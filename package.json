@@ -1,0 +1,30 @@
+{
+  "name": "better-scroll",
+  "version": "0.0.1",
+  "description": "inspired by iscroll, and it has a better scroll perfermance",
+  "author": {
+    "name": "huangyi",
+    "email": "ustbhuangyi@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "javascript",
+    "ios"
+  ],
+  "licenses": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ustbhuangyi/better-scroll.git"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "del": "^0.1.0",
+    "gulp-replace": "^0.5.4",
+    "amd-optimize": "^0.4.3",
+    "browser-sync": "^2.2.1"
+  }
+}
