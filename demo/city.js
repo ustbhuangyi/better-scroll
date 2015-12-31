@@ -9,8 +9,6 @@ define(['./cityData', '../build/bscroll', './handlebars'], function (cityData, B
 
 	var shortcutList = [];
 	var anchorMap = {};
-	var titleHeight = 28;
-	var itemHeight = 44;
 
 	function initCities() {
 		var cityTpl = [
@@ -38,7 +36,8 @@ define(['./cityData', '../build/bscroll', './handlebars'], function (cityData, B
 
 	function initShortCut() {
 		var y = 0;
-
+		var titleHeight = 28;
+		var itemHeight = 44;
 
 		cityData.forEach(function (group) {
 			var name = group.name.substr(0, 1);
