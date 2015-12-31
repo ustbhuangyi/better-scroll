@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('../util/util');
+var Timeline = require('../util/timeline');
 
 var TOUCH_EVENT = 1;
 
@@ -409,7 +410,37 @@ var TOUCH_EVENT = 1;
 			this.y = y;
 		},
 		_animate: function (destX, destY, duration, easingFn) {
+			var startX = this.x;
+			var startY = this.y;
+			var me = this;
+			var timeline = new Timeline();
 
+			timeline.onenterframe = function (time) {
+				if (!me.isAnimating) {
+					this.stop();
+					return;
+				}
+
+				if (time > duration) {
+					me.isAnimating = false;
+					me._translate(destX, destY);
+
+					if (!me.resetPosition(me.options.bounceTime, _.ease.bounce)) {
+						me._trigger('scrollEnd');
+					}
+					this.stop();
+					return;
+				}
+				var now = time / duration;
+				var easing = easingFn(now);
+
+				var newX = ( destX - startX ) * easing + startX;
+				var newY = ( destY - startY ) * easing + startY;
+				me._translate(newX, newY);
+			};
+
+			this.isAnimating = true;
+			timeline.start();
 		},
 		enable: function () {
 			this.enabled = true;
