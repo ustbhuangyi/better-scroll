@@ -794,7 +794,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		var reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g');
 		el.className = el.className.replace(reg, ' ');
-
 	};
 
 	_.offset = function (el) {

@@ -90,6 +90,8 @@ define(['./cityData', '../build/bscroll', './handlebars'], function (cityData, B
 			var anchor = shortcutList[shortcutList.indexOf(touch.anchor) + delta];
 
 			scrollTo(anchor);
+
+			e.preventDefault();
 			e.stopPropagation();
 
 		});

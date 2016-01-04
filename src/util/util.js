@@ -72,7 +72,6 @@ _.removeClass = function (el, className) {
 
 	var reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g');
 	el.className = el.className.replace(reg, ' ');
-
 };
 
 _.offset = function (el) {
