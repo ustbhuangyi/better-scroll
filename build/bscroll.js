@@ -326,17 +326,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.startY = this.y;
 				}
 
-				if (this.directionLocked === 'h') {
-					if (this.pointX > document.documentElement.clientWidth - 10 || this.pointX < 10) {
-						this._end(e);
-					}
-				} else if (this.directionLocked === 'v') {
-					if (this.pointY < 10 || this.pointY > document.documentElement.clientHeight - 10) {
-						this._end(e);
-					}
+				if (this.pointX > document.documentElement.clientWidth - 10 || this.pointX < 10
+					|| this.pointY < 10 || this.pointY > document.documentElement.clientHeight - 10
+				) {
+					this._end(e);
 				}
-
-
 			},
 			_end: function (e) {
 				if (!this.enabled || _.eventType[e.type] !== this.initiated)
@@ -352,16 +346,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					return;
 				}
 
-
-				this.isInTransition = false;
-				this.endTime = +new Date;
-
-				// ensures that the last position is rounded
-				var newX = Math.round(this.x);
-				var newY = Math.round(this.y);
-
-				this.scrollTo(newX, newY);
-
 				// we scrolled less than 10 pixels
 				if (!this.moved) {
 					if (this.options.tap) {
@@ -375,6 +359,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					this._trigger('scrollCancel');
 					return;
 				}
+
+				this.isInTransition = false;
+				this.endTime = +new Date;
+
+				// ensures that the last position is rounded
+				var newX = Math.round(this.x);
+				var newY = Math.round(this.y);
+
+				this.scrollTo(newX, newY);
 
 				var duration = this.endTime - this.startTime;
 				var absDistX = Math.abs(newX - this.startX);
@@ -703,6 +696,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 		};
+
+		BScroll.utils = _;
 
 		if (typeof module !== 'undefined' && module.exports) {
 			module.exports = BScroll;
