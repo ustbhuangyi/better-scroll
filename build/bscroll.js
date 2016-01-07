@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		BScroll.prototype = {
-			version: '0.0.5',
+			version: '0.0.6',
 
 			_init: function () {
 
@@ -525,8 +525,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.wrapperWidth = this.wrapper.style.width || this.wrapper.clientWidth;
 				this.wrapperHeight = this.wrapper.style.height || this.wrapper.clientHeight;
 
-				this.scrollerWidth = this.scroller.clientWidth;
-				this.scrollerHeight = this.scroller.clientHeight;
+				this.scrollerWidth = this.scroller.style.width || this.scroller.clientWidth;
+				this.scrollerHeight = this.scroller.style.height || this.scroller.clientHeight;
 
 				this.maxScrollX = this.wrapperWidth - this.scrollerWidth;
 				this.maxScrollY = this.wrapperHeight - this.scrollerHeight;

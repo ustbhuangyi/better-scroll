@@ -469,8 +469,8 @@ var TOUCH_EVENT = 1;
 			this.wrapperWidth = this.wrapper.style.width || this.wrapper.clientWidth;
 			this.wrapperHeight = this.wrapper.style.height || this.wrapper.clientHeight;
 
-			this.scrollerWidth = this.scroller.clientWidth;
-			this.scrollerHeight = this.scroller.clientHeight;
+			this.scrollerWidth = this.scroller.style.width || this.scroller.clientWidth;
+			this.scrollerHeight = this.scroller.style.height || this.scroller.clientHeight;
 
 			this.maxScrollX = this.wrapperWidth - this.scrollerWidth;
 			this.maxScrollY = this.wrapperHeight - this.scrollerHeight;
