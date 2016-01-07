@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		BScroll.prototype = {
-			version: '0.0.3',
+			version: '0.0.5',
 
 			_init: function () {
 
