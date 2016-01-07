@@ -7,7 +7,6 @@ var replace = require('gulp-replace');
 var version = require('./package.json').version;
 
 var dest = 'build';
-
 var path = {
 	js: 'src/**/*.js'
 };
