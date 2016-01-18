@@ -58,7 +58,7 @@ _.hasClass = function (el, className) {
 };
 
 _.addClass = function (el, className) {
-	if (el.hasClass(el, className))
+	if (_.hasClass(el, className))
 		return;
 
 	var newClass = el.className.split(' ');
@@ -67,7 +67,7 @@ _.addClass = function (el, className) {
 };
 
 _.removeClass = function (el, className) {
-	if (!el.hasClass(el, className))
+	if (!_.hasClass(el, className))
 		return;
 
 	var reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g');
