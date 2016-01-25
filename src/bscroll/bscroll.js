@@ -450,7 +450,7 @@ var TOUCH_EVENT = 1;
 		},
 		off: function (type, fn) {
 			var _events = this._events[type];
-			if (_events) {
+			if (!_events) {
 				return;
 			}
 

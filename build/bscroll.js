@@ -506,7 +506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			},
 			off: function (type, fn) {
 				var _events = this._events[type];
-				if (_events) {
+				if (!_events) {
 					return;
 				}
 
@@ -775,7 +775,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	_.addClass = function (el, className) {
-		if (el.hasClass(el, className))
+		if (_.hasClass(el, className))
 			return;
 
 		var newClass = el.className.split(' ');
@@ -784,7 +784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	_.removeClass = function (el, className) {
-		if (!el.hasClass(el, className))
+		if (!_.hasClass(el, className))
 			return;
 
 		var reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g');
