@@ -11,11 +11,11 @@ var elementStyle = document.createElement('div').style;
 var vendor = (function () {
 
 	var transformNames = {
-		standard: 'transform',
 		webkit: 'webkitTransform',
 		Moz: 'MozTransform',
 		O: 'OTransform',
-		ms: 'msTransform'
+		ms: 'msTransform',
+		standard: 'transform'
 	};
 
 	for (var key in transformNames) {

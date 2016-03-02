@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		BScroll.prototype = {
-			version: '0.0.7',
+			version: '0.0.10',
 
 			_init: function () {
 
@@ -728,11 +728,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var vendor = (function () {
 
 		var transformNames = {
-			standard: 'transform',
 			webkit: 'webkitTransform',
 			Moz: 'MozTransform',
 			O: 'OTransform',
-			ms: 'msTransform'
+			ms: 'msTransform',
+			standard: 'transform'
 		};
 
 		for (var key in transformNames) {
