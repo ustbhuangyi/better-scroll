@@ -326,8 +326,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.startY = this.y;
 				}
 
-				if (this.pointX > document.documentElement.clientWidth - 10 || this.pointX < 10
-					|| this.pointY < 10 || this.pointY > document.documentElement.clientHeight - 10
+				var scrollLeft = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
+				var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+
+				var pX = this.pointX - scrollLeft;
+				var pY = this.pointY - scrollTop;
+
+				if (pX > document.documentElement.clientWidth - 10 || pX < 10
+					|| pY < 10 || pY > document.documentElement.clientHeight - 10
 				) {
 					this._end(e);
 				}
