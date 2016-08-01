@@ -6,7 +6,7 @@
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
   },
-  "main": "src/index.js",
+  "main": "build/bscroll.min.js",
   "scripts": {
     "dev": "webpack-dev-server --port 9090 --inline --hot --content-base ./demo --host 0.0.0.0",
     "build": "webpack --config webpack.min.js"
