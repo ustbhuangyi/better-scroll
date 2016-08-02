@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.2");
+	_bscroll.BScroll.Version = ("0.1.3");
 
 	module.exports = _bscroll.BScroll;
 
@@ -556,6 +556,20 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.startTime = timestamp;
 					this.startX = this.x;
 					this.startY = this.y;
+
+					if (this.options.probeType === 1) {
+						this.trigger('scroll', {
+							x: this.x,
+							y: this.y
+						});
+					}
+				}
+
+				if (this.options.probeType > 1) {
+					this.trigger('scroll', {
+						x: this.x,
+						y: this.y
+					});
 				}
 
 				var scrollLeft = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
@@ -679,8 +693,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, this.options.resizePolling);
 			}
 		}, {
+			key: '_startProbe',
+			value: function _startProbe() {
+				(0, _util.cancelAnimationFrame)(this.probeTimer);
+				this.probeTimer = (0, _util.requestAnimationFrame)(probe);
+
+				var me = this;
+
+				function probe() {
+					var pos = me.getComputedPosition();
+					me.trigger('scroll', pos);
+					if (me.isInTransition) {
+						me.probeTimer = (0, _util.requestAnimationFrame)(probe);
+					}
+				}
+			}
+		}, {
 			key: '_transitionTime',
 			value: function _transitionTime() {
+				var _this4 = this;
+
 				var time = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
 				this.scrollerStyle[_util.style.transitionDuration] = time + 'ms';
@@ -693,6 +725,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (!time && _util.isBadAndroid) {
 					this.scrollerStyle[_util.style.transitionDuration] = '0.001s';
+
+					(0, _util.requestAnimationFrame)(function () {
+						if (_this4.scrollerStyle[_util.style.transitionDuration] === '0.0001ms') {
+							_this4.scrollerStyle[_util.style.transitionDuration] = '0s';
+						}
+					});
 				}
 			}
 		}, {
@@ -856,6 +894,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					this._transitionTimingFunction(easing.style);
 					this._transitionTime(time);
 					this._translate(x, y);
+
+					if (time && this.options.probeType === 3) {
+						this._startProbe();
+					}
 
 					if (this.options.wheel) {
 						if (y > 0) {
@@ -1494,6 +1536,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			target[key] = source[key];
 		}
 	};
+
+	var DEFAULT_INTERVAL = 100 / 60;
+
+	var requestAnimationFrame = exports.requestAnimationFrame = function () {
+		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || function (callback) {
+			return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL) / 2);
+		};
+	}();
+
+	var cancelAnimationFrame = exports.cancelAnimationFrame = function () {
+		return window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || function (id) {
+			window.clearTimeout(id);
+		};
+	}();
 
 /***/ }
 /******/ ])
