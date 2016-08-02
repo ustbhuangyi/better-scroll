@@ -1945,7 +1945,13 @@ function initCities() {
 
 	cities.innerHTML = cityHtml;
 
-	scroll = new window.BScroll(cityWrapper);
+	scroll = new window.BScroll(cityWrapper, {
+		probeType: 3
+	});
+
+	scroll.on('scroll', function (pos) {
+		console.log(Math.round(pos.y));
+	});
 
 	scroll.scrollTo(0, 0);
 }

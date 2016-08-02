@@ -17,7 +17,9 @@ import {
 	tap,
 	click,
 	momentum,
-	extend
+	extend,
+	requestAnimationFrame,
+	cancelAnimationFrame
 } from '../util';
 
 const TOUCH_EVENT = 1;
@@ -491,6 +493,20 @@ export class BScroll extends EventEmitter {
 			this.startTime = timestamp;
 			this.startX = this.x;
 			this.startY = this.y;
+
+			if (this.options.probeType === 1) {
+				this.trigger('scroll', {
+					x: this.x,
+					y: this.y
+				});
+			}
+		}
+
+		if (this.options.probeType > 1) {
+			this.trigger('scroll', {
+				x: this.x,
+				y: this.y
+			});
 		}
 
 		let scrollLeft = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
@@ -620,6 +636,21 @@ export class BScroll extends EventEmitter {
 		}, this.options.resizePolling);
 	}
 
+	_startProbe() {
+		cancelAnimationFrame(this.probeTimer);
+		this.probeTimer = requestAnimationFrame(probe);
+
+		let me = this;
+
+		function probe() {
+			let pos = me.getComputedPosition();
+			me.trigger('scroll', pos);
+			if (me.isInTransition) {
+				me.probeTimer = requestAnimationFrame(probe);
+			}
+		}
+	}
+
 	_transitionTime(time = 0) {
 		this.scrollerStyle[style.transitionDuration] = time + 'ms';
 
@@ -631,6 +662,12 @@ export class BScroll extends EventEmitter {
 
 		if (!time && isBadAndroid) {
 			this.scrollerStyle[style.transitionDuration] = '0.001s';
+
+			requestAnimationFrame(() => {
+				if (this.scrollerStyle[style.transitionDuration] === '0.0001ms') {
+					this.scrollerStyle[style.transitionDuration] = '0s';
+				}
+			});
 		}
 	}
 
@@ -777,6 +814,10 @@ export class BScroll extends EventEmitter {
 			this._transitionTimingFunction(easing.style);
 			this._transitionTime(time);
 			this._translate(x, y);
+
+			if (time && this.options.probeType === 3) {
+				this._startProbe();
+			}
 
 			if (this.options.wheel) {
 				if (y > 0) {
