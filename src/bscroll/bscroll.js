@@ -432,7 +432,7 @@ export class BScroll extends EventEmitter {
 		let timestamp = +new Date();
 
 		// We need to move at least 15 pixels for the scrolling to initiate
-		if (timestamp - this.startTime > this.options.momentumLimitTime && (absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance)) {
+		if (timestamp - this.endTime > this.options.momentumLimitTime && (absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance)) {
 			return;
 		}
 
