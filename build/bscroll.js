@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.3");
+	_bscroll.BScroll.Version = ("0.1.5");
 
 	module.exports = _bscroll.BScroll;
 
@@ -398,7 +398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				eventOperation(window, 'resize', this);
 
 				if (this.options.click) {
-					eventOperation(this.wrapper, 'click', this, true);
+					eventOperation(this.wrapper, 'click', this);
 				}
 
 				if (!this.options.disableMouse) {
@@ -497,7 +497,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				var timestamp = +new Date();
 
-				if (timestamp - this.startTime > this.options.momentumLimitTime && absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance) {
+				if (timestamp - this.endTime > this.options.momentumLimitTime && absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance) {
 					return;
 				}
 
