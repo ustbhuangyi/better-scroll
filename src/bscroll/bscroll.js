@@ -334,7 +334,7 @@ export class BScroll extends EventEmitter {
 		eventOperation(window, 'resize', this);
 
 		if (this.options.click) {
-			eventOperation(this.wrapper, 'click', this, true);
+			eventOperation(this.wrapper, 'click', this);
 		}
 
 		if (!this.options.disableMouse) {
