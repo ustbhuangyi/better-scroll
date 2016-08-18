@@ -16,16 +16,6 @@ git clone https://github.com/ustbhuangyi/better-scroll.git
 cd better-scroll
 npm install
 ```
-如果没有安装webpack，请全局安装webpack
-
-```bash
-npm install -g webpack
-```
-如果没有安装webpack-dev-server，请全局安装webpack-dev-server
-
-```bash
-npm install -g webpack-dev-server
-```
 测试demo页
 
 ```bash
