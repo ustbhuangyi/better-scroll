@@ -122,19 +122,8 @@ export function click(e) {
 	var target = e.target;
 
 	if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
-		let ev = new window.MouseEvent('click', {
-			bubbles: true,
-			cancelable: true,
-			view: e.view,
-			screenX: target.screenX,
-			screenY: target.screenY,
-			clientX: target.clientX,
-			clientY: target.clientY,
-			ctrlKey: e.ctrlKey,
-			altKey: e.altKey,
-			shiftKey: e.shiftKey,
-			metaKey: e.metaKey
-		});
+		let ev = document.createEvent(window.MouseEvent ? 'MouseEvents' : 'Event');
+		ev.initEvent('click', true, true);
 		e._constructed = true;
 		target.dispatchEvent(ev);
 	}
