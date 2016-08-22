@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.5");
+	_bscroll.BScroll.Version = ("0.1.6");
 
 	module.exports = _bscroll.BScroll;
 
@@ -1309,19 +1309,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		var target = e.target;
 
 		if (!/(SELECT|INPUT|TEXTAREA)/i.test(target.tagName)) {
-			var ev = new window.MouseEvent('click', {
-				bubbles: true,
-				cancelable: true,
-				view: e.view,
-				screenX: target.screenX,
-				screenY: target.screenY,
-				clientX: target.clientX,
-				clientY: target.clientY,
-				ctrlKey: e.ctrlKey,
-				altKey: e.altKey,
-				shiftKey: e.shiftKey,
-				metaKey: e.metaKey
-			});
+			var ev = document.createEvent(window.MouseEvent ? 'MouseEvents' : 'Event');
+			ev.initEvent('click', true, true);
 			e._constructed = true;
 			target.dispatchEvent(ev);
 		}
