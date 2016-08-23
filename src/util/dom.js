@@ -124,7 +124,7 @@ export function click(e) {
 	if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
 		let ev = document.createEvent(window.MouseEvent ? 'MouseEvents' : 'Event');
 		ev.initEvent('click', true, true);
-		e._constructed = true;
+		ev._constructed = true;
 		target.dispatchEvent(ev);
 	}
 };
