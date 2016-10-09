@@ -3,7 +3,11 @@
 
 inspired by iscroll, and it has a better scroll perfermance
 
-##如何构建
+## API
+
+和iscroll接口基本一致，支持横向纵向滚动，支持snap和probe
+
+## 如何构建
 better-scroll的源码是基于webpack构建的
 
 首先，clone项目源码
