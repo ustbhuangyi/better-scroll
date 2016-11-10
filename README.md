@@ -73,7 +73,7 @@ npm run dev
 Example:
 
 ```javascript
-let scroll = new BScroll(document.getElementById('wrap), {
+let scroll = new BScroll(document.getElementById('wrapper'), {
   startX: 0,
   startY: 0
 })
@@ -134,7 +134,7 @@ Events 列表
 ## 派发滚动
 
 ```javascript
-let scroll = new BScroll(document.getElementById('wrap))
+let scroll = new BScroll(document.getElementById('wrapper'))
 scroll.scrollTo(0, 500)
 ...
 ```
