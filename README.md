@@ -113,7 +113,11 @@ Options List:
 Example:
 
 ```javascript
-scroll.on('scrollStart', (pos) => {
+let scroll = new BScroll(document.getElementById('wrapper'),{
+   probeType: 3
+})
+
+scroll.on('scroll', (pos) => {
   console.log(pos.x + '~' + posx.y)
   ...
 })
