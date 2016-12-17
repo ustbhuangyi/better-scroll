@@ -35,7 +35,6 @@ function initScroll() {
   var scroll = new window.BScroll(listWrapper, {
     probeType: 1
   });
-  
   scroll.on('touchend', function (pos) {
     if (pos.y > 50) {
       setTimeout(function () {
