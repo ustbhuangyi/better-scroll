@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.9");
+	_bscroll.BScroll.Version = ("0.1.11");
 
 	module.exports = _bscroll.BScroll;
 
@@ -1076,7 +1076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          this._transitionEnd(e);
 	          break;
 	        case 'click':
-	          if (!e._constructed) {
+	          if (this.enabled && !e._constructed && !/(SELECT|INPUT|TEXTAREA)/i.test(e.target.tagName)) {
 	            e.preventDefault();
 	            e.stopPropagation();
 	          }
