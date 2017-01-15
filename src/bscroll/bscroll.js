@@ -991,7 +991,7 @@ export class BScroll extends EventEmitter {
         this._transitionEnd(e);
         break;
       case 'click':
-        if (!e._constructed) {
+        if (this.enabled && !e._constructed && !(/(SELECT|INPUT|TEXTAREA)/i).test(e.target.tagName)) {
           e.preventDefault();
           e.stopPropagation();
         }
