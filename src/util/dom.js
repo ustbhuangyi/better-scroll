@@ -31,7 +31,7 @@ function prefixStyle(style) {
 }
 
 export function addEvent(el, type, fn, capture) {
-  el.addEventListener(type, fn, !!capture);
+  el.addEventListener(type, fn, { passive: false, capture: !!capture });
 };
 
 export function removeEvent(el, type, fn, capture) {
