@@ -1,7 +1,7 @@
 # better-scroll
 [![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll)
 
-inspired by iscroll, and it has a better scroll perfermance
+inspired by iscroll, and it has a better scroll perfermance https://ustbhuangyi.github.io/better-scroll/
 
 ## 立即使用
 
@@ -43,7 +43,7 @@ var BScroll = require('better-scroll')
 ```
 
 ## DEMO
-better-scroll的源码是基于webpack构建的
+better-scroll 的源码是基于 Webpack 构建的
 
 首先，clone项目源码
 
@@ -86,22 +86,23 @@ Options List:
 - scrollY: `true` 滚动方向
 - click: `true` 是否启用click事件
 - directionLockThreshold: `5`
-- momentum: `true` 是否开启动量动画，关闭可以提升效率
+- momentum: `true` 是否开启拖动惯性
 - bounce: `true` 是否启用弹力动画效果，关掉可以加速
-- selectedIndex: `0`
-- rotate: `25`
+- selectedIndex: `0` 
+- rotate: `25` 
 - wheel: `false` 是否监听鼠标滚轮事件
-- snap: `false` 自动分割容器，用于制作走马灯效果等
-- snapLoop: `false`
-- snapThreshold: `0.1`
-- swipeTime: `2500`
+- snap: `false` 是否开启捕捉元素，当为 true 时，捕捉的元素会根据可滚动的位置和滚动区域计算得到可滑动几页。
+- snapLoop: `false` 是否创建当前滚动元素子集的拷贝
+- snapThreshold: `0.1` 滑动的长度限制，只有大于这个距离才会触发事件
+- swipeTime: `2500` swipe 持续时间
 - bounceTime: `700` 弹力动画持续的毫秒数
 - adjustTime: `400`
 - swipeBounceTime: `1200`
 - deceleration: `0.001` 滚动动量减速越大越快，建议不大于0.01
-- momentumLimitTime: `300`
-- momentumLimitDistance: `15`
+- momentumLimitTime: `300` 惯性拖动的回弹时间
+- momentumLimitDistance: `15` 惯性拖动的回弹距离
 - resizePolling: `60` 重新调整窗口大小时，重新计算better-scroll的时间间隔
+- probeType: `1` 监听事件的触发时间，1为即时触发，3为延迟到事件完毕后触发
 - preventDefault: `true` 是否阻止默认事件
 - preventDefaultException: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }` 阻止默认事件
 - HWCompositing: `true` 是否启用硬件加速
@@ -126,17 +127,23 @@ scroll.on('scroll', (pos) => {
 
 Events 列表
 
-- beforeScrollStart 滚动开始之前触发
-- scrollStart 滚动开始时触发
-- scroll 滚动时触发
-- scrollCancel 取消滚动时触发
-- scrollEnd 滚动结束时触发
-- flick 
-- refresh
-- destroy 销毁better-scroll实例时触发
+- beforeScrollStart - 滚动开始之前触发
+- scrollStart - 滚动开始时触发
+- scroll - 滚动时触发
+- scrollCancel - 取消滚动时触发
+- scrollEnd - 滚动结束时触发
+- flick - 触发了 fastclick 时的回调函数
+- refresh - 当 better-scroll 刷新时触发
+- destroy - 销毁 better-scroll 实例时触发
 
 
 ## 派发滚动
+
+- scrollTo(x, y, time, easing)
+
+  ​
+
+Example:
 
 ```javascript
 let scroll = new BScroll(document.getElementById('wrapper'))
@@ -144,4 +151,4 @@ scroll.scrollTo(0, 500)
 ...
 ```
 
-第一个参数为X轴，第二个参数为Y轴
+

@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.11");
+	_bscroll.BScroll.Version = ("0.1.12");
 
 	module.exports = _bscroll.BScroll;
 
@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function BScroll(el, options) {
 	    _classCallCheck(this, BScroll);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BScroll).call(this));
+	    var _this = _possibleConstructorReturn(this, (BScroll.__proto__ || Object.getPrototypeOf(BScroll)).call(this));
 
 	    _this.wrapper = typeof el === 'string' ? document.querySelector(el) : el;
 	    _this.scroller = _this.wrapper.children[0];
@@ -718,7 +718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _transitionTime() {
 	      var _this4 = this;
 
-	      var time = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	      var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
 	      this.scrollerStyle[_util.style.transitionDuration] = time + 'ms';
 
@@ -844,8 +844,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'resetPosition',
 	    value: function resetPosition() {
-	      var time = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	      var easeing = arguments.length <= 1 || arguments[1] === undefined ? _util.ease.bounce : arguments[1];
+	      var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	      var easeing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util.ease.bounce;
 
 	      var x = this.x;
 	      if (!this.hasHorizontalScroll || x > 0) {
@@ -880,8 +880,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'scrollBy',
 	    value: function scrollBy(x, y) {
-	      var time = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-	      var easing = arguments.length <= 3 || arguments[3] === undefined ? _util.ease.bounce : arguments[3];
+	      var time = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	      var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _util.ease.bounce;
 
 	      x = this.x + x;
 	      y = this.y + y;
@@ -891,7 +891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'scrollTo',
 	    value: function scrollTo(x, y, time) {
-	      var easing = arguments.length <= 3 || arguments[3] === undefined ? _util.ease.bounce : arguments[3];
+	      var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _util.ease.bounce;
 
 	      this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y);
 
@@ -985,7 +985,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'goToPage',
 	    value: function goToPage(x, y, time) {
-	      var easing = arguments.length <= 3 || arguments[3] === undefined ? _util.ease.bounce : arguments[3];
+	      var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : _util.ease.bounce;
 
 	      if (x >= this.pages.length) {
 	        x = this.pages.length - 1;
@@ -1223,7 +1223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function addEvent(el, type, fn, capture) {
-	  el.addEventListener(type, fn, !!capture);
+	  el.addEventListener(type, fn, { passive: false, capture: !!capture });
 	};
 
 	function removeEvent(el, type, fn, capture) {
@@ -1404,7 +1404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(EventEmitter, [{
 			key: "on",
 			value: function on(type, fn) {
-				var context = arguments.length <= 2 || arguments[2] === undefined ? this : arguments[2];
+				var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
 
 				if (!this._events[type]) {
 					this._events[type] = [];
@@ -1415,7 +1415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: "once",
 			value: function once(type, fn) {
-				var context = arguments.length <= 2 || arguments[2] === undefined ? this : arguments[2];
+				var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
 
 				var fired = false;
 
@@ -1458,10 +1458,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				for (var i = 0; i < len; i++) {
 					var event = eventsCopy[i];
 
-					var _event = _slicedToArray(event, 2);
-
-					var fn = _event[0];
-					var context = _event[1];
+					var _event = _slicedToArray(event, 2),
+					    fn = _event[0],
+					    context = _event[1];
 
 					if (fn) {
 						fn.apply(context, [].slice.call(arguments, 1));
@@ -1487,10 +1486,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		var distance = current - start;
 		var speed = Math.abs(distance) / time;
 
-		var deceleration = options.deceleration;
-		var itemHeight = options.itemHeight;
-		var swipeBounceTime = options.swipeBounceTime;
-		var bounceTime = options.bounceTime;
+		var deceleration = options.deceleration,
+		    itemHeight = options.itemHeight,
+		    swipeBounceTime = options.swipeBounceTime,
+		    bounceTime = options.bounceTime;
 
 		var duration = options.swipeTime;
 		var rate = options.wheel ? 4 : 15;
