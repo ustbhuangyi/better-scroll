@@ -8,6 +8,7 @@
 }
 
 #slider .content {
+	overflow: hidden;
 	min-height: 1;
 }
 
