@@ -4,11 +4,12 @@
 	margin: 0 auto;
 	width: 100%;
 	max-width: 750px;
-	min-height: 1;
+	min-height: 1px;
 }
 
 #slider .content {
-	min-height: 1;
+	overflow: hidden;
+	min-height: 1px;
 }
 
 #slider .content .slider-item {
