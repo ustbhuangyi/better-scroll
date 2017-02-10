@@ -90,7 +90,7 @@ Options List:
 - bounce: `true` 是否启用弹力动画效果，关掉可以加速
 - selectedIndex: `0` 
 - rotate: `25` 
-- wheel: `false` 是否监听鼠标滚轮事件
+- wheel: `false` 该属性是给 picker 组件使用的，普通的列表滚动不需要配置
 - snap: `false` 是否开启捕捉元素，当为 true 时，捕捉的元素会根据可滚动的位置和滚动区域计算得到可滑动几页。
 - snapLoop: `false` 是否创建当前滚动元素子集的拷贝
 - snapThreshold: `0.1` 滑动的长度限制，只有大于这个距离才会触发事件
