@@ -149,6 +149,6 @@ scroll.scrollTo(0, 500)
 ...
 ```
 - scrollToElement(el, time, offsetX, offsetY, easing) 滚动到
-  某个元素，el（必填） 表示 dom 元素，time 表示动画，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
+  某个元素，el（必填）表示 dom 元素，time 表示动画，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
 
 
