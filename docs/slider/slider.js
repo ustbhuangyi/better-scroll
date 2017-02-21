@@ -3,7 +3,8 @@ function Slider(options) {
 		wrap: options.wrap,
 		inner: options.inner,
 		dots: options.dots,
-		speed: options.speed
+		speed: options.speed,
+		auto: options.auto
 	}
 
 	this.$slider = document.querySelector(options.wrap);
@@ -13,6 +14,8 @@ function Slider(options) {
 	this.resize();
 
 	this.runScroll();
+
+	this.autoScroll();
 }
 
 Slider.prototype = {
@@ -81,6 +84,18 @@ Slider.prototype = {
 				}
 			}
 		});
+	},
+	autoScroll: function() {
+		if (!this.options.auto) {
+			return
+		}
+		var that = this;
+		console.log(that.slider)
+		var page = that.slider.getCurrentPage().pageX;
+
+		setInterval(function(){
+			that.slider.next()
+		}, this.options.auto)
 	}
 }
 
@@ -88,5 +103,6 @@ new Slider({
 	wrap: '#slider',
 	inner: '.content',
 	dots: '.dots',
-	speed: 400
+	speed: 400,
+	auto: 2000
 });
