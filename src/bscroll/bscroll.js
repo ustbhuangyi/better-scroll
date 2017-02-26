@@ -387,7 +387,7 @@ export class BScroll extends EventEmitter {
     if (this.options.useTransition && this.isInTransition) {
       this.isInTransition = false;
       let pos = this.getComputedPosition();
-      this._translate(Math.round(pos.x), Math.round(pos.y));
+      this._translate(pos.x, pos.y);
       if (this.options.wheel) {
         this.target = this.items[Math.round(-pos.y / this.itemHeight)];
       } else {
