@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.12");
+	_bscroll.BScroll.Version = ("0.1.13");
 
 	module.exports = _bscroll.BScroll;
 
@@ -452,7 +452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.options.useTransition && this.isInTransition) {
 	        this.isInTransition = false;
 	        var pos = this.getComputedPosition();
-	        this._translate(Math.round(pos.x), Math.round(pos.y));
+	        this._translate(pos.x, pos.y);
 	        if (this.options.wheel) {
 	          this.target = this.items[Math.round(-pos.y / this.itemHeight)];
 	        } else {
