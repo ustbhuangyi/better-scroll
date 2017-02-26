@@ -1,0 +1,43 @@
+#slider {
+	position: relative;
+	overflow: hidden;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 750px;
+	min-height: 1px;
+}
+
+#slider .content {
+	overflow: hidden;
+	min-height: 1px;
+}
+
+#slider .content .slider-item {
+	float: left;
+}
+
+#slider .content .slider-item img {
+	width: 100%;
+	display: block;
+}
+
+#slider .dots {
+	position: absolute;
+	text-align: center;
+	bottom: 10px;
+	width: 100%;
+	height: 10px;
+}
+
+#slider .dots span {
+	display: inline-block;
+	margin: 0 5px;
+	width: 10px;
+	height: 10px;
+	border-radius: 10px;
+	background-color: #EEE;
+}
+
+#slider .dots span.on {
+	background-color: #f18c10;
+}
