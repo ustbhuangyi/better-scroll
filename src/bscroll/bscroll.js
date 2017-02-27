@@ -669,7 +669,7 @@ export class BScroll extends EventEmitter {
     this.scrollerStyle[style.transitionDuration] = time + 'ms';
 
     if (this.options.wheel && !isBadAndroid) {
-      for (let i = 0; i < this.itemLen; i++) {
+      for (let i = 0; i < this.items.length; i++) {
         this.items[i].style[style.transitionDuration] = time + 'ms';
       }
     }
@@ -689,7 +689,7 @@ export class BScroll extends EventEmitter {
     this.scrollerStyle[style.transitionTimingFunction] = easing;
 
     if (this.options.wheel && !isBadAndroid) {
-      for (let i = 0; i < this.itemLen; i++) {
+      for (let i = 0; i < this.items.length; i++) {
         this.items[i].style[style.transitionTimingFunction] = easing;
       }
     }
@@ -718,7 +718,7 @@ export class BScroll extends EventEmitter {
     }
 
     if (this.options.wheel && !isBadAndroid) {
-      for (let i = 0; i < this.itemLen; i++) {
+      for (let i = 0; i < this.items.length; i++) {
         let deg = this.options.rotate * (y / this.itemHeight + i);
         this.items[i].style[style.transform] = 'rotateX(' + deg + 'deg)';
       }
@@ -752,9 +752,8 @@ export class BScroll extends EventEmitter {
         this.selectedIndex = this.options.selectedIndex;
       }
       this.options.startY = -this.selectedIndex * this.itemHeight;
-      this.itemLen = this.items.length;
       this.maxScrollX = 0;
-      this.maxScrollY = -this.itemHeight * (this.itemLen - 1);
+      this.maxScrollY = -this.itemHeight * (this.items.length - 1);
     } else {
       this.maxScrollX = this.wrapperWidth - this.scrollerWidth;
       this.maxScrollY = this.wrapperHeight - this.scrollerHeight;
@@ -837,7 +836,7 @@ export class BScroll extends EventEmitter {
         if (y > 0) {
           this.selectedIndex = 0;
         } else if (y < this.maxScrollY) {
-          this.selectedIndex = this.itemLen - 1;
+          this.selectedIndex = this.items.length - 1;
         } else {
           this.selectedIndex = Math.abs(y / this.itemHeight) | 0;
         }
