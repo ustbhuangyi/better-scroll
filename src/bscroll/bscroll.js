@@ -387,7 +387,7 @@ export class BScroll extends EventEmitter {
     if (this.options.useTransition && this.isInTransition) {
       this.isInTransition = false;
       let pos = this.getComputedPosition();
-      this._translate(Math.round(pos.x), Math.round(pos.y));
+      this._translate(pos.x, pos.y);
       if (this.options.wheel) {
         this.target = this.items[Math.round(-pos.y / this.itemHeight)];
       } else {
@@ -471,12 +471,20 @@ export class BScroll extends EventEmitter {
     let newX = this.x + deltaX;
     let newY = this.y + deltaY;
 
-    // Slow down if outside of the boundaries
+    // Slow down or stop if outside of the boundaries
     if (newX > 0 || newX < this.maxScrollX) {
-      newX = this.x + deltaX / 3;
+      if (this.options.bounce) {
+        newX = this.x + deltaX / 3;
+      } else {
+        newX = newX > 0 ? 0 : this.maxScrollX;
+      }
     }
     if (newY > 0 || newY < this.maxScrollY) {
-      newY = this.y + deltaY / 3;
+      if (this.options.bounce) {
+        newY = this.y + deltaY / 3;
+      } else {
+        newY = newY > 0 ? 0 : this.maxScrollY;
+      }
     }
 
     this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
