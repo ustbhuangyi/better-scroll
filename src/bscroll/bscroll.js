@@ -361,7 +361,7 @@ export class BScroll extends EventEmitter {
         return;
       }
     }
-    if (!this.enabled || (this.initiated && this.initiated !== _eventType)) {
+    if (!this.enabled || this.destroyed || (this.initiated && this.initiated !== _eventType)) {
       return;
     }
     this.initiated = _eventType;
@@ -408,7 +408,7 @@ export class BScroll extends EventEmitter {
   }
 
   _move(e) {
-    if (!this.enabled || eventType[e.type] !== this.initiated) {
+    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
       return;
     }
 
@@ -530,7 +530,7 @@ export class BScroll extends EventEmitter {
   }
 
   _end(e) {
-    if (!this.enabled || eventType[e.type] !== this.initiated) {
+    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
       return;
     }
     this.initiated = false;
@@ -968,6 +968,7 @@ export class BScroll extends EventEmitter {
   destroy() {
     this._removeEvents();
 
+    this.destroyed = true
     this.trigger('destroy');
   }
 
