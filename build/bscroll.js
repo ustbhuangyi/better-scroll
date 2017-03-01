@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _bscroll = __webpack_require__(1);
 
-	_bscroll.BScroll.Version = ("0.1.14");
+	_bscroll.BScroll.Version = ("0.1.15");
 
 	module.exports = _bscroll.BScroll;
 
@@ -426,7 +426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return;
 	        }
 	      }
-	      if (!this.enabled || this.initiated && this.initiated !== _eventType) {
+	      if (!this.enabled || this.destroyed || this.initiated && this.initiated !== _eventType) {
 	        return;
 	      }
 	      this.initiated = _eventType;
@@ -474,7 +474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_move',
 	    value: function _move(e) {
-	      if (!this.enabled || _util.eventType[e.type] !== this.initiated) {
+	      if (!this.enabled || this.destroyed || _util.eventType[e.type] !== this.initiated) {
 	        return;
 	      }
 
@@ -593,7 +593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_end',
 	    value: function _end(e) {
-	      if (!this.enabled || _util.eventType[e.type] !== this.initiated) {
+	      if (!this.enabled || this.destroyed || _util.eventType[e.type] !== this.initiated) {
 	        return;
 	      }
 	      this.initiated = false;
@@ -1052,6 +1052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function destroy() {
 	      this._removeEvents();
 
+	      this.destroyed = true;
 	      this.trigger('destroy');
 	    }
 	  }, {

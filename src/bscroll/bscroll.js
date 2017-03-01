@@ -968,7 +968,7 @@ export class BScroll extends EventEmitter {
   destroy() {
     this._removeEvents();
 
-    this.destroyed = true
+    this.destroyed = true;
     this.trigger('destroy');
   }
 
