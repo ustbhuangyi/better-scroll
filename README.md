@@ -92,8 +92,8 @@ Options List:
 - selectedIndex: `0` wheel 为 true 时有效，表示被选中的 wheel 索引
 - rotate: `25` wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度
 - wheel: `false` 该属性是给 picker 组件使用的，普通的列表滚动不需要配置
-- snap: `false` 是否开启捕捉元素，当为 true 时，捕捉的元素会根据可滚动的位置和滚动区域计算得到可滑动几页。
-- snapLoop: `false` 是否创建当前滚动元素子集的拷贝
+- snap: `false` 该属性是给 slider 组件使用的，普通的列表滚动不需要配置
+- snapLoop: `false` 是否可以循环滑动
 - snapThreshold: `0.1` 滑动切换的比例，大于这个比例就是滑动的下一页
 - swipeTime: `2500` swipe 持续时间
 - bounceTime: `700` 弹力动画持续的毫秒数
