@@ -95,7 +95,7 @@ Options List:
 - snap: `false` 该属性是给 slider 组件使用的，普通的列表滚动不需要配置
 - snapLoop: `false` 是否可以无缝循环轮播
 - snapThreshold: `0.1` 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页
-- snapSpeed: 400, 轮播图切换的动画时间
+- snapSpeed: `400`, 轮播图切换的动画时间
 - swipeTime: `2500` swipe 持续时间
 - bounceTime: `700` 弹力动画持续的毫秒数
 - adjustTime: `400` wheel 为 true 有用，调整停留位置的时间
