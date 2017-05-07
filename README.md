@@ -133,12 +133,13 @@ Events 列表
 - scroll - 滚动时触发
 - scrollCancel - 取消滚动时触发
 - scrollEnd - 滚动结束时触发
+- touchEnd - 手指移开屏幕时触发
 - flick - 触发了 fastclick 时的回调函数
 - refresh - 当 better-scroll 刷新时触发
 - destroy - 销毁 better-scroll 实例时触发
 
 
-## 派发滚动
+## 方法
 
 - scrollTo(x, y, time, easing) 滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数
 
@@ -149,9 +150,20 @@ let scroll = new BScroll(document.getElementById('wrapper'))
 scroll.scrollTo(0, 500)
 ...
 ```
-- scrollToElement(el, time, offsetX, offsetY, easing) 滚动到
-  某个元素，el（必填）表示 dom 元素，time 表示动画，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
+- scrollToElement(el, time, offsetX, offsetY, easing) 滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
+    
   
 - refresh() 强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。
+
+- getCurrentPage() 当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引
+
+- goToPage(x, y, time, easing) 当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数
+
+- enable() 启用 better-scroll，默认开启
+
+- disable() 禁用 better-scroll
+
+- destroy() 销毁 better-scroll，解绑事件
+
 
 
