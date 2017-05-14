@@ -121,7 +121,7 @@ let scroll = new BScroll(document.getElementById('wrapper'),{
 })
 
 scroll.on('scroll', (pos) => {
-  console.log(pos.x + '~' + posx.y)
+  console.log(pos.x + '~' + pos.y)
   ...
 })
 ```
