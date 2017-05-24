@@ -28,7 +28,7 @@ inspired by iscroll, and it has a better scroll perfermance https://ustbhuangyi.
 安装better-scroll
 
 ```shell
-npm install better-scroll --save-dev
+npm install better-scroll
 ```
 引入better-scroll
 
