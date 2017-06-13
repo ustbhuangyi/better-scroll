@@ -1,31 +1,37 @@
-var path = require('path');
-var webpack = require('webpack');
-var version = require('./package.json').version;
+const path = require('path');
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 
 module.exports = {
-	entry: './src/index',
-	output: {
-		path: path.resolve(__dirname, 'build'),
-		filename: 'bscroll.js',
-		library: 'BScroll',
-		libraryTarget: 'umd',
-		publicPath: '/assets/'
-	},
-	module: {
-		preLoaders: [
-			{
-				test: /\.js$/,
-				loader: 'eslint',
-				exclude: /node_modules/
-			}
-		],
-		loaders: [
-			{test: /\.js$/, loader: 'babel'}
-		]
-	},
-	plugins: [
-		new webpack.DefinePlugin({
-			__VERSION__: JSON.stringify(version)
-		})
-	]
+  entry: './src/index',
+  output: {
+    filename: 'bscroll.js',
+    library: 'BScroll',
+    libraryTarget: 'umd',
+    publicPath: '/assets/'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [resolve('src')],
+        options: {
+          formatter: require('eslint-friendly-formatter')
+        }
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [resolve('src')],
+        query: {
+          presets: ['es2015', 'stage-2'],
+          plugins: ['transform-runtime', 'add-module-exports']
+        }
+      }
+    ]
+  }
 };

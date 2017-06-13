@@ -1,5 +1,4 @@
 import {
-  EventEmitter,
   hasPerspective,
   hasTouch,
   hasTransform,
@@ -7,20 +6,20 @@ import {
   getRect,
   eventType,
   style,
-  isBadAndroid,
-  ease,
   offset,
   addEvent,
   removeEvent,
   prepend,
   preventDefaultException,
   tap,
-  click,
-  momentum,
-  extend,
-  requestAnimationFrame,
-  cancelAnimationFrame
-} from '../util';
+  click
+} from '../util/dom';
+
+import {extend, requestAnimationFrame, cancelAnimationFrame} from '../util/lang';
+import {isBadAndroid} from '../util/env';
+import {ease} from '../util/ease';
+import {EventEmitter} from '../util/eventEmitter';
+import {momentum} from '../util/momentum';
 
 const TOUCH_EVENT = 1;
 
@@ -925,10 +924,10 @@ export class BScroll extends EventEmitter {
     let posY = this.pages[x][y].y;
 
     time = time === undefined ? this.options.snapSpeed || Math.max(
-      Math.max(
-        Math.min(Math.abs(posX - this.x), 1000),
-        Math.min(Math.abs(posY - this.y), 1000)
-      ), 300) : time;
+        Math.max(
+          Math.min(Math.abs(posX - this.x), 1000),
+          Math.min(Math.abs(posY - this.y), 1000)
+        ), 300) : time;
 
     this.currentPage = {
       x: posX,
@@ -1007,4 +1006,3 @@ export class BScroll extends EventEmitter {
     }
   }
 }
-;

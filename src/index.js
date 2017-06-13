@@ -1,6 +1,5 @@
 import {BScroll} from './bscroll/bscroll';
 
-/* eslint-disable no-undef */
-BScroll.Version = __VERSION__;
+BScroll.Version = '0.2.1';
 
-module.exports = BScroll;
+export default BScroll;
