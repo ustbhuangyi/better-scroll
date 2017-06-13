@@ -656,12 +656,6 @@ var BScroll$1 = function (_EventEmitter) {
           }
         }
       });
-
-      this.on('flick', function () {
-        var time = _this2.options.snapSpeed || Math.max(Math.max(Math.min(Math.abs(_this2.x - _this2.startX), 1000), Math.min(Math.abs(_this2.y - _this2.startY), 1000)), 300);
-
-        _this2.goToPage(_this2.currentPage.pageX + _this2.directionX, _this2.currentPage.pageY + _this2.directionY, time);
-      });
     }
   }, {
     key: '_nearestSnap',
@@ -815,7 +809,10 @@ var BScroll$1 = function (_EventEmitter) {
         if (this.options.wheel) {
           this.target = this.items[Math.round(-pos.y / this.itemHeight)];
         } else {
-          this.trigger('scrollEnd');
+          this.trigger('scrollEnd', {
+            x: this.x,
+            y: this.y
+          });
         }
       }
 
@@ -1055,7 +1052,10 @@ var BScroll$1 = function (_EventEmitter) {
       if (this.options.wheel) {
         this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0;
       }
-      this.trigger('scrollEnd');
+      this.trigger('scrollEnd', {
+        x: this.x,
+        y: this.y
+      });
     }
   }, {
     key: '_resize',
@@ -1133,7 +1133,10 @@ var BScroll$1 = function (_EventEmitter) {
       this._transitionTime();
       if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
         this.isInTransition = false;
-        this.trigger('scrollEnd');
+        this.trigger('scrollEnd', {
+          x: this.x,
+          y: this.y
+        });
       }
     }
   }, {
