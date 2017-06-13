@@ -227,20 +227,6 @@ export class BScroll extends EventEmitter {
         }
       }
     });
-
-    this.on('flick', () => {
-      let time = this.options.snapSpeed || Math.max(
-          Math.max(
-            Math.min(Math.abs(this.x - this.startX), 1000),
-            Math.min(Math.abs(this.y - this.startY), 1000)
-          ), 300);
-
-      this.goToPage(
-        this.currentPage.pageX + this.directionX,
-        this.currentPage.pageY + this.directionY,
-        time
-      );
-    });
   }
 
   _nearestSnap(x, y) {
@@ -390,7 +376,10 @@ export class BScroll extends EventEmitter {
       if (this.options.wheel) {
         this.target = this.items[Math.round(-pos.y / this.itemHeight)];
       } else {
-        this.trigger('scrollEnd');
+        this.trigger('scrollEnd', {
+          x: this.x,
+          y: this.y
+        });
       }
     }
 
@@ -635,7 +624,10 @@ export class BScroll extends EventEmitter {
     if (this.options.wheel) {
       this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0;
     }
-    this.trigger('scrollEnd');
+    this.trigger('scrollEnd', {
+      x: this.x,
+      y: this.y
+    });
   }
 
   _resize() {
@@ -702,7 +694,10 @@ export class BScroll extends EventEmitter {
     this._transitionTime();
     if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false;
-      this.trigger('scrollEnd');
+      this.trigger('scrollEnd', {
+        x: this.x,
+        y: this.y
+      });
     }
   }
 
