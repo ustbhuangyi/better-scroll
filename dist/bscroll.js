@@ -1,5 +1,5 @@
 /*!
- * better-scroll v0.2.2
+ * better-scroll v0.2.3
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -655,6 +655,12 @@ var BScroll$1 = function (_EventEmitter) {
             _this2.goToPage(1, _this2.currentPage.pageY, 0);
           }
         }
+      });
+
+      this.on('flick', function () {
+        var time = _this2.options.snapSpeed || Math.max(Math.max(Math.min(Math.abs(_this2.x - _this2.startX), 1000), Math.min(Math.abs(_this2.y - _this2.startY), 1000)), 300);
+
+        _this2.goToPage(_this2.currentPage.pageX + _this2.directionX, _this2.currentPage.pageY + _this2.directionY, time);
       });
     }
   }, {
@@ -1471,7 +1477,7 @@ var BScroll$1 = function (_EventEmitter) {
   return BScroll;
 }(EventEmitter);
 
-BScroll$1.Version = '0.2.3';
+BScroll$1.Version = '0.2.4';
 
 return BScroll$1;
 
