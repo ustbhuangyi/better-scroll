@@ -666,7 +666,7 @@ var BScroll$1 = function (_EventEmitter) {
 
       var i = 0;
       // Check if we exceeded the snap threshold
-      if (Math.abs(x - this.absStartX) < this.snapThresholdX && Math.abs(y - this.absStartY) < this.snapThresholdY) {
+      if (Math.abs(x - this.absStartX) <= this.snapThresholdX && Math.abs(y - this.absStartY) <= this.snapThresholdY) {
         return this.currentPage;
       }
 
@@ -1471,7 +1471,7 @@ var BScroll$1 = function (_EventEmitter) {
   return BScroll;
 }(EventEmitter);
 
-BScroll$1.Version = '0.2.2';
+BScroll$1.Version = '0.2.3';
 
 return BScroll$1;
 
