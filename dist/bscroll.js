@@ -1,5 +1,5 @@
 /*!
- * better-scroll v0.2.1
+ * better-scroll v0.2.2
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -909,8 +909,8 @@ var BScroll$1 = function (_EventEmitter) {
         }
       }
 
-      this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
-      this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
+      // this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
+      // this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
       if (!this.moved) {
         this.moved = true;
@@ -998,6 +998,11 @@ var BScroll$1 = function (_EventEmitter) {
       }
 
       this.scrollTo(newX, newY);
+
+      var deltaX = newX - this.absStartX;
+      var deltaY = newY - this.absStartY;
+      this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
+      this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
       this.endTime = +new Date();
 
@@ -1466,7 +1471,7 @@ var BScroll$1 = function (_EventEmitter) {
   return BScroll;
 }(EventEmitter);
 
-BScroll$1.Version = '0.2.1';
+BScroll$1.Version = '0.2.2';
 
 return BScroll$1;
 
