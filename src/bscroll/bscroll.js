@@ -475,8 +475,8 @@ export class BScroll extends EventEmitter {
       }
     }
 
-    this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
-    this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
+    // this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
+    // this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
     if (!this.moved) {
       this.moved = true;
@@ -564,6 +564,11 @@ export class BScroll extends EventEmitter {
     }
 
     this.scrollTo(newX, newY);
+
+    let deltaX = newX - this.absStartX;
+    let deltaY = newY - this.absStartY;
+    this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
+    this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
     this.endTime = +new Date();
 
