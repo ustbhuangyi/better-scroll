@@ -236,8 +236,8 @@ export class BScroll extends EventEmitter {
 
     let i = 0;
     // Check if we exceeded the snap threshold
-    if (Math.abs(x - this.absStartX) < this.snapThresholdX &&
-      Math.abs(y - this.absStartY) < this.snapThresholdY) {
+    if (Math.abs(x - this.absStartX) <= this.snapThresholdX &&
+      Math.abs(y - this.absStartY) <= this.snapThresholdY) {
       return this.currentPage;
     }
 
