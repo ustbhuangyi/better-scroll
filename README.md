@@ -109,7 +109,7 @@ Options List:
 - HWCompositing: `true` 是否启用硬件加速
 - useTransition: `true` 是否使用CSS3的Transition属性
 - useTransform: `true` 是否使用CSS3的Transform属性
-- probeType: `1` 滚动的时候会派发scroll事件，会截流。`2`滚动的时候实时派发scroll事件，不会截流。 `3`除了实时派发scroll事件，在swipe的情况下仍然能实时派发scroll事件
+- probeType: `1` 会截流,只有在滚动结束的时候派发一个 scroll 事件。`2`在手指 move 的时候也会实时派发 scroll 事件，不会截流。 `3`除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件
 
 ## Events 事件
 
