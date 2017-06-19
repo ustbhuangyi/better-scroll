@@ -105,7 +105,7 @@ Options List:
 - momentumLimitDistance: `15` 符合惯性拖动的最小拖动距离
 - resizePolling: `60` 重新调整窗口大小时，重新计算better-scroll的时间间隔
 - preventDefault: `true` 是否阻止默认事件
-- preventDefaultException: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }` 阻止默认事件
+- preventDefaultException: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }` 阻止默认事件的例外配置
 - HWCompositing: `true` 是否启用硬件加速
 - useTransition: `true` 是否使用CSS3的Transition属性
 - useTransform: `true` 是否使用CSS3的Transform属性
