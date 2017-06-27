@@ -134,7 +134,7 @@ Events 列表
 - scrollCancel - 取消滚动时触发
 - scrollEnd - 滚动结束时触发
 - touchend - 手指移开屏幕时触发
-- flick - 触发了 fastclick 时的回调函数
+- flick - 轻拂时触发
 - refresh - 当 better-scroll 刷新时触发
 - destroy - 销毁 better-scroll 实例时触发
 
