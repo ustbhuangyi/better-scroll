@@ -1,185 +1,61 @@
 # better-scroll
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll)
 
-inspired by iscroll, and it has a better scroll perfermance https://ustbhuangyi.github.io/better-scroll/
+## better-scroll 是什么
 
-## 立即使用
+better-scroll 是一款重点解决移动端（未来可能会考虑 PC 端）各种滚动场景需求的插件。它的核心是借鉴的 [iscroll](https://github.com/cubiq/iscroll) 的实现，它的 API 设计基本兼容 iscroll，在 iscroll 的基础上又扩展了一些 feature 以及做了一些性能优化。
 
-```HTML
-<body>
-  <div id="wrapper">
-    <ul>
-	   <li>...</li>
-	   <li>...</li>
-	   ...
-    </ul>
-  </div>
-<script type="text/javascript" src="better-scroll.js"></script>
-<script type="text/javascript">
-  new BScroll(document.getElementById('wrapper'));
-</script>
-</body>
+better-scroll 是基于原生 JS 实现的，不依赖任何框架。它编译后的代码大小是 37kb，压缩后是 21kb，gzip 后仅有 6kb，是一款非常轻量的 JS lib。
+
+## 起步
+
+学习使用 better-scroll 最好的方式是看它的 demo 代码，我们把代码都放在了 example 目录。由于目前最适合移动端开发的前端 mvvm 框架是 [Vue](https://github.com/vuejs/vue)，并且 better-scroll 可以很好的和 Vue 配合使用的，所以 demo 我都用 Vue 进行了重写。
+
+better-scroll 最常见的应用场景是列表滚动，我们来看一下它的 html 结构
+```html
+<div class="wrapper">
+  <ul class="content">
+    <li>...</li>
+    <li>...</li>
+    ...
+  </ul>
+  <!-- 这里可以放一些其它的 DOM，但不会影响滚动 -->
+</div>
+```
+上面的代码中 better-scroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，better-scroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
+
+最简单的初始化代码如下：
+
+``` js
+import BScroll from 'better-scroll'
+let wrapper = document.querySelector('.wrapper')
+let scroll = new BScroll(wrapper)
+```
+better-scroll 提供了一个类，实例化的第一个参数是一个原生的 DOM 对象。当然，如果传递的是一个字符串，better-scroll 内部会尝试调用 querySelector 去获取这个 DOM 对象，所以初始化代码也可以是这样：
+
+``` js
+import BScroll from 'better-scroll'
+let scroll = new BScroll('.wrapper')
 ```
 
-搞定 !
+## 滚动原理
 
-## 通过npm引入
+很多人已经用过 better-scroll，我收到反馈最多的问题是：
 
-安装better-scroll
+> better-scroll 初始化了， 但是没法滚动。
 
-```shell
-npm install better-scroll
-```
-引入better-scroll
+不能滚动是现象，我们得搞清楚这其中的根本原因。在这之前，我们先来看一下浏览器的滚动原理：
+浏览器的滚动条大家都会遇到，当页面内容的高度超过视口高度的时候，会出现纵向滚动条；当页面内容的宽度超过视口宽度的时候，会出现横向滚动条。也就是当我们的视口展示不下内容的时候，会通过滚动条的方式让用户滚动屏幕看到剩余的内容。
 
-```javascript
-import BScroll from normal-scroll
-```
+better-scroll 也是一样的原理，我们可以用一张图更直观的感受一下：
 
->如果不支持import, 请使用
+![布局](http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png)
 
-```javascript
-var BScroll = require(normal-scroll)
-```
+绿色部分为 wrapper，也就是父容器，它会有**固定的高度**。黄色部分为 content，它是父容器的**第一个子元素**，它的高度会随着内容的大小而撑高。那么，当 content 的高度不超过父容器的高度，是不能滚动的，而它一旦超过了父容器的高度，我们就可以滚动内容区了，这就是 better-scroll 的滚动原理。
 
-## DEMO
-better-scroll 的源码是基于 Webpack 构建的
+## 文档
 
-首先，clone项目源码
+访问 [better-scroll 官方文档](http://ustbhuangyi.github.io/better-scroll/doc) 
 
-```shell
-git clone https://github.com/ustbhuangyi/better-scroll.git
-```
+## demo 
 
-安装依赖
-
-```shell
-cd better-scroll
-npm install
-```
-
-测试demo页
-
-```shell
-npm run dev
-```
-
-打开浏览器访问如下地址, 查看效果
-
-> localhost:9090
-
-## Options 参数
-
-Example:
-
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'), {
-  startX: 0,
-  startY: 0
-})
-```
-
-Options List:
-
-- startX: `0` 开始的X轴位置
-- startY: `0` 开始的Y轴位置
-- scrollY: `true` 滚动方向为 Y 轴
-- scrollX: 'true' 滚动方向为 X 轴
-- click: `true` 是否派发click事件
-- directionLockThreshold: `5`
-- momentum: `true` 当快速滑动时是否开启滑动惯性
-- bounce: `true` 是否启用回弹动画效果
-- selectedIndex: `0` wheel 为 true 时有效，表示被选中的 wheel 索引
-- rotate: `25` wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度
-- wheel: `false` 该属性是给 picker 组件使用的，普通的列表滚动不需要配置
-- snap: `false` 该属性是给 slider 组件使用的，普通的列表滚动不需要配置
-- snapLoop: `false` 是否可以无缝循环轮播
-- snapThreshold: `0.1` 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页
-- snapSpeed: `400`, 轮播图切换的动画时间
-- swipeTime: `2500` swipe 持续时间
-- bounceTime: `700` 弹力动画持续的毫秒数
-- adjustTime: `400` wheel 为 true 有用，调整停留位置的时间
-- swipeBounceTime: `1200` swipe 回弹 时间
-- deceleration: `0.001` 滚动动量减速越大越快，建议不大于0.01
-- momentumLimitTime: `300` 符合惯性拖动的最大时间
-- momentumLimitDistance: `15` 符合惯性拖动的最小拖动距离
-- resizePolling: `60` 重新调整窗口大小时，重新计算better-scroll的时间间隔
-- preventDefault: `true` 是否阻止默认事件
-- preventDefaultException: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }` 阻止默认事件的例外配置
-- HWCompositing: `true` 是否启用硬件加速
-- useTransition: `true` 是否使用CSS3的Transition属性
-- useTransform: `true` 是否使用CSS3的Transform属性
-- probeType: `1` 会截流,只有在滚动结束的时候派发一个 scroll 事件。`2`在手指 move 的时候也会实时派发 scroll 事件，不会截流。 `3`除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件
-
-## Events 事件
-
-Example:
-
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'),{
-   probeType: 3
-})
-
-scroll.on('scroll', (pos) => {
-  console.log(pos.x + '~' + pos.y)
-  ...
-})
-```
-
-Events 列表
-
-- beforeScrollStart - 滚动开始之前触发
-- scrollStart - 滚动开始时触发
-- scroll - 滚动时触发
-- scrollCancel - 取消滚动时触发
-- scrollEnd - 滚动结束时触发
-- touchend - 手指移开屏幕时触发
-- flick - 轻拂时触发
-- refresh - 当 better-scroll 刷新时触发
-- destroy - 销毁 better-scroll 实例时触发
-
-
-## 方法
-
-- scrollTo(x, y, time, easing) 
-
-滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数
-
-Example:
-
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'))
-scroll.scrollTo(0, 500)
-...
-```
-- scrollToElement(el, time, offsetX, offsetY, easing) 
-
-滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
-    
-  
-- refresh() 
-
-强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。
-
-- getCurrentPage() 
-
-当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引
-
-- goToPage(x, y, time, easing)
-
-当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数
-
-- enable() 
-
-启用 better-scroll，默认开启
-
-- disable()
-
-禁用 better-scroll
-
-- destroy() 
-
-销毁 better-scroll，解绑事件
-
-
-
+![二维码](http://qr.api.cli.im/qr?data=http%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252Fdemo%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=ce498c0d79c6d8099e9c771a6162789b)
