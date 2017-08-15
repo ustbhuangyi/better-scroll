@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>选项 / 基础 · better-scroll</title>
+        <title>方法 / 通用 · better-scroll</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="options.html" />
+    <link rel="next" href="api.html" />
     
     
-    <link rel="prev" href="installation.html" />
+    <link rel="prev" href="options-advanced.html" />
     
 
     </head>
@@ -192,7 +192,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3" data-path="options.html">
+        <li class="chapter " data-level="1.3" data-path="options.html">
             
                 <a href="options.html">
             
@@ -607,7 +607,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5" data-path="api.html">
+        <li class="chapter active" data-level="1.5" data-path="api.html">
             
                 <a href="api.html">
             
@@ -993,7 +993,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >选项 / 基础</a>
+        <a href="." >方法 / 通用</a>
     </h1>
 </div>
 
@@ -1008,187 +1008,74 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x9009;&#x9879;--&#x57FA;&#x7840;">&#x9009;&#x9879; / &#x57FA;&#x7840;</h1>
-<p>better-scroll &#x652F;&#x6301;&#x5F88;&#x591A;&#x53C2;&#x6570;&#x914D;&#x7F6E;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;&#x521D;&#x59CB;&#x5316;&#x7684;&#x65F6;&#x5019;&#x4F20;&#x5165;&#x7B2C;&#x4E8C;&#x4E2A;&#x53C2;&#x6570;&#xFF0C;&#x6BD4;&#x5982;&#xFF1A;</p>
-<pre><code class="lang-js"><span class="hljs-keyword">let</span> scroll = <span class="hljs-keyword">new</span> BScroll(<span class="hljs-string">&apos;.wrapper&apos;</span>,{
-    scrollY: <span class="hljs-literal">true</span>,
-    click: <span class="hljs-literal">true</span>
-})
-</code></pre>
-<p>&#x8FD9;&#x6837;&#x5C31;&#x5B9E;&#x73B0;&#x4E86;&#x4E00;&#x4E2A;&#x7EB5;&#x5411;&#x53EF;&#x70B9;&#x51FB;&#x7684;&#x6EDA;&#x52A8;&#x6548;&#x679C;&#x3002;better-scroll &#x652F;&#x6301;&#x7684;&#x53C2;&#x6570;&#x975E;&#x5E38;&#x591A;&#xFF0C;&#x53EF;&#x4EE5;&#x4FEE;&#x6539;&#x5B83;&#x4EEC;&#x53BB;&#x5B9E;&#x73B0;&#x66F4;&#x591A;&#x7684; feature&#x3002;&#x901A;&#x5E38;&#x4F60;&#x53EF;&#x4EE5;&#x4E0D;&#x6539;&#x8FD9;&#x4E9B;&#x53C2;&#x6570;&#xFF08;&#x5217;&#x51FA;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#x7684;&#x53C2;&#x6570;&#xFF09;&#xFF0C;better-scroll &#x5DF2;&#x7ECF;&#x4E3A;&#x4F60;&#x5B9E;&#x73B0;&#x4E86;&#x6700;&#x4F73;&#x6548;&#x679C;&#xFF0C;&#x63A5;&#x4E0B;&#x6765;&#x6211;&#x4EEC;&#x6765;&#x5217;&#x4E3E; better-scroll &#x652F;&#x6301;&#x7684;&#x53C2;&#x6570;&#x3002;</p>
-<h2 id="startx">startX</h2>
+                                <h1 id="&#x65B9;&#x6CD5;--&#x901A;&#x7528;">&#x65B9;&#x6CD5; / &#x901A;&#x7528;</h1>
+<p>better-scroll &#x63D0;&#x4F9B;&#x4E86;&#x5F88;&#x591A;&#x7075;&#x6D3B;&#x7684; API&#xFF0C;&#x5F53;&#x6211;&#x4EEC;&#x57FA;&#x4E8E; better-scroll &#x53BB;&#x5B9E;&#x73B0;&#x4E00;&#x4E9B; feature &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x7528;&#x5230;&#x8FD9;&#x4E9B; API&#xFF0C;&#x4E86;&#x89E3;&#x4ED6;&#x4EEC;&#x4F1A;&#x6709;&#x52A9;&#x4E8E;&#x5F00;&#x53D1;&#x66F4;&#x52A0;&#x590D;&#x6742;&#x7684;&#x9700;&#x6C42;&#x3002;</p>
+<h2 id="refresh">refresh()</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number,</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;0</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6A2A;&#x8F74;&#x65B9;&#x5411;&#x521D;&#x59CB;&#x5316;&#x4F4D;&#x7F6E;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x91CD;&#x65B0;&#x8BA1;&#x7B97; better-scroll&#xFF0C;&#x5F53; DOM &#x7ED3;&#x6784;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x7684;&#x65F6;&#x5019;&#x52A1;&#x5FC5;&#x8981;&#x8C03;&#x7528;&#x786E;&#x4FDD;&#x6EDA;&#x52A8;&#x7684;&#x6548;&#x679C;&#x6B63;&#x5E38;&#x3002;</li>
 </ul>
-<h2 id="starty">startY</h2>
+<h2 id="scrolltox-y-time-easing">scrollTo(x, y, time, easing)</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number,</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;0</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x7EB5;&#x8F74;&#x65B9;&#x5411;&#x521D;&#x59CB;&#x5316;&#x4F4D;&#x7F6E;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;<ul>
+<li>{Number} x &#x6A2A;&#x8F74;&#x5750;&#x6807;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
+<li>{Number} y &#x7EB5;&#x8F74;&#x5750;&#x6807;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
+<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
+<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
 </ul>
-<h2 id="scrollx">scrollX</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;: false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x6A2A;&#x5411;&#x6EDA;&#x52A8;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E; <a href="options.html#eventpassthrough">eventPassthrough</a> &#x4E3A; &apos;vertical&apos; &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8BE5;&#x914D;&#x7F6E;&#x65E0;&#x6548;&#x3002;</li>
+</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x6307;&#x5B9A;&#x7684;&#x4F4D;&#x7F6E;&#x3002;  </li>
 </ul>
-<h2 id="scrolly">scrollY</h2>
+<h2 id="scrollbyx-y-time-easing">scrollBy(x, y, time, easing)</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x7EB5;&#x5411;&#x6EDA;&#x52A8;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E; <a href="options.html#eventpassthrough">eventPassthrough</a> &#x4E3A; &apos;vertical&apos; &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8BE5;&#x914D;&#x7F6E;&#x65E0;&#x6548;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;<ul>
+<li>{Number} x &#x6A2A;&#x8F74;&#x8DDD;&#x79BB;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
+<li>{Number} y &#x7EB5;&#x8F74;&#x8DDD;&#x79BB;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
+<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
+<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
 </ul>
-<h2 id="freescroll">freeScroll</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6709;&#x4E9B;&#x573A;&#x666F;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x652F;&#x6301;&#x6A2A;&#x5411;&#x548C;&#x7EB5;&#x5411;&#x540C;&#x65F6;&#x6EDA;&#x52A8;&#xFF0C;&#x800C;&#x4E0D;&#x4EC5;&#x9650;&#x5236;&#x5728;&#x67D0;&#x4E2A;&#x65B9;&#x5411;&#xFF0C;&#x8FD9;&#x4E2A;&#x65F6;&#x5019;&#x6211;&#x4EEC;&#x53EA;&#x8981;&#x8BBE;&#x7F6E; <code>fressScroll</code> &#x4E3A; true &#x5373;&#x53EF;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E; <a href="options.html#eventpassthrough">eventPassthrough</a> &#x4E0D;&#x4E3A;&#x7A7A;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8BE5;&#x914D;&#x7F6E;&#x65E0;&#x6548;&#x3002;</li>
+</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x76F8;&#x5BF9;&#x4E8E;&#x5F53;&#x524D;&#x4F4D;&#x7F6E;&#x504F;&#x79FB;&#x6EDA;&#x52A8; x,y &#x7684;&#x8DDD;&#x79BB;&#x3002;</li>
 </ul>
-<h2 id="directionlockthreshold">directionLockThreshold</h2>
+<h2 id="scrolltoelementel-time-offsetx-offsety-easing">scrollToElement(el, time, offsetX, offsetY, easing)</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;5&#xFF08;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x9501;&#x5B9A;&#x53EA;&#x6EDA;&#x52A8;&#x4E00;&#x4E2A;&#x65B9;&#x5411;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x4EEC;&#x5728;<strong>&#x521D;&#x59CB;&#x6EDA;&#x52A8;</strong>&#x7684;&#x65F6;&#x5019;&#x6839;&#x636E;&#x6A2A;&#x8F74;&#x548C;&#x7EB5;&#x8F74;&#x6EDA;&#x52A8;&#x7684;&#x7EDD;&#x5BF9;&#x503C;&#x505A;&#x5DEE;&#xFF0C;&#x5F53;&#x5DEE;&#x503C;&#x5927; <code>directionLockThreshold</code> &#x7684;&#x65F6;&#x5019;&#x6765;&#x51B3;&#x5B9A;&#x6EDA;&#x52A8;&#x9501;&#x5B9A;&#x7684;&#x65B9;&#x5411;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x5F53;&#x8BBE;&#x7F6E; <a href="options.html#eventpassthrough">eventPassthrough</a> &#x7684;&#x65F6;&#x5019;&#xFF0C;<code>directionLockThreshold</code> &#x8BBE;&#x7F6E;&#x65E0;&#x6548;&#xFF0C;&#x59CB;&#x7EC8;&#x4E3A; 0&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;<ul>
+<li>{DOM | String} el &#x6EDA;&#x52A8;&#x5230;&#x7684;&#x76EE;&#x6807;&#x5143;&#x7D20;, &#x5982;&#x679C;&#x662F;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x5219;&#x5185;&#x90E8;&#x4F1A;&#x5C1D;&#x8BD5;&#x8C03;&#x7528; querySelector &#x8F6C;&#x6362;&#x6210; DOM &#x5BF9;&#x8C61;&#x3002;</li>
+<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
+<li>{Number | Boolean} offsetX &#x76F8;&#x5BF9;&#x4E8E;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x6A2A;&#x8F74;&#x504F;&#x79FB;&#x91CF;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x6EDA;&#x5230;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x4E2D;&#x5FC3;&#x4F4D;&#x7F6E;</li>
+<li>{Number | Boolean} offsetY &#x76F8;&#x5BF9;&#x4E8E;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x7EB5;&#x8F74;&#x504F;&#x79FB;&#x91CF;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x6EDA;&#x5230;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x4E2D;&#x5FC3;&#x4F4D;&#x7F6E;</li>
+<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
 </ul>
-<h2 id="eventpassthrough">eventPassthrough</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A; String</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;&apos;&apos;</li>
-<li>&#x53EF;&#x9009;&#x503C;&#xFF1A;&apos;vertical&apos;&#x3001;&apos;horizontal&apos;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6709;&#x65F6;&#x5019;&#x6211;&#x4EEC;&#x4F7F;&#x7528; better-scroll &#x5728;&#x67D0;&#x4E2A;&#x65B9;&#x5411;&#x6A21;&#x62DF;&#x6EDA;&#x52A8;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5E0C;&#x671B;&#x5728;&#x53E6;&#x4E00;&#x4E2A;&#x65B9;&#x5411;&#x4FDD;&#x7559;&#x539F;&#x751F;&#x7684;&#x6EDA;&#x52A8;&#xFF08;&#x6BD4;&#x5982;&#x8F6E;&#x64AD;&#x56FE;&#xFF0C;&#x6211;&#x4EEC;&#x5E0C;&#x671B;&#x6A2A;&#x5411;&#x6A21;&#x62DF;&#x6A2A;&#x5411;&#x6EDA;&#x52A8;&#xFF0C;&#x800C;&#x7EB5;&#x5411;&#x7684;&#x6EDA;&#x52A8;&#x8FD8;&#x662F;&#x4FDD;&#x7559;&#x539F;&#x751F;&#x6EDA;&#x52A8;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E; <code>eventPassthrough</code> &#x4E3A; vertical&#xFF1B;&#x76F8;&#x5E94;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x6211;&#x4EEC;&#x5E0C;&#x671B;&#x4FDD;&#x7559;&#x6A2A;&#x5411;&#x7684;&#x539F;&#x751F;&#x6EDA;&#x52A8;&#xFF0C;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;<code>eventPassthrough</code>&#x4E3A; horizontal&#xFF09;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;<code>eventPassthrough</code> &#x7684;&#x8BBE;&#x7F6E;&#x4F1A;&#x5BFC;&#x81F4;&#x5176;&#x5B83;&#x4E00;&#x4E9B;&#x9009;&#x9879;&#x914D;&#x7F6E;&#x65E0;&#x6548;&#xFF0C;&#x9700;&#x8981;&#x5C0F;&#x5FC3;&#x4F7F;&#x7528;&#x5B83;&#x3002;</li>
+</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x6307;&#x5B9A;&#x7684;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x3002;</li>
 </ul>
-<h2 id="bounce">bounce</h2>
+<h2 id="stop">stop()</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x6EDA;&#x52A8;&#x8D85;&#x8FC7;&#x8FB9;&#x7F18;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x6709;&#x4E00;&#x5C0F;&#x6BB5;&#x56DE;&#x5F39;&#x52A8;&#x753B;&#x3002;&#x8BBE;&#x7F6E;&#x4E3A; true &#x5219;&#x5F00;&#x542F;&#x52A8;&#x753B;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x7ACB;&#x5373;&#x505C;&#x6B62;&#x5F53;&#x524D;&#x8FD0;&#x884C;&#x7684;&#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x3002;</li>
 </ul>
-<h2 id="bouncetime">bounceTime</h2>
+<h2 id="enable">enable()</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;700&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8BBE;&#x7F6E;&#x56DE;&#x5F39;&#x52A8;&#x753B;&#x7684;&#x52A8;&#x753B;&#x65F6;&#x957F;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x542F;&#x7528; better-scroll, &#x9ED8;&#x8BA4; better-scroll&#x3002;</li>
 </ul>
-<h2 id="momentum">momentum</h2>
+<h2 id="disable">disable()</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x5FEB;&#x901F;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#x6ED1;&#x52A8;&#x4E00;&#x6BB5;&#x8DDD;&#x79BB;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x6839;&#x636E;&#x6ED1;&#x52A8;&#x7684;&#x8DDD;&#x79BB;&#x548C;&#x65F6;&#x95F4;&#x8BA1;&#x7B97;&#x51FA;&#x52A8;&#x91CF;&#xFF0C;&#x5E76;&#x751F;&#x6210;&#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x3002;&#x8BBE;&#x7F6E;&#x4E3A; true &#x5219;&#x5F00;&#x542F;&#x52A8;&#x753B;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x7981;&#x7528; better-scroll&#xFF0C;&#x4E8B;&#x4EF6;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x4E0D;&#x518D;&#x54CD;&#x5E94;&#x3002;</li>
 </ul>
-<h2 id="momentumlimittime">momentumLimitTime</h2>
+<h2 id="destroy">destroy()</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;300&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x53EA;&#x6709;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#x5FEB;&#x901F;&#x6ED1;&#x52A8;&#x7684;&#x65F6;&#x95F4;&#x5C0F;&#x4E8E; <code>momentumLimitTime</code>&#xFF0C;&#x624D;&#x80FD;&#x5F00;&#x542F; momentum &#x52A8;&#x753B;&#x3002;</li>
-</ul>
-<h2 id="momentumlimitdistance">momentumLimitDistance</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;15&#xFF08;&#x5355;&#x4F4D;px&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x53EA;&#x6709;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#x5FEB;&#x901F;&#x6ED1;&#x52A8;&#x7684;&#x8DDD;&#x79BB;&#x5927;&#x4E8E; <code>momentumLimitDistance</code>&#xFF0C;&#x624D;&#x80FD;&#x5F00;&#x542F; momentum &#x52A8;&#x753B;&#x3002;</li>
-</ul>
-<h2 id="swipetime">swipeTime</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;2500&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8BBE;&#x7F6E; momentum &#x52A8;&#x753B;&#x7684;&#x52A8;&#x753B;&#x65F6;&#x957F;&#x3002;</li>
-</ul>
-<h2 id="swipebouncetime">swipeBounceTime</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;500&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8BBE;&#x7F6E;&#x5F53;&#x8FD0;&#x884C; momentum &#x52A8;&#x753B;&#x65F6;&#xFF0C;&#x8D85;&#x8FC7;&#x8FB9;&#x7F18;&#x540E;&#x7684;&#x56DE;&#x5F39;&#x6574;&#x4E2A;&#x52A8;&#x753B;&#x65F6;&#x95F4;&#x3002;</li>
-</ul>
-<h2 id="deceleration">deceleration</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;0.001&#xFF08;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8868;&#x793A; momentum &#x52A8;&#x753B;&#x7684;&#x51CF;&#x901F;&#x5EA6;&#x3002;</li>
-</ul>
-<h2 id="flicklimittime">flickLimitTime</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;200&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6709;&#x7684;&#x65F6;&#x5019;&#x6211;&#x4EEC;&#x8981;&#x6355;&#x83B7;&#x7528;&#x6237;&#x7684;&#x8F7B;&#x62C2;&#x52A8;&#x4F5C;&#xFF08;&#x77ED;&#x65F6;&#x95F4;&#x6ED1;&#x52A8;&#x4E00;&#x4E2A;&#x8F83;&#x77ED;&#x7684;&#x8DDD;&#x79BB;&#xFF09;&#x3002;&#x53EA;&#x6709;&#x7528;&#x6237;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#x6ED1;&#x52A8;&#x7684;&#x65F6;&#x95F4;&#x5C0F;&#x4E8E; <code>flickLimitTime</code> &#xFF0C;&#x624D;&#x7B97;&#x4E00;&#x6B21;&#x8F7B;&#x62C2;&#x3002;</li>
-</ul>
-<h2 id="flicklimitdistance">flickLimitDistance</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;100&#xFF08;&#x5355;&#x4F4D;px&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x53EA;&#x6709;&#x7528;&#x6237;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#x6ED1;&#x52A8;&#x7684;&#x8DDD;&#x79BB;&#x5C0F;&#x4E8E; <code>flickLimitDistance</code> &#xFF0C;&#x624D;&#x7B97;&#x4E00;&#x6B21;&#x8F7B;&#x62C2;&#x3002;</li>
-</ul>
-<h2 id="resizepolling">resizePolling</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;60&#xFF08;&#x5355;&#x4F4D;ms&#xFF0C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;)</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x7A97;&#x53E3;&#x7684;&#x5C3A;&#x5BF8;&#x6539;&#x53D8;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x9700;&#x8981;&#x5BF9; better-scroll &#x505A;&#x91CD;&#x65B0;&#x8BA1;&#x7B97;&#xFF0C;&#x4E3A;&#x4E86;&#x4F18;&#x5316;&#x6027;&#x80FD;&#xFF0C;&#x6211;&#x4EEC;&#x5BF9;&#x91CD;&#x65B0;&#x8BA1;&#x7B97;&#x505A;&#x4E86;&#x5EF6;&#x65F6;&#x3002;60ms &#x662F;&#x4E00;&#x4E2A;&#x6BD4;&#x8F83;&#x5408;&#x7406;&#x7684;&#x503C;&#x3002;</li>
-</ul>
-<h2 id="probetype">probeType</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Number</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;0</li>
-<li>&#x53EF;&#x9009;&#x503C;&#xFF1A;1&#x3001;2&#x3001;3</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6709;&#x65F6;&#x5019;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x77E5;&#x9053;&#x6EDA;&#x52A8;&#x7684;&#x4F4D;&#x7F6E;&#x3002;&#x5F53; probeType &#x4E3A; 1 &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x5728;&#x5C4F;&#x5E55;&#x6ED1;&#x52A8;&#x505C;&#x6B62;&#x7684;&#x65F6;&#x5019;&#x6D3E;&#x53D1; <a href="events.html#scroll">scroll &#x4E8B;&#x4EF6;</a>&#xFF1B;&#x5F53; probeType &#x4E3A; 2 &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x5728;&#x5C4F;&#x5E55;&#x6ED1;&#x52A8;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x5B9E;&#x65F6;&#x7684;&#x6D3E;&#x53D1; scroll &#x4E8B;&#x4EF6;&#xFF1B;&#x5F53; probeType &#x4E3A; 3 &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4E0D;&#x4EC5;&#x5728;&#x5C4F;&#x5E55;&#x6ED1;&#x52A8;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;&#x800C;&#x4E14;&#x5728; momentum &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x8FD0;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x5B9E;&#x65F6;&#x6D3E;&#x53D1; scroll &#x4E8B;&#x4EF6;&#x3002;</li>
-</ul>
-<h2 id="preventdefault">preventDefault</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x662F;&#x5426;&#x963B;&#x6B62;&#x539F;&#x751F;&#x7684;&#x6EDA;&#x52A8;&#x3002;&#x8FD9;&#x4E2A;&#x503C;&#x5E94;&#x8BE5;&#x8BBE;&#x4E3A; true&#xFF0C;&#x9664;&#x975E;&#x4F60;&#x771F;&#x7684;&#x77E5;&#x9053;&#x4F60;&#x5728;&#x505A;&#x4EC0;&#x4E48;&#xFF0C;&#x901A;&#x5E38;&#x4F60;&#x53EF;&#x80FD;&#x7528;&#x5230;&#x7684;&#x662F; <a href="options.html#preventdefaultexception">preventDefaultException</a>&#x3002;</li>
-</ul>
-<h2 id="preventdefaultexception">preventDefaultException</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;<code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}</code></li>
-<li>&#x4F5C;&#x7528;&#xFF1A;better-scroll &#x7684;&#x5B9E;&#x73B0;&#x4F1A;&#x963B;&#x6B62;&#x539F;&#x751F;&#x7684;&#x6EDA;&#x52A8;&#xFF0C;&#x8FD9;&#x6837;&#x4E5F;&#x540C;&#x65F6;&#x963B;&#x6B62;&#x4E86;&#x4E00;&#x4E9B;&#x539F;&#x751F;&#x7EC4;&#x4EF6;&#x7684;&#x9ED8;&#x8BA4;&#x884C;&#x4E3A;&#xFF0C;&#x6BD4;&#x5982; input checkbox &#x7684;&#x9009;&#x4E2D;&#x3002;&#x8FD9;&#x4E2A;&#x65F6;&#x5019;&#x6211;&#x4EEC;&#x4E0D;&#x80FD;&#x5BF9;&#x8FD9;&#x4E9B;&#x5143;&#x7D20;&#x505A; preventDefault&#xFF0C;&#x6240;&#x4EE5;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x914D;&#x7F6E; preventDefaultException&#x3002;&#x9ED8;&#x8BA4;&#x503C; <code>{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}</code>&#x8868;&#x793A;&#x6807;&#x7B7E;&#x540D;&#x4E3A; input&#x3001;textarea&#x3001;button&#x3001;select &#x8FD9;&#x4E9B;&#x5143;&#x7D20;&#x7684;&#x9ED8;&#x8BA4;&#x884C;&#x4E3A;&#x90FD;&#x4E0D;&#x4F1A;&#x88AB;&#x7EC4;&#x7EC7;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x975E;&#x5E38;&#x6709;&#x7528;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x5B83;&#x7684; key &#x662F; DOM &#x5143;&#x7D20;&#x7684;&#x5C5E;&#x6027;&#x503C;&#xFF0C;value &#x53EF;&#x4EE5;&#x662F;&#x4E00;&#x4E2A;&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x3002;&#x6BD4;&#x5982;&#x6211;&#x4EEC;&#x60F3;&#x914D;&#x4E00;&#x4E2A; class &#x540D;&#x79F0;&#x4E3A; test &#x7684;&#x5143;&#x7D20;&#xFF0C;&#x90A3;&#x4E48;&#x914D;&#x7F6E;&#x89C4;&#x5219;&#x4E3A; <code>{className:/(^|\s)test(\s|$)/}</code>&#x3002;</li>
-</ul>
-<h2 id="hwcompositing">HWCompositing</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true&#xFF08;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x662F;&#x5426;&#x5F00;&#x542F;&#x786C;&#x4EF6;&#x52A0;&#x901F;&#xFF0C;&#x5F00;&#x542F;&#x5B83;&#x4F1A;&#x5728; scroller &#x4E0A;&#x6DFB;&#x52A0; <code>translateZ(0)</code> &#x6765;&#x5F00;&#x542F;&#x786C;&#x4EF6;&#x52A0;&#x901F;&#x4ECE;&#x800C;&#x63D0;&#x5347;&#x52A8;&#x753B;&#x6027;&#x80FD;&#xFF0C;&#x6709;&#x5F88;&#x597D;&#x7684;&#x6EDA;&#x52A8;&#x6548;&#x679C;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x53EA;&#x6709;&#x652F;&#x6301;&#x786C;&#x4EF6;&#x52A0;&#x901F;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x5F00;&#x542F;&#x624D;&#x6709;&#x6548;&#x679C;&#x3002;</li>
-</ul>
-<h2 id="usetransition">useTransition</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true&#xFF08;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x662F;&#x5426;&#x4F7F;&#x7528; CSS3 transition &#x52A8;&#x753B;&#x3002;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; false&#xFF0C;&#x5219;&#x4F7F;&#x7528; requestAnimationFrame &#x505A;&#x52A8;&#x753B;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x53EA;&#x6709;&#x652F;&#x6301; CSS3 &#x7684;&#x6D4F;&#x89C8;&#x5668;&#x5F00;&#x542F;&#x624D;&#x6709;&#x6548;&#x679C;&#x3002;</li>
-</ul>
-<h2 id="usetransform">useTransform</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;true&#xFF08;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF09;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x662F;&#x5426;&#x4F7F;&#x7528; CSS3 transform &#x505A;&#x4F4D;&#x79FB;&#x3002;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; false, &#x5219;&#x8BBE;&#x7F6E;&#x5143;&#x7D20;&#x7684; <code>top/left</code> (&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x9700;&#x8981; scroller &#x662F;&#x7EDD;&#x5BF9;&#x5B9A;&#x4F4D;&#x7684;)&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x53EA;&#x6709;&#x652F;&#x6301; CSS3 &#x7684;&#x6D4F;&#x89C8;&#x5668;&#x5F00;&#x542F;&#x624D;&#x6709;&#x6548;&#x679C;&#x3002;</li>
-</ul>
-<h2 id="bindtowrapper">bindToWrapper</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;move &#x4E8B;&#x4EF6;&#x901A;&#x5E38;&#x4F1A;&#x7ED1;&#x5B9A;&#x5230; document &#x4E0A;&#x800C;&#x4E0D;&#x662F;&#x6EDA;&#x52A8;&#x7684;&#x5BB9;&#x5668;&#x4E0A;&#xFF0C;&#x5F53;&#x79FB;&#x52A8;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x5149;&#x6807;&#x6216;&#x624B;&#x6307;&#x79BB;&#x5F00;&#x6EDA;&#x52A8;&#x7684;&#x5BB9;&#x5668;&#x6EDA;&#x52A8;&#x4ECD;&#x7136;&#x4F1A;&#x7EE7;&#x7EED;&#xFF0C;&#x8FD9;&#x901A;&#x5E38;&#x662F;&#x671F;&#x671B;&#x7684;&#x3002;&#x5F53;&#x7136;&#x4F60;&#x4E5F;&#x53EF;&#x4EE5;&#x628A; move &#x4E8B;&#x4EF6;&#x7ED1;&#x5B9A;&#x5230;&#x6EDA;&#x52A8;&#x7684;&#x5BB9;&#x5668;&#x4E0A;&#xFF0C;<code>bindToWrapper</code> &#x8BBE;&#x7F6E;&#x4E3A; true &#x5373;&#x53EF;&#xFF0C;&#x8FD9;&#x6837;&#x4E00;&#x65E6;&#x79FB;&#x52A8;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x5149;&#x6807;&#x6216;&#x624B;&#x6307;&#x79BB;&#x5F00;&#x6EDA;&#x52A8;&#x7684;&#x5BB9;&#x5668;&#xFF0C;&#x6EDA;&#x52A8;&#x4F1A;&#x7ACB;&#x523B;&#x505C;&#x6B62;&#x3002;</li>
-</ul>
-<h2 id="disablemouse">disableMouse</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x4E00;&#x65E6;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x76D1;&#x542C;&#x9F20;&#x6807;&#x7684;&#x76F8;&#x5173;&#x4E8B;&#x4EF6;&#xFF0C;&#x5982;&#x679C;&#x9700;&#x6C42;&#x660E;&#x786E;&#x4E0D;&#x652F;&#x6301;&#x9F20;&#x6807;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6765;&#x8282;&#x7EA6;&#x4E00;&#x4E9B;&#x8D44;&#x6E90;&#xFF08;&#x5C11;&#x76D1;&#x542C;&#x4E00;&#x4E9B;&#x4E8B;&#x4EF6;&#xFF09;&#x3002;</li>
-</ul>
-<h2 id="disabletouch">disableTouch</h2>
-<ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x4E00;&#x65E6;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x4E0D;&#x4F1A;&#x76D1;&#x542C;touch &#x7684;&#x76F8;&#x5173;&#x4E8B;&#x4EF6;&#xFF0C;&#x5982;&#x679C;&#x9700;&#x6C42;&#x660E;&#x786E;&#x4E0D;&#x652F;&#x6301;&#x79FB;&#x52A8;&#x7AEF;&#xFF0C;&#x5219;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6765;&#x8282;&#x7EA6;&#x4E00;&#x4E9B;&#x8D44;&#x6E90;&#xFF08;&#x5C11;&#x76D1;&#x542C;&#x4E00;&#x4E9B;&#x4E8B;&#x4EF6;&#xFF09;&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x4E0D;&#x652F;&#x6301; touch &#x4E8B;&#x4EF6;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4F1A;&#x5FFD;&#x7565;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#xFF0C;&#x59CB;&#x7EC8;&#x4E0D;&#x80FD;&#x76D1;&#x542C; touch &#x4E8B;&#x4EF6;&#x3002;</li>
+<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
+<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
+<li>&#x4F5C;&#x7528;&#xFF1A;&#x9500;&#x6BC1; better-scroll&#xFF0C;&#x89E3;&#x7ED1;&#x4E8B;&#x4EF6;&#x3002;</li>
 </ul>
 
                                 
@@ -1217,12 +1104,12 @@
 
             
                 
-                <a href="installation.html#cdn" class="navigation navigation-prev " aria-label="Previous page: CDN">
+                <a href="options-advanced.html#snap" class="navigation navigation-prev " aria-label="Previous page: snap">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="options.html#startx" class="navigation navigation-next " aria-label="Next page: startX">
+                <a href="api.html#refresh" class="navigation navigation-next " aria-label="Next page: refresh">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1233,7 +1120,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"选项 / 基础","level":"1.3","depth":1,"next":{"title":"startX","level":"1.3.1","depth":2,"anchor":"#startx","path":"options.md","ref":"options.md#startx","articles":[]},"previous":{"title":"CDN","level":"1.2.2","depth":2,"anchor":"#cdn","path":"installation.md","ref":"installation.md#cdn","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/edit/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0"},"file":{"path":"options.md","mtime":"2017-08-15T11:03:25.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-15T11:17:27.059Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"方法 / 通用","level":"1.5","depth":1,"next":{"title":"refresh","level":"1.5.1","depth":2,"anchor":"#refresh","path":"api.md","ref":"api.md#refresh","articles":[]},"previous":{"title":"snap","level":"1.4.2","depth":2,"anchor":"#snap","path":"options-advanced.md","ref":"options-advanced.md#snap","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0"},"file":{"path":"api.md","mtime":"2017-08-15T11:03:25.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-15T11:40:45.257Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
