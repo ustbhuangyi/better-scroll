@@ -33,13 +33,13 @@ npm install better-scroll
 引入better-scroll
 
 ```javascript
-import BScroll from 'better-scroll'
+import BScroll from normal-scroll
 ```
 
 >如果不支持import, 请使用
 
 ```javascript
-var BScroll = require('better-scroll')
+var BScroll = require(normal-scroll)
 ```
 
 ## DEMO

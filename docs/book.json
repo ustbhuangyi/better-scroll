@@ -1,0 +1,17 @@
+{
+  "gitbook": ">3.0.0",
+  "plugins": ["scripts", "edit-link", "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git", "-fontsettings"],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/ustbhuangyi/better-scroll/edit/master/docs",
+      "label": "Edit This Page"
+    }
+  },
+  "title": "better-scroll",
+  "links": {
+    "sharing": {
+      "facebook": false,
+      "twitter": false
+    }
+  }
+}
