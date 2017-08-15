@@ -1,0 +1,87 @@
+border-top-1px($color)
+  &:before
+    border-top: 1px solid $color
+
+border-right-1px($color)
+  &:after
+    border-right: 1px solid $color
+
+border-bottom-1px($color)
+  &:after
+    border-bottom: 1px solid $color
+
+border-left-1px($color)
+  &:before
+    border-left: 1px solid $color
+
+border-1px($color = #ccc, $radius = 2px, $style = solid)
+  position: relative
+  &:after
+    content: ""
+    pointer-events: none // 解决iphone上的点击无效Bug
+    display: block
+    position: absolute
+    left: 0
+    top: 0
+    transform-origin: 0 0
+    border: 1px $style $color
+    border-radius: $radius
+    box-sizing border-box
+    width 100%
+    height 100%
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+      width: 200%
+      height: 200%
+      border-radius: $radius * 2
+      transform: scale(.5) translateZ(0)
+    @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+      width: 300%
+      height: 300%
+      border-radius: $radius * 3
+      transform: scale(.33) translateZ(0)
+
+border-none()
+  &:before
+    display: none
+  &:after
+    display: none
+
+flex-fix()
+  -ms-flex: 1 1 0.000000001px
+  -webkit-box-flex: 1
+  -webkit-flex: 1
+  flex: 1
+  -webkit-flex-basis: 0.000000001px
+  flex-basis: 0.000000001px
+  width: 1%
+
+touch-active(type = orange)
+  if (type == orange)
+    &:active
+      color: #fcc1a6
+      background-color: rgba(250, 143, 84, .04)
+  else
+    &:active
+      color: #c6c6c6
+      background-color: rgba(0, 0, 0, .04)
+
+hide-scrollbar()
+  &::-webkit-scrollbar
+    width: 0
+    height: 0
+
+bg-image($url)
+  background-image: url($url + "@2x.png")
+  @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3)
+    background-image: url($url + "@3x.png")
+
+vendor(prop, args)
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+
+transition()
+  vendor('transition', arguments)
+
+transform()
+  vendor('transform', arguments)
