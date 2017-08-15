@@ -1,5 +1,7 @@
 # better-scroll
 
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll)
+
 ## better-scroll 是什么
 
 better-scroll 是一款重点解决移动端（未来可能会考虑 PC 端）各种滚动场景需求的插件。它的核心是借鉴的 [iscroll](https://github.com/cubiq/iscroll) 的实现，它的 API 设计基本兼容 iscroll，在 iscroll 的基础上又扩展了一些 feature 以及做了一些性能优化。
