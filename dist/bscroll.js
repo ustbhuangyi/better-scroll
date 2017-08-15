@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.0.0
+ * better-normal-scroll v1.0.1
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1447,7 +1447,7 @@ eventMixin(BScroll);
 snapMixin(BScroll);
 wheelMixin(BScroll);
 
-BScroll.Version = '1.0.0';
+BScroll.Version = '1.0.1';
 
 return BScroll;
 

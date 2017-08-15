@@ -26,7 +26,7 @@ eventMixin(BScroll)
 snapMixin(BScroll)
 wheelMixin(BScroll)
 
-BScroll.Version = '1.0.0'
+BScroll.Version = '1.0.1'
 
 export default BScroll
 
