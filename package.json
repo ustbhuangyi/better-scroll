@@ -10,8 +10,9 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "doc": "cd docs && gitbook install && gitbook serve",
-    "build:demo": "node build/build-demo"
+    "doc": "cd doc && gitbook install && gitbook serve",
+    "build:demo": "node build/build-demo",
+    "build:doc": "sh build/doc.sh"
   },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
