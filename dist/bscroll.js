@@ -330,10 +330,10 @@ var DEFAULT_OPTIONS = {
 
 function initMixin(BScroll) {
   BScroll.prototype._init = function (el, options) {
-    this._handleOptions(options
+    this._handleOptions(options);
 
     // init private custom events
-    );this._events = {};
+    this._events = {};
 
     this.x = 0;
     this.y = 0;
@@ -573,8 +573,7 @@ var requestAnimationFrame = function () {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
   // if all else fails, use setTimeout
   function (callback) {
-    return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL) / 2 // make interval as precise as possible.
-    );
+    return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL) / 2); // make interval as precise as possible.
   };
 }();
 
@@ -655,10 +654,10 @@ function coreMixin(BScroll) {
     var absDistX = Math.abs(this.distX);
     var absDistY = Math.abs(this.distY);
 
-    var timestamp = getNow
+    var timestamp = getNow();
 
     // We need to move at least momentumLimitDistance pixels for the scrolling to initiate
-    ();if (timestamp - this.endTime > this.options.momentumLimitTime && absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance) {
+    if (timestamp - this.endTime > this.options.momentumLimitTime && absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance) {
       return;
     }
 
@@ -764,19 +763,19 @@ function coreMixin(BScroll) {
     this.trigger('touchEnd', {
       x: this.x,
       y: this.y
-    }
+    });
 
     // reset if we are outside of the boundaries
-    );if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
+    if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
       return;
     }
     this.isInTransition = false;
     // ensures that the last position is rounded
     var newX = Math.round(this.x);
-    var newY = Math.round(this.y
+    var newY = Math.round(this.y);
 
     // we scrolled less than 15 pixels
-    );if (!this.moved) {
+    if (!this.moved) {
       if (this.options.wheel) {
         if (this.target && this.target.className === 'wheel-scroll') {
           var index = Math.abs(Math.round(newY / this.itemHeight));
@@ -808,10 +807,10 @@ function coreMixin(BScroll) {
 
     var duration = this.endTime - this.startTime;
     var absDistX = Math.abs(newX - this.startX);
-    var absDistY = Math.abs(newY - this.startY
+    var absDistY = Math.abs(newY - this.startY);
 
     // flick
-    );if (this._events.flick && duration < this.options.flickLimitTime && absDistX < this.options.flickLimitDistance && absDistY < this.options.flickLimitDistance) {
+    if (this._events.flick && duration < this.options.flickLimitTime && absDistX < this.options.flickLimitDistance && absDistY < this.options.flickLimitDistance) {
       this.trigger('flick');
       return;
     }
@@ -1245,10 +1244,10 @@ function snapMixin(BScroll) {
       }
 
       var initPage = snap.loop ? 1 : 0;
-      _this.goToPage(_this.currentPage.pageX || initPage, _this.currentPage.pageY || 0, 0
+      _this.goToPage(_this.currentPage.pageX || initPage, _this.currentPage.pageY || 0, 0);
 
       // Update snap threshold if needed
-      );var snapThreshold = snap.threshold;
+      var snapThreshold = snap.threshold;
       if (snapThreshold % 1 === 0) {
         _this.snapThresholdX = snapThreshold;
         _this.snapThresholdY = snapThreshold;

@@ -14,7 +14,9 @@ module.exports = {
   },
   output: {
     path: config.dev.path,
-    publicPath: config.dev.assetsPublicPath,
+    publicPath: process.env.NODE_ENV === 'production'
+      ? config.build.assetsPublicPath
+      : config.dev.assetsPublicPath,
     filename: '[name].js',
     chunkFilename: '[name].js'
   },
