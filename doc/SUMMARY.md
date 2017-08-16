@@ -6,7 +6,7 @@
   - [滚动原理](README.md#滚动原理)
 - [安装](installation.md)
   - [NPM](installation.md#npm)
-  - [CDN](installation.md#cdn)
+  - [script 加载](installation.md#script-加载)
 - [选项 / 基础](options.md)
   - [startX](options.md#startx)
   - [startY](options.md#starty)
