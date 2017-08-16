@@ -1,10 +1,13 @@
 <!--
-IMPORTANT: Please use the following link to create a new issue:
+注意：
 
-  https://new-issue.vuejs.org/
+提交 Issue 时请提供如下信息:
 
-If your issue was not created using the app above, it will be closed immediately.
+1.外网可访问的测试地址
+2.调用 BScroll 的代码及 BScroll 版本
+3.出现问题的机型、操作系统、宿主环境、浏览器信息
+4.问题的复现概率
 
-中文用户请注意：
-请使用上面的链接来创建新的 issue。如果不是用上述工具创建的 issue 会被自动关闭。
+如果未提供如上信息, Issues 将被关闭
+
 -->
