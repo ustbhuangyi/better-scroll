@@ -23,7 +23,7 @@ let scroll = new BScroll('.wrapper',{
   - 类型：Boolean
   - 默认值: false
   - 作用：当设置为 true 的时候，可以开启横向滚动。
-  - 备注：当设置 [eventPassthrough](/options.html#eventpassthrough) 为 'vertical' 的时候，该配置无效。
+  - 备注：当设置 [eventPassthrough](/options.html#eventpassthrough) 为 'horizontal' 的时候，该配置无效。
  
 ## scrollY
   - 类型：Boolean
@@ -34,13 +34,13 @@ let scroll = new BScroll('.wrapper',{
 ## freeScroll
   - 类型：Boolean
   - 默认值：false
-  - 作用：有些场景我们需要支持横向和纵向同时滚动，而不仅限制在某个方向，这个时候我们只要设置 `fressScroll` 为 true 即可。
+  - 作用：有些场景我们需要支持横向和纵向同时滚动，而不仅限制在某个方向，这个时候我们只要设置 `freeScroll` 为 true 即可。
   - 备注：当设置 [eventPassthrough](/options.html#eventpassthrough) 不为空的时候，该配置无效。
   
 ## directionLockThreshold
   - 类型：Number
   - 默认值：5（不建议修改）
-  - 作用：当我们需要锁定只滚动一个方向的时候，我们在**初始滚动**的时候根据横轴和纵轴滚动的绝对值做差，当差值大 `directionLockThreshold` 的时候来决定滚动锁定的方向。
+  - 作用：当我们需要锁定只滚动一个方向的时候，我们在**初始滚动**的时候根据横轴和纵轴滚动的绝对值做差，当差值大于 `directionLockThreshold` 的时候来决定滚动锁定的方向。
   - 备注：当设置 [eventPassthrough](/options.html#eventpassthrough) 的时候，`directionLockThreshold` 设置无效，始终为 0。
 
 ## eventPassthrough
@@ -155,8 +155,3 @@ let scroll = new BScroll('.wrapper',{
    - 默认值：false
    - 作用：一旦设置为 true，则不会监听touch 的相关事件，如果需求明确不支持移动端，则可以设置为 true 来节约一些资源（少监听一些事件）。
    - 备注：不支持 touch 事件的浏览器会忽略这个配置，始终不能监听 touch 事件。
-
-  
-
-  
- 
