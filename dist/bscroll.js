@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.0.1
+ * better-normal-scroll v1.1.0
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -285,6 +285,8 @@ var DEFAULT_OPTIONS = {
   freeScroll: false,
   directionLockThreshold: 5,
   eventPassthrough: '',
+  click: false,
+  tap: false,
   bounce: true,
   bounceTime: 700,
   momentum: true,
@@ -305,8 +307,8 @@ var DEFAULT_OPTIONS = {
   useTransition: true,
   useTransform: true,
   bindToWrapper: false,
-  disableMouse: false,
-  disableTouch: false,
+  disableMouse: hasTouch,
+  disableTouch: !hasTouch,
   /**
    * for picker
    * wheel: {
@@ -325,7 +327,14 @@ var DEFAULT_OPTIONS = {
    *   stepY: 100
    * }
    */
-  snap: false
+  snap: false,
+  /**
+   * for scrollbar
+   * scrollbar: {
+   *   fade: true
+   * }
+   */
+  scrollbar: false
 };
 
 function initMixin(BScroll) {
@@ -378,21 +387,21 @@ function initMixin(BScroll) {
 
   BScroll.prototype._addDOMEvents = function () {
     var eventOperation = addEvent;
-    this._handleEvents(eventOperation);
+    this._handleDOMEvents(eventOperation);
   };
 
   BScroll.prototype._removeDOMEvents = function () {
     var eventOperation = removeEvent;
-    this._handleEvents(eventOperation);
+    this._handleDOMEvents(eventOperation);
   };
 
-  BScroll.prototype._handleEvents = function (eventOperation) {
+  BScroll.prototype._handleDOMEvents = function (eventOperation) {
     var target = this.options.bindToWrapper ? this.wrapper : window;
     eventOperation(window, 'orientationchange', this);
     eventOperation(window, 'resize', this);
 
     if (this.options.click) {
-      eventOperation(this.wrapper, 'click', this);
+      eventOperation(this.wrapper, 'click', this, true);
     }
 
     if (!this.options.disableMouse) {
@@ -415,6 +424,9 @@ function initMixin(BScroll) {
   BScroll.prototype._initExtFeatures = function () {
     if (this.options.snap) {
       this._initSnap();
+    }
+    if (this.options.scrollbar) {
+      this._initScrollbar();
     }
   };
 
@@ -445,7 +457,7 @@ function initMixin(BScroll) {
         this._transitionEnd(e);
         break;
       case 'click':
-        if (this.enabled && !e._constructed && !/(SELECT|INPUT|TEXTAREA)/i.test(e.target.tagName)) {
+        if (this.enabled && !e._constructed) {
           e.preventDefault();
           e.stopPropagation();
         }
@@ -900,6 +912,12 @@ function coreMixin(BScroll) {
         this.items[i].style[style.transitionDuration] = time + 'ms';
       }
     }
+
+    if (this.indicators) {
+      for (var _i = 0; _i < this.indicators.length; _i++) {
+        this.indicators[_i].transitionTime(time);
+      }
+    }
   };
 
   BScroll.prototype._transitionTimingFunction = function (easing) {
@@ -908,6 +926,12 @@ function coreMixin(BScroll) {
     if (this.options.wheel) {
       for (var i = 0; i < this.items.length; i++) {
         this.items[i].style[style.transitionTimingFunction] = easing;
+      }
+    }
+
+    if (this.indicators) {
+      for (var _i2 = 0; _i2 < this.indicators.length; _i2++) {
+        this.indicators[_i2].transitionTimingFunction(easing);
       }
     }
   };
@@ -938,14 +962,23 @@ function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
+      var _options$wheel$rotate = this.options.wheel.rotate,
+          rotate = _options$wheel$rotate === undefined ? 25 : _options$wheel$rotate;
+
       for (var i = 0; i < this.items.length; i++) {
-        var deg = this.options.wheel.rotate * (y / this.itemHeight + i);
+        var deg = rotate * (y / this.itemHeight + i);
         this.items[i].style[style.transform] = 'rotateX(' + deg + 'deg)';
       }
     }
 
     this.x = x;
     this.y = y;
+
+    if (this.indicators) {
+      for (var _i3 = 0; _i3 < this.indicators.length; _i3++) {
+        this.indicators[_i3].updatePosition();
+      }
+    }
   };
 
   BScroll.prototype._animate = function (destX, destY, duration, easingFn) {
@@ -1422,6 +1455,224 @@ function wheelMixin(BScroll) {
   };
 }
 
+var INDICATOR_MIN_LEN = 8;
+
+function scrollbarMixin(BScroll) {
+  BScroll.prototype._initScrollbar = function () {
+    var _this = this;
+
+    var _options$scrollbar$fa = this.options.scrollbar.fade,
+        fade = _options$scrollbar$fa === undefined ? true : _options$scrollbar$fa;
+
+    this.indicators = [];
+    var indicator = void 0;
+
+    if (this.options.scrollX) {
+      indicator = {
+        el: createScrollbar('horizontal'),
+        direction: 'horizontal',
+        fade: fade
+      };
+      this._insertScrollBar(indicator.el);
+
+      this.indicators.push(new Indicator(this, indicator));
+    }
+
+    if (this.options.scrollY) {
+      indicator = {
+        el: createScrollbar('vertical'),
+        direction: 'vertical',
+        fade: fade
+      };
+      this._insertScrollBar(indicator.el);
+      this.indicators.push(new Indicator(this, indicator));
+    }
+
+    this.on('refresh', function () {
+      for (var i = 0; i < _this.indicators.length; i++) {
+        _this.indicators[i].refresh();
+      }
+    });
+
+    if (fade) {
+      this.on('scrollEnd', function () {
+        for (var i = 0; i < _this.indicators.length; i++) {
+          _this.indicators[i].fade();
+        }
+      });
+
+      this.on('scrollCancel', function () {
+        for (var i = 0; i < _this.indicators.length; i++) {
+          _this.indicators[i].fade();
+        }
+      });
+
+      this.on('scrollStart', function () {
+        for (var i = 0; i < _this.indicators.length; i++) {
+          _this.indicators[i].fade(true);
+        }
+      });
+
+      this.on('beforeScrollStart', function () {
+        for (var i = 0; i < _this.indicators.length; i++) {
+          _this.indicators[i].fade(true, true);
+        }
+      });
+    }
+  };
+
+  BScroll.prototype._insertScrollBar = function (scrollbar) {
+    this.wrapper.appendChild(scrollbar);
+  };
+}
+
+function createScrollbar(direction) {
+  var scrollbar = document.createElement('div');
+  var indicator = document.createElement('div');
+
+  scrollbar.style.cssText = 'position:absolute;z-index:9999;pointerEvents:none';
+  indicator.style.cssText = 'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;';
+
+  indicator.className = 'bscroll-indicator';
+
+  if (direction === 'horizontal') {
+    scrollbar.style.cssText += ';height:7px;left:2px;right:2px;bottom:0';
+    indicator.style.height = '100%';
+    scrollbar.className = 'bscroll-horizontal-scrollbar';
+  } else {
+    scrollbar.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px';
+    indicator.style.width = '100%';
+    scrollbar.className = 'bscroll-vertical-scrollbar';
+  }
+
+  scrollbar.style.cssText += ';overflow:hidden';
+  scrollbar.appendChild(indicator);
+
+  return scrollbar;
+}
+
+function Indicator(scroller, options) {
+  this.wrapper = options.el;
+  this.wrapperStyle = this.wrapper.style;
+  this.indicator = this.wrapper.children[0];
+  this.indicatorStyle = this.indicator.style;
+  this.scroller = scroller;
+  this.direction = options.direction;
+  if (options.fade) {
+    this.visible = 0;
+    this.wrapperStyle.opacity = '0';
+  } else {
+    this.visible = 1;
+  }
+}
+
+Indicator.prototype.refresh = function () {
+  this.transitionTime();
+  this._calculate();
+  this.updatePosition();
+};
+
+Indicator.prototype.fade = function (visible, hold) {
+  var _this2 = this;
+
+  if (hold && !this.visible) {
+    return;
+  }
+
+  var time = visible ? 250 : 500;
+
+  visible = visible ? '1' : '0';
+
+  this.wrapperStyle[style.transitionDuration] = time + 'ms';
+
+  clearTimeout(this.fadeTimeout);
+  this.fadeTimeout = setTimeout(function () {
+    _this2.wrapperStyle.opacity = visible;
+    _this2.visible = +visible;
+  }, 0);
+};
+
+Indicator.prototype.updatePosition = function () {
+  if (this.direction === 'vertical') {
+    var y = Math.round(this.sizeRatioY * this.scroller.y);
+
+    if (y < 0) {
+      this.transitionTime(500);
+      var height = Math.max(this.indicatorHeight + y * 3, INDICATOR_MIN_LEN);
+      this.indicatorStyle.height = height + 'px';
+      y = 0;
+    } else if (y > this.maxPosY) {
+      this.transitionTime(500);
+      var _height = Math.max(this.indicatorHeight - (y - this.maxPosY) * 3, INDICATOR_MIN_LEN);
+      this.indicatorStyle.height = _height + 'px';
+      y = this.maxPosY + this.indicatorHeight - _height;
+    } else {
+      this.indicatorStyle.height = this.indicatorHeight + 'px';
+    }
+    this.y = y;
+
+    if (this.scroller.options.useTransform) {
+      this.indicatorStyle[style.transform] = 'translateY(' + y + 'px)' + this.scroller.translateZ;
+    } else {
+      this.indicatorStyle.top = y + 'px';
+    }
+  } else {
+    var x = Math.round(this.sizeRatioX * this.scroller.x);
+
+    if (x < 0) {
+      this.transitionTime(500);
+      var width = Math.max(this.indicatorWidth + x * 3, INDICATOR_MIN_LEN);
+      this.indicatorStyle.width = width + 'px';
+      x = 0;
+    } else if (x > this.maxPosX) {
+      this.transitionTime(500);
+      var _width = Math.max(this.indicatorWidth - (x - this.maxPosX) * 3, INDICATOR_MIN_LEN);
+      this.indicatorStyle.width = _width + 'px';
+      x = this.maxPosX + this.indicatorWidth - _width;
+    } else {
+      this.indicatorStyle.width = this.indicatorWidth + 'px';
+    }
+
+    this.x = x;
+
+    if (this.scroller.options.useTransform) {
+      this.indicatorStyle[style.transform] = 'translateX(' + x + 'px)' + this.scroller.translateZ;
+    } else {
+      this.indicatorStyle.left = x + 'px';
+    }
+  }
+};
+
+Indicator.prototype.transitionTime = function () {
+  var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+  this.indicatorStyle[style.transitionDuration] = time + 'ms';
+};
+
+Indicator.prototype.transitionTimingFunction = function (easing) {
+  this.indicatorStyle[style.transitionTimingFunction] = easing;
+};
+
+Indicator.prototype._calculate = function () {
+  if (this.direction === 'vertical') {
+    var wrapperHeight = this.wrapper.clientHeight;
+    this.indicatorHeight = Math.max(Math.round(wrapperHeight * wrapperHeight / (this.scroller.scrollerHeight || wrapperHeight || 1)), INDICATOR_MIN_LEN);
+    this.indicatorStyle.height = this.indicatorHeight + 'px';
+
+    this.maxPosY = wrapperHeight - this.indicatorHeight;
+
+    this.sizeRatioY = this.maxPosY / this.scroller.maxScrollY;
+  } else {
+    var wrapperWidth = this.wrapper.clientWidth;
+    this.indicatorWidth = Math.max(Math.round(wrapperWidth * wrapperWidth / (this.scroller.scrollerHeight || wrapperWidth || 1)), INDICATOR_MIN_LEN);
+    this.indicatorStyle.width = this.indicatorWidth + 'px';
+
+    this.maxPosX = wrapperWidth - this.indicatorWidth;
+
+    this.sizeRatioX = this.maxPosX / this.scroller.maxScrollX;
+  }
+};
+
 function warn(msg) {
   console.error("[BScroll warn]: " + msg);
 }
@@ -1446,8 +1697,9 @@ coreMixin(BScroll);
 eventMixin(BScroll);
 snapMixin(BScroll);
 wheelMixin(BScroll);
+scrollbarMixin(BScroll);
 
-BScroll.Version = '1.0.1';
+BScroll.Version = '1.1.0';
 
 return BScroll;
 
