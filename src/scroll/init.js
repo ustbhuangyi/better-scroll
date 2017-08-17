@@ -131,7 +131,7 @@ export function initMixin(BScroll) {
     eventOperation(window, 'resize', this)
 
     if (this.options.click) {
-      eventOperation(this.wrapper, 'click', this)
+      eventOperation(this.wrapper, 'click', this, true)
     }
 
     if (!this.options.disableMouse) {

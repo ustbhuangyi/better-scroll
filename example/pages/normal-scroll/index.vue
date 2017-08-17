@@ -3,7 +3,7 @@
     <div slot="content" class="scroll-content">
       <scroll :data="items" class="list-wrapper">
         <ul class="list-content">
-          <li class="list-item" v-for="item in items">{{item}}</li>
+          <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
         </ul>
       </scroll>
     </div>
@@ -48,6 +48,11 @@
           '我是第二十八行',
           '我是第二十九行'
         ]
+      }
+    },
+    methods: {
+      clickItem(e, item) {
+        console.log(`${item} is clicked}`, e)
       }
     },
     components: {
