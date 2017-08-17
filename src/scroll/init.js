@@ -17,6 +17,8 @@ const DEFAULT_OPTIONS = {
   freeScroll: false,
   directionLockThreshold: 5,
   eventPassthrough: '',
+  click: false,
+  tap: false,
   bounce: true,
   bounceTime: 700,
   momentum: true,
@@ -37,8 +39,8 @@ const DEFAULT_OPTIONS = {
   useTransition: true,
   useTransform: true,
   bindToWrapper: false,
-  disableMouse: false,
-  disableTouch: false,
+  disableMouse: hasTouch,
+  disableTouch: !hasTouch,
   /**
    * for picker
    * wheel: {
@@ -187,7 +189,7 @@ export function initMixin(BScroll) {
         this._transitionEnd(e)
         break
       case 'click':
-        if (this.enabled && !e._constructed && !(/(SELECT|INPUT|TEXTAREA)/i).test(e.target.tagName)) {
+        if (this.enabled && !e._constructed) {
           e.preventDefault()
           e.stopPropagation()
         }

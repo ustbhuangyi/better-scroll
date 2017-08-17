@@ -20,7 +20,7 @@
       },
       click: {
         type: Boolean,
-        default: true
+        default: false
       },
       listenScroll: {
         type: Boolean,
@@ -57,15 +57,13 @@
         if (!this.$refs.wrapper) {
           return
         }
-        console.log(this.click)
         this.scroll = new BScroll(this.$refs.wrapper, {
           probeType: this.probeType,
           click: this.click,
           eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V,
           scrollbar: {
             fade: true
-          },
-          disableMouse: true
+          }
         })
 
         if (this.listenScroll) {

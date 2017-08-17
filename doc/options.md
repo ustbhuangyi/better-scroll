@@ -50,6 +50,16 @@ let scroll = new BScroll('.wrapper',{
   - 作用：有时候我们使用 better-scroll 在某个方向模拟滚动的时候，希望在另一个方向保留原生的滚动（比如轮播图，我们希望横向模拟横向滚动，而纵向的滚动还是保留原生滚动，我们可以设置 `eventPassthrough` 为 vertical；相应的，如果我们希望保留横向的原生滚动，可以设置`eventPassthrough`为 horizontal）。
   - 备注：`eventPassthrough` 的设置会导致其它一些选项配置无效，需要小心使用它。
   
+## click
+  - 类型：Boolean
+  - 默认值：false
+  - 作用：当设置为 true，better-scroll 会阻止浏览器的原生 click 事件，并自己派发一个 click 事件。为了区分和原生 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true
+  
+## tap
+  - 类型：Boolean | String
+  - 默认值：false
+  - 作用：当我们不想阻止原生的 click 事件，可以设置 tap 为 true，它会在区域被点击的时候派发一个 tap 事件，你可以像监听原生事件那样去监听它，如 `element.addEventListener('tap', doSomething, false);`。如果 tap 设置为字符串, 那么这个字符串就作为自定义事件名称。如 `tap: 'myCustomTapEvent'`。
+  
 ## bounce
    - 类型：Boolean
    - 默认值：true
@@ -147,11 +157,10 @@ let scroll = new BScroll('.wrapper',{
    
 ## disableMouse
    - 类型：Boolean
-   - 默认值：false
-   - 作用：一旦设置为 true，则不会监听鼠标的相关事件，如果需求明确不支持鼠标，则可以设置为 true 来节约一些资源（少监听一些事件）。
+   - 默认值：根据当前浏览器环境计算而来（不建议修改）
+   - 作用：当在移动端环境（支持 touch 事件），disableMouse 会计算为 true，这样就不会监听鼠标相关的事件，而在 PC 环境，disableMouse 会计算为 false，就会监听鼠标相关事件，不建议修改该属性，除非你知道你在做什么。
    
 ## disableTouch
    - 类型：Boolean
-   - 默认值：false
-   - 作用：一旦设置为 true，则不会监听touch 的相关事件，如果需求明确不支持移动端，则可以设置为 true 来节约一些资源（少监听一些事件）。
-   - 备注：不支持 touch 事件的浏览器会忽略这个配置，始终不能监听 touch 事件。
+   - 默认值：根据当前浏览器环境计算而来（不建议修改）
+   - 作用：当在移动端环境（支持 touch 事件），disableTouch 会计算为 false，这样会监听 touch 相关的事件，而在 PC 环境，disableTouch 会计算为 true，就不会监听 touch 相关事件。不建议修改该属性，除非你知道你在做什么。

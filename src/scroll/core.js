@@ -378,8 +378,9 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
+      const {rotate = 25} = this.options.wheel
       for (let i = 0; i < this.items.length; i++) {
-        let deg = this.options.wheel.rotate * (y / this.itemHeight + i)
+        let deg = rotate * (y / this.itemHeight + i)
         this.items[i].style[style.transform] = `rotateX(${deg}deg)`
       }
     }

@@ -4,7 +4,7 @@ const INDICATOR_MIN_LEN = 8
 
 export function scrollbarMixin(BScroll) {
   BScroll.prototype._initScrollbar = function () {
-    const {fade} = this.options.scrollbar
+    const {fade = true} = this.options.scrollbar
     this.indicators = []
     let indicator
 
