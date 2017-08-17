@@ -13,14 +13,19 @@
       <div class="example">
         <div class="scroll">
           <div class="title">Scroll</div>
-          <div class="option">Options</div>
+          <div class="option">
+            <div class="title sub">Options</div>
+            <div class="option-list">
+              <ul>
+                <bs-option name="scrollbar" optionType="boolean" :value="scrollbar" @update:value="val => scrollbar = val"></bs-option>
+              </ul>
+            </div>
+          </div>
           <div class="demo">Demo
-            <scroll-list></scroll-list>
+            <scroll-list :scrollbar="scrollbar" :scrollbar-fade="scrollbarFade"></scroll-list>
           </div>
           <div class="methods">Methods</div>
         </div>
-        <div class="picker"></div>
-        <div class="slider"></div>
 
         <ul class="example-list">
           <li class="example-item">
@@ -53,10 +58,22 @@
 
 <script type="text/ecmascript-6">
   import ScrollList from './components/scroll-list/scrollList.vue'
+  import BsOption from './components/bs-option/bs-option.vue'
 
   export default {
+    data() {
+      return {
+        scrollbar: false,
+        scrollbarFade: true
+      }
+    },
     components: {
-      ScrollList
+      ScrollList,
+      BsOption
+    },
+    watch: {
+      scrollbar: function () {
+      }
     }
   }
 </script>
@@ -66,6 +83,7 @@
     .scroll
       max-width: 800px
       .demo
+        position relative
         max-width: 375px
         height: 667px
         overflow: hidden
