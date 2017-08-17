@@ -129,7 +129,7 @@ let scroll = new BScroll('.wrapper',{
 ## preventDefaultException  
    - 类型：Object
    - 默认值：`{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`
-   - 作用：better-scroll 的实现会阻止原生的滚动，这样也同时阻止了一些原生组件的默认行为，比如 input checkbox 的选中。这个时候我们不能对这些元素做 preventDefault，所以我们可以配置 preventDefaultException。默认值 `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`表示标签名为 input、textarea、button、select 这些元素的默认行为都不会被组织。
+   - 作用：better-scroll 的实现会阻止原生的滚动，这样也同时阻止了一些原生组件的默认行为，比如 input checkbox 的选中。这个时候我们不能对这些元素做 preventDefault，所以我们可以配置 preventDefaultException。默认值 `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`表示标签名为 input、textarea、button、select 这些元素的默认行为都不会被阻止。
    - 备注：这是一个非常有用的配置，它的 key 是 DOM 元素的属性值，value 可以是一个正则表达式。比如我们想配一个 class 名称为 test 的元素，那么配置规则为 `{className:/(^|\s)test(\s|$)/}`。
    
 ## HWCompositing
