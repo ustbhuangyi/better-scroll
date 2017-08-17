@@ -1,20 +1,18 @@
 <template>
-  <page class="scroll-view" title="Scroll（普通滚动列表组件）" desc="基于 better-scroll 可以实现一个普通的滚动列表组件">
-    <div slot="content" class="scroll-content">
-      <scroll :data="items" class="list-wrapper">
-        <ul class="list-content">
-          <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
-        </ul>
-      </scroll>
-    </div>
-  </page>
+  <scroll :data="items" class="list-wrapper">
+    <ul class="list-content">
+      <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
+    </ul>
+  </scroll>
 </template>
 
 <script type="text/ecmascript-6">
-  import Page from 'example/components/page/page.vue'
-  import Scroll from 'example/components/scroll/scroll.vue'
+  import Scroll from '../scroll/scroll.vue'
+
+  const COMPONENT_NAME = 'scroll-list'
 
   export default {
+    name: COMPONENT_NAME,
     data() {
       return {
         items: [
@@ -56,10 +54,10 @@
       }
     },
     components: {
-      Page,
       Scroll
     }
   }
+
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
@@ -67,11 +65,8 @@
     height: 100%
 
   .list-wrapper
-    position: absolute
-    left: 0
-    top: 0
-    right: 0
-    bottom: 0
+    max-width 750px
+    max-hight 1350px
     overflow: hidden
     background: #fff
     .list-content
@@ -84,4 +79,5 @@
         font-size: 18px
         padding-left: 20px
         border-bottom: 1px solid #e5e5e5
+
 </style>
