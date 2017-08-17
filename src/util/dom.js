@@ -124,7 +124,8 @@ export function click(e) {
 
   if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
     let ev = document.createEvent(window.MouseEvent ? 'MouseEvents' : 'Event')
-    ev.initEvent('click', true, true)
+    // cancelable 设置为 false 是为了解决和 fastclick 冲突问题
+    ev.initEvent('click', true, false)
     ev._constructed = true
     target.dispatchEvent(ev)
   }
