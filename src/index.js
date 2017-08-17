@@ -3,6 +3,8 @@ import {initMixin} from './scroll/init'
 import {coreMixin} from './scroll/core'
 import {snapMixin} from './scroll/snap'
 import {wheelMixin} from './scroll/wheel'
+import {scrollbarMixin} from './scroll/scrollbar'
+
 import {warn} from './util/debug'
 
 function BScroll(el, options) {
@@ -25,6 +27,7 @@ coreMixin(BScroll)
 eventMixin(BScroll)
 snapMixin(BScroll)
 wheelMixin(BScroll)
+scrollbarMixin(BScroll)
 
 BScroll.Version = '1.0.1'
 

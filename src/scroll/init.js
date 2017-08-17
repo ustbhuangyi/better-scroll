@@ -57,7 +57,14 @@ const DEFAULT_OPTIONS = {
    *   stepY: 100
    * }
    */
-  snap: false
+  snap: false,
+  /**
+   * for scrollbar
+   * scrollbar: {
+   *   fade: true
+   * }
+   */
+  scrollbar: false
 }
 
 export function initMixin(BScroll) {
@@ -110,15 +117,15 @@ export function initMixin(BScroll) {
 
   BScroll.prototype._addDOMEvents = function () {
     let eventOperation = addEvent
-    this._handleEvents(eventOperation)
+    this._handleDOMEvents(eventOperation)
   }
 
   BScroll.prototype._removeDOMEvents = function () {
     let eventOperation = removeEvent
-    this._handleEvents(eventOperation)
+    this._handleDOMEvents(eventOperation)
   }
 
-  BScroll.prototype._handleEvents = function (eventOperation) {
+  BScroll.prototype._handleDOMEvents = function (eventOperation) {
     let target = this.options.bindToWrapper ? this.wrapper : window
     eventOperation(window, 'orientationchange', this)
     eventOperation(window, 'resize', this)
@@ -147,6 +154,9 @@ export function initMixin(BScroll) {
   BScroll.prototype._initExtFeatures = function () {
     if (this.options.snap) {
       this._initSnap()
+    }
+    if (this.options.scrollbar) {
+      this._initScrollbar()
     }
   }
 

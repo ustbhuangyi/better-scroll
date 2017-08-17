@@ -10,7 +10,7 @@ import {
 import {ease} from '../util/ease'
 import {momentum} from '../util/momentum'
 import {requestAnimationFrame, cancelAnimationFrame} from '../util/raf'
-import {getNow} from '../util/date'
+import {getNow} from '../util/lang'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -328,6 +328,12 @@ export function coreMixin(BScroll) {
         this.items[i].style[style.transitionDuration] = time + 'ms'
       }
     }
+
+    if (this.indicators) {
+      for (let i = 0; i < this.indicators.length; i++) {
+        this.indicators[i].transitionTime(time)
+      }
+    }
   }
 
   BScroll.prototype._transitionTimingFunction = function (easing) {
@@ -336,6 +342,12 @@ export function coreMixin(BScroll) {
     if (this.options.wheel) {
       for (let i = 0; i < this.items.length; i++) {
         this.items[i].style[style.transitionTimingFunction] = easing
+      }
+    }
+
+    if (this.indicators) {
+      for (let i = 0; i < this.indicators.length; i++) {
+        this.indicators[i].transitionTimingFunction(easing)
       }
     }
   }
@@ -374,6 +386,12 @@ export function coreMixin(BScroll) {
 
     this.x = x
     this.y = y
+
+    if (this.indicators) {
+      for (let i = 0; i < this.indicators.length; i++) {
+        this.indicators[i].updatePosition()
+      }
+    }
   }
 
   BScroll.prototype._animate = function (destX, destY, duration, easingFn) {
