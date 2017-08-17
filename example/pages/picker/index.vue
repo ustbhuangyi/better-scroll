@@ -210,7 +210,7 @@
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
   .picker-view
     .select
       margin: 0 10px 40px 10px

@@ -11,6 +11,17 @@
     </section>
     <section class="main-content">
       <div class="example">
+        <div class="scroll">
+          <div class="title">Scroll</div>
+          <div class="option">Options</div>
+          <div class="demo">Demo
+            <scroll-list></scroll-list>
+          </div>
+          <div class="methods">Methods</div>
+        </div>
+        <div class="picker"></div>
+        <div class="slider"></div>
+
         <ul class="example-list">
           <li class="example-item">
             <router-link to="/picker">
@@ -41,11 +52,23 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  import ScrollList from './components/scroll-list/scrollList.vue'
+
+  export default {
+    components: {
+      ScrollList
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   .example
+    .scroll
+      max-width: 800px
+      .demo
+        max-width: 375px
+        height: 667px
+        overflow: hidden
     .example-list
       display: flex
       justify-content: center
