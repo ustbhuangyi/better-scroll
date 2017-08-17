@@ -1,18 +1,58 @@
 <template>
-  <scroll :data="items" class="list-wrapper">
+  <div ref="wrapper" class="list-wrapper">
     <ul class="list-content">
       <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
     </ul>
-  </scroll>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import Scroll from '../scroll/scroll.vue'
+  import BScroll from 'scroll/index'
 
   const COMPONENT_NAME = 'scroll-list'
+  const DIRECTION_H = 'horizontal'
+  const DIRECTION_V = 'vertical'
 
   export default {
     name: COMPONENT_NAME,
+    props: {
+      scrollbar: {
+        type: Boolean,
+        default: false
+      },
+      scrollbarFade: {
+        type: Boolean,
+        default: false
+      },
+      probeType: {
+        type: Number,
+        default: 1
+      },
+      click: {
+        type: Boolean,
+        default: false
+      },
+      listenScroll: {
+        type: Boolean,
+        default: false
+      },
+      pullup: {
+        type: Boolean,
+        default: false
+      },
+      beforeScroll: {
+        type: Boolean,
+        default: false
+      },
+      refreshDelay: {
+        type: Number,
+        default: 20
+      },
+      direction: {
+        type: String,
+        default: DIRECTION_V
+      }
+    },
     data() {
       return {
         items: [
@@ -48,25 +88,94 @@
         ]
       }
     },
+    mounted() {
+      setTimeout(() => {
+        this._initScroll()
+      }, 20)
+    },
     methods: {
+      _initScroll() {
+        if (!this.$refs.wrapper) {
+          return
+        }
+
+        let params = {
+          probeType: this.probeType,
+          click: this.click,
+          eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V
+        }
+
+        if (this.scrollbar) {
+          Object.assign(params, {
+            scrollbar: {
+              fade: this.scrollbarFade
+            }
+          })
+        }
+
+        this.scroll = new BScroll(this.$refs.wrapper, params)
+
+        if (this.listenScroll) {
+          this.scroll.on('scroll', (pos) => {
+            this.$emit('scroll', pos)
+          })
+        }
+
+        if (this.pullup) {
+          this.scroll.on('scrollEnd', () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToEnd')
+            }
+          })
+        }
+
+        if (this.beforeScroll) {
+          this.scroll.on('beforeScrollStart', () => {
+            this.$emit('beforeScroll')
+          })
+        }
+      },
+      disable() {
+        this.scroll && this.scroll.disable()
+      },
+      enable() {
+        this.scroll && this.scroll.enable()
+      },
+      refresh() {
+        this.scroll && this.scroll.refresh()
+      },
+      scrollTo() {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+      },
+      scrollToElement() {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+      },
       clickItem(e, item) {
         console.log(`${item} is clicked}`, e)
       }
     },
-    components: {
-      Scroll
+    watch: {
+      data() {
+        setTimeout(() => {
+          this.refresh()
+        }, this.refreshDelay)
+      },
+      scrollbar: function () {
+        this.scroll.destroy()
+        this._initScroll()
+      }
     }
   }
 
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  .scroll-content
-    height: 100%
-
   .list-wrapper
-    max-width 750px
-    max-hight 1350px
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
     overflow: hidden
     background: #fff
     .list-content
