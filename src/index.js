@@ -29,7 +29,7 @@ snapMixin(BScroll)
 wheelMixin(BScroll)
 scrollbarMixin(BScroll)
 
-BScroll.Version = '1.1.0'
+BScroll.Version = '1.1.1'
 
 export default BScroll
 
