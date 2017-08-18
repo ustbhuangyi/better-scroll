@@ -18,7 +18,7 @@
               <div class="title sub">Options</div>
               <div class="option-list">
                 <ul>
-                  <bs-option name="scrollbar" optionType="boolean" :value="scrollbar" @update:value="val => scrollbar = val"></bs-option>
+                  <switch-option name="scrollbar" :value="scrollbar" @update:value="val => scrollbar = val"></switch-option>
                 </ul>
               </div>
             </div>
@@ -65,7 +65,7 @@
 
 <script type="text/ecmascript-6">
   import ScrollList from './components/scroll-list/scrollList.vue'
-  import BsOption from './components/bs-option/bs-option.vue'
+  import SwitchOption from './components/switch-option/switchOption.vue'
 
   export default {
     data() {
@@ -76,7 +76,7 @@
     },
     components: {
       ScrollList,
-      BsOption
+      SwitchOption
     },
     watch: {
       scrollbar: function () {
@@ -86,16 +86,20 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable.styl"
+
   .example
     .usage-wrap
       .title
-        font-size: 20px
+        font-size: $fontsize-large-xxx
         font-weight: 400
         padding: 15px
         border-bottom: 1px solid rgba(0,0,0,.1)
         margin-bottom 15px
+        &.sub
+          font-size: $fontsize-large-x
       .flex-box
-        max-width: 800px
+        max-width: 900px
         display: flex
         justify-content: space-between
         .options
