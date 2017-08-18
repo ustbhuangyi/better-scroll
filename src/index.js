@@ -4,6 +4,8 @@ import {coreMixin} from './scroll/core'
 import {snapMixin} from './scroll/snap'
 import {wheelMixin} from './scroll/wheel'
 import {scrollbarMixin} from './scroll/scrollbar'
+import {pullDownMixin} from './scroll/pulldown'
+import {pullUpMixin} from './scroll/pullup'
 
 import {warn} from './util/debug'
 
@@ -28,8 +30,10 @@ eventMixin(BScroll)
 snapMixin(BScroll)
 wheelMixin(BScroll)
 scrollbarMixin(BScroll)
+pullDownMixin(BScroll)
+pullUpMixin(BScroll)
 
-BScroll.Version = '1.1.1'
+BScroll.Version = '1.2.0'
 
 export default BScroll
 

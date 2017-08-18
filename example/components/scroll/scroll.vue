@@ -30,10 +30,6 @@
         type: Array,
         default: null
       },
-      pullup: {
-        type: Boolean,
-        default: false
-      },
       beforeScroll: {
         type: Boolean,
         default: false
@@ -45,6 +41,18 @@
       direction: {
         type: String,
         default: DIRECTION_V
+      },
+      scrollbar: {
+        type: Object,
+        default: null
+      },
+      pullDownRefresh: {
+        type: Object,
+        default: null
+      },
+      pullUpLoad: {
+        type: Object,
+        default: null
       }
     },
     mounted() {
@@ -61,9 +69,9 @@
           probeType: this.probeType,
           click: this.click,
           eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V,
-          scrollbar: {
-            fade: true
-          }
+          scrollbar: this.scrollbar,
+          pullDownRefresh: this.pullDownRefresh,
+          pullUpLoad: this.pullUpLoad
         })
 
         if (this.listenScroll) {
@@ -72,17 +80,21 @@
           })
         }
 
-        if (this.pullup) {
-          this.scroll.on('scrollEnd', () => {
-            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-              this.$emit('scrollToEnd')
-            }
-          })
-        }
-
         if (this.beforeScroll) {
           this.scroll.on('beforeScrollStart', () => {
             this.$emit('beforeScroll')
+          })
+        }
+
+        if (this.pullDownRefresh) {
+          this.scroll.on('pullingDown', () => {
+            this.$emit('pullingDown')
+          })
+        }
+
+        if (this.pullUpLoad) {
+          this.scroll.on('pullingUp', () => {
+            this.$emit('pullingUp')
           })
         }
       },
@@ -94,6 +106,12 @@
       },
       refresh() {
         this.scroll && this.scroll.refresh()
+      },
+      finishPullDown() {
+        this.scroll && this.scroll.finishPullDown()
+      },
+      finishPullUp() {
+        this.scroll && this.scroll.finishPullUp()
       },
       scrollTo() {
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)

@@ -191,6 +191,11 @@ export function coreMixin(BScroll) {
       y: this.y
     })
 
+    // if configure pull down refresh, check it first
+    if (this.options.pullDownRefresh && this._checkPullDown()) {
+      return
+    }
+
     // reset if we are outside of the boundaries
     if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
       return
@@ -358,7 +363,7 @@ export function coreMixin(BScroll) {
     }
 
     this._transitionTime()
-    if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
+    if (!this.pulling && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false
       this.trigger('scrollEnd', {
         x: this.x,
@@ -409,7 +414,7 @@ export function coreMixin(BScroll) {
         me.isAnimating = false
         me._translate(destX, destY)
 
-        if (!me.resetPosition(me.options.bounceTime)) {
+        if (!me.pulling && !me.resetPosition(me.options.bounceTime)) {
           me.trigger('scrollEnd', {
             x: me.x,
             y: me.y
@@ -428,7 +433,7 @@ export function coreMixin(BScroll) {
         requestAnimationFrame(step)
       }
 
-      if (me.probeType === 3) {
+      if (me.options.probeType === 3) {
         me.trigger('scroll', {
           x: this.x,
           y: this.y

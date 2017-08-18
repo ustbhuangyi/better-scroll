@@ -66,7 +66,22 @@ const DEFAULT_OPTIONS = {
    *   fade: true
    * }
    */
-  scrollbar: false
+  scrollbar: false,
+  /**
+   * for pull down and refresh
+   * pullDownRefresh: {
+   *   threshold: 50,
+   *   stop: 20
+   * }
+   */
+  pullDownRefresh: false,
+  /**
+   * for pull up and load
+   * pullUpLoad: {
+   *   threshold: 50
+   * }
+   */
+  pullUpLoad: false
 }
 
 export function initMixin(BScroll) {
@@ -159,6 +174,9 @@ export function initMixin(BScroll) {
     }
     if (this.options.scrollbar) {
       this._initScrollbar()
+    }
+    if (this.options.pullUpLoad) {
+      this._initPullUp()
     }
   }
 
