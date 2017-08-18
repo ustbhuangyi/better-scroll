@@ -11,6 +11,29 @@
     </section>
     <section class="main-content">
       <div class="example">
+        <div class="usage-wrap">
+          <div class="title">Scroll</div>
+          <div class="flex-box">
+            <div class="options">
+              <div class="title sub">Options</div>
+              <div class="option-list">
+                <ul>
+                  <switch-option name="scrollbar" :value="scrollbar" @update:value="val => scrollbar = val"></switch-option>
+                </ul>
+              </div>
+            </div>
+            <div class="demo">
+              <div class="title sub">Demo</div>
+              <div class="scroll-list-wrap">
+                <scroll-list :scrollbar="scrollbar" :scrollbar-fade="scrollbarFade"></scroll-list>
+              </div>
+            </div>
+            <div class="methods">
+              <div class="title sub">Methods</div>
+            </div>
+          </div>
+        </div>
+
         <ul class="example-list">
           <li class="example-item">
             <router-link to="/picker">
@@ -41,11 +64,55 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  import ScrollList from './components/scroll-list/scrollList.vue'
+  import SwitchOption from './components/switch-option/switchOption.vue'
+
+  export default {
+    data() {
+      return {
+        scrollbar: false,
+        scrollbarFade: true
+      }
+    },
+    components: {
+      ScrollList,
+      SwitchOption
+    },
+    watch: {
+      scrollbar: function () {
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable.styl"
+
   .example
+    .usage-wrap
+      .title
+        font-size: $fontsize-large-xxx
+        font-weight: 400
+        padding: 15px
+        border-bottom: 1px solid rgba(0,0,0,.1)
+        margin-bottom 15px
+        &.sub
+          font-size: $fontsize-large-x
+      .flex-box
+        max-width: 900px
+        display: flex
+        justify-content: space-between
+        .options
+          flex: 0 1 200px
+        .demo
+          flex: 0 0 375px
+          .scroll-list-wrap
+            position relative
+            max-width: 375px
+            height: 667px
+            overflow: hidden
+        .methods
+          flex: 0 1 200px
     .example-list
       display: flex
       justify-content: center
