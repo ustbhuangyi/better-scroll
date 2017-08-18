@@ -11,6 +11,22 @@
     </section>
     <section class="main-content">
       <div class="example">
+        <div class="scroll">
+          <div class="title">Scroll</div>
+          <div class="option">
+            <div class="title sub">Options</div>
+            <div class="option-list">
+              <ul>
+                <bs-option name="scrollbar" optionType="boolean" :value="scrollbar" @update:value="val => scrollbar = val"></bs-option>
+              </ul>
+            </div>
+          </div>
+          <div class="demo">Demo
+            <scroll-list :scrollbar="scrollbar" :scrollbar-fade="scrollbarFade"></scroll-list>
+          </div>
+          <div class="methods">Methods</div>
+        </div>
+
         <ul class="example-list">
           <li class="example-item">
             <router-link to="/picker">
@@ -41,11 +57,36 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  import ScrollList from './components/scroll-list/scrollList.vue'
+  import BsOption from './components/bs-option/bs-option.vue'
+
+  export default {
+    data() {
+      return {
+        scrollbar: false,
+        scrollbarFade: true
+      }
+    },
+    components: {
+      ScrollList,
+      BsOption
+    },
+    watch: {
+      scrollbar: function () {
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   .example
+    .scroll
+      max-width: 800px
+      .demo
+        position relative
+        max-width: 375px
+        height: 667px
+        overflow: hidden
     .example-list
       display: flex
       justify-content: center
