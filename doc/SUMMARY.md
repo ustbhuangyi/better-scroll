@@ -41,6 +41,8 @@
   - [wheel](options-advanced.md#wheel)
   - [snap](options-advanced.md#snap)
   - [scrollbar](options-advanced.md#scrollbar)
+  - [pullDownRefresh](options-advanced.md#pulldownrefresh)
+  - [pullUpLoad](options-advanced.md#pullupload)
 - [方法 / 通用](api.md)
   - [refresh](api.md#refresh)
   - [scrollTo](api.md#scrolltox-y-time-easing)
@@ -57,6 +59,8 @@
   - [getCurrentPage](api-specific.md#getcurrentpage)
   - [wheelTo](api-specific.md#wheeltoindex)
   - [getSelectedIndex](api-specific.md#getselectedindex)
+  - [finishPullDown](api-specific.md#finishpulldown)
+  - [finishPullUp](api-specific.md#finishpullup)
 - [事件](events.md)
   - [beforeScrollStart](events.md#beforescrollstart)
   - [scrollStart](events.md#scrollstart)
@@ -67,6 +71,8 @@
   - [flick](events.md#flick)
   - [refresh](events.md#refresh)
   - [destroy](events.md#destroy)
+  - [pullingDown](events.md#pullingdown)
+  - [pullingUp](events.md#pullingup)
   
   
     
