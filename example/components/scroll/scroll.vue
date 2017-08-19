@@ -100,6 +100,7 @@
         }
       },
       disable() {
+        debugger
         this.scroll && this.scroll.disable()
       },
       enable() {

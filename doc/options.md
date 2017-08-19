@@ -52,8 +52,8 @@ let scroll = new BScroll('.wrapper',{
   
 ## click
   - 类型：Boolean
-  - 默认值：false （不建议修改）
-  - 作用：当设置为 true，better-scroll 会阻止浏览器的原生 click 事件，并自己派发一个 click 事件。为了区分和原生 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true
+  - 默认值：false
+  - 作用：当设置为 true，better-scroll 会阻止浏览器的原生 click 事件，并自己派发一个 click 事件。为了区分和原生 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。
   
 ## tap
   - 类型：Boolean | String

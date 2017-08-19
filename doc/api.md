@@ -43,12 +43,12 @@ better-scroll 提供了很多灵活的 API，当我们基于 better-scroll 去�
 ## enable()
    - 参数：无
    - 返回值：无
-   - 作用：启用 better-scroll, 默认 better-scroll。
+   - 作用：启用 better-scroll, 默认 开启。
 
 ## disable()
    - 参数：无
    - 返回值：无
-   - 作用：禁用 better-scroll，事件回调函数不再响应。
+   - 作用：禁用 better-scroll，DOM 事件（如 touchstart、touchmove、touchend）的回调函数不再响应。
    
 ## destroy()
    - 参数：无
