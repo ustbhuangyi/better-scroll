@@ -20,7 +20,7 @@
       },
       click: {
         type: Boolean,
-        default: false
+        default: true
       },
       listenScroll: {
         type: Boolean,
@@ -100,7 +100,6 @@
         }
       },
       disable() {
-        debugger
         this.scroll && this.scroll.disable()
       },
       enable() {
