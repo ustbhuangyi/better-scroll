@@ -3,11 +3,23 @@
     <ul class="list-content">
       <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
     </ul>
+    <div class="pulldown-wrapper" v-if="pullDownRefresh">
+      <div class="before-trigger" v-if="!isPullDownRefresh">
+        下拉刷新
+      </div>
+      <div class="after-trigger" v-else>
+        <div v-if="loading" class="loading">
+          <loading></loading>
+        </div>
+        <div v-else >加载成功</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from 'scroll/index'
+  import BScroll from '../../../dist/bscroll'
+  import Loading from '../loading/loading.vue'
 
   const COMPONENT_NAME = 'scroll-list'
   const DIRECTION_H = 'horizontal'
@@ -17,6 +29,10 @@
     name: COMPONENT_NAME,
     props: {
       scrollbar: {
+        type: Boolean,
+        default: false
+      },
+      pullDownRefresh: {
         type: Boolean,
         default: false
       },
@@ -85,7 +101,9 @@
           '我是第二十七行',
           '我是第二十八行',
           '我是第二十九行'
-        ]
+        ],
+        isPullDownRefresh: false,
+        loading: true
       }
     },
     mounted() {
@@ -99,21 +117,15 @@
           return
         }
 
-        let params = {
+        let options = {
           probeType: this.probeType,
           click: this.click,
-          eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V
+          eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V,
+          scrollbar: this.scrollbar,
+          pullDownRefresh: this.pullDownRefresh ? {stop: 40} : false
         }
 
-        if (this.scrollbar) {
-          Object.assign(params, {
-            scrollbar: {
-              fade: this.scrollbarFade
-            }
-          })
-        }
-
-        this.scroll = new BScroll(this.$refs.wrapper, params)
+        this.scroll = new BScroll(this.$refs.wrapper, options)
 
         if (this.listenScroll) {
           this.scroll.on('scroll', (pos) => {
@@ -134,6 +146,10 @@
             this.$emit('beforeScroll')
           })
         }
+
+        if (this.pullDownRefresh) {
+          this.scroll.on('pullingDown', this.pullDownHandle)
+        }
       },
       disable() {
         this.scroll && this.scroll.disable()
@@ -152,6 +168,20 @@
       },
       clickItem(e, item) {
         console.log(`${item} is clicked}`, e)
+      },
+      pullDownHandle() {
+        this.isPullDownRefresh = true
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.items.unshift('我是新数据: ' + +new Date())
+        }, 1000)
+        setTimeout(() => {
+          this.scroll.finishPullDown()
+          setTimeout(() => {
+            this.isPullDownRefresh = false
+          }, this.bounceTime || 700)
+        }, 2000)
       }
     },
     watch: {
@@ -163,7 +193,14 @@
       scrollbar: function () {
         this.scroll.destroy()
         this._initScroll()
+      },
+      pullDownRefresh: function () {
+        this.scroll.destroy()
+        this._initScroll()
       }
+    },
+    components: {
+      Loading
     }
   }
 
@@ -188,5 +225,14 @@
         font-size: 18px
         padding-left: 20px
         border-bottom: 1px solid #e5e5e5
+    .pulldown-wrapper
+      position: absolute
+      width: 100%
+      left: 0
+      top: 0
+      display: flex
+      justify-content center
+      align-items center
+      padding: 10px 0
 
 </style>

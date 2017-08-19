@@ -3,8 +3,7 @@
     <section class="page-header">
       <h1 class="project-name">BetterScroll</h1>
 
-      <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance
-  </h2>
+      <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance</h2>
       <a href="https://github.com/ustbhuangyi/better-scroll" class="btn">View on GitHub</a>
       <a href="https://github.com/ustbhuangyi/better-scroll/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/ustbhuangyi/better-scroll/tarball/master" class="btn">Download .tar.gz</a>
@@ -16,16 +15,19 @@
           <div class="flex-box">
             <div class="options">
               <div class="title sub">Options</div>
-              <div class="option-list">
-                <ul>
+              <ul class="option-list">
+                <li>
                   <switch-option name="scrollbar" :value="scrollbar" @update:value="val => scrollbar = val"></switch-option>
-                </ul>
-              </div>
+                </li>
+                <li>
+                  <switch-option name="pulldown refresh" :value="pullDownRefresh" @update:value="val => pullDownRefresh = val"></switch-option>
+                </li>
+              </ul>
             </div>
             <div class="demo">
               <div class="title sub">Demo</div>
               <div class="scroll-list-wrap">
-                <scroll-list :scrollbar="scrollbar" :scrollbar-fade="scrollbarFade"></scroll-list>
+                <scroll-list :scrollbar="scrollbar" :pullDownRefresh="pullDownRefresh"></scroll-list>
               </div>
             </div>
             <div class="methods">
@@ -71,7 +73,7 @@
     data() {
       return {
         scrollbar: false,
-        scrollbarFade: true
+        pullDownRefresh: true
       }
     },
     components: {
@@ -91,28 +93,37 @@
   .example
     .usage-wrap
       .title
-        font-size: $fontsize-large-xxx
-        font-weight: 400
-        padding: 15px
+        font-size: 2.5rem
+        font-weight: 500
+        color: $color-dark-grey
+        padding: 1rem
         border-bottom: 1px solid rgba(0,0,0,.1)
-        margin-bottom 15px
+        margin-bottom 1rem
         &.sub
-          font-size: $fontsize-large-x
+          font-size: 1.75rem
       .flex-box
-        max-width: 900px
         display: flex
         justify-content: space-between
         .options
-          flex: 0 1 200px
+          flex: 0 1 25%
+          .option-list
+            border: 1px solid rgba(0,0,0,.1)
+            border-radius: 1rem
+            li
+              padding: 5px 0
+              border-bottom: 1px solid rgba(0,0,0,.1)
         .demo
           flex: 0 0 375px
           .scroll-list-wrap
             position relative
             max-width: 375px
             height: 667px
+            border: 1px solid rgba(0,0,0,.1)
+            border-radius: 1rem
+            transform: rotate(0deg)  // fix 子元素超出边框圆角部分不隐藏的问题
             overflow: hidden
         .methods
-          flex: 0 1 200px
+          flex: 0 1 25%
     .example-list
       display: flex
       justify-content: center
