@@ -1,12 +1,9 @@
 <template>
   <div class="switch-wrapper">
-    <input id="checkbox" type="checkbox" v-model="checked">
     <span class="name">{{ name }}</span>
-    <label for="checkbox">
-      <div class="switch-ellipse" :class="{ active: checked }">
-        <span class="switch-circle" :class="{ active: checked }"></span>
-      </div>
-    </label>
+    <div class="switch-ellipse" :class="{ active: checked }" @click="clickSwitch">
+      <span class="switch-circle" :class="{ active: checked }"></span>
+    </div>
   </div>
 </template>
 
@@ -29,6 +26,11 @@
       checked: function (newValue) {
         this.$emit('update:value', newValue)
       }
+    },
+    methods: {
+      clickSwitch: function () {
+        this.checked = !this.checked
+      }
     }
   }
 </script>
@@ -41,25 +43,21 @@
     justify-content space-between
     align-items center
     padding 0 15px
-    input
-      display none
     .name
-
-
-    label
-      text-align right
-      .switch-ellipse
-        margin-top: 5px;
-        display: inline-block;
-        position: relative;
-        height: 30px;
-        width: 52px;
-        border-radius: 1000px;
-        box-shadow: 0 0 2px #333;
-        transition: all 0.1s
-        &.active
-          background: $color-green;
-          transition: all 0.2s ease 0.2s;
+      flex: 0 1 auto
+    .switch-ellipse
+      flex: 0 0 auto
+      margin-top: 5px;
+      display: inline-block;
+      position: relative;
+      height: 30px;
+      width: 52px;
+      border-radius: 1000px;
+      box-shadow: 0 0 2px #333;
+      transition: all 0.1s
+      &.active
+        background: $color-green;
+        transition: all 0.2s ease 0.2s;
       .switch-circle
         position: absolute;
         display: inline-block;
