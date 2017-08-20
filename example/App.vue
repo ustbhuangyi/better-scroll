@@ -48,11 +48,17 @@
             <div class="demo">
               <div class="title sub">Demo</div>
               <div class="scroll-list-wrap">
-                <scroll-list :scrollbar="scrollbar" :pullDownRefresh="pullDownRefresh" :pullUpLoad="pullUpLoad"></scroll-list>
+                <scroll-list ref="scrollList" :scrollbar="scrollbar" :pullDownRefresh="pullDownRefresh" :pullUpLoad="pullUpLoad"></scroll-list>
               </div>
             </div>
             <div class="methods">
               <div class="title sub">Methods</div>
+              <ul class="method-list">
+                <li>
+                  <input type="text" placeholder="Y:number" v-model="y">
+                  <div class="button" @click="scrollTo">scrollTo</div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -75,9 +81,10 @@
   export default {
     data() {
       return {
-        scrollbar: false,
+        scrollbar: true,
         pullDownRefresh: true,
-        pullUpLoad: true
+        pullUpLoad: true,
+        y: 300
       }
     },
     components: {
@@ -85,7 +92,10 @@
       SwitchOption
     },
     watch: {
-      scrollbar: function () {
+    },
+    methods: {
+      scrollTo() {
+        this.$refs.scrollList.scrollTo(0, -this.y)
       }
     }
   }
@@ -153,6 +163,30 @@
             flex: 0 1 25%
           @media screen and (max-width: 42rem)
             flex: 0 1 100%
+          .method-list
+            li
+              display: flex
+              width: 100%
+              justify-content: center
+              align-items: center
+              transform: rotate(0deg)  // fix 子元素超出边框圆角部分不隐藏的问题
+              overflow: hidden
+              input
+              .button
+                flex: 1 1 50%
+                border: 1px solid rgba(0,0,0,.1)
+                padding: 0.5rem 1rem
+                line-height: 1.6rem
+              input
+                border-radius: 1rem 0 0 1rem
+                outline: none
+                &:focus
+                  border-color: $color-green
+              .button
+                border-radius: 0 1rem 1rem 0
+                background-color: $color-green
+                border-color: $color-green
+                color: $color-white
 
   .view
     transition: all 0.3s
