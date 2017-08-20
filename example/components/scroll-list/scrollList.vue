@@ -178,19 +178,18 @@
     watch: {
       data: function () {
         setTimeout(() => {
-          if (this.pullDownRefresh) {
+          if (this.pullDownRefresh && this.isPullDownRefresh) {
             this.loading = false
             this.finishPullDown()
             setTimeout(() => {
               this.isPullDownRefresh = false
               this.refresh()
             }, this.scroll.options.bounceTime)
-          }
-          if (this.pullUpLoad) {
+          } else if (this.pullUpLoad && this.isPullUpLoad) {
             this.isPullUpLoad = false
             this.finishPullUp()
-          }
-          if (!this.pullDownRefresh) {
+            this.refresh()
+          } else {
             this.refresh()
           }
         }, this.refreshDelay)
