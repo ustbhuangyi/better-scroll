@@ -52,6 +52,13 @@ module.exports = {
           presets: ['es2015', 'stage-2'],
           plugins: ['transform-runtime', 'add-module-exports']
         }
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000
+        }
       }
     ]
   }
