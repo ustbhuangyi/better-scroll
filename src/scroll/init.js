@@ -9,6 +9,8 @@ import {
   removeEvent
 } from '../util/dom'
 
+import {extend} from '../util/lang'
+
 const DEFAULT_OPTIONS = {
   startX: 0,
   startY: 0,
@@ -110,7 +112,7 @@ export function initMixin(BScroll) {
   }
 
   BScroll.prototype._handleOptions = function (options) {
-    this.options = Object.assign({}, DEFAULT_OPTIONS, options)
+    this.options = extend({}, DEFAULT_OPTIONS, options)
 
     this.translateZ = this.options.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 

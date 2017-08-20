@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.0
+ * better-normal-scroll v1.2.1
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -278,6 +278,24 @@ function before(el, target) {
   target.parentNode.insertBefore(el, target);
 }
 
+function getNow() {
+  return window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
+}
+
+function extend(target) {
+  for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    rest[_key - 1] = arguments[_key];
+  }
+
+  for (var i = 0; i < rest.length; i++) {
+    var source = rest[i];
+    for (var key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
 var DEFAULT_OPTIONS = {
   startX: 0,
   startY: 0,
@@ -379,7 +397,7 @@ function initMixin(BScroll) {
   };
 
   BScroll.prototype._handleOptions = function (options) {
-    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
+    this.options = extend({}, DEFAULT_OPTIONS, options);
 
     this.translateZ = this.options.HWCompositing && hasPerspective ? ' translateZ(0)' : '';
 
@@ -613,10 +631,6 @@ var cancelAnimationFrame = function () {
     window.clearTimeout(id);
   };
 }();
-
-function getNow() {
-  return window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
-}
 
 function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -1777,7 +1791,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.0';
+BScroll.Version = '1.2.1';
 
 return BScroll;
 
