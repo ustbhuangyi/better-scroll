@@ -10,8 +10,26 @@
     </section>
     <section class="main-content">
       <div class="example">
+        <div class="title">基础应用</div>
+        <ul class="example-list">
+          <li class="example-item">
+            <router-link to="/normal-scroll">
+              <span>普通 Scroll 组件</span>
+            </router-link>
+          </li>
+          <li class="example-item">
+            <router-link to="/picker">
+              <span>Picker 组件</span>
+            </router-link>
+          </li>
+          <li class="example-item">
+            <router-link to="/slide">
+              <span>Slide 组件</span>
+            </router-link>
+          </li>
+        </ul>
         <div class="usage-wrap">
-          <div class="title">Scroll</div>
+          <div class="title">普通 Scroll 组件</div>
           <div class="flex-box">
             <div class="options">
               <div class="title sub">Options</div>
@@ -38,24 +56,6 @@
             </div>
           </div>
         </div>
-
-        <ul class="example-list">
-          <li class="example-item">
-            <router-link to="/picker">
-              <span>Picker 组件</span>
-            </router-link>
-          </li>
-          <li class="example-item">
-            <router-link to="/normal-scroll">
-              <span>普通 Scroll 组件</span>
-            </router-link>
-          </li>
-          <li class="example-item">
-            <router-link to="/slide">
-              <span>Slide 组件</span>
-            </router-link>
-          </li>
-        </ul>
       </div>
       <footer class="site-footer">
     <span class="site-footer-owner"><a href="https://github.com/ustbhuangyi/picker">BetterScroll</a> is maintained by <a
@@ -95,39 +95,15 @@
   @import "~common/stylus/variable.styl"
 
   .example
-    .usage-wrap
-      .title
-        font-size: 2.5rem
-        font-weight: 500
-        color: $color-dark-grey
-        padding: 1rem
-        border-bottom: 1px solid rgba(0,0,0,.1)
-        margin-bottom 1rem
-        &.sub
-          font-size: 1.75rem
-      .flex-box
-        display: flex
-        justify-content: space-between
-        .options
-          flex: 0 1 25%
-          .option-list
-            border: 1px solid rgba(0,0,0,.1)
-            border-radius: 1rem
-            li
-              padding: 5px 0
-              border-bottom: 1px solid rgba(0,0,0,.1)
-        .demo
-          flex: 0 0 375px
-          .scroll-list-wrap
-            position relative
-            max-width: 375px
-            height: 667px
-            border: 1px solid rgba(0,0,0,.1)
-            border-radius: 1rem
-            transform: rotate(0deg)  // fix 子元素超出边框圆角部分不隐藏的问题
-            overflow: hidden
-        .methods
-          flex: 0 1 25%
+    .title
+      font-size: 1.75rem
+      font-weight: 500
+      color: $color-dark-grey
+      padding: 1rem
+      border-bottom: 1px solid rgba(0,0,0,.1)
+      margin-bottom: 1rem
+      &.sub
+        font-size: 1.50rem
     .example-list
       display: flex
       justify-content: center
@@ -138,6 +114,46 @@
         text-align: center
         a
           line-height: 60px
+    .usage-wrap
+      @media screen and (min-width: 42rem)
+        margin-top: 4rem
+      .flex-box
+        display: flex
+        justify-content: space-between
+        flex-wrap: wrap
+        .options
+          @media screen and (min-width: 42rem)
+            flex: 0 1 25%
+          @media screen and (max-width: 42rem)
+            flex: 0 1 100%
+            margin-bottom: 1rem
+
+          .option-list
+            border: 1px solid rgba(0,0,0,.1)
+            border-radius: 1rem
+            li
+              padding: 5px 0
+              border-bottom: 1px solid rgba(0,0,0,.1)
+        .demo
+          @media screen and (min-width: 42rem)
+            flex: 0 0 23rem
+          @media screen and (max-width: 42rem)
+            flex: 0 0 100%
+            margin-bottom: 1rem
+
+          .scroll-list-wrap
+            position relative
+            height: 41rem
+            border: 1px solid rgba(0,0,0,.1)
+            border-radius: 1rem
+            transform: rotate(0deg)  // fix 子元素超出边框圆角部分不隐藏的问题
+            overflow: hidden
+        .methods
+          @media screen and (min-width: 42rem)
+            flex: 0 1 25%
+          @media screen and (max-width: 42rem)
+            flex: 0 1 100%
+
   .view
     transition: all 0.3s
     transform: translate3d(0, 0, 0)
