@@ -5,6 +5,7 @@
       <li class="pullup-wrapper" v-if="pullUpLoad">
         <div class="before-trigger" v-if="!isPullUpLoad">
           上拉加载
+
         </div>
         <div class="after-trigger" v-else>
           <loading></loading>
@@ -14,12 +15,13 @@
     <div class="pulldown-wrapper" v-if="pullDownRefresh">
       <div class="before-trigger" v-if="!isPullDownRefresh">
         下拉刷新
+
       </div>
       <div class="after-trigger" v-if="isPullDownRefresh">
         <div v-if="loading" class="loading">
           <loading></loading>
         </div>
-        <div v-else >刷新成功</div>
+        <div v-else>刷新成功</div>
       </div>
     </div>
   </div>
@@ -125,7 +127,8 @@
         let options = {
           probeType: this.probeType,
           click: this.click,
-          eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V,
+          scrollY: this.direction === DIRECTION_V,
+          scrollX: this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
           pullDownRefresh: this.pullDownRefresh ? {stop: 40} : false,
           pullUpLoad: this.pullUpLoad

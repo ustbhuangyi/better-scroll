@@ -65,6 +65,13 @@ export function scrollbarMixin(BScroll) {
   BScroll.prototype._insertScrollBar = function (scrollbar) {
     this.wrapper.appendChild(scrollbar)
   }
+
+  BScroll.prototype._removeScrollBars = function () {
+    for (var i = 0; i < this.indicators.length; i++) {
+      let indicator = this.indicators[i]
+      indicator.remove()
+    }
+  }
 }
 
 function createScrollbar(direction) {
@@ -188,6 +195,10 @@ Indicator.prototype.transitionTime = function (time = 0) {
 
 Indicator.prototype.transitionTimingFunction = function (easing) {
   this.indicatorStyle[style.transitionTimingFunction] = easing
+}
+
+Indicator.prototype.remove = function () {
+  this.wrapper.parentNode.removeChild(this.wrapper)
 }
 
 Indicator.prototype._calculate = function () {

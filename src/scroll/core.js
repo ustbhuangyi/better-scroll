@@ -581,6 +581,10 @@ export function coreMixin(BScroll) {
   BScroll.prototype.destroy = function () {
     this._removeDOMEvents()
 
+    if (this.options.scrollbar) {
+      this._removeScrollBars()
+    }
+
     this.destroyed = true
     this.trigger('destroy')
   }
