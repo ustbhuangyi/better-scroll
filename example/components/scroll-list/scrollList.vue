@@ -2,23 +2,31 @@
   <div ref="wrapper" class="list-wrapper">
     <ul class="list-content">
       <li @click="clickItem($event,item)" class="list-item" v-for="item in items">{{item}}</li>
+      <li class="pullup-wrapper" v-if="pullUpLoad">
+        <div class="before-trigger" v-if="!isPullUpLoad">
+          上拉加载
+        </div>
+        <div class="after-trigger" v-else>
+          <loading></loading>
+        </div>
+      </li>
     </ul>
     <div class="pulldown-wrapper" v-if="pullDownRefresh">
       <div class="before-trigger" v-if="!isPullDownRefresh">
         下拉刷新
       </div>
-      <div class="after-trigger" v-else>
+      <div class="after-trigger" v-if="isPullDownRefresh">
         <div v-if="loading" class="loading">
           <loading></loading>
         </div>
-        <div v-else >加载成功</div>
+        <div v-else >刷新成功</div>
       </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from '../../../dist/bscroll'
+  import BScroll from '../../../src/index'
   import Loading from '../loading/loading.vue'
 
   const COMPONENT_NAME = 'scroll-list'
@@ -33,6 +41,10 @@
         default: false
       },
       pullDownRefresh: {
+        type: Boolean,
+        default: false
+      },
+      pullUpLoad: {
         type: Boolean,
         default: false
       },
@@ -72,38 +84,31 @@
     data() {
       return {
         items: [
-          '我是第一行',
-          '我是第二行',
-          '我是第三行',
-          '我是第四行',
-          '我是第五行',
-          '我是第六行',
-          '我是第七行',
-          '我是第八行',
-          '我是第九行',
-          '我是第十行',
-          '我是第十一行',
-          '我是第十二行',
-          '我是第十三行',
-          '我是第十四行',
-          '我是第十五行',
-          '我是第十六行',
-          '我是第十七行',
-          '我是第十八行',
-          '我是第十九行',
-          '我是第二十行',
-          '我是第二十一行',
-          '我是第二十二行',
-          '我是第二十三行',
-          '我是第二十四行',
-          '我是第二十五行',
-          '我是第二十六行',
-          '我是第二十七行',
-          '我是第二十八行',
-          '我是第二十九行'
+          '我是第 1 行',
+          '我是第 2 行',
+          '我是第 3 行',
+          '我是第 4 行',
+          '我是第 5 行',
+          '我是第 6 行',
+          '我是第 7 行',
+          '我是第 8 行',
+          '我是第 9 行',
+          '我是第 10 行',
+          '我是第 11 行',
+          '我是第 12 行',
+          '我是第 13 行',
+          '我是第 14 行',
+          '我是第 15 行',
+          '我是第 16 行',
+          '我是第 17 行',
+          '我是第 18 行',
+          '我是第 19 行',
+          '我是第 20 行'
         ],
         isPullDownRefresh: false,
-        loading: true
+        loading: true,
+        itemIndex: 20,
+        isPullUpLoad: false
       }
     },
     mounted() {
@@ -122,7 +127,8 @@
           click: this.click,
           eventPassthrough: this.direction === DIRECTION_V ? DIRECTION_H : DIRECTION_V,
           scrollbar: this.scrollbar,
-          pullDownRefresh: this.pullDownRefresh ? {stop: 40} : false
+          pullDownRefresh: this.pullDownRefresh ? {stop: 40} : false,
+          pullUpLoad: this.pullUpLoad
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)
@@ -149,6 +155,10 @@
 
         if (this.pullDownRefresh) {
           this.scroll.on('pullingDown', this.pullDownHandle)
+        }
+
+        if (this.pullUpLoad) {
+          this.scroll.on('pullingUp', this.pullUpHandle)
         }
       },
       disable() {
@@ -182,19 +192,40 @@
             this.isPullDownRefresh = false
           }, this.bounceTime || 700)
         }, 2000)
+      },
+      pullUpHandle() {
+        let newPage = [
+          '我是第 ' + ++this.itemIndex + ' 行',
+          '我是第 ' + ++this.itemIndex + ' 行',
+          '我是第 ' + ++this.itemIndex + ' 行',
+          '我是第 ' + ++this.itemIndex + ' 行',
+          '我是第 ' + ++this.itemIndex + ' 行'
+        ]
+        this.isPullUpLoad = true
+        setTimeout(() => {
+          this.items = this.items.concat(newPage)
+          if (this.isPullUpLoad) {
+            this.scroll.finishPullUp()
+            this.isPullUpLoad = false
+          }
+        }, 1000)
       }
     },
     watch: {
-      data() {
+      items: function () {
         setTimeout(() => {
           this.refresh()
-        }, this.refreshDelay)
+        }, this.isPullDownRefresh ? 1700 : this.refreshDelay)
       },
       scrollbar: function () {
         this.scroll.destroy()
         this._initScroll()
       },
       pullDownRefresh: function () {
+        this.scroll.destroy()
+        this._initScroll()
+      },
+      pullUpLoad: function () {
         this.scroll.destroy()
         this._initScroll()
       }
@@ -234,5 +265,11 @@
       justify-content center
       align-items center
       padding: 10px 0
+    .pullup-wrapper
+      width: 100%
+      display: flex
+      justify-content center
+      align-items center
+      padding: 1rem 0
 
 </style>

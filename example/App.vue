@@ -20,14 +20,17 @@
                   <switch-option name="scrollbar" :value="scrollbar" @update:value="val => scrollbar = val"></switch-option>
                 </li>
                 <li>
-                  <switch-option name="pulldown refresh" :value="pullDownRefresh" @update:value="val => pullDownRefresh = val"></switch-option>
+                  <switch-option name="pull down refresh" :value="pullDownRefresh" @update:value="val => pullDownRefresh = val"></switch-option>
+                </li>
+                <li>
+                  <switch-option name="pull up load" :value="pullUpLoad" @update:value="val => pullUpLoad = val"></switch-option>
                 </li>
               </ul>
             </div>
             <div class="demo">
               <div class="title sub">Demo</div>
               <div class="scroll-list-wrap">
-                <scroll-list :scrollbar="scrollbar" :pullDownRefresh="pullDownRefresh"></scroll-list>
+                <scroll-list :scrollbar="scrollbar" :pullDownRefresh="pullDownRefresh" :pullUpLoad="pullUpLoad"></scroll-list>
               </div>
             </div>
             <div class="methods">
@@ -73,7 +76,8 @@
     data() {
       return {
         scrollbar: false,
-        pullDownRefresh: true
+        pullDownRefresh: true,
+        pullUpLoad: true
       }
     },
     components: {
