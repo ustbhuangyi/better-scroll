@@ -11,12 +11,12 @@
         </div>
       </li>
     </ul>
-    <div name="pulldown" class="pulldown-wrapper" v-if="pullDownRefresh">
-      <div class="before-trigger" v-if="!isPullDownRefresh">
-        <span>下拉刷新</span>
+    <div ref="pulldown" class="pulldown-wrapper" v-if="pullDownRefresh">
+      <div class="before-trigger" v-if="beforePullDown">
+        <bubble :y="bubbleY"></bubble>
       </div>
       <div class="after-trigger" v-else>
-        <div v-if="loading" class="loading">
+        <div v-if="pulling" class="loading">
           <loading></loading>
         </div>
         <div v-else><span>刷新成功</span></div>
@@ -28,6 +28,7 @@
 <script type="text/ecmascript-6">
   import BScroll from '../../../src/index'
   import Loading from '../loading/loading.vue'
+  import Bubble from '../bubble/bubble.vue'
 
   const COMPONENT_NAME = 'scroll-list'
   const DIRECTION_H = 'horizontal'
@@ -87,10 +88,15 @@
     },
     data() {
       return {
-        isPullDownRefresh: false,
-        loading: false,
-        isPullUpLoad: false
+        beforePullDown: true,
+        isPullingDown: false,
+        pulling: false,
+        isPullUpLoad: false,
+        bubbleY: 0
       }
+    },
+    created() {
+      this.pulldownInitTop = -50
     },
     mounted() {
       setTimeout(() => {
@@ -109,7 +115,7 @@
           scrollY: this.direction === DIRECTION_V,
           scrollX: this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
-          pullDownRefresh: this.pullDownRefresh ? {stop: 40} : false,
+          pullDownRefresh: this.pullDownRefresh,
           pullUpLoad: this.pullUpLoad
         }
 
@@ -118,14 +124,6 @@
         if (this.listenScroll) {
           this.scroll.on('scroll', (pos) => {
             this.$emit('scroll', pos)
-          })
-        }
-
-        if (this.pullup) {
-          this.scroll.on('scrollEnd', () => {
-            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-              this.$emit('scrollToEnd')
-            }
           })
         }
 
@@ -138,8 +136,19 @@
         if (this.pullDownRefresh) {
           this.scroll.on('pullingDown', () => {
             this.$emit('pullingDown')
-            this.isPullDownRefresh = true
-            this.loading = true
+            this.beforePullDown = false
+            this.isPullingDown = true
+            this.pulling = true
+          })
+
+          this.scroll.on('scroll', (pos) => {
+            if (this.beforePullDown) {
+              this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
+              this.$refs.pulldown.style.transitionDuration = ''
+              this.$refs.pulldown.style.top = `${Math.min(pos.y + this.pulldownInitTop, 10)}px`
+            } else {
+              this.bubbleY = 0
+            }
           })
         }
 
@@ -176,15 +185,18 @@
       }
     },
     watch: {
-      data: function () {
+      data() {
         setTimeout(() => {
-          if (this.pullDownRefresh && this.isPullDownRefresh) {
-            this.loading = false
-            this.finishPullDown()
+          if (this.pullDownRefresh && this.isPullingDown) {
+            this.pulling = false
             setTimeout(() => {
-              this.isPullDownRefresh = false
-              this.refresh()
-            }, this.scroll.options.bounceTime)
+              this.finishPullDown()
+              this.isPullingDown = false
+              setTimeout(() => {
+                this.beforePullDown = true
+                this.refresh()
+              }, this.scroll.options.bounceTime)
+            }, 500)
           } else if (this.pullUpLoad && this.isPullUpLoad) {
             this.isPullUpLoad = false
             this.finishPullUp()
@@ -194,21 +206,29 @@
           }
         }, this.refreshDelay)
       },
-      scrollbar: function () {
+      isPullingDown(val) {
+        if (!val) {
+          this.$refs.pulldown.style.top = `${this.pulldownInitTop}px`
+          this.$refs.pulldown.style.transitionDuration = '700ms'
+          this.$refs.pulldown.style.transitionTimingFunction = 'cubic-bezier(0.165, 0.84, 0.44, 1)'
+        }
+      },
+      scrollbar() {
         this.scroll.destroy()
         this._initScroll()
       },
-      pullDownRefresh: function () {
+      pullDownRefresh() {
         this.scroll.destroy()
         this._initScroll()
       },
-      pullUpLoad: function () {
+      pullUpLoad() {
         this.scroll.destroy()
         this._initScroll()
       }
     },
     components: {
-      Loading
+      Loading,
+      Bubble
     }
   }
 
@@ -237,11 +257,12 @@
       position: absolute
       width: 100%
       left: 0
-      top: 0
       display: flex
       justify-content center
       align-items center
-      padding: 10px 0
+      transition: all
+      .after-trigger
+        margin-top: 10px
     .pullup-wrapper
       width: 100%
       display: flex

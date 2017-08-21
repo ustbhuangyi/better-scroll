@@ -57,7 +57,8 @@
                              :pullDownRefresh="pullDownRefresh"
                              :pullUpLoad="pullUpLoad"
                              @pullingDown="onPullingDown"
-                             @pullingUp="onPullingUp"></scroll-list>
+                             @pullingUp="onPullingUp">
+                </scroll-list>
               </div>
             </div>
             <div class="methods">
