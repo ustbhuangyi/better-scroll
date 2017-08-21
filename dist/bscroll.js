@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.1
+ * better-normal-scroll v1.2.2
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1209,6 +1209,10 @@ function coreMixin(BScroll) {
   BScroll.prototype.destroy = function () {
     this._removeDOMEvents();
 
+    if (this.options.scrollbar) {
+      this._removeScrollBars();
+    }
+
     this.destroyed = true;
     this.trigger('destroy');
   };
@@ -1562,6 +1566,13 @@ function scrollbarMixin(BScroll) {
   BScroll.prototype._insertScrollBar = function (scrollbar) {
     this.wrapper.appendChild(scrollbar);
   };
+
+  BScroll.prototype._removeScrollBars = function () {
+    for (var i = 0; i < this.indicators.length; i++) {
+      var indicator = this.indicators[i];
+      indicator.remove();
+    }
+  };
 }
 
 function createScrollbar(direction) {
@@ -1691,6 +1702,10 @@ Indicator.prototype.transitionTimingFunction = function (easing) {
   this.indicatorStyle[style.transitionTimingFunction] = easing;
 };
 
+Indicator.prototype.remove = function () {
+  this.wrapper.parentNode.removeChild(this.wrapper);
+};
+
 Indicator.prototype._calculate = function () {
   if (this.direction === 'vertical') {
     var wrapperHeight = this.wrapper.clientHeight;
@@ -1713,14 +1728,13 @@ Indicator.prototype._calculate = function () {
 
 function pullDownMixin(BScroll) {
   BScroll.prototype._checkPullDown = function () {
-    this.pulling = false;
     var _options$pullDownRefr = this.options.pullDownRefresh,
         _options$pullDownRefr2 = _options$pullDownRefr.threshold,
-        threshold = _options$pullDownRefr2 === undefined ? 50 : _options$pullDownRefr2,
+        threshold = _options$pullDownRefr2 === undefined ? 90 : _options$pullDownRefr2,
         _options$pullDownRefr3 = _options$pullDownRefr.stop,
-        stop = _options$pullDownRefr3 === undefined ? 20 : _options$pullDownRefr3;
+        stop = _options$pullDownRefr3 === undefined ? 40 : _options$pullDownRefr3;
 
-    if (this.y > threshold) {
+    if (this.y > threshold && !this.pulling) {
       this.pulling = true;
       this.trigger('pullingDown');
       this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce);
@@ -1791,7 +1805,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.1';
+BScroll.Version = '1.2.2';
 
 return BScroll;
 
