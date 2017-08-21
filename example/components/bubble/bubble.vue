@@ -121,6 +121,7 @@
         ctx.fill()
         ctx.strokeStyle = 'rgb(170,170,170)'
         ctx.stroke()
+        ctx.restore()
       }
     },
     watch: {
