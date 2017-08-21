@@ -56,11 +56,11 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 ## 文档
 
-访问 [better-scroll 官方文档](http://ustbhuangyi.github.io/better-scroll/doc/) 
+访问 [better-scroll 官方文档](https://ustbhuangyi.github.io/better-scroll/doc/) 
 
 ## demo 
 
-[体验地址](http://ustbhuangyi.github.io/better-scroll/demo/)
+[体验地址](https://ustbhuangyi.github.io/better-scroll/demo/)
 
 也可以扫码访问：
 
