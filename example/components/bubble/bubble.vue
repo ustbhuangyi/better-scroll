@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="bubble" :width="width" :height="height"></canvas>
+  <canvas ref="bubble" :width="width" :height="height" :style="style"></canvas>
 </template>
 
 <script type="text/ecmascript-6">
@@ -13,24 +13,30 @@
     data() {
       return {
         width: 50,
-        height: 80,
-        initRadius: 20,
-        minHeadRadius: 12,
-        minTailRadius: 5,
-        initArrowRadius: 10,
-        minArrowRadius: 6,
-        arrowWidth: 4,
-        maxDistance: 40,
-        initCenterX: 25,
-        initCenterY: 25
+        height: 80
       }
     },
     computed: {
       distance() {
-        return Math.max(0, Math.min(this.y, this.maxDistance))
+        return Math.max(0, Math.min(this.y * this.ratio, this.maxDistance))
+      },
+      style() {
+        return `width:${this.width / this.ratio}px;height:${this.height / this.ratio}px`
       }
     },
     created() {
+      this.ratio = window.devicePixelRatio
+      this.width *= this.ratio
+      this.height *= this.ratio
+      this.initRadius = 18 * this.ratio
+      this.minHeadRadius = 12 * this.ratio
+      this.minTailRadius = 5 * this.ratio
+      this.initArrowRadius = 10 * this.ratio
+      this.minArrowRadius = 6 * this.ratio
+      this.arrowWidth = 3 * this.ratio
+      this.maxDistance = 40 * this.ratio
+      this.initCenterX = 25 * this.ratio
+      this.initCenterY = 25 * this.ratio
       this.headCenter = {
         x: this.initCenterX,
         y: this.initCenterY
@@ -112,10 +118,10 @@
         // 画外圆
         ctx.arc(this.headCenter.x, this.headCenter.y, arrowRadius, 0, Math.PI * 3 / 2, false)
 
-        ctx.lineTo(this.headCenter.x, this.headCenter.y - arrowRadius - 2 + rate)
-        ctx.lineTo(this.headCenter.x + 8 - rate * 2, this.headCenter.y - arrowRadius + 2)
+        ctx.lineTo(this.headCenter.x, this.headCenter.y - arrowRadius - this.arrowWidth / 2 + rate)
+        ctx.lineTo(this.headCenter.x + this.arrowWidth * 2 - rate * 2, this.headCenter.y - arrowRadius + this.arrowWidth / 2)
 
-        ctx.lineTo(this.headCenter.x, this.headCenter.y - arrowRadius + 6 - rate)
+        ctx.lineTo(this.headCenter.x, this.headCenter.y - arrowRadius + this.arrowWidth * 3 / 2 - rate)
 
         ctx.fillStyle = 'rgb(255,255,255)'
         ctx.fill()
