@@ -7,6 +7,7 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
+  background-color: #f2f2f2;
   color: #606c71; }
 
 a {
@@ -216,7 +217,7 @@ a {
 
 @media screen and (max-width: 42em) {
   .main-content {
-    padding: 1rem 1rem;
+    padding: 1rem 1rem 2rem 1rem;
     font-size: 1rem; }
   iframe {
     display: none
@@ -226,7 +227,7 @@ a {
 .site-footer {
   padding-top: 2rem;
   margin-top: 2rem;
-  border-top: solid 1px #eff0f1; }
+  border-top: solid 1px #d7d7d7; }
 
 .site-footer-owner {
   display: block;

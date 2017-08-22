@@ -1,5 +1,5 @@
 <template>
-  <optional-demo class="scroll-view" title="Vertical Scroll" desc="基于 BScroll 实现垂直滚动列表组件">
+  <optional-demo class="scroll-view" title="普通 Scroll 组件" desc="基于 BScroll 实现垂直滚动列表组件">
     <div slot="options">
       <li>
         <switch-option name="scrollbar" :value="scrollbar"
