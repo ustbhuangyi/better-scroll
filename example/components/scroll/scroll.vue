@@ -3,7 +3,7 @@
     <div>
       <slot>
         <ul class="list-content">
-          <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
+          <li @click="clickItem(item)" class="list-item" v-for="item in data">{{item}}</li>
         </ul>
       </slot>
       <slot name="pullup"
@@ -58,22 +58,6 @@
         type: Array,
         default: []
       },
-      scrollbar: {
-        type: Boolean,
-        default: false
-      },
-      pullDownRefresh: {
-        type: Boolean,
-        default: false
-      },
-      pullUpLoad: {
-        type: Boolean,
-        default: false
-      },
-      scrollbarFade: {
-        type: Boolean,
-        default: false
-      },
       probeType: {
         type: Number,
         default: 1
@@ -86,21 +70,29 @@
         type: Boolean,
         default: false
       },
-      pullup: {
+      listenBeforeScroll: {
         type: Boolean,
         default: false
       },
-      beforeScroll: {
+      direction: {
+        type: String,
+        default: DIRECTION_V
+      },
+      scrollbar: {
+        type: Boolean,
+        default: false
+      },
+      pullDownRefresh: {
+        type: Boolean,
+        default: false
+      },
+      pullUpLoad: {
         type: Boolean,
         default: false
       },
       refreshDelay: {
         type: Number,
         default: 20
-      },
-      direction: {
-        type: String,
-        default: DIRECTION_V
       }
     },
     data() {
@@ -145,35 +137,18 @@
           })
         }
 
-        if (this.beforeScroll) {
+        if (this.listenBeforeScroll) {
           this.scroll.on('beforeScrollStart', () => {
-            this.$emit('beforeScroll')
+            this.$emit('beforeScrollStart')
           })
         }
 
         if (this.pullDownRefresh) {
-          this.scroll.on('pullingDown', () => {
-            this.$emit('pullingDown')
-            this.beforePullDown = false
-            this.isPullingDown = true
-            this.pulling = true
-          })
-
-          this.scroll.on('scroll', (pos) => {
-            if (this.beforePullDown) {
-              this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
-              this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
-            } else {
-              this.bubbleY = 0
-            }
-          })
+          this._initPullDownRefresh()
         }
 
         if (this.pullUpLoad) {
-          this.scroll.on('pullingUp', () => {
-            this.$emit('pullingUp')
-            this.isPullUpLoad = true
-          })
+          this._initPullUpLoad()
         }
       },
       disable() {
@@ -197,8 +172,31 @@
       finishPullUp() {
         this.scroll && this.scroll.finishPullUp()
       },
-      clickItem(e, item) {
-        console.log(`${item} is clicked}`, e)
+      clickItem(item) {
+        this.$emit('click', item)
+      },
+      _initPullDownRefresh() {
+        this.scroll.on('pullingDown', () => {
+          this.$emit('pullingDown')
+          this.beforePullDown = false
+          this.isPullingDown = true
+          this.pulling = true
+        })
+
+        this.scroll.on('scroll', (pos) => {
+          if (this.beforePullDown) {
+            this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
+            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
+          } else {
+            this.bubbleY = 0
+          }
+        })
+      },
+      _initPullUpLoad() {
+        this.scroll.on('pullingUp', () => {
+          this.$emit('pullingUp')
+          this.isPullUpLoad = true
+        })
       }
     },
     watch: {
