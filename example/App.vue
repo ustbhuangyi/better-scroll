@@ -195,7 +195,7 @@
 
           .option-list
             border: 1px solid rgba(0, 0, 0, .1)
-            border-radius: 1rem
+            border-radius: $radius-size-medium
             li
               padding: 5px 0
               border-bottom: 1px solid rgba(0, 0, 0, .1)
@@ -208,9 +208,9 @@
 
           .scroll-list-wrap
             position relative
-            height: 41rem
+            height: 30rem
             border: 1px solid rgba(0, 0, 0, .1)
-            border-radius: 1rem
+            border-radius: $radius-size-medium
             transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
             overflow: hidden
         .methods
@@ -233,12 +233,12 @@
                 padding: 0.5rem 1rem
                 line-height: 1.6rem
               input
-                border-radius: 1rem 0 0 1rem
+                border-radius: $radius-size-medium 0 0 $radius-size-medium
                 outline: none
                 &:focus
                   border-color: $color-green
               .button
-                border-radius: 0 1rem 1rem 0
+                border-radius: 0 $radius-size-medium $radius-size-medium 0
                 background-color: $color-green
                 border-color: $color-green
                 color: $color-white
