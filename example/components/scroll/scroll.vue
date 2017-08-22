@@ -30,7 +30,6 @@
       <div ref="pulldown" class="pulldown-wrapper" :style="pullDownStyle" v-if="pullDownRefresh">
         <div class="before-trigger" v-if="beforePullDown">
           <bubble :y="bubbleY"></bubble>
-          <span>下拉刷新</span>
         </div>
         <div class="after-trigger" v-else>
           <div v-if="pulling" class="loading">
@@ -163,7 +162,7 @@
           this.scroll.on('scroll', (pos) => {
             if (this.beforePullDown) {
               this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
-              this.pullDownStyle = `transitionDuration:0;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
+              this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
             } else {
               this.bubbleY = 0
             }
