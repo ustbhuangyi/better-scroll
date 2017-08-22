@@ -13,6 +13,11 @@
         <div class="title">基础应用</div>
         <ul class="example-list">
           <li class="example-item">
+            <router-link to="/vertical-scroll">
+              <span>Vertical Scroll</span>
+            </router-link>
+          </li>
+          <li class="example-item">
             <router-link to="/normal-scroll">
               <span>普通 Scroll 组件</span>
             </router-link>
@@ -51,14 +56,14 @@
             <div class="demo">
               <div class="title sub">Demo</div>
               <div class="scroll-list-wrap">
-                <scroll-list ref="scrollList"
+                <scroll ref="scrollList"
                              :data="items"
                              :scrollbar="scrollbar"
                              :pullDownRefresh="pullDownRefresh"
                              :pullUpLoad="pullUpLoad"
                              @pullingDown="onPullingDown"
                              @pullingUp="onPullingUp">
-                </scroll-list>
+                </scroll>
               </div>
             </div>
             <div class="methods">
@@ -85,7 +90,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import ScrollList from './components/scroll-list/scrollList.vue'
+  import Scroll from './components/scroll/scroll.vue'
   import SwitchOption from './components/switch-option/switchOption.vue'
 
   const _data = [
@@ -123,7 +128,7 @@
       }
     },
     components: {
-      ScrollList,
+      Scroll,
       SwitchOption
     },
     watch: {},

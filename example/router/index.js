@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Picker from 'example/pages/picker'
 import Slide from 'example/pages/slide'
-import NormalScroll from 'example/pages/normal-scroll'
+import NormalScroll from 'example/pages/normal-scroll/'
+import VerticalScroll from 'example/pages/vertical-scroll/'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
     {
       path: '/normal-scroll',
       component: NormalScroll
+    },
+    {
+      path: '/vertical-scroll',
+      component: VerticalScroll
     }
   ]
 })
