@@ -196,7 +196,7 @@
                 this.beforePullDown = true
                 this.refresh()
               }, this.scroll.options.bounceTime)
-            }, 500)
+            }, 600)
           } else if (this.pullUpLoad && this.isPullUpLoad) {
             this.isPullUpLoad = false
             this.finishPullUp()
