@@ -1,17 +1,17 @@
 <template>
-  <optional-demo class="scroll-view" title="Vertical Scroll" desc="基于 better-scroll 可以实现一个普通的滚动列表组件">
+  <optional-demo class="scroll-view" title="Vertical Scroll" desc="基于 BScroll 实现垂直滚动列表组件">
     <div slot="options">
       <li>
         <switch-option name="scrollbar" :value="scrollbar"
-                       @update:value="val => scrollbar = val"></switch-option>
+                       @update:value="updateScrollbar"></switch-option>
       </li>
       <li>
         <switch-option name="pull down refresh" :value="pullDownRefresh"
-                       @update:value="val => pullDownRefresh = val"></switch-option>
+                       @update:value="updatePullDownRefresh"></switch-option>
       </li>
       <li>
         <switch-option name="pull up load" :value="pullUpLoad"
-                       @update:value="val => pullUpLoad = val"></switch-option>
+                       @update:value="updatePullUpLoad"></switch-option>
       </li>
     </div>
     <div slot="demo">
@@ -102,6 +102,15 @@
         setTimeout(() => {
           this.items = this.items.concat(newPage)
         }, 1000)
+      },
+      updateScrollbar(val) {
+        this.scrollbar = val
+      },
+      updatePullDownRefresh(val) {
+        this.pullDownRefresh = val
+      },
+      updatePullUpLoad(val) {
+        this.pullUpLoad = val
       }
     }
   }

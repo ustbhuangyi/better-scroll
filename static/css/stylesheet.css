@@ -205,7 +205,7 @@ a {
 
 @media screen and (min-width: 64em) {
   .main-content {
-    padding: 2rem 6rem;
+    padding: 2rem 8rem;
     margin: 0 auto;
     font-size: 1.1rem; } }
 
@@ -216,7 +216,7 @@ a {
 
 @media screen and (max-width: 42em) {
   .main-content {
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     font-size: 1rem; }
   iframe {
     display: none
