@@ -1,27 +1,45 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
-    <ul class="list-content">
-      <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
-      <li class="pullup-wrapper" v-if="pullUpLoad">
-        <div class="before-trigger" v-if="!isPullUpLoad">
-          <span>加载更多</span>
+    <div>
+      <slot>
+        <ul class="list-content">
+          <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
+        </ul>
+      </slot>
+      <slot name="pullup"
+            :pullUpLoad="pullUpLoad"
+            :isPullUpLoad="isPullUpLoad"
+      >
+        <div class="pullup-wrapper" v-if="pullUpLoad">
+          <div class="before-trigger" v-if="!isPullUpLoad">
+            <span>加载更多</span>
+          </div>
+          <div class="after-trigger" v-else>
+            <loading></loading>
+          </div>
+        </div>
+      </slot>
+    </div>
+    <slot name="pulldown"
+          :pullDownRefresh="pullDownRefresh"
+          :pullDownStyle="pullDownStyle"
+          :beforePullDown="beforePullDown"
+          :pulling="pulling"
+          :bubbleY="bubbleY"
+    >
+      <div ref="pulldown" class="pulldown-wrapper" :style="pullDownStyle" v-if="pullDownRefresh">
+        <div class="before-trigger" v-if="beforePullDown">
+          <bubble :y="bubbleY"></bubble>
+          <span>下拉刷新</span>
         </div>
         <div class="after-trigger" v-else>
-          <loading></loading>
+          <div v-if="pulling" class="loading">
+            <loading></loading>
+          </div>
+          <div v-else><span>刷新成功</span></div>
         </div>
-      </li>
-    </ul>
-    <div ref="pulldown" class="pulldown-wrapper" v-if="pullDownRefresh">
-      <div class="before-trigger" v-if="beforePullDown">
-        <bubble :y="bubbleY"></bubble>
       </div>
-      <div class="after-trigger" v-else>
-        <div v-if="pulling" class="loading">
-          <loading></loading>
-        </div>
-        <div v-else><span>刷新成功</span></div>
-      </div>
-    </div>
+    </slot>
   </div>
 </template>
 
@@ -92,7 +110,8 @@
         isPullingDown: false,
         pulling: false,
         isPullUpLoad: false,
-        bubbleY: 0
+        bubbleY: 0,
+        pullDownStyle: ''
       }
     },
     created() {
@@ -144,8 +163,7 @@
           this.scroll.on('scroll', (pos) => {
             if (this.beforePullDown) {
               this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
-              this.$refs.pulldown.style.transitionDuration = ''
-              this.$refs.pulldown.style.top = `${Math.min(pos.y + this.pulldownInitTop, 10)}px`
+              this.pullDownStyle = `transitionDuration:0;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
             } else {
               this.bubbleY = 0
             }
@@ -208,9 +226,7 @@
       },
       isPullingDown(val) {
         if (!val) {
-          this.$refs.pulldown.style.top = `${this.pulldownInitTop}px`
-          this.$refs.pulldown.style.transitionDuration = '700ms'
-          this.$refs.pulldown.style.transitionTimingFunction = 'cubic-bezier(0.165, 0.84, 0.44, 1)'
+          this.pullDownStyle = `top:${this.pulldownInitTop}px;transitionDuration:700ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
         }
       },
       scrollbar() {
