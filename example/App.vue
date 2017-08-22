@@ -13,6 +13,11 @@
         <div class="title">基础应用</div>
         <ul class="example-list">
           <li class="example-item">
+            <router-link to="/vertical-scroll">
+              <span>Vertical Scroll</span>
+            </router-link>
+          </li>
+          <li class="example-item">
             <router-link to="/normal-scroll">
               <span>普通 Scroll 组件</span>
             </router-link>
@@ -51,14 +56,14 @@
             <div class="demo">
               <div class="title sub">Demo</div>
               <div class="scroll-list-wrap">
-                <scroll-list ref="scrollList"
+                <scroll ref="scrollList"
                              :data="items"
                              :scrollbar="scrollbar"
                              :pullDownRefresh="pullDownRefresh"
                              :pullUpLoad="pullUpLoad"
                              @pullingDown="onPullingDown"
                              @pullingUp="onPullingUp">
-                </scroll-list>
+                </scroll>
               </div>
             </div>
             <div class="methods">
@@ -85,7 +90,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import ScrollList from './components/scroll-list/scrollList.vue'
+  import Scroll from './components/scroll/scroll.vue'
   import SwitchOption from './components/switch-option/switchOption.vue'
 
   const _data = [
@@ -123,7 +128,7 @@
       }
     },
     components: {
-      ScrollList,
+      Scroll,
       SwitchOption
     },
     watch: {},
@@ -195,7 +200,7 @@
 
           .option-list
             border: 1px solid rgba(0, 0, 0, .1)
-            border-radius: 1rem
+            border-radius: $radius-size-medium
             li
               padding: 5px 0
               border-bottom: 1px solid rgba(0, 0, 0, .1)
@@ -208,9 +213,9 @@
 
           .scroll-list-wrap
             position relative
-            height: 41rem
+            height: 30rem
             border: 1px solid rgba(0, 0, 0, .1)
-            border-radius: 1rem
+            border-radius: $radius-size-medium
             transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
             overflow: hidden
         .methods
@@ -233,12 +238,12 @@
                 padding: 0.5rem 1rem
                 line-height: 1.6rem
               input
-                border-radius: 1rem 0 0 1rem
+                border-radius: $radius-size-medium 0 0 $radius-size-medium
                 outline: none
                 &:focus
                   border-color: $color-green
               .button
-                border-radius: 0 1rem 1rem 0
+                border-radius: 0 $radius-size-medium $radius-size-medium 0
                 background-color: $color-green
                 border-color: $color-green
                 color: $color-white
