@@ -98,6 +98,7 @@
     data() {
       return {
         beforePullDown: true,
+        isFinishing: false,
         isPullingDown: false,
         pulling: false,
         isPullUpLoad: false,
@@ -184,6 +185,10 @@
           } else {
             this.bubbleY = 0
           }
+
+          if (this.isFinishing) {
+            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y - 30, 10)}px`
+          }
         })
       },
       _initPullUpLoad() {
@@ -196,6 +201,7 @@
         const {stopTime = 600} = this.pullDownRefresh
         return new Promise((resolve) => {
           setTimeout(() => {
+            this.isFinishing = true
             this.scroll.finishPullDown()
             this.isPullingDown = false
             resolve()
@@ -204,7 +210,9 @@
       },
       _afterPullDown() {
         setTimeout(() => {
+          this.pullDownStyle = `transitionDuration:0ms;top:${this.pullDownInitTop}px`
           this.beforePullDown = true
+          this.isFinishing = false
           this.refresh()
         }, this.scroll.options.bounceTime)
       }
@@ -225,11 +233,6 @@
             this.refresh()
           }
         }, this.refreshDelay)
-      },
-      isPullingDown(val) {
-        if (!val) {
-          this.pullDownStyle = `top:${this.pullDownInitTop}px;transitionDuration:${this.scroll.options.bounceTime}ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
-        }
       },
       scrollbar() {
         this.scroll.destroy()
