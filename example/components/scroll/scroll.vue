@@ -181,13 +181,13 @@
         this.scroll.on('scroll', (pos) => {
           if (this.beforePullDown) {
             this.bubbleY = Math.max(0, pos.y + this.pullDownInitTop)
-            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
+            this.pullDownStyle = `top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
           } else {
             this.bubbleY = 0
           }
 
           if (this.isFinishing) {
-            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y - 30, 10)}px`
+            this.pullDownStyle = `top:${Math.min(pos.y - 30, 10)}px`
           }
         })
       },
@@ -210,7 +210,7 @@
       },
       _afterPullDown() {
         setTimeout(() => {
-          this.pullDownStyle = `transitionDuration:0ms;top:${this.pullDownInitTop}px`
+          this.pullDownStyle = `top:${this.pullDownInitTop}px`
           this.beforePullDown = true
           this.isFinishing = false
           this.refresh()
