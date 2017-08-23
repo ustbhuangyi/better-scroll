@@ -106,7 +106,7 @@
       }
     },
     created() {
-      this.pulldownInitTop = -50
+      this.pullDownInitTop = -50
     },
     mounted() {
       setTimeout(() => {
@@ -166,12 +166,6 @@
       scrollToElement() {
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       },
-      finishPullDown() {
-        this.scroll && this.scroll.finishPullDown()
-      },
-      finishPullUp() {
-        this.scroll && this.scroll.finishPullUp()
-      },
       clickItem(item) {
         this.$emit('click', item)
       },
@@ -185,8 +179,8 @@
 
         this.scroll.on('scroll', (pos) => {
           if (this.beforePullDown) {
-            this.bubbleY = Math.max(0, pos.y + this.pulldownInitTop)
-            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pulldownInitTop, 10)}px`
+            this.bubbleY = Math.max(0, pos.y + this.pullDownInitTop)
+            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
           } else {
             this.bubbleY = 0
           }
@@ -199,12 +193,13 @@
         })
       },
       _finishPullDown() {
+        const {stopTime = 600} = this.pullDownRefresh
         return new Promise((resolve) => {
           setTimeout(() => {
-            this.finishPullDown()
+            this.scroll.finishPullDown()
             this.isPullingDown = false
             resolve()
-          }, 600)
+          }, stopTime)
         })
       },
       _afterPullDown() {
@@ -224,7 +219,7 @@
             })
           } else if (this.pullUpLoad && this.isPullUpLoad) {
             this.isPullUpLoad = false
-            this.finishPullUp()
+            this.scroll.finishPullUp()
             this.refresh()
           } else {
             this.refresh()
@@ -233,7 +228,7 @@
       },
       isPullingDown(val) {
         if (!val) {
-          this.pullDownStyle = `top:${this.pulldownInitTop}px;transitionDuration:${this.scroll.options.bounceTime}ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
+          this.pullDownStyle = `top:${this.pullDownInitTop}px;transitionDuration:${this.scroll.options.bounceTime}ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
         }
       },
       scrollbar() {
