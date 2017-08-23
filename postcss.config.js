@@ -4,7 +4,8 @@ module.exports = {
       browsers: [
         "> 1%",
         "last 2 versions",
-        "not ie <= 8"
+        "not ie <= 8",
+        "iOS 8"
       ]
     })
   ]
