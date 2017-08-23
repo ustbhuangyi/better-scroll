@@ -98,7 +98,7 @@
     data() {
       return {
         beforePullDown: true,
-        isFinishing: false,
+        isRebounding: false,
         isPullingDown: false,
         pulling: false,
         isPullUpLoad: false,
@@ -186,7 +186,7 @@
             this.bubbleY = 0
           }
 
-          if (this.isFinishing) {
+          if (this.isRebounding) {
             this.pullDownStyle = `top:${Math.min(pos.y - 30, 10)}px`
           }
         })
@@ -197,11 +197,11 @@
           this.isPullUpLoad = true
         })
       },
-      _finishPullDown() {
+      _reboundPullDown() {
         const {stopTime = 600} = this.pullDownRefresh
         return new Promise((resolve) => {
           setTimeout(() => {
-            this.isFinishing = true
+            this.isRebounding = true
             this.scroll.finishPullDown()
             this.isPullingDown = false
             resolve()
@@ -212,7 +212,7 @@
         setTimeout(() => {
           this.pullDownStyle = `top:${this.pullDownInitTop}px`
           this.beforePullDown = true
-          this.isFinishing = false
+          this.isRebounding = false
           this.refresh()
         }, this.scroll.options.bounceTime)
       }
@@ -222,7 +222,7 @@
         setTimeout(() => {
           if (this.pullDownRefresh && this.isPullingDown) {
             this.pulling = false
-            this._finishPullDown().then(() => {
+            this._reboundPullDown().then(() => {
               this._afterPullDown()
             })
           } else if (this.pullUpLoad && this.isPullUpLoad) {
