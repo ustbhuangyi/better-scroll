@@ -135,7 +135,10 @@
 
             .scroll-list-wrap
               position relative
-              height: 30rem
+              @media screen and (min-width: 42rem)
+                height: 30rem
+              @media screen and (max-width: 42rem)
+                height: 26rem
               border: 1px solid rgba(0, 0, 0, .1)
               border-radius: $radius-size-medium
               transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题

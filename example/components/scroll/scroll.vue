@@ -98,6 +98,7 @@
     data() {
       return {
         beforePullDown: true,
+        isRebounding: false,
         isPullingDown: false,
         pulling: false,
         isPullUpLoad: false,
@@ -180,9 +181,13 @@
         this.scroll.on('scroll', (pos) => {
           if (this.beforePullDown) {
             this.bubbleY = Math.max(0, pos.y + this.pullDownInitTop)
-            this.pullDownStyle = `transitionDuration:0ms;top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
+            this.pullDownStyle = `top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
           } else {
             this.bubbleY = 0
+          }
+
+          if (this.isRebounding) {
+            this.pullDownStyle = `top:${Math.min(pos.y - 30, 10)}px`
           }
         })
       },
@@ -192,10 +197,11 @@
           this.isPullUpLoad = true
         })
       },
-      _finishPullDown() {
+      _reboundPullDown() {
         const {stopTime = 600} = this.pullDownRefresh
         return new Promise((resolve) => {
           setTimeout(() => {
+            this.isRebounding = true
             this.scroll.finishPullDown()
             this.isPullingDown = false
             resolve()
@@ -204,7 +210,9 @@
       },
       _afterPullDown() {
         setTimeout(() => {
+          this.pullDownStyle = `top:${this.pullDownInitTop}px`
           this.beforePullDown = true
+          this.isRebounding = false
           this.refresh()
         }, this.scroll.options.bounceTime)
       }
@@ -214,7 +222,7 @@
         setTimeout(() => {
           if (this.pullDownRefresh && this.isPullingDown) {
             this.pulling = false
-            this._finishPullDown().then(() => {
+            this._reboundPullDown().then(() => {
               this._afterPullDown()
             })
           } else if (this.pullUpLoad && this.isPullUpLoad) {
@@ -225,11 +233,6 @@
             this.refresh()
           }
         }, this.refreshDelay)
-      },
-      isPullingDown(val) {
-        if (!val) {
-          this.pullDownStyle = `top:${this.pullDownInitTop}px;transitionDuration:${this.scroll.options.bounceTime}ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
-        }
       },
       scrollbar() {
         this.scroll.destroy()
