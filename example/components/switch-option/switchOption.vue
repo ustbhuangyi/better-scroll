@@ -1,5 +1,5 @@
 <template>
-  <div class="switch-wrapper">
+  <div class="switch-option">
     <span class="name">{{ name }}</span>
     <div class="switch-ellipse" :class="{ active: checked }" @click="clickSwitch">
       <span class="switch-circle" :class="{ active: checked }"></span>
@@ -38,14 +38,19 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable.styl"
 
-  .switch-wrapper
+  .switch-option
     display flex
     justify-content space-between
-    align-items center
+    align-items stretch
+    width: 100%
+    height: 100%
     padding 0 15px
     .name
+      display flex
+      align-items: center
       flex: 0 1 auto
     .switch-ellipse
+      align-self: center
       flex: 0 0 auto
       margin-top: 5px;
       display: inline-block;

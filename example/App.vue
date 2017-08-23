@@ -72,7 +72,7 @@
           box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
           text-align: center
           @media screen and (min-width: 42rem)
-            flex: 0 1 25%
+            flex: 0 1 28%
           @media screen and (max-width: 42rem)
             flex: 0 1 100%
             margin-bottom: 2rem

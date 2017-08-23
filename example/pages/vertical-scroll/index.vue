@@ -9,6 +9,14 @@
         <switch-option name="pull down refresh" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
       </li>
+      <li v-if="pullDownRefresh">
+        <input-option name="threshold" :value="pullDownRefreshThreshold"
+                      @update:value="updatePullDownRefreshThreshold"></input-option>
+      </li>
+      <li v-if="pullDownRefresh">
+        <input-option name="stop" :value="pullDownRefreshStop"
+                      @update:value="updatePullDownRefreshStop"></input-option>
+      </li>
       <li>
         <switch-option name="pull up load" :value="pullUpLoad"
                        @update:value="updatePullUpLoad"></switch-option>
@@ -19,6 +27,8 @@
               :data="items"
               :scrollbar="scrollbar"
               :pullDownRefresh="pullDownRefresh"
+              :pullDownRefreshStop="pullDownRefreshStop"
+              :pullDownRefreshThreshold="pullDownRefreshThreshold"
               :pullUpLoad="pullUpLoad"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
@@ -37,6 +47,7 @@
   import OptionalDemo from 'example/components/optional-demo/optionalDemo.vue'
   import Scroll from 'example/components/scroll/scroll.vue'
   import SwitchOption from 'example/components/switch-option/switchOption.vue'
+  import InputOption from 'example/components/input-option/inputOption.vue'
 
   const _data = [
     '我是第 1 行',
@@ -66,6 +77,8 @@
       return {
         scrollbar: true,
         pullDownRefresh: true,
+        pullDownRefreshThreshold: 90,
+        pullDownRefreshStop: 40,
         pullUpLoad: true,
         y: 300,
         items: _data,
@@ -75,7 +88,8 @@
     components: {
       OptionalDemo,
       Scroll,
-      SwitchOption
+      SwitchOption,
+      InputOption
     },
     watch: {},
     methods: {
@@ -108,6 +122,12 @@
       },
       updatePullDownRefresh(val) {
         this.pullDownRefresh = val
+      },
+      updatePullDownRefreshThreshold(val) {
+        this.pullDownRefreshThreshold = val
+      },
+      updatePullDownRefreshStop(val) {
+        this.pullDownRefreshStop = val
       },
       updatePullUpLoad(val) {
         this.pullUpLoad = val
