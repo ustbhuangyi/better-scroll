@@ -197,6 +197,21 @@
           this.$emit('pullingUp')
           this.isPullUpLoad = true
         })
+      },
+      _finishPullDown() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.finishPullDown()
+            this.isPullingDown = false
+            resolve()
+          }, 600)
+        })
+      },
+      _afterPullDown() {
+        setTimeout(() => {
+          this.beforePullDown = true
+          this.refresh()
+        }, this.scroll.options.bounceTime)
       }
     },
     watch: {
@@ -204,14 +219,9 @@
         setTimeout(() => {
           if (this.pullDownRefresh && this.isPullingDown) {
             this.pulling = false
-            setTimeout(() => {
-              this.finishPullDown()
-              this.isPullingDown = false
-              setTimeout(() => {
-                this.beforePullDown = true
-                this.refresh()
-              }, this.scroll.options.bounceTime)
-            }, 600)
+            this._finishPullDown().then(() => {
+              this._afterPullDown()
+            })
           } else if (this.pullUpLoad && this.isPullUpLoad) {
             this.isPullUpLoad = false
             this.finishPullUp()
@@ -223,7 +233,7 @@
       },
       isPullingDown(val) {
         if (!val) {
-          this.pullDownStyle = `top:${this.pulldownInitTop}px;transitionDuration:700ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
+          this.pullDownStyle = `top:${this.pulldownInitTop}px;transitionDuration:${this.scroll.options.bounceTime}ms;transitionTimingFunction:cubic-bezier(0.165, 0.84, 0.44, 1)`
         }
       },
       scrollbar() {
