@@ -5,15 +5,19 @@
         <switch-option name="scrollbar" :value="scrollbar"
                        @update:value="updateScrollbar"></switch-option>
       </li>
-      <li>
+      <li v-if="scrollbar">
+        <switch-option name="scrollbar fade" :value="scrollbarFade"
+                       @update:value="updateScrollbarFade"></switch-option>
+      </li>
+      <li class="even">
         <switch-option name="pull down refresh" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
       </li>
-      <li v-if="pullDownRefresh">
-        <input-option name="threshold" :value="pullDownRefreshThreshold"
+      <li v-if="pullDownRefresh" class="even">
+        <input-option name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
                       @update:value="updatePullDownRefreshThreshold"></input-option>
       </li>
-      <li v-if="pullDownRefresh">
+      <li v-if="pullDownRefresh" class="even">
         <input-option name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
                       @update:value="updatePullDownRefreshStop"></input-option>
       </li>
@@ -21,15 +25,22 @@
         <switch-option name="pull up load" :value="pullUpLoad"
                        @update:value="updatePullUpLoad"></switch-option>
       </li>
+      <li v-if="pullUpLoad">
+        <input-option name="threshold" :value="pullUpLoadThreshold"
+                      @update:value="updatePullUpLoadThreshold"></input-option>
+      </li>
+      <li class="even">
+        <input-option name="startY" :value="startY"
+                      @update:value="updateStartY"></input-option>
+      </li>
     </div>
     <div slot="demo">
       <scroll ref="scrollList"
               :data="items"
-              :scrollbar="scrollbar"
-              :pullDownRefresh="pullDownRefresh"
-              :pullDownRefreshStop="pullDownRefreshStop"
-              :pullDownRefreshThreshold="pullDownRefreshThreshold"
-              :pullUpLoad="pullUpLoad"
+              :scrollbar="scrollbarObj"
+              :pullDownRefresh="pullDownRefreshObj"
+              :pullUpLoad="pullUpLoadObj"
+              :startY="parseInt(startY)"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
       </scroll>
@@ -44,10 +55,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import OptionalDemo from 'example/components/optional-demo/optionalDemo.vue'
+  import OptionalDemo from 'example/components/optional-demo/optional-demo.vue'
   import Scroll from 'example/components/scroll/scroll.vue'
-  import SwitchOption from 'example/components/switch-option/switchOption.vue'
-  import InputOption from 'example/components/input-option/inputOption.vue'
+  import SwitchOption from 'example/components/switch-option/switch-option.vue'
+  import InputOption from 'example/components/input-option/input-option.vue'
 
   const _data = [
     '我是第 1 行',
@@ -76,10 +87,13 @@
     data() {
       return {
         scrollbar: true,
+        scrollbarFade: true,
         pullDownRefresh: true,
         pullDownRefreshThreshold: 90,
         pullDownRefreshStop: 40,
         pullUpLoad: true,
+        pullUpLoadThreshold: 50,
+        startY: 0,
         y: 300,
         items: _data,
         itemIndex: _data.length
@@ -92,6 +106,17 @@
       InputOption
     },
     watch: {},
+    computed: {
+      scrollbarObj: function () {
+        return this.scrollbar ? {fade: this.scrollbarFade} : false
+      },
+      pullDownRefreshObj: function () {
+        return this.pullDownRefresh ? {threshold: parseInt(this.pullDownRefreshThreshold), stop: parseInt(this.pullDownRefreshStop)} : false
+      },
+      pullUpLoadObj: function () {
+        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold)} : false
+      }
+    },
     methods: {
       scrollTo() {
         this.$refs.scrollList.scrollTo(0, -this.y)
@@ -120,6 +145,9 @@
       updateScrollbar(val) {
         this.scrollbar = val
       },
+      updateScrollbarFade(val) {
+        this.scrollbarFade = val
+      },
       updatePullDownRefresh(val) {
         this.pullDownRefresh = val
       },
@@ -131,6 +159,12 @@
       },
       updatePullUpLoad(val) {
         this.pullUpLoad = val
+      },
+      updatePullUpLoadThreshold(val) {
+        this.pullUpLoadThreshold = val
+      },
+      updateStartY(val) {
+        this.startY = val
       }
     }
   }

@@ -52,30 +52,33 @@
     .switch-ellipse
       align-self: center
       flex: 0 0 auto
-      margin-top: 5px;
-      display: inline-block;
-      position: relative;
-      height: 30px;
-      width: 52px;
-      border-radius: 1000px;
-      box-shadow: 0 0 2px #333;
+      margin-top: 5px
+      display: inline-block
+      position: relative
+      height: 31px
+      width: 51px
+      background-color: $color-white
+      border-radius: 1000px
+      border: 2px solid rgba(0, 0, 0, .1)
       transition: all 0.1s
       &.active
-        background: $color-green;
-        transition: all 0.2s ease 0.2s;
+        background-color: $color-green
+        border-color: transparent
+        transition: all 0.2s ease 0.2s
       .switch-circle
-        position: absolute;
-        display: inline-block;
-        height: 29px;
-        width: 29px;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 0 0 2px #333;
-        top: 1px
-        left: 1px
-        transition: all 0.3s;
+        position: absolute
+        display: inline-block
+        height: 27px
+        width: 27px
+        background: white
+        border-radius: 50%
+        border: 1px solid rgba(0, 0, 0, .1)
+        box-shadow: -1px 1px 1px #999
+        top: 0
+        left: 0
+        transition: all 0.3s
         &.active
-          left: 23px;
-          transition: all 0.4s ease 0.1s;
+          left: 21px
+          transition: all 0.4s ease 0.1s
 
 </style>

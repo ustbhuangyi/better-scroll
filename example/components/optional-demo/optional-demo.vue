@@ -58,7 +58,7 @@
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 
   @import "~common/stylus/variable.styl"
 
@@ -93,7 +93,7 @@
           left: 0
           padding: 0 15px
           font-size: 14px
-          color: rgb(0, 160, 220)
+          color: $color-green
       .page-content
         flex: 1 0 95%
         overflow scroll
@@ -126,6 +126,8 @@
               li
                 height: 3.5rem
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
+                &.even
+                  background-color: $color-active-light-gray
           .demo
             @media screen and (min-width: 42rem)
               flex: 0 0 23rem

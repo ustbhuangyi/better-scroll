@@ -79,24 +79,20 @@
         default: DIRECTION_V
       },
       scrollbar: {
-        type: Boolean,
+        type: null,
         default: false
       },
       pullDownRefresh: {
-        type: Boolean,
+        type: null,
         default: false
-      },
-      pullDownRefreshThreshold: {
-        type: Number,
-        default: 90
-      },
-      pullDownRefreshStop: {
-        type: Number,
-        default: 40
       },
       pullUpLoad: {
-        type: Boolean,
+        type: null,
         default: false
+      },
+      startY: {
+        type: Number,
+        default: 0
       },
       refreshDelay: {
         type: Number,
@@ -134,8 +130,9 @@
           scrollY: this.direction === DIRECTION_V,
           scrollX: this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
-          pullDownRefresh: this.pullDownRefresh ? {threshold: this.pullDownRefreshThreshold, stop: this.pullDownRefreshStop} : false,
-          pullUpLoad: this.pullUpLoad
+          pullDownRefresh: this.pullDownRefresh,
+          pullUpLoad: this.pullUpLoad,
+          startY: this.startY
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)
@@ -195,7 +192,7 @@
           }
 
           if (this.isRebounding) {
-            this.pullDownStyle = `top:${Math.min(pos.y - 30, 10)}px`
+            this.pullDownStyle = `top:${10 - (this.pullDownRefresh.stop - pos.y)}px`
           }
         })
       },
@@ -250,15 +247,11 @@
         this.scroll.destroy()
         this._initScroll()
       },
-      pullDownRefreshThreshold() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      pullDownRefreshStop() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
       pullUpLoad() {
+        this.scroll.destroy()
+        this._initScroll()
+      },
+      startY() {
         this.scroll.destroy()
         this._initScroll()
       }
@@ -305,4 +298,5 @@
       display: flex
       justify-content center
       align-items center
+      padding: 16px 0
 </style>
