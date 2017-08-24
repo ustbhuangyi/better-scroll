@@ -50,10 +50,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import OptionalDemo from 'example/components/optional-demo/optionalDemo.vue'
+  import OptionalDemo from 'example/components/optional-demo/optional-demo.vue'
   import Scroll from 'example/components/scroll/scroll.vue'
-  import SwitchOption from 'example/components/switch-option/switchOption.vue'
-  import InputOption from 'example/components/input-option/inputOption.vue'
+  import SwitchOption from 'example/components/switch-option/switch-option.vue'
+  import InputOption from 'example/components/input-option/input-option.vue'
 
   const _data = [
     '我是第 1 行',
