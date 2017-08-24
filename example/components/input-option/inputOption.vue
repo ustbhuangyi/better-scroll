@@ -23,7 +23,7 @@
     },
     watch: {
       inputValue: function (newValue) {
-        this.$emit('update:value', Math.max(newValue, this.minValue))
+        this.$emit('update:value', this.minValue ? Math.max(newValue, this.minValue) : newValue)
       }
     }
   }

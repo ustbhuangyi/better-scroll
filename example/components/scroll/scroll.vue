@@ -79,24 +79,12 @@
         default: DIRECTION_V
       },
       scrollbar: {
-        type: Boolean,
-        default: false
-      },
-      scrollbarFade: {
-        type: Boolean,
+        type: null,
         default: false
       },
       pullDownRefresh: {
-        type: Boolean,
+        type: null,
         default: false
-      },
-      pullDownRefreshThreshold: {
-        type: Number,
-        default: 90
-      },
-      pullDownRefreshStop: {
-        type: Number,
-        default: 40
       },
       pullUpLoad: {
         type: Boolean,
@@ -137,8 +125,8 @@
           click: this.click,
           scrollY: this.direction === DIRECTION_V,
           scrollX: this.direction === DIRECTION_H,
-          scrollbar: this.scrollbar ? {fade: this.scrollbarFade} : false,
-          pullDownRefresh: this.pullDownRefresh ? {threshold: this.pullDownRefreshThreshold, stop: this.pullDownRefreshStop} : false,
+          scrollbar: this.scrollbar,
+          pullDownRefresh: this.pullDownRefresh,
           pullUpLoad: this.pullUpLoad
         }
 
@@ -250,19 +238,7 @@
         this.scroll.destroy()
         this._initScroll()
       },
-      scrollbarFade() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
       pullDownRefresh() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      pullDownRefreshThreshold() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      pullDownRefreshStop() {
         this.scroll.destroy()
         this._initScroll()
       },
@@ -313,4 +289,5 @@
       display: flex
       justify-content center
       align-items center
+      padding: 16px 0
 </style>

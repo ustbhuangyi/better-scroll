@@ -6,7 +6,7 @@
                        @update:value="updateScrollbar"></switch-option>
       </li>
       <li v-if="scrollbar">
-        <switch-option name="scrollbarFade" :value="scrollbarFade"
+        <switch-option name="scrollbar fade" :value="scrollbarFade"
                        @update:value="updateScrollbarFade"></switch-option>
       </li>
       <li class="even">
@@ -14,7 +14,7 @@
                        @update:value="updatePullDownRefresh"></switch-option>
       </li>
       <li v-if="pullDownRefresh" class="even">
-        <input-option name="threshold" :value="pullDownRefreshThreshold"
+        <input-option name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
                       @update:value="updatePullDownRefreshThreshold"></input-option>
       </li>
       <li v-if="pullDownRefresh" class="even">
@@ -29,11 +29,8 @@
     <div slot="demo">
       <scroll ref="scrollList"
               :data="items"
-              :scrollbar="scrollbar"
-              :scrollbarFade="scrollbarFade"
-              :pullDownRefresh="pullDownRefresh"
-              :pullDownRefreshStop="pullDownRefreshStop"
-              :pullDownRefreshThreshold="pullDownRefreshThreshold"
+              :scrollbar="scrollbarObj"
+              :pullDownRefresh="pullDownRefreshObj"
               :pullUpLoad="pullUpLoad"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
@@ -98,6 +95,14 @@
       InputOption
     },
     watch: {},
+    computed: {
+      scrollbarObj: function () {
+        return this.scrollbar ? {fade: this.scrollbarFade} : false
+      },
+      pullDownRefreshObj: function () {
+        return this.pullDownRefresh ? {threshold: parseInt(this.pullDownRefreshThreshold), stop: parseInt(this.pullDownRefreshStop)} : false
+      }
+    },
     methods: {
       scrollTo() {
         this.$refs.scrollList.scrollTo(0, -this.y)
