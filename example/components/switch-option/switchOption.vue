@@ -73,7 +73,7 @@
         background: white
         border-radius: 50%
         border: 1px solid rgba(0, 0, 0, .1)
-        box-shadow: -1px 1px 1px #333
+        box-shadow: -1px 1px 1px #999
         top: 0
         left: 0
         transition: all 0.3s
