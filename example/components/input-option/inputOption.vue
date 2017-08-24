@@ -13,7 +13,8 @@
       name: {
         type: String
       },
-      value: null
+      value: null,
+      minValue: null
     },
     data() {
       return {
@@ -22,7 +23,7 @@
     },
     watch: {
       inputValue: function (newValue) {
-        this.$emit('update:value', newValue)
+        this.$emit('update:value', Math.max(newValue, this.minValue))
       }
     }
   }

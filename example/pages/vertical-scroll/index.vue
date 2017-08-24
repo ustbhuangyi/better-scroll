@@ -14,7 +14,7 @@
                       @update:value="updatePullDownRefreshThreshold"></input-option>
       </li>
       <li v-if="pullDownRefresh">
-        <input-option name="stop" :value="pullDownRefreshStop"
+        <input-option name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
                       @update:value="updatePullDownRefreshStop"></input-option>
       </li>
       <li>
