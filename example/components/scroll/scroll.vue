@@ -187,7 +187,7 @@
           }
 
           if (this.isRebounding) {
-            this.pullDownStyle = `top:${Math.min(pos.y - 30, 10)}px`
+            this.pullDownStyle = `top:${10 - (this.pullDownRefresh.stop - pos.y)}px`
           }
         })
       },
