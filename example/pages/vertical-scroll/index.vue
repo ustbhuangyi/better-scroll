@@ -25,13 +25,17 @@
         <switch-option name="pull up load" :value="pullUpLoad"
                        @update:value="updatePullUpLoad"></switch-option>
       </li>
+      <li v-if="pullUpLoad">
+        <input-option name="threshold" :value="pullUpLoadThreshold"
+                      @update:value="updatePullUpLoadThreshold"></input-option>
+      </li>
     </div>
     <div slot="demo">
       <scroll ref="scrollList"
               :data="items"
               :scrollbar="scrollbarObj"
               :pullDownRefresh="pullDownRefreshObj"
-              :pullUpLoad="pullUpLoad"
+              :pullUpLoad="pullUpLoadObj"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
       </scroll>
@@ -83,6 +87,7 @@
         pullDownRefreshThreshold: 90,
         pullDownRefreshStop: 40,
         pullUpLoad: true,
+        pullUpLoadThreshold: 50,
         y: 300,
         items: _data,
         itemIndex: _data.length
@@ -101,6 +106,9 @@
       },
       pullDownRefreshObj: function () {
         return this.pullDownRefresh ? {threshold: parseInt(this.pullDownRefreshThreshold), stop: parseInt(this.pullDownRefreshStop)} : false
+      },
+      pullUpLoadObj: function () {
+        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold)} : false
       }
     },
     methods: {
@@ -145,6 +153,9 @@
       },
       updatePullUpLoad(val) {
         this.pullUpLoad = val
+      },
+      updatePullUpLoadThreshold(val) {
+        this.pullUpLoadThreshold = val
       }
     }
   }

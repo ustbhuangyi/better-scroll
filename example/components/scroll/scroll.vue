@@ -87,7 +87,7 @@
         default: false
       },
       pullUpLoad: {
-        type: Boolean,
+        type: null,
         default: false
       },
       refreshDelay: {
