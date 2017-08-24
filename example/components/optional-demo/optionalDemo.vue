@@ -93,7 +93,7 @@
           left: 0
           padding: 0 15px
           font-size: 14px
-          color: rgb(0, 160, 220)
+          color: $color-green
       .page-content
         flex: 1 0 95%
         overflow scroll
