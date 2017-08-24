@@ -126,6 +126,8 @@
               li
                 height: 3.5rem
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
+                &.even
+                  background-color: $color-vue-green-opacity
           .demo
             @media screen and (min-width: 42rem)
               flex: 0 0 23rem

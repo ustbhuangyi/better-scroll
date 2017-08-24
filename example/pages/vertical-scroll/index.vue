@@ -5,15 +5,15 @@
         <switch-option name="scrollbar" :value="scrollbar"
                        @update:value="updateScrollbar"></switch-option>
       </li>
-      <li>
+      <li class="even">
         <switch-option name="pull down refresh" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
       </li>
-      <li v-if="pullDownRefresh">
+      <li v-if="pullDownRefresh" class="even">
         <input-option name="threshold" :value="pullDownRefreshThreshold"
                       @update:value="updatePullDownRefreshThreshold"></input-option>
       </li>
-      <li v-if="pullDownRefresh">
+      <li v-if="pullDownRefresh" class="even">
         <input-option name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
                       @update:value="updatePullDownRefreshStop"></input-option>
       </li>

@@ -47,6 +47,7 @@
       flex: 0 1 auto
       width: 8rem
       padding: 0.8rem
+      background-color: transparent
       border-left: 1px solid rgba(0, 0, 0, .1)
       outline: none
       &:focus
