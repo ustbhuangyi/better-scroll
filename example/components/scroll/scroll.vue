@@ -86,6 +86,14 @@
         type: Boolean,
         default: false
       },
+      pullDownRefreshThreshold: {
+        type: Number,
+        default: 90
+      },
+      pullDownRefreshStop: {
+        type: Number,
+        default: 40
+      },
       pullUpLoad: {
         type: Boolean,
         default: false
@@ -126,7 +134,7 @@
           scrollY: this.direction === DIRECTION_V,
           scrollX: this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
-          pullDownRefresh: this.pullDownRefresh,
+          pullDownRefresh: this.pullDownRefresh ? {threshold: this.pullDownRefreshThreshold, stop: this.pullDownRefreshStop} : false,
           pullUpLoad: this.pullUpLoad
         }
 
@@ -239,6 +247,14 @@
         this._initScroll()
       },
       pullDownRefresh() {
+        this.scroll.destroy()
+        this._initScroll()
+      },
+      pullDownRefreshThreshold() {
+        this.scroll.destroy()
+        this._initScroll()
+      },
+      pullDownRefreshStop() {
         this.scroll.destroy()
         this._initScroll()
       },

@@ -124,7 +124,7 @@
               border: 1px solid rgba(0, 0, 0, .1)
               border-radius: $radius-size-medium
               li
-                padding: 5px 0
+                height: 3.5rem
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
           .demo
             @media screen and (min-width: 42rem)
