@@ -40,7 +40,7 @@
               :scrollbar="scrollbarObj"
               :pullDownRefresh="pullDownRefreshObj"
               :pullUpLoad="pullUpLoadObj"
-              :startY="startY"
+              :startY="parseInt(startY)"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
       </scroll>
