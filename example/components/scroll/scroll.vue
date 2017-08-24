@@ -90,6 +90,10 @@
         type: null,
         default: false
       },
+      startY: {
+        type: Number,
+        default: 0
+      },
       refreshDelay: {
         type: Number,
         default: 20
@@ -127,7 +131,8 @@
           scrollX: this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
           pullDownRefresh: this.pullDownRefresh,
-          pullUpLoad: this.pullUpLoad
+          pullUpLoad: this.pullUpLoad,
+          startY: this.startY
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)
@@ -243,6 +248,10 @@
         this._initScroll()
       },
       pullUpLoad() {
+        this.scroll.destroy()
+        this._initScroll()
+      },
+      startY() {
         this.scroll.destroy()
         this._initScroll()
       }

@@ -29,6 +29,10 @@
         <input-option name="threshold" :value="pullUpLoadThreshold"
                       @update:value="updatePullUpLoadThreshold"></input-option>
       </li>
+      <li class="even">
+        <input-option name="startY" :value="startY"
+                      @update:value="updateStartY"></input-option>
+      </li>
     </div>
     <div slot="demo">
       <scroll ref="scrollList"
@@ -36,6 +40,7 @@
               :scrollbar="scrollbarObj"
               :pullDownRefresh="pullDownRefreshObj"
               :pullUpLoad="pullUpLoadObj"
+              :startY="startY"
               @pullingDown="onPullingDown"
               @pullingUp="onPullingUp">
       </scroll>
@@ -88,6 +93,7 @@
         pullDownRefreshStop: 40,
         pullUpLoad: true,
         pullUpLoadThreshold: 50,
+        startY: 0,
         y: 300,
         items: _data,
         itemIndex: _data.length
@@ -156,6 +162,9 @@
       },
       updatePullUpLoadThreshold(val) {
         this.pullUpLoadThreshold = val
+      },
+      updateStartY(val) {
+        this.startY = val
       }
     }
   }
