@@ -5,6 +5,10 @@
         <switch-option name="scrollbar" :value="scrollbar"
                        @update:value="updateScrollbar"></switch-option>
       </li>
+      <li v-if="scrollbar">
+        <switch-option name="scrollbarFade" :value="scrollbarFade"
+                       @update:value="updateScrollbarFade"></switch-option>
+      </li>
       <li class="even">
         <switch-option name="pull down refresh" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
@@ -26,6 +30,7 @@
       <scroll ref="scrollList"
               :data="items"
               :scrollbar="scrollbar"
+              :scrollbarFade="scrollbarFade"
               :pullDownRefresh="pullDownRefresh"
               :pullDownRefreshStop="pullDownRefreshStop"
               :pullDownRefreshThreshold="pullDownRefreshThreshold"
@@ -76,6 +81,7 @@
     data() {
       return {
         scrollbar: true,
+        scrollbarFade: true,
         pullDownRefresh: true,
         pullDownRefreshThreshold: 90,
         pullDownRefreshStop: 40,
@@ -119,6 +125,9 @@
       },
       updateScrollbar(val) {
         this.scrollbar = val
+      },
+      updateScrollbarFade(val) {
+        this.scrollbarFade = val
       },
       updatePullDownRefresh(val) {
         this.pullDownRefresh = val
