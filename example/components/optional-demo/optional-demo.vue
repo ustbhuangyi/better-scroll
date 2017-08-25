@@ -121,13 +121,21 @@
               margin-bottom: 1rem
 
             .option-list
-              border: 1px solid rgba(0, 0, 0, .1)
-              border-radius: $radius-size-medium
+              .group
+                margin-bottom: 1rem
+                border: 1px solid rgba(0, 0, 0, .1)
+                border-radius: $radius-size-medium
               li
                 height: 3.5rem
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
-                &.even
+                &.sub
+                  font-size: $fontsize-medium
                   background-color: $color-active-light-gray
+                  &.first
+                    box-shadow: 0 1px 1px 1px #eee inset
+                  &.last
+                    border-bottom: none
+
           .demo
             @media screen and (min-width: 42rem)
               flex: 0 0 23rem
