@@ -45,10 +45,11 @@
       align-items center
     input
       flex: 0 1 auto
-      width: 8rem
-      padding: 0.8rem
-      background-color: transparent
+      width: 10rem
+      padding-left: 0.8rem
+      background-color: $color-white
       border-left: 1px solid rgba(0, 0, 0, .1)
+      box-shadow: 0 0 1px 1px #eee inset
       outline: none
       &:focus
         border: 1px solid $color-green

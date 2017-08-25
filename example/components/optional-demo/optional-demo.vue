@@ -159,27 +159,25 @@
             @media screen and (max-width: 42rem)
               flex: 0 1 100%
             .method-list
+              .group
+                margin-bottom: 1rem
+                border: 1px solid rgba(0, 0, 0, .1)
+                border-radius: $radius-size-medium
               li
-                display: flex
+              button
                 width: 100%
-                justify-content: center
-                align-items: center
-                transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
-                overflow: hidden
-                input
-                .button
-                  flex: 1 1 50%
-                  border: 1px solid rgba(0, 0, 0, .1)
-                  padding: 0.5rem 1rem
-                  line-height: 1.6rem
-                input
-                  border-radius: $radius-size-medium 0 0 $radius-size-medium
-                  outline: none
-                  &:focus
-                    border-color: $color-green
-                .button
-                  border-radius: 0 $radius-size-medium $radius-size-medium 0
-                  background-color: $color-green
-                  border-color: $color-green
-                  color: $color-white
+                height: 2.5rem
+              li
+                background-color: $color-active-light-gray
+                border-bottom: 1px solid rgba(0, 0, 0, .1)
+              button
+                width: 100%
+                height: 2.5rem
+                border-bottom-left-radius: $radius-size-medium
+                border-bottom-right-radius: $radius-size-medium
+                background-color: $color-green
+                box-shadow: 0 0 0 1px $color-green
+                border: none
+                outline: none
+                color: $color-white
 </style>

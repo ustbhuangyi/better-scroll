@@ -37,14 +37,14 @@
         </li>
       </div>
       <div class="group">
-        <li class="even">
+        <li>
           <input-option name="startY" :value="startY"
                         @update:value="updateStartY"></input-option>
         </li>
       </div>
     </div>
     <div slot="demo">
-      <scroll ref="scrollList"
+      <scroll ref="scroll"
               :data="items"
               :scrollbar="scrollbarObj"
               :pullDownRefresh="pullDownRefreshObj"
@@ -55,10 +55,17 @@
       </scroll>
     </div>
     <div slot="methods">
-      <li>
-        <input type="text" placeholder="Y:number" v-model="y">
-        <div class="button" @click="scrollTo">scrollTo</div>
-      </li>
+      <div class="group">
+        <li>
+          <input-option name="x" :value="scrollToX"
+                         @update:value="updateScrollToX"></input-option>
+        </li>
+        <li>
+          <input-option name="y" :value="scrollToY"
+                         @update:value="updateScrollToY"></input-option>
+        </li>
+        <button @click="scrollTo">scrollTo</button>
+      </div>
     </div>
   </optional-demo>
 </template>
@@ -103,6 +110,8 @@
         pullUpLoad: true,
         pullUpLoadThreshold: 50,
         startY: 0,
+        scrollToX: 0,
+        scrollToY: 0,
         y: 300,
         items: _data,
         itemIndex: _data.length
@@ -128,7 +137,7 @@
     },
     methods: {
       scrollTo() {
-        this.$refs.scrollList.scrollTo(0, -this.y)
+        this.$refs.scroll.scrollTo(-this.scrollToX, -this.scrollToY)
       },
       onPullingDown() {
         this.loading = true
@@ -174,6 +183,12 @@
       },
       updateStartY(val) {
         this.startY = val
+      },
+      updateScrollToX(val) {
+        this.scrollToX = val
+      },
+      updateScrollToY(val) {
+        this.scrollToY = val
       }
     }
   }
