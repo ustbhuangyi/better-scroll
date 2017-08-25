@@ -71,6 +71,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import Vue from 'vue'
   import OptionalDemo from 'example/components/optional-demo/optional-demo.vue'
   import Scroll from 'example/components/scroll/scroll.vue'
   import SwitchOption from 'example/components/switch-option/switch-option.vue'
@@ -123,7 +124,20 @@
       SwitchOption,
       InputOption
     },
-    watch: {},
+    watch: {
+      scrollbarObj() {
+        this.rebuildScroll()
+      },
+      pullDownRefreshObj() {
+        this.rebuildScroll()
+      },
+      pullUpLoadObj() {
+        this.rebuildScroll()
+      },
+      startY() {
+        this.rebuildScroll()
+      }
+    },
     computed: {
       scrollbarObj: function () {
         return this.scrollbar ? {fade: this.scrollbarFade} : false
@@ -189,6 +203,12 @@
       },
       updateScrollToY(val) {
         this.scrollToY = val
+      },
+      rebuildScroll() {
+        Vue.nextTick(() => {
+          this.$refs.scroll.destroy()
+          this.$refs.scroll.initScroll()
+        })
       }
     }
   }
