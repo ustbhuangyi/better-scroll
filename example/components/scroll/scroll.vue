@@ -115,11 +115,11 @@
     },
     mounted() {
       setTimeout(() => {
-        this._initScroll()
+        this.initScroll()
       }, 20)
     },
     methods: {
-      _initScroll() {
+      initScroll() {
         if (!this.$refs.wrapper) {
           return
         }
@@ -174,6 +174,9 @@
       },
       clickItem(item) {
         this.$emit('click', item)
+      },
+      destroy() {
+        this.scroll.destroy()
       },
       _initPullDownRefresh() {
         this.scroll.on('pullingDown', () => {
@@ -238,22 +241,6 @@
             this.refresh()
           }
         }, this.refreshDelay)
-      },
-      scrollbar() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      pullDownRefresh() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      pullUpLoad() {
-        this.scroll.destroy()
-        this._initScroll()
-      },
-      startY() {
-        this.scroll.destroy()
-        this._initScroll()
       }
     },
     components: {
