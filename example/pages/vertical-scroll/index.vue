@@ -39,10 +39,14 @@
     </div>
     <div slot="methods">
       <div class="group">
-          <input-option class="item" name="x" :value="scrollToX"
-                         @update:value="updateScrollToX"></input-option>
-          <input-option class="item" name="y" :value="scrollToY"
-                         @update:value="updateScrollToY"></input-option>
+        <input-option class="item" name="x" :value="scrollToX"
+                       @update:value="updateScrollToX"></input-option>
+        <input-option class="item" name="y" :value="scrollToY"
+                       @update:value="updateScrollToY"></input-option>
+        <input-option class="item" name="time" :value="scrollToTime"
+                       @update:value="updateScrollToTime"></input-option>
+        <select-option class="item" name="easing" :value="scrollToEasing" :options="scrollToEasingOptions"
+                       @update:value="updateScrollToEasing"></select-option>
         <button @click="scrollTo">scrollTo</button>
       </div>
     </div>
@@ -55,6 +59,9 @@
   import Scroll from 'example/components/scroll/scroll.vue'
   import SwitchOption from 'example/components/switch-option/switch-option.vue'
   import InputOption from 'example/components/input-option/input-option.vue'
+  import SelectOption from 'example/components/select-option/select-option.vue'
+
+  import { ease } from '../../common/js/ease'
 
   const _data = [
     '我是第 1 行',
@@ -91,8 +98,10 @@
         pullUpLoadThreshold: 50,
         startY: 0,
         scrollToX: 0,
-        scrollToY: 0,
-        y: 300,
+        scrollToY: -200,
+        scrollToTime: 700,
+        scrollToEasing: 'bounce',
+        scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
         items: _data,
         itemIndex: _data.length
       }
@@ -101,7 +110,8 @@
       OptionalDemo,
       Scroll,
       SwitchOption,
-      InputOption
+      InputOption,
+      SelectOption
     },
     watch: {
       scrollbarObj() {
@@ -130,7 +140,7 @@
     },
     methods: {
       scrollTo() {
-        this.$refs.scroll.scrollTo(-this.scrollToX, -this.scrollToY)
+        this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
       },
       onPullingDown() {
         this.loading = true
@@ -182,6 +192,12 @@
       },
       updateScrollToY(val) {
         this.scrollToY = val
+      },
+      updateScrollToTime(val) {
+        this.scrollToTime = val
+      },
+      updateScrollToEasing(val) {
+        this.scrollToEasing = val
       },
       rebuildScroll() {
         Vue.nextTick(() => {
