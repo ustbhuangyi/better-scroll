@@ -2,45 +2,28 @@
   <optional-demo class="scroll-view" title="普通 Scroll 组件" desc="基于 BScroll 实现垂直滚动列表组件">
     <div slot="options">
       <div class="group">
-        <li>
-          <switch-option name="滚动条" :value="scrollbar"
-                         @update:value="updateScrollbar"></switch-option>
-        </li>
-        <li v-if="scrollbar" class="sub first last">
-          <switch-option name="fade" :value="scrollbarFade"
-                         @update:value="updateScrollbarFade"></switch-option>
-        </li>
-      </div>
-
-      <div class="group">
-        <li>
-          <switch-option name="下拉刷新" :value="pullDownRefresh"
-                         @update:value="updatePullDownRefresh"></switch-option>
-        </li>
-        <li v-if="pullDownRefresh" class="sub first">
-          <input-option name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
-                        @update:value="updatePullDownRefreshThreshold"></input-option>
-        </li>
-        <li v-if="pullDownRefresh" class="sub last">
-          <input-option name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
-                        @update:value="updatePullDownRefreshStop"></input-option>
-        </li>
+        <switch-option class="item" name="滚动条" :value="scrollbar"
+                       @update:value="updateScrollbar"></switch-option>
+        <switch-option v-if="scrollbar" class="item sub first last" name="fade" :value="scrollbarFade"
+                       @update:value="updateScrollbarFade"></switch-option>
       </div>
       <div class="group">
-        <li>
-          <switch-option name="上拉加载" :value="pullUpLoad"
-                         @update:value="updatePullUpLoad"></switch-option>
-        </li>
-        <li v-if="pullUpLoad" class="sub first last">
-          <input-option name="threshold" :value="pullUpLoadThreshold"
-                        @update:value="updatePullUpLoadThreshold"></input-option>
-        </li>
+        <switch-option class="item" name="下拉刷新" :value="pullDownRefresh"
+                       @update:value="updatePullDownRefresh"></switch-option>
+        <input-option v-if="pullDownRefresh" class="item sub first" name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
+                      @update:value="updatePullDownRefreshThreshold"></input-option>
+        <input-option v-if="pullDownRefresh" class="item sub last" name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
+                      @update:value="updatePullDownRefreshStop"></input-option>
       </div>
       <div class="group">
-        <li>
-          <input-option name="startY" :value="startY"
-                        @update:value="updateStartY"></input-option>
-        </li>
+        <switch-option class="item" name="上拉加载" :value="pullUpLoad"
+                       @update:value="updatePullUpLoad"></switch-option>
+        <input-option v-if="pullUpLoad" class="item sub first last" name="threshold" :value="pullUpLoadThreshold"
+                      @update:value="updatePullUpLoadThreshold"></input-option>
+      </div>
+      <div class="group">
+        <input-option class="item" name="startY" :value="startY"
+                      @update:value="updateStartY"></input-option>
       </div>
     </div>
     <div slot="demo">
@@ -56,14 +39,10 @@
     </div>
     <div slot="methods">
       <div class="group">
-        <li>
-          <input-option name="x" :value="scrollToX"
+          <input-option class="item" name="x" :value="scrollToX"
                          @update:value="updateScrollToX"></input-option>
-        </li>
-        <li>
-          <input-option name="y" :value="scrollToY"
+          <input-option class="item" name="y" :value="scrollToY"
                          @update:value="updateScrollToY"></input-option>
-        </li>
         <button @click="scrollTo">scrollTo</button>
       </div>
     </div>
