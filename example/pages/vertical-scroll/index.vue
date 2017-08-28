@@ -2,45 +2,28 @@
   <optional-demo class="scroll-view" title="普通 Scroll 组件" desc="基于 BScroll 实现垂直滚动列表组件">
     <div slot="options">
       <div class="group">
-        <li>
-          <switch-option name="滚动条" :value="scrollbar"
-                         @update:value="updateScrollbar"></switch-option>
-        </li>
-        <li v-if="scrollbar" class="sub first last">
-          <switch-option name="fade" :value="scrollbarFade"
-                         @update:value="updateScrollbarFade"></switch-option>
-        </li>
-      </div>
-
-      <div class="group">
-        <li>
-          <switch-option name="下拉刷新" :value="pullDownRefresh"
-                         @update:value="updatePullDownRefresh"></switch-option>
-        </li>
-        <li v-if="pullDownRefresh" class="sub first">
-          <input-option name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
-                        @update:value="updatePullDownRefreshThreshold"></input-option>
-        </li>
-        <li v-if="pullDownRefresh" class="sub last">
-          <input-option name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
-                        @update:value="updatePullDownRefreshStop"></input-option>
-        </li>
+        <switch-option class="item" name="滚动条" :value="scrollbar"
+                       @update:value="updateScrollbar"></switch-option>
+        <switch-option v-if="scrollbar" class="item sub first last" name="fade" :value="scrollbarFade"
+                       @update:value="updateScrollbarFade"></switch-option>
       </div>
       <div class="group">
-        <li>
-          <switch-option name="上拉加载" :value="pullUpLoad"
-                         @update:value="updatePullUpLoad"></switch-option>
-        </li>
-        <li v-if="pullUpLoad" class="sub first last">
-          <input-option name="threshold" :value="pullUpLoadThreshold"
-                        @update:value="updatePullUpLoadThreshold"></input-option>
-        </li>
+        <switch-option class="item" name="下拉刷新" :value="pullDownRefresh"
+                       @update:value="updatePullDownRefresh"></switch-option>
+        <input-option v-if="pullDownRefresh" class="item sub first" name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
+                      @update:value="updatePullDownRefreshThreshold"></input-option>
+        <input-option v-if="pullDownRefresh" class="item sub last" name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
+                      @update:value="updatePullDownRefreshStop"></input-option>
       </div>
       <div class="group">
-        <li>
-          <input-option name="startY" :value="startY"
-                        @update:value="updateStartY"></input-option>
-        </li>
+        <switch-option class="item" name="上拉加载" :value="pullUpLoad"
+                       @update:value="updatePullUpLoad"></switch-option>
+        <input-option v-if="pullUpLoad" class="item sub first last" name="threshold" :value="pullUpLoadThreshold"
+                      @update:value="updatePullUpLoadThreshold"></input-option>
+      </div>
+      <div class="group">
+        <input-option class="item" name="startY" :value="startY"
+                      @update:value="updateStartY"></input-option>
       </div>
     </div>
     <div slot="demo">
@@ -56,14 +39,14 @@
     </div>
     <div slot="methods">
       <div class="group">
-        <li>
-          <input-option name="x" :value="scrollToX"
-                         @update:value="updateScrollToX"></input-option>
-        </li>
-        <li>
-          <input-option name="y" :value="scrollToY"
-                         @update:value="updateScrollToY"></input-option>
-        </li>
+        <input-option class="item" name="x" :value="scrollToX"
+                       @update:value="updateScrollToX"></input-option>
+        <input-option class="item" name="y" :value="scrollToY"
+                       @update:value="updateScrollToY"></input-option>
+        <input-option class="item" name="time" :value="scrollToTime"
+                       @update:value="updateScrollToTime"></input-option>
+        <select-option class="item" name="easing" :value="scrollToEasing" :options="scrollToEasingOptions"
+                       @update:value="updateScrollToEasing"></select-option>
         <button @click="scrollTo">scrollTo</button>
       </div>
     </div>
@@ -76,6 +59,9 @@
   import Scroll from 'example/components/scroll/scroll.vue'
   import SwitchOption from 'example/components/switch-option/switch-option.vue'
   import InputOption from 'example/components/input-option/input-option.vue'
+  import SelectOption from 'example/components/select-option/select-option.vue'
+
+  import { ease } from '../../common/js/ease'
 
   const _data = [
     '我是第 1 行',
@@ -112,8 +98,10 @@
         pullUpLoadThreshold: 50,
         startY: 0,
         scrollToX: 0,
-        scrollToY: 0,
-        y: 300,
+        scrollToY: -200,
+        scrollToTime: 700,
+        scrollToEasing: 'bounce',
+        scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
         items: _data,
         itemIndex: _data.length
       }
@@ -122,7 +110,8 @@
       OptionalDemo,
       Scroll,
       SwitchOption,
-      InputOption
+      InputOption,
+      SelectOption
     },
     watch: {
       scrollbarObj() {
@@ -151,7 +140,7 @@
     },
     methods: {
       scrollTo() {
-        this.$refs.scroll.scrollTo(-this.scrollToX, -this.scrollToY)
+        this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
       },
       onPullingDown() {
         this.loading = true
@@ -204,6 +193,12 @@
       updateScrollToY(val) {
         this.scrollToY = val
       },
+      updateScrollToTime(val) {
+        this.scrollToTime = val
+      },
+      updateScrollToEasing(val) {
+        this.scrollToEasing = val
+      },
       rebuildScroll() {
         Vue.nextTick(() => {
           this.$refs.scroll.destroy()
@@ -214,6 +209,23 @@
   }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
-
+<style lang="stylus" rel="stylesheet/stylus">
+  .list-wrapper
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    overflow: hidden
+    background: #fff
+    .list-content
+      position: relative
+      z-index: 10
+      background: #fff
+      .list-item
+        height: 60px
+        line-height: 60px
+        font-size: 18px
+        padding-left: 20px
+        border-bottom: 1px solid #e5e5e5
 </style>

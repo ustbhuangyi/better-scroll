@@ -12,9 +12,9 @@
           </section>
           <div class="options">
             <div class="title sub">Options</div>
-            <ul class="option-list">
+            <div class="option-list">
               <slot name="options"></slot>
-            </ul>
+            </div>
           </div>
           <div class="demo">
             <div class="title sub">Demo</div>
@@ -125,8 +125,8 @@
                 margin-bottom: 1rem
                 border: 1px solid rgba(0, 0, 0, .1)
                 border-radius: $radius-size-medium
-              li
-                height: 3.5rem
+              .item
+                height: 3.2rem
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
                 &.sub
                   font-size: $fontsize-medium
@@ -163,11 +163,11 @@
                 margin-bottom: 1rem
                 border: 1px solid rgba(0, 0, 0, .1)
                 border-radius: $radius-size-medium
-              li
+              .item
               button
                 width: 100%
                 height: 2.5rem
-              li
+              .item
                 background-color: $color-active-light-gray
                 border-bottom: 1px solid rgba(0, 0, 0, .1)
               button
