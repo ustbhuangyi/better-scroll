@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.2
+ * better-normal-scroll v1.2.3
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1805,7 +1805,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.2';
+BScroll.Version = '1.2.3';
 
 return BScroll;
 
