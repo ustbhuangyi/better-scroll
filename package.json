@@ -79,6 +79,7 @@
     "ora": "^1.2.0",
     "rimraf": "^2.6.0",
     "url-loader": "^0.5.9",
-    "file-loader": "^0.11.1"
+    "file-loader": "^0.11.1",
+    "vconsole": "^2.5.2"
   }
 }

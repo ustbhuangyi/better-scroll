@@ -279,7 +279,7 @@ function before(el, target) {
 }
 
 function getNow() {
-  return window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
+  return window.performance && window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
 }
 
 function extend(target) {
