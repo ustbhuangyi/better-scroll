@@ -10,9 +10,11 @@
       <div class="group">
         <switch-option class="item" name="下拉刷新" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
-        <input-option v-if="pullDownRefresh" class="item sub first" name="threshold (≥ 40)" :value="pullDownRefreshThreshold" min-value="40"
+        <input-option v-if="pullDownRefresh" class="item sub first" name="threshold (≥ 40)"
+                      :value="pullDownRefreshThreshold" min-value="40"
                       @update:value="updatePullDownRefreshThreshold"></input-option>
-        <input-option v-if="pullDownRefresh" class="item sub last" name="stop (≥ 40)" :value="pullDownRefreshStop" min-value="40"
+        <input-option v-if="pullDownRefresh" class="item sub last" name="stop (≥ 40)" :value="pullDownRefreshStop"
+                      min-value="40"
                       @update:value="updatePullDownRefreshStop"></input-option>
       </div>
       <div class="group">
@@ -40,11 +42,11 @@
     <div slot="methods">
       <div class="group">
         <input-option class="item" name="x" :value="scrollToX"
-                       @update:value="updateScrollToX"></input-option>
+                      @update:value="updateScrollToX"></input-option>
         <input-option class="item" name="y" :value="scrollToY"
-                       @update:value="updateScrollToY"></input-option>
+                      @update:value="updateScrollToY"></input-option>
         <input-option class="item" name="time" :value="scrollToTime"
-                       @update:value="updateScrollToTime"></input-option>
+                      @update:value="updateScrollToTime"></input-option>
         <select-option class="item" name="easing" :value="scrollToEasing" :options="scrollToEasingOptions"
                        @update:value="updateScrollToEasing"></select-option>
         <button @click="scrollTo">scrollTo</button>
@@ -61,7 +63,7 @@
   import InputOption from 'example/components/input-option/input-option.vue'
   import SelectOption from 'example/components/select-option/select-option.vue'
 
-  import { ease } from '../../common/js/ease'
+  import {ease} from '../../common/js/ease'
 
   const _data = [
     '我是第 1 行',
@@ -132,10 +134,13 @@
         return this.scrollbar ? {fade: this.scrollbarFade} : false
       },
       pullDownRefreshObj: function () {
-        return this.pullDownRefresh ? {threshold: parseInt(this.pullDownRefreshThreshold), stop: parseInt(this.pullDownRefreshStop)} : false
+        return this.pullDownRefresh ? {
+          threshold: parseInt(this.pullDownRefreshThreshold),
+          stop: parseInt(this.pullDownRefreshStop)
+        } : false
       },
       pullUpLoadObj: function () {
-        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold)} : false
+        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold), txt: {noMore: '没有更多订单了'}} : false
       }
     },
     methods: {

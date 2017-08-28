@@ -35,7 +35,7 @@
           <div v-if="pulling" class="loading">
             <loading></loading>
           </div>
-          <div v-else><span>刷新成功</span></div>
+          <div v-else><span>{{refreshTxt}}</span></div>
         </div>
       </div>
     </slot>
@@ -50,8 +50,9 @@
   const COMPONENT_NAME = 'scroll-list'
   const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
-  const LOAD_TXT_MORE = '加载更多'
-  const LOAD_TXT_NO_MORE = '没有更多数据了'
+  const DEFAULT_LOAD_TXT_MORE = '加载更多'
+  const DEFAULT_LOAD_TXT_NO_MORE = '没有更多数据了'
+  const DEFAULT_REFRESH_TXT = '刷新成功'
 
   export default {
     name: COMPONENT_NAME,
@@ -108,9 +109,21 @@
         isPullingDown: false,
         pulling: false,
         isPullUpLoad: false,
-        bubbleY: 0,
+        pullUpDirty: true,
         pullDownStyle: '',
-        pullUpTxt: LOAD_TXT_MORE
+        bubbleY: 0
+      }
+    },
+    computed: {
+      pullUpTxt() {
+        const moreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.more || DEFAULT_LOAD_TXT_MORE
+
+        const noMoreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.noMore || DEFAULT_LOAD_TXT_NO_MORE
+
+        return this.pullUpDirty ? moreTxt : noMoreTxt
+      },
+      refreshTxt() {
+        return this.pullDownRefresh && this.pullDownRefresh.txt || DEFAULT_REFRESH_TXT
       }
     },
     created() {
@@ -190,7 +203,7 @@
         } else if (this.pullUpLoad && this.isPullUpLoad) {
           this.isPullUpLoad = false
           this.scroll.finishPullUp()
-          this.pullUpTxt = dirty ? LOAD_TXT_MORE : LOAD_TXT_NO_MORE
+          this.pullUpDirty = dirty
           this.refresh()
         } else {
           this.refresh()
@@ -269,6 +282,7 @@
     transition: all
     .after-trigger
       margin-top: 10px
+
   .pullup-wrapper
     width: 100%
     display: flex
