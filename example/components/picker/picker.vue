@@ -27,7 +27,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import BScroll from 'scroll/index'
+  import BScroll from '../../../src/index'
 
   const STATE_HIDE = 0
   const STATE_SHOW = 1
