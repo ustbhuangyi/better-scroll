@@ -13,9 +13,9 @@
       <picker @select="handleSelect(2,arguments)" :data="data[2]" :selected-index="selectedIndex[2]"
               ref="picker2" :title="title[2]"></picker>
 
-      <div class="select" @click="showPicker(3)" ref="select3">变化选择器示例 ...</div>
-      <picker @select="handleSelect(3,arguments)" :data="data[3]" :selected-index="selectedIndex[3]"
-              ref="picker3" :title="title[3]"></picker>
+      <div class="select" @click="showPicker(3)" ref="select3">联动选择器示例 ...</div>
+      <picker @select="handleSelect(3,arguments)" :data="linkageData" :selected-index="selectedIndex[3]"
+              ref="picker3" :title="title[3]" @change="handleChange"></picker>
     </div>
   </page>
 </template>
@@ -23,6 +23,7 @@
 <script type="text/ecmascript-6">
   import Page from 'example/components/page/page.vue'
   import Picker from 'example/components/picker/picker.vue'
+  import { provinceList, cityList, areaList } from '../../common/js/config'
 
   let data1 = [
     {
@@ -144,8 +145,6 @@
     }
   ]
 
-  let _data = [data1, data2, data3]
-
   export default {
     mounted() {
       this.$refs.picker0.setData([data1])
@@ -156,15 +155,15 @@
         data: [
           [data1],
           [data1, data2],
-          [data1, data2, data3],
-          [_data[0]]
+          [data1, data2, data3]
         ],
         selectedIndex: [
           [0],
           [1, 0],
           [0, 1, 2],
-          [0]
+          [0, 0, 0]
         ],
+        tempIndex: [0, 0, 0],
         title: [
           '单列选择器',
           '两列选择器',
@@ -176,13 +175,26 @@
         index: 0
       }
     },
+    computed: {
+      linkageData() {
+        const provinces = provinceList
+        const cities = cityList[provinces[this.tempIndex[0]].value]
+        const areas = areaList[cities[this.tempIndex[1]].value]
+
+        return [provinces, cities, areas]
+      }
+    },
+    watch: {
+      linkageData() {
+        this.$refs.picker3.refresh()
+      }
+    },
     methods: {
       showPicker(index) {
         let picker = this.$refs['picker' + index]
 
         if (index === 3) {
-          this.index = (this.index + 1) % 3
-          picker.setData([_data[this.index]])
+          picker.setData(this.linkageData)
         }
         picker.show()
       },
@@ -191,7 +203,7 @@
         let [selectedVal, selectedIndex] = args
         let data
         if (index === 3) {
-          data = [_data[this.index]]
+          data = this.linkageData
         } else {
           data = this.data[index]
         }
@@ -200,7 +212,17 @@
           text += data[i][selectedIndex[i]].text + ' '
         }
         el.innerText = text
-        console.log(selectedVal)
+        return selectedVal
+      },
+      handleChange(i, newIndex) {
+        if (newIndex !== this.tempIndex[i]) {
+          for (let j = 2; j > i; j--) {
+            this.tempIndex.splice(j, 1, 0)
+            this.$refs.picker3.scrollTo(j, 0)
+          }
+
+          this.tempIndex.splice(i, 1, newIndex)
+        }
       }
     },
     components: {

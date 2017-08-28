@@ -196,6 +196,13 @@
         this.pickerSelectedIndex[index] = dist
         wheel.wheelTo(dist)
       },
+      refresh() {
+        setTimeout(() => {
+          this.wheels.forEach((wheel) => {
+            wheel.refresh()
+          })
+        }, 200)
+      },
       _createWheel(wheelWrapper, i) {
         if (!this.wheels[i]) {
           this.wheels[i] = new BScroll(wheelWrapper.children[i], {
