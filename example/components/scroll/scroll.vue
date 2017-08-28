@@ -12,7 +12,7 @@
       >
         <div class="pullup-wrapper" v-if="pullUpLoad">
           <div class="before-trigger" v-if="!isPullUpLoad">
-            <span>加载更多</span>
+            <span>{{pullUpTxt}}</span>
           </div>
           <div class="after-trigger" v-else>
             <loading></loading>
@@ -50,6 +50,8 @@
   const COMPONENT_NAME = 'scroll-list'
   const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
+  const LOAD_TXT_MORE = '加载更多'
+  const LOAD_TXT_NO_MORE = '没有更多数据了'
 
   export default {
     name: COMPONENT_NAME,
@@ -107,7 +109,8 @@
         pulling: false,
         isPullUpLoad: false,
         bubbleY: 0,
-        pullDownStyle: ''
+        pullDownStyle: '',
+        pullUpTxt: LOAD_TXT_MORE
       }
     },
     created() {
@@ -178,6 +181,21 @@
       destroy() {
         this.scroll.destroy()
       },
+      forceUpdate(dirty) {
+        if (this.pullDownRefresh && this.isPullingDown) {
+          this.pulling = false
+          this._reboundPullDown().then(() => {
+            this._afterPullDown()
+          })
+        } else if (this.pullUpLoad && this.isPullUpLoad) {
+          this.isPullUpLoad = false
+          this.scroll.finishPullUp()
+          this.pullUpTxt = dirty ? LOAD_TXT_MORE : LOAD_TXT_NO_MORE
+          this.refresh()
+        } else {
+          this.refresh()
+        }
+      },
       _initPullDownRefresh() {
         this.scroll.on('pullingDown', () => {
           this.$emit('pullingDown')
@@ -228,18 +246,7 @@
     watch: {
       data() {
         setTimeout(() => {
-          if (this.pullDownRefresh && this.isPullingDown) {
-            this.pulling = false
-            this._reboundPullDown().then(() => {
-              this._afterPullDown()
-            })
-          } else if (this.pullUpLoad && this.isPullUpLoad) {
-            this.isPullUpLoad = false
-            this.scroll.finishPullUp()
-            this.refresh()
-          } else {
-            this.refresh()
-          }
+          this.forceUpdate(true)
         }, this.refreshDelay)
       }
     },

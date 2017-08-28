@@ -144,23 +144,36 @@
       },
       onPullingDown() {
         this.loading = true
-        // 更新数据
+        // 模拟更新数据
         setTimeout(() => {
           this.loading = false
-          this.items.unshift('我是新数据: ' + +new Date())
+          if (Math.random() > 0.5) {
+            // 如果有新数据
+            this.items.unshift('我是新数据: ' + +new Date())
+          } else {
+            // 如果没有新数据
+            this.$refs.scroll.forceUpdate()
+          }
         }, 1000)
       },
       onPullingUp() {
-        let newPage = [
-          '我是第 ' + ++this.itemIndex + ' 行',
-          '我是第 ' + ++this.itemIndex + ' 行',
-          '我是第 ' + ++this.itemIndex + ' 行',
-          '我是第 ' + ++this.itemIndex + ' 行',
-          '我是第 ' + ++this.itemIndex + ' 行'
-        ]
         // 更新数据
         setTimeout(() => {
-          this.items = this.items.concat(newPage)
+          if (Math.random() > 0.5) {
+            // 如果有新数据
+            let newPage = [
+              '我是第 ' + ++this.itemIndex + ' 行',
+              '我是第 ' + ++this.itemIndex + ' 行',
+              '我是第 ' + ++this.itemIndex + ' 行',
+              '我是第 ' + ++this.itemIndex + ' 行',
+              '我是第 ' + ++this.itemIndex + ' 行'
+            ]
+
+            this.items = this.items.concat(newPage)
+          } else {
+            // 如果没有新数据
+            this.$refs.scroll.forceUpdate()
+          }
         }, 1000)
       },
       updateScrollbar(val) {
