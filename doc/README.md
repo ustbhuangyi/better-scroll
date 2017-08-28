@@ -52,5 +52,9 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 绿色部分为 wrapper，也就是父容器，它会有**固定的高度**。黄色部分为 content，它是父容器的**第一个子元素**，它的高度会随着内容的大小而撑高。那么，当 content 的高度不超过父容器的高度，是不能滚动的，而它一旦超过了父容器的高度，我们就可以滚动内容区了，这就是 better-scroll 的滚动原理。
 
+## better-scroll 在 MVVM 框架的应用
+
+我之前写过一篇[当 better-scroll 遇见 Vue](https://zhuanlan.zhihu.com/p/27407024)，也希望大家投稿，分享一下 better-scroll 在其它框架下的使用心得。
+
 
 
