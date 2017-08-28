@@ -53,12 +53,12 @@ let scroll = new BScroll('.wrapper',{
 ## click
   - 类型：Boolean
   - 默认值：false
-  - 作用：当设置为 true，better-scroll 会阻止浏览器的原生 click 事件，并自己派发一个 click 事件。为了区分和原生 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。
+  - 作用：better-scroll 默认会阻止浏览器的原生 click 事件。当设置为 true，better-scroll 会派发一个 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。
   
 ## tap
   - 类型：Boolean | String
   - 默认值：false
-  - 作用：当我们不想阻止原生的 click 事件，可以设置 tap 为 true，它会在区域被点击的时候派发一个 tap 事件，你可以像监听原生事件那样去监听它，如 `element.addEventListener('tap', doSomething, false);`。如果 tap 设置为字符串, 那么这个字符串就作为自定义事件名称。如 `tap: 'myCustomTapEvent'`。
+  - 作用：因为 better-scroll 会阻止原生的 click 事件，我们可以设置 tap 为 true，它会在区域被点击的时候派发一个 tap 事件，你可以像监听原生事件那样去监听它，如 `element.addEventListener('tap', doSomething, false);`。如果 tap 设置为字符串, 那么这个字符串就作为自定义事件名称。如 `tap: 'myCustomTapEvent'`。
   
 ## bounce
    - 类型：Boolean
