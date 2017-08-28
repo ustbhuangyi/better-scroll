@@ -41,6 +41,8 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable.styl"
+
   .page
     position: fixed
     z-index: 20
@@ -69,7 +71,7 @@
         left: 0
         padding: 0 15px
         font-size: 14px
-        color: rgb(0, 160, 220)
+        color: $color-green
     .wrapper
       width: 100%
       display: flex

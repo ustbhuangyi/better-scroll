@@ -20,8 +20,12 @@
       <div class="group">
         <switch-option class="item" name="上拉加载" :value="pullUpLoad"
                        @update:value="updatePullUpLoad"></switch-option>
-        <input-option v-if="pullUpLoad" class="item sub first last" name="threshold" :value="pullUpLoadThreshold"
+        <input-option v-if="pullUpLoad" class="item sub first" name="threshold" :value="pullUpLoadThreshold"
                       @update:value="updatePullUpLoadThreshold"></input-option>
+        <input-option v-if="pullUpLoad" class="item sub first" name="moreTxt" :value="pullUpLoadMoreTxt"
+                      @update:value="updatePullUpLoadMoreTxt"></input-option>
+        <input-option v-if="pullUpLoad" class="item sub first last" name="noMoreTxt" :value="pullUpLoadNoMoreTxt"
+                      @update:value="updatePullUpLoadNoMoreTxt"></input-option>
       </div>
       <div class="group">
         <input-option class="item" name="startY" :value="startY"
@@ -98,6 +102,8 @@
         pullDownRefreshStop: 40,
         pullUpLoad: true,
         pullUpLoadThreshold: 50,
+        pullUpLoadMoreTxt: '加载更多',
+        pullUpLoadNoMoreTxt: '没有更多数据了',
         startY: 0,
         scrollToX: 0,
         scrollToY: -200,
@@ -140,7 +146,7 @@
         } : false
       },
       pullUpLoadObj: function () {
-        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold), txt: {noMore: '没有更多订单了'}} : false
+        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold), txt: {more: this.pullUpLoadMoreTxt, noMore: this.pullUpLoadNoMoreTxt}} : false
       }
     },
     methods: {
@@ -201,6 +207,12 @@
       },
       updatePullUpLoadThreshold(val) {
         this.pullUpLoadThreshold = val
+      },
+      updatePullUpLoadMoreTxt(val) {
+        this.pullUpLoadMoreTxt = val
+      },
+      updatePullUpLoadNoMoreTxt(val) {
+        this.pullUpLoadNoMoreTxt = val
       },
       updateStartY(val) {
         this.startY = val

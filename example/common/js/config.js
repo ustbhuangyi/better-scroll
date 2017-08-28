@@ -108,14 +108,14 @@ export const cityList = {
   '110000': [
     {
       province: '北京市',
-      text: '市辖区',
+      text: '北京市',
       value: '110100'
     }
   ],
     '120000': [
     {
       province: '天津市',
-      text: '市辖区',
+      text: '天津市',
       value: '120100'
     }
   ],
@@ -489,7 +489,7 @@ export const cityList = {
     '310000': [
     {
       province: '上海市',
-      text: '市辖区',
+      text: '上海市',
       value: '310100'
     }
   ],
@@ -1335,7 +1335,7 @@ export const cityList = {
     '500000': [
     {
       province: '重庆市',
-      text: '市辖区',
+      text: '重庆市',
       value: '500100'
     },
     {
