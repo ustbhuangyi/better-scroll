@@ -3,17 +3,23 @@ export function pullUpMixin(BScroll) {
     // must watch scroll in real time
     this.options.probeType = 3
 
+    this.pullupWatching = false
     this._watchPullUp()
   }
 
   BScroll.prototype._watchPullUp = function () {
-    const {threshold = 50} = this.options.pullUpLoad
+    if (this.pullupWatching) {
+      return
+    }
+    this.pullupWatching = true
+    const {threshold = 0} = this.options.pullUpLoad
 
     this.on('scroll', checkToEnd)
 
     function checkToEnd() {
       if (this.y <= (this.maxScrollY + threshold)) {
         this.trigger('pullingUp')
+        this.pullupWatching = false
         this.off('scroll', checkToEnd)
       }
     }
