@@ -74,8 +74,7 @@
         state: STATE_HIDE,
         pickerData: this.data.slice(),
         pickerSelectedIndex: this.selectedIndex,
-        pickerSelectedVal: [],
-        scrolling: []
+        pickerSelectedVal: []
       }
     },
     created() {
@@ -205,7 +204,6 @@
         setTimeout(() => {
           this.wheels.forEach((wheel, index) => {
             wheel.refresh()
-            this.scrolling[index] = false
           })
         }, 200)
       },
@@ -218,25 +216,18 @@
             probeType: 3
           })
 
-          this.wheels[i].on('scrollStart', () => {
-            this.scrolling[i] = true
-          })
-
           this.wheels[i].on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
-            this.scrolling[i] = false
           })
         } else {
           this.wheels[i].refresh()
         }
 
-        this.scrolling[i] = false
-
         return this.wheels[i]
       },
       _canConfirm() {
-        return this.scrolling.every((item) => {
-          return !item
+        return this.wheels.every((wheel) => {
+          return !wheel.isInTransition
         })
       }
     },
