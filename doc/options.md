@@ -17,8 +17,8 @@ let scroll = new BScroll('.wrapper',{
 ## startY
   - 类型：Number,
   - 默认值：0
-  - 作用：纵轴方向初始化位置。
-  
+  - 作用：纵轴方向初始化位置，见 [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) 。
+
 ## scrollX
   - 类型：Boolean
   - 默认值: false

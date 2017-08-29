@@ -14,7 +14,7 @@ better-scroll 提供了很多灵活的 API，当我们基于 better-scroll 去�
      - {Number} time 滚动动画执行的时长（单位 ms）
      - {Object} easing 缓动函数，一般不建议修改，如果想修改，参考源码中的 ease.js 里的写法
    - 返回值：无  
-   - 作用：滚动到指定的位置。  
+   - 作用：滚动到指定的位置，见 [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) 。  
 
 ## scrollBy(x, y, time, easing)
    - 参数：
