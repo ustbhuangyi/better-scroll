@@ -78,6 +78,7 @@
       }
     },
     created() {
+      window.xx = this
       if (!this.pickerSelectedIndex.length) {
         this.pickerSelectedIndex = []
         for (let i = 0; i < this.pickerData.length; i++) {
@@ -87,6 +88,9 @@
     },
     methods: {
       confirm() {
+        if (!this._canConfirm()) {
+          return
+        }
         this.hide()
 
         let changed = false
@@ -198,7 +202,7 @@
       },
       refresh() {
         setTimeout(() => {
-          this.wheels.forEach((wheel) => {
+          this.wheels.forEach((wheel, index) => {
             wheel.refresh()
           })
         }, 200)
@@ -208,15 +212,23 @@
           this.wheels[i] = new BScroll(wheelWrapper.children[i], {
             wheel: {
               selectedIndex: this.pickerSelectedIndex[i]
-            }
+            },
+            probeType: 3
           })
+
           this.wheels[i].on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
           })
         } else {
           this.wheels[i].refresh()
         }
+
         return this.wheels[i]
+      },
+      _canConfirm() {
+        return this.wheels.every((wheel) => {
+          return !wheel.isInTransition
+        })
       }
     },
     watch: {
