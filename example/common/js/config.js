@@ -92,15 +92,6 @@ export const provinceList = [
   }, {
     text: '新疆维吾尔自治区',
     value: '650000'
-  }, {
-    text: '台湾省',
-    value: '710000'
-  }, {
-    text: '香港特别行政区',
-    value: '810000'
-  }, {
-    text: '澳门特别行政区',
-    value: '820000'
   }
 ]
 
