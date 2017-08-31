@@ -1,6 +1,6 @@
 # better-scroll
 
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/dolymood/better-scroll.svg)](https://travis-ci.org/dolymood/better-scroll) [![codecov.io](http://codecov.io/github/dolymood/better-scroll/coverage.svg)](http://codecov.io/github/dolymood/better-scroll)
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/dolymood/better-scroll.svg?branch=master)](https://travis-ci.org/dolymood/better-scroll) [![codecov.io](http://codecov.io/github/dolymood/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/dolymood/better-scroll)
 
 ## better-scroll 是什么
 
