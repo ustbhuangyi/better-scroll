@@ -13,19 +13,25 @@
         <ul class="example-list">
           <li class="example-item">
             <router-link to="/vertical-scroll">
-              <img :src="verticalScrollUrl" alt="普通 Scroll 组件">
+              <img :src="verticalScrollUrl">
               <span>普通 Scroll 组件</span>
             </router-link>
           </li>
           <li class="example-item">
+            <router-link to="/index-view">
+              <img :src="indexListUrl">
+              <span>索引列表</span>
+            </router-link>
+          </li>
+          <li class="example-item">
             <router-link to="/picker">
-              <img :src="pickerlUrl" alt="Picker 组件">
+              <img :src="pickerlUrl">
               <span>Picker 组件</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/slide">
-              <img :src="sliderlUrl" alt="Slide 组件">
+              <img :src="sliderlUrl">
               <span>Slide 组件</span>
             </router-link>
           </li>
@@ -47,6 +53,7 @@
     data() {
       return {
         verticalScrollUrl: require('./pages/vertical-scroll/vertical_scroll.jpeg'),
+        indexListUrl: require('./pages/index-list/index_list.jpeg'),
         pickerlUrl: require('./pages/picker/picker.jpeg'),
         sliderlUrl: require('./pages/slide/slide.jpeg')
       }
@@ -71,6 +78,7 @@
           padding: 0.8rem
           box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
           text-align: center
+          margin-bottom: 2rem
           @media screen and (min-width: 42rem)
             flex: 0 1 28%
           @media screen and (max-width: 42rem)
