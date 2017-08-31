@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Picker from 'example/pages/picker'
 import Slide from 'example/pages/slide'
 import VerticalScroll from 'example/pages/vertical-scroll/'
+import IndexView from 'example/pages/index-list/'
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
     {
       path: '/vertical-scroll',
       component: VerticalScroll
+    },
+    {
+      path: '/index-view',
+      component: IndexView
     }
   ]
 })
