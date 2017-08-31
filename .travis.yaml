@@ -8,6 +8,5 @@ node_js:
 branches:
   only:
     - master
-    - tests
 script:
   - npm test
