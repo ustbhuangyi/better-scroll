@@ -7,7 +7,7 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-var srcAndExample = [resolve('src'), resolve('example')]
+var packFiles = [resolve('src'), resolve('example'), resolve('test')]
 
 module.exports = {
   entry: {
@@ -35,7 +35,7 @@ module.exports = {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: srcAndExample,
+        include: packFiles,
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -48,7 +48,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: srcAndExample,
+        include: packFiles,
         query: {
           presets: ['es2015', 'stage-2'],
           plugins: ['transform-runtime', 'add-module-exports']
