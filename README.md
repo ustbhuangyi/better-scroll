@@ -1,6 +1,6 @@
 # better-scroll
 
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll)
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/dolymood/better-scroll.svg)](https://travis-ci.org/dolymood/better-scroll) [![codecov.io](http://codecov.io/github/dolymood/better-scroll/coverage.svg)](http://codecov.io/github/dolymood/better-scroll)
 
 ## better-scroll 是什么
 
@@ -56,9 +56,9 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 ## 文档
 
-访问 [better-scroll 官方文档](https://ustbhuangyi.github.io/better-scroll/doc/) 
+访问 [better-scroll 官方文档](https://ustbhuangyi.github.io/better-scroll/doc/)
 
-## demo 
+## demo
 
 [体验地址](https://ustbhuangyi.github.io/better-scroll/demo/)
 
