@@ -14,7 +14,8 @@
     "build:demo": "node build/build-demo",
     "build:doc": "sh build/doc.sh",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
-    "test": "npm run unit"
+    "test": "npm run unit && npm run codecov",
+    "codecov": "codecov"
   },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
@@ -97,6 +98,7 @@
     "chai": "^3.5.0",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.13.0",
-    "babel-plugin-istanbul": "^4.1.4"
+    "babel-plugin-istanbul": "^4.1.4",
+    "codecov": "^2.2.0"
   }
 }
