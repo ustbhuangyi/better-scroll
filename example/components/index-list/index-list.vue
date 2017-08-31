@@ -30,7 +30,7 @@
     </scroll>
     <div class="index-list-nav" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
-        <li v-for="(item, index) in shortcutList" :data-index="index">{{item}}</li>
+        <li v-for="(item, index) in shortcutList" :data-index="index" :class="{active: currentIndex === index}">{{item}}</li>
       </ul>
     </div>
     <div class="index-list-fixed" ref="fixed" v-show="fixedTitle">
@@ -179,7 +179,7 @@
       scrollY(newY) {
         const listHeight = this.listHeight
         // 当滚动到顶部，newY>0
-        if (newY > 0) {
+        if (newY > -TITLE_HEIGHT) {
           this.currentIndex = 0
           return
         }
@@ -268,6 +268,8 @@
             box-sizing(border-box)
             font-size: $fontsize-small
             color: $color-grey
+            &.active
+              color: $color-green
           @media (max-height: 480px)
             li
               padding-top: 3px
