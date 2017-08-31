@@ -3,12 +3,12 @@
     <div class="back">
     </div>
     <div v-if="items.length" class="slider-wrapper">
-      <slide ref="slide" :autoPlay="false">
+      <slide ref="slide" :autoPlay="false" :loop="false">
         <div v-for="(item, index) in items">
           <div class="full-page-img-wrapper">
             <img :src="item"/>
             <div class="button-wrapper" @click="handleClick(index)">
-              <span class="button">开始使用</span>
+              <span class="button">{{ index === items.length -1 ? '开始使用' : '跳过' }}</span>
             </div>
           </div>
         </div>
@@ -62,14 +62,16 @@
       position: absolute 0 0 0 0
       img
         width: 100%
+        height: 100%
       .button-wrapper
         position: absolute
-        bottom: 90px
+        top: 510px
+        display: block
         width: 33%
         .button
           display: inline-block
-          margin-left: -39%
-          padding: 15px 20px
+          width: 130px
+          padding: 15px 0
           border: 4px solid rgba(255, 255, 255, 0.8)
           border-radius: 4px
           color: rgba(255, 255, 255, 0.8)
