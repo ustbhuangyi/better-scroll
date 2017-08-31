@@ -143,9 +143,59 @@
         "cityid": 19
       },
       {
+        "name": "张家界市",
+        "tags": "ZHANGJIAJIE,张家界市",
+        "cityid": 20
+      },
+      {
+        "name": "珠海市",
+        "tags": "ZHUHAI,珠海市",
+        "cityid": 21
+      },
+      {
+        "name": "中山市",
+        "tags": "ZHONGSHAN,中山市",
+        "cityid": 22
+      },
+      {
+        "name": "自贡市",
+        "tags": "ZIGONG,自贡市",
+        "cityid": 23
+      },
+      {
+        "name": "资阳市",
+        "tags": "ZIYANG,资阳市",
+        "cityid": 24
+      },
+      {
+        "name": "枣庄市",
+        "tags": "ZHAOZHUANG,枣庄市",
+        "cityid": 25
+      },
+      {
+        "name": "舟山",
+        "tags": "ZHOUSHAN,舟山",
+        "cityid": 26
+      },
+      {
+        "name": "遵义市",
+        "tags": "ZUNYI,遵义市",
+        "cityid": 27
+      },
+      {
+        "name": "淄博市",
+        "tags": "ZIBO,淄博市",
+        "cityid": 28
+      },
+      {
+        "name": "株洲市",
+        "tags": "ZHUZHOU,株洲市",
+        "cityid": 29
+      },
+      {
         "name": "中卫市",
         "tags": "ZHONGWEI,中卫市",
-        "cityid": 20
+        "cityid": 30
       }
     ]
   }

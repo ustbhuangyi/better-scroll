@@ -35,6 +35,12 @@
               <span>Slide 组件</span>
             </router-link>
           </li>
+          <li class="example-item">
+            <router-link to="/full-page-slide">
+              <img :src="fullPageSliderlUrl">
+              <span>全屏 Slide</span>
+            </router-link>
+          </li>
         </ul>
       </div>
       <footer class="site-footer">
@@ -52,10 +58,11 @@
   export default {
     data() {
       return {
-        verticalScrollUrl: require('./pages/vertical-scroll/vertical_scroll.jpeg'),
-        indexListUrl: require('./pages/index-list/index_list.jpeg'),
-        pickerlUrl: require('./pages/picker/picker.jpeg'),
-        sliderlUrl: require('./pages/slide/slide.jpeg')
+        verticalScrollUrl: require('./common/images/vertical-scroll.jpeg'),
+        indexListUrl: require('./common/images/index-list.jpeg'),
+        pickerlUrl: require('./common/images/picker.jpeg'),
+        sliderlUrl: require('./common/images/slide.jpeg'),
+        fullPageSliderlUrl: require('./common/images/full-page-slide.jpeg')
       }
     }
   }
