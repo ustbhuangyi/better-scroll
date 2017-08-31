@@ -1,16 +1,18 @@
 <template>
   <div class="page">
+    <div class="back">
+    </div>
     <div v-if="items.length" class="slider-wrapper">
-      <slide ref="slide">
-        <div v-for="item in items">
+      <slide ref="slide" :autoPlay="false">
+        <div v-for="(item, index) in items">
           <div class="full-page-img-wrapper">
             <img :src="item"/>
+            <div class="button-wrapper" @click="handleClick(index)">
+              <span class="button">开始使用</span>
+            </div>
           </div>
         </div>
       </slide>
-    </div>
-    <div class="back">
-      <div @click="back">开始使用</div>
     </div>
   </div>
 </template>
@@ -33,8 +35,12 @@
       Slide
     },
     methods: {
-      back() {
-        this.$router.back()
+      handleClick(index) {
+        if (index === this.items.length - 1) {
+          this.$router.back()
+        } else {
+          this.$refs.slide.next()
+        }
       }
     }
   }
@@ -54,15 +60,18 @@
     overflow: hidden
     .full-page-img-wrapper
       position: absolute 0 0 0 0
-    .back
-      position: absolute
-      bottom: 60px
-      left: 32%
-      width: 36%
-      line-height: 50px
-      text-align: center
-      font-size: $fontsize-large-xx
-      border: 4px solid rgba(255, 255, 255, 0.8)
-      border-radius: 4px
-      color: rgba(255, 255, 255, 0.8)
+      img
+        width: 100%
+      .button-wrapper
+        position: absolute
+        bottom: 90px
+        width: 33%
+        .button
+          display: inline-block
+          margin-left: -39%
+          padding: 15px 20px
+          border: 4px solid rgba(255, 255, 255, 0.8)
+          border-radius: 4px
+          color: rgba(255, 255, 255, 0.8)
+          font-size: $fontsize-large-xx
 </style>

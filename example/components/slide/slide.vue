@@ -104,6 +104,9 @@
         this._setSlideWidth(true)
         this.slide.refresh()
       },
+      next() {
+        this.slide.next()
+      },
       _setSlideWidth(isResize) {
         this.children = this.$refs.slideGroup.children
 
