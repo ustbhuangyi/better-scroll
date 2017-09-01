@@ -405,7 +405,8 @@ export function coreMixin(BScroll) {
     let startX = this.x
     let startY = this.y
     let startTime = getNow()
-    let destTime = startTime + duration
+		let destTime = startTime + duration
+		cancelAnimationFrame(me.animateTimer)
 
     function step() {
       let now = getNow()
@@ -430,7 +431,7 @@ export function coreMixin(BScroll) {
       me._translate(newX, newY)
 
       if (me.isAnimating) {
-        requestAnimationFrame(step)
+        me.animateTimer = requestAnimationFrame(step)
       }
 
       if (me.options.probeType === 3) {
