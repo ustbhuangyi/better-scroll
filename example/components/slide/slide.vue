@@ -38,6 +38,10 @@
       click: {
         type: Boolean,
         default: true
+      },
+      allowVerticalScroll: {
+        ype: Boolean,
+        default: true
       }
     },
     data() {
@@ -127,7 +131,7 @@
       _initSlide() {
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
-          eventPassthrough: 'vertical',
+          eventPassthrough: this.allowVerticalScroll ? 'vertical' : false,
           momentum: false,
           snap: {
             loop: this.loop,
