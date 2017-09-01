@@ -41,6 +41,8 @@
               <span>全屏 Slide</span>
             </router-link>
           </li>
+          <li class="example-item placeholder">
+          </li>
         </ul>
       </div>
       <footer class="site-footer">
@@ -77,7 +79,7 @@
         justify-content: space-between
         flex-wrap: wrap
         @media screen and (min-width: 42rem)
-          margin: 2rem 0 4rem 0
+          margin: 2rem 0 2rem 0
         @media screen and (max-width: 42rem)
           margin: 1rem 0
         .example-item
@@ -86,6 +88,8 @@
           box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
           text-align: center
           margin-bottom: 2rem
+          &.placeholder
+            visibility: hidden
           @media screen and (min-width: 42rem)
             flex: 0 1 28%
           @media screen and (max-width: 42rem)
