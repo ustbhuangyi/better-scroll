@@ -7,8 +7,8 @@
         <div v-for="(item, index) in items">
           <div class="full-page-img-wrapper">
             <img :src="item"/>
-            <div class="button-wrapper" @click="handleClick(index)">
-              <span class="button">{{ index === items.length -1 ? '开始使用' : '跳过' }}</span>
+            <div v-if="index === items.length -1" class="button-wrapper" @click="handleClick(index)">
+              <span class="button">开始使用</span>
             </div>
           </div>
         </div>
@@ -68,6 +68,7 @@
         top: 510px
         display: block
         width: 33%
+        overflow: hidden
         .button
           display: inline-block
           width: 130px
