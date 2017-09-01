@@ -74,7 +74,8 @@
         state: STATE_HIDE,
         pickerData: this.data.slice(),
         pickerSelectedIndex: this.selectedIndex,
-        pickerSelectedVal: []
+        pickerSelectedVal: [],
+        pickerSelectedText: []
       }
     },
     created() {
@@ -104,13 +105,13 @@
           if (this.pickerSelectedVal[i] !== value) {
             changed = true
           }
-          this.pickerSelectedVal[i] = value
+          this.pickerSelectedText[i] = this.pickerData[i][index].text
         }
 
-        this.$emit(EVENT_SELECT, this.pickerSelectedVal, this.pickerSelectedIndex)
+        this.$emit(EVENT_SELECT, this.pickerSelectedVal, this.pickerSelectedIndex, this.pickerSelectedText)
 
         if (changed) {
-          this.$emit(EVENT_VALUE_CHANGE, this.pickerSelectedVal, this.pickerSelectedIndex)
+          this.$emit(EVENT_VALUE_CHANGE, this.pickerSelectedVal, this.pickerSelectedIndex, this.pickerSelectedText)
         }
       },
       cancel() {

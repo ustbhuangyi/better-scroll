@@ -1,21 +1,21 @@
 <template>
   <page class="picker-view" title="Picker（选择器）" desc="picker 组件是移动端常见的选择器组件，支持单列和多列；可以动态改变 picker 某列的数据，实现级联的效果。">
     <div slot="content">
-      <div class="select" @click="showPicker(0)" ref="select0">单列筛选器示例 ...</div>
+      <div class="select" @click="showPicker(0)" ref="select0">{{ selectedText[0] }}</div>
       <picker @select="handleSelect(0,arguments)" :selected-index="selectedIndex[0]"
               ref="picker0" :title="title[0]"></picker>
-      <div class="select" @click="showPicker(1)" ref="select1">两列筛选器示例 ...</div>
+      <div class="select" @click="showPicker(1)" ref="select1">{{ selectedText[1] }}</div>
       <picker @select="handleSelect(1,arguments)" :data="data[1]" :selected-index="selectedIndex[1]"
               ref="picker1" :title="title[1]" :cancelTxt="cancelTxt"
               :confirmTxt="confirmTxt"></picker>
 
-      <div class="select" @click="showPicker(2)" ref="select2">三列选择器示例 ...</div>
+      <div class="select" @click="showPicker(2)" ref="select2">{{ selectedText[2] }}</div>
       <picker @select="handleSelect(2,arguments)" :data="data[2]" :selected-index="selectedIndex[2]"
               ref="picker2" :title="title[2]"></picker>
 
-      <div class="select" @click="showPicker(3)" ref="select3">联动选择器示例 ...</div>
-      <picker @select="handleSelect(3,arguments)" :data="linkageData" :selected-index="selectedIndex[3]"
-              ref="picker3" :title="title[3]" @change="handleChange"></picker>
+      <div class="select" @click="showPicker(3)" ref="select3">{{ selectedText[3] }}</div>
+      <city-picker @select="handleSelect(3,arguments)" :data="data[3]" :selected-index="selectedIndex[3]"
+              ref="picker3" :title="title[3]"></city-picker>
     </div>
   </page>
 </template>
@@ -23,7 +23,8 @@
 <script type="text/ecmascript-6">
   import Page from 'example/components/page/page.vue'
   import Picker from 'example/components/picker/picker.vue'
-  import { provinceList, cityList, areaList } from '../../common/js/config'
+  import CityPicker from 'example/components/city-picker/city-picker.vue'
+  import { provinceList, cityList, areaList } from '../../data/areaData'
 
   let data1 = [
     {
@@ -155,7 +156,8 @@
         data: [
           [data1],
           [data1, data2],
-          [data1, data2, data3]
+          [data1, data2, data3],
+          [provinceList, cityList, areaList]
         ],
         selectedIndex: [
           [0],
@@ -163,7 +165,12 @@
           [0, 1, 2],
           [0, 0, 0]
         ],
-        tempIndex: [0, 0, 0],
+        selectedText: [
+          '单列选择器示例 ...',
+          '两列选择器示例 ...',
+          '三列选择器示例 ...',
+          '联动选择器示例 ...'
+        ],
         title: [
           '单列选择器',
           '两列选择器',
@@ -171,63 +178,23 @@
           '联动选择器'
         ],
         cancelTxt: '关闭',
-        confirmTxt: '好的',
-        index: 0
-      }
-    },
-    computed: {
-      linkageData() {
-        const provinces = provinceList
-        const cities = cityList[provinces[this.tempIndex[0]].value]
-        const areas = areaList[cities[this.tempIndex[1]].value]
-
-        return [provinces, cities, areas]
-      }
-    },
-    watch: {
-      linkageData() {
-        this.$refs.picker3.refresh()
+        confirmTxt: '好的'
       }
     },
     methods: {
       showPicker(index) {
         let picker = this.$refs['picker' + index]
 
-        if (index === 3) {
-          picker.setData(this.linkageData)
-        }
         picker.show()
       },
       handleSelect(index, args) {
-        let el = this.$refs['select' + index]
-        let [selectedVal, selectedIndex] = args
-        let data
-        if (index === 3) {
-          data = this.linkageData
-        } else {
-          data = this.data[index]
-        }
-        let text = ''
-        for (let i = 0; i < data.length; i++) {
-          text += data[i][selectedIndex[i]].text + ' '
-        }
-        el.innerText = text
-        return selectedVal
-      },
-      handleChange(i, newIndex) {
-        if (newIndex !== this.tempIndex[i]) {
-          for (let j = 2; j > i; j--) {
-            this.tempIndex.splice(j, 1, 0)
-            this.$refs.picker3.scrollTo(j, 0)
-          }
-
-          this.tempIndex.splice(i, 1, newIndex)
-        }
+        this.selectedText.splice(index, 1, args[2].join('，'))
       }
     },
     components: {
       Page,
-      Picker
+      Picker,
+      CityPicker
     }
   }
 </script>

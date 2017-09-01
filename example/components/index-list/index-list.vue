@@ -8,9 +8,9 @@
       :click="true"
       @scroll="scroll">
       <div class="index-list-content" ref="content">
-        <h1 class="index-list-title" v-if="title" ref="title" @click="titleClick">
+        <div class="index-list-title" v-if="title" ref="title" @click="titleClick">
           {{title}}
-        </h1>
+        </div>
         <ul ref="groups">
           <li v-for="group in data" ref="listGroup">
             <h2 class="index-list-anchor">{{group.name}}</h2>
@@ -212,65 +212,73 @@
     position: relative
     width: 100%
     height: 100%
-  .index-list-content
-    background: $color-white
-    box-shadow: 0 3px 6px $color-light-grey-ss
-    border-radius: 2px
-  .index-list-title
-    padding: 14px 16px
-    font-size: $fontsize-medium
-    line-height: 1.6
-    color: $color-dark-grey
-  .index-list-anchor
-    padding: 16px 16px 10px 16px
-    line-height: 1
-    font-size: $fontsize-medium
-    color: $color-light-grey
-    background: $color-title-background
-  .index-list-item
-    position: relative
-    height: 50px
-    line-height: 50px
-    padding: 0 16px
-    font-size: $fontsize-medium
-    color: $color-dark-grey
-    &:last-child
-      border-none()
-  .index-list-item_active
-    background: $color-active-light-gray
-  .index-list-fixed
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    padding: 16px 16px 10px 16px
-    box-sizing: border-box
-    font-size: $fontsize-medium
-    line-height: 1
-    color: $color-light-grey
-    background: $color-title-background
-  .index-list-nav
-    position: absolute
-    z-index: 30
-    right: 0
-    top: 50%
-    transform: translateY(-50%)
-    font-family: Helvetica
-    >
-      ul
-        padding: 0
-        margin: 0
-        >
-          li
-            padding: 6px 16px 0 16px
-            line-height: 1
-            text-align: center
-            box-sizing(border-box)
-            font-size: $fontsize-small
-            color: $color-grey
-            &.active
-              color: $color-green
-          @media (max-height: 480px)
+    .list-wrapper
+      position: absolute
+      left: 0
+      top: 0
+      right: 0
+      bottom: 0
+      overflow: hidden
+      background: #fff
+      .index-list-content
+        background: $color-white
+        border-radius: 2px
+        .index-list-title
+          padding: 14px 16px
+          font-size: $fontsize-medium
+          line-height: 1.6
+          color: $color-dark-grey
+        .index-list-anchor
+          padding: 16px 16px 10px 16px
+          line-height: 1
+          font-size: $fontsize-medium
+          color: $color-light-grey
+          background: $color-title-background
+        .index-list-item
+          position: relative
+          height: 50px
+          line-height: 50px
+          padding: 0 16px
+          font-size: $fontsize-medium
+          color: $color-dark-grey
+          &:last-child
+            border-none()
+        .index-list-item_active
+          background: $color-active-light-gray
+    .index-list-fixed
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      padding: 16px 16px 10px 16px
+      box-sizing: border-box
+      font-size: $fontsize-medium
+      line-height: 1
+      color: $color-light-grey
+      background: $color-title-background
+    .index-list-nav
+      position: absolute
+      z-index: 30
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      font-family: Helvetica
+      >
+        ul
+          padding: 0
+          margin: 0
+          >
             li
-              padding-top: 3px
+              padding: 6px 16px 0 16px
+              line-height: 1
+              text-align: center
+              box-sizing(border-box)
+              font-size: $fontsize-small
+              color: $color-grey
+              &.active
+                color: $color-green
+            @media (max-height: 480px)
+              li
+                padding-top: 3px
+
 </style>
