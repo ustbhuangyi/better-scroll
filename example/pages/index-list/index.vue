@@ -55,7 +55,6 @@
     methods: {
       selectItem(item) {
         console.log(item)
-//        window.alert(JSON.stringify(item))
       },
       clickTitle(title) {
         console.log(title)

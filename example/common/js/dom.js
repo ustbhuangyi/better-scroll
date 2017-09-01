@@ -23,7 +23,7 @@ export function removeClass(el, className) {
 }
 
 export function getData(el, name, val) {
-  var prefix = 'data-'
+  let prefix = 'data-'
   if (val) {
     return el.setAttribute(prefix + name, val)
   }
