@@ -90,6 +90,9 @@
           margin-bottom: 2rem
           &.placeholder
             visibility: hidden
+            height: 0
+            margin: 0
+            padding: 0
           @media screen and (min-width: 42rem)
             flex: 0 1 28%
           @media screen and (max-width: 42rem)

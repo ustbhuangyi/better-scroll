@@ -76,8 +76,8 @@
                 display: inline-block
                 width: 130px
                 padding: 15px 0
-                border: 4px solid rgba(255, 255, 255, 0.8)
+                border: 4px solid rgba(255, 255, 255, 0.7)
                 border-radius: 4px
-                color: rgba(255, 255, 255, 0.8)
+                color: rgba(255, 255, 255, 0.7)
                 font-size: $fontsize-large-xx
 </style>
