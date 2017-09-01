@@ -139,7 +139,8 @@
 
         this.slide.on('scrollEnd', this._onScrollEnd)
 
-        this.slide.on('touchend', () => {
+        this.slide.on('touchEnd', () => {
+          console.log('touchEnd')
           if (this.autoPlay) {
             this._play()
           }
@@ -152,6 +153,7 @@
         })
       },
       _onScrollEnd() {
+        console.log('scrollEnd')
         let pageIndex = this.slide.getCurrentPage().pageX
         if (this.loop) {
           pageIndex -= 1
@@ -175,16 +177,18 @@
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
 
   .slide
     min-height: 1px
     .slide-group
+      height: 100%
       position: relative
       overflow: hidden
       white-space: nowrap
       .slide-item
+        height: 100%
         float: left
         box-sizing: border-box
         overflow: hidden

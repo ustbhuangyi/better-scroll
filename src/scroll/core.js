@@ -287,6 +287,8 @@ export function coreMixin(BScroll) {
         easing = ease.swipeBounce
       }
       this.scrollTo(newX, newY, time, easing)
+      console.log('scrollTo', newX, newY)
+
       return
     }
 
