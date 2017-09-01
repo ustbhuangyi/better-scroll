@@ -8,9 +8,9 @@
       :click="true"
       @scroll="scroll">
       <div class="index-list-content" ref="content">
-        <h1 class="index-list-title" v-if="title" ref="title" @click="titleClick">
+        <div class="index-list-title" v-if="title" ref="title" @click="titleClick">
           {{title}}
-        </h1>
+        </div>
         <ul ref="groups">
           <li v-for="group in data" ref="listGroup">
             <h2 class="index-list-anchor">{{group.name}}</h2>
