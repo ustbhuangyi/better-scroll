@@ -3,7 +3,7 @@
     <div>
       <slot>
         <ul class="list-content">
-          <li @click="clickItem(item)" class="list-item" v-for="item in data">{{item}}</li>
+          <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
         </ul>
       </slot>
       <slot name="pullup"
@@ -188,7 +188,8 @@
       scrollToElement() {
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       },
-      clickItem(item) {
+      clickItem(e, item) {
+        console.log(e)
         this.$emit('click', item)
       },
       destroy() {
@@ -271,7 +272,26 @@
 
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
+  .list-wrapper
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    overflow: hidden
+    background: #fff
+    .list-content
+      position: relative
+      z-index: 10
+      background: #fff
+      .list-item
+        height: 60px
+        line-height: 60px
+        font-size: 18px
+        padding-left: 20px
+        border-bottom: 1px solid #e5e5e5
+
   .pulldown-wrapper
     position: absolute
     width: 100%
