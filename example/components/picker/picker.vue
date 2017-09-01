@@ -78,7 +78,6 @@
       }
     },
     created() {
-      window.xx = this
       if (!this.pickerSelectedIndex.length) {
         this.pickerSelectedIndex = []
         for (let i = 0; i < this.pickerData.length; i++) {
@@ -155,7 +154,7 @@
         this.pickerSelectedIndex = index
       },
       refill(datas) {
-        var ret = []
+        let ret = []
         if (!datas.length) {
           return ret
         }

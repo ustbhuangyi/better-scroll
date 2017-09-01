@@ -43,7 +43,7 @@
   }
 </script>
 
-<style scoped lang="stylus">
+<style lang="stylus">
   @import "~common/stylus/variable.styl"
 
   .full-page-slide-wrapper
@@ -59,23 +59,25 @@
       height: 100%
       .slide-group
         height: 100%
-        .full-page-img-wrapper
-          position: relative
+        .slide-item
           height: 100%
-          background-size: cover
-          transform: translateZ(0)
-          .button-wrapper
-            position: fixed
-            bottom: 85px
-            display: block
-            width: 100%
-            overflow: hidden
-            .button
-              display: inline-block
-              width: 130px
-              padding: 15px 0
-              border: 4px solid rgba(255, 255, 255, 0.8)
-              border-radius: 4px
-              color: rgba(255, 255, 255, 0.8)
-              font-size: $fontsize-large-xx
+          .full-page-img-wrapper
+            position: relative
+            height: 100%
+            background-size: cover
+            transform: translateZ(0)
+            .button-wrapper
+              position: fixed
+              bottom: 85px
+              display: block
+              width: 100%
+              overflow: hidden
+              .button
+                display: inline-block
+                width: 130px
+                padding: 15px 0
+                border: 4px solid rgba(255, 255, 255, 0.8)
+                border-radius: 4px
+                color: rgba(255, 255, 255, 0.8)
+                font-size: $fontsize-large-xx
 </style>
