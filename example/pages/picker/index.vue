@@ -23,7 +23,7 @@
 <script type="text/ecmascript-6">
   import Page from 'example/components/page/page.vue'
   import Picker from 'example/components/picker/picker.vue'
-  import { provinceList, cityList, areaList } from '../../common/js/config'
+  import { provinceList, cityList, areaList } from '../../data/areaData'
 
   let data1 = [
     {
