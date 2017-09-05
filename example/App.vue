@@ -41,6 +41,12 @@
               <span>全屏 Slide</span>
             </router-link>
           </li>
+          <li class="example-item">
+            <router-link to="/free-scroll">
+              <img :src="fullPageSliderlUrl">
+              <span>自由滚动</span>
+            </router-link>
+          </li>
           <li class="example-item placeholder">
           </li>
         </ul>
