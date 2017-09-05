@@ -2,7 +2,7 @@
   <page class="free-scroll-view" title="free scroll（自由滚动）" desc="支持横向和纵向同时滚动">
     <div slot="content">
       <scroll ref="scroll" :freeScroll="true">
-        <img slot="content" :src="imgUrl"/>
+        <img :src="imgUrl"/>
       </scroll>
     </div>
   </page>
