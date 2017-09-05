@@ -6,7 +6,9 @@ describe('BScroll - init', () => {
     const scroller = document.createElement('div')
     wrapper.appendChild(scroller)
     const scroll = new BScroll(wrapper, {
-      tap: true
+      tap: true,
+      click: true,
+      disableMouse: false
     })
     expect(scroll.options.scrollX)
       .to.be.false
@@ -18,5 +20,9 @@ describe('BScroll - init', () => {
       .to.equal(500)
     expect(scroll.wrapperWidth)
       .to.equal(0)
+    scroll.disable()
+    expect(scroll.enabled)
+      .to.be.false
+    scroll.enable()
   })
 })
