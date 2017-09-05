@@ -1,3 +1,5 @@
+import {requestAnimationFrame, cancelAnimationFrame} from '../util/raf'
+
 export function pullUpMixin(BScroll) {
   BScroll.prototype._initPullUp = function () {
     // must watch scroll in real time
@@ -16,8 +18,8 @@ export function pullUpMixin(BScroll) {
 
     this.on('scroll', checkToEnd)
 
-    function checkToEnd() {
-      if (this.y <= (this.maxScrollY + threshold)) {
+    function checkToEnd(pos) {
+      if (pos.y <= (this.maxScrollY + threshold)) {
         this.trigger('pullingUp')
         this.pullupWatching = false
         this.off('scroll', checkToEnd)
@@ -26,6 +28,9 @@ export function pullUpMixin(BScroll) {
   }
 
   BScroll.prototype.finishPullUp = function () {
-    this._watchPullUp()
+    cancelAnimationFrame(this.watchTimer)
+    this.watchTimer = requestAnimationFrame(() => {
+      this._watchPullUp()
+    })
   }
 }

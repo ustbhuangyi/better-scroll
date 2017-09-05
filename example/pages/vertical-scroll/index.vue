@@ -101,7 +101,7 @@
         pullDownRefreshThreshold: 90,
         pullDownRefreshStop: 40,
         pullUpLoad: true,
-        pullUpLoadThreshold: 50,
+        pullUpLoadThreshold: 0,
         pullUpLoadMoreTxt: '加载更多',
         pullUpLoadNoMoreTxt: '没有更多数据了',
         startY: 0,

@@ -210,7 +210,13 @@
           })
         } else if (this.pullUpLoad && this.isPullUpLoad) {
           this.isPullUpLoad = false
-          this.scroll.finishPullUp()
+          if (this.scroll.isInTransition) {
+            this.scroll.once('scrollEnd', () => {
+              this.scroll.finishPullUp()
+            })
+          } else {
+            this.scroll.finishPullUp()
+          }
           this.pullUpDirty = dirty
           this.refresh()
         } else {
