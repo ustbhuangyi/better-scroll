@@ -13,37 +13,37 @@
         <ul class="example-list">
           <li class="example-item">
             <router-link to="/vertical-scroll">
-              <img :src="verticalScrollUrl">
+              <img :src="verticalScrollImg">
               <span>普通 Scroll 组件</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/index-view">
-              <img :src="indexListUrl">
+              <img :src="indexListImg">
               <span>索引列表</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/picker">
-              <img :src="pickerlUrl">
+              <img :src="pickerImg">
               <span>Picker 组件</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/slide">
-              <img :src="sliderlUrl">
+              <img :src="slideImg">
               <span>Slide 组件</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/full-page-slide">
-              <img :src="fullPageSliderlUrl">
+              <img :src="fullPageSliderImg">
               <span>全屏 Slide</span>
             </router-link>
           </li>
           <li class="example-item">
             <router-link to="/free-scroll">
-              <img :src="fullPageSliderlUrl">
+              <img :src="freeScrollImg">
               <span>自由滚动</span>
             </router-link>
           </li>
@@ -66,11 +66,12 @@
   export default {
     data() {
       return {
-        verticalScrollUrl: require('./common/images/vertical-scroll.jpeg'),
-        indexListUrl: require('./common/images/index-list.jpeg'),
-        pickerlUrl: require('./common/images/picker.jpeg'),
-        sliderlUrl: require('./common/images/slide.jpeg'),
-        fullPageSliderlUrl: require('./common/images/full-page-slide.jpeg')
+        verticalScrollImg: require('./common/images/vertical-scroll.jpeg'),
+        indexListImg: require('./common/images/index-list.jpeg'),
+        pickerImg: require('./common/images/picker.jpeg'),
+        slideImg: require('./common/images/slide.jpeg'),
+        fullPageSliderImg: require('./common/images/full-page-slide.jpeg'),
+        freeScrollImg: require('./common/images/free-scroll.jpeg')
       }
     }
   }

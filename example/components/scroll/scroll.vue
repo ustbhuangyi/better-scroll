@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
-    <div>
+    <div class="scroll-content">
       <slot>
         <ul class="list-content">
           <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
