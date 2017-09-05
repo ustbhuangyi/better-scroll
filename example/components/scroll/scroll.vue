@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
-    <div>
+    <div class="scroll-content">
       <slot>
         <ul class="list-content">
           <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
@@ -59,7 +59,9 @@
     props: {
       data: {
         type: Array,
-        default: []
+        default: function () {
+          return []
+        }
       },
       probeType: {
         type: Number,
@@ -100,6 +102,10 @@
       refreshDelay: {
         type: Number,
         default: 20
+      },
+      freeScroll: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -143,12 +149,13 @@
         let options = {
           probeType: this.probeType,
           click: this.click,
-          scrollY: this.direction === DIRECTION_V,
-          scrollX: this.direction === DIRECTION_H,
+          scrollY: this.freeScroll || this.direction === DIRECTION_V,
+          scrollX: this.freeScroll || this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
           pullDownRefresh: this.pullDownRefresh,
           pullUpLoad: this.pullUpLoad,
-          startY: this.startY
+          startY: this.startY,
+          freeScroll: this.freeScroll
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)
