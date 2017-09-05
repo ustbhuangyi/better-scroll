@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.4
+ * better-normal-scroll v1.2.5
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1769,8 +1769,8 @@ function pullUpMixin(BScroll) {
 
     this.on('scroll', checkToEnd);
 
-    function checkToEnd() {
-      if (this.y <= this.maxScrollY + threshold) {
+    function checkToEnd(pos) {
+      if (pos.y <= this.maxScrollY + threshold) {
         this.trigger('pullingUp');
         this.pullupWatching = false;
         this.off('scroll', checkToEnd);
@@ -1779,7 +1779,12 @@ function pullUpMixin(BScroll) {
   };
 
   BScroll.prototype.finishPullUp = function () {
-    this._watchPullUp();
+    var _this = this;
+
+    cancelAnimationFrame(this.watchTimer);
+    this.watchTimer = requestAnimationFrame(function () {
+      _this._watchPullUp();
+    });
   };
 }
 
@@ -1811,7 +1816,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.4';
+BScroll.Version = '1.2.5';
 
 return BScroll;
 
