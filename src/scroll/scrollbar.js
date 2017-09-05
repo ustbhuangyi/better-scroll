@@ -212,7 +212,7 @@ Indicator.prototype._calculate = function () {
     this.sizeRatioY = this.maxPosY / this.scroller.maxScrollY
   } else {
     let wrapperWidth = this.wrapper.clientWidth
-    this.indicatorWidth = Math.max(Math.round(wrapperWidth * wrapperWidth / (this.scroller.scrollerHeight || wrapperWidth || 1)), INDICATOR_MIN_LEN)
+    this.indicatorWidth = Math.max(Math.round(wrapperWidth * wrapperWidth / (this.scroller.scrollerWidth || wrapperWidth || 1)), INDICATOR_MIN_LEN)
     this.indicatorStyle.width = `${this.indicatorWidth}px`
 
     this.maxPosX = wrapperWidth - this.indicatorWidth
