@@ -97,9 +97,4 @@
         a
           line-height: 3rem
           color: #606c71
-  .view
-    transition: all 0.3s
-    transform: translate3d(0, 0, 0)
-    &.move-enter-active, &.move-leave-active
-      transform: translate3d(100%, 0, 0)
 </style>

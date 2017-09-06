@@ -3,7 +3,7 @@
     <section class="page-header">
       <nav class="nav">
         <div class="left">
-          <a class="brand" href="">BetterScroll</a>
+          <router-link to="/" class="brand">BetterScroll</router-link>
           <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">文档</a>
           <router-link to="/examples" class="tab">示例</router-link>
         </div>
@@ -19,7 +19,9 @@
       <router-link to="/examples" class="btn">示例</router-link>
     </section>
     <section class="main-content">
-      <router-view class="view"></router-view>
+      <transition name="fade">
+        <router-view class="view"></router-view>
+      </transition>
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/ustbhuangyi/picker">BetterScroll</a> is maintained by <a
         href="https://github.com/ustbhuangyi">ustbhuangyi</a>.</span>
@@ -82,15 +84,15 @@
       min-width: 6rem
 
   .main-content
-
     .site-footer
       text-align: center
       @media screen and (max-width: 42rem)
         margin-top: -1rem
 
-  .view
-    transition: all 0.3s
-    transform: translate3d(0, 0, 0)
-    &.move-enter-active, &.move-leave-active
-      transform: translate3d(100%, 0, 0)
+    .view
+      transition: all 0.5s
+      &.fade-enter-active, &.fade-leave-active
+        opacity: 0;
+      &.fade-enter, &.fade-leave
+        transition: opacity .5s
 </style>
