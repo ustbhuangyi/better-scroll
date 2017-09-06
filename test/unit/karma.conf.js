@@ -2,6 +2,13 @@ var webpackConfig = require('../../build/webpack.test.conf')
 
 module.exports = function (config) {
   config.set({
+    browserDisconnectTimeout: 6000,
+    processKillTimeout: 6000,
+    client: {
+      mocha: {
+        timeout: 6000
+      }
+    },
     // to run in additional browsers:
     // 1. install corresponding karma launcher
     //    http://karma-runner.github.io/0.13/config/browsers.html

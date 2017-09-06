@@ -33,6 +33,7 @@ describe('dom.js', () => {
       .to.equal(359)
     expect(height)
       .to.equal(0)
+    document.body.removeChild(ele)
   })
   it('#preventDefaultException()', () => {
     const exceptions = {

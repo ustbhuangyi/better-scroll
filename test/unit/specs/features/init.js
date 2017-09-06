@@ -24,5 +24,7 @@ describe('BScroll - init', () => {
     expect(scroll.enabled)
       .to.be.false
     scroll.enable()
+    expect(scroll.enabled)
+      .to.be.true
   })
 })
