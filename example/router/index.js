@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Features from 'example/pages/features'
+import Examples from 'example/pages/examples'
 import VerticalScroll from 'example/pages/vertical-scroll/'
 import IndexView from 'example/pages/index-list/'
 import Picker from 'example/pages/picker'
@@ -11,6 +13,14 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      component: Features
+    },
+    {
+      path: '/examples',
+      component: Examples
+    },
     {
       path: '/vertical-scroll',
       component: VerticalScroll
