@@ -210,13 +210,7 @@
           })
         } else if (this.pullUpLoad && this.isPullUpLoad) {
           this.isPullUpLoad = false
-          if (this.scroll.isInTransition) {
-            this.scroll.once('scrollEnd', () => {
-              this.scroll.finishPullUp()
-            })
-          } else {
-            this.scroll.finishPullUp()
-          }
+          this.scroll.finishPullUp()
           this.pullUpDirty = dirty
           this.refresh()
         } else {
