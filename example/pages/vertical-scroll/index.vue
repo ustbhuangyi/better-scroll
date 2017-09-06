@@ -155,7 +155,7 @@
       },
       onPullingDown() {
         // 模拟更新数据
-        console.log('pulling down and loading data')
+        console.log('pulling down and load data')
         setTimeout(() => {
           if (Math.random() > 0.5) {
             // 如果有新数据
