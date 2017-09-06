@@ -69,7 +69,7 @@ describe('BScroll - core scroll', () => {
     scroll.on('touchEnd', endHandler)
     scroll.on('scrollEnd', () => {
       expect(scroll.y)
-        .to.equal(-206)
+        .to.be.closeTo(-210, 20)
       done()
     })
     dispatchSwipe(wrapper, [
