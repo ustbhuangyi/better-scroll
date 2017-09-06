@@ -154,10 +154,9 @@
         this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
       },
       onPullingDown() {
-        this.loading = true
         // 模拟更新数据
+        console.log('pulling down and loading data')
         setTimeout(() => {
-          this.loading = false
           if (Math.random() > 0.5) {
             // 如果有新数据
             this.items.unshift('我是新数据: ' + +new Date())
@@ -169,6 +168,7 @@
       },
       onPullingUp() {
         // 更新数据
+        console.log('pulling up and load data')
         setTimeout(() => {
           if (Math.random() > 0.5) {
             // 如果有新数据
