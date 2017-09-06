@@ -56,7 +56,7 @@
       @media screen and (min-width: 42rem)
         margin-bottom: 5rem
       @media screen and (max-width: 42rem)
-        margin-bottom: 3rem
+        margin-bottom: 3.5rem
       a
         color: $color-white
         &:hover
@@ -79,7 +79,10 @@
           top: 0.2rem
           width: 1.2rem
     h1
-      margin-bottom: 1rem
+      @media screen and (min-width: 42rem)
+        margin-bottom: 1rem
+      @media screen and (max-width: 42rem)
+        margin-bottom: 0.5rem
     .btn
       min-width: 6rem
 
@@ -90,9 +93,9 @@
         margin-top: -1rem
 
     .view
-      transition: all 0.5s
+      transition: all 0.4s ease-in-out
       &.fade-enter-active, &.fade-leave-active
-        opacity: 0;
+        opacity: 0.01
       &.fade-enter, &.fade-leave
-        transition: opacity .5s
+        transition: opacity .4s
 </style>
