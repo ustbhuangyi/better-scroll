@@ -2,37 +2,37 @@
   <div class="example">
     <ul class="example-list">
       <li class="example-item">
-        <router-link to="/vertical-scroll">
+        <router-link to="/examples/vertical-scroll">
           <img :src="verticalScrollImg">
           <span>普通 Scroll 组件</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/index-view">
+        <router-link to="/examples/index-view">
           <img :src="indexListImg">
           <span>索引列表</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/picker">
+        <router-link to="/examples/picker">
           <img :src="pickerImg">
           <span>Picker 组件</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/slide">
+        <router-link to="/examples/slide">
           <img :src="slideImg">
           <span>Slide 组件</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/full-page-slide">
+        <router-link to="/examples/full-page-slide">
           <img :src="fullPageSliderImg">
           <span>全屏 Slide</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/free-scroll">
+        <router-link to="/examples/free-scroll">
           <img :src="freeScrollImg">
           <span>自由滚动</span>
         </router-link>
@@ -97,4 +97,9 @@
         a
           line-height: 3rem
           color: #606c71
+    .view
+      transition: all 0.3s
+      transform: translate3d(0, 0, 0)
+      &.move-enter-active, &.move-leave-active
+        transform: translate3d(100%, 0, 0)
 </style>

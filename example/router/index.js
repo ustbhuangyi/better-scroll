@@ -19,31 +19,33 @@ export default new Router({
     },
     {
       path: '/examples',
-      component: Examples
-    },
-    {
-      path: '/vertical-scroll',
-      component: VerticalScroll
-    },
-    {
-      path: '/index-view',
-      component: IndexView
-    },
-    {
-      path: '/picker',
-      component: Picker
-    },
-    {
-      path: '/slide',
-      component: Slide
-    },
-    {
-      path: '/full-page-slide',
-      component: FullPageSlide
-    },
-    {
-      path: '/free-scroll',
-      component: FreeScroll
+      component: Examples,
+      children: [
+        {
+          path: 'vertical-scroll',
+          component: VerticalScroll
+        },
+        {
+          path: 'index-view',
+          component: IndexView
+        },
+        {
+          path: 'picker',
+          component: Picker
+        },
+        {
+          path: 'slide',
+          component: Slide
+        },
+        {
+          path: 'full-page-slide',
+          component: FullPageSlide
+        },
+        {
+          path: 'free-scroll',
+          component: FreeScroll
+        }
+      ]
     }
   ]
 })
