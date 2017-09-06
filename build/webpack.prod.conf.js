@@ -25,8 +25,7 @@ var webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
-        drop_console: true
+        warnings: false
       }
     }),
     // extract css into its own file
