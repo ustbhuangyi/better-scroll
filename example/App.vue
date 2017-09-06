@@ -1,12 +1,22 @@
 <template>
   <div id="app">
     <section class="page-header">
+      <nav class="nav">
+        <div class="left">
+          <a class="brand" href="">BetterScroll</a>
+          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">文档</a>
+          <a class="tab" href="">示例</a>
+        </div>
+
+        <div class="right">
+          <a href="https://github.com/ustbhuangyi/better-scroll" target="_blank"><img :src="githubIcon" alt="GitHub"></a>
+        </div>
+      </nav>
       <h1 class="project-name">BetterScroll</h1>
 
       <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance</h2>
-      <a href="https://github.com/ustbhuangyi/better-scroll" class="btn">View on GitHub</a>
-      <a href="https://github.com/ustbhuangyi/better-scroll/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/ustbhuangyi/better-scroll/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">Get Started</a>
+      <a class="btn">DEMO</a>
     </section>
     <section class="main-content">
       <div class="example">
@@ -66,6 +76,7 @@
   export default {
     data() {
       return {
+        githubIcon: require('./common/images/github.svg'),
         verticalScrollImg: require('./common/images/vertical-scroll.jpeg'),
         indexListImg: require('./common/images/index-list.jpeg'),
         pickerImg: require('./common/images/picker.jpeg'),
@@ -79,6 +90,40 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable.styl"
+
+  .page-header
+    .nav
+      margin-bottom: 5rem
+      vertical-align: middle
+      @media screen and (min-width: 42rem)
+        margin-bottom: 5rem
+      @media screen and (max-width: 42rem)
+        margin-bottom: 3rem
+      a
+        color: $color-white
+        &:hover
+          text-decoration: none
+      .left
+        float: left
+        .brand
+          font-size: $fontsize-large-xx
+          margin-right: 3rem
+        .tab
+          margin-right: 1rem
+          padding-bottom: 5px
+          &:hover
+            box-shadow: 0 3px 0 rgba(255,255,255,0.5)
+      .right
+        float: right
+        vertical-align: middle
+        img
+          position: relative
+          top: 0.2rem
+          width: 1.2rem
+    h1
+      margin-bottom: 1rem
+
+
   .main-content
     .example
       .example-list
