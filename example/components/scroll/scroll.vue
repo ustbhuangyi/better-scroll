@@ -47,7 +47,7 @@
   import Loading from '../loading/loading.vue'
   import Bubble from '../bubble/bubble.vue'
 
-  const COMPONENT_NAME = 'scroll-list'
+  const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
   const DEFAULT_LOAD_TXT_MORE = '加载更多'
