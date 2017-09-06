@@ -78,6 +78,7 @@
       .example-item
         background-color $color-white
         padding: 0.8rem
+        border: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
         text-align: center
         margin-bottom: 2rem

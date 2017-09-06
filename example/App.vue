@@ -79,7 +79,7 @@
     h1
       margin-bottom: 1rem
     .btn
-      width: 6rem
+      min-width: 6rem
 
   .main-content
 
