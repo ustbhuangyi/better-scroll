@@ -276,7 +276,7 @@
               font-size: $fontsize-small
               color: $color-grey
               &.active
-                color: $color-green
+                color: $color-main-l
             @media (max-height: 480px)
               li
                 padding-top: 3px

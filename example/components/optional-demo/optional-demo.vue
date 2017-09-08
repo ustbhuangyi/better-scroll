@@ -3,7 +3,7 @@
     <div class="flex-box">
       <header class="header">
         <h1>{{title}}</h1>
-        <span @click="back" class="back">back</span>
+        <img class="back" :src="backIcon" @click="back" alt="back"/>
       </header>
       <div ref="wrapper" class="page-content">
         <main class="main-content">
@@ -50,6 +50,11 @@
         default: ''
       }
     },
+    data() {
+      return {
+        backIcon: require('../../common/images/back.svg')
+      }
+    },
     methods: {
       back() {
         this.$router.back()
@@ -86,14 +91,13 @@
         h1
           margin: 0
           font-size: 16px
-          font-weight: 700
+          color: $color-main
         .back
           position: absolute
-          top: 0
-          left: 0
-          padding: 0 15px
-          font-size: 14px
-          color: $color-green
+          top: 9px
+          left: 15px
+          width: 26px
+          color: $color-main
       .page-content
         flex: 1 0 95%
         overflow scroll
@@ -175,8 +179,8 @@
                 height: 2.5rem
                 border-bottom-left-radius: $radius-size-medium
                 border-bottom-right-radius: $radius-size-medium
-                background-color: $color-green
-                box-shadow: 0 0 0 1px $color-green
+                background-color: $color-main-l
+                box-shadow: 0 0 0 1px $color-main-l
                 border: none
                 outline: none
                 color: $color-white
