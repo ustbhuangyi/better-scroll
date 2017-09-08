@@ -69,7 +69,7 @@
       },
       click: {
         type: Boolean,
-        default: false
+        default: true
       },
       listenScroll: {
         type: Boolean,
