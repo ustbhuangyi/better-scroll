@@ -84,7 +84,7 @@
       @media screen and (max-width: 42rem)
         margin-bottom: 0.5rem
     .btn
-      min-width: 6rem
+      min-width: 7rem
 
   .main-content
     .site-footer

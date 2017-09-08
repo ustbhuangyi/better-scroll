@@ -52,6 +52,6 @@
       box-shadow: 0 0 1px 1px #eee inset
       outline: none
       &:focus
-        border: 1px solid $color-green
+        border: 1px solid $color-main
 
 </style>

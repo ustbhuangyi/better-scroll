@@ -62,7 +62,7 @@
       border: 2px solid rgba(0, 0, 0, .1)
       transition: all 0.1s
       &.active
-        background-color: $color-green
+        background-color: $color-main-l
         border-color: transparent
         transition: all 0.2s ease 0.2s
       .switch-circle
