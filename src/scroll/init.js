@@ -6,7 +6,8 @@ import {
   style,
   offset,
   addEvent,
-  removeEvent
+	removeEvent,
+	getRect
 } from '../util/dom'
 
 import {extend} from '../util/lang'
@@ -221,11 +222,11 @@ export function initMixin(BScroll) {
     /* eslint-disable no-unused-vars */
     let rf = this.wrapper.offsetHeight
 
-    this.wrapperWidth = parseInt(this.wrapper.style.width) || this.wrapper.clientWidth
-    this.wrapperHeight = parseInt(this.wrapper.style.height) || this.wrapper.clientHeight
+    this.wrapperWidth = getRect(this.wrapper.style.width).width || this.wrapper.clientWidth
+    this.wrapperHeight = getRect(this.wrapper.style.height).height || this.wrapper.clientHeight
 
-    this.scrollerWidth = parseInt(this.scroller.style.width) || this.scroller.clientWidth
-    this.scrollerHeight = parseInt(this.scroller.style.height) || this.scroller.clientHeight
+    this.scrollerWidth = getRect(this.scroller.style.width).width || this.scroller.clientWidth
+    this.scrollerHeight = getRect(this.scroller.style.height).height || this.scroller.clientHeight
 
     const wheel = this.options.wheel
     if (wheel) {
