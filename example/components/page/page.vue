@@ -2,7 +2,7 @@
   <div class="page">
     <header class="header">
       <h1>{{title}}</h1>
-      <span @click="back" class="back">back</span>
+      <img class="back" :src="backIcon" @click="back" alt="back"/>
     </header>
     <div class="wrapper">
       <section v-show="desc" class="desc">
@@ -30,6 +30,11 @@
       content: {
         type: String,
         default: ''
+      }
+    },
+    data() {
+      return {
+        backIcon: require('../../common/images/back.svg')
       }
     },
     methods: {
@@ -64,14 +69,13 @@
       h1
         margin: 0
         font-size: 16px
-        font-weight: 700
+        color: $color-main
       .back
         position: absolute
-        top: 0
-        left: 0
-        padding: 0 15px
-        font-size: 14px
-        color: $color-green
+        top: 9px
+        left: 15px
+        width: 26px
+        color: $color-main
     .wrapper
       width: 100%
       display: flex

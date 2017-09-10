@@ -101,7 +101,7 @@
         pullDownRefreshThreshold: 90,
         pullDownRefreshStop: 40,
         pullUpLoad: true,
-        pullUpLoadThreshold: 50,
+        pullUpLoadThreshold: 0,
         pullUpLoadMoreTxt: '加载更多',
         pullUpLoadNoMoreTxt: '没有更多数据了',
         startY: 0,
@@ -154,10 +154,9 @@
         this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
       },
       onPullingDown() {
-        this.loading = true
         // 模拟更新数据
+        console.log('pulling down and load data')
         setTimeout(() => {
-          this.loading = false
           if (Math.random() > 0.5) {
             // 如果有新数据
             this.items.unshift('我是新数据: ' + +new Date())
@@ -169,6 +168,7 @@
       },
       onPullingUp() {
         // 更新数据
+        console.log('pulling up and load data')
         setTimeout(() => {
           if (Math.random() > 0.5) {
             // 如果有新数据
@@ -240,22 +240,4 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  .list-wrapper
-    position: absolute
-    left: 0
-    top: 0
-    right: 0
-    bottom: 0
-    overflow: hidden
-    background: #fff
-    .list-content
-      position: relative
-      z-index: 10
-      background: #fff
-      .list-item
-        height: 60px
-        line-height: 60px
-        font-size: 18px
-        padding-left: 20px
-        border-bottom: 1px solid #e5e5e5
 </style>

@@ -288,9 +288,9 @@
           font-size: $fontsize-medium
         .confirm
           right: 0
-          color: $color-orange
+          color: $color-main
           &:active
-            color: $color-active-light-orange-fe
+            color: $color-main-ll
         .cancel
           left: 0
           &:active

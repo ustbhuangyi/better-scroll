@@ -60,8 +60,8 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 ## demo 
 
-[体验地址](https://ustbhuangyi.github.io/better-scroll/demo/)
+[体验地址](https://ustbhuangyi.github.io/better-scroll/)
 
 也可以扫码访问：
 
-![二维码](http://qr.api.cli.im/qr?data=http%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252Fdemo%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=ce498c0d79c6d8099e9c771a6162789b)
+![二维码](https://qr.api.cli.im/qr?data=https%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=0da6b5bf346079bafa07f6935dc996bd)

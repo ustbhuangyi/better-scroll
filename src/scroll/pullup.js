@@ -16,8 +16,8 @@ export function pullUpMixin(BScroll) {
 
     this.on('scroll', checkToEnd)
 
-    function checkToEnd() {
-      if (this.y <= (this.maxScrollY + threshold)) {
+    function checkToEnd(pos) {
+      if (pos.y <= (this.maxScrollY + threshold)) {
         this.trigger('pullingUp')
         this.pullupWatching = false
         this.off('scroll', checkToEnd)
@@ -26,6 +26,12 @@ export function pullUpMixin(BScroll) {
   }
 
   BScroll.prototype.finishPullUp = function () {
-    this._watchPullUp()
+    if (this.isInTransition) {
+      this.once('scrollEnd', () => {
+        this._watchPullUp()
+      })
+    } else {
+      this._watchPullUp()
+    }
   }
 }

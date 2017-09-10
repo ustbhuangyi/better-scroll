@@ -1,9 +1,9 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
-    <div>
+    <div class="scroll-content">
       <slot>
         <ul class="list-content">
-          <li @click="clickItem(item)" class="list-item" v-for="item in data">{{item}}</li>
+          <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
         </ul>
       </slot>
       <slot name="pullup"
@@ -47,7 +47,7 @@
   import Loading from '../loading/loading.vue'
   import Bubble from '../bubble/bubble.vue'
 
-  const COMPONENT_NAME = 'scroll-list'
+  const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
   const DEFAULT_LOAD_TXT_MORE = '加载更多'
@@ -59,7 +59,9 @@
     props: {
       data: {
         type: Array,
-        default: []
+        default: function () {
+          return []
+        }
       },
       probeType: {
         type: Number,
@@ -67,7 +69,7 @@
       },
       click: {
         type: Boolean,
-        default: false
+        default: true
       },
       listenScroll: {
         type: Boolean,
@@ -100,6 +102,10 @@
       refreshDelay: {
         type: Number,
         default: 20
+      },
+      freeScroll: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -143,12 +149,13 @@
         let options = {
           probeType: this.probeType,
           click: this.click,
-          scrollY: this.direction === DIRECTION_V,
-          scrollX: this.direction === DIRECTION_H,
+          scrollY: this.freeScroll || this.direction === DIRECTION_V,
+          scrollX: this.freeScroll || this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
           pullDownRefresh: this.pullDownRefresh,
           pullUpLoad: this.pullUpLoad,
-          startY: this.startY
+          startY: this.startY,
+          freeScroll: this.freeScroll
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)
@@ -188,7 +195,8 @@
       scrollToElement() {
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       },
-      clickItem(item) {
+      clickItem(e, item) {
+        console.log(e)
         this.$emit('click', item)
       },
       destroy() {
@@ -271,7 +279,26 @@
 
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
+  .list-wrapper
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    overflow: hidden
+    background: #fff
+    .list-content
+      position: relative
+      z-index: 10
+      background: #fff
+      .list-item
+        height: 60px
+        line-height: 60px
+        font-size: 18px
+        padding-left: 20px
+        border-bottom: 1px solid #e5e5e5
+
   .pulldown-wrapper
     position: absolute
     width: 100%

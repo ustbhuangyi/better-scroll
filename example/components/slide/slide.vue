@@ -11,7 +11,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {addClass} from 'common/js/dom'
+  import { addClass } from 'common/js/dom'
   import BScroll from 'scroll/index'
 
   const COMPONENT_NAME = 'slide'
@@ -81,6 +81,9 @@
       })
     },
     activated() {
+      if (!this.slide) {
+        return
+      }
       this.slide.enable()
       let pageIndex = this.slide.getCurrentPage().pageX
       if (pageIndex > this.dots.length) {

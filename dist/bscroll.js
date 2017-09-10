@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.3
+ * better-normal-scroll v1.2.6
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -932,11 +932,12 @@ function coreMixin(BScroll) {
     var me = this;
 
     function probe() {
+      if (!me.isInTransition) {
+        return;
+      }
       var pos = me.getComputedPosition();
       me.trigger('scroll', pos);
-      if (me.isInTransition) {
-        me.probeTimer = requestAnimationFrame(probe);
-      }
+      me.probeTimer = requestAnimationFrame(probe);
     }
   };
 
@@ -1717,7 +1718,7 @@ Indicator.prototype._calculate = function () {
     this.sizeRatioY = this.maxPosY / this.scroller.maxScrollY;
   } else {
     var wrapperWidth = this.wrapper.clientWidth;
-    this.indicatorWidth = Math.max(Math.round(wrapperWidth * wrapperWidth / (this.scroller.scrollerHeight || wrapperWidth || 1)), INDICATOR_MIN_LEN);
+    this.indicatorWidth = Math.max(Math.round(wrapperWidth * wrapperWidth / (this.scroller.scrollerWidth || wrapperWidth || 1)), INDICATOR_MIN_LEN);
     this.indicatorStyle.width = this.indicatorWidth + 'px';
 
     this.maxPosX = wrapperWidth - this.indicatorWidth;
@@ -1754,26 +1755,40 @@ function pullUpMixin(BScroll) {
     // must watch scroll in real time
     this.options.probeType = 3;
 
+    this.pullupWatching = false;
     this._watchPullUp();
   };
 
   BScroll.prototype._watchPullUp = function () {
+    if (this.pullupWatching) {
+      return;
+    }
+    this.pullupWatching = true;
     var _options$pullUpLoad$t = this.options.pullUpLoad.threshold,
-        threshold = _options$pullUpLoad$t === undefined ? 50 : _options$pullUpLoad$t;
+        threshold = _options$pullUpLoad$t === undefined ? 0 : _options$pullUpLoad$t;
 
 
     this.on('scroll', checkToEnd);
 
-    function checkToEnd() {
-      if (this.y <= this.maxScrollY + threshold) {
+    function checkToEnd(pos) {
+      if (pos.y <= this.maxScrollY + threshold) {
         this.trigger('pullingUp');
+        this.pullupWatching = false;
         this.off('scroll', checkToEnd);
       }
     }
   };
 
   BScroll.prototype.finishPullUp = function () {
-    this._watchPullUp();
+    var _this = this;
+
+    if (this.isInTransition) {
+      this.once('scrollEnd', function () {
+        _this._watchPullUp();
+      });
+    } else {
+      this._watchPullUp();
+    }
   };
 }
 
@@ -1805,7 +1820,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.3';
+BScroll.Version = '1.2.6';
 
 return BScroll;
 

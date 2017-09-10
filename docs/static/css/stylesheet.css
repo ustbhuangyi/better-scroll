@@ -7,7 +7,7 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  background-color: #f2f2f2;
+  background-color: #fff;
   color: #606c71; }
 
 a {
@@ -62,15 +62,15 @@ a {
 
 @media screen and (min-width: 64em) {
   .page-header {
-    padding: 5rem 6rem; } }
+    padding: 1.5rem 6rem 3rem 6rem; } }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
   .page-header {
-    padding: 3rem 4rem; } }
+    padding: 1.5rem 4rem 2rem 4rem; } }
 
 @media screen and (max-width: 42em) {
   .page-header {
-    padding: 2rem 1rem; } }
+    padding: 1.5rem 1rem 1rem 1rem; } }
 
 .project-name {
   margin-top: 0;
@@ -89,7 +89,7 @@ a {
     font-size: 1.75rem; } }
 
 .project-tagline {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-weight: normal;
   opacity: 0.7; }
 
@@ -110,12 +110,10 @@ a {
 .main-content img {
   max-width: 100%; }
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
   font-weight: normal;
   color: #159957; }
-.main-content p {
-  margin-bottom: 1em; }
 .main-content code {
   padding: 2px 4px;
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;

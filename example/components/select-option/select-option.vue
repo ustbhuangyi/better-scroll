@@ -60,6 +60,6 @@
       outline: none
       border-radius: 0
       &:focus
-        border: 1px solid $color-green
+        border: 1px solid $color-main
 
 </style>
