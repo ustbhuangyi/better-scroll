@@ -57,9 +57,11 @@ const DEFAULT_OPTIONS = {
    * for slide
    * snap: {
    *   loop: false,
+   *   el: domEl,
    *   threshold: 0.1,
    *   stepX: 100,
-   *   stepY: 100
+   *   stepY: 100,
+   *   listenFlick: true
    * }
    */
   snap: false,

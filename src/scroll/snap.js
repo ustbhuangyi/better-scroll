@@ -124,19 +124,21 @@ export function snapMixin(BScroll) {
       }
     })
 
-    this.on('flick', () => {
-      let time = snap.speed || Math.max(
-          Math.max(
-            Math.min(Math.abs(this.x - this.startX), 1000),
-            Math.min(Math.abs(this.y - this.startY), 1000)
-          ), 300)
+    if (snap.listenFlick !== false) {
+      this.on('flick', () => {
+        let time = snap.speed || Math.max(
+            Math.max(
+              Math.min(Math.abs(this.x - this.startX), 1000),
+              Math.min(Math.abs(this.y - this.startY), 1000)
+            ), 300)
 
-      this.goToPage(
-        this.currentPage.pageX + this.directionX,
-        this.currentPage.pageY + this.directionY,
-        time
-      )
-    })
+        this.goToPage(
+          this.currentPage.pageX + this.directionX,
+          this.currentPage.pageY + this.directionY,
+          time
+        )
+      })
+    }
   }
 
   BScroll.prototype._nearestSnap = function (x, y) {
