@@ -17,7 +17,7 @@ let scroll = new BScroll('.wrapper',{
 ## startY
   - 类型：Number,
   - 默认值：0
-  - 作用：纵轴方向初始化位置，见 [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) 。
+  - 作用：纵轴方向初始化位置，见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll) 。
 
 ## scrollX
   - 类型：Boolean
@@ -124,7 +124,7 @@ let scroll = new BScroll('.wrapper',{
 ## preventDefault
    - 类型：Boolean
    - 默认值：true
-   - 作用：是否阻止原生的滚动。这个值应该设为 true，除非你真的知道你在做什么，通常你可能用到的是 [preventDefaultException](/options.html#preventdefaultexception)。
+   - 作用：当事件派发后是否阻止浏览器默认行为。这个值应该设为 true，除非你真的知道你在做什么，通常你可能用到的是 [preventDefaultException](/options.html#preventdefaultexception)。
    
 ## preventDefaultException  
    - 类型：Object
