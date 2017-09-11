@@ -158,7 +158,7 @@
         } else if (index > this.listHeight.length - 2) {
           index = this.listHeight.length - 2
         }
-        this.$refs.indexList.scrollToElement(this.$refs.listGroup[index], 0)
+        this.$refs.indexList.scrollToElement(this.$refs.listGroup[index], 200)
         this.scrollY = this.$refs.indexList.scroll.y
       }
     },

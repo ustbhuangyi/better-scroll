@@ -224,12 +224,12 @@ export function initMixin(BScroll) {
     this.wrapperWidth = parseInt(this.wrapper.style.width) || this.wrapper.clientWidth
     this.wrapperHeight = parseInt(this.wrapper.style.height) || this.wrapper.clientHeight
 
-    this.scrollerWidth = parseInt(this.scroller.style.width) || this.scroller.clientWidth
-    this.scrollerHeight = parseInt(this.scroller.style.height) || this.scroller.clientHeight
+    this.scrollerWidth = this.options.scrollerWidth = parseInt(this.scroller.style.width) || this.scroller.clientWidth
+    this.scrollerHeight = this.options.scrollerHeight = parseInt(this.scroller.style.height) || this.scroller.clientHeight
 
     const wheel = this.options.wheel
     if (wheel) {
-      this.items = this.scroller.children
+      this.items = this.options.items = this.scroller.children
       this.options.itemHeight = this.itemHeight = this.items.length ? this.items[0].clientHeight : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex

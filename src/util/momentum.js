@@ -2,14 +2,14 @@ export function momentum(current, start, time, lowerMargin, wrapperSize, options
   let distance = current - start
   let speed = Math.abs(distance) / time
 
-  let {deceleration, itemHeight, swipeBounceTime, wheel, swipeTime} = options
+  let {deceleration, itemHeight, swipeBounceTime, wheel, swipeTime, items, scrollerHeight} = options
   let duration = swipeTime
   let rate = wheel ? 4 : 15
 
   let destination = current + speed / deceleration * (distance < 0 ? -1 : 1)
 
   if (wheel && itemHeight) {
-    destination = Math.round(destination / itemHeight) * itemHeight
+    destination = Math.round(destination * items.length / scrollerHeight) * scrollerHeight / items.length
   }
 
   if (destination < lowerMargin) {

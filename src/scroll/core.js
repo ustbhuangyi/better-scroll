@@ -209,8 +209,8 @@ export function coreMixin(BScroll) {
     if (!this.moved) {
       if (this.options.wheel) {
         if (this.target && this.target.className === 'wheel-scroll') {
-          let index = Math.abs(Math.round(newY / this.itemHeight))
-          let _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight)
+          let index = Math.abs(Math.round(newY * this.items.length / this.scrollerHeight))
+          let _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) * this.items.length / this.scrollerHeight)
           this.target = this.items[index + _offset]
         }
         this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe)
@@ -259,7 +259,8 @@ export function coreMixin(BScroll) {
       this.isInTransition = 1
     } else {
       if (this.options.wheel) {
-        newY = Math.round(newY / this.itemHeight) * this.itemHeight
+        let idx = Math.round(newY * this.items.length / this.scrollerHeight)
+        newY = idx * this.scrollerHeight / this.items.length
         time = this.options.wheel.adjustTime || 400
       }
     }
@@ -291,7 +292,7 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0
+      this.selectedIndex = Math.abs(this.y * this.items.length / this.scrollerHeight) | 0
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -386,7 +387,7 @@ export function coreMixin(BScroll) {
     if (this.options.wheel) {
       const {rotate = 25} = this.options.wheel
       for (let i = 0; i < this.items.length; i++) {
-        let deg = rotate * (y / this.itemHeight + i)
+        let deg = rotate * (y * this.items.length / this.scrollerHeight + i)
         this.items[i].style[style.transform] = `rotateX(${deg}deg)`
       }
     }
@@ -406,7 +407,8 @@ export function coreMixin(BScroll) {
     let startX = this.x
     let startY = this.y
     let startTime = getNow()
-    let destTime = startTime + duration
+		let destTime = startTime + duration
+		cancelAnimationFrame(me.animateTimer)
 
     function step() {
       let now = getNow()
@@ -431,7 +433,7 @@ export function coreMixin(BScroll) {
       me._translate(newX, newY)
 
       if (me.isAnimating) {
-        requestAnimationFrame(step)
+        me.animateTimer = requestAnimationFrame(step)
       }
 
       if (me.options.probeType === 3) {
@@ -471,7 +473,7 @@ export function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1
         } else {
-          this.selectedIndex = Math.abs(y / this.itemHeight) | 0
+          this.selectedIndex = Math.abs(y * this.items.length / this.scrollerHeight) | 0
         }
       }
     } else {
@@ -507,7 +509,7 @@ export function coreMixin(BScroll) {
     pos.top = pos.top > 0 ? 0 : pos.top < this.maxScrollY ? this.maxScrollY : pos.top
 
     if (this.options.wheel) {
-      pos.top = Math.round(pos.top / this.itemHeight) * this.itemHeight
+      pos.top = Math.round(pos.top * this.items.length / this.scrollerHeight) * this.scrollerHeight / this.items.length
     }
 
     this.scrollTo(pos.left, pos.top, time, easing)
@@ -563,7 +565,7 @@ export function coreMixin(BScroll) {
       let pos = this.getComputedPosition()
       this._translate(pos.x, pos.y)
       if (this.options.wheel) {
-        this.target = this.items[Math.round(-pos.y / this.itemHeight)]
+        this.target = this.items[Math.round(-pos.y * this.items.length / this.scrollerHeight)]
       } else {
         this.trigger('scrollEnd', {
           x: this.x,
