@@ -74,6 +74,19 @@
   - [destroy](events.md#destroy)
   - [pullingDown](events.md#pullingdown)
   - [pullingUp](events.md#pullingup)
+- [属性](property.md)
+  - [x](property.md#x)
+  - [y](property.md#y)
+  - [maxScrollX](property.md#maxscrollx)
+  - [maxScrollY](property.md#maxscrolly)
+  - [movingDirectionX](property.md#movingdirectionx)
+  - [movingDirectionY](property.md#movingdirectiony)
+  - [directionX](property.md#directionx)
+  - [directionY](property.md#directiony)
+  - [enabled](property.md#enabled)
+  - [isInTransition](property.md#isintransition)
+  - [isAnimating](property.md#isanimating)
+ 
   
   
     
