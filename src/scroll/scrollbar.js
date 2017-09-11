@@ -1,4 +1,4 @@
-import {style} from '../util/dom'
+import { style } from '../util/dom'
 
 const INDICATOR_MIN_LEN = 8
 

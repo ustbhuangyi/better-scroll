@@ -7,10 +7,10 @@ import {
   style,
   offset
 } from '../util/dom'
-import {ease} from '../util/ease'
-import {momentum} from '../util/momentum'
-import {requestAnimationFrame, cancelAnimationFrame} from '../util/raf'
-import {getNow} from '../util/lang'
+import { ease } from '../util/ease'
+import { momentum } from '../util/momentum'
+import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
+import { getNow } from '../util/lang'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -34,6 +34,8 @@ export function coreMixin(BScroll) {
     this.distY = 0
     this.directionX = 0
     this.directionY = 0
+    this.movingDirectionX = 0
+    this.movingDirectionY = 0
     this.directionLocked = 0
 
     this._transitionTime()
@@ -117,6 +119,8 @@ export function coreMixin(BScroll) {
 
     deltaX = this.hasHorizontalScroll ? deltaX : 0
     deltaY = this.hasVerticalScroll ? deltaY : 0
+    this.movingDirectionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0
+    this.movingDirectionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0
 
     let newX = this.x + deltaX
     let newY = this.y + deltaY
@@ -431,7 +435,7 @@ export function coreMixin(BScroll) {
       me._translate(newX, newY)
 
       if (me.isAnimating) {
-        requestAnimationFrame(step)
+        me.animateTimer = requestAnimationFrame(step)
       }
 
       if (me.options.probeType === 3) {
@@ -443,6 +447,7 @@ export function coreMixin(BScroll) {
     }
 
     this.isAnimating = true
+    cancelAnimationFrame(this.animateTimer)
     step()
   }
 
