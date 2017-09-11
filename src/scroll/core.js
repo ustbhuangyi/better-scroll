@@ -34,6 +34,8 @@ export function coreMixin(BScroll) {
     this.distY = 0
     this.directionX = 0
     this.directionY = 0
+    this.movingDirectionX = 0
+    this.movingDirectionY = 0
     this.directionLocked = 0
 
     this._transitionTime()
@@ -117,6 +119,8 @@ export function coreMixin(BScroll) {
 
     deltaX = this.hasHorizontalScroll ? deltaX : 0
     deltaY = this.hasVerticalScroll ? deltaY : 0
+    this.movingDirectionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0
+    this.movingDirectionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0
 
     let newX = this.x + deltaX
     let newY = this.y + deltaY

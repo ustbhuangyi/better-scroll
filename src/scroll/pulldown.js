@@ -1,4 +1,4 @@
-import {ease} from '../util/ease'
+import { ease } from '../util/ease'
 
 export function pullDownMixin(BScroll) {
   BScroll.prototype._checkPullDown = function () {

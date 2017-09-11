@@ -1,5 +1,5 @@
-import {getRect, prepend} from '../util/dom'
-import {ease} from '../util/ease'
+import { getRect, prepend } from '../util/dom'
+import { ease } from '../util/ease'
 
 export function snapMixin(BScroll) {
   BScroll.prototype._initSnap = function () {
