@@ -39,7 +39,7 @@ export function coreMixin(BScroll) {
     this.directionLocked = 0
 
     this._transitionTime()
-    this.startTime = getNow()
+    this.absStartTime = this.startTime = getNow()
 
     if (this.options.wheel) {
       this.target = e.target
@@ -240,12 +240,13 @@ export function coreMixin(BScroll) {
 
     this.endTime = getNow()
 
-    let duration = this.endTime - this.startTime
+		let duration = this.endTime - this.startTime
+    let absDuration = this.endTime - this.absStartTime
     let absDistX = Math.abs(newX - this.startX)
     let absDistY = Math.abs(newY - this.startY)
 
     // flick
-    if (this._events.flick && duration < this.options.flickLimitTime && absDistX < this.options.flickLimitDistance && absDistY < this.options.flickLimitDistance) {
+    if (this._events.flick && absDuration < this.options.flickLimitTime && absDistX < this.options.flickLimitDistance && absDistY < this.options.flickLimitDistance) {
       this.trigger('flick')
       return
     }
