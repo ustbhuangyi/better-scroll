@@ -53,7 +53,7 @@ let scroll = new BScroll('.wrapper',{
 ## click
   - 类型：Boolean
   - 默认值：false
-  - 作用：better-scroll 默认会阻止浏览器的原生 click 事件。当设置为 true，better-scroll 会派发一个 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。
+  - 作用：better-scroll 默认会阻止浏览器的原生 click 事件。当设置为 true，better-scroll 会派发一个 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。但是自定义的 click 事件会阻止一些原生组件的行为，如 checkbox 的选中等，所以一旦滚动列表中有一些原生表单组件，推荐的做法是监听 tap 事件，如下。
   
 ## tap
   - 类型：Boolean | String
@@ -129,7 +129,7 @@ let scroll = new BScroll('.wrapper',{
 ## preventDefaultException  
    - 类型：Object
    - 默认值：`{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`
-   - 作用：better-scroll 的实现会阻止原生的滚动，这样也同时阻止了一些原生组件的默认行为，比如 input checkbox 的选中。这个时候我们不能对这些元素做 preventDefault，所以我们可以配置 preventDefaultException。默认值 `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`表示标签名为 input、textarea、button、select 这些元素的默认行为都不会被阻止。
+   - 作用：better-scroll 的实现会阻止原生的滚动，这样也同时阻止了一些原生组件的默认行为。这个时候我们不能对这些元素做 preventDefault，所以我们可以配置 preventDefaultException。默认值 `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}`表示标签名为 input、textarea、button、select 这些元素的默认行为都不会被阻止。
    - 备注：这是一个非常有用的配置，它的 key 是 DOM 元素的属性值，value 可以是一个正则表达式。比如我们想配一个 class 名称为 test 的元素，那么配置规则为 `{className:/(^|\s)test(\s|$)/}`。
    
 ## HWCompositing
