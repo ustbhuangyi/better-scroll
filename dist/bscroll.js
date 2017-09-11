@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.2.6
+ * better-normal-scroll v1.3.0
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -341,9 +341,11 @@ var DEFAULT_OPTIONS = {
    * for slide
    * snap: {
    *   loop: false,
+   *   el: domEl,
    *   threshold: 0.1,
    *   stepX: 100,
-   *   stepY: 100
+   *   stepY: 100,
+   *   listenFlick: true
    * }
    */
   snap: false,
@@ -503,19 +505,18 @@ function initMixin(BScroll) {
   };
 
   BScroll.prototype.refresh = function () {
-    /* eslint-disable no-unused-vars */
-    var rf = this.wrapper.offsetHeight;
+    var wrapperRect = getRect(this.wrapper);
+    this.wrapperWidth = wrapperRect.width;
+    this.wrapperHeight = wrapperRect.height;
 
-    this.wrapperWidth = parseInt(this.wrapper.style.width) || this.wrapper.clientWidth;
-    this.wrapperHeight = parseInt(this.wrapper.style.height) || this.wrapper.clientHeight;
-
-    this.scrollerWidth = parseInt(this.scroller.style.width) || this.scroller.clientWidth;
-    this.scrollerHeight = parseInt(this.scroller.style.height) || this.scroller.clientHeight;
+    var scrollerRect = getRect(this.scroller);
+    this.scrollerWidth = scrollerRect.width;
+    this.scrollerHeight = scrollerRect.height;
 
     var wheel = this.options.wheel;
     if (wheel) {
       this.items = this.scroller.children;
-      this.options.itemHeight = this.itemHeight = this.items.length ? this.items[0].clientHeight : 0;
+      this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0;
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex;
       }
@@ -654,6 +655,8 @@ function coreMixin(BScroll) {
     this.distY = 0;
     this.directionX = 0;
     this.directionY = 0;
+    this.movingDirectionX = 0;
+    this.movingDirectionY = 0;
     this.directionLocked = 0;
 
     this._transitionTime();
@@ -737,6 +740,8 @@ function coreMixin(BScroll) {
 
     deltaX = this.hasHorizontalScroll ? deltaX : 0;
     deltaY = this.hasVerticalScroll ? deltaY : 0;
+    this.movingDirectionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
+    this.movingDirectionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
 
     var newX = this.x + deltaX;
     var newY = this.y + deltaY;
@@ -1050,7 +1055,7 @@ function coreMixin(BScroll) {
       me._translate(newX, newY);
 
       if (me.isAnimating) {
-        requestAnimationFrame(step);
+        me.animateTimer = requestAnimationFrame(step);
       }
 
       if (me.options.probeType === 3) {
@@ -1062,6 +1067,7 @@ function coreMixin(BScroll) {
     }
 
     this.isAnimating = true;
+    cancelAnimationFrame(this.animateTimer);
     step();
   };
 
@@ -1344,11 +1350,13 @@ function snapMixin(BScroll) {
       }
     });
 
-    this.on('flick', function () {
-      var time = snap.speed || Math.max(Math.max(Math.min(Math.abs(_this.x - _this.startX), 1000), Math.min(Math.abs(_this.y - _this.startY), 1000)), 300);
+    if (snap.listenFlick !== false) {
+      this.on('flick', function () {
+        var time = snap.speed || Math.max(Math.max(Math.min(Math.abs(_this.x - _this.startX), 1000), Math.min(Math.abs(_this.y - _this.startY), 1000)), 300);
 
-      _this.goToPage(_this.currentPage.pageX + _this.directionX, _this.currentPage.pageY + _this.directionY, time);
-    });
+        _this.goToPage(_this.currentPage.pageX + _this.directionX, _this.currentPage.pageY + _this.directionY, time);
+      });
+    }
   };
 
   BScroll.prototype._nearestSnap = function (x, y) {
@@ -1771,7 +1779,7 @@ function pullUpMixin(BScroll) {
     this.on('scroll', checkToEnd);
 
     function checkToEnd(pos) {
-      if (pos.y <= this.maxScrollY + threshold) {
+      if (this.movingDirectionY === 1 && pos.y <= this.maxScrollY + threshold) {
         this.trigger('pullingUp');
         this.pullupWatching = false;
         this.off('scroll', checkToEnd);
@@ -1820,7 +1828,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.2.6';
+BScroll.Version = '1.3.0';
 
 return BScroll;
 
