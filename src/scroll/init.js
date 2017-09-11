@@ -6,10 +6,11 @@ import {
   style,
   offset,
   addEvent,
-  removeEvent
+  removeEvent,
+  getRect
 } from '../util/dom'
 
-import {extend} from '../util/lang'
+import { extend } from '../util/lang'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -218,19 +219,18 @@ export function initMixin(BScroll) {
   }
 
   BScroll.prototype.refresh = function () {
-    /* eslint-disable no-unused-vars */
-    let rf = this.wrapper.offsetHeight
+    let wrapperRect = getRect(this.wrapper)
+    this.wrapperWidth = wrapperRect.width
+    this.wrapperHeight = wrapperRect.height
 
-    this.wrapperWidth = parseInt(this.wrapper.style.width) || this.wrapper.clientWidth
-    this.wrapperHeight = parseInt(this.wrapper.style.height) || this.wrapper.clientHeight
-
-    this.scrollerWidth = parseInt(this.scroller.style.width) || this.scroller.clientWidth
-    this.scrollerHeight = parseInt(this.scroller.style.height) || this.scroller.clientHeight
+    let scrollerRect = getRect(this.scroller)
+    this.scrollerWidth = scrollerRect.width
+    this.scrollerHeight = scrollerRect.height
 
     const wheel = this.options.wheel
     if (wheel) {
       this.items = this.scroller.children
-      this.options.itemHeight = this.itemHeight = this.items.length ? this.items[0].clientHeight : 0
+      this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex
       }
