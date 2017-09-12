@@ -59,22 +59,17 @@
         }
       }, 20)
 
-      window.addEventListener('resize', () => {
-        if (!this.slide || !this.slide.enabled) {
-          return
-        }
-        clearTimeout(this.resizeTimer)
-        this.resizeTimer = setTimeout(() => {
-          if (this.slide.isInTransition) {
-            this._onScrollEnd()
-          } else {
-            if (this.autoPlay) {
-              this._play()
-            }
-          }
-          this.refresh()
-        }, 60)
-      })
+      if ('ontouchstart' in window) {
+        window.addEventListener('orientationchange', () => {
+          setTimeout(() => {
+            this._resetSlide()
+          }, 300)
+        });
+      } else {
+        window.addEventListener('resize', () => {
+          this._resetSlide()
+        })
+      }
     },
     activated() {
       if (!this.slide) {
@@ -104,8 +99,26 @@
     },
     methods: {
       refresh() {
-        this._setSlideWidth(true)
-        this.slide.refresh()
+        if (this.slide) {
+          this._setSlideWidth(true)
+          this.slide.refresh()
+        }
+      },
+      _resetSlide() {
+        if (!this.slide || !this.slide.enabled) {
+          return
+        }
+        clearTimeout(this.resizeTimer)
+        this.resizeTimer = setTimeout(() => {
+          if (this.slide.isInTransition) {
+            this._onScrollEnd()
+          } else {
+            if (this.autoPlay) {
+              this._play()
+            }
+          }
+          this.refresh()
+        }, 60)
       },
       next() {
         this.slide.next()
