@@ -2,7 +2,7 @@
   <div ref="wrapper" class="list-wrapper">
     <div class="scroll-content">
       <slot>
-        <ul class="list-content">
+        <ul ref="list" class="list-content">
           <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
         </ul>
       </slot>
@@ -46,6 +46,7 @@
   import BScroll from '../../../src/index'
   import Loading from '../loading/loading.vue'
   import Bubble from '../bubble/bubble.vue'
+  import { getRect } from '../../common/js/dom'
 
   const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'
@@ -145,6 +146,7 @@
         if (!this.$refs.wrapper) {
           return
         }
+        this.$refs.list.style.minHeight = getRect(this.$refs.wrapper).height + 'px'
 
         let options = {
           probeType: this.probeType,
