@@ -146,7 +146,7 @@
         if (!this.$refs.wrapper) {
           return
         }
-        if (this.$refs.list) {
+        if (this.$refs.list && (this.pullDownRefresh || this.pullUpLoad)) {
           this.$refs.list.style.minHeight = getRect(this.$refs.wrapper).height + 'px'
         }
 
