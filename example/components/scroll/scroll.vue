@@ -146,7 +146,9 @@
         if (!this.$refs.wrapper) {
           return
         }
-        this.$refs.list.style.minHeight = getRect(this.$refs.wrapper).height + 'px'
+        if (this.$refs.list) {
+          this.$refs.list.style.minHeight = getRect(this.$refs.wrapper).height + 'px'
+        }
 
         let options = {
           probeType: this.probeType,
