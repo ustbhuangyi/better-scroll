@@ -4,7 +4,7 @@
       <nav class="nav">
         <div class="left">
           <router-link to="/" class="brand">BetterScroll</router-link>
-          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">文档</a>
+          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">{{ $t("message.doc") }}</a>
           <router-link to="/examples" class="tab">示例</router-link>
         </div>
 

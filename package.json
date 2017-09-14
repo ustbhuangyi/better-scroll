@@ -73,6 +73,7 @@
     "vue-template-compiler": "^2.4.2",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
+    "vue-i18n": "^7.2.0",
     "autoprefixer": "^7.1.1",
     "uglify-js": "^3.0.27",
     "extract-text-webpack-plugin": "^3.0.0",
@@ -84,7 +85,6 @@
     "url-loader": "^0.5.9",
     "file-loader": "^0.11.1",
     "vconsole": "^2.5.2",
-
     "cross-env": "^5.0.5",
     "karma": "^1.7.0",
     "karma-coverage": "^1.1.1",
