@@ -1,10 +1,10 @@
 
 <!DOCTYPE HTML>
-<html lang="" >
+<html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>方法 / 定制 · better-scroll</title>
+        <title>安装 · better-scroll</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -12,20 +12,20 @@
         
         
     
-    <link rel="stylesheet" href="gitbook/style.css">
+    <link rel="stylesheet" href="../gitbook/style.css">
 
     
             
                 
-                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
                 
             
                 
-                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
                 
             
                 
-                <link rel="stylesheet" href="gitbook/gitbook-plugin-theme-vuejs/vue.css">
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-theme-vuejs/vue.css">
                 
             
         
@@ -53,14 +53,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
-    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="api-specific.html" />
+    <link rel="next" href="installation.html" />
     
     
-    <link rel="prev" href="api.html" />
+    <link rel="prev" href="./" />
     
 
     </head>
@@ -71,7 +71,7 @@
         
             
 <div id="book-search-input" role="search">
-    <input type="text" placeholder="Type to search" />
+    <input type="text" placeholder="输入并搜索" />
 </div>
 
             
@@ -160,7 +160,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" data-path="installation.html">
+        <li class="chapter active" data-level="1.2" data-path="installation.html">
             
                 <a href="installation.html">
             
@@ -808,7 +808,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.6" data-path="api-specific.html">
+        <li class="chapter " data-level="1.6" data-path="api-specific.html">
             
                 <a href="api-specific.html">
             
@@ -1262,7 +1262,7 @@
 
     <li>
         <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
-            Published with GitBook
+            本书使用 GitBook 发布
         </a>
     </li>
 </ul>
@@ -1285,7 +1285,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >方法 / 定制</a>
+        <a href="." >安装</a>
     </h1>
 </div>
 
@@ -1300,73 +1300,19 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x65B9;&#x6CD5;--&#x5B9A;&#x5236;">&#x65B9;&#x6CD5; / &#x5B9A;&#x5236;</h1>
-<p>better-scroll &#x8FD8;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E9B;&#x5B9A;&#x5236;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4E13;&#x95E8;&#x7528;&#x6765;&#x5B9E;&#x73B0;&#x67D0;&#x4E00;&#x4E2A; feature &#x6240;&#x7528;&#x3002;</p>
-<h2 id="gotopagex-y-time-easing">goToPage(x, y, time, easing)</h2>
-<ul>
-<li>&#x53C2;&#x6570;<ul>
-<li>{Number} x &#x6A2A;&#x8F74;&#x7684;&#x9875;&#x6570;</li>
-<li>{Number} y &#x7EB5;&#x8F74;&#x7684;&#x9875;&#x6570;</li>
-<li>{Number} time &#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x95F4;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
-</ul>
-</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x6211;&#x4EEC;&#x505A; slide &#x7EC4;&#x4EF6;&#x7684;&#x65F6;&#x5019;&#xFF0C;slide &#x901A;&#x5E38;&#x4F1A;&#x5206;&#x6210;&#x591A;&#x4E2A;&#x9875;&#x9762;&#x3002;&#x8C03;&#x7528;&#x6B64;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x6EDA;&#x52A8;&#x5230;&#x6307;&#x5B9A;&#x7684;&#x9875;&#x9762;&#x3002;   </li>
-</ul>
-<h2 id="nexttime-easing">next(time, easing)</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{Number} time &#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x95F4;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
-</ul>
-</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x4E0B;&#x4E00;&#x4E2A;&#x9875;&#x9762;</li>
-</ul>
-<h2 id="prevtime-easing">prev(time, easing)</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{Number} time &#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x95F4;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
-</ul>
-</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x4E0A;&#x4E00;&#x4E2A;&#x9875;&#x9762;</li>
-</ul>
-<h2 id="getcurrentpage">getCurrentPage()</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;{Object} <code>{ x: posX, y: posY,pageX: x, pageY: y}</code> &#x5176;&#x4E2D;&#xFF0C;x &#x548C; y &#x8868;&#x793A;&#x504F;&#x79FB;&#x7684;&#x5750;&#x6807;&#x503C;&#xFF0C;pageX &#x548C; pageY &#x8868;&#x793A;&#x6A2A;&#x8F74;&#x65B9;&#x5411;&#x548C;&#x7EB5;&#x8F74;&#x65B9;&#x5411;&#x7684;&#x9875;&#x9762;&#x6570;&#x3002;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x9875;&#x9762;&#x7684;&#x4FE1;&#x606F;&#x3002;</li>
-</ul>
-<h2 id="wheeltoindex">wheelTo(index)</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{Number} index &#x7D22;&#x5F15;&#x503C;</li>
-</ul>
-</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x6211;&#x4EEC;&#x505A; picker &#x7EC4;&#x4EF6;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8C03;&#x7528;&#x8BE5;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x6EDA;&#x52A8;&#x5230;&#x7D22;&#x5F15;&#x5BF9;&#x5E94;&#x7684;&#x4F4D;&#x7F6E;&#x3002;</li>
-</ul>
-<h2 id="getselectedindex">getSelectedIndex()</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;{Number} &#x5F53;&#x524D;&#x9009;&#x4E2D;&#x7684;&#x7D22;&#x5F15;&#x503C;&#x3002;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x9009;&#x4E2D;&#x7684;&#x7D22;&#x5F15;&#x503C;&#x3002;</li>
-</ul>
-<h2 id="finishpulldown">finishPullDown()</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x4E0B;&#x62C9;&#x5237;&#x65B0;&#x6570;&#x636E;&#x52A0;&#x8F7D;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x8C03;&#x7528;&#x6B64;&#x65B9;&#x6CD5;&#x544A;&#x8BC9; better-scroll &#x6570;&#x636E;&#x5DF2;&#x52A0;&#x8F7D;&#x3002;</li>
-</ul>
-<h2 id="finishpullup">finishPullUp()</h2>
-<ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x5F53;&#x4E0A;&#x62C9;&#x52A0;&#x8F7D;&#x6570;&#x636E;&#x52A0;&#x8F7D;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x8C03;&#x7528;&#x6B64;&#x65B9;&#x6CD5;&#x544A;&#x8BC9; better-scroll &#x6570;&#x636E;&#x5DF2;&#x52A0;&#x8F7D;&#x3002;</li>
-</ul>
+                                <h1 id="&#x5B89;&#x88C5;">&#x5B89;&#x88C5;</h1>
+<h2 id="npm">NPM</h2>
+<p>better-scroll &#x6258;&#x7BA1;&#x5728; Npm &#x4E0A;&#xFF0C;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x5B89;&#x88C5;&#xFF1A;</p>
+<pre><code>npm install better-scroll --save
+</code></pre><p>&#x63A5;&#x4E0B;&#x6765;&#x5C31;&#x53EF;&#x4EE5;&#x5728;&#x4EE3;&#x7801;&#x4E2D;&#x5F15;&#x5165;&#x4E86;&#xFF0C;<a href="https://webpack.js.org/" target="_blank">webpack</a> &#x7B49;&#x6784;&#x5EFA;&#x5DE5;&#x5177;&#x90FD;&#x652F;&#x6301;&#x4ECE; node_modules &#x91CC;&#x5F15;&#x5165;&#x4EE3;&#x7801;&#xFF1A;</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> BScroll <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;better-scroll&apos;</span>
+</code></pre>
+<p>&#x5982;&#x679C;&#x662F; ES5 &#x7684;&#x8BED;&#x6CD5;&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-js"><span class="hljs-keyword">var</span> BScroll = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;better-scroll&apos;</span>)
+</code></pre>
+<h2 id="script-&#x52A0;&#x8F7D;">script &#x52A0;&#x8F7D;</h2>
+<p>better-scroll &#x4E5F;&#x652F;&#x6301;&#x76F4;&#x63A5;&#x7528; script &#x52A0;&#x8F7D;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x52A0;&#x8F7D;&#x540E;&#x4F1A;&#x5728; window &#x4E0A;&#x6302;&#x8F7D;&#x4E00;&#x4E2A; BScroll &#x7684;&#x5BF9;&#x8C61;&#x3002; </p>
+<p>&#x4F60;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x7528;&#xFF1A;<code>https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js</code> &#x8FD9;&#x4E2A;&#x5730;&#x5740;&#x3002;&#x4E5F;&#x53EF;&#x4EE5;&#x628A; dist &#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x6587;&#x4EF6;&#x62F7;&#x8D1D;&#x51FA;&#x53BB;&#x53D1;&#x5E03;&#x5230;&#x81EA;&#x5DF1;&#x7684; cdn &#x670D;&#x52A1;&#x5668;&#x3002;</p>
 
                                 
                                 </section>
@@ -1394,12 +1340,12 @@
 
             
                 
-                <a href="api.html#destroy" class="navigation navigation-prev " aria-label="Previous page: destroy">
+                <a href="./#better-scroll-在-mvvm-框架的应用" class="navigation navigation-prev " aria-label="Previous page: better-scroll 在 MVVM 框架的应用">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="api-specific.html#gotopagex-y-time-easing" class="navigation navigation-next " aria-label="Next page: goToPage">
+                <a href="installation.html#npm" class="navigation navigation-next " aria-label="Next page: NPM">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1410,37 +1356,41 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"方法 / 定制","level":"1.6","depth":1,"next":{"title":"goToPage","level":"1.6.1","depth":2,"anchor":"#gotopagex-y-time-easing","path":"api-specific.md","ref":"api-specific.md#gotopagex-y-time-easing","articles":[]},"previous":{"title":"destroy","level":"1.5.8","depth":2,"anchor":"#destroy","path":"api.md","ref":"api.md#destroy","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":">3.0.0"},"file":{"path":"api-specific.md","mtime":"2017-08-18T12:46:28.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-11T18:32:24.827Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.2","depth":1,"next":{"title":"NPM","level":"1.2.1","depth":2,"anchor":"#npm","path":"installation.md","ref":"installation.md#npm","articles":[]},"previous":{"title":"better-scroll 在 MVVM 框架的应用","level":"1.1.4","depth":2,"anchor":"#better-scroll-在-mvvm-框架的应用","path":"README.md","ref":"README.md#better-scroll-在-mvvm-框架的应用","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"installation.md","mtime":"2017-08-16T04:00:29.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-14T03:58:51.021Z"},"basePath":".","book":{"language":"zh-hans"}});
         });
     </script>
 </div>
 
         
-    <script src="gitbook/gitbook.js"></script>
-    <script src="gitbook/theme.js"></script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
     
         
-        <script src="gitbook/gitbook-plugin-edit-link/plugin.js"></script>
-        
-    
-        
-        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
         
     
         
-        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
-        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
         
     
         
-        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
         
     
         
-        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
         
     
 
