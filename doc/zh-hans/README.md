@@ -1,4 +1,3 @@
-（待重写成，中英文readme）
 # 介绍
 
 ## better-scroll 是什么
