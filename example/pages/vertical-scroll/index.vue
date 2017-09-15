@@ -1,14 +1,14 @@
 <template>
-  <optional-demo class="scroll-view" title="普通 Scroll 组件" desc="基于 BScroll 实现垂直滚动列表组件">
+  <optional-demo class="scroll-view" :title="$t('examples.normalScrollList')" :desc="$t('normalScrollListPage.desc')">
     <div slot="options">
       <div class="group">
-        <switch-option class="item" name="滚动条" :value="scrollbar"
+        <switch-option class="item" :name="$t('normalScrollListPage.scrollbar')" :value="scrollbar"
                        @update:value="updateScrollbar"></switch-option>
         <switch-option v-if="scrollbar" class="item sub first last" name="fade" :value="scrollbarFade"
                        @update:value="updateScrollbarFade"></switch-option>
       </div>
       <div class="group">
-        <switch-option class="item" name="下拉刷新" :value="pullDownRefresh"
+        <switch-option class="item" :name="$t('normalScrollListPage.pullDownRefresh')" :value="pullDownRefresh"
                        @update:value="updatePullDownRefresh"></switch-option>
         <input-option v-if="pullDownRefresh" class="item sub first" name="threshold (≥ 40)"
                       :value="pullDownRefreshThreshold" min-value="40"
@@ -18,7 +18,7 @@
                       @update:value="updatePullDownRefreshStop"></input-option>
       </div>
       <div class="group">
-        <switch-option class="item" name="上拉加载" :value="pullUpLoad"
+        <switch-option class="item" :name="$t('normalScrollListPage.pullUpLoad')" :value="pullUpLoad"
                        @update:value="updatePullUpLoad"></switch-option>
         <input-option v-if="pullUpLoad" class="item sub first" name="threshold" :value="pullUpLoadThreshold"
                       @update:value="updatePullUpLoadThreshold"></input-option>
@@ -69,29 +69,6 @@
 
   import {ease} from '../../common/js/ease'
 
-  const _data = [
-    '我是第 1 行',
-    '我是第 2 行',
-    '我是第 3 行',
-    '我是第 4 行',
-    '我是第 5 行',
-    '我是第 6 行',
-    '我是第 7 行',
-    '我是第 8 行',
-    '我是第 9 行',
-    '我是第 10 行',
-    '我是第 11 行',
-    '我是第 12 行',
-    '我是第 13 行',
-    '我是第 14 行',
-    '我是第 15 行',
-    '我是第 16 行',
-    '我是第 17 行',
-    '我是第 18 行',
-    '我是第 19 行',
-    '我是第 20 行'
-  ]
-
   export default {
     data() {
       return {
@@ -102,16 +79,21 @@
         pullDownRefreshStop: 40,
         pullUpLoad: true,
         pullUpLoadThreshold: 0,
-        pullUpLoadMoreTxt: '加载更多',
-        pullUpLoadNoMoreTxt: '没有更多数据了',
+        pullUpLoadMoreTxt: this.$i18n.t('scrollComponent.defaultLoadTxtMore'),
+        pullUpLoadNoMoreTxt: this.$i18n.t('scrollComponent.defaultLoadTxtNoMore'),
         startY: 0,
         scrollToX: 0,
         scrollToY: -200,
         scrollToTime: 700,
         scrollToEasing: 'bounce',
         scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
-        items: _data,
-        itemIndex: _data.length
+        items: [],
+        itemIndex: 0
+      }
+    },
+    created() {
+      for (let i = 0; i < 20; i++) {
+        this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
       }
     },
     components: {
@@ -159,7 +141,7 @@
         setTimeout(() => {
           if (Math.random() > 0.5) {
             // 如果有新数据
-            this.items.unshift('我是新数据: ' + +new Date())
+            this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
           } else {
             // 如果没有新数据
             this.$refs.scroll.forceUpdate()
@@ -172,13 +154,10 @@
         setTimeout(() => {
           if (Math.random() > 0.5) {
             // 如果有新数据
-            let newPage = [
-              '我是第 ' + ++this.itemIndex + ' 行',
-              '我是第 ' + ++this.itemIndex + ' 行',
-              '我是第 ' + ++this.itemIndex + ' 行',
-              '我是第 ' + ++this.itemIndex + ' 行',
-              '我是第 ' + ++this.itemIndex + ' 行'
-            ]
+            let newPage = []
+            for (let i = 0; i < 10; i++) {
+              newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
+            }
 
             this.items = this.items.concat(newPage)
           } else {

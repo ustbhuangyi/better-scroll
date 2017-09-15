@@ -51,9 +51,6 @@
   const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'
   const DIRECTION_V = 'vertical'
-  const DEFAULT_LOAD_TXT_MORE = '加载更多'
-  const DEFAULT_LOAD_TXT_NO_MORE = '没有更多数据了'
-  const DEFAULT_REFRESH_TXT = '刷新成功'
 
   export default {
     name: COMPONENT_NAME,
@@ -123,14 +120,14 @@
     },
     computed: {
       pullUpTxt() {
-        const moreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.more || DEFAULT_LOAD_TXT_MORE
+        const moreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.more || this.$i18n.t('scrollComponent.defaultLoadTxtMore')
 
-        const noMoreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.noMore || DEFAULT_LOAD_TXT_NO_MORE
+        const noMoreTxt = this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.noMore || this.$i18n.t('scrollComponent.defaultLoadTxtNoMore')
 
         return this.pullUpDirty ? moreTxt : noMoreTxt
       },
       refreshTxt() {
-        return this.pullDownRefresh && this.pullDownRefresh.txt || DEFAULT_REFRESH_TXT
+        return this.pullDownRefresh && this.pullDownRefresh.txt || this.$i18n.t('scrollComponent.defaultRefreshTxt')
       }
     },
     created() {

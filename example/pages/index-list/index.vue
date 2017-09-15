@@ -1,6 +1,6 @@
 <template>
   <page type="index-list"
-               title="IndexList（索引列表）">
+               :title="$t('examples.indexList')">
     <div slot="content">
       <div class="split"></div>
       <div class="view-wrapper">

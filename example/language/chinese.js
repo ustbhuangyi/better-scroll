@@ -3,7 +3,6 @@ export default {
   navigator: {
     doc: '文档',
     demo: '示例',
-    changeLanguage: 'English',
     started: '起步'
   },
 
@@ -29,5 +28,21 @@ export default {
     slide: 'Slide 组件',
     startGuidance: '开屏引导',
     freeScroll: '自由滚动'
+  },
+
+  normalScrollListPage: {
+    desc: '基于 BScroll 实现垂直滚动列表组件',
+    scrollbar: '滚动条',
+    pullDownRefresh: '下拉刷新',
+    pullUpLoad: '上拉加载',
+    previousTxt: '我是第 ',
+    followingTxt: ' 行',
+    newDataTxt: '我是新数据: '
+  },
+
+  scrollComponent: {
+    defaultLoadTxtMore: '加载更多',
+    defaultLoadTxtNoMore: '没有更多数据了',
+    defaultRefreshTxt: '刷新成功'
   }
 }

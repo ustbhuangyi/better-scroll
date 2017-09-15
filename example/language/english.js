@@ -3,7 +3,6 @@ export default {
   navigator: {
     doc: 'Docs',
     demo: 'Demo',
-    changeLanguage: '中文',
     started: 'Get Started'
   },
 
@@ -29,5 +28,21 @@ export default {
     slide: 'Slide',
     startGuidance: 'Start Guidance',
     freeScroll: 'Free Scroll'
+  },
+
+  normalScrollListPage: {
+    desc: 'Nomal scroll list based on BetterScroll',
+    scrollbar: 'Scrollbar',
+    pullDownRefresh: 'Pull Down Refresh',
+    pullUpLoad: 'Pull Up Load',
+    previousTxt: 'I am the No.',
+    followingTxt: ' line',
+    newDataTxt: 'I am new data: '
+  },
+
+  scrollComponent: {
+    defaultLoadTxtMore: 'Load more',
+    defaultLoadTxtNoMore: 'There is no more data',
+    defaultRefreshTxt: 'Refresh success'
   }
 }

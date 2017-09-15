@@ -1,5 +1,5 @@
 <template>
-  <page class="picker-view" title="Picker（选择器）" desc="picker 组件是移动端常见的选择器组件，支持单列和多列；可以动态改变 picker 某列的数据，实现级联的效果。">
+  <page class="picker-view" :title="$t('examples.picker')" desc="picker 组件是移动端常见的选择器组件，支持单列和多列；可以动态改变 picker 某列的数据，实现级联的效果。">
     <div slot="content">
       <div class="select" @click="showPicker(0)" ref="select0">{{ selectedText[0] }}</div>
       <picker @select="handleSelect(0,arguments)" :selected-index="selectedIndex[0]"
