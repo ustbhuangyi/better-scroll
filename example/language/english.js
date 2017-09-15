@@ -27,7 +27,13 @@ export default {
     picker: 'Picker',
     slide: 'Slide',
     startGuidance: 'Start Guidance',
-    freeScroll: 'Free Scroll'
+    freeScroll: 'Free Scroll',
+    verticalScrollImg: 'vertical-scroll-en.jpeg',
+    indexListImg: 'index-list.jpeg',
+    pickerImg: 'picker-en.jpeg',
+    slideImg: 'slide.jpeg',
+    startGuidanceImg: 'full-page-slide.jpeg',
+    freeScrollImg: 'free-scroll.jpeg'
   },
 
   normalScrollListPage: {
@@ -51,7 +57,7 @@ export default {
   },
 
   pickerPage: {
-    desc: 'picker is a typical choose component at mobile end. And it could dynamic change the data of every column to realize linkage picker.',
+    desc: 'Picker is a typical choose component at mobile end. And it could dynamic change the data of every column to realize linkage picker.',
     picker: ' picker',
     pickerDemo: ' picker demo ...',
     oneColumn: 'One column',
@@ -63,10 +69,14 @@ export default {
   },
 
   slidePage: {
-    desc: 'slide is a typical component at mobile end, support horizontal move.'
+    desc: 'Slide is a typical component at mobile end, support horizontal move.'
   },
 
   fullPageSlideComponent: {
     buttonTxt: 'Start Use'
+  },
+
+  freeScrollPage: {
+    desc: 'Free scroll supports horizontal and vertical move at the same time.'
   }
 }

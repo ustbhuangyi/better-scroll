@@ -27,7 +27,7 @@
       </li>
       <li class="example-item">
         <router-link to="/examples/full-page-slide">
-          <img :src="fullPageSliderImg">
+          <img :src="startGuidanceImg">
           <span>{{ $t('examples.startGuidance') }}</span>
         </router-link>
       </li>
@@ -52,12 +52,12 @@
     data() {
       return {
         githubIcon: require('../../common/images/github.svg'),
-        verticalScrollImg: require('../../common/images/vertical-scroll.jpeg'),
-        indexListImg: require('../../common/images/index-list.jpeg'),
-        pickerImg: require('../../common/images/picker.jpeg'),
-        slideImg: require('../../common/images/slide.jpeg'),
-        fullPageSliderImg: require('../../common/images/full-page-slide.jpeg'),
-        freeScrollImg: require('../../common/images/free-scroll.jpeg')
+        verticalScrollImg: require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg')),
+        indexListImg: require('../../common/images/' + this.$i18n.t('examples.indexListImg')),
+        pickerImg: require('../../common/images/' + this.$i18n.t('examples.pickerImg')),
+        slideImg: require('../../common/images/' + this.$i18n.t('examples.slideImg')),
+        startGuidanceImg: require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg')),
+        freeScrollImg: require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       }
     }
   }

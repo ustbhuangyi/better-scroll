@@ -1,5 +1,5 @@
 <template>
-  <page class="free-scroll-view" :title="$t('examples.freeScroll')" desc="自由滚动，可支持横向和纵向同时滚动">
+  <page class="free-scroll-view" :title="$t('examples.freeScroll')" :desc="$t('freeScrollPage.desc')">
     <div slot="content">
       <scroll ref="scroll" :freeScroll="freeScroll" :scrollbar="scrollbar">
         <div class="content">

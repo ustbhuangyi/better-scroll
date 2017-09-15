@@ -27,7 +27,13 @@ export default {
     picker: 'Picker 组件',
     slide: 'Slide 组件',
     startGuidance: '开屏引导',
-    freeScroll: '自由滚动'
+    freeScroll: '自由滚动',
+    verticalScrollImg: 'vertical-scroll.jpeg',
+    indexListImg: 'index-list.jpeg',
+    pickerImg: 'picker.jpeg',
+    slideImg: 'slide.jpeg',
+    startGuidanceImg: 'full-page-slide.jpeg',
+    freeScrollImg: 'free-scroll.jpeg'
   },
 
   normalScrollListPage: {
@@ -68,5 +74,9 @@ export default {
 
   fullPageSlideComponent: {
     buttonTxt: '开始使用'
+  },
+
+  freeScrollPage: {
+    desc: '自由滚动，可支持横向和纵向同时滚动。'
   }
 }
