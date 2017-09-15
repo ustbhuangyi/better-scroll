@@ -1,21 +1,24 @@
 <template>
-  <page class="picker-view" title="Picker（选择器）" desc="picker 组件是移动端常见的选择器组件，支持单列和多列；可以动态改变 picker 某列的数据，实现级联的效果。">
+  <page class="picker-view" :title="$t('examples.picker')" :desc="$t('pickerPage.desc')">
     <div slot="content">
       <div class="select" @click="showPicker(0)" ref="select0">{{ selectedText[0] }}</div>
       <picker @select="handleSelect(0,arguments)" :selected-index="selectedIndex[0]"
-              ref="picker0" :title="title[0]"></picker>
+              ref="picker0" :title="title[0]" :cancelTxt="$tc('pickerPage.cancelTxt', 1)"
+              :confirmTxt="$tc('pickerPage.confirmTxt', 1)"></picker>
       <div class="select" @click="showPicker(1)" ref="select1">{{ selectedText[1] }}</div>
       <picker @select="handleSelect(1,arguments)" :data="data[1]" :selected-index="selectedIndex[1]"
-              ref="picker1" :title="title[1]" :cancelTxt="cancelTxt"
-              :confirmTxt="confirmTxt"></picker>
+              ref="picker1" :title="title[1]" :cancelTxt="$tc('pickerPage.cancelTxt', 2)"
+              :confirmTxt="$tc('pickerPage.confirmTxt', 2)"></picker>
 
       <div class="select" @click="showPicker(2)" ref="select2">{{ selectedText[2] }}</div>
       <picker @select="handleSelect(2,arguments)" :data="data[2]" :selected-index="selectedIndex[2]"
-              ref="picker2" :title="title[2]"></picker>
+              ref="picker2" :title="title[2]" :cancelTxt="$tc('pickerPage.cancelTxt', 1)"
+              :confirmTxt="$tc('pickerPage.confirmTxt', 1)"></picker>
 
       <div class="select" @click="showPicker(3)" ref="select3">{{ selectedText[3] }}</div>
       <city-picker @select="handleSelect(3,arguments)" :data="data[3]" :selected-index="selectedIndex[3]"
-              ref="picker3" :title="title[3]"></city-picker>
+              ref="picker3" :title="title[3]" :cancelTxt="$tc('pickerPage.cancelTxt', 1)"
+                   :confirmTxt="$tc('pickerPage.confirmTxt', 1)"></city-picker>
     </div>
   </page>
 </template>
@@ -166,19 +169,17 @@
           [0, 0, 0]
         ],
         selectedText: [
-          '单列选择器示例 ...',
-          '两列选择器示例 ...',
-          '三列选择器示例 ...',
-          '联动选择器示例 ...'
+          this.$i18n.tc('pickerPage.oneColumn') + this.$i18n.t('pickerPage.pickerDemo'),
+          this.$i18n.t('pickerPage.twoColumn') + this.$i18n.t('pickerPage.pickerDemo'),
+          this.$i18n.t('pickerPage.threeColumn') + this.$i18n.t('pickerPage.pickerDemo'),
+          this.$i18n.t('pickerPage.linkage') + this.$i18n.t('pickerPage.pickerDemo')
         ],
         title: [
-          '单列选择器',
-          '两列选择器',
-          '三列选择器',
-          '联动选择器'
-        ],
-        cancelTxt: '关闭',
-        confirmTxt: '好的'
+          this.$i18n.t('pickerPage.oneColumn') + this.$i18n.t('pickerPage.picker'),
+          this.$i18n.t('pickerPage.twoColumn') + this.$i18n.t('pickerPage.picker'),
+          this.$i18n.t('pickerPage.threeColumn') + this.$i18n.t('pickerPage.picker'),
+          this.$i18n.t('pickerPage.linkage') + this.$i18n.t('pickerPage.picker')
+        ]
       }
     },
     methods: {

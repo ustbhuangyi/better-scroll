@@ -1,6 +1,6 @@
 <template>
   <page type="index-list"
-               title="IndexList（索引列表）">
+               :title="$t('examples.indexList')">
     <div slot="content">
       <div class="split"></div>
       <div class="view-wrapper">
@@ -24,7 +24,7 @@
     },
     data() {
       return {
-        title: '当前城市: 北京市',
+        title: this.$i18n.t('indexListPage.title'),
         cityData: []
       }
     },

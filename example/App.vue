@@ -4,19 +4,27 @@
       <nav class="nav">
         <div class="left">
           <router-link to="/" class="brand">BetterScroll</router-link>
-          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">文档</a>
-          <router-link to="/examples" class="tab">示例</router-link>
+          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">{{ $t('navigator.doc') }}</a>
+          <router-link to="/examples" class="tab">{{ $t('navigator.demo') }}</router-link>
         </div>
 
         <div class="right">
+          <span class="tab language-wrapper" @click="toggleLanguage">
+            <span>Language</span>
+            <ul class="option-wrapper" v-if="showLanguage">
+              <li @click="chooseLanguage('en')">English</li>
+              <li @click="chooseLanguage('zh')">中文</li>
+            </ul>
+          </span>
+
           <a href="https://github.com/ustbhuangyi/better-scroll" target="_blank"><img :src="githubIcon" alt="GitHub"></a>
         </div>
       </nav>
       <h1 class="project-name">BetterScroll</h1>
 
       <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance</h2>
-      <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">起步</a>
-      <router-link to="/examples" class="btn">示例</router-link>
+      <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">{{ $t('navigator.started') }}</a>
+      <router-link to="/examples" class="btn">{{ $t('navigator.demo') }}</router-link>
     </section>
     <section class="main-content">
       <transition name="fade">
@@ -34,13 +42,16 @@
   export default {
     data() {
       return {
-        githubIcon: require('./common/images/github.svg'),
-        verticalScrollImg: require('./common/images/vertical-scroll.jpeg'),
-        indexListImg: require('./common/images/index-list.jpeg'),
-        pickerImg: require('./common/images/picker.jpeg'),
-        slideImg: require('./common/images/slide.jpeg'),
-        fullPageSliderImg: require('./common/images/full-page-slide.jpeg'),
-        freeScrollImg: require('./common/images/free-scroll.jpeg')
+        showLanguage: false,
+        githubIcon: require('./common/images/github.svg')
+      }
+    },
+    methods: {
+      toggleLanguage() {
+        this.showLanguage = !this.showLanguage
+      },
+      chooseLanguage(lang) {
+        this.$i18n.locale = lang
       }
     }
   }
@@ -51,12 +62,30 @@
 
   .page-header
     .nav
-      margin-bottom: 5rem
+      margin-bottom: 1.5rem
       vertical-align: middle
+      line-height: 1.6rem
       @media screen and (min-width: 42rem)
         margin-bottom: 5rem
       @media screen and (max-width: 42rem)
-        margin-bottom: 3.5rem
+        margin-bottom: 4rem
+      .tab
+        padding-bottom: 5px
+        @media screen and (min-width: 42rem)
+          margin-right: 1rem
+        @media screen and (max-width: 42rem)
+          margin-right: 0.4rem
+        &:hover
+          box-shadow: 0 3px 0 rgba(255,255,255,0.5)
+          cursor: pointer
+      .language-wrapper
+        position: relative
+        .option-wrapper
+          width: 100%
+          position: absolute
+          top: 2rem
+          left: 0
+          line-height: 2rem
       a
         color: $color-white
         &:hover
@@ -65,12 +94,11 @@
         float: left
         .brand
           font-size: $fontsize-large-xx
-          margin-right: 3rem
-        .tab
-          margin-right: 1rem
-          padding-bottom: 5px
-          &:hover
-            box-shadow: 0 3px 0 rgba(255,255,255,0.5)
+          @media screen and (min-width: 42rem)
+            margin-right: 3rem
+          @media screen and (max-width: 42rem)
+            margin-right: 1rem
+
       .right
         float: right
         vertical-align: middle

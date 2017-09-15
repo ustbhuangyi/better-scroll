@@ -4,37 +4,37 @@
       <li class="example-item">
         <router-link to="/examples/vertical-scroll">
           <img :src="verticalScrollImg">
-          <span>普通 Scroll 组件</span>
+          <span>{{ $t('examples.normalScrollList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/index-view">
           <img :src="indexListImg">
-          <span>索引列表</span>
+          <span>{{ $t('examples.indexList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/picker">
           <img :src="pickerImg">
-          <span>Picker 组件</span>
+          <span>{{ $t('examples.picker') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/slide">
           <img :src="slideImg">
-          <span>Slide 组件</span>
+          <span>{{ $t('examples.slide') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/full-page-slide">
-          <img :src="fullPageSliderImg">
-          <span>全屏 Slide</span>
+          <img :src="startGuidanceImg">
+          <span>{{ $t('examples.startGuidance') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/free-scroll">
           <img :src="freeScrollImg">
-          <span>自由滚动</span>
+          <span>{{ $t('examples.freeScroll') }}</span>
         </router-link>
       </li>
       <li class="example-item placeholder">
@@ -50,14 +50,26 @@
 <script type="text/ecmascript-6">
   export default {
     data() {
-      return {
-        githubIcon: require('../../common/images/github.svg'),
-        verticalScrollImg: require('../../common/images/vertical-scroll.jpeg'),
-        indexListImg: require('../../common/images/index-list.jpeg'),
-        pickerImg: require('../../common/images/picker.jpeg'),
-        slideImg: require('../../common/images/slide.jpeg'),
-        fullPageSliderImg: require('../../common/images/full-page-slide.jpeg'),
-        freeScrollImg: require('../../common/images/free-scroll.jpeg')
+      return {}
+    },
+    computed: {
+      verticalScrollImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
+      },
+      indexListImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.indexListImg'))
+      },
+      pickerImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.pickerImg'))
+      },
+      slideImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.slideImg'))
+      },
+      startGuidanceImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
+      },
+      freeScrollImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       }
     }
   }

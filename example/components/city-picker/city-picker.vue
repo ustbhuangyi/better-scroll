@@ -1,6 +1,6 @@
 <template>
   <picker @select="handleSelect(arguments)" :data="linkageData" :selected-index="selectedIndex"
-          ref="picker" :title="title" @change="handleChange"></picker>
+          ref="picker" :title="title" @change="handleChange" :cancelTxt="cancelTxt" :confirmTxt="confirmTxt"></picker>
 </template>
 
 <script type="text/ecmascript-6">
@@ -24,6 +24,12 @@
       selectedIndex: {
         type: Array,
         default: [0, 0, 0]
+      },
+      cancelTxt: {
+        type: String
+      },
+      confirmTxt: {
+        type: String
       }
     },
     data() {

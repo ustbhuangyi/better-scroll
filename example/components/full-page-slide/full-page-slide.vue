@@ -4,7 +4,7 @@
       <div v-for="(item, index) in items">
         <div class="full-page-img-wrapper" :style="getStyle(index)">
           <div v-if="index === items.length -1" class="button-wrapper" @click="handleClick()">
-            <span class="button">开始使用</span>
+            <span class="button">{{ $t('fullPageSlideComponent.buttonTxt') }}</span>
           </div>
         </div>
       </div>

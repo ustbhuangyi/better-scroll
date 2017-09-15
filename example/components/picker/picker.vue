@@ -52,11 +52,11 @@
       },
       cancelTxt: {
         type: String,
-        default: '取消'
+        default: 'cancel'
       },
       confirmTxt: {
         type: String,
-        default: '确定'
+        default: 'confirm'
       },
       selectedIndex: {
         type: Array,
