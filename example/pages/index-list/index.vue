@@ -24,7 +24,7 @@
     },
     data() {
       return {
-        title: '当前城市: 北京市',
+        title: this.$i18n.t('indexListPage.title'),
         cityData: []
       }
     },

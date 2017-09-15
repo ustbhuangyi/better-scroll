@@ -44,5 +44,21 @@ export default {
     defaultLoadTxtMore: '加载更多',
     defaultLoadTxtNoMore: '没有更多数据了',
     defaultRefreshTxt: '刷新成功'
+  },
+
+  indexListPage: {
+    title: '当前城市: 北京市'
+  },
+
+  pickerPage: {
+    desc: 'picker 组件是移动端常见的选择器组件，支持单列和多列；可以动态改变 picker 某列的数据，实现级联的效果。',
+    picker: '选择器',
+    pickerDemo: '选择器示例 ...',
+    oneColumn: '单列',
+    twoColumn: '两列',
+    threeColumn: '三列',
+    linkage: '级联',
+    confirmTxt: '确定 | 好的',
+    cancelTxt: '取消 | 关闭'
   }
 }
