@@ -68,15 +68,19 @@
 
   .page-header
     .nav
-      margin-bottom: 5rem
+      margin-bottom: 1.5rem
       vertical-align: middle
+      line-height: 2rem
       @media screen and (min-width: 42rem)
         margin-bottom: 5rem
       @media screen and (max-width: 42rem)
-        margin-bottom: 3.5rem
+        margin-bottom: 4rem
       .tab
-        margin-right: 1rem
         padding-bottom: 5px
+        @media screen and (min-width: 42rem)
+          margin-right: 1rem
+        @media screen and (max-width: 42rem)
+          margin-right: 0.4rem
         &:hover
           box-shadow: 0 3px 0 rgba(255,255,255,0.5)
           cursor: pointer
@@ -96,7 +100,10 @@
         float: left
         .brand
           font-size: $fontsize-large-xx
-          margin-right: 3rem
+          @media screen and (min-width: 42rem)
+            margin-right: 3rem
+          @media screen and (max-width: 42rem)
+            margin-right: 1rem
 
       .right
         float: right
