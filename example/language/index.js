@@ -6,9 +6,9 @@ import English from './english'
 Vue.use(VueI18n)
 
 export default new VueI18n({
-  local: 'zh',
-  message: {
-    'zh': Chinese,
-    'en': English
+  locale: 'en',
+  messages: {
+    zh: Chinese,
+    en: English
   }
 })

@@ -4,19 +4,20 @@
       <nav class="nav">
         <div class="left">
           <router-link to="/" class="brand">BetterScroll</router-link>
-          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">{{ $t("message.doc") }}</a>
-          <router-link to="/examples" class="tab">示例</router-link>
+          <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">{{ $t('navigator.doc') }}</a>
+          <router-link to="/examples" class="tab">{{ $t('navigator.demo') }}</router-link>
         </div>
 
         <div class="right">
+          <span class="tab" @click="changeLanguage">{{ $t('navigator.changeLanguage') }}</span>
           <a href="https://github.com/ustbhuangyi/better-scroll" target="_blank"><img :src="githubIcon" alt="GitHub"></a>
         </div>
       </nav>
       <h1 class="project-name">BetterScroll</h1>
 
       <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance</h2>
-      <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">起步</a>
-      <router-link to="/examples" class="btn">示例</router-link>
+      <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">{{ $t('navigator.started') }}</a>
+      <router-link to="/examples" class="btn">{{ $t('navigator.demo') }}</router-link>
     </section>
     <section class="main-content">
       <transition name="fade">
@@ -42,6 +43,11 @@
         fullPageSliderImg: require('./common/images/full-page-slide.jpeg'),
         freeScrollImg: require('./common/images/free-scroll.jpeg')
       }
+    },
+    methods: {
+      changeLanguage() {
+        this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
+      }
     }
   }
 </script>
@@ -57,6 +63,12 @@
         margin-bottom: 5rem
       @media screen and (max-width: 42rem)
         margin-bottom: 3.5rem
+      .tab
+        margin-right: 1rem
+        padding-bottom: 5px
+        &:hover
+          box-shadow: 0 3px 0 rgba(255,255,255,0.5)
+          cursor: pointer
       a
         color: $color-white
         &:hover
@@ -66,11 +78,7 @@
         .brand
           font-size: $fontsize-large-xx
           margin-right: 3rem
-        .tab
-          margin-right: 1rem
-          padding-bottom: 5px
-          &:hover
-            box-shadow: 0 3px 0 rgba(255,255,255,0.5)
+
       .right
         float: right
         vertical-align: middle
