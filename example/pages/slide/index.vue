@@ -1,5 +1,5 @@
 <template>
-  <page class="slide-view" :title="$t('examples.slide')" desc="轮播图是移动端常见的需求，支持左右滑动">
+  <page class="slide-view" :title="$t('examples.slide')" :desc="$t('slidePage.desc')">
     <div slot="content">
       <div v-if="items.length" class="slide-wrapper">
         <div class="slide-content">

@@ -51,7 +51,7 @@ export default {
   },
 
   pickerPage: {
-    desc: 'picker is a typical choose component at mobile end. And it could dynamic change the data of every column to realize linkage picker',
+    desc: 'picker is a typical choose component at mobile end. And it could dynamic change the data of every column to realize linkage picker.',
     picker: ' picker',
     pickerDemo: ' picker demo ...',
     oneColumn: 'One column',
@@ -60,5 +60,13 @@ export default {
     linkage: 'Linkage',
     confirmTxt: 'confirm | ok',
     cancelTxt: 'cancel | close'
+  },
+
+  slidePage: {
+    desc: 'slide is a typical component at mobile end, support horizontal move.'
+  },
+
+  fullPageSlideComponent: {
+    buttonTxt: 'Start Use'
   }
 }

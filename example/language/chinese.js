@@ -60,5 +60,13 @@ export default {
     linkage: '级联',
     confirmTxt: '确定 | 好的',
     cancelTxt: '取消 | 关闭'
+  },
+
+  slidePage: {
+    desc: '轮播图是移动端常见的需求，支持左右滑动。'
+  },
+
+  fullPageSlideComponent: {
+    buttonTxt: '开始使用'
   }
 }
