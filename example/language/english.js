@@ -20,5 +20,14 @@ export default {
       title: 'None Dependence',
       desc: 'As a JavaScript library, BetterScroll don\'t depend on any framework, you could use it alone, or together with MVVM framework, Such as, Vue which the offical demo used.'
     }
+  },
+
+  examples: {
+    normalScrollList: 'Normal Scroll List',
+    indexList: 'Index List',
+    picker: 'Picker',
+    slide: 'Slide',
+    startGuidance: 'Start Guidance',
+    freeScroll: 'Free Scroll'
   }
 }

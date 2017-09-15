@@ -4,37 +4,37 @@
       <li class="example-item">
         <router-link to="/examples/vertical-scroll">
           <img :src="verticalScrollImg">
-          <span>普通 Scroll 组件</span>
+          <span>{{ $t('examples.normalScrollList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/index-view">
           <img :src="indexListImg">
-          <span>索引列表</span>
+          <span>{{ $t('examples.indexList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/picker">
           <img :src="pickerImg">
-          <span>Picker 组件</span>
+          <span>{{ $t('examples.picker') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/slide">
           <img :src="slideImg">
-          <span>Slide 组件</span>
+          <span>{{ $t('examples.slide') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/full-page-slide">
           <img :src="fullPageSliderImg">
-          <span>全屏 Slide</span>
+          <span>{{ $t('examples.startGuidance') }}</span>
         </router-link>
       </li>
       <li class="example-item">
         <router-link to="/examples/free-scroll">
           <img :src="freeScrollImg">
-          <span>自由滚动</span>
+          <span>{{ $t('examples.freeScroll') }}</span>
         </router-link>
       </li>
       <li class="example-item placeholder">

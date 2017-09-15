@@ -20,5 +20,14 @@ export default {
       title: '零依赖',
       desc: '不依赖任何框架，既可以原生 JS 引用，也可以与任意前端 MVVM 框架结合使用，比如官方 DEMO 就是与 Vue 的结合示例。'
     }
+  },
+
+  examples: {
+    normalScrollList: '普通 Scroll 组件',
+    indexList: '索引列表',
+    picker: 'Picker 组件',
+    slide: 'Slide 组件',
+    startGuidance: '开屏引导',
+    freeScroll: '自由滚动'
   }
 }
