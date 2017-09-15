@@ -9,7 +9,14 @@
         </div>
 
         <div class="right">
-          <span class="tab" @click="changeLanguage">{{ $t('navigator.changeLanguage') }}</span>
+          <span class="tab language-wrapper" @click="toggleLanguage">
+            <span>Language</span>
+            <ul class="option-wrapper" v-if="showLanguage">
+              <li @click="chooseLanguage('en')">English</li>
+              <li @click="chooseLanguage('zh')">中文</li>
+            </ul>
+          </span>
+
           <a href="https://github.com/ustbhuangyi/better-scroll" target="_blank"><img :src="githubIcon" alt="GitHub"></a>
         </div>
       </nav>
@@ -35,6 +42,7 @@
   export default {
     data() {
       return {
+        showLanguage: false,
         githubIcon: require('./common/images/github.svg'),
         verticalScrollImg: require('./common/images/vertical-scroll.jpeg'),
         indexListImg: require('./common/images/index-list.jpeg'),
@@ -45,8 +53,11 @@
       }
     },
     methods: {
-      changeLanguage() {
-        this.$i18n.locale = this.$i18n.locale === 'en' ? 'zh' : 'en'
+      toggleLanguage() {
+        this.showLanguage = !this.showLanguage
+      },
+      chooseLanguage(lang) {
+        this.$i18n.locale = lang
       }
     }
   }
@@ -69,6 +80,14 @@
         &:hover
           box-shadow: 0 3px 0 rgba(255,255,255,0.5)
           cursor: pointer
+      .language-wrapper
+        position: relative
+        .option-wrapper
+          width: 100%
+          position: absolute
+          top: 2rem
+          left: 0
+          line-height: 2rem
       a
         color: $color-white
         &:hover
