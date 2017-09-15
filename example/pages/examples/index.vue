@@ -50,14 +50,26 @@
 <script type="text/ecmascript-6">
   export default {
     data() {
-      return {
-        githubIcon: require('../../common/images/github.svg'),
-        verticalScrollImg: require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg')),
-        indexListImg: require('../../common/images/' + this.$i18n.t('examples.indexListImg')),
-        pickerImg: require('../../common/images/' + this.$i18n.t('examples.pickerImg')),
-        slideImg: require('../../common/images/' + this.$i18n.t('examples.slideImg')),
-        startGuidanceImg: require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg')),
-        freeScrollImg: require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
+      return {}
+    },
+    computed: {
+      verticalScrollImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
+      },
+      indexListImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.indexListImg'))
+      },
+      pickerImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.pickerImg'))
+      },
+      slideImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.slideImg'))
+      },
+      startGuidanceImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
+      },
+      freeScrollImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       }
     }
   }

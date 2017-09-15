@@ -43,13 +43,7 @@
     data() {
       return {
         showLanguage: false,
-        githubIcon: require('./common/images/github.svg'),
-        verticalScrollImg: require('./common/images/vertical-scroll.jpeg'),
-        indexListImg: require('./common/images/index-list.jpeg'),
-        pickerImg: require('./common/images/picker.jpeg'),
-        slideImg: require('./common/images/slide.jpeg'),
-        fullPageSliderImg: require('./common/images/full-page-slide.jpeg'),
-        freeScrollImg: require('./common/images/free-scroll.jpeg')
+        githubIcon: require('./common/images/github.svg')
       }
     },
     methods: {
@@ -70,7 +64,7 @@
     .nav
       margin-bottom: 1.5rem
       vertical-align: middle
-      line-height: 2rem
+      line-height: 1.6rem
       @media screen and (min-width: 42rem)
         margin-bottom: 5rem
       @media screen and (max-width: 42rem)

@@ -17,8 +17,8 @@
 
       <div class="select" @click="showPicker(3)" ref="select3">{{ selectedText[3] }}</div>
       <city-picker @select="handleSelect(3,arguments)" :data="data[3]" :selected-index="selectedIndex[3]"
-              ref="picker3" :title="title[3]" :cancelTxt="$t('pickerPage.cancelTxt', 1)"
-                   :confirmTxt="$t('pickerPage.confirmTxt', 1)"></city-picker>
+              ref="picker3" :title="title[3]" :cancelTxt="$tc('pickerPage.cancelTxt', 1)"
+                   :confirmTxt="$tc('pickerPage.confirmTxt', 1)"></city-picker>
     </div>
   </page>
 </template>
