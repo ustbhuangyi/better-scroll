@@ -1,50 +1,50 @@
 # Events
 
-Besides rish API methods, BetterScroll also emits several events to interact. With these events, you could implement some advanced feature.
+Besides rich API methods, better-scroll also emits several events to interact. With these events, you could implement some advanced feature.
 
 ## beforeScrollStart
-   - parameters: none
-   - trigger timing: before scroll starts.
+   - Parameters: none.
+   - Trigger timing: before scroll starts.
 
 ## scrollStart
-   - parameters: none
-   - trigger timing: when scroll starts.
+   - Parameters: none.
+   - Trigger timing: when scroll starts.
 
 ## scroll
-   - parameters: {Object} {x, y} real time coordinates during scroll
-   - trigger timing: During scroll，specific timing depends on the option of [probeType](/options.html#probetype).
+   - Parameters: {Object} {x, y} real time coordinates during scroll.
+   - Trigger timing: During scroll，specific timing depends on the option of [probeType](/options.html#probetype).
 
 ## scrollCancel
-   - parameters: none
-   - trigger timing: when scroll is canceled.
+   - Parameters: none.
+   - Trigger timing: when scroll is canceled.
 
 ## scrollEnd
-   - parameters: {Object} {x, y} coordinates
-   - trigger timing: when scroll ends.
+   - Parameters: {Object} {x, y} coordinates.
+   - Trigger timing: when scroll ends.
 
 ## touchEnd
-   - parameters: {Object} {x, y} coordinates
-   - trigger timing: when finger touch or mouse leaves.
+   - Parameters: {Object} {x, y} coordinates.
+   - Trigger timing: when finger touch or mouse leaves.
 
 ## flick
-   - parameters: none
-   - trigger timing: flick.
+   - Parameters: none.
+   - Trigger timing: flick.
 
 ## refresh
-   - parameters: none
-   - trigger timing: after executing the method of refresh.
+   - Parameters: none.
+   - Trigger timing: after executing the method of refresh.
 
 ## destroy
-   - parameters: none
-   - trigger timing: after executing the method of destroy.
+   - Parameters: none.
+   - Trigger timing: after executing the method of destroy.
 
 ## pullingDown
-   - parameters: none
-   - trigger timing: when the action of pulling down finishes, this timing usually use to request data.
+   - Parameters: none.
+   - Trigger timing: when the action of pulling down finishes, this timing usually use to request data.
 
 ## pullingUp
-   - parameters: none
-   - trigger timing: when the action of pulling up finishes, this timing usually use to request data.
+   - Parameters: none.
+   - Trigger timing: when the action of pulling up finishes, this timing usually use to request data.
 
 
 
