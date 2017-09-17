@@ -1,32 +1,32 @@
-# 选项 / 高级
+# Options / Advanced
 
-better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
-   
+BetterScroll also supports several advanced options to implement some special feature.
+
 ## wheel
-   - 类型：Boolean | Object
-   - 默认值：false
-   - 作用：这个配置是为了做 picker 组件用的，默认为 false，如果开启则需要配置一个 Object，例如：`{selectedIndex: 0,
-  rotate: 25, adjustTime: 400}`。 
-   - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Picker Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/picker) 。想了解更多的细节可以去看 example 中的 [picker](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue) 组件的代码。
+   - type: Boolean | Object
+   - default: false
+   - usage: the options is used to config picker component. You can enable picker by config an Object, such as, `{selectedIndex: 0,
+  rotate: 25, adjustTime: 400}`.
+   - remark: this is an advanced option, doesn't need to config in normal scene, specific application scene could refer to [Picker Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/picker). More detail in the source code of [picker component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue).
 
 ## snap
-   - 类型：Boolean | Object
-   - 默认值：false
-   - 作用：这个配置是为了做 slide 组件用的，默认为 false，如果开启则需要配置一个 Object，例如：` * snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}`。
-   - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide) 。想了解更多的细节可以去看 example 中的 [slide](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue) 组件的代码。
+   - type: Boolean | Object
+   - default: false
+   - usage: the options is used to config slide component. You can enable slide by config as an Object, such as, ` snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}`.
+   - remark: this is an advanced option, doesn't need to config in normal scene, specific application scene could refer to [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide). More detail in the source code of [slide component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue).
 
 ## scrollbar
-   - 类型：Boolean | Object
-   - 默认值：false
-   - 作用：这个配置可以开启滚动条，默认为 false。当设置为 true 或者是一个 Object 的时候，都会开启滚动条，默认是会 fade 的，见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll) 。了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
+   - type: Boolean | Object
+   - default: false
+   - usage: the options is used to config scrollbar, You can enable scrollbar by config as true or an Object. Such as, ` scrollbar: {fade: false}`. And the fade is defaut to be true. See [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll). More detail in the source code of [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
 
 ## pullDownRefresh
-   - 类型：Boolean | Object
-   - 默认值：false
-   - 作用：这个配置用于做下拉刷新功能，默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启下拉刷新，可以配置顶部下拉的距离（threshold） 来决定刷新时机以及回弹停留的距离（stop），见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll) 。了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
+   - type: Boolean | Object
+   - default: false
+   - usage: the options is used to config pulling down refresh. You can enable pulling down refresh by config as true or an Object. Such as `pullDownRefresh: { threshold: 50, stop: 20}`, threshold is about the distance cross the border which decide the trigger of pullingDown event. stop is the position when rebound. See [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll). More detail in the source code of [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
 
 ## pullUpLoad
-   - 类型：Boolean | Object
-   - 默认值：false
-   - 作用：这个配置用于做上拉加载功能，默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启上拉加载，可以配置离底部距离阈值（threshold）来决定开始加载的时机，见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll) 。了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
+   - type: Boolean | Object
+   - default: false
+   - usage: the options is used to config pulling up load. You can enable pulling up load by config as true or an Object. Such as `pullUoLoad: { threshold: -20}`, threshold is about the distance cross the border which decide the trigger of pullingUp event.See [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll). More detail in the source code of [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
 
