@@ -1,53 +1,52 @@
-# 事件
+# Events
 
-better-scroll 除了提供了丰富的 API 调用，还提供了一些事件，方便和外部做交互。你可以利用他们实现一些更高级的 feature。
+Besides rich API methods, better-scroll also emits several events to interact. With these events, you could implement some advanced feature.
 
 ## beforeScrollStart
-   - 参数：无
-   - 触发时机：滚动开始之前。
-   
+   - Parameters: none.
+   - Trigger timing: before scroll starts.
+
 ## scrollStart
-   - 参数：无
-   - 触发时机：滚动开始时。
-  
+   - Parameters: none.
+   - Trigger timing: when scroll starts.
+
 ## scroll
-   - 参数：{Object} {x, y} 滚动的实时坐标
-   - 触发时机：滚动过程中，具体时机取决于选项中的 [probeType](/options.html#probetype)。
-   
+   - Parameters: {Object} {x, y} real time coordinates during scroll.
+   - Trigger timing: During scroll，specific timing depends on the option of [probeType](/options.html#probetype).
+
 ## scrollCancel
-   - 参数：无
-   - 触发时机：滚动被取消。
-   
+   - Parameters: none.
+   - Trigger timing: when scroll is canceled.
+
 ## scrollEnd
-   - 参数：{Object} {x, y} 滚动结束的位置坐标
-   - 触发时机：滚动结束。
-   
+   - Parameters: {Object} {x, y} coordinates.
+   - Trigger timing: when scroll ends.
+
 ## touchEnd
-   - 参数：{Object} {x, y} 位置坐标
-   - 触发时机：鼠标/手指离开。
-   
+   - Parameters: {Object} {x, y} coordinates.
+   - Trigger timing: when finger touch or mouse leaves.
+
 ## flick
-   - 参数：无
-   - 触发时机：轻拂时。
-   
+   - Parameters: none.
+   - Trigger timing: flick.
+
 ## refresh
-   - 参数: 无
-   - 触发时机：refresh 方法调用完成后。
-   
+   - Parameters: none.
+   - Trigger timing: after executing the method of refresh.
+
 ## destroy
-   - 参数：无
-   - 触发时机：destroy 方法调用完成后。
-   
+   - Parameters: none.
+   - Trigger timing: after executing the method of destroy.
+
 ## pullingDown
-   - 参数：无
-   - 触发时机：在一次下拉刷新的动作后，这个时机一般用来去后端请求数据。
-   
+   - Parameters: none.
+   - Trigger timing: when the action of pulling down happens. This timing usually use to request data.
+
 ## pullingUp
-   - 参数：无
-   - 触发时机：在一次上拉加载的动作后，这个时机一般用来去后端请求数据。
-      
-   
- 
-   
-   
-   
+   - Parameters: none.
+   - Trigger timing: when the action of pulling up happens. This timing usually use to request data.
+
+
+
+
+

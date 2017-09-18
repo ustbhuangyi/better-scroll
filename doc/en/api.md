@@ -1,56 +1,56 @@
-# 方法 / 通用
+# Methods / Common
 
-better-scroll 提供了很多灵活的 API，当我们基于 better-scroll 去实现一些 feature 的时候，会用到这些 API，了解他们会有助于开发更加复杂的需求。
+better-scroll supports lots of flexible API. It's really useful when implementing advanced feature.
 
 ## refresh()
-  - 参数：无
-  - 返回值：无  
-  - 作用：重新计算 better-scroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常。
+  - Parameters: none.
+  - Return: none.
+  - Usage: recalculate better-scroll to ensure scroll work properly when the structure of DOM changes.
 
 ## scrollTo(x, y, time, easing)
-   - 参数：
-     - {Number} x 横轴坐标（单位 px）
-     - {Number} y 纵轴坐标（单位 px）
-     - {Number} time 滚动动画执行的时长（单位 ms）
-     - {Object} easing 缓动函数，一般不建议修改，如果想修改，参考源码中的 ease.js 里的写法
-   - 返回值：无  
-   - 作用：滚动到指定的位置，见 [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) 。  
+   - Parameters:
+     - {Number} x, horizontal axis coordinate. (unit: px)
+     - {Number} y, vertical axis coordinate. (unit: px)
+     - {Number} time, animation duration. (unit: ms)
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+   - Return: none.
+   - Usage: scroll to target position. See [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) .
 
 ## scrollBy(x, y, time, easing)
-   - 参数：
-     - {Number} x 横轴距离（单位 px）
-     - {Number} y 纵轴距离（单位 px）
-     - {Number} time 滚动动画执行的时长（单位 ms）
-     - {Object} easing 缓动函数，一般不建议修改，如果想修改，参考源码中的 ease.js 里的写法
-   - 返回值：无  
-   - 作用：相对于当前位置偏移滚动 x,y 的距离。
-   
+   - Parameters:
+     - {Number} x, horizontal axis distance. (unit: px)
+     - {Number} y, vertical axis distance. (unit: px)
+     - {Number} time, animation duration. (unit: ms)
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+   - Return: none.
+   - Usage: Refer to current position, scroll the distance of (x, y).
+
 ## scrollToElement(el, time, offsetX, offsetY, easing)
-   - 参数：
-     - {DOM | String} el 滚动到的目标元素, 如果是字符串，则内部会尝试调用 querySelector 转换成 DOM 对象。
-     - {Number} time 滚动动画执行的时长（单位 ms）
-     - {Number | Boolean} offsetX 相对于目标元素的横轴偏移量，如果设置为 true，则滚到目标元素的中心位置
-     - {Number | Boolean} offsetY 相对于目标元素的纵轴偏移量，如果设置为 true，则滚到目标元素的中心位置
-     - {Object} easing 缓动函数，一般不建议修改，如果想修改，参考源码中的 ease.js 里的写法
-   - 返回值：无  
-   - 作用：滚动到指定的目标元素。
+   - Parameters:
+     - {DOM | String} el, target element. If the value is a string, we will try to use querySelector get the DOM element.
+     - {Number} time, animation duration. (unit ms)
+     - {Number | Boolean} offsetX, the x offset to target element，If the value is true, scroll to the center of target element.
+     - {Number | Boolean} offsetY, the y offset to target element，If the value is true, scroll to the center of target element.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+   - Return: none.
+   - Usage: scroll to target element.
 
 ## stop()
-   - 参数：无
-   - 返回值：无
-   - 作用：立即停止当前运行的滚动动画。
-   
+   - Parameters: none.
+   - Return: none.
+   - Usage: stop the scroll animation immediately.
+
 ## enable()
-   - 参数：无
-   - 返回值：无
-   - 作用：启用 better-scroll, 默认 开启。
+   - Parameters: none.
+   - Return: none.
+   - Usage: enable better-scroll. It's enabled by default.
 
 ## disable()
-   - 参数：无
-   - 返回值：无
-   - 作用：禁用 better-scroll，DOM 事件（如 touchstart、touchmove、touchend）的回调函数不再响应。
-   
+   - Parameters: none.
+   - Return: none.
+   - Usage: disable better-scroll. And it will make the callbacks of DOM events don't response.
+
 ## destroy()
-   - 参数：无
-   - 返回值：无
-   - 作用：销毁 better-scroll，解绑事件。
+   - Parameters: none.
+   - Return: none.
+   - Usage: destroy better-scroll，remove events and free some memory when the scroll is not needed anymore.
