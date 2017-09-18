@@ -18,31 +18,39 @@ export default new Router({
       component: Features
     },
     {
+      path: '/:lang',
+      component: Features
+    },
+    {
+      path: '/examples/:lang',
+      component: Examples
+    },
+    {
       path: '/examples',
       component: Examples,
       children: [
         {
-          path: 'vertical-scroll',
+          path: 'vertical-scroll/:lang',
           component: VerticalScroll
         },
         {
-          path: 'index-view',
+          path: 'index-view/:lang',
           component: IndexView
         },
         {
-          path: 'picker',
+          path: 'picker/:lang',
           component: Picker
         },
         {
-          path: 'slide',
+          path: 'slide/:lang',
           component: Slide
         },
         {
-          path: 'full-page-slide',
+          path: 'full-page-slide/:lang',
           component: FullPageSlide
         },
         {
-          path: 'free-scroll',
+          path: 'free-scroll/:lang',
           component: FreeScroll
         }
       ]
