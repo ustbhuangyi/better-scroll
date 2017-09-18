@@ -1300,62 +1300,62 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x4E8B;&#x4EF6;">&#x4E8B;&#x4EF6;</h1>
-<p>better-scroll &#x9664;&#x4E86;&#x63D0;&#x4F9B;&#x4E86;&#x4E30;&#x5BCC;&#x7684; API &#x8C03;&#x7528;&#xFF0C;&#x8FD8;&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E9B;&#x4E8B;&#x4EF6;&#xFF0C;&#x65B9;&#x4FBF;&#x548C;&#x5916;&#x90E8;&#x505A;&#x4EA4;&#x4E92;&#x3002;&#x4F60;&#x53EF;&#x4EE5;&#x5229;&#x7528;&#x4ED6;&#x4EEC;&#x5B9E;&#x73B0;&#x4E00;&#x4E9B;&#x66F4;&#x9AD8;&#x7EA7;&#x7684; feature&#x3002;</p>
+                                <h1 id="events">Events</h1>
+<p>Besides rich API methods, better-scroll also emits several events to interact. With these events, you could implement some advanced feature.</p>
 <h2 id="beforescrollstart">beforeScrollStart</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x6EDA;&#x52A8;&#x5F00;&#x59CB;&#x4E4B;&#x524D;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: before scroll starts.</li>
 </ul>
 <h2 id="scrollstart">scrollStart</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x6EDA;&#x52A8;&#x5F00;&#x59CB;&#x65F6;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: when scroll starts.</li>
 </ul>
 <h2 id="scroll">scroll</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;{Object} {x, y} &#x6EDA;&#x52A8;&#x7684;&#x5B9E;&#x65F6;&#x5750;&#x6807;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x6EDA;&#x52A8;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;&#x5177;&#x4F53;&#x65F6;&#x673A;&#x53D6;&#x51B3;&#x4E8E;&#x9009;&#x9879;&#x4E2D;&#x7684; <a href="options.html#probetype">probeType</a>&#x3002;</li>
+<li>Parameters: {Object} {x, y} real time coordinates during scroll.</li>
+<li>Trigger timing: During scroll&#xFF0C;specific timing depends on the option of <a href="options.html#probetype">probeType</a>.</li>
 </ul>
 <h2 id="scrollcancel">scrollCancel</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x6EDA;&#x52A8;&#x88AB;&#x53D6;&#x6D88;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: when scroll is canceled.</li>
 </ul>
 <h2 id="scrollend">scrollEnd</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;{Object} {x, y} &#x6EDA;&#x52A8;&#x7ED3;&#x675F;&#x7684;&#x4F4D;&#x7F6E;&#x5750;&#x6807;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x6EDA;&#x52A8;&#x7ED3;&#x675F;&#x3002;</li>
+<li>Parameters: {Object} {x, y} coordinates.</li>
+<li>Trigger timing: when scroll ends.</li>
 </ul>
 <h2 id="touchend">touchEnd</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;{Object} {x, y} &#x4F4D;&#x7F6E;&#x5750;&#x6807;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x9F20;&#x6807;/&#x624B;&#x6307;&#x79BB;&#x5F00;&#x3002;</li>
+<li>Parameters: {Object} {x, y} coordinates.</li>
+<li>Trigger timing: when finger touch or mouse leaves.</li>
 </ul>
 <h2 id="flick">flick</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x8F7B;&#x62C2;&#x65F6;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: flick.</li>
 </ul>
 <h2 id="refresh">refresh</h2>
 <ul>
-<li>&#x53C2;&#x6570;: &#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;refresh &#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x5B8C;&#x6210;&#x540E;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: after executing the method of refresh.</li>
 </ul>
 <h2 id="destroy">destroy</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;destroy &#x65B9;&#x6CD5;&#x8C03;&#x7528;&#x5B8C;&#x6210;&#x540E;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: after executing the method of destroy.</li>
 </ul>
 <h2 id="pullingdown">pullingDown</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x5728;&#x4E00;&#x6B21;&#x4E0B;&#x62C9;&#x5237;&#x65B0;&#x7684;&#x52A8;&#x4F5C;&#x540E;&#xFF0C;&#x8FD9;&#x4E2A;&#x65F6;&#x673A;&#x4E00;&#x822C;&#x7528;&#x6765;&#x53BB;&#x540E;&#x7AEF;&#x8BF7;&#x6C42;&#x6570;&#x636E;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: when the action of pulling down happens. This timing usually use to request data.</li>
 </ul>
 <h2 id="pullingup">pullingUp</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x89E6;&#x53D1;&#x65F6;&#x673A;&#xFF1A;&#x5728;&#x4E00;&#x6B21;&#x4E0A;&#x62C9;&#x52A0;&#x8F7D;&#x7684;&#x52A8;&#x4F5C;&#x540E;&#xFF0C;&#x8FD9;&#x4E2A;&#x65F6;&#x673A;&#x4E00;&#x822C;&#x7528;&#x6765;&#x53BB;&#x540E;&#x7AEF;&#x8BF7;&#x6C42;&#x6570;&#x636E;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Trigger timing: when the action of pulling up happens. This timing usually use to request data.</li>
 </ul>
 
                                 
@@ -1400,7 +1400,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Events","level":"1.7","depth":1,"next":{"title":"beforeScrollStart","level":"1.7.1","depth":2,"anchor":"#beforescrollstart","path":"events.md","ref":"events.md#beforescrollstart","articles":[]},"previous":{"title":"finishPullUp","level":"1.6.8","depth":2,"anchor":"#finishpullup","path":"api-specific.md","ref":"api-specific.md#finishpullup","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"events.md","mtime":"2017-08-18T13:24:03.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-14T03:58:51.021Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Events","level":"1.7","depth":1,"next":{"title":"beforeScrollStart","level":"1.7.1","depth":2,"anchor":"#beforescrollstart","path":"events.md","ref":"events.md#beforescrollstart","articles":[]},"previous":{"title":"finishPullUp","level":"1.6.8","depth":2,"anchor":"#finishpullup","path":"api-specific.md","ref":"api-specific.md#finishpullup","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"events.md","mtime":"2017-09-18T06:13:53.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-18T06:15:09.789Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>

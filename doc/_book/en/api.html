@@ -1300,74 +1300,74 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x65B9;&#x6CD5;--&#x901A;&#x7528;">&#x65B9;&#x6CD5; / &#x901A;&#x7528;</h1>
-<p>better-scroll &#x63D0;&#x4F9B;&#x4E86;&#x5F88;&#x591A;&#x7075;&#x6D3B;&#x7684; API&#xFF0C;&#x5F53;&#x6211;&#x4EEC;&#x57FA;&#x4E8E; better-scroll &#x53BB;&#x5B9E;&#x73B0;&#x4E00;&#x4E9B; feature &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x7528;&#x5230;&#x8FD9;&#x4E9B; API&#xFF0C;&#x4E86;&#x89E3;&#x4ED6;&#x4EEC;&#x4F1A;&#x6709;&#x52A9;&#x4E8E;&#x5F00;&#x53D1;&#x66F4;&#x52A0;&#x590D;&#x6742;&#x7684;&#x9700;&#x6C42;&#x3002;</p>
+                                <h1 id="methods--common">Methods / Common</h1>
+<p>better-scroll supports lots of flexible API. It&apos;s really useful when implementing advanced feature.</p>
 <h2 id="refresh">refresh()</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x91CD;&#x65B0;&#x8BA1;&#x7B97; better-scroll&#xFF0C;&#x5F53; DOM &#x7ED3;&#x6784;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x7684;&#x65F6;&#x5019;&#x52A1;&#x5FC5;&#x8981;&#x8C03;&#x7528;&#x786E;&#x4FDD;&#x6EDA;&#x52A8;&#x7684;&#x6548;&#x679C;&#x6B63;&#x5E38;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Return: none.</li>
+<li>Usage: recalculate better-scroll to ensure scroll work properly when the structure of DOM changes.</li>
 </ul>
 <h2 id="scrolltox-y-time-easing">scrollTo(x, y, time, easing)</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{Number} x &#x6A2A;&#x8F74;&#x5750;&#x6807;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
-<li>{Number} y &#x7EB5;&#x8F74;&#x5750;&#x6807;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
-<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
+<li>Parameters:<ul>
+<li>{Number} x, horizontal axis coordinate. (unit: px)</li>
+<li>{Number} y, vertical axis coordinate. (unit: px)</li>
+<li>{Number} time, animation duration. (unit: ms)</li>
+<li>{Object} easing, easing function, usually don&apos;t suggest modifying. If you really need to modify, please consult the format in ease.js of source code.</li>
 </ul>
 </li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x6307;&#x5B9A;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll" target="_blank">Demo</a> &#x3002;  </li>
+<li>Return: none.</li>
+<li>Usage: scroll to target position. See <a href="https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll" target="_blank">Demo</a> .</li>
 </ul>
 <h2 id="scrollbyx-y-time-easing">scrollBy(x, y, time, easing)</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{Number} x &#x6A2A;&#x8F74;&#x8DDD;&#x79BB;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
-<li>{Number} y &#x7EB5;&#x8F74;&#x8DDD;&#x79BB;&#xFF08;&#x5355;&#x4F4D; px&#xFF09;</li>
-<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
+<li>Parameters:<ul>
+<li>{Number} x, horizontal axis distance. (unit: px)</li>
+<li>{Number} y, vertical axis distance. (unit: px)</li>
+<li>{Number} time, animation duration. (unit: ms)</li>
+<li>{Object} easing, easing function, usually don&apos;t suggest modifying. If you really need to modify, please consult the format in ease.js of source code.</li>
 </ul>
 </li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x76F8;&#x5BF9;&#x4E8E;&#x5F53;&#x524D;&#x4F4D;&#x7F6E;&#x504F;&#x79FB;&#x6EDA;&#x52A8; x,y &#x7684;&#x8DDD;&#x79BB;&#x3002;</li>
+<li>Return: none.</li>
+<li>Usage: Refer to current position, scroll the distance of (x, y).</li>
 </ul>
 <h2 id="scrolltoelementel-time-offsetx-offsety-easing">scrollToElement(el, time, offsetX, offsetY, easing)</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;<ul>
-<li>{DOM | String} el &#x6EDA;&#x52A8;&#x5230;&#x7684;&#x76EE;&#x6807;&#x5143;&#x7D20;, &#x5982;&#x679C;&#x662F;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x5219;&#x5185;&#x90E8;&#x4F1A;&#x5C1D;&#x8BD5;&#x8C03;&#x7528; querySelector &#x8F6C;&#x6362;&#x6210; DOM &#x5BF9;&#x8C61;&#x3002;</li>
-<li>{Number} time &#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x6267;&#x884C;&#x7684;&#x65F6;&#x957F;&#xFF08;&#x5355;&#x4F4D; ms&#xFF09;</li>
-<li>{Number | Boolean} offsetX &#x76F8;&#x5BF9;&#x4E8E;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x6A2A;&#x8F74;&#x504F;&#x79FB;&#x91CF;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x6EDA;&#x5230;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x4E2D;&#x5FC3;&#x4F4D;&#x7F6E;</li>
-<li>{Number | Boolean} offsetY &#x76F8;&#x5BF9;&#x4E8E;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x7EB5;&#x8F74;&#x504F;&#x79FB;&#x91CF;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x7F6E;&#x4E3A; true&#xFF0C;&#x5219;&#x6EDA;&#x5230;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x7684;&#x4E2D;&#x5FC3;&#x4F4D;&#x7F6E;</li>
-<li>{Object} easing &#x7F13;&#x52A8;&#x51FD;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x4E0D;&#x5EFA;&#x8BAE;&#x4FEE;&#x6539;&#xFF0C;&#x5982;&#x679C;&#x60F3;&#x4FEE;&#x6539;&#xFF0C;&#x53C2;&#x8003;&#x6E90;&#x7801;&#x4E2D;&#x7684; ease.js &#x91CC;&#x7684;&#x5199;&#x6CD5;</li>
+<li>Parameters:<ul>
+<li>{DOM | String} el, target element. If the value is a string, we will try to use querySelector get the DOM element.</li>
+<li>{Number} time, animation duration. (unit ms)</li>
+<li>{Number | Boolean} offsetX, the x offset to target element&#xFF0C;If the value is true, scroll to the center of target element.</li>
+<li>{Number | Boolean} offsetY, the y offset to target element&#xFF0C;If the value is true, scroll to the center of target element.</li>
+<li>{Object} easing, easing function, usually don&apos;t suggest modifying. If you really need to modify, please consult the format in ease.js of source code.</li>
 </ul>
 </li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;  </li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x6EDA;&#x52A8;&#x5230;&#x6307;&#x5B9A;&#x7684;&#x76EE;&#x6807;&#x5143;&#x7D20;&#x3002;</li>
+<li>Return: none.</li>
+<li>Usage: scroll to target element.</li>
 </ul>
 <h2 id="stop">stop()</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x7ACB;&#x5373;&#x505C;&#x6B62;&#x5F53;&#x524D;&#x8FD0;&#x884C;&#x7684;&#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Return: none.</li>
+<li>Usage: stop the scroll animation immediately.</li>
 </ul>
 <h2 id="enable">enable()</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x542F;&#x7528; better-scroll, &#x9ED8;&#x8BA4; &#x5F00;&#x542F;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Return: none.</li>
+<li>Usage: enable better-scroll. It&apos;s enabled by default.</li>
 </ul>
 <h2 id="disable">disable()</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x7981;&#x7528; better-scroll&#xFF0C;DOM &#x4E8B;&#x4EF6;&#xFF08;&#x5982; touchstart&#x3001;touchmove&#x3001;touchend&#xFF09;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x4E0D;&#x518D;&#x54CD;&#x5E94;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Return: none.</li>
+<li>Usage: disable better-scroll. And it will make the callbacks of DOM events don&apos;t response.</li>
 </ul>
 <h2 id="destroy">destroy()</h2>
 <ul>
-<li>&#x53C2;&#x6570;&#xFF1A;&#x65E0;</li>
-<li>&#x8FD4;&#x56DE;&#x503C;&#xFF1A;&#x65E0;</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x9500;&#x6BC1; better-scroll&#xFF0C;&#x89E3;&#x7ED1;&#x4E8B;&#x4EF6;&#x3002;</li>
+<li>Parameters: none.</li>
+<li>Return: none.</li>
+<li>Usage: destroy better-scroll&#xFF0C;remove events and free some memory when the scroll is not needed anymore.</li>
 </ul>
 
                                 
@@ -1412,7 +1412,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Methods / Common","level":"1.5","depth":1,"next":{"title":"refresh","level":"1.5.1","depth":2,"anchor":"#refresh","path":"api.md","ref":"api.md#refresh","articles":[]},"previous":{"title":"pullUpLoad","level":"1.4.5","depth":2,"anchor":"#pullupload","path":"options-advanced.md","ref":"options-advanced.md#pullupload","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"api.md","mtime":"2017-08-29T06:06:36.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-14T03:58:51.021Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Methods / Common","level":"1.5","depth":1,"next":{"title":"refresh","level":"1.5.1","depth":2,"anchor":"#refresh","path":"api.md","ref":"api.md#refresh","articles":[]},"previous":{"title":"pullUpLoad","level":"1.4.5","depth":2,"anchor":"#pullupload","path":"options-advanced.md","ref":"options-advanced.md#pullupload","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"api.md","mtime":"2017-09-18T06:13:53.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-18T06:15:09.789Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>

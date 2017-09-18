@@ -1300,40 +1300,40 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x9009;&#x9879;--&#x9AD8;&#x7EA7;">&#x9009;&#x9879; / &#x9AD8;&#x7EA7;</h1>
-<p>better-scroll &#x8FD8;&#x652F;&#x6301;&#x4E00;&#x4E9B;&#x9AD8;&#x7EA7;&#x914D;&#x7F6E;&#xFF0C;&#x6765;&#x5B9E;&#x73B0;&#x4E00;&#x4E9B;&#x7279;&#x6B8A;&#x7684; feature&#x3002;</p>
+                                <h1 id="options--advanced">Options / Advanced</h1>
+<p>better-scroll also supports several advanced options to implement some special features.</p>
 <h2 id="wheel">wheel</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x662F;&#x4E3A;&#x4E86;&#x505A; picker &#x7EC4;&#x4EF6;&#x7528;&#x7684;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#xFF0C;&#x5982;&#x679C;&#x5F00;&#x542F;&#x5219;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Object&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;<code>{selectedIndex: 0,
-rotate: 25, adjustTime: 400}</code>&#x3002; </li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x9AD8;&#x7EA7;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x4E00;&#x822C;&#x573A;&#x666F;&#x4E0D;&#x9700;&#x8981;&#x914D;&#x7F6E;&#xFF0C;&#x5177;&#x4F53;&#x5E94;&#x7528;&#x573A;&#x666F;&#x53EF;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/picker" target="_blank">Picker Demo</a> &#x3002;&#x60F3;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue" target="_blank">picker</a> &#x7EC4;&#x4EF6;&#x7684;&#x4EE3;&#x7801;&#x3002;</li>
+<li>Type: Boolean | Object.</li>
+<li>Default: false.</li>
+<li>Usage: this option is used to configure picker component. You can enable picker by configure it as an Object, like <code>{selectedIndex: 0,
+rotate: 25, adjustTime: 400}</code>.</li>
+<li>Remark: it&apos;s an advanced option which doesn&apos;t need to configure in normal scene. You can see the specific application scene in <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/picker" target="_blank">Picker Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue" target="_blank">picker component</a>.</li>
 </ul>
 <h2 id="snap">snap</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x662F;&#x4E3A;&#x4E86;&#x505A; slide &#x7EC4;&#x4EF6;&#x7528;&#x7684;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#xFF0C;&#x5982;&#x679C;&#x5F00;&#x542F;&#x5219;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Object&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;<code>* snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}</code>&#x3002;</li>
-<li>&#x5907;&#x6CE8;&#xFF1A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x9AD8;&#x7EA7;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x4E00;&#x822C;&#x573A;&#x666F;&#x4E0D;&#x9700;&#x8981;&#x914D;&#x7F6E;&#xFF0C;&#x5177;&#x4F53;&#x5E94;&#x7528;&#x573A;&#x666F;&#x53EF;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/slide" target="_blank">Slide Demo</a> &#x3002;&#x60F3;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue" target="_blank">slide</a> &#x7EC4;&#x4EF6;&#x7684;&#x4EE3;&#x7801;&#x3002;</li>
+<li>Type: Boolean | Object.</li>
+<li>Default: false.</li>
+<li>Usage: this option is used to configure slide component. You can enable slide by configure it as an Object, such as, <code>snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}</code>.</li>
+<li>Remark: it&apos;s an advanced option which doesn&apos;t need to configure in normal scene. You can see the specific application scene in <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/slide" target="_blank">Slide Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue" target="_blank">slide component</a>.</li>
 </ul>
 <h2 id="scrollbar">scrollbar</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x6EDA;&#x52A8;&#x6761;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#x3002;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6216;&#x8005;&#x662F;&#x4E00;&#x4E2A; Object &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x90FD;&#x4F1A;&#x5F00;&#x542F;&#x6EDA;&#x52A8;&#x6761;&#xFF0C;&#x9ED8;&#x8BA4;&#x662F;&#x4F1A; fade &#x7684;&#xFF0C;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> &#x3002;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll</a> &#x7EC4;&#x4EF6;&#x4EE3;&#x7801;&#x3002;</li>
+<li>Type: Boolean | Object.</li>
+<li>Default: false.</li>
+<li>Usage: this option is used to configure scroll bar. You can enable scroll bar by configure it as true or an Object, like <code>scrollbar: {fade: false}</code>. Fade is about whether the scroll bar fade when scroll stop, and it&apos;s true by default. You can see <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll component</a>.</li>
 </ul>
 <h2 id="pulldownrefresh">pullDownRefresh</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x7528;&#x4E8E;&#x505A;&#x4E0B;&#x62C9;&#x5237;&#x65B0;&#x529F;&#x80FD;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#x3002;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6216;&#x8005;&#x662F;&#x4E00;&#x4E2A; Object &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x4E0B;&#x62C9;&#x5237;&#x65B0;&#xFF0C;&#x53EF;&#x4EE5;&#x914D;&#x7F6E;&#x9876;&#x90E8;&#x4E0B;&#x62C9;&#x7684;&#x8DDD;&#x79BB;&#xFF08;threshold&#xFF09; &#x6765;&#x51B3;&#x5B9A;&#x5237;&#x65B0;&#x65F6;&#x673A;&#x4EE5;&#x53CA;&#x56DE;&#x5F39;&#x505C;&#x7559;&#x7684;&#x8DDD;&#x79BB;&#xFF08;stop&#xFF09;&#xFF0C;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> &#x3002;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll</a> &#x7EC4;&#x4EF6;&#x4EE3;&#x7801;&#x3002;</li>
+<li>Type: Boolean | Object.</li>
+<li>Default: false.</li>
+<li>Usage: this option is used to configure pulling down refresh. You can enable pulling down refresh by configure it as true or an Object, like <code>pullDownRefresh: { threshold: 50, stop: 20}</code>. Threshold is about the distance exceeded the border which decide the trigger of pullingDown event. Stop is the position where rebound stop at. You can see <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll component</a>.</li>
 </ul>
 <h2 id="pullupload">pullUpLoad</h2>
 <ul>
-<li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
-<li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x7528;&#x4E8E;&#x505A;&#x4E0A;&#x62C9;&#x52A0;&#x8F7D;&#x529F;&#x80FD;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#x3002;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6216;&#x8005;&#x662F;&#x4E00;&#x4E2A; Object &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x4E0A;&#x62C9;&#x52A0;&#x8F7D;&#xFF0C;&#x53EF;&#x4EE5;&#x914D;&#x7F6E;&#x79BB;&#x5E95;&#x90E8;&#x8DDD;&#x79BB;&#x9608;&#x503C;&#xFF08;threshold&#xFF09;&#x6765;&#x51B3;&#x5B9A;&#x5F00;&#x59CB;&#x52A0;&#x8F7D;&#x7684;&#x65F6;&#x673A;&#xFF0C;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> &#x3002;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll</a> &#x7EC4;&#x4EF6;&#x4EE3;&#x7801;&#x3002;</li>
+<li>Type: Boolean | Object.</li>
+<li>Default: false.</li>
+<li>Usage: this option is used to configure pulling up load. You can enable pulling up load by configure it as true or an Object, like <code>pullUoLoad: { threshold: -20}</code>. Threshold is about the distance exceeded the border which decide the trigger of pullingUp event. You can see <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll component</a>.</li>
 </ul>
 
                                 
@@ -1378,7 +1378,7 @@ rotate: 25, adjustTime: 400}</code>&#x3002; </li>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"disableTouch","level":"1.3.29","depth":2,"anchor":"#disabletouch","path":"options.md","ref":"options.md#disabletouch","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2017-09-11T12:41:34.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-14T03:58:51.021Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"disableTouch","level":"1.3.29","depth":2,"anchor":"#disabletouch","path":"options.md","ref":"options.md#disabletouch","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2017-09-18T06:13:53.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-18T06:15:09.789Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
