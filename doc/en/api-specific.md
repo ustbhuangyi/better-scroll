@@ -1,6 +1,6 @@
 # Methods / Customized
 
-better-scroll also supports several customized methods, to implement some specific feature.
+better-scroll also supports several customized methods to implement some specific feature.
 
 ## goToPage(x, y, time, easing)
    - Parameters:
@@ -9,7 +9,7 @@ better-scroll also supports several customized methods, to implement some specif
      - {Number} time, animation duration.
      - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format of ease.js in source code.
    - Return: none.
-   - Usage: In slide component, slide usually has several pages. Use this method scroll to specific page.
+   - Usage: in slide component, slide usually has several pages. Use this method scroll to specific page.
 
 ## next(time, easing)
    - Parameters:
@@ -38,7 +38,7 @@ better-scroll also supports several customized methods, to implement some specif
    - Parameters:
      - {Number} index.
    - Return: none.
-   - Usage: In picker component, use this methods scrolling to the indexed position.
+   - Usage: in picker component, use this methods scrolling to the indexed position.
 
 ## getSelectedIndex()
    - Parameters: none.
