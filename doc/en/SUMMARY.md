@@ -1,13 +1,13 @@
 # Summary
 
 - [Introduction](README.md)
-  - [What is BetterScroll ?](README.md#What is BetterScroll ?)
-  - [start](README.md#起步)
-  - [scroll fundamental](README.md#滚动原理)
-  - [use BetterScroll together with MVVM framework](README.md#better-scroll-在-mvvm-框架的应用)
+  - [What is BetterScroll ?](README.md#what-is-better-scroll-)
+  - [start](README.md#getting-started)
+  - [the core of scrolling](README.md#the-core-of-scrolling)
+  - [the implementation of better-scroll in MVVM frameworks](README.md#the-implementation-of-better-scroll-in-mvvm-frameworks)
 - [Install](installation.md)
   - [NPM](installation.md#npm)
-  - [script load](installation.md#script-加载)
+  - [script load](installation.md#script-load)
 - [Options / Basic](options.md)
   - [startX](options.md#startx)
   - [startY](options.md#starty)
