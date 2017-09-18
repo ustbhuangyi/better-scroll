@@ -33,7 +33,8 @@
     "url": "git@github.com:ustbhuangyi/better-scroll.git"
   },
   "dependencies": {
-    "babel-runtime": "^6.0.0"
+    "babel-runtime": "^6.0.0",
+    "js-beautify": "1.6.14"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",
