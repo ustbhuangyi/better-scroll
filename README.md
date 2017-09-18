@@ -1,5 +1,7 @@
 # better-scroll
 
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll)
+
 ## What is better-scroll ?
 
 better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (perhaps supporting the PC side in the future). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of better-scroll are compatible with iscroll on the whole. What's more, better-scroll also extends some features and optimizes for performance  based on iscroll.
