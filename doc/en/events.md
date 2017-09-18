@@ -40,11 +40,11 @@ Besides rich API methods, better-scroll also emits several events to interact. W
 
 ## pullingDown
    - Parameters: none.
-   - Trigger timing: when the action of pulling down finishes, this timing usually use to request data.
+   - Trigger timing: when the action of pulling down is happened, this timing usually use to request data.
 
 ## pullingUp
    - Parameters: none.
-   - Trigger timing: when the action of pulling up finishes, this timing usually use to request data.
+   - Trigger timing: when the action of pulling up is happened, this timing usually use to request data.
 
 
 

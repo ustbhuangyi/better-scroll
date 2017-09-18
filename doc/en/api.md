@@ -12,7 +12,7 @@ better-scroll supports lots of flexible API. It's really useful when implementin
      - {Number} x, horizontal axis coordinate. (unit: px)
      - {Number} y, vertical axis coordinate. (unit: px)
      - {Number} time, animation duration. (unit: ms)
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
    - Usage: scroll to target position. See [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) .
 
@@ -21,7 +21,7 @@ better-scroll supports lots of flexible API. It's really useful when implementin
      - {Number} x, horizontal axis distance. (unit: px)
      - {Number} y, vertical axis distance. (unit: px)
      - {Number} time, animation duration. (unit: ms)
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
    - Usage: Refer to current position, scroll the distance of (x, y).
 
@@ -31,7 +31,7 @@ better-scroll supports lots of flexible API. It's really useful when implementin
      - {Number} time, animation duration. (unit ms)
      - {Number | Boolean} offsetX, the x offset to target element，If the value is true, scroll to the center of target element.
      - {Number | Boolean} offsetY, the y offset to target element，If the value is true, scroll to the center of target element.
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
    - Usage: scroll to target element.
 
@@ -43,7 +43,7 @@ better-scroll supports lots of flexible API. It's really useful when implementin
 ## enable()
    - Parameters: none.
    - Return: none.
-   - Usage: enable better-scroll, default enable.
+   - Usage: enable better-scroll. It's enabled by default.
 
 ## disable()
    - Parameters: none.
@@ -53,4 +53,4 @@ better-scroll supports lots of flexible API. It's really useful when implementin
 ## destroy()
    - Parameters: none.
    - Return: none.
-   - Usage: destroy better-scroll，remove events.
+   - Usage: destroy better-scroll，remove events and free some memory when the scroll is not needed anymore.

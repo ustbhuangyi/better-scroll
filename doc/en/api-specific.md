@@ -7,21 +7,21 @@ better-scroll also supports several customized methods, to implement some specif
      - {Number} x, number of horizontal axis page.
      - {Number} y, number of vertical axis page.
      - {Number} time, animation duration.
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format of ease.js in source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format of ease.js in source code.
    - Return: none.
    - Usage: In slide component, slide usually has several pages. Use this method scroll to specific page.
 
 ## next(time, easing)
    - Parameters:
      - {Number} time animation duration.
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format of ease.js in source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format of ease.js in source code.
    - Return: none.
    - Usage: scroll to next page.
 
 ## prev(time, easing)
    - Parameters:
      - {Number} time, animation duration.
-     - {Object} easing, easing function, generally don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
+     - {Object} easing, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
    - Usage: scroll to previous page.
 
@@ -48,9 +48,9 @@ better-scroll also supports several customized methods, to implement some specif
 ## finishPullDown()
    - Parameters: none.
    - Return: none.
-   - Usage: when finish the data loading cause by pulling down is finish, use this method to tell better-scroll that data is already loaded.
+   - Usage: when the data loading cause by pulling down is finished, use this method to tell better-scroll that data is already loaded.
 
 ## finishPullUp()
    - Parameters: none.
    - Return: none.
-   - Usage: when finish the data loading cause by pulling up is finish, use this method to tell better-scroll that data is already loaded.
+   - Usage: when the data loading cause by pulling up is finished, use this method to tell better-scroll that data is already loaded.
