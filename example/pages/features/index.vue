@@ -3,19 +3,32 @@
     <ul class="feature-list">
       <li class="feature-item">
         <div class="title">{{ $t('features.userExperience.title') }}</div>
-        <p>{{ $t('features.userExperience.desc') }}</p>
+        <p :class="lang">{{ $t('features.userExperience.desc') }}</p>
       </li>
       <li class="feature-item">
         <div class="title">{{ $t('features.application.title') }}</div>
-        <p>{{ $t('features.application.desc') }}</p>
+        <p :class="lang">{{ $t('features.application.desc') }}</p>
       </li>
       <li class="feature-item">
         <div class="title">{{ $t('features.dependence.title') }}</div>
-        <p>{{ $t('features.dependence.desc') }}</p>
+        <p :class="lang">{{ $t('features.dependence.desc') }}</p>
       </li>
     </ul>
   </div>
 </template>
+
+<script type="text/ecmascript-6">
+  export default {
+    data() {
+      return {}
+    },
+    computed: {
+      lang() {
+        return this.$i18n.locale
+      }
+    }
+  }
+</script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable.styl"
@@ -45,7 +58,7 @@
           line-height: 28px
           font-weight: normal
         p
-          text-align: justify
           line-height: 180%;
-
+          &.zh
+            text-align: justify
 </style>

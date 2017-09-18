@@ -13,7 +13,7 @@ export default {
     },
     application: {
       title: 'Rich Features',
-      desc: 'It supports lots of features which can be applied in normal scroll list, picker, slide, index list, start guidance, etc. to implement complicated needs a lot easier, such as pull down refresh, pull up load.'
+      desc: 'It can be applied to normal scroll list, picker, slide, index list, start guidance, etc. What\'s more, some complicated needs like pull down refresh and pull up load can be implemented much easier.'
     },
     dependence: {
       title: 'Dependence Free',
