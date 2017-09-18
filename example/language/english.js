@@ -9,15 +9,15 @@ export default {
   features: {
     userExperience: {
       title: 'Optimize Experience',
-      desc: 'To make scroll more smoothly, We support flexible configuration about inertial scrolling, rebound, fade scrollbar, etc. which could optimize user experience obviously.'
+      desc: 'To make scroll more smoothly, We support flexible configurations about inertial scrolling, rebound, fade scrollbar, etc. which could optimize user experience obviously.'
     },
     application: {
-      title: 'Diverse Use',
-      desc: 'It could use in normal scroll list, picker, slide, index list, start guidance, etc. And could realize pull down reflesh, pull up load easy.'
+      title: 'Rich Features',
+      desc: 'It supports lots of features which can be applied in normal scroll list, picker, slide, index list, start guidance, etc. to implement complicated needs a lot easier, such as pull down refresh, pull up load.'
     },
     dependence: {
-      title: 'None Dependence',
-      desc: 'As a JavaScript library, BetterScroll don\'t depend on any framework, you could use it alone, or together with MVVM framework, Such as, Vue which the offical demo used.'
+      title: 'Dependence Free',
+      desc: 'As a plain JavaScript library, BetterScroll doesn\'t depend on any framework, you could use it alone, or with any other MVVM frameworks.'
     }
   },
 

@@ -2,37 +2,37 @@
   <div class="example">
     <ul class="example-list">
       <li class="example-item">
-        <router-link to="/examples/vertical-scroll">
+        <router-link :to="verticalScrollPath">
           <img :src="verticalScrollImg">
           <span>{{ $t('examples.normalScrollList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/examples/index-view">
+        <router-link :to="indexListPath">
           <img :src="indexListImg">
           <span>{{ $t('examples.indexList') }}</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/examples/picker">
+        <router-link :to="pickerPath">
           <img :src="pickerImg">
           <span>{{ $t('examples.picker') }}</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/examples/slide">
+        <router-link :to="slidePath">
           <img :src="slideImg">
           <span>{{ $t('examples.slide') }}</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/examples/full-page-slide">
+        <router-link :to="startGuidancePath">
           <img :src="startGuidanceImg">
           <span>{{ $t('examples.startGuidance') }}</span>
         </router-link>
       </li>
       <li class="example-item">
-        <router-link to="/examples/free-scroll">
+        <router-link :to="freeScrollPath">
           <img :src="freeScrollImg">
           <span>{{ $t('examples.freeScroll') }}</span>
         </router-link>
@@ -70,7 +70,28 @@
       },
       freeScrollImg() {
         return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
+      },
+      verticalScrollPath() {
+        return '/examples/vertical-scroll/' + this.$i18n.locale
+      },
+      indexListPath() {
+        return '/examples/index-view/' + this.$i18n.locale
+      },
+      pickerPath() {
+        return '/examples/picker/' + this.$i18n.locale
+      },
+      slidePath() {
+        return '/examples/slide/' + this.$i18n.locale
+      },
+      startGuidancePath() {
+        return '/examples/full-page-slide/' + this.$i18n.locale
+      },
+      freeScrollPath() {
+        return '/examples/free-scroll/' + this.$i18n.locale
       }
+    },
+    created() {
+      this.$i18n.locale = this.$route.params.lang === 'zh' ? 'zh' : 'en'
     }
   }
 </script>

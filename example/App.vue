@@ -3,9 +3,9 @@
     <section class="page-header">
       <nav class="nav">
         <div class="left">
-          <router-link to="/" class="brand">BetterScroll</router-link>
+          <router-link :to="lang" class="brand">BetterScroll</router-link>
           <a class="tab" href="https://ustbhuangyi.github.io/better-scroll/doc/" target="_blank">{{ $t('navigator.doc') }}</a>
-          <router-link to="/examples" class="tab">{{ $t('navigator.demo') }}</router-link>
+          <router-link :to="examplesPath" class="tab">{{ $t('navigator.demo') }}</router-link>
         </div>
 
         <div class="right">
@@ -24,7 +24,7 @@
 
       <h2 class="project-tagline">inspired by iscroll, and it has a better scroll perfermance</h2>
       <a href="https://ustbhuangyi.github.io/better-scroll/doc/" class="btn" target="_blank">{{ $t('navigator.started') }}</a>
-      <router-link to="/examples" class="btn">{{ $t('navigator.demo') }}</router-link>
+      <router-link :to="examplesPath" class="btn">{{ $t('navigator.demo') }}</router-link>
     </section>
     <section class="main-content">
       <transition name="fade">
@@ -46,13 +46,28 @@
         githubIcon: require('./common/images/github.svg')
       }
     },
+    computed: {
+      lang() {
+        return '/' + this.$i18n.locale
+      },
+      examplesPath() {
+        return '/examples/' + this.$i18n.locale
+      }
+    },
     methods: {
       toggleLanguage() {
         this.showLanguage = !this.showLanguage
       },
       chooseLanguage(lang) {
-        this.$i18n.locale = lang
+        if (this.$route.params.lang !== lang) {
+          this.$i18n.locale = lang
+          let newPath = this.$route.path.substring(0, -2) + lang
+          this.$router.replace(newPath)
+        }
       }
+    },
+    created() {
+      this.$i18n.locale = this.$route.params.lang === 'zh' ? 'zh' : 'en'
     }
   }
 </script>
