@@ -1310,186 +1310,186 @@
 <p>The code results in a clickable vertical scrolling effect. better-scroll supports lots of parameters, which can be modified to achieve more features. Usually, you don&apos;t need to modify these parameters because better-scroll has achieved the best effect for you. Next let&apos;s list the parameters that better-scroll supports.</p>
 <h2 id="startx">startX</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default:  0</li>
+<li>Type: <code>Number</code></li>
+<li>Default:  <code>0</code></li>
 <li>Function: Initialize the postion in the horizontal axis direction,</li>
 </ul>
 <h2 id="starty">startY</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 0</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>0</code></li>
 <li>Usage: Initialize the postion in the vertical axis direction, take a look at the <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll" target="_blank">Demo</a>.</li>
 </ul>
 <h2 id="scrollx">scrollX</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: false</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>false</code></li>
 <li>Usage: When setted to true, horizontal scrolling would be enabled</li>
-<li>Remark: This configuration is invalid when setting <a href="options.html#eventpassthrough">eventPassthrough</a> to &apos;horizontal&apos;.</li>
+<li>Note: This configuration is invalid when setting <a href="options.html#eventpassthrough">eventPassthrough</a> to &apos;horizontal&apos;.</li>
 </ul>
 <h2 id="scrolly">scrollY</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code></li>
 <li>Usage: When setted to true, vertical scrolling would be enabled</li>
-<li>Remark: This configuration is invalid when setting <a href="options.html#eventpassthrough">eventPassthrough</a> to &apos;vertical&apos;.</li>
+<li>Note: This configuration is invalid when setting <a href="options.html#eventpassthrough">eventPassthrough</a> to &apos;vertical&apos;.</li>
 </ul>
 <h2 id="freescroll">freeScroll</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: false</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>false</code></li>
 <li>Usage: In some scenes we need to scroll both horizontally and vertically, we can set  <code>freeScroll</code> to true</li>
-<li>Remark:  This configuration is invalid when <a href="">eventPassthrough</a> isn&apos;t setted to empty.</li>
+<li>Note:  This configuration is invalid when <a href="">eventPassthrough</a> isn&apos;t setted to empty.</li>
 </ul>
 <h2 id="directionlockthreshold">directionLockThreshold</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 5 (modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>5</code> (modification is not recommended)</li>
 <li>Usage: If we need to lock the scrolling only in one direction,  we calculate the numerical difference between the absolute values of horizontal axis and vertical axis&apos; scrolling distance at the initialization time of scrolling. When the value of the numerical difference is greater than <code>directionLockThreshold</code>, the lock direction can be determined.</li>
-<li>Remark: If <a href="options.html#eventpassthrough">eventPassthrough</a> is setted, <code>directionLockThreshold</code> is invalid and will always be 0.</li>
+<li>Note: If <a href="options.html#eventpassthrough">eventPassthrough</a> is setted, <code>directionLockThreshold</code> is invalid and will always be 0.</li>
 </ul>
 <h2 id="eventpassthrough">eventPassthrough</h2>
 <ul>
-<li>Type: String</li>
-<li>Default: &apos;&apos;</li>
-<li>Optional value: &apos;vertical&apos; / &apos;horizontal&apos;</li>
+<li>Type: <code>String</code></li>
+<li>Default: <code>&apos;&apos;</code></li>
+<li>Optional value: <code>vertical</code>, <code>horizontal</code></li>
 <li>Usage: Sometimes we want to preserve native vertical scroll but being able to add an horizontal better-scroll (maybe a carousel). Set this to &apos;vertical&apos; and the better-scroll area will react to horizontal swipes only. Vertical swipes will naturally scroll the whole page. Contrarily, set this to &apos;horizontal&apos; when you want to keep natural horizontal scroll.</li>
-<li>Remark: The setting of  <code>eventPassthrough</code> will cause some other settings to be invalid, be careful when using it.</li>
+<li>Note: The setting of  <code>eventPassthrough</code> will cause some other settings to be invalid, be careful when using it.</li>
 </ul>
 <h2 id="click">click</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: false</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>false</code></li>
 <li>Usage: To override the native scrolling better-scroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to <code>true</code>. And then better-scroll will add a private attribute called &#xB7;<code>_constructed</code> to the dispatched event whose value is true. But custom click event will inhibit some native behaviors like the selection of checkbox. Please note that it is suggested to use the custom <code>tap</code> event instead (see below).</li>
 </ul>
 <h2 id="tap">tap</h2>
 <ul>
-<li>Type: Boolean | String</li>
-<li>Default: false</li>
+<li>Type: <code>Boolean | String</code></li>
+<li>Default: <code>false</code></li>
 <li>Usage: Because better-scroll will inhibit standard click event, we can set tap to true. When the area is clicked, it will dispatch a tap event, you can add an event listener as you would do for a standard event like <code>element.addEventListener(&apos;tap&apos;, doSomething, false);</code>. If tap is setted to string, then the string value is regareded as the name of the custom event, like <code>tap: &apos;myCustomTapEvent&apos;</code>.</li>
 </ul>
 <h2 id="bounce">bounce</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code></li>
 <li>Usage: When the scroller meets the boundary it performs a small bounce animation. Setting this to true will enable the animation.</li>
 </ul>
 <h2 id="bouncetime">bounceTime</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 700 (ms, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>700</code> (ms, modification is not recommended)</li>
 <li>Usage: Set the duration in millisecond of the bounce animation.</li>
 </ul>
 <h2 id="momentum">momentum</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code></li>
 <li>Usage: If setted to true, you can turn on the momentum animation performed when the user quickly flicks on screen.</li>
 </ul>
 <h2 id="momentumlimittime">momentumLimitTime</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 300 (ms, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>300</code> (ms, modification is not recommended)</li>
 <li>Usage: Only when the time of the user&apos;s flicking on screen is lower than <code>momentumLimitTime</code> can the momentum animation be enabled.</li>
 </ul>
 <h2 id="momentumlimitdistance">momentumLimitDistance</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 15 (px, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>15</code> (px, modification is not recommended)</li>
 <li>Usage: Only when the distance of the user&apos;s flicking on screen is greater than <code>momentumLimitTime</code> can the momentum animation be enabled.</li>
 </ul>
 <h2 id="swipetime">swipeTime</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 2500 (ms, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>2500</code> (ms, modification is not recommended)</li>
 <li>Usage: Set the duration in millisecond of the momentum animation.</li>
 </ul>
 <h2 id="swipebouncetime">swipeBounceTime</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 500 (ms&#xFF0C;modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>500</code> (ms&#xFF0C;modification is not recommended)</li>
 <li>Usage: Set the entire bounce animation time when the scroller meets the boundary in the case of running a momentum animation.</li>
 </ul>
 <h2 id="deceleration">deceleration</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 0.001 (modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>0.001</code> (modification is not recommended)</li>
 <li>Usage: Represent the deceleration of the momentum animation.</li>
 </ul>
 <h2 id="flicklimittime">flickLimitTime</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 200 (ms, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>200</code> (ms, modification is not recommended)</li>
 <li>Usage: Sometimes we want to cpture the user&apos;s flick action (slide a short distance in a short time). Only when the time of the user slide on screen is shorter than <code>flickLimitTime</code>, it is considered as a flick action.</li>
 </ul>
 <h2 id="flicklimitdistance">flickLimitDistance</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 100 (px, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>100</code> (px, modification is not recommended)</li>
 <li>Usage: Only when the distance of the user slide on screen is shorter than <code>flickLimitDistance</code>, it is considered as a flick action</li>
 </ul>
 <h2 id="resizepolling">resizePolling</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 60 (ms, modification is not recommended)</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>60</code> (ms, modification is not recommended)</li>
 <li>Usage: When you resize the window better-scroll has to recalculate elements position and dimension. This might be a pretty daunting task for the poor little fella. To give it some rest the polling is set to 60 milliseconds and it is reasonable value.</li>
 </ul>
 <h2 id="probetype">probeType</h2>
 <ul>
-<li>Type: Number</li>
-<li>Default: 0</li>
-<li>Optional Value: 1, 2, 3</li>
+<li>Type: <code>Number</code></li>
+<li>Default: <code>0</code></li>
+<li>Optional Value: <code>1</code>, <code>2</code>, <code>3</code></li>
 <li>Usage: Sometimes we want to know the scrolling position. This setting regulates the probe aggressiveness or the frequency at which the <code>scroll</code> event is fired. Valid values are: <code>1</code>, <code>2</code>, <code>3</code>. When setted to 1, The scroll event is non-real time fired (after the screen scrolled for some time); When setted to 2,  the scroll event is real-time fired during the screen scrolling; When setted to 3, the scroll event is real-time fired during not only the screen scrolling but also the momentum and bounce animation.</li>
 </ul>
 <h2 id="preventdefault">preventDefault</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code></li>
 <li>Usage: Whether or not to <code>preventDefault()</code> when events are fired. This should be left <code>true</code> unless you really know what you are doing. Usually you might use <a href="options.html#preventdefaultexception">preventDefaultException</a>.</li>
 </ul>
 <h2 id="preventdefaultexception">preventDefaultException</h2>
 <ul>
 <li>Type: Object</li>
-<li>Default: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}</code></li>
+<li>Default: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code></li>
 <li>Usage: better-scroll will inhibit the native scrolling and menwhile inhibit some native components&apos; default behaviours. In this situation, we can&apos;t &apos;preventDefault&apos; on these elements, so we can configure &apos;preventDefaultException&apos;. Default <code>{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}</code> represents that default behaviours of elements with tagnames like &apos;input&apos;, &apos;textarea&apos;, &apos;button&apos;, &apos;select&apos; will not be inhibited</li>
-<li>Remark: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is &apos;test&apos;, then the configuration is <code>{className:/(^|\s)test(\s|$)/}</code>.</li>
+<li>Note: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is &apos;test&apos;, then the configuration is <code>{className:/(^|\s)test(\s|$)/}</code>.</li>
 </ul>
 <h2 id="hwcompositing">HWCompositing</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true (modification is not recommended)</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code> (modification is not recommended)</li>
 <li>Usage: This option tries to put the scroller on the hardware layer by appending <code>translateZ(0)</code> to the transform CSS property. This greatly increases performance especially on mobile and achieve a good scrolling effect.</li>
-<li>Remark:  Only browsers that support enabling hardware acceleration has the effect.</li>
+<li>Note: Only browsers that support enabling hardware acceleration has the effect.</li>
 </ul>
 <h2 id="usetransition">useTransition</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true (modification is not recommended)</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code> (modification is not recommended)</li>
 <li>Usage: Whether to use CSS3 transition animation. If setted to false, the engine will use <code>requestAnimationFrame</code> to do animation. </li>
-<li>Remark: Only browsers that support CSS3 has the effect.</li>
+<li>Note: Only browsers that support CSS3 has the effect.</li>
 </ul>
 <h2 id="usetransform">useTransform</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: true (modification is not recommended)</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>true</code> (modification is not recommended)</li>
 <li>Usage: By default the engine uses the <code>transform</code> CSS property. If setting this to <code>false</code>,  then use the <code>top</code>/<code>left</code> (and thus the scroller needs to be absolutely positioned).</li>
-<li>Remark: Only browsers that support CSS3 has the effect.</li>
+<li>Note: Only browsers that support CSS3 has the effect.</li>
 </ul>
 <h2 id="bindtowrapper">bindToWrapper</h2>
 <ul>
-<li>Type: Boolean</li>
-<li>Default: false</li>
+<li>Type: <code>Boolean</code></li>
+<li>Default: <code>false</code></li>
 <li>Usage: The <code>move</code> event is normally bound to the document and not the scroll container. When you move the cursor/finger out of the wrapper the scrolling keeps going. This is usually what you want, but you can also bind the move event to wrapper itself. Doing so as soon as the pointer leaves the container the scroll stops.</li>
 </ul>
 <h2 id="disablemouse">disableMouse</h2>
 <ul>
-<li>Type: Boolean</li>
+<li>Type: <code>Boolean</code></li>
 <li>Default: get the result by current browser environment (modification is not recommended)</li>
 <li>Usage: When in mobile environment (supporting touch event),  disableMouse will be true and mouse event will not be listened. While in PC environment, disableMouse will be false and mouse event will be listened. We suggest not modifying this unless you konw what you are doing.</li>
 </ul>
 <h2 id="disabletouch">disableTouch</h2>
 <ul>
-<li>Type: Boolean</li>
+<li>Type: <code>Boolean</code></li>
 <li>Default: get the result by current browser environment (modification is not recommended)</li>
 <li>Usage: When in mobile environment (supporting touch event),  disableMouse will be false and touch event will be listened. While in PC environment, disableMouse will be true and touch event will not be listened. We suggest not modifying this unless you konw what you are doing.</li>
 </ul>
@@ -1536,7 +1536,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options / Basic","level":"1.3","depth":1,"next":{"title":"startX","level":"1.3.1","depth":2,"anchor":"#startx","path":"options.md","ref":"options.md#startx","articles":[]},"previous":{"title":"script load","level":"1.2.2","depth":2,"anchor":"#script-load","path":"installation.md","ref":"installation.md#script-load","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/docs"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-09-18T06:13:53.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-18T12:39:06.243Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Options / Basic","level":"1.3","depth":1,"next":{"title":"startX","level":"1.3.1","depth":2,"anchor":"#startx","path":"options.md","ref":"options.md#startx","articles":[]},"previous":{"title":"script load","level":"1.2.2","depth":2,"anchor":"#script-load","path":"installation.md","ref":"installation.md#script-load","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-09-19T03:24:25.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-09-19T03:31:14.046Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
