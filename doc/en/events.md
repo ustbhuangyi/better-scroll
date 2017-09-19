@@ -11,19 +11,19 @@ Besides rich API methods, better-scroll also emits several events to interact. W
    - Trigger timing: when scroll starts.
 
 ## scroll
-   - Parameters: {Object} {x, y} real time coordinates during scroll.
-   - Trigger timing: During scroll，specific timing depends on the option of [probeType](/options.html#probetype).
+   - Parameters: `{Object} {x, y}` real time coordinates during scroll.
+   - Trigger timing: During scoll，specific timing depends on the option of [probeType](/options.html#probetype).
 
 ## scrollCancel
    - Parameters: none.
    - Trigger timing: when scroll is canceled.
 
 ## scrollEnd
-   - Parameters: {Object} {x, y} coordinates.
+   - Parameters: `{Object} {x, y}` coordinates.
    - Trigger timing: when scroll ends.
 
 ## touchEnd
-   - Parameters: {Object} {x, y} coordinates.
+   - Parameters: `{Object} {x, y}` coordinates.
    - Trigger timing: when finger touch or mouse leaves.
 
 ## flick
