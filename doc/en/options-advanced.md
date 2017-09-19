@@ -1,4 +1,4 @@
-# Options / Advanced
+# Advanced Options
 
 better-scroll also supports several advanced options to implement some special features.
 
