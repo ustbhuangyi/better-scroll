@@ -6,7 +6,7 @@
 
 better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (perhaps supporting the PC side in the future). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of better-scroll are compatible with iscroll on the whole. What's more, better-scroll also extends some features and optimizes for performance based on iscroll.
 
-better-scroll is implemented with plain JavaScript, which means it's dependency free. The size of compiled code is 46 KB, 26 KB after compressed, and only 7kb after gzip. better-scroll is a really lightweight JavaScript lib.
+better-scroll is implemented with plain JavaScript, which means it's dependency free. The size of compiled code is 46 KB, 26 KB after compressed, and only 7KB after gzip. better-scroll is a really lightweight JavaScript lib.
 
 ## Getting started
 
