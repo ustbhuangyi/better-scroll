@@ -3,7 +3,7 @@
   "plugins": ["scripts", "edit-link", "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git", "-fontsettings"],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/ustbhuangyi/better-scroll/tree/master/docs",
+      "base": "https://github.com/ustbhuangyi/better-scroll/tree/master/doc",
       "label": "Edit This Page"
     }
   },
