@@ -28,12 +28,14 @@ export default {
     slide: 'Slide',
     startGuidance: 'Start Guidance',
     freeScroll: 'Free Scroll',
+    formList: 'Form List',
     verticalScrollImg: 'vertical-scroll-en.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker-en.jpeg',
     slideImg: 'slide.jpeg',
     startGuidanceImg: 'full-page-slide.jpeg',
-    freeScrollImg: 'free-scroll.jpeg'
+    freeScrollImg: 'free-scroll.jpeg',
+    formListImg: 'form-list-en.jpeg'
   },
 
   normalScrollListPage: {
@@ -78,5 +80,11 @@ export default {
 
   freeScrollPage: {
     desc: 'Free scroll supports horizontal and vertical move at the same time.'
+  },
+
+  formListPage: {
+    desc: 'To use form in better-scroll, you need to make sure the option click is configured as false, since some native element events will be prevented by customized click event. And in this situation, we recommend to handle click by listening tap event.',
+    previousTxt: 'No.',
+    followingTxt: ' option'
   }
 }

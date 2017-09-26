@@ -84,12 +84,11 @@
       overflow: hidden
       -webkit-overflow-scrolling: touch
       .desc
-        padding: 10px
-        margin: 10px 0
+        padding: 20px
         line-height: 20px
         font-size: 14px
       .content
         flex: 1
         position: relative
-        margin: 10px
+        margin: 0px 10px 10px 10px
 </style>

@@ -37,6 +37,14 @@
           <span>{{ $t('examples.freeScroll') }}</span>
         </router-link>
       </li>
+      <li class="example-item">
+        <router-link :to="formListPath">
+          <img :src="formListImg">
+          <span>{{ $t('examples.formList') }}</span>
+        </router-link>
+      </li>
+      <li class="example-item placeholder">
+      </li>
       <li class="example-item placeholder">
       </li>
     </ul>
@@ -71,6 +79,9 @@
       freeScrollImg() {
         return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       },
+      formListImg() {
+        return require('../../common/images/' + this.$i18n.t('examples.formListImg'))
+      },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale
       },
@@ -88,6 +99,9 @@
       },
       freeScrollPath() {
         return '/examples/free-scroll/' + this.$i18n.locale
+      },
+      formListPath() {
+        return '/examples/form-list/' + this.$i18n.locale
       }
     },
     created() {
