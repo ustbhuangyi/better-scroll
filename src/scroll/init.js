@@ -7,7 +7,8 @@ import {
   offset,
   addEvent,
   removeEvent,
-  getRect
+  getRect,
+  preventDefaultException
 } from '../util/dom'
 
 import { extend } from '../util/lang'
@@ -213,7 +214,9 @@ export function initMixin(BScroll) {
         break
       case 'click':
         if (this.enabled && !e._constructed) {
-          e.preventDefault()
+          if (!preventDefaultException(e.target, this.options.preventDefaultException)) {
+            e.preventDefault()
+          }
           e.stopPropagation()
         }
         break
