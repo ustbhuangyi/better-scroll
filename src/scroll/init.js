@@ -184,6 +184,9 @@ export function initMixin(BScroll) {
     if (this.options.pullUpLoad) {
       this._initPullUp()
     }
+    if (this.options.pullDownRefresh) {
+      this._initPullDown()
+    }
   }
 
   BScroll.prototype.handleEvent = function (e) {

@@ -67,7 +67,7 @@
   import InputOption from 'example/components/input-option/input-option.vue'
   import SelectOption from 'example/components/select-option/select-option.vue'
 
-  import {ease} from '../../common/js/ease'
+  import { ease } from '../../common/js/ease'
 
   export default {
     data() {
@@ -104,14 +104,23 @@
       SelectOption
     },
     watch: {
-      scrollbarObj() {
-        this.rebuildScroll()
+      scrollbarObj: {
+        handler() {
+          this.rebuildScroll()
+        },
+        deep: true
       },
-      pullDownRefreshObj() {
-        this.rebuildScroll()
+      pullDownRefreshObj: {
+        handler() {
+          this.rebuildScroll()
+        },
+        deep: true
       },
-      pullUpLoadObj() {
-        this.rebuildScroll()
+      pullUpLoadObj: {
+        handler() {
+          this.rebuildScroll()
+        },
+        deep: true
       },
       startY() {
         this.rebuildScroll()
@@ -128,7 +137,10 @@
         } : false
       },
       pullUpLoadObj: function () {
-        return this.pullUpLoad ? {threshold: parseInt(this.pullUpLoadThreshold), txt: {more: this.pullUpLoadMoreTxt, noMore: this.pullUpLoadNoMoreTxt}} : false
+        return this.pullUpLoad ? {
+          threshold: parseInt(this.pullUpLoadThreshold),
+          txt: {more: this.pullUpLoadMoreTxt, noMore: this.pullUpLoadNoMoreTxt}
+        } : false
       }
     },
     methods: {
