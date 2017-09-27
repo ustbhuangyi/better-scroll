@@ -83,7 +83,7 @@ export default {
   },
 
   formListPage: {
-    desc: '由于当 click 选项为 true 时 better-scroll 自定义的 click 事件会阻止一些原生组件行为，所以在滚动列表中使用一些原生表单组件时，click 选项必须为false，并且此时推荐用监听 tap 事件来做点击处理。',
+    desc: '由于当 click 选项为 true 时 better-scroll 会阻止一些原生组件行为，所以在滚动列表中使用一些原生表单组件时，click 选项必须为false，并且此时推荐用监听 tap 事件来做点击处理。',
     previousTxt: '第 ',
     followingTxt: ' 项'
   }
