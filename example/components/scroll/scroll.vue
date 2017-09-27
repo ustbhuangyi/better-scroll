@@ -69,6 +69,10 @@
         type: Boolean,
         default: true
       },
+      tap: {
+        type: Boolean,
+        default: false
+      },
       listenScroll: {
         type: Boolean,
         default: false
@@ -150,6 +154,7 @@
         let options = {
           probeType: this.probeType,
           click: this.click,
+          tap: this.tap,
           scrollY: this.freeScroll || this.direction === DIRECTION_V,
           scrollX: this.freeScroll || this.direction === DIRECTION_H,
           scrollbar: this.scrollbar,
