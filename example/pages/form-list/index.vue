@@ -1,12 +1,18 @@
 <template>
   <page class="form-list-view" :title="$t('examples.formList')" :desc="$t('formListPage.desc')">
     <div slot="content">
-      <scroll ref="scroll" :click="options.click" :tap="options.tap">
+      <scroll ref="scroll" :click="options.click" :tap="options.tap" :listenBeforeScroll="options.listenBeforeScroll" @beforeScrollStart="beforeScrollStart">
         <ul class="content" ref="formList">
-          <li v-for="(item, index) in items" @click="click">
-            <input type="checkbox" :value="index" v-model="checkedItems">
-            <label>{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt') }}</label>
-          </li>
+          <template v-for="(item, index) in items">
+            <li>
+              <input type="checkbox" :value="index" v-model="checkedItems">
+              <label>{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt') }}</label>
+            </li>
+            <li>
+              <input class="text-input" type="text" @focus="focusHandle(index)" @blur="blurHandle(index)">
+              <span>input {{ index }}</span>
+            </li>
+          </template>
         </ul>
       </scroll>
     </div>
@@ -22,9 +28,10 @@
       return {
         options: {
           click: false,
-          tap: true
+          tap: true,
+          listenBeforeScroll: true // 用于input blur
         },
-        items: Array(20),
+        items: Array(10),
         checkedItems: []
       }
     },
@@ -34,7 +41,6 @@
     },
     mounted() {
       let labelList = this.$refs.formList.querySelectorAll('label')
-      console.log(labelList)
       labelList.forEach((item, index) => {
         item.addEventListener('tap', () => {
           console.log('tap item', index)
@@ -44,8 +50,18 @@
       })
     },
     methods: {
-      click() {
-        console.log('click item')
+      // 用于input blur
+      beforeScrollStart() {
+        let inputList = this.$refs.formList.querySelectorAll('.text-input')
+        inputList.forEach((item) => {
+          item.blur()
+        })
+      },
+      focusHandle(index) {
+        console.log(`input ${index}: focus`)
+      },
+      blurHandle(index) {
+        console.log(`input ${index}: blur`)
       }
     }
   }
@@ -57,4 +73,7 @@
       li
         padding: 30px
         border-bottom: 1px solid #e5e5e5
+        .text-input
+          border: 1px solid #e5e5e5
+          border-radius: 3px
 </style>
