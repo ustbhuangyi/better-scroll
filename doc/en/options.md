@@ -54,7 +54,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
 ## click
   - Type: `Boolean`
   - Default: `false`
-  - Usage: To override the native scrolling better-scroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to `true`. And then better-scroll will add a private attribute called ·`_constructed` to the dispatched event whose value is true. But custom click event will inhibit some native behaviors like the selection of checkbox. Please note that it is suggested to use the custom `tap` event instead (see below).
+  - Usage: To override the native scrolling better-scroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to `true`. And then better-scroll will add a private attribute called ·`_constructed` to the dispatched event whose value is true.
 
 ## tap
   - Type: `Boolean | String`
