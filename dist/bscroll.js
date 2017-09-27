@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.3.0
+ * better-normal-scroll v1.3.1
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -467,6 +467,9 @@ function initMixin(BScroll) {
     if (this.options.pullUpLoad) {
       this._initPullUp();
     }
+    if (this.options.pullDownRefresh) {
+      this._initPullDown();
+    }
   };
 
   BScroll.prototype.handleEvent = function (e) {
@@ -497,7 +500,9 @@ function initMixin(BScroll) {
         break;
       case 'click':
         if (this.enabled && !e._constructed) {
-          e.preventDefault();
+          if (!preventDefaultException(e.target, this.options.preventDefaultException)) {
+            e.preventDefault();
+          }
           e.stopPropagation();
         }
         break;
@@ -1215,6 +1220,8 @@ function coreMixin(BScroll) {
 
   BScroll.prototype.destroy = function () {
     this._removeDOMEvents();
+    // remove custom events
+    this._events = {};
 
     if (this.options.scrollbar) {
       this._removeScrollBars();
@@ -1736,6 +1743,11 @@ Indicator.prototype._calculate = function () {
 };
 
 function pullDownMixin(BScroll) {
+  BScroll.prototype._initPullDown = function () {
+    // must watch scroll in real time
+    this.options.probeType = 3;
+  };
+
   BScroll.prototype._checkPullDown = function () {
     var _options$pullDownRefr = this.options.pullDownRefresh,
         _options$pullDownRefr2 = _options$pullDownRefr.threshold,
@@ -1828,7 +1840,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.3.0';
+BScroll.Version = '1.3.1';
 
 return BScroll;
 
