@@ -33,7 +33,7 @@ export function eventMixin(BScroll) {
     let count = _events.length
     while (count--) {
       // 移除通过on或者once绑定的回调函数
-      if (_events[count][0] === fn || events[count][0].fn === fn) {
+      if (_events[count][0] === fn || _events[count][0].fn === fn) {
         _events[count][0] = undefined
       }
     }
