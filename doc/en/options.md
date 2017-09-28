@@ -120,7 +120,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
    - Type: `Number`
    - Default: `0`
    - Optional Value: `1`, `2`, `3`
-   - Usage: Sometimes we want to know the scrolling position. This setting regulates the probe aggressiveness or the frequency at which the `scroll` event is fired. Valid values are: `1`, `2`, `3`. When setted to 1, The scroll event is non-real time fired (after the screen scrolled for some time); When setted to 2,  the scroll event is real-time fired during the screen scrolling; When setted to 3, the scroll event is real-time fired during not only the screen scrolling but also the momentum and bounce animation.
+   - Usage: Sometimes we want to know the scrolling position. This setting regulates the probe aggressiveness or the frequency at which the `scroll` event is fired. Valid values are: `1`, `2`, `3`. When setted to 1, The scroll event is non-real time fired (after the screen scrolled for some time); When setted to 2,  the scroll event is real-time fired during the screen scrolling; When setted to 3, the scroll event is real-time fired during not only the screen scrolling but also the momentum and bounce animation. If not setted, the default value `0` means there is no scroll event is fired.
 
 ## preventDefault
    - Type: `Boolean`
