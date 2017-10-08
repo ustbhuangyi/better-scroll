@@ -3,20 +3,22 @@ import { dispatchTouchStart, dispatchTouchMove, dispatchSwipe } from '../../util
 
 describe('BScroll - core scroll', () => {
   let scroll
+  let scroller
   let scrollOptions = {
     bindToWrapper: true,
     probeType: 3
   }
   beforeEach(() => {
     const wrapper = document.createElement('div')
-    const scroller = document.createElement('div')
     const list = document.createElement('ul')
+    scroller = document.createElement('div')
     scroller.appendChild(list)
     wrapper.appendChild(scroller)
     document.body.appendChild(wrapper)
     wrapper.style.height = '500px'
     wrapper.style.overflow = 'hidden'
     let listHTML = ''
+    list.style.margin = '0'
     for (let i = 0; i < 100; i++) {
       listHTML += `<li>${i}</li>`
     }
@@ -89,5 +91,32 @@ describe('BScroll - core scroll', () => {
       .to.equal(0)
     expect(scroll.y)
       .to.equal(0)
+  })
+  it('scrollStop', (done) => {
+    const endHandler = sinon.spy()
+    scroll.on('scrollEnd', endHandler)
+    scroll.scrollToElement(scroller, 100000, 0, 500)
+    setTimeout(() => {
+      scroll.stop()
+      expect(endHandler)
+        .to.be.calledOnce
+      done()
+    }, 5000)
+  })
+  it('scrollToElement', () => {
+    scroll.scrollToElement(scroller, 1000, 0, 500)
+    expect(scroll.y)
+      .to.equal(-500)
+    scroll.scrollToElement(scroller, 1000, 0, 400)
+    expect(scroll.y)
+      .to.equal(-400)
+  })
+  it('scrollBy', () => {
+    scroll.scrollBy(0, -300, 1000)
+    expect(scroll.y)
+      .to.equal(-300)
+    scroll.scrollBy(0, -200, 1000)
+    expect(scroll.y)
+      .to.equal(-500)
   })
 })
