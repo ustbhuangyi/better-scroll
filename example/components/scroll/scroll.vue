@@ -144,7 +144,7 @@
           return
         }
         if (this.$refs.list && (this.pullDownRefresh || this.pullUpLoad)) {
-          this.$refs.list.style.minHeight = getRect(this.$refs.wrapper).height + 'px'
+          this.$refs.list.style.minHeight = `${getRect(this.$refs.wrapper).height + 1}px`
         }
 
         let options = {

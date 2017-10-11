@@ -92,7 +92,7 @@
       }
     },
     created() {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 2; i++) {
         this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
       }
     },
