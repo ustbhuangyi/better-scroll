@@ -21,7 +21,7 @@ The most common application scenario of better-scroll is list scrolling. Let's s
     <li>...</li>
     ...
   </ul>
-  <!-- you can put some other DOMs here, it won't affect the scrolling
+  <!-- you can put some other DOMs here, it won't affect the scrolling -->
 </div>
 ```
 
