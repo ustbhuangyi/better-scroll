@@ -35,7 +35,7 @@ const wrapper = document.querySelector('.wrapper')
 const scroll = new BScroll(wrapper)
 ```
 
-bettor-scroll provides a class whose first parameter is a plain DOM object when instantiated. Certainly, better-scroll inside would try to use querySelector to get the DOM object, so the initiazation code can also be like the following:
+better-scroll provides a class whose first parameter is a plain DOM object when instantiated. Certainly, better-scroll inside would try to use querySelector to get the DOM object, so the initiazation code can also be like the following:
 
 ```javascript
 import BScroll from 'better-scroll'
