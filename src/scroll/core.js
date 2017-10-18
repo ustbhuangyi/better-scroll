@@ -330,6 +330,10 @@ export function coreMixin(BScroll) {
     }
   }
 
+  BScroll.prototype._transitionProperty = function (property = 'transform') {
+    this.scrollerStyle[style.transitionProperty] = property
+  }
+
   BScroll.prototype._transitionTime = function (time = 0) {
     this.scrollerStyle[style.transitionDuration] = time + 'ms'
 
@@ -462,6 +466,7 @@ export function coreMixin(BScroll) {
     this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y)
 
     if (!time || this.options.useTransition) {
+      this._transitionProperty()
       this._transitionTimingFunction(easing.style)
       this._transitionTime(time)
       this._translate(x, y)
