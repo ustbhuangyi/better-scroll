@@ -9,6 +9,11 @@ let scroll = new BScroll('.wrapper',{
 ```
 这样就实现了一个纵向可点击的滚动效果。better-scroll 支持的参数非常多，可以修改它们去实现更多的 feature。通常你可以不改这些参数（列出不建议修改的参数），better-scroll 已经为你实现了最佳效果，接下来我们来列举 better-scroll 支持的参数。
 
+## contentEl
+  - 类型：Number | String | DOMElement
+  - 默认值：0
+  - 作用：默认父容器的第一个子元素作为content，当参数类型为 Number 时作为父容器下子元素索引；String 类型为 query selector，也可以直接传入一个 element 对象。
+
 ## startX
   - 类型：Number,
   - 默认值：0

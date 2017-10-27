@@ -14,12 +14,6 @@ function BScroll(el, options) {
   if (!this.wrapper) {
     warn('can not resolve the wrapper dom')
   }
-  this.scroller = this.wrapper.children[0]
-  if (!this.scroller) {
-    warn('the wrapper need at least one child element to be scroller')
-  }
-  // cache style for better performance
-  this.scrollerStyle = this.scroller.style
 
   this._init(el, options)
 }

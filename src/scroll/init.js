@@ -12,8 +12,10 @@ import {
 } from '../util/dom'
 
 import { extend } from '../util/lang'
+import { warn } from '../util/debug'
 
 const DEFAULT_OPTIONS = {
+  contentEl: 0,
   startX: 0,
   startY: 0,
   scrollX: false,
@@ -101,6 +103,21 @@ export function initMixin(BScroll) {
     this.y = 0
     this.directionX = 0
     this.directionY = 0
+
+    if (typeof this.options.contentEl === 'number') {
+      this.scroller = this.wrapper.children[this.options.contentEl]
+    } else if (typeof this.options.contentEl === 'string') {
+      this.scroller = document.querySelector(this.options.contentEl)
+    } else if (typeof this.options.contentEl === 'object') {
+      this.scroller = this.options.contentEl
+    }
+
+    if (!this.scroller) {
+      warn('the wrapper need at least one child element to be scroller')
+    }
+
+    // cache style for better performance
+    this.scrollerStyle = this.scroller.style
 
     this._addDOMEvents()
 
