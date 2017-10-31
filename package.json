@@ -6,6 +6,7 @@
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
   },
+  "types": "./types/index.d.ts",
   "main": "dist/bscroll.js",
   "scripts": {
     "dev": "node build/dev-server.js",
