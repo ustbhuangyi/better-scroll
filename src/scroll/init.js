@@ -106,6 +106,8 @@ export function initMixin(BScroll) {
 
     this._initExtFeatures()
 
+    this._watchTransition()
+
     this.refresh()
 
     if (!this.options.snap) {
@@ -279,5 +281,24 @@ export function initMixin(BScroll) {
 
   BScroll.prototype.disable = function () {
     this.enabled = false
+  }
+
+  BScroll.prototype._watchTransition = function () {
+    let isInTransition = false
+    let me = this
+    let prePointerEvents = this.scroller.style.pointerEvents || 'auto'
+    Object.defineProperty(this, 'isInTransition', {
+      get() {
+        return isInTransition
+      },
+      set(newVal) {
+        isInTransition = newVal
+        if (isInTransition) {
+          me.scroller.style.pointerEvents = 'none'
+        } else {
+          me.scroller.style.pointerEvents = prePointerEvents
+        }
+      }
+    })
   }
 }

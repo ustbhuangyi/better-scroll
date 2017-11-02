@@ -195,6 +195,9 @@ export function coreMixin(BScroll) {
       y: this.y
     })
 
+    let preventClick = this.stopFromTransition
+    this.stopFromTransition = false
+
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
       return
@@ -219,12 +222,14 @@ export function coreMixin(BScroll) {
         }
         this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe)
       } else {
-        if (this.options.tap) {
-          tap(e, this.options.tap)
-        }
+        if (!preventClick) {
+          if (this.options.tap) {
+            tap(e, this.options.tap)
+          }
 
-        if (this.options.click) {
-          click(e)
+          if (this.options.click) {
+            click(e)
+          }
         }
       }
       this.trigger('scrollCancel')
@@ -260,7 +265,7 @@ export function coreMixin(BScroll) {
       newX = momentumX.destination
       newY = momentumY.destination
       time = Math.max(momentumX.duration, momentumY.duration)
-      this.isInTransition = 1
+      this.isInTransition = true
     } else {
       if (this.options.wheel) {
         newY = Math.round(newY / this.itemHeight) * this.itemHeight
@@ -580,12 +585,14 @@ export function coreMixin(BScroll) {
           y: this.y
         })
       }
+      this.stopFromTransition = true
     } else if (!this.options.useTransition && this.isAnimating) {
       this.isAnimating = false
       this.trigger('scrollEnd', {
         x: this.x,
         y: this.y
       })
+      this.stopFromTransition = true
     }
   }
 
