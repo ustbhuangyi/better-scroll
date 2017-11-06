@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.3.1
+ * better-normal-scroll v1.4.0
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -93,6 +93,8 @@ function eventMixin(BScroll) {
         fn.apply(context, arguments);
       }
     }
+    // 将参数中的回调函数挂载在magic对象的fn属性上,为了执行off方法的时候，暴露对应的函数方法
+    magic.fn = fn;
 
     this.on(type, magic);
   };
@@ -105,7 +107,8 @@ function eventMixin(BScroll) {
 
     var count = _events.length;
     while (count--) {
-      if (_events[count][0] === fn) {
+      // 移除通过on或者once绑定的回调函数
+      if (_events[count][0] === fn || _events[count][0] && _events[count][0].fn === fn) {
         _events[count][0] = undefined;
       }
     }
@@ -200,6 +203,7 @@ var style = {
   transform: transform,
   transitionTimingFunction: prefixStyle('transitionTimingFunction'),
   transitionDuration: prefixStyle('transitionDuration'),
+  transitionProperty: prefixStyle('transitionProperty'),
   transitionDelay: prefixStyle('transitionDelay'),
   transformOrigin: prefixStyle('transformOrigin'),
   transitionEnd: prefixStyle('transitionEnd')
@@ -389,6 +393,8 @@ function initMixin(BScroll) {
 
     this._initExtFeatures();
 
+    this._watchTransition();
+
     this.refresh();
 
     if (!this.options.snap) {
@@ -562,6 +568,25 @@ function initMixin(BScroll) {
 
   BScroll.prototype.disable = function () {
     this.enabled = false;
+  };
+
+  BScroll.prototype._watchTransition = function () {
+    var isInTransition = false;
+    var me = this;
+    var prePointerEvents = this.scroller.style.pointerEvents || 'auto';
+    Object.defineProperty(this, 'isInTransition', {
+      get: function get() {
+        return isInTransition;
+      },
+      set: function set(newVal) {
+        isInTransition = newVal;
+        if (isInTransition) {
+          me.scroller.style.pointerEvents = 'none';
+        } else {
+          me.scroller.style.pointerEvents = prePointerEvents;
+        }
+      }
+    });
   };
 }
 
@@ -820,6 +845,9 @@ function coreMixin(BScroll) {
       y: this.y
     });
 
+    var preventClick = this.stopFromTransition;
+    this.stopFromTransition = false;
+
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
       return;
@@ -844,12 +872,14 @@ function coreMixin(BScroll) {
         }
         this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe);
       } else {
-        if (this.options.tap) {
-          tap(e, this.options.tap);
-        }
+        if (!preventClick) {
+          if (this.options.tap) {
+            tap(e, this.options.tap);
+          }
 
-        if (this.options.click) {
-          click(e);
+          if (this.options.click) {
+            click(e);
+          }
         }
       }
       this.trigger('scrollCancel');
@@ -883,7 +913,7 @@ function coreMixin(BScroll) {
       newX = momentumX.destination;
       newY = momentumY.destination;
       time = Math.max(momentumX.duration, momentumY.duration);
-      this.isInTransition = 1;
+      this.isInTransition = true;
     } else {
       if (this.options.wheel) {
         newY = Math.round(newY / this.itemHeight) * this.itemHeight;
@@ -949,6 +979,12 @@ function coreMixin(BScroll) {
       me.trigger('scroll', pos);
       me.probeTimer = requestAnimationFrame(probe);
     }
+  };
+
+  BScroll.prototype._transitionProperty = function () {
+    var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'transform';
+
+    this.scrollerStyle[style.transitionProperty] = property;
   };
 
   BScroll.prototype._transitionTime = function () {
@@ -1093,6 +1129,7 @@ function coreMixin(BScroll) {
     this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y);
 
     if (!time || this.options.useTransition) {
+      this._transitionProperty();
       this._transitionTimingFunction(easing.style);
       this._transitionTime(time);
       this._translate(x, y);
@@ -1209,12 +1246,14 @@ function coreMixin(BScroll) {
           y: this.y
         });
       }
+      this.stopFromTransition = true;
     } else if (!this.options.useTransition && this.isAnimating) {
       this.isAnimating = false;
       this.trigger('scrollEnd', {
         x: this.x,
         y: this.y
       });
+      this.stopFromTransition = true;
     }
   };
 
@@ -1840,7 +1879,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.3.1';
+BScroll.Version = '1.4.0';
 
 return BScroll;
 
