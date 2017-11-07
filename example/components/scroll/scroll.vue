@@ -289,6 +289,9 @@
     bottom: 0
     overflow: hidden
     background: #fff
+    .scroll-content
+      position: relative
+      z-index: 1
     .list-content
       position: relative
       z-index: 10
