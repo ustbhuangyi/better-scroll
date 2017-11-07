@@ -200,6 +200,7 @@ export function coreMixin(BScroll) {
 
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
+      this.resetPosition(this.options.bounceTime, ease.bounce, this.hasHorizontalScroll ? (this.options.pullDownRefresh.stop || 0) : 0, this.hasVerticalScroll ? (this.options.pullDownRefresh.stop || 0) : 0)
       return
     }
 
@@ -528,17 +529,17 @@ export function coreMixin(BScroll) {
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
-  BScroll.prototype.resetPosition = function (time = 0, easeing = ease.bounce) {
+  BScroll.prototype.resetPosition = function (time = 0, easeing = ease.bounce, minX = 0, minY = 0) {
     let x = this.x
-    if (!this.hasHorizontalScroll || x > 0) {
-      x = 0
+    if (!this.hasHorizontalScroll || x > minX) {
+      x = minX
     } else if (x < this.maxScrollX) {
       x = this.maxScrollX
     }
 
     let y = this.y
-    if (!this.hasVerticalScroll || y > 0) {
-      y = 0
+    if (!this.hasVerticalScroll || y > minY) {
+      y = minY
     } else if (y < this.maxScrollY) {
       y = this.maxScrollY
     }
