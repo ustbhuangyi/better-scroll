@@ -24,7 +24,7 @@
           :pullDownRefresh="pullDownRefresh"
           :pullDownStyle="pullDownStyle"
           :beforePullDown="beforePullDown"
-          :pulling="pulling"
+          :isPullingDown="isPullingDown"
           :bubbleY="bubbleY"
     >
       <div ref="pulldown" class="pulldown-wrapper" :style="pullDownStyle" v-if="pullDownRefresh">
@@ -32,7 +32,7 @@
           <bubble :y="bubbleY"></bubble>
         </div>
         <div class="after-trigger" v-else>
-          <div v-if="pulling" class="loading">
+          <div v-if="isPullingDown" class="loading">
             <loading></loading>
           </div>
           <div v-else><span>{{refreshTxt}}</span></div>
@@ -111,7 +111,6 @@
         beforePullDown: true,
         isRebounding: false,
         isPullingDown: false,
-        pulling: false,
         isPullUpLoad: false,
         pullUpDirty: true,
         pullDownStyle: '',
@@ -205,7 +204,7 @@
       },
       forceUpdate(dirty) {
         if (this.pullDownRefresh && this.isPullingDown) {
-          this.pulling = false
+          this.isPullingDown = false
           this._reboundPullDown().then(() => {
             this._afterPullDown()
           })
@@ -222,7 +221,6 @@
         this.scroll.on('pullingDown', () => {
           this.beforePullDown = false
           this.isPullingDown = true
-          this.pulling = true
           this.$emit('pullingDown')
         })
 
@@ -251,7 +249,6 @@
           setTimeout(() => {
             this.isRebounding = true
             this.scroll.finishPullDown()
-            this.isPullingDown = false
             resolve()
           }, stopTime)
         })
