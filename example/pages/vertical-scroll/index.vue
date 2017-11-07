@@ -158,7 +158,7 @@
             // 如果没有新数据
             this.$refs.scroll.forceUpdate()
           }
-        }, 1000)
+        }, 2000)
       },
       onPullingUp() {
         // 更新数据
@@ -176,7 +176,7 @@
             // 如果没有新数据
             this.$refs.scroll.forceUpdate()
           }
-        }, 1000)
+        }, 2000)
       },
       updateScrollbar(val) {
         this.scrollbar = val
