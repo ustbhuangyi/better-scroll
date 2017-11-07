@@ -9,7 +9,7 @@ import { pullUpMixin } from './scroll/pullup'
 
 import { warn } from './util/debug'
 
-export function BScroll(el, options) {
+function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
   if (!this.wrapper) {
     warn('can not resolve the wrapper dom')
