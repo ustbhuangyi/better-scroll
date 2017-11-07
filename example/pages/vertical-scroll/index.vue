@@ -176,7 +176,7 @@
             // 如果没有新数据
             this.$refs.scroll.forceUpdate()
           }
-        }, 2000)
+        }, 1500)
       },
       updateScrollbar(val) {
         this.scrollbar = val
