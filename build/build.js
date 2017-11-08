@@ -26,6 +26,7 @@ const builds = [{
   dest: resolve('dist/bscroll.js'),
   format: 'umd',
   moduleName: 'BScroll',
+  exports: 'named',
   plugins: [
     babel({
       exclude: 'node_modules/**' // only transpile our source code
@@ -36,6 +37,7 @@ const builds = [{
   entry: resolve('src/index.js'),
   dest: resolve('dist/bscroll.min.js'),
   format: 'umd',
+  exports: 'named',
   moduleName: 'BScroll',
   plugins: [
     babel({
@@ -66,13 +68,13 @@ function buildEntry(config) {
     const code = bundle.generate(config).code
     if (isProd) {
       var minified = (config.banner ? config.banner + '\n' : '') + uglify.minify(code, {
-          output: {
-            ascii_only: true
-          },
-          compress: {
-            pure_funcs: ['makeMap']
-          }
-        }).code
+        output: {
+          ascii_only: true
+        },
+        compress: {
+          pure_funcs: ['makeMap']
+        }
+      }).code
       return write(config.dest, minified, true)
     } else {
       return write(config.dest, code)

@@ -4,10 +4,10 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.BScroll = factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.BScroll = global.BScroll || {})));
+}(this, (function (exports) { 'use strict';
 
 var slicedToArray = function () {
   function sliceIterator(arr, i) {
@@ -1101,8 +1101,8 @@ function coreMixin(BScroll) {
 
       if (me.options.probeType === 3) {
         me.trigger('scroll', {
-          x: this.x,
-          y: this.y
+          x: me.x,
+          y: me.y
         });
       }
     }
@@ -1884,6 +1884,8 @@ pullUpMixin(BScroll);
 
 BScroll.Version = '1.4.1';
 
-return BScroll;
+exports['default'] = BScroll;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
