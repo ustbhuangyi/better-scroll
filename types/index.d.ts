@@ -101,13 +101,26 @@ declare namespace BScroll {
 		 */
     pullUpLoad: Partial<PullUpOption> | boolean;
   }
+
+  interface Position {
+    x: number;
+    y: number;
+  }
 }
 
-interface BScrollStatic {
-  new(element: Element | string, options?: Partial<BScroll.BsOption>): BScrollStatic;
+interface BScroll {
   // 重新计算 better-scroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常
   x: number;
   y: number;
+  maxScrollX: number;
+  maxScrollY: number;
+  movingDirectionX: number;
+  movingDirectionY: number;
+  directionX: number;
+  directionY: number;
+  enabled: boolean;
+  isInTransition: boolean;
+  isAnimating: boolean;
 
   refresh(): void;
   // 启用 better-scroll, 默认 开启
@@ -143,12 +156,27 @@ interface BScrollStatic {
   finishPullUp(): void;
 
   // 监听事件
-  on(type: string, fn: (evt?: any) => void): void;
-  off(type: string, fn?: (evt?: any) => void): void;
+  on(type: 'beforeScrollStart', fn: () => any): void;
+  on(type: 'scrollStart', fn: () => any): void;
+  on(type: 'scroll', fn: (pos: BScroll.Position) => any): void;
+  on(type: 'scrollCancel', fn: () => any): void;
+  on(type: 'beforeScrollStart', fn: () => any): void;
+  on(type: 'scrollEnd', fn: (pos: BScroll.Position) => any): void;
+  on(type: 'touchEnd', fn: (pos: BScroll.Position) => any): void;
+  on(type: 'flick', fn: () => any): void;
+  on(type: 'refresh', fn: () => any): void;
+  on(type: 'destroy', fn: () => any): void;
+  on(type: 'pullingDown', fn: () => any): void;
+  on(type: 'pullingUp', fn: () => any): void;
+  off(type: 'beforeScrollStart' | 'scrollStart' | 'scroll' | 'scrollCancel' | 'beforeScrollStart' | 'scrollEnd' | 'touchEnd' | 'flick' | 'refresh' | 'destroy' | 'pullingDown' | 'pullingUp', fn: (...args: any[]) => void): void;
+}
+
+interface BScrollStatic {
+  new(element: Element | string, options?: Partial<BScroll.BsOption>): BScroll;
 }
 
 declare const BScroll: BScrollStatic;
 
 declare module 'better-scroll' {
-  export default BScroll;
+  export = BScroll;
 }
