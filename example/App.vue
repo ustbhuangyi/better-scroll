@@ -31,7 +31,7 @@
         <router-view class="view"></router-view>
       </transition>
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/ustbhuangyi/picker">BetterScroll</a> is maintained by <a
+        <span class="site-footer-owner"><a href="https://github.com/ustbhuangyi/better-scroll">BetterScroll</a> is maintained by <a
         href="https://github.com/ustbhuangyi">ustbhuangyi</a>.</span>
       </footer>
     </section>
