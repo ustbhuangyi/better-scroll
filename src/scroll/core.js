@@ -300,7 +300,7 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0
+      this.selectedIndex = Math.round(Math.abs(this.y / this.itemHeight))
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -486,7 +486,7 @@ export function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1
         } else {
-          this.selectedIndex = Math.abs(y / this.itemHeight) | 0
+          this.selectedIndex = Math.round(Math.abs(y / this.itemHeight))
         }
       }
     } else {
