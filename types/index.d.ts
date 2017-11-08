@@ -150,5 +150,5 @@ interface BScrollStatic {
 declare const BScroll: BScrollStatic;
 
 declare module 'better-scroll' {
-  export default BScroll;
+  export = BScroll;
 }
