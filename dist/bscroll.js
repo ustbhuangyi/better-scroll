@@ -1101,8 +1101,8 @@ function coreMixin(BScroll) {
 
       if (me.options.probeType === 3) {
         me.trigger('scroll', {
-          x: this.x,
-          y: this.y
+          x: me.x,
+          y: me.y
         });
       }
     }
@@ -1883,6 +1883,8 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
 BScroll.Version = '1.4.1';
+
+Object.defineProperty(BScroll, '__esModule', { value: true });
 
 return BScroll;
 
