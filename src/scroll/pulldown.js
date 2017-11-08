@@ -8,9 +8,12 @@ export function pullDownMixin(BScroll) {
 
   BScroll.prototype._checkPullDown = function () {
     const {threshold = 90, stop = 40} = this.options.pullDownRefresh
-    if (this.y > threshold && !this.pulling) {
-      this.pulling = true
-      this.trigger('pullingDown')
+
+    if (this.y > threshold) {
+      if (!this.pulling) {
+        this.pulling = true
+        this.trigger('pullingDown')
+      }
       this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce)
     }
 

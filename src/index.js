@@ -9,7 +9,7 @@ import { pullUpMixin } from './scroll/pullup'
 
 import { warn } from './util/debug'
 
-export function BScroll(el, options) {
+function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
   if (!this.wrapper) {
     warn('can not resolve the wrapper dom')
@@ -33,7 +33,7 @@ scrollbarMixin(BScroll)
 pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 
-BScroll.Version = '1.4.0'
+BScroll.Version = '1.4.1'
 
 export default BScroll
 

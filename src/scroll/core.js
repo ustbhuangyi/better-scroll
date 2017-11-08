@@ -449,8 +449,8 @@ export function coreMixin(BScroll) {
 
       if (me.options.probeType === 3) {
         me.trigger('scroll', {
-          x: this.x,
-          y: this.y
+          x: me.x,
+          y: me.y
         })
       }
     }
