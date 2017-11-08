@@ -4,10 +4,10 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.BScroll = factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.BScroll = global.BScroll || {})));
+}(this, (function (exports) { 'use strict';
 
 var slicedToArray = function () {
   function sliceIterator(arr, i) {
@@ -1881,6 +1881,9 @@ pullUpMixin(BScroll);
 
 BScroll.Version = '1.4.0';
 
-return BScroll;
+exports.BScroll = BScroll;
+exports['default'] = BScroll;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
