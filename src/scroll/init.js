@@ -12,6 +12,7 @@ import {
 } from '../util/dom'
 
 import { extend } from '../util/lang'
+import { warn } from '../util/debug'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -242,7 +243,10 @@ export function initMixin(BScroll) {
       this.items = this.scroller.children
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
-        this.selectedIndex = wheel.selectedIndex
+        this.selectedIndex = wheel.selectedIndex || 0
+        if (wheel.selectedIndexselectedIndex === undefined) {
+          warn('wheel option selectedIndex is required!')
+        }
       }
       this.options.startY = -this.selectedIndex * this.itemHeight
       this.maxScrollX = 0
