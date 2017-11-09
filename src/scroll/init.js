@@ -244,7 +244,7 @@ export function initMixin(BScroll) {
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex || 0
-        if (wheel.selectedIndexselectedIndex === undefined) {
+        if (wheel.selectedIndex === undefined) {
           warn('wheel option selectedIndex is required!')
         }
       }
