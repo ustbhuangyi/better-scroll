@@ -145,11 +145,11 @@ interface BScroll {
   // 滚动到上一个页面
   prev(time: number, easing: object): void;
   // 获取当前页面的信息
-  getCurrentPage(): void
+  getCurrentPage(): number;
   // 当我们做 picker 组件的时候，调用该方法可以滚动到索引对应的位置
   wheelTo(index: number): void;
   // 获取当前选中的索引值
-  getSelectedIndex(): void;
+  getSelectedIndex(): number;
   // 当下拉刷新数据加载完毕后，需要调用此方法告诉 better-scroll 数据已加载
   finishPullDown(): void;
   // 当上拉加载数据加载完毕后，需要调用此方法告诉 better-scroll 数据已加载
@@ -169,6 +169,7 @@ interface BScroll {
   on(type: 'pullingDown', fn: () => any): void;
   on(type: 'pullingUp', fn: () => any): void;
   off(type: 'beforeScrollStart' | 'scrollStart' | 'scroll' | 'scrollCancel' | 'beforeScrollStart' | 'scrollEnd' | 'touchEnd' | 'flick' | 'refresh' | 'destroy' | 'pullingDown' | 'pullingUp', fn: (...args: any[]) => void): void;
+  trigger(type: string): void;
 }
 
 interface BScrollStatic {
