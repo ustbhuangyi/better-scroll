@@ -60,6 +60,8 @@ The green part is the wrapper, also known as the parent container, which has **f
 
 I wrote an article [When better-scroll meets Vue](https://zhuanlan.zhihu.com/p/27407024) (in Chinese). I also hope that developers can contribute to share the experience of using better-scroll with other frameworks.
 
+A fantastic mobile ui lib implement by Vue: [cube-ui](https://github.com/didi/cube-ui/)
+
 ## Document
 
 Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
