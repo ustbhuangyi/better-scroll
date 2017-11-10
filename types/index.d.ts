@@ -145,7 +145,12 @@ interface BScroll {
   // 滚动到上一个页面
   prev(time: number, easing: object): void;
   // 获取当前页面的信息
-  getCurrentPage(): number;
+  getCurrentPage(): {
+    x: number;
+    y: number;
+    pageX: number;
+    pageY: number;
+  };
   // 当我们做 picker 组件的时候，调用该方法可以滚动到索引对应的位置
   wheelTo(index: number): void;
   // 获取当前选中的索引值
