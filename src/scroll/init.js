@@ -12,7 +12,6 @@ import {
 } from '../util/dom'
 
 import { extend } from '../util/lang'
-import { warn } from '../util/debug'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -123,15 +122,7 @@ export function initMixin(BScroll) {
   BScroll.prototype._handleOptions = function (options) {
     this.options = extend({}, DEFAULT_OPTIONS, options)
 
-    if (this.options.wheel && (!this.options.wheel.wheelWrapperClass || !this.options.wheel.wheelItemClass)) {
-      if (!this.options.wheel.wheelWrapperClass) {
-        this.options.wheel.wheelWrapperClass = 'wheel-scroll'
-      }
-      if (!this.options.wheel.wheelItemClass) {
-        this.options.wheel.wheelItemClass = 'wheel-item'
-      }
-      warn('wheelWrapperClass & wheelItemClass of wheel options use the default setting.')
-    }
+    this._initWheel()
 
     this.translateZ = this.options.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
@@ -256,9 +247,6 @@ export function initMixin(BScroll) {
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex || 0
-        if (wheel.selectedIndex === undefined) {
-          warn('wheel option selectedIndex is required!')
-        }
       }
       this.options.startY = -this.selectedIndex * this.itemHeight
       this.maxScrollX = 0
