@@ -211,7 +211,10 @@
         if (!this.wheels[i]) {
           this.wheels[i] = new BScroll(wheelWrapper.children[i], {
             wheel: {
-              selectedIndex: this.pickerSelectedIndex[i]
+              selectedIndex: this.pickerSelectedIndex[i],
+              /** 默认值就是下面配置的两个，为了展示二者的作用，这里再配置一下 */
+              wheelWrapperClass: 'wheel-scroll',
+              wheelItemClass: 'wheel-item'
             },
             probeType: 3
           })

@@ -52,6 +52,8 @@ const DEFAULT_OPTIONS = {
    *   selectedIndex: 0,
    *   rotate: 25,
    *   adjustTime: 400
+   *   wheelWrapperClass: 'wheel-scroll',
+   *   wheelItemClass: 'wheel-item'
    * }
    */
   wheel: false,
@@ -120,6 +122,16 @@ export function initMixin(BScroll) {
 
   BScroll.prototype._handleOptions = function (options) {
     this.options = extend({}, DEFAULT_OPTIONS, options)
+
+    if (this.options.wheel && (!this.options.wheel.wheelWrapperClass || !this.options.wheel.wheelItemClass)) {
+      if (!this.options.wheel.wheelWrapperClass) {
+        this.options.wheel.wheelWrapperClass = 'wheel-scroll'
+      }
+      if (!this.options.wheel.wheelItemClass) {
+        this.options.wheel.wheelItemClass = 'wheel-item'
+      }
+      warn('wheelWrapperClass & wheelItemClass of wheel options use the default setting.')
+    }
 
     this.translateZ = this.options.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
