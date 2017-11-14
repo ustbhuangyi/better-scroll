@@ -12,7 +12,6 @@ import {
 } from '../util/dom'
 
 import { extend } from '../util/lang'
-import { warn } from '../util/debug'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -52,6 +51,8 @@ const DEFAULT_OPTIONS = {
    *   selectedIndex: 0,
    *   rotate: 25,
    *   adjustTime: 400
+   *   wheelWrapperClass: 'wheel-scroll',
+   *   wheelItemClass: 'wheel-item'
    * }
    */
   wheel: false,
@@ -190,6 +191,9 @@ export function initMixin(BScroll) {
     if (this.options.pullDownRefresh) {
       this._initPullDown()
     }
+    if (this.options.wheel) {
+      this._initWheel()
+    }
   }
 
   BScroll.prototype.handleEvent = function (e) {
@@ -244,9 +248,6 @@ export function initMixin(BScroll) {
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex || 0
-        if (wheel.selectedIndex === undefined) {
-          warn('wheel option selectedIndex is required!')
-        }
       }
       this.options.startY = -this.selectedIndex * this.itemHeight
       this.maxScrollX = 0

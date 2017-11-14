@@ -43,7 +43,7 @@ describe('BScroll - wheel', () => {
       const scroller = document.createElement('div')
       scroller.className = 'wheel'
       for (let i = 0; i < 100; i++) {
-        ulHTML += `<li>${i}</li>`
+        ulHTML += `<li class="wheel-item">${i}</li>`
       }
       ul.innerHTML = ulHTML
       listArr.push(ul)
@@ -61,6 +61,11 @@ describe('BScroll - wheel', () => {
     wheels = []
     wrapper = null
     document.body.removeChild(document.querySelector('.wheel-wrapper'))
+  })
+  it('the wheel wrapper class name should be use default value', () => {
+    const wheel = wheels[0]
+    expect(wheel.options.wheel.wheelWrapperClass).to.equal('wheel-scroll')
+    expect(wheel.options.wheel.wheelItemClass).to.equal('wheel-item')
   })
   it('wheelTo', () => {
     const wheel = wheels[0]
