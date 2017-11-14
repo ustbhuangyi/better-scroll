@@ -122,8 +122,6 @@ export function initMixin(BScroll) {
   BScroll.prototype._handleOptions = function (options) {
     this.options = extend({}, DEFAULT_OPTIONS, options)
 
-    this._initWheel()
-
     this.translateZ = this.options.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
     this.options.useTransition = this.options.useTransition && hasTransition
@@ -192,6 +190,9 @@ export function initMixin(BScroll) {
     }
     if (this.options.pullDownRefresh) {
       this._initPullDown()
+    }
+    if (this.options.wheel) {
+      this._initWheel()
     }
   }
 
