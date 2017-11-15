@@ -34,6 +34,7 @@ pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 
 BScroll.Version = '1.4.1'
+// Object.defineProperty(BScroll, '__esModule', { value: true })
 
 export default BScroll
 
