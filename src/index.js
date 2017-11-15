@@ -34,6 +34,7 @@ pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 
 BScroll.Version = '1.4.1'
+BScroll.default = BScroll
 
 export default BScroll
 
