@@ -300,6 +300,10 @@ function extend(target) {
   return target;
 }
 
+function warn(msg) {
+  console.error("[BScroll warn]: " + msg);
+}
+
 var DEFAULT_OPTIONS = {
   startX: 0,
   startY: 0,
@@ -529,7 +533,10 @@ function initMixin(BScroll) {
       this.items = this.scroller.children;
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0;
       if (this.selectedIndex === undefined) {
-        this.selectedIndex = wheel.selectedIndex;
+        this.selectedIndex = wheel.selectedIndex || 0;
+        if (wheel.selectedIndex === undefined) {
+          warn('wheel option selectedIndex is required!');
+        }
       }
       this.options.startY = -this.selectedIndex * this.itemHeight;
       this.maxScrollX = 0;
@@ -944,7 +951,7 @@ function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0;
+      this.selectedIndex = Math.round(Math.abs(this.y / this.itemHeight));
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -1101,8 +1108,8 @@ function coreMixin(BScroll) {
 
       if (me.options.probeType === 3) {
         me.trigger('scroll', {
-          x: this.x,
-          y: this.y
+          x: me.x,
+          y: me.y
         });
       }
     }
@@ -1144,7 +1151,7 @@ function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1;
         } else {
-          this.selectedIndex = Math.abs(y / this.itemHeight) | 0;
+          this.selectedIndex = Math.round(Math.abs(y / this.itemHeight));
         }
       }
     } else {
@@ -1854,10 +1861,6 @@ function pullUpMixin(BScroll) {
   };
 }
 
-function warn(msg) {
-  console.error("[BScroll warn]: " + msg);
-}
-
 function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el;
   if (!this.wrapper) {
@@ -1883,6 +1886,7 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
 BScroll.Version = '1.4.1';
+BScroll.default = BScroll;
 
 return BScroll;
 
