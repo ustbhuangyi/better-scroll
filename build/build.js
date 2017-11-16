@@ -34,6 +34,17 @@ const builds = [{
   banner
 }, {
   entry: resolve('src/index.js'),
+  dest: resolve('dist/bscroll.esm.js'),
+  format: 'es',
+  moduleName: 'BScroll',
+  plugins: [
+    babel({
+      exclude: 'node_modules/**' // only transpile our source code
+    })
+  ],
+  banner
+}, {
+  entry: resolve('src/index.js'),
   dest: resolve('dist/bscroll.min.js'),
   format: 'umd',
   moduleName: 'BScroll',

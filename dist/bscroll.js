@@ -338,6 +338,8 @@ var DEFAULT_OPTIONS = {
    *   selectedIndex: 0,
    *   rotate: 25,
    *   adjustTime: 400
+   *   wheelWrapperClass: 'wheel-scroll',
+   *   wheelItemClass: 'wheel-item'
    * }
    */
   wheel: false,
@@ -476,6 +478,9 @@ function initMixin(BScroll) {
     if (this.options.pullDownRefresh) {
       this._initPullDown();
     }
+    if (this.options.wheel) {
+      this._initWheel();
+    }
   };
 
   BScroll.prototype.handleEvent = function (e) {
@@ -529,7 +534,7 @@ function initMixin(BScroll) {
       this.items = this.scroller.children;
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0;
       if (this.selectedIndex === undefined) {
-        this.selectedIndex = wheel.selectedIndex;
+        this.selectedIndex = wheel.selectedIndex || 0;
       }
       this.options.startY = -this.selectedIndex * this.itemHeight;
       this.maxScrollX = 0;
@@ -865,7 +870,7 @@ function coreMixin(BScroll) {
     // we scrolled less than 15 pixels
     if (!this.moved) {
       if (this.options.wheel) {
-        if (this.target && this.target.className === 'wheel-scroll') {
+        if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
           var index = Math.abs(Math.round(newY / this.itemHeight));
           var _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight);
           this.target = this.items[index + _offset];
@@ -944,7 +949,7 @@ function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0;
+      this.selectedIndex = Math.round(Math.abs(this.y / this.itemHeight));
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -1101,8 +1106,8 @@ function coreMixin(BScroll) {
 
       if (me.options.probeType === 3) {
         me.trigger('scroll', {
-          x: this.x,
-          y: this.y
+          x: me.x,
+          y: me.y
         });
       }
     }
@@ -1144,7 +1149,7 @@ function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1;
         } else {
-          this.selectedIndex = Math.abs(y / this.itemHeight) | 0;
+          this.selectedIndex = Math.round(Math.abs(y / this.itemHeight));
         }
       }
     } else {
@@ -1158,7 +1163,7 @@ function coreMixin(BScroll) {
     }
     el = el.nodeType ? el : this.scroller.querySelector(el);
 
-    if (this.options.wheel && el.className !== 'wheel-item') {
+    if (this.options.wheel && el.className !== this.options.wheel.wheelItemClass) {
       return;
     }
 
@@ -1539,6 +1544,10 @@ function snapMixin(BScroll) {
   };
 }
 
+function warn(msg) {
+  console.error("[BScroll warn]: " + msg);
+}
+
 function wheelMixin(BScroll) {
   BScroll.prototype.wheelTo = function (index) {
     if (this.options.wheel) {
@@ -1549,6 +1558,20 @@ function wheelMixin(BScroll) {
 
   BScroll.prototype.getSelectedIndex = function () {
     return this.options.wheel && this.selectedIndex;
+  };
+
+  BScroll.prototype._initWheel = function () {
+    var wheel = this.options.wheel;
+    if (!wheel.wheelWrapperClass) {
+      wheel.wheelWrapperClass = 'wheel-scroll';
+    }
+    if (!wheel.wheelItemClass) {
+      wheel.wheelItemClass = 'wheel-item';
+    }
+    if (wheel.selectedIndex === undefined) {
+      wheel.selectedIndex = 0;
+      warn('wheel option selectedIndex is required!');
+    }
   };
 }
 
@@ -1852,10 +1875,6 @@ function pullUpMixin(BScroll) {
       this._watchPullUp();
     }
   };
-}
-
-function warn(msg) {
-  console.error("[BScroll warn]: " + msg);
 }
 
 function BScroll(el, options) {
