@@ -10,6 +10,11 @@ let scroll = new BScroll('.wrapper',{
 ```
 The code results in a clickable vertical scrolling effect. better-scroll supports lots of parameters, which can be modified to achieve more features. Usually, you don't need to modify these parameters because better-scroll has achieved the best effect for you. Next let's list the parameters that better-scroll supports.
 
+## contentEl
+  - Type: Number | String | DOMElement
+  - Default: 0
+  - Function: The child element index value in the parent container, or query selector when option type is string.
+
 ## startX
   - Type: `Number`
   - Default:  `0`
