@@ -1,30 +1,40 @@
 declare namespace BScroll {
   interface WheelOption {
     selectedIndex: number;
-    rotate: number;
-    adjustTime: number;
+    rotate?: number;
+    adjustTime?: number;
+    wheelWrapperClass?: string;
+    wheelItemClass?: string;
   }
 
   interface SlideOption {
-    loop: boolean;
+    loop?: boolean;
     el: Element;
-    threshold: number;
-    stepX: number;
-    stepY: number;
-    listenFlick: boolean;
+    threshold?: number;
+    stepX?: number;
+    stepY?: number;
+    listenFlick?: boolean;
+    speed?: number;
   }
 
   interface ScrollBarOption {
-    fade: boolean;
+    fade?: boolean;
   }
 
   interface PullDownOption {
-    threshold: number;
-    stop: number;
+    threshold?: number;
+    stop?: number;
   }
 
   interface PullUpOption {
-    threshold: number;
+    threshold?: number;
+  }
+
+  interface PageOption {
+    x: number,
+    y: number,
+    pageX: number,
+    pageY: number
   }
 
   interface BsOption {
@@ -145,7 +155,7 @@ interface BScroll {
   // 滚动到上一个页面
   prev(time: number, easing: object): void;
   // 获取当前页面的信息
-  getCurrentPage(): void
+  getCurrentPage(): PageOption;
   // 当我们做 picker 组件的时候，调用该方法可以滚动到索引对应的位置
   wheelTo(index: number): void;
   // 获取当前选中的索引值
