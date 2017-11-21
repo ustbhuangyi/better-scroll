@@ -1,30 +1,40 @@
 declare namespace BScroll {
   interface WheelOption {
     selectedIndex: number;
-    rotate: number;
-    adjustTime: number;
+    rotate?: number;
+    adjustTime?: number;
+    wheelWrapperClass?: string;
+    wheelItemClass?: string;
   }
 
   interface SlideOption {
-    loop: boolean;
+    loop?: boolean;
     el: Element;
-    threshold: number;
-    stepX: number;
-    stepY: number;
-    listenFlick: boolean;
+    threshold?: number;
+    stepX?: number;
+    stepY?: number;
+    listenFlick?: boolean;
+    speed?: number;
   }
 
   interface ScrollBarOption {
-    fade: boolean;
+    fade?: boolean;
   }
 
   interface PullDownOption {
-    threshold: number;
-    stop: number;
+    threshold?: number;
+    stop?: number;
   }
 
   interface PullUpOption {
-    threshold: number;
+    threshold?: number;
+  }
+
+  interface PageOption {
+    x: number,
+    y: number,
+    pageX: number,
+    pageY: number
   }
 
   interface BsOption {
