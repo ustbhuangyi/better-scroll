@@ -217,10 +217,19 @@ export function snapMixin(BScroll) {
 
   BScroll.prototype.goToPage = function (x, y, time, easing = ease.bounce) {
     const snap = this.options.snap
+
+    if (!this.pages) {
+      return
+    }
+
     if (x >= this.pages.length) {
       x = this.pages.length - 1
     } else if (x < 0) {
       x = 0
+    }
+
+    if (!this.pages[x]) {
+      return
     }
 
     if (y >= this.pages[x].length) {
