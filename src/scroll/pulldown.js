@@ -1,4 +1,5 @@
 import { ease } from '../util/ease'
+import { DIRECTION_DOWN } from '../util/const'
 
 export function pullDownMixin(BScroll) {
   BScroll.prototype._initPullDown = function () {
@@ -9,13 +10,16 @@ export function pullDownMixin(BScroll) {
   BScroll.prototype._checkPullDown = function () {
     const {threshold = 90, stop = 40} = this.options.pullDownRefresh
 
-    if (this.y > threshold) {
-      if (!this.pulling) {
-        this.pulling = true
-        this.trigger('pullingDown')
-      }
-      this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce)
+    // check if a real pull down action
+    if (this.movingDirectionY !== DIRECTION_DOWN || this.y < threshold) {
+      return false
     }
+
+    if (!this.pulling) {
+      this.pulling = true
+      this.trigger('pullingDown')
+    }
+    this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce)
 
     return this.pulling
   }

@@ -11,6 +11,7 @@ import { ease } from '../util/ease'
 import { momentum } from '../util/momentum'
 import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
 import { getNow } from '../util/lang'
+import { DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT } from '../util/const'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -119,8 +120,8 @@ export function coreMixin(BScroll) {
 
     deltaX = this.hasHorizontalScroll ? deltaX : 0
     deltaY = this.hasVerticalScroll ? deltaY : 0
-    this.movingDirectionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0
-    this.movingDirectionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0
+    this.movingDirectionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0
+    this.movingDirectionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0
 
     let newX = this.x + deltaX
     let newY = this.y + deltaY
@@ -240,8 +241,8 @@ export function coreMixin(BScroll) {
 
     let deltaX = newX - this.absStartX
     let deltaY = newY - this.absStartY
-    this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0
-    this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0
+    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0
+    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0
 
     this.endTime = getNow()
 
@@ -300,7 +301,7 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.abs(this.y / this.itemHeight) | 0
+      this.selectedIndex = Math.round(Math.abs(this.y / this.itemHeight))
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -486,7 +487,7 @@ export function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1
         } else {
-          this.selectedIndex = Math.abs(y / this.itemHeight) | 0
+          this.selectedIndex = Math.round(Math.abs(y / this.itemHeight))
         }
       }
     } else {

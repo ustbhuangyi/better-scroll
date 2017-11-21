@@ -1,3 +1,5 @@
+import { DIRECTION_UP } from '../util/const'
+
 export function pullUpMixin(BScroll) {
   BScroll.prototype._initPullUp = function () {
     // must watch scroll in real time
@@ -17,7 +19,7 @@ export function pullUpMixin(BScroll) {
     this.on('scroll', checkToEnd)
 
     function checkToEnd(pos) {
-      if (this.movingDirectionY === 1 && pos.y <= (this.maxScrollY + threshold)) {
+      if (this.movingDirectionY === DIRECTION_UP && pos.y <= (this.maxScrollY + threshold)) {
         this.trigger('pullingUp')
         this.pullupWatching = false
         this.off('scroll', checkToEnd)
