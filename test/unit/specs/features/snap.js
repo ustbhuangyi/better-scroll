@@ -145,6 +145,14 @@ describe('BScroll - snap', () => {
       scroll.goToPage(2, 0)
       expect(scroll.currentPage.pageX)
         .to.equal(2)
+      scroll.pages = undefined
+      scroll.goToPage(1, 0)
+      expect(scroll.currentPage.pageX)
+        .to.equal(2)
+      scroll.pages = []
+      scroll.goToPage(1, 0)
+      expect(scroll.currentPage.pageX)
+        .to.equal(2)
       done()
     }, 0)
   })
