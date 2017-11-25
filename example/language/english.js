@@ -29,6 +29,7 @@ export default {
     startGuidance: 'Start Guidance',
     freeScroll: 'Free Scroll',
     formList: 'Form List',
+    goodsList: 'Goods List',
     verticalScrollImg: 'vertical-scroll-en.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker-en.jpeg',

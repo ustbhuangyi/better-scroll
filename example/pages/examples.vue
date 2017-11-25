@@ -43,6 +43,12 @@
           <span>{{ $t('examples.formList') }}</span>
         </router-link>
       </li>
+      <li class="example-item">
+        <router-link :to="goodsListPath">
+          <img :src="formListImg">
+          <span>{{ $t('examples.goodsList') }}</span>
+        </router-link>
+      </li>
       <li class="example-item placeholder">
       </li>
       <li class="example-item placeholder">
@@ -102,6 +108,9 @@
       },
       formListPath() {
         return '/examples/form-list/' + this.$i18n.locale
+      },
+      goodsListPath() {
+        return '/examples/goods-list/' + this.$i18n.locale
       }
     },
     created() {
