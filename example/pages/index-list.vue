@@ -13,9 +13,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Page from '../../components/page/page.vue'
-  import IndexList from '../../components/index-list/index-list.vue'
-  import cityData from '../../data/index-list.json'
+  import Page from '../components/page/page.vue'
+  import IndexList from '../components/index-list/index-list.vue'
+  import cityData from '../data/index-list.json'
 
   export default {
     components: {

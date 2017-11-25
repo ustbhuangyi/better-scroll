@@ -67,7 +67,7 @@
   import InputOption from 'example/components/input-option/input-option.vue'
   import SelectOption from 'example/components/select-option/select-option.vue'
 
-  import { ease } from '../../common/js/ease'
+  import { ease } from '../common/js/ease'
 
   export default {
     data() {

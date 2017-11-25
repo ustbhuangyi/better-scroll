@@ -62,25 +62,25 @@
     },
     computed: {
       verticalScrollImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
+        return require('../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
       },
       indexListImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.indexListImg'))
+        return require('../common/images/' + this.$i18n.t('examples.indexListImg'))
       },
       pickerImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.pickerImg'))
+        return require('../common/images/' + this.$i18n.t('examples.pickerImg'))
       },
       slideImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.slideImg'))
+        return require('../common/images/' + this.$i18n.t('examples.slideImg'))
       },
       startGuidanceImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
+        return require('../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
       },
       freeScrollImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
+        return require('../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       },
       formListImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.formListImg'))
+        return require('../common/images/' + this.$i18n.t('examples.formListImg'))
       },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale
