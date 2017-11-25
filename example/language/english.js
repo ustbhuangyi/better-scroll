@@ -87,5 +87,9 @@ export default {
     desc: 'To use form in better-scroll, you need to make sure the option click is configured as false, since some native element events will be prevented when click is true. And in this situation, we recommend to handle click by listening tap event.',
     previousTxt: 'No.',
     followingTxt: ' option'
+  },
+
+  goodsListPage: {
+    desc: 'A goods list contains related picture and information.'
   }
 }
