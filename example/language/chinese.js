@@ -29,13 +29,15 @@ export default {
     startGuidance: '开屏引导',
     freeScroll: '自由滚动',
     formList: '表单列表',
+    goodsList: '商品列表',
     verticalScrollImg: 'vertical-scroll.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker.jpeg',
     slideImg: 'slide.jpeg',
     startGuidanceImg: 'full-page-slide.jpeg',
     freeScrollImg: 'free-scroll.jpeg',
-    formListImg: 'form-list.jpeg'
+    formListImg: 'form-list.jpeg',
+    goodsListImg: 'goods-list.jpeg'
   },
 
   normalScrollListPage: {

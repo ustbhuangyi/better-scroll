@@ -9,6 +9,7 @@ import Slide from 'example/pages/slide'
 import FullPageSlide from 'example/pages/full-page-slide'
 import FreeScroll from 'example/pages/free-scroll'
 import FormList from 'example/pages/form-list'
+import GoodsList from 'example/pages/goods-list'
 
 Vue.use(Router)
 
@@ -57,6 +58,10 @@ export default new Router({
         {
           path: 'form-list/:lang',
           component: FormList
+        },
+        {
+          path: 'goods-list/:lang',
+          component: GoodsList
         }
       ]
     }

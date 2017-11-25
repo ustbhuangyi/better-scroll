@@ -23,7 +23,7 @@
       return {
         freeScroll: true,
         scrollbar: true,
-        imgUrl: require('../../common/images/vertical-scroll.jpeg')
+        imgUrl: require('../common/images/vertical-scroll.jpeg')
       }
     },
     components: {

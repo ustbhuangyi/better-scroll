@@ -27,7 +27,7 @@
   import Page from 'example/components/page/page.vue'
   import Picker from 'example/components/picker/picker.vue'
   import CityPicker from 'example/components/city-picker/city-picker.vue'
-  import { provinceList, cityList, areaList } from '../../data/areaData'
+  import { provinceList, cityList, areaList } from '../data/areaData'
 
   let data1 = [
     {

@@ -43,6 +43,12 @@
           <span>{{ $t('examples.formList') }}</span>
         </router-link>
       </li>
+      <li class="example-item">
+        <router-link :to="goodsListPath">
+          <img :src="goodsListImg">
+          <span>{{ $t('examples.goodsList') }}</span>
+        </router-link>
+      </li>
       <li class="example-item placeholder">
       </li>
       <li class="example-item placeholder">
@@ -62,25 +68,28 @@
     },
     computed: {
       verticalScrollImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
+        return require('../common/images/' + this.$i18n.t('examples.verticalScrollImg'))
       },
       indexListImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.indexListImg'))
+        return require('../common/images/' + this.$i18n.t('examples.indexListImg'))
       },
       pickerImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.pickerImg'))
+        return require('../common/images/' + this.$i18n.t('examples.pickerImg'))
       },
       slideImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.slideImg'))
+        return require('../common/images/' + this.$i18n.t('examples.slideImg'))
       },
       startGuidanceImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
+        return require('../common/images/' + this.$i18n.t('examples.startGuidanceImg'))
       },
       freeScrollImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.freeScrollImg'))
+        return require('../common/images/' + this.$i18n.t('examples.freeScrollImg'))
       },
       formListImg() {
-        return require('../../common/images/' + this.$i18n.t('examples.formListImg'))
+        return require('../common/images/' + this.$i18n.t('examples.formListImg'))
+      },
+      goodsListImg() {
+        return require('../common/images/' + this.$i18n.t('examples.goodsListImg'))
       },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale
@@ -102,6 +111,9 @@
       },
       formListPath() {
         return '/examples/form-list/' + this.$i18n.locale
+      },
+      goodsListPath() {
+        return '/examples/goods-list/' + this.$i18n.locale
       }
     },
     created() {
