@@ -45,7 +45,7 @@
       </li>
       <li class="example-item">
         <router-link :to="goodsListPath">
-          <img :src="formListImg">
+          <img :src="goodsListImg">
           <span>{{ $t('examples.goodsList') }}</span>
         </router-link>
       </li>
@@ -87,6 +87,9 @@
       },
       formListImg() {
         return require('../common/images/' + this.$i18n.t('examples.formListImg'))
+      },
+      goodsListImg() {
+        return require('../common/images/' + this.$i18n.t('examples.goodsListImg'))
       },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale

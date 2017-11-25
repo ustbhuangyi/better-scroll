@@ -1,5 +1,5 @@
 <template>
-  <page class="goods-list-view" :title="$t('examples.goodsList')" :desc="$t('goodsListPage.desc')">
+  <page class="goods-list-view" :title="$t('examples.goodsList')">
     <div slot="content">
       <scroll ref="scroll">
         <ul class="foods-wrapper">
@@ -55,6 +55,11 @@
 <style lang="stylus">
   @import "~common/stylus/mixin.styl"
 
+  .page
+    &.goods-list-view
+      .wrapper
+        .content
+          margin: 0
   .foods-wrapper
     .food-item
       display: flex
