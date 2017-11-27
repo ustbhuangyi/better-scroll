@@ -270,7 +270,7 @@ export function initMixin(BScroll) {
     function next() {
       setTimeout(() => {
         check.call(this)
-      })
+      }, 1000)
     }
 
     next.call(this)
