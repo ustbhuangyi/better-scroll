@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.4.2
+ * better-normal-scroll v1.5.0
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -294,6 +294,25 @@ function extend(target) {
   return target;
 }
 
+function debounce(func, delay) {
+  var timer = void 0;
+
+  return function () {
+    var _this = this;
+
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function () {
+      func.apply(_this, args);
+    }, delay);
+  };
+}
+
 var DEFAULT_OPTIONS = {
   startX: 0,
   startY: 0,
@@ -391,6 +410,8 @@ function initMixin(BScroll) {
 
     this._watchTransition();
 
+    this._initDOMObserver();
+
     this.refresh();
 
     if (!this.options.snap) {
@@ -475,6 +496,88 @@ function initMixin(BScroll) {
     if (this.options.wheel) {
       this._initWheel();
     }
+  };
+
+  BScroll.prototype._watchTransition = function () {
+    if (typeof Object.defineProperty !== 'function') {
+      return;
+    }
+    var isInTransition = false;
+    var me = this;
+    var prePointerEvents = this.scroller.style.pointerEvents || 'auto';
+    Object.defineProperty(this, 'isInTransition', {
+      get: function get() {
+        return isInTransition;
+      },
+      set: function set(newVal) {
+        isInTransition = newVal;
+        if (isInTransition) {
+          me.scroller.style.pointerEvents = 'none';
+        } else {
+          me.scroller.style.pointerEvents = prePointerEvents;
+        }
+      }
+    });
+  };
+
+  BScroll.prototype._initDOMObserver = function () {
+    var _this = this;
+
+    if (typeof MutationObserver !== 'undefined') {
+      var observer = new MutationObserver(debounce(function (mutations) {
+        var shouldRefresh = mutations.some(function (mutation) {
+          return mutation.type !== 'attributes';
+        });
+        if (shouldRefresh) {
+          _this.refresh();
+        }
+      }, 60));
+      var config = {
+        attributes: false,
+        childList: true,
+        characterData: true
+      };
+      observer.observe(this.scroller, config);
+
+      this.on('destroy', function () {
+        observer.disconnect();
+      });
+    } else {
+      this._checkDOMUpdate();
+    }
+  };
+
+  BScroll.prototype._checkDOMUpdate = function () {
+    var scrollerRect = getRect(this.scroller);
+    var oldWidth = scrollerRect.width;
+    var oldHeight = scrollerRect.height;
+
+    function check() {
+      if (this.destroyed) {
+        return;
+      }
+      scrollerRect = getRect(this.scroller);
+      var newWidth = scrollerRect.width;
+      var newHeight = scrollerRect.height;
+
+      if (oldWidth !== newWidth || oldHeight !== newHeight) {
+        this.refresh();
+      }
+      oldWidth = newWidth;
+      oldHeight = newHeight;
+
+      next.call(this);
+    }
+
+    function next() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        check.call(_this2);
+      });
+    }
+
+    next.call(this);
   };
 
   BScroll.prototype.handleEvent = function (e) {
@@ -568,25 +671,6 @@ function initMixin(BScroll) {
   BScroll.prototype.disable = function () {
     this.enabled = false;
   };
-
-  BScroll.prototype._watchTransition = function () {
-    var isInTransition = false;
-    var me = this;
-    var prePointerEvents = this.scroller.style.pointerEvents || 'auto';
-    Object.defineProperty(this, 'isInTransition', {
-      get: function get() {
-        return isInTransition;
-      },
-      set: function set(newVal) {
-        isInTransition = newVal;
-        if (isInTransition) {
-          me.scroller.style.pointerEvents = 'none';
-        } else {
-          me.scroller.style.pointerEvents = prePointerEvents;
-        }
-      }
-    });
-  };
 }
 
 var ease = {
@@ -661,6 +745,11 @@ var cancelAnimationFrame = function () {
     window.clearTimeout(id);
   };
 }();
+
+var DIRECTION_UP = 1;
+var DIRECTION_DOWN = -1;
+var DIRECTION_LEFT = 1;
+var DIRECTION_RIGHT = -1;
 
 function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -769,8 +858,8 @@ function coreMixin(BScroll) {
 
     deltaX = this.hasHorizontalScroll ? deltaX : 0;
     deltaY = this.hasVerticalScroll ? deltaY : 0;
-    this.movingDirectionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
-    this.movingDirectionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
+    this.movingDirectionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0;
+    this.movingDirectionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0;
 
     var newX = this.x + deltaX;
     var newY = this.y + deltaY;
@@ -889,8 +978,8 @@ function coreMixin(BScroll) {
 
     var deltaX = newX - this.absStartX;
     var deltaY = newY - this.absStartY;
-    this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
-    this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
+    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0;
+    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0;
 
     this.endTime = getNow();
 
@@ -1481,10 +1570,19 @@ function snapMixin(BScroll) {
     var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ease.bounce;
 
     var snap = this.options.snap;
+
+    if (!this.pages) {
+      return;
+    }
+
     if (x >= this.pages.length) {
       x = this.pages.length - 1;
     } else if (x < 0) {
       x = 0;
+    }
+
+    if (!this.pages[x]) {
+      return;
     }
 
     if (y >= this.pages[x].length) {
@@ -1543,7 +1641,9 @@ function warn(msg) {
 }
 
 function wheelMixin(BScroll) {
-  BScroll.prototype.wheelTo = function (index) {
+  BScroll.prototype.wheelTo = function () {
+    var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
     if (this.options.wheel) {
       this.y = -index * this.itemHeight;
       this.scrollTo(0, this.y);
@@ -1811,14 +1911,17 @@ function pullDownMixin(BScroll) {
         _options$pullDownRefr3 = _options$pullDownRefr.stop,
         stop = _options$pullDownRefr3 === undefined ? 40 : _options$pullDownRefr3;
 
+    // check if a real pull down action
 
-    if (this.y > threshold) {
-      if (!this.pulling) {
-        this.pulling = true;
-        this.trigger('pullingDown');
-      }
-      this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce);
+    if (this.movingDirectionY !== DIRECTION_DOWN || this.y < threshold) {
+      return false;
     }
+
+    if (!this.pulling) {
+      this.pulling = true;
+      this.trigger('pullingDown');
+    }
+    this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce);
 
     return this.pulling;
   };
@@ -1850,7 +1953,7 @@ function pullUpMixin(BScroll) {
     this.on('scroll', checkToEnd);
 
     function checkToEnd(pos) {
-      if (this.movingDirectionY === 1 && pos.y <= this.maxScrollY + threshold) {
+      if (this.movingDirectionY === DIRECTION_UP && pos.y <= this.maxScrollY + threshold) {
         this.trigger('pullingUp');
         this.pullupWatching = false;
         this.off('scroll', checkToEnd);
@@ -1895,6 +1998,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.4.2';
+BScroll.Version = '1.5.0';
 
 export default BScroll;
