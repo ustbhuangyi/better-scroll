@@ -580,7 +580,7 @@ function initMixin(BScroll) {
 
       setTimeout(function () {
         check.call(_this2);
-      });
+      }, 1000);
     }
 
     next.call(this);
