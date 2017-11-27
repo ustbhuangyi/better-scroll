@@ -1,9 +1,9 @@
 <template>
   <page class="goods-list-view" :title="$t('examples.goodsList')">
-    <div slot="content">
-      <scroll ref="scroll">
+    <div slot="content" class="scroll-wrapper">
+      <div ref="scroll" class="scroll">
         <ul class="foods-wrapper">
-          <li @click="selectFood(food,$event)" v-for="food in foods" class="food-item border-1px">
+          <li v-for="food in foods" class="food-item border-1px">
             <div class="icon">
               <img width="57" height="57" :src="food.icon">
             </div>
@@ -20,7 +20,7 @@
             </div>
           </li>
         </ul>
-      </scroll>
+      </div>
     </div>
   </page>
 </template>
@@ -29,20 +29,32 @@
   import Page from 'example/components/page/page.vue'
   import Scroll from 'example/components/scroll/scroll'
   import data from 'example/data/goods-list.json'
+  import BScroll from 'scroll/index'
 
   let _foods = []
 
   data.goods.forEach((item) => {
     _foods = _foods.concat(item.foods)
   })
-  while (_foods.length < 100) {
-    _foods = _foods.concat(_foods)
-  }
 
   export default {
     data() {
       return {
         foods: _foods
+      }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.scroll)
+        this._appendFood()
+      })
+    },
+    methods: {
+      _appendFood() {
+        if (this.foods.length < 100) {
+          this.foods = this.foods.concat(_foods)
+          setTimeout(this._appendFood, 5000)
+        }
       }
     },
     components: {
@@ -59,7 +71,13 @@
     &.goods-list-view
       .wrapper
         .content
+          height: 100%
           margin: 0
+          .scroll-wrapper
+            height: 100%
+            .scroll
+              height: 100%
+
   .foods-wrapper
     .food-item
       display: flex

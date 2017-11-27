@@ -11,7 +11,7 @@ import {
   preventDefaultException
 } from '../util/dom'
 
-import { extend } from '../util/lang'
+import { extend, debounce } from '../util/lang'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -110,6 +110,8 @@ export function initMixin(BScroll) {
 
     this._watchTransition()
 
+    this._initDOMObserver()
+
     this.refresh()
 
     if (!this.options.snap) {
@@ -194,6 +196,84 @@ export function initMixin(BScroll) {
     if (this.options.wheel) {
       this._initWheel()
     }
+  }
+
+  BScroll.prototype._watchTransition = function () {
+    if (typeof Object.defineProperty !== 'function') {
+      return
+    }
+    let isInTransition = false
+    let me = this
+    let prePointerEvents = this.scroller.style.pointerEvents || 'auto'
+    Object.defineProperty(this, 'isInTransition', {
+      get() {
+        return isInTransition
+      },
+      set(newVal) {
+        isInTransition = newVal
+        if (isInTransition) {
+          me.scroller.style.pointerEvents = 'none'
+        } else {
+          me.scroller.style.pointerEvents = prePointerEvents
+        }
+      }
+    })
+  }
+
+  BScroll.prototype._initDOMObserver = function () {
+    if (typeof MutationObserver !== 'undefined') {
+      let observer = new MutationObserver(debounce((mutations) => {
+        let shouldRefresh = mutations.some((mutation) => {
+          return mutation.type !== 'attributes'
+        })
+        if (shouldRefresh) {
+          this.refresh()
+        }
+      }, 60))
+      const config = {
+        attributes: false,
+        childList: true,
+        characterData: true
+      }
+      observer.observe(this.scroller, config)
+
+      this.on('destroy', () => {
+        observer.disconnect()
+      })
+    } else {
+      this._checkDOMUpdate()
+    }
+  }
+
+  BScroll.prototype._checkDOMUpdate = function () {
+    let scrollerRect = getRect(this.scroller)
+    let oldWidth = scrollerRect.width
+    let oldHeight = scrollerRect.height
+
+    function check() {
+      if (this.destroyed) {
+        return
+      }
+      scrollerRect = getRect(this.scroller)
+      let newWidth = scrollerRect.width
+      let newHeight = scrollerRect.height
+
+      if (oldWidth !== newWidth || oldHeight !== newHeight) {
+        this.refresh()
+      }
+      oldWidth = newWidth
+      oldHeight = newHeight
+
+      next.call(this)
+    }
+
+    function next() {
+      setTimeout(() => {
+        check.call(this)
+      })
+    }
+
+    next.call(this)
   }
 
   BScroll.prototype.handleEvent = function (e) {
@@ -286,24 +366,5 @@ export function initMixin(BScroll) {
 
   BScroll.prototype.disable = function () {
     this.enabled = false
-  }
-
-  BScroll.prototype._watchTransition = function () {
-    let isInTransition = false
-    let me = this
-    let prePointerEvents = this.scroller.style.pointerEvents || 'auto'
-    Object.defineProperty(this, 'isInTransition', {
-      get() {
-        return isInTransition
-      },
-      set(newVal) {
-        isInTransition = newVal
-        if (isInTransition) {
-          me.scroller.style.pointerEvents = 'none'
-        } else {
-          me.scroller.style.pointerEvents = prePointerEvents
-        }
-      }
-    })
   }
 }

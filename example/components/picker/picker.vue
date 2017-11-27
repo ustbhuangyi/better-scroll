@@ -201,11 +201,11 @@
         wheel.wheelTo(dist)
       },
       refresh() {
-        setTimeout(() => {
+        this.$nextTick(() => {
           this.wheels.forEach((wheel, index) => {
             wheel.refresh()
           })
-        }, 200)
+        })
       },
       _createWheel(wheelWrapper, i) {
         if (!this.wheels[i]) {
