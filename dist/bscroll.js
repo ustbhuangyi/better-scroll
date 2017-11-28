@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.0
+ * better-normal-scroll v1.5.1
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -300,25 +300,6 @@ function extend(target) {
   return target;
 }
 
-function debounce(func, delay) {
-  var timer = void 0;
-
-  return function () {
-    var _this = this;
-
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(function () {
-      func.apply(_this, args);
-    }, delay);
-  };
-}
-
 var DEFAULT_OPTIONS = {
   startX: 0,
   startY: 0,
@@ -530,18 +511,19 @@ function initMixin(BScroll) {
     var _this = this;
 
     if (typeof MutationObserver !== 'undefined') {
-      var observer = new MutationObserver(debounce(function (mutations) {
+      var observer = new MutationObserver(function (mutations) {
         var shouldRefresh = mutations.some(function (mutation) {
           return mutation.type !== 'attributes';
         });
         if (shouldRefresh) {
           _this.refresh();
         }
-      }, 60));
+      });
       var config = {
-        attributes: false,
+        attributes: true,
         childList: true,
-        characterData: true
+        characterData: true,
+        subtree: true
       };
       observer.observe(this.scroller, config);
 
@@ -2004,7 +1986,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.0';
+BScroll.Version = '1.5.1';
 
 return BScroll;
 
