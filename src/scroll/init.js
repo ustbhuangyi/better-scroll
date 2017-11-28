@@ -223,17 +223,10 @@ export function initMixin(BScroll) {
   BScroll.prototype._initDOMObserver = function () {
     if (typeof MutationObserver !== 'undefined') {
       let observer = new MutationObserver((mutations) => {
-        let shouldRefresh = mutations.some((mutation) => {
-          return mutation.type !== 'attributes'
-        })
-        if (shouldRefresh) {
-          this.refresh()
-        }
+        this.refresh()
       })
       const config = {
-        attributes: true,
         childList: true,
-        characterData: true,
         subtree: true
       }
       observer.observe(this.scroller, config)
