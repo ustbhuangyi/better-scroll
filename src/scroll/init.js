@@ -11,7 +11,7 @@ import {
   preventDefaultException
 } from '../util/dom'
 
-import { extend, debounce } from '../util/lang'
+import { extend } from '../util/lang'
 
 const DEFAULT_OPTIONS = {
   startX: 0,
@@ -222,18 +222,19 @@ export function initMixin(BScroll) {
 
   BScroll.prototype._initDOMObserver = function () {
     if (typeof MutationObserver !== 'undefined') {
-      let observer = new MutationObserver(debounce((mutations) => {
+      let observer = new MutationObserver((mutations) => {
         let shouldRefresh = mutations.some((mutation) => {
           return mutation.type !== 'attributes'
         })
         if (shouldRefresh) {
           this.refresh()
         }
-      }, 60))
+      })
       const config = {
-        attributes: false,
+        attributes: true,
         childList: true,
-        characterData: true
+        characterData: true,
+        subtree: true
       }
       observer.observe(this.scroller, config)
 
