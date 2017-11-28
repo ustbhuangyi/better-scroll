@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.1
+ * better-normal-scroll v1.5.2
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -484,18 +484,18 @@ function initMixin(BScroll) {
       return;
     }
     var isInTransition = false;
-    var me = this;
     var prePointerEvents = this.scroller.style.pointerEvents || 'auto';
+    // fix issue #359
+    var el = this.scroller.children.length ? this.scroller.children : [this.scroller];
     Object.defineProperty(this, 'isInTransition', {
       get: function get() {
         return isInTransition;
       },
       set: function set(newVal) {
         isInTransition = newVal;
-        if (isInTransition) {
-          me.scroller.style.pointerEvents = 'none';
-        } else {
-          me.scroller.style.pointerEvents = prePointerEvents;
+        var pointerEvents = isInTransition ? 'none' : prePointerEvents;
+        for (var i = 0; i < el.length; i++) {
+          el[i].style.pointerEvents = pointerEvents;
         }
       }
     });
@@ -506,17 +506,10 @@ function initMixin(BScroll) {
 
     if (typeof MutationObserver !== 'undefined') {
       var observer = new MutationObserver(function (mutations) {
-        var shouldRefresh = mutations.some(function (mutation) {
-          return mutation.type !== 'attributes';
-        });
-        if (shouldRefresh) {
-          _this.refresh();
-        }
+        _this.refresh();
       });
       var config = {
-        attributes: true,
         childList: true,
-        characterData: true,
         subtree: true
       };
       observer.observe(this.scroller, config);
@@ -1980,6 +1973,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.1';
+BScroll.Version = '1.5.2';
 
 export default BScroll;
