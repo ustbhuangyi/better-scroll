@@ -203,18 +203,18 @@ export function initMixin(BScroll) {
       return
     }
     let isInTransition = false
-    let me = this
     let prePointerEvents = this.scroller.style.pointerEvents || 'auto'
+    // fix issue #359
+    let el = this.scroller.children.length ? this.scroller.children : [this.scroller]
     Object.defineProperty(this, 'isInTransition', {
       get() {
         return isInTransition
       },
       set(newVal) {
         isInTransition = newVal
-        if (isInTransition) {
-          me.scroller.style.pointerEvents = 'none'
-        } else {
-          me.scroller.style.pointerEvents = prePointerEvents
+        let pointerEvents = isInTransition ? 'none' : prePointerEvents
+        for (let i = 0; i < el.length; i++) {
+          el[i].style.pointerEvents = pointerEvents
         }
       }
     })
