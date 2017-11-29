@@ -131,6 +131,7 @@ interface BScroll {
   enabled: boolean;
   isInTransition: boolean;
   isAnimating: boolean;
+  options: BScroll.BsOption;
 
   refresh(): void;
   // 启用 better-scroll, 默认 开启
