@@ -164,3 +164,8 @@ let scroll = new BScroll('.wrapper',{
    - 类型：Boolean
    - 默认值：根据当前浏览器环境计算而来（不建议修改）
    - 作用：当在移动端环境（支持 touch 事件），disableTouch 会计算为 false，这样会监听 touch 相关的事件，而在 PC 环境，disableTouch 会计算为 true，就不会监听 touch 相关事件。不建议修改该属性，除非你知道你在做什么。
+   
+## observeDOM(v1.5.3+)  
+   - 类型：Boolean
+   - 默认值：true
+   - 作用：会检测 scroller 内部 DOM 变化，自动调用 refresh 方法重新计算来保证滚动的正确性。它会额外增加一些性能开销，如果你能明确地知道 scroller 内部 DOM 的变化时机并手动调用 refresh 重新计算，你可以把该选项设置为 false。

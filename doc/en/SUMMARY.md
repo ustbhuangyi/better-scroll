@@ -38,6 +38,7 @@
   - [bindToWrapper](options.md#bindtowrapper)
   - [disableMouse](options.md#disablemouse)
   - [disableTouch](options.md#disabletouch)
+  - [observeDOM](options.md#observedom)
 - [Options / Advanced](options-advanced.md)
   - [wheel](options-advanced.md#wheel)
   - [snap](options-advanced.md#snap)
