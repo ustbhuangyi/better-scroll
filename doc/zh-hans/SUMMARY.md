@@ -38,7 +38,7 @@
   - [bindToWrapper](options.md#bindtowrapper)
   - [disableMouse](options.md#disablemouse)
   - [disableTouch](options.md#disabletouch)
-  - [observeDOM](options.md#observedom)
+  - [observeDOM](options.md#observedomv153)
 - [选项 / 高级](options-advanced.md)
   - [wheel](options-advanced.md#wheel)
   - [snap](options-advanced.md#snap)

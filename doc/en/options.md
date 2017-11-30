@@ -166,7 +166,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
    - Default: get the result by current browser environment (modification is not recommended)
    - Usage: When in mobile environment (supporting touch event),  disableMouse will be false and touch event will be listened. While in PC environment, disableMouse will be true and touch event will not be listened. We suggest not modifying this unless you konw what you are doing.
    
-observeDOM(v1.5.3+)  
+## observeDOM(v1.5.3+)  
    - Type：Boolean
    - Default：true
    - Usage：It will listen the DOM change inside of the scroller，and automatically call refresh method which will recalculate to ensure the correctness of the scroll. However, it will add some additional performance overhead，if you can clearly know the DOM change inside of the scroller and manually call the refresh method to recalculate, you can set this option to false.  
