@@ -45,6 +45,7 @@ const DEFAULT_OPTIONS = {
   bindToWrapper: false,
   disableMouse: hasTouch,
   disableTouch: !hasTouch,
+  observeDOM: true,
   /**
    * for picker
    * wheel: {
@@ -110,7 +111,9 @@ export function initMixin(BScroll) {
 
     this._watchTransition()
 
-    this._initDOMObserver()
+    if (this.observeDOM) {
+      this._initDOMObserver()
+    }
 
     this.refresh()
 
@@ -202,17 +205,17 @@ export function initMixin(BScroll) {
     if (typeof Object.defineProperty !== 'function') {
       return
     }
+    let me = this
     let isInTransition = false
-    let prePointerEvents = this.scroller.style.pointerEvents || 'auto'
-    // fix issue #359
-    let el = this.scroller.children.length ? this.scroller.children : [this.scroller]
     Object.defineProperty(this, 'isInTransition', {
       get() {
         return isInTransition
       },
       set(newVal) {
         isInTransition = newVal
-        let pointerEvents = isInTransition ? 'none' : prePointerEvents
+        // fix issue #359
+        let el = me.scroller.children.length ? me.scroller.children : [me.scroller]
+        let pointerEvents = isInTransition ? 'none' : 'auto'
         for (let i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents
         }
@@ -222,10 +225,38 @@ export function initMixin(BScroll) {
 
   BScroll.prototype._initDOMObserver = function () {
     if (typeof MutationObserver !== 'undefined') {
+      let timer
       let observer = new MutationObserver((mutations) => {
-        this.refresh()
+        // don't do any refresh during the transition
+        if (this.isInTransition) {
+          return
+        }
+        let immediateRefresh = false
+        let deferredRefresh = false
+        for (let i = 0; i < mutations.length; i++) {
+          const mutation = mutations[i]
+          if (mutation.type !== 'attributes') {
+            immediateRefresh = true
+            break
+          } else {
+            if (mutation.target !== this.scroller) {
+              deferredRefresh = true
+              break
+            }
+          }
+        }
+        if (immediateRefresh) {
+          this.refresh()
+        } else if (deferredRefresh) {
+          // attributes changes too often
+          clearTimeout(timer)
+          timer = setTimeout(() => {
+            this.refresh()
+          }, 60)
+        }
       })
       const config = {
+        attributes: true,
         childList: true,
         subtree: true
       }

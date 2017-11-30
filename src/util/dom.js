@@ -1,3 +1,5 @@
+import { isWeChatDevTools } from './env'
+
 let elementStyle = document.createElement('div').style
 
 let vendor = (() => {
@@ -57,7 +59,8 @@ export function offset(el) {
 let transform = prefixStyle('transform')
 
 export const hasPerspective = prefixStyle('perspective') in elementStyle
-export const hasTouch = 'ontouchstart' in window
+// fix issue #361
+export const hasTouch = 'ontouchstart' in window || isWeChatDevTools
 export const hasTransform = transform !== false
 export const hasTransition = prefixStyle('transition') in elementStyle
 
