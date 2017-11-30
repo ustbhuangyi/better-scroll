@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.2
+ * better-normal-scroll v1.5.3
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -136,6 +136,10 @@ function eventMixin(BScroll) {
   };
 }
 
+var ua = navigator.userAgent;
+
+var isWeChatDevTools = /wechatdevtools/.test(ua);
+
 var elementStyle = document.createElement('div').style;
 
 var vendor = function () {
@@ -195,7 +199,8 @@ function offset(el) {
 var transform = prefixStyle('transform');
 
 var hasPerspective = prefixStyle('perspective') in elementStyle;
-var hasTouch = 'ontouchstart' in window;
+// fix issue #361
+var hasTouch = 'ontouchstart' in window || isWeChatDevTools;
 var hasTransform = transform !== false;
 var hasTransition = prefixStyle('transition') in elementStyle;
 
@@ -332,6 +337,7 @@ var DEFAULT_OPTIONS = {
   bindToWrapper: false,
   disableMouse: hasTouch,
   disableTouch: !hasTouch,
+  observeDOM: true,
   /**
    * for picker
    * wheel: {
@@ -397,7 +403,9 @@ function initMixin(BScroll) {
 
     this._watchTransition();
 
-    this._initDOMObserver();
+    if (this.options.observeDOM) {
+      this._initDOMObserver();
+    }
 
     this.refresh();
 
@@ -489,17 +497,17 @@ function initMixin(BScroll) {
     if (typeof Object.defineProperty !== 'function') {
       return;
     }
+    var me = this;
     var isInTransition = false;
-    var prePointerEvents = this.scroller.style.pointerEvents || 'auto';
-    // fix issue #359
-    var el = this.scroller.children.length ? this.scroller.children : [this.scroller];
     Object.defineProperty(this, 'isInTransition', {
       get: function get() {
         return isInTransition;
       },
       set: function set(newVal) {
         isInTransition = newVal;
-        var pointerEvents = isInTransition ? 'none' : prePointerEvents;
+        // fix issue #359
+        var el = me.scroller.children.length ? me.scroller.children : [me.scroller];
+        var pointerEvents = isInTransition ? 'none' : 'auto';
         for (var i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents;
         }
@@ -511,10 +519,38 @@ function initMixin(BScroll) {
     var _this = this;
 
     if (typeof MutationObserver !== 'undefined') {
+      var timer = void 0;
       var observer = new MutationObserver(function (mutations) {
-        _this.refresh();
+        // don't do any refresh during the transition
+        if (_this.isInTransition) {
+          return;
+        }
+        var immediateRefresh = false;
+        var deferredRefresh = false;
+        for (var i = 0; i < mutations.length; i++) {
+          var mutation = mutations[i];
+          if (mutation.type !== 'attributes') {
+            immediateRefresh = true;
+            break;
+          } else {
+            if (mutation.target !== _this.scroller) {
+              deferredRefresh = true;
+              break;
+            }
+          }
+        }
+        if (immediateRefresh) {
+          _this.refresh();
+        } else if (deferredRefresh) {
+          // attributes changes too often
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            _this.refresh();
+          }, 60);
+        }
       });
       var config = {
+        attributes: true,
         childList: true,
         subtree: true
       };
@@ -1979,7 +2015,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.2';
+BScroll.Version = '1.5.3';
 
 return BScroll;
 

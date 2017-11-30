@@ -111,7 +111,7 @@ export function initMixin(BScroll) {
 
     this._watchTransition()
 
-    if (this.observeDOM) {
+    if (this.options.observeDOM) {
       this._initDOMObserver()
     }
 
