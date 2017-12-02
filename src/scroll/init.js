@@ -227,8 +227,8 @@ export function initMixin(BScroll) {
     if (typeof MutationObserver !== 'undefined') {
       let timer
       let observer = new MutationObserver((mutations) => {
-        // don't do any refresh during the transition、pulling up load and pulling down refresh
-        if (this.isInTransition || this.pulling || !this.pullupWatching) {
+        // don't do any refresh during the transition, or outside of the boundaries
+        if (this._shouldNotRefresh()) {
           return
         }
         let immediateRefresh = false
@@ -268,6 +268,12 @@ export function initMixin(BScroll) {
     } else {
       this._checkDOMUpdate()
     }
+  }
+
+  BScroll.prototype._shouldNotRefresh = function () {
+    let outsideBoundaries = this.x > 0 || this.x < this.maxScrollX || this.y > 0 || this.y < this.maxScrollY
+
+    return this.isInTransition || outsideBoundaries
   }
 
   BScroll.prototype._checkDOMUpdate = function () {
