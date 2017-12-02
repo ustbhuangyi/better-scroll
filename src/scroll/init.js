@@ -227,8 +227,8 @@ export function initMixin(BScroll) {
     if (typeof MutationObserver !== 'undefined') {
       let timer
       let observer = new MutationObserver((mutations) => {
-        // don't do any refresh during the transition
-        if (this.isInTransition) {
+        // don't do any refresh during the transition、pulling up load and pulling down refresh
+        if (this.isInTransition || this.pulling || !this.pullupWatching) {
           return
         }
         let immediateRefresh = false
