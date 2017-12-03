@@ -273,7 +273,7 @@ export function initMixin(BScroll) {
   BScroll.prototype._shouldNotRefresh = function () {
     let outsideBoundaries = this.x > 0 || this.x < this.maxScrollX || this.y > 0 || this.y < this.maxScrollY
 
-    return this.isInTransition || outsideBoundaries
+    return this.isInTransition || this.stopFromTransition || outsideBoundaries
   }
 
   BScroll.prototype._checkDOMUpdate = function () {

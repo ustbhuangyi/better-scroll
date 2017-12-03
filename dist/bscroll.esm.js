@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.3
+ * better-normal-scroll v1.5.4
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -515,8 +515,8 @@ function initMixin(BScroll) {
     if (typeof MutationObserver !== 'undefined') {
       var timer = void 0;
       var observer = new MutationObserver(function (mutations) {
-        // don't do any refresh during the transition
-        if (_this.isInTransition) {
+        // don't do any refresh during the transition, or outside of the boundaries
+        if (_this._shouldNotRefresh()) {
           return;
         }
         var immediateRefresh = false;
@@ -556,6 +556,12 @@ function initMixin(BScroll) {
     } else {
       this._checkDOMUpdate();
     }
+  };
+
+  BScroll.prototype._shouldNotRefresh = function () {
+    var outsideBoundaries = this.x > 0 || this.x < this.maxScrollX || this.y > 0 || this.y < this.maxScrollY;
+
+    return this.isInTransition || this.stopFromTransition || outsideBoundaries;
   };
 
   BScroll.prototype._checkDOMUpdate = function () {
@@ -2009,6 +2015,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.3';
+BScroll.Version = '1.5.4';
 
 export default BScroll;
