@@ -5,6 +5,7 @@ doc/
 example/
 static/
 .idea/
+.github/
 postcss.config.js
 .bin/
 .DS_Store
