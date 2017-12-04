@@ -69,6 +69,7 @@
 
   .page
     &.goods-list-view
+      background-color: white
       .wrapper
         .content
           height: 100%
