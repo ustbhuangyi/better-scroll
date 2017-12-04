@@ -66,6 +66,10 @@ A fantastic mobile ui lib implement by Vue: [cube-ui](https://github.com/didi/cu
 
 Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
+## Communication
+
+![QR Code](http://webapp.didistatic.com/static/webapp/shield/better-scroll-qq.jpg)
+
 ## Demo
 
 Visit [Demo](https://ustbhuangyi.github.io/better-scroll/)
