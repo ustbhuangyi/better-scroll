@@ -1,4 +1,4 @@
-import { getRect, prepend } from '../util/dom'
+import { getRect, prepend, removeChild } from '../util/dom'
 import { ease } from '../util/ease'
 
 export function snapMixin(BScroll) {
@@ -139,6 +139,14 @@ export function snapMixin(BScroll) {
         )
       })
     }
+
+    this.on('destroy', () => {
+      if (snap.loop) {
+        let children = this.scroller.children
+        removeChild(this.scroller, children[children.length - 1])
+        removeChild(this.scroller, children[0])
+      }
+    })
   }
 
   BScroll.prototype._nearestSnap = function (x, y) {

@@ -60,6 +60,10 @@ export function scrollbarMixin(BScroll) {
         }
       })
     }
+
+    this.on('destroy', () => {
+      this._removeScrollBars()
+    })
   }
 
   BScroll.prototype._insertScrollBar = function (scrollbar) {

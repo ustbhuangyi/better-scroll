@@ -146,3 +146,7 @@ export function prepend(el, target) {
 export function before(el, target) {
   target.parentNode.insertBefore(el, target)
 }
+
+export function removeChild(el, child) {
+  el.removeChild(child)
+}

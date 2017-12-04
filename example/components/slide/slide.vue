@@ -47,17 +47,7 @@
       }
     },
     mounted() {
-      setTimeout(() => {
-        this._setSlideWidth()
-        if (this.showDot) {
-          this._initDots()
-        }
-        this._initSlide()
-
-        if (this.autoPlay) {
-          this._play()
-        }
-      }, 20)
+      this.update()
 
       window.addEventListener('resize', () => {
         if (!this.slide || !this.slide.enabled) {
@@ -103,12 +93,33 @@
       clearTimeout(this.timer)
     },
     methods: {
+      update() {
+        if (this.slide) {
+          this.slide.destroy()
+        }
+        this.$nextTick(() => {
+          this.init()
+        })
+      },
       refresh() {
         this._setSlideWidth(true)
         this.slide.refresh()
       },
       next() {
         this.slide.next()
+      },
+      init() {
+        clearTimeout(this.timer)
+        this.currentPageIndex = 0
+        this._setSlideWidth()
+        if (this.showDot) {
+          this._initDots()
+        }
+        this._initSlide()
+
+        if (this.autoPlay) {
+          this._play()
+        }
       },
       _setSlideWidth(isResize) {
         this.children = this.$refs.slideGroup.children
