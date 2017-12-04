@@ -1,11 +1,13 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
     <div class="scroll-content">
-      <slot>
-        <ul ref="list" class="list-content">
-          <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
-        </ul>
-      </slot>
+      <div ref="listWrapper">
+        <slot>
+          <ul class="list-content">
+            <li @click="clickItem($event,item)" class="list-item" v-for="item in data">{{item}}</li>
+          </ul>
+        </slot>
+      </div>
       <slot name="pullup"
             :pullUpLoad="pullUpLoad"
             :isPullUpLoad="isPullUpLoad"
@@ -142,8 +144,8 @@
         if (!this.$refs.wrapper) {
           return
         }
-        if (this.$refs.list && (this.pullDownRefresh || this.pullUpLoad)) {
-          this.$refs.list.style.minHeight = `${getRect(this.$refs.wrapper).height + 1}px`
+        if (this.$refs.listWrapper && (this.pullDownRefresh || this.pullUpLoad)) {
+          this.$refs.listWrapper.style.minHeight = `${getRect(this.$refs.wrapper).height + 1}px`
         }
 
         let options = {
