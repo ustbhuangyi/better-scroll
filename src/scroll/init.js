@@ -337,8 +337,8 @@ export function initMixin(BScroll) {
         if (this.enabled && !e._constructed) {
           if (!preventDefaultException(e.target, this.options.preventDefaultException)) {
             e.preventDefault()
+            e.stopPropagation()
           }
-          e.stopPropagation()
         }
         break
     }
