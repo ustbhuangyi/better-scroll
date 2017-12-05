@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.4
+ * better-normal-scroll v1.5.5
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -279,6 +279,10 @@ function prepend(el, target) {
 
 function before(el, target) {
   target.parentNode.insertBefore(el, target);
+}
+
+function removeChild(el, child) {
+  el.removeChild(child);
 }
 
 function getNow() {
@@ -627,8 +631,8 @@ function initMixin(BScroll) {
         if (this.enabled && !e._constructed) {
           if (!preventDefaultException(e.target, this.options.preventDefaultException)) {
             e.preventDefault();
+            e.stopPropagation();
           }
-          e.stopPropagation();
         }
         break;
     }
@@ -1363,16 +1367,12 @@ function coreMixin(BScroll) {
   };
 
   BScroll.prototype.destroy = function () {
+    this.destroyed = true;
+    this.trigger('destroy');
+
     this._removeDOMEvents();
     // remove custom events
     this._events = {};
-
-    if (this.options.scrollbar) {
-      this._removeScrollBars();
-    }
-
-    this.destroyed = true;
-    this.trigger('destroy');
   };
 }
 
@@ -1508,6 +1508,14 @@ function snapMixin(BScroll) {
         _this.goToPage(_this.currentPage.pageX + _this.directionX, _this.currentPage.pageY + _this.directionY, time);
       });
     }
+
+    this.on('destroy', function () {
+      if (snap.loop) {
+        var _children = _this.scroller.children;
+        removeChild(_this.scroller, _children[_children.length - 1]);
+        removeChild(_this.scroller, _children[0]);
+      }
+    });
   };
 
   BScroll.prototype._nearestSnap = function (x, y) {
@@ -1750,6 +1758,10 @@ function scrollbarMixin(BScroll) {
         }
       });
     }
+
+    this.on('destroy', function () {
+      _this._removeScrollBars();
+    });
   };
 
   BScroll.prototype._insertScrollBar = function (scrollbar) {
@@ -2015,6 +2027,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.4';
+BScroll.Version = '1.5.5';
 
 export default BScroll;
