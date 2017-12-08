@@ -26,6 +26,9 @@ function prefixStyle(style) {
   }
 
   if (vendor === 'standard') {
+    if (style === 'transitionEnd') {
+      return 'transitionend'
+    }
     return style
   }
 
