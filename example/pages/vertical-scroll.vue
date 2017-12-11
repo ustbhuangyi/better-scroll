@@ -40,7 +40,9 @@
               :pullUpLoad="pullUpLoadObj"
               :startY="parseInt(startY)"
               @pullingDown="onPullingDown"
-              @pullingUp="onPullingUp">
+              @pullingUp="onPullingUp"
+              @click="clickItem"
+      >
       </scroll>
     </div>
     <div slot="methods">
@@ -156,7 +158,9 @@
             this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
           } else {
             // 如果没有新数据
-            this.$refs.scroll.forceUpdate()
+            if (this.$refs.scroll) {
+              this.$refs.scroll.forceUpdate()
+            }
           }
         }, 2000)
       },
@@ -174,9 +178,14 @@
             this.items = this.items.concat(newPage)
           } else {
             // 如果没有新数据
-            this.$refs.scroll.forceUpdate()
+            if (this.$refs.scroll) {
+              this.$refs.scroll.forceUpdate()
+            }
           }
         }, 1500)
+      },
+      clickItem() {
+        this.$router.back()
       },
       updateScrollbar(val) {
         this.scrollbar = val

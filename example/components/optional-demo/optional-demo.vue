@@ -100,7 +100,8 @@
           color: $color-main
       .page-content
         flex: 1 0 95%
-        overflow scroll
+        overflow: auto
+        -webkit-overflow-scrolling: touch
         .title
           font-size: 1.5rem
           font-weight: 500

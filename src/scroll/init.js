@@ -215,7 +215,7 @@ export function initMixin(BScroll) {
         isInTransition = newVal
         // fix issue #359
         let el = me.scroller.children.length ? me.scroller.children : [me.scroller]
-        let pointerEvents = isInTransition ? 'none' : 'auto'
+        let pointerEvents = (isInTransition && !me.pulling) ? 'none' : 'auto'
         for (let i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents
         }
@@ -251,7 +251,9 @@ export function initMixin(BScroll) {
           // attributes changes too often
           clearTimeout(timer)
           timer = setTimeout(() => {
-            this.refresh()
+            if (!this._shouldNotRefresh()) {
+              this.refresh()
+            }
           }, 60)
         }
       })

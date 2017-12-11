@@ -25,14 +25,8 @@
     data() {
       return {
         title: this.$i18n.t('indexListPage.title'),
-        cityData: []
+        cityData: cityData
       }
-    },
-    mounted() {
-      setTimeout(() => {
-        this.cityData = cityData
-        window.lal = this.$refs.lal
-      }, 100)
     },
     computed: {
       data() {
@@ -54,6 +48,7 @@
     },
     methods: {
       selectItem(item) {
+        this.$router.back()
         console.log(item)
       },
       clickTitle(title) {
