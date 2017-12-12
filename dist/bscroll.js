@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.5
+ * better-normal-scroll v1.5.6
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -166,6 +166,9 @@ function prefixStyle(style) {
   }
 
   if (vendor === 'standard') {
+    if (style === 'transitionEnd') {
+      return 'transitionend';
+    }
     return style;
   }
 
@@ -511,7 +514,7 @@ function initMixin(BScroll) {
         isInTransition = newVal;
         // fix issue #359
         var el = me.scroller.children.length ? me.scroller.children : [me.scroller];
-        var pointerEvents = isInTransition ? 'none' : 'auto';
+        var pointerEvents = isInTransition && !me.pulling ? 'none' : 'auto';
         for (var i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents;
         }
@@ -549,7 +552,9 @@ function initMixin(BScroll) {
           // attributes changes too often
           clearTimeout(timer);
           timer = setTimeout(function () {
-            _this.refresh();
+            if (!_this._shouldNotRefresh()) {
+              _this.refresh();
+            }
           }, 60);
         }
       });
@@ -960,11 +965,16 @@ function coreMixin(BScroll) {
       y: this.y
     });
 
-    var preventClick = this.stopFromTransition;
-    this.stopFromTransition = false;
+    this.isInTransition = false;
 
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
+      return;
+    }
+
+    // check if it is a click operation
+    if (this._checkClick(e)) {
+      this.trigger('scrollCancel');
       return;
     }
 
@@ -972,34 +982,10 @@ function coreMixin(BScroll) {
     if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
       return;
     }
-    this.isInTransition = false;
+
     // ensures that the last position is rounded
     var newX = Math.round(this.x);
     var newY = Math.round(this.y);
-
-    // we scrolled less than 15 pixels
-    if (!this.moved) {
-      if (this.options.wheel) {
-        if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
-          var index = Math.abs(Math.round(newY / this.itemHeight));
-          var _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight);
-          this.target = this.items[index + _offset];
-        }
-        this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe);
-      } else {
-        if (!preventClick) {
-          if (this.options.tap) {
-            tap(e, this.options.tap);
-          }
-
-          if (this.options.click) {
-            click(e);
-          }
-        }
-      }
-      this.trigger('scrollCancel');
-      return;
-    }
 
     this.scrollTo(newX, newY);
 
@@ -1065,6 +1051,38 @@ function coreMixin(BScroll) {
       x: this.x,
       y: this.y
     });
+  };
+
+  BScroll.prototype._checkClick = function (e) {
+    // when in the process of pulling down, it should not prevent click
+    var preventClick = this.stopFromTransition && !this.pulling;
+    this.stopFromTransition = false;
+
+    // we scrolled less than 15 pixels
+    if (!this.moved) {
+      if (this.options.wheel) {
+        if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
+          var index = Math.abs(Math.round(this.y / this.itemHeight));
+          var _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight);
+          this.target = this.items[index + _offset];
+        }
+        this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe);
+        return true;
+      } else {
+        if (!preventClick) {
+          if (this.options.tap) {
+            tap(e, this.options.tap);
+          }
+
+          if (this.options.click) {
+            click(e);
+          }
+          return true;
+        }
+        return false;
+      }
+    }
+    return false;
   };
 
   BScroll.prototype._resize = function () {
@@ -1306,16 +1324,18 @@ function coreMixin(BScroll) {
     var easeing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ease.bounce;
 
     var x = this.x;
-    if (!this.hasHorizontalScroll || x > 0) {
+    var roundX = Math.round(x);
+    if (!this.hasHorizontalScroll || roundX > 0) {
       x = 0;
-    } else if (x < this.maxScrollX) {
+    } else if (roundX < this.maxScrollX) {
       x = this.maxScrollX;
     }
 
     var y = this.y;
-    if (!this.hasVerticalScroll || y > 0) {
+    var roundY = Math.round(y);
+    if (!this.hasVerticalScroll || roundY > 0) {
       y = 0;
-    } else if (y < this.maxScrollY) {
+    } else if (roundY < this.maxScrollY) {
       y = this.maxScrollY;
     }
 
@@ -2033,7 +2053,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.5';
+BScroll.Version = '1.5.6';
 
 return BScroll;
 
