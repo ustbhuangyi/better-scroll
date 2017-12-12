@@ -153,14 +153,15 @@
         // 模拟更新数据
         console.log('pulling down and load data')
         setTimeout(() => {
+          if (this._isDestroyed) {
+            return
+          }
           if (Math.random() > 0.5) {
             // 如果有新数据
             this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
           } else {
             // 如果没有新数据
-            if (this.$refs.scroll) {
-              this.$refs.scroll.forceUpdate()
-            }
+            this.$refs.scroll.forceUpdate()
           }
         }, 2000)
       },
@@ -168,6 +169,9 @@
         // 更新数据
         console.log('pulling up and load data')
         setTimeout(() => {
+          if (this._isDestroyed) {
+            return
+          }
           if (Math.random() > 0.5) {
             // 如果有新数据
             let newPage = []
@@ -178,9 +182,7 @@
             this.items = this.items.concat(newPage)
           } else {
             // 如果没有新数据
-            if (this.$refs.scroll) {
-              this.$refs.scroll.forceUpdate()
-            }
+            this.$refs.scroll.forceUpdate()
           }
         }, 1500)
       },
