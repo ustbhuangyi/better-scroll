@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.5.6
+ * better-normal-scroll v1.6.0
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1503,7 +1503,7 @@ function snapMixin(BScroll) {
       }
 
       var initPage = snap.loop ? 1 : 0;
-      _this.goToPage(_this.currentPage.pageX || initPage, _this.currentPage.pageY || 0, 0);
+      _this._goToPage(_this.currentPage.pageX || initPage, _this.currentPage.pageY || 0, 0);
 
       // Update snap threshold if needed
       var snapThreshold = snap.threshold;
@@ -1519,10 +1519,10 @@ function snapMixin(BScroll) {
     this.on('scrollEnd', function () {
       if (snap.loop) {
         if (_this.currentPage.pageX === 0) {
-          _this.goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0);
+          _this._goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0);
         }
         if (_this.currentPage.pageX === _this.pages.length - 1) {
-          _this.goToPage(1, _this.currentPage.pageY, 0);
+          _this._goToPage(1, _this.currentPage.pageY, 0);
         }
       }
     });
@@ -1531,7 +1531,7 @@ function snapMixin(BScroll) {
       this.on('flick', function () {
         var time = snap.speed || Math.max(Math.max(Math.min(Math.abs(_this.x - _this.startX), 1000), Math.min(Math.abs(_this.y - _this.startY), 1000)), 300);
 
-        _this.goToPage(_this.currentPage.pageX + _this.directionX, _this.currentPage.pageY + _this.directionY, time);
+        _this._goToPage(_this.currentPage.pageX + _this.directionX, _this.currentPage.pageY + _this.directionY, time);
       });
     }
 
@@ -1617,12 +1617,14 @@ function snapMixin(BScroll) {
     };
   };
 
-  BScroll.prototype.goToPage = function (x, y, time) {
+  BScroll.prototype._goToPage = function (x) {
+    var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var time = arguments[2];
     var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ease.bounce;
 
     var snap = this.options.snap;
 
-    if (!this.pages) {
+    if (!snap || !this.pages) {
       return;
     }
 
@@ -1656,6 +1658,22 @@ function snapMixin(BScroll) {
     this.scrollTo(posX, posY, time, easing);
   };
 
+  BScroll.prototype.goToPage = function (x, y, time, easing) {
+    var snap = this.options.snap;
+    if (snap) {
+      if (snap.loop) {
+        var len = this.pages.length - 2;
+        if (x >= len) {
+          x = len - 1;
+        } else if (x < 0) {
+          x = 0;
+        }
+        x += 1;
+      }
+      this._goToPage(x, y, time, easing);
+    }
+  };
+
   BScroll.prototype.next = function (time, easing) {
     var x = this.currentPage.pageX;
     var y = this.currentPage.pageY;
@@ -1666,7 +1684,7 @@ function snapMixin(BScroll) {
       y++;
     }
 
-    this.goToPage(x, y, time, easing);
+    this._goToPage(x, y, time, easing);
   };
 
   BScroll.prototype.prev = function (time, easing) {
@@ -1679,11 +1697,21 @@ function snapMixin(BScroll) {
       y--;
     }
 
-    this.goToPage(x, y, time, easing);
+    this._goToPage(x, y, time, easing);
   };
 
   BScroll.prototype.getCurrentPage = function () {
-    return this.options.snap && this.currentPage;
+    var snap = this.options.snap;
+    if (snap) {
+      if (snap.loop) {
+        var currentPage = extend({}, this.currentPage, {
+          pageX: this.currentPage.pageX - 1
+        });
+        return currentPage;
+      }
+      return this.currentPage;
+    }
+    return null;
   };
 }
 
@@ -2053,7 +2081,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.5.6';
+BScroll.Version = '1.6.0';
 
 return BScroll;
 
