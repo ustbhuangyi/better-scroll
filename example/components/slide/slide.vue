@@ -169,10 +169,9 @@
         this.dots = new Array(this.children.length)
       },
       _play() {
-        let pageIndex = this.currentPageIndex + 1
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
-          this.slide.goToPage(pageIndex, 0, 400)
+          this.slide.next()
         }, this.interval)
       }
     }
