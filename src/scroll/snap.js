@@ -1,5 +1,6 @@
 import { getRect, prepend, removeChild } from '../util/dom'
 import { ease } from '../util/ease'
+import { extend } from '../util/lang'
 
 export function snapMixin(BScroll) {
   BScroll.prototype._initSnap = function () {
@@ -100,7 +101,7 @@ export function snapMixin(BScroll) {
       }
 
       let initPage = snap.loop ? 1 : 0
-      this.goToPage(this.currentPage.pageX || initPage, this.currentPage.pageY || 0, 0)
+      this._goToPage(this.currentPage.pageX || initPage, this.currentPage.pageY || 0, 0)
 
       // Update snap threshold if needed
       const snapThreshold = snap.threshold
@@ -116,10 +117,10 @@ export function snapMixin(BScroll) {
     this.on('scrollEnd', () => {
       if (snap.loop) {
         if (this.currentPage.pageX === 0) {
-          this.goToPage(this.pages.length - 2, this.currentPage.pageY, 0)
+          this._goToPage(this.pages.length - 2, this.currentPage.pageY, 0)
         }
         if (this.currentPage.pageX === this.pages.length - 1) {
-          this.goToPage(1, this.currentPage.pageY, 0)
+          this._goToPage(1, this.currentPage.pageY, 0)
         }
       }
     })
@@ -132,7 +133,7 @@ export function snapMixin(BScroll) {
               Math.min(Math.abs(this.y - this.startY), 1000)
             ), 300)
 
-        this.goToPage(
+        this._goToPage(
           this.currentPage.pageX + this.directionX,
           this.currentPage.pageY + this.directionY,
           time
@@ -223,10 +224,10 @@ export function snapMixin(BScroll) {
     }
   }
 
-  BScroll.prototype.goToPage = function (x, y, time, easing = ease.bounce) {
+  BScroll.prototype._goToPage = function (x, y = 0, time, easing = ease.bounce) {
     const snap = this.options.snap
 
-    if (!this.pages) {
+    if (!snap || !this.pages) {
       return
     }
 
@@ -264,6 +265,22 @@ export function snapMixin(BScroll) {
     this.scrollTo(posX, posY, time, easing)
   }
 
+  BScroll.prototype.goToPage = function (x, y, time, easing) {
+    const snap = this.options.snap
+    if (snap) {
+      if (snap.loop) {
+        let len = this.pages.length - 2
+        if (x >= len) {
+          x = len - 1
+        } else if (x < 0) {
+          x = 0
+        }
+        x += 1
+      }
+      this._goToPage(x, y, time, easing)
+    }
+  }
+
   BScroll.prototype.next = function (time, easing) {
     let x = this.currentPage.pageX
     let y = this.currentPage.pageY
@@ -274,7 +291,7 @@ export function snapMixin(BScroll) {
       y++
     }
 
-    this.goToPage(x, y, time, easing)
+    this._goToPage(x, y, time, easing)
   }
 
   BScroll.prototype.prev = function (time, easing) {
@@ -287,10 +304,20 @@ export function snapMixin(BScroll) {
       y--
     }
 
-    this.goToPage(x, y, time, easing)
+    this._goToPage(x, y, time, easing)
   }
 
   BScroll.prototype.getCurrentPage = function () {
-    return this.options.snap && this.currentPage
+    const snap = this.options.snap
+    if (snap) {
+      if (snap.loop) {
+        let currentPage = extend({}, this.currentPage, {
+          pageX: this.currentPage.pageX - 1
+        })
+        return currentPage
+      }
+      return this.currentPage
+    }
+    return null
   }
 }
