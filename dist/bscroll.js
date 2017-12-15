@@ -270,9 +270,21 @@ function click(e) {
   var target = e.target;
 
   if (!/(SELECT|INPUT|TEXTAREA)/i.test(target.tagName)) {
-    var ev = document.createEvent(window.MouseEvent ? 'MouseEvents' : 'Event');
-    // cancelable 设置为 false 是为了解决和 fastclick 冲突问题
+    var ev = document.createEvent('Event');
+    // cancelable set to false in case of the conflict with fastclick
     ev.initEvent('click', true, false);
+    var posSrc = void 0;
+    if (e.type === 'mouseup' || e.type === 'mousecancel') {
+      posSrc = e;
+    } else if (e.type === 'touchend' || e.type === 'touchcancel') {
+      posSrc = e.changedTouches[0];
+    }
+    if (posSrc) {
+      ev.screenX = posSrc.screenX || 0;
+      ev.screenY = posSrc.screenY || 0;
+      ev.clientX = posSrc.clientX || 0;
+      ev.clientY = posSrc.clientY || 0;
+    }
     ev._constructed = true;
     target.dispatchEvent(ev);
   }
