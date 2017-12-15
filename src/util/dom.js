@@ -127,16 +127,24 @@ export function tap(e, eventName) {
 }
 
 export function click(e) {
-  var target = e.target
+  let target = e.target
 
   if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
     let ev = document.createEvent('Event')
     // cancelable set to false in case of the conflict with fastclick
     ev.initEvent('click', true, false)
-    ev.screenX = e.screenX || 0
-    ev.screenY = e.screenY || 0
-    ev.clientX = e.clientX || 0
-    ev.clientY = e.clientY || 0
+    let posSrc
+    if (e.type === 'mouseup' || e.type === 'mousecancel') {
+      posSrc = e
+    } else if (e.type === 'touchend' || e.type === 'touchcancel') {
+      posSrc = e.changedTouches[0]
+    }
+    if (posSrc) {
+      ev.screenX = posSrc.screenX || 0
+      ev.screenY = posSrc.screenY || 0
+      ev.clientX = posSrc.clientX || 0
+      ev.clientY = posSrc.clientY || 0
+    }
     ev._constructed = true
     target.dispatchEvent(ev)
   }
