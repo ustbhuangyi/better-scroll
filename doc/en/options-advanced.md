@@ -12,7 +12,7 @@ better-scroll also supports several advanced options to implement some special f
 ## snap
    - Type: `Boolean | Object`
    - Default: `false`
-   - Usage: this option is used to configure slide component. You can enable slide by configure it as an Object, such as, ` snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}`.
+   - Usage: this option is used to configure slide component. You can enable slide by configure it as an Object, such as, ` snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}`, Notice：loop set to true only support slide loop in horizontal axis，but not in vertical axis.
    - Note: it's an advanced option which doesn't need to configure in normal scene. You can see the specific application scene in [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide) and more details in the source code of [slide component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue).
 
 ## scrollbar
