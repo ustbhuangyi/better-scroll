@@ -340,11 +340,11 @@ export function coreMixin(BScroll) {
     let me = this
 
     function probe() {
+      let pos = me.getComputedPosition()
+      me.trigger('scroll', pos)
       if (!me.isInTransition) {
         return
       }
-      let pos = me.getComputedPosition()
-      me.trigger('scroll', pos)
       me.probeTimer = requestAnimationFrame(probe)
     }
   }
