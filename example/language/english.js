@@ -30,6 +30,7 @@ export default {
     freeScroll: 'Free Scroll',
     formList: 'Form List',
     goodsList: 'Goods List',
+    navList: 'Navigation List',
     verticalScrollImg: 'vertical-scroll-en.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker-en.jpeg',
@@ -37,7 +38,8 @@ export default {
     startGuidanceImg: 'full-page-slide.jpeg',
     freeScrollImg: 'free-scroll.jpeg',
     formListImg: 'form-list-en.jpeg',
-    goodsListImg: 'goods-list.jpeg'
+    goodsListImg: 'goods-list.jpeg',
+    navListImg: 'navigator-en.jpg'
   },
 
   normalScrollListPage: {
@@ -88,5 +90,11 @@ export default {
     desc: 'To use form in better-scroll, you need to make sure the option click is configured as false, since some native element events will be prevented when click is true. And in this situation, we recommend to handle click by listening tap event.',
     previousTxt: 'No.',
     followingTxt: ' option'
+  },
+  navigatorPage: {
+    desc: 'Navigator supports horizontal move. According to the menu tab which your choice，contents what you want to render can be shown in \n' +
+    'the blank area',
+    txtPart1: 'The corresponding contents of the ',
+    txtPart2: ' can be shown in this area'
   }
 }
