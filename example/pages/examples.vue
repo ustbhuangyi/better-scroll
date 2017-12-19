@@ -49,6 +49,12 @@
           <span>{{ $t('examples.goodsList') }}</span>
         </router-link>
       </li>
+      <li class="example-item">
+        <router-link :to="navListPath">
+          <img :src="navListImg">
+          <span>{{ $t('examples.navList') }}</span>
+        </router-link>
+      </li>
       <li class="example-item placeholder">
       </li>
       <li class="example-item placeholder">
@@ -91,6 +97,9 @@
       goodsListImg() {
         return require('../common/images/' + this.$i18n.t('examples.goodsListImg'))
       },
+      navListImg() {
+        return require('../common/images/' + this.$i18n.t('examples.navListImg'))
+      },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale
       },
@@ -114,6 +123,9 @@
       },
       goodsListPath() {
         return '/examples/goods-list/' + this.$i18n.locale
+      },
+      navListPath() {
+        return '/examples/nav-list/1/' + this.$i18n.locale
       }
     },
     created() {

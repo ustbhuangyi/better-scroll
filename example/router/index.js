@@ -10,6 +10,12 @@ import FullPageSlide from 'example/pages/full-page-slide'
 import FreeScroll from 'example/pages/free-scroll'
 import FormList from 'example/pages/form-list'
 import GoodsList from 'example/pages/goods-list'
+import NavigatorList from 'example/pages/navigator'
+import SlideRender from 'example/page-render/slide-render'
+import FormListRender from 'example/page-render/form-list-render'
+import SimpleScrollDemo from 'example/pages/simple-scroll-demo'
+import GoodListRender from 'example/page-render/goods-list-render.vue'
+import PickerRender from 'example/page-render/picker-render.vue'
 
 Vue.use(Router)
 
@@ -62,6 +68,32 @@ export default new Router({
         {
           path: 'goods-list/:lang',
           component: GoodsList
+        },
+        {
+          path: 'nav-list',
+          component: NavigatorList,
+          children: [
+            {
+              path: '1/:lang',
+              component: SlideRender
+            },
+            {
+              path: '2/:lang',
+              component: FormListRender
+            },
+            {
+              path: '3/:lang',
+              component: SimpleScrollDemo
+            },
+            {
+              path: '4/:lang',
+              component: GoodListRender
+            },
+            {
+              path: '5/:lang',
+              component: PickerRender
+            }
+          ]
         }
       ]
     }
