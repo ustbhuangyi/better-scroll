@@ -144,8 +144,10 @@ export function snapMixin(BScroll) {
     this.on('destroy', () => {
       if (snap.loop) {
         let children = this.scroller.children
-        removeChild(this.scroller, children[children.length - 1])
-        removeChild(this.scroller, children[0])
+        if (children.length > 2) {
+          removeChild(this.scroller, children[children.length - 1])
+          removeChild(this.scroller, children[0])
+        }
       }
     })
   }
