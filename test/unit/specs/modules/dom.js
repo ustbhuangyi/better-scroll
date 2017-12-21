@@ -1,3 +1,5 @@
+import 'basic-mouse-event-polyfill-phantomjs'
+
 import { addEvent, removeEvent, offset, getRect, preventDefaultException, tap, click, prepend } from 'scroll/util/dom'
 
 describe('dom.js', () => {
