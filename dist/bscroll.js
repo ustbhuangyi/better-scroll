@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.6.1
+ * better-normal-scroll v1.6.2
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -140,6 +140,24 @@ var ua = navigator.userAgent;
 
 var isWeChatDevTools = /wechatdevtools/.test(ua);
 
+function getNow() {
+  return window.performance && window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
+}
+
+function extend(target) {
+  for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    rest[_key - 1] = arguments[_key];
+  }
+
+  for (var i = 0; i < rest.length; i++) {
+    var source = rest[i];
+    for (var key in source) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
 var elementStyle = document.createElement('div').style;
 
 var vendor = function () {
@@ -270,20 +288,33 @@ function click(e) {
   var target = e.target;
 
   if (!/(SELECT|INPUT|TEXTAREA)/i.test(target.tagName)) {
-    var ev = document.createEvent('Event');
-    // cancelable set to false in case of the conflict with fastclick
-    ev.initEvent('click', true, false);
-    var posSrc = void 0;
+    var eventSource = void 0;
     if (e.type === 'mouseup' || e.type === 'mousecancel') {
-      posSrc = e;
+      eventSource = e;
     } else if (e.type === 'touchend' || e.type === 'touchcancel') {
-      posSrc = e.changedTouches[0];
+      eventSource = e.changedTouches[0];
     }
-    if (posSrc) {
-      ev.screenX = posSrc.screenX || 0;
-      ev.screenY = posSrc.screenY || 0;
-      ev.clientX = posSrc.clientX || 0;
-      ev.clientY = posSrc.clientY || 0;
+    var posSrc = {};
+    if (eventSource) {
+      posSrc.screenX = eventSource.screenX || 0;
+      posSrc.screenY = eventSource.screenY || 0;
+      posSrc.clientX = eventSource.clientX || 0;
+      posSrc.clientY = eventSource.clientY || 0;
+    }
+    var ev = void 0;
+    var event = 'click';
+    var bubbles = true;
+    // cancelable set to false in case of the conflict with fastclick
+    var cancelable = false;
+    if (typeof MouseEvent !== 'undefined') {
+      ev = new MouseEvent(event, extend({
+        bubbles: bubbles,
+        cancelable: cancelable
+      }, posSrc));
+    } else {
+      ev = document.createEvent('Event');
+      ev.initEvent(event, bubbles, cancelable);
+      extend(ev, posSrc);
     }
     ev._constructed = true;
     target.dispatchEvent(ev);
@@ -304,24 +335,6 @@ function before(el, target) {
 
 function removeChild(el, child) {
   el.removeChild(child);
-}
-
-function getNow() {
-  return window.performance && window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
-}
-
-function extend(target) {
-  for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    rest[_key - 1] = arguments[_key];
-  }
-
-  for (var i = 0; i < rest.length; i++) {
-    var source = rest[i];
-    for (var key in source) {
-      target[key] = source[key];
-    }
-  }
-  return target;
 }
 
 var DEFAULT_OPTIONS = {
@@ -2095,7 +2108,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.6.1';
+BScroll.Version = '1.6.2';
 
 return BScroll;
 
