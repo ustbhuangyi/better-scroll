@@ -6,10 +6,12 @@
         <template v-for="(item, index) in items">
           <li ref="listItem" @click="clickItem(index)">
             <input :id="'input'+index" type="checkbox" :value="index" v-model="checkedItems">
-            <label @click.stop :for="'input'+index">{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt')
+            <label :for="'input'+index">{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt')
               }}</label>
-            <input class="text-input" type="text" @focus="focusHandle(index)" @blur="blurHandle(index)">
+            <input class="text-input" @click.stop="clickInpunt(index)" type="text" @focus="focusHandle(index)"
+                   @blur="blurHandle(index)">
             <span>input {{ index }}</span>
+            <a href="https://github.com/didi/cube-ui">cube-ui</a>
           </li>
         </template>
       </ul>
@@ -39,6 +41,9 @@
     methods: {
       clickItem(index) {
         console.log('click item', index)
+      },
+      clickInpunt(index) {
+        console.log('click input', index)
       },
       // 用于input blur
       beforeScrollStart() {

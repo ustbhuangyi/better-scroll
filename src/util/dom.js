@@ -1,4 +1,5 @@
 import { isWeChatDevTools } from './env'
+import { extend } from './lang'
 
 let elementStyle = document.createElement('div').style
 
@@ -130,20 +131,33 @@ export function click(e) {
   let target = e.target
 
   if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
-    let ev = document.createEvent('Event')
-    // cancelable set to false in case of the conflict with fastclick
-    ev.initEvent('click', true, false)
-    let posSrc
+    let eventSource
     if (e.type === 'mouseup' || e.type === 'mousecancel') {
-      posSrc = e
+      eventSource = e
     } else if (e.type === 'touchend' || e.type === 'touchcancel') {
-      posSrc = e.changedTouches[0]
+      eventSource = e.changedTouches[0]
     }
-    if (posSrc) {
-      ev.screenX = posSrc.screenX || 0
-      ev.screenY = posSrc.screenY || 0
-      ev.clientX = posSrc.clientX || 0
-      ev.clientY = posSrc.clientY || 0
+    let posSrc = {}
+    if (eventSource) {
+      posSrc.screenX = eventSource.screenX || 0
+      posSrc.screenY = eventSource.screenY || 0
+      posSrc.clientX = eventSource.clientX || 0
+      posSrc.clientY = eventSource.clientY || 0
+    }
+    let ev
+    const event = 'click'
+    const bubbles = true
+    // cancelable set to false in case of the conflict with fastclick
+    const cancelable = false
+    if (typeof MouseEvent !== 'undefined') {
+      ev = new MouseEvent(event, extend({
+        bubbles,
+        cancelable
+      }, posSrc))
+    } else {
+      ev = document.createEvent('Event')
+      ev.initEvent(event, bubbles, cancelable)
+      extend(ev, posSrc)
     }
     ev._constructed = true
     target.dispatchEvent(ev)
