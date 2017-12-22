@@ -326,7 +326,8 @@ export function coreMixin(BScroll) {
     if (!this.enabled) {
       return
     }
-
+    // fix a scroll problem under Android condition
+    this.wrapper.scrollTop = 0
     clearTimeout(this.resizeTimeout)
     this.resizeTimeout = setTimeout(() => {
       this.refresh()
