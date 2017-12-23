@@ -135,12 +135,14 @@
       _initSlide() {
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
+          scrollY: false,
           momentum: false,
           snap: {
             loop: this.loop,
             threshold: 0.3,
             speed: 400
           },
+          bounce: false,
           click: this.click
         })
 
