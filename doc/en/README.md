@@ -4,7 +4,7 @@
 
 better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (perhaps supporting the PC side in the future). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of better-scroll are compatible with iscroll on the whole. What's more, better-scroll also extends some features and optimizes for performance based on iscroll.
 
-better-scroll is implemented with plain JavaScript, which means it's dependency free. The size of compiled code is 46 KB, 26 KB after compressed, and only 7KB after gzip. better-scroll is a really lightweight JavaScript lib.
+better-scroll is implemented with plain JavaScript, which means it's dependency free. The size of compiled code is 56 KB, 31 KB after compressed, and only 8KB after gzip. better-scroll is a really lightweight JavaScript lib.
 
 ## Getting started
 
@@ -57,3 +57,21 @@ The green part is the wrapper, also known as the parent container, which has **f
 ## Using better-scroll with MVVM frameworks
 
 I wrote an article [When better-scroll meets Vue](https://zhuanlan.zhihu.com/p/27407024) (in Chinese). I also hope that developers can contribute to share the experience of using better-scroll with other frameworks.
+
+A fantastic mobile ui lib implement by Vue: [cube-ui](https://github.com/didi/cube-ui/)
+
+## use better-scroll in the real project
+
+If you want to learn how to use better-scroll in the real project，you can learn my two practical courses(in Chinese)。
+
+[High imitating starvation takeout practical course base on Vue.js](https://coding.imooc.com/class/74.html)
+
+[Project demo address](http://ustbhuangyi.com/sell/)
+
+![QR Code](https://qr.api.cli.im/qr?data=http%253A%252F%252Fustbhuangyi.com%252Fsell%252F%2523%252Fgoods&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=686203a49c4613080b5b3004323ff977)
+
+[Music App advanced practical course base on Vue.js](http://coding.imooc.com/class/107.html)
+
+[Project demo address](http://ustbhuangyi.com/music/)
+
+![QR Code](https://qr.api.cli.im/qr?data=http%253A%252F%252Fustbhuangyi.com%252Fmusic%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=731bbcc2b490454d2cc604f98539952c)

@@ -1,4 +1,6 @@
-# 介绍
+# better-scroll
+
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll)
 
 ## better-scroll 是什么
 
@@ -74,6 +76,18 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 ![二维码](https://qr.api.cli.im/qr?data=http%253A%252F%252Fustbhuangyi.com%252Fmusic%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=731bbcc2b490454d2cc604f98539952c)
 
+## 文档
 
+访问 [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
+## 交流群
 
+![QR Code](http://webapp.didistatic.com/static/webapp/shield/better-scroll-qq.jpg)
+
+## Demo
+
+访问 [Demo](https://ustbhuangyi.github.io/better-scroll/)
+
+或者扫描下方二维码：
+
+![QR Code](https://qr.api.cli.im/qr?data=https%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=0da6b5bf346079bafa07f6935dc996bd)
