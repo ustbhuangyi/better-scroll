@@ -184,9 +184,9 @@
   @import "~common/stylus/variable"
 
   .slide
+    position: relative
     min-height: 1px
     .slide-group
-      position: relative
       overflow: hidden
       white-space: nowrap
       .slide-item
