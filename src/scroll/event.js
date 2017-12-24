@@ -8,17 +8,12 @@ export function eventMixin(BScroll) {
   }
 
   BScroll.prototype.once = function (type, fn, context = this) {
-    let fired = false
-
     function magic() {
       this.off(type, magic)
 
-      if (!fired) {
-        fired = true
-        fn.apply(context, arguments)
-      }
+      fn.apply(context, arguments)
     }
-    // 将参数中的回调函数挂载在magic对象的fn属性上,为了执行off方法的时候，暴露对应的函数方法
+    // To expose the corresponding function method in order to execute the off method
     magic.fn = fn
 
     this.on(type, magic)
@@ -32,7 +27,6 @@ export function eventMixin(BScroll) {
 
     let count = _events.length
     while (count--) {
-      // 移除通过on或者once绑定的回调函数
       if (_events[count][0] === fn || (_events[count][0] && _events[count][0].fn === fn)) {
         _events[count][0] = undefined
       }
