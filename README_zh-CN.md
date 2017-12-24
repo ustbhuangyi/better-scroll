@@ -91,3 +91,7 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 或者扫描下方二维码：
 
 ![QR Code](https://qr.api.cli.im/qr?data=https%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=0da6b5bf346079bafa07f6935dc996bd)
+
+## Changelog
+
+每次改动的详情参考[发版日志](https://github.com/ustbhuangyi/better-scroll/releases).
