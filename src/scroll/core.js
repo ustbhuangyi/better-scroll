@@ -198,6 +198,15 @@ export function coreMixin(BScroll) {
 
     this.isInTransition = false
 
+    // ensures that the last position is rounded
+    let newX = Math.round(this.x)
+    let newY = Math.round(this.y)
+
+    let deltaX = newX - this.absStartX
+    let deltaY = newY - this.absStartY
+    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0
+    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0
+
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
       return
@@ -214,19 +223,9 @@ export function coreMixin(BScroll) {
       return
     }
 
-    // ensures that the last position is rounded
-    let newX = Math.round(this.x)
-    let newY = Math.round(this.y)
-
     this.scrollTo(newX, newY)
 
-    let deltaX = newX - this.absStartX
-    let deltaY = newY - this.absStartY
-    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0
-    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0
-
     this.endTime = getNow()
-
     let duration = this.endTime - this.startTime
     let absDistX = Math.abs(newX - this.startX)
     let absDistY = Math.abs(newY - this.startY)

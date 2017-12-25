@@ -11,7 +11,7 @@ export function pullDownMixin(BScroll) {
     const {threshold = 90, stop = 40} = this.options.pullDownRefresh
 
     // check if a real pull down action
-    if (this.movingDirectionY !== DIRECTION_DOWN || this.y < threshold) {
+    if (this.directionY !== DIRECTION_DOWN || this.y < threshold) {
       return false
     }
 
