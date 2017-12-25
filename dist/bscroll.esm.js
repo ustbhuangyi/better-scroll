@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.6.2
+ * better-normal-scroll v1.6.3
  * (c) 2016-2017 ustbhuangyi
  * Released under the MIT License.
  */
@@ -77,17 +77,12 @@ function eventMixin(BScroll) {
   BScroll.prototype.once = function (type, fn) {
     var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
 
-    var fired = false;
-
     function magic() {
       this.off(type, magic);
 
-      if (!fired) {
-        fired = true;
-        fn.apply(context, arguments);
-      }
+      fn.apply(context, arguments);
     }
-    // 将参数中的回调函数挂载在magic对象的fn属性上,为了执行off方法的时候，暴露对应的函数方法
+    // To expose the corresponding function method in order to execute the off method
     magic.fn = fn;
 
     this.on(type, magic);
@@ -101,7 +96,6 @@ function eventMixin(BScroll) {
 
     var count = _events.length;
     while (count--) {
-      // 移除通过on或者once绑定的回调函数
       if (_events[count][0] === fn || _events[count][0] && _events[count][0].fn === fn) {
         _events[count][0] = undefined;
       }
@@ -130,9 +124,10 @@ function eventMixin(BScroll) {
   };
 }
 
-var ua = navigator.userAgent;
+var ua = navigator.userAgent.toLowerCase();
 
 var isWeChatDevTools = /wechatdevtools/.test(ua);
+var isAndroid = ua.indexOf('android') > 0;
 
 function getNow() {
   return window.performance && window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
@@ -986,6 +981,15 @@ function coreMixin(BScroll) {
 
     this.isInTransition = false;
 
+    // ensures that the last position is rounded
+    var newX = Math.round(this.x);
+    var newY = Math.round(this.y);
+
+    var deltaX = newX - this.absStartX;
+    var deltaY = newY - this.absStartY;
+    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0;
+    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0;
+
     // if configure pull down refresh, check it first
     if (this.options.pullDownRefresh && this._checkPullDown()) {
       return;
@@ -1002,19 +1006,9 @@ function coreMixin(BScroll) {
       return;
     }
 
-    // ensures that the last position is rounded
-    var newX = Math.round(this.x);
-    var newY = Math.round(this.y);
-
     this.scrollTo(newX, newY);
 
-    var deltaX = newX - this.absStartX;
-    var deltaY = newY - this.absStartY;
-    this.directionX = deltaX > 0 ? DIRECTION_RIGHT : deltaX < 0 ? DIRECTION_LEFT : 0;
-    this.directionY = deltaY > 0 ? DIRECTION_DOWN : deltaY < 0 ? DIRECTION_UP : 0;
-
     this.endTime = getNow();
-
     var duration = this.endTime - this.startTime;
     var absDistX = Math.abs(newX - this.startX);
     var absDistY = Math.abs(newY - this.startY);
@@ -1110,7 +1104,10 @@ function coreMixin(BScroll) {
     if (!this.enabled) {
       return;
     }
-
+    // fix a scroll problem under Android condition
+    if (isAndroid) {
+      this.wrapper.scrollTop = 0;
+    }
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(function () {
       _this.refresh();
@@ -2017,7 +2014,7 @@ function pullDownMixin(BScroll) {
 
     // check if a real pull down action
 
-    if (this.movingDirectionY !== DIRECTION_DOWN || this.y < threshold) {
+    if (this.directionY !== DIRECTION_DOWN || this.y < threshold) {
       return false;
     }
 
@@ -2102,6 +2099,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.6.2';
+BScroll.Version = '1.6.3';
 
 export default BScroll;
