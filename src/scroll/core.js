@@ -12,6 +12,7 @@ import { momentum } from '../util/momentum'
 import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
 import { getNow } from '../util/lang'
 import { DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT } from '../util/const'
+import { isAndroid } from '../util/env'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -325,7 +326,10 @@ export function coreMixin(BScroll) {
     if (!this.enabled) {
       return
     }
-
+    // fix a scroll problem under Android condition
+    if (isAndroid) {
+      this.wrapper.scrollTop = 0
+    }
     clearTimeout(this.resizeTimeout)
     this.resizeTimeout = setTimeout(() => {
       this.refresh()
