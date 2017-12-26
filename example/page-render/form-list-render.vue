@@ -45,12 +45,12 @@
       clickInpunt(index) {
         console.log('click input', index)
       },
-      // 用于input blur
+      // supported in better-scroll core
       beforeScrollStart() {
-        let inputList = this.$refs.formList.querySelectorAll('.text-input')
-        inputList.forEach((item) => {
-          item.blur()
-        })
+//        let inputList = this.$refs.formList.querySelectorAll('.text-input')
+//        inputList.forEach((item) => {
+//          item.blur()
+//        })
       },
       focusHandle(index) {
         console.log(`input ${index}: focus`)

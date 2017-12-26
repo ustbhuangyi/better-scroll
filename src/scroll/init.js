@@ -46,6 +46,7 @@ const DEFAULT_OPTIONS = {
   disableMouse: hasTouch,
   disableTouch: !hasTouch,
   observeDOM: true,
+  autoBlur: true,
   /**
    * for picker
    * wheel: {
@@ -113,6 +114,10 @@ export function initMixin(BScroll) {
 
     if (this.options.observeDOM) {
       this._initDOMObserver()
+    }
+
+    if (this.options.autoBlur) {
+      this._handleAutoBlur()
     }
 
     this.refresh()
@@ -219,6 +224,15 @@ export function initMixin(BScroll) {
         for (let i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents
         }
+      }
+    })
+  }
+
+  BScroll.prototype._handleAutoBlur = function () {
+    this.on('beforeScrollStart', () => {
+      let activeElement = document.activeElement
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        activeElement.blur()
       }
     })
   }
