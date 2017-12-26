@@ -103,7 +103,6 @@
         display: inline-block
       .tab-list
         margin: 0 auto
-        /*white-space: nowrap;*/
         .tab-item
           display: inline-block
           line-height: 54px;

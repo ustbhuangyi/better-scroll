@@ -66,7 +66,7 @@
     data() {
       return {
         navList: this.$i18n.locale === 'en' ? navListEn : navListZh,  // 渲染的列表数据
-        currentTabIndex: 5 // 当前默认tab
+        currentTabIndex: 1 // 当前默认tab
       }
     },
     methods: {
