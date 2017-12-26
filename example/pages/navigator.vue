@@ -95,15 +95,15 @@
       background: #fff;
       box-shadow: 0 2px 3px rgba(0, 0, 0, .12)
       overflow: hidden;
-  .tab-render-content
-    position: absolute;
-    left: 0;
-    top: 50px;
-    right: 0;
-    bottom: 0;
-    margin-top: 15px;
-    padding: 15px;
-    background: #fff;
-    line-height: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .tab-render-content
+      position: absolute;
+      left: 0;
+      top: 50px;
+      right: 0;
+      bottom: 0;
+      margin-top: 15px;
+      padding: 15px;
+      background: #fff;
+      line-height: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 </style>
