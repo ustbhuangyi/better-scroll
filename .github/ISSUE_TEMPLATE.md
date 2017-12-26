@@ -1,24 +1,10 @@
 <!--
-Please make sure the following information is offered before submitting your issue, thank you!
+IMPORTANT: Please use the following link to create a new issue:
 
-1. Accessible network address for source debugging. (It would be great if you could use CodePen、JSFiddle、CodeSandbox)
-2. Detailed recurrent steps for bugs.
-3. Which version of BetterScroll is used?
-4. The information about environment, include phone model, operating system, browser, etc.
+  https://cube-ui.github.io/cube-issue-helper/?repo=ustbhuangyi/better-scroll
 
-Warning: the issue without above information or unrelated to better-scroll will be closed.
+If your issue was not created using the app above, it will be closed immediately.
 
----
-
-注意：
-
-为了更好的反馈问题，有效追踪 bug，提交 Issue 时请提供如下信息：
-
-1. 外网可访问的测试地址（可以调试的源码，借助 CodePen、 JSFiddle 或者 CodeSandbox）;
-2. 详细的复现步骤；
-3. 调用 BScroll 的代码及 BScroll 版本；
-4. 出现问题的机型、操作系统、宿主环境、浏览器信息。
-
-如果未提供如上信息，或者用 Issue 提与 better-scroll 无关的问题，Issue 将被关闭。
-
+中文用户请注意：
+请使用上面的链接来创建新的 issue。如果不是用上述工具创建的 issue 会被自动关闭。
 -->
