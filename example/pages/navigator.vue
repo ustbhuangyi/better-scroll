@@ -2,7 +2,7 @@
   <page class="navigator-view" :title="$t('examples.navList')" :desc="$t('navigatorPage.desc')">
     <div slot="content">
       <div class="navigator-container" ref="viewport">
-        <navigator :navList="navList" @changeNavItem="changeNavItem" @changeContent="changeContent">
+        <navigator :navList="navList" @change="change" :currentTabIndex="currentTabIndex">
           <span slot="item" slot-scope="props" class="tab-name" :class="{'link-active':isCurrent(props.index)}">{{props.text}}</span>
         </navigator>
       </div>
@@ -65,19 +65,21 @@
   export default {
     data() {
       return {
-        navList: this.$i18n.locale === 'en' ? navListEn : navListZh,   // 渲染的列表数据
-        currentTabId: 1 // 当前默认tab
+        navList: this.$i18n.locale === 'en' ? navListEn : navListZh,  // 渲染的列表数据
+        currentTabIndex: 5 // 当前默认tab
       }
     },
     methods: {
       isCurrent (index) {
-        return index === this.currentTabId
+        return index === this.currentTabIndex
       },
-      changeNavItem (currentTabId) {
-        this.currentTabId = currentTabId
-      },
-      changeContent (item) {
-        this.$router.replace('/examples/nav-list/' + item.id + '/' + this.$i18n.locale)
+      change (item) {
+        if (item !== undefined) {
+          this.currentTabIndex = item.id
+        }
+
+        // 以下部分编写点击相应的navList item时，渲染的逻辑代码
+        this.$router.replace('/examples/nav-list/' + this.currentTabIndex + '/' + this.$i18n.locale)
       }
     },
     components: {

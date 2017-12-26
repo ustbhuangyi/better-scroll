@@ -4,8 +4,7 @@
       <ul class="tab-list" ref="tabList">
         <li v-for="item in navList" class="tab-item" @click="selectNav(item)">
           <slot name="item" :text="item.name" :index="item.id">
-            <!--<span class="tab-name" :class="{'link-active':isCurrent(item)}">{{item.name}}-->
-            <!--</span>-->
+            <span class="tab-name" :class="{'link-active':isCurrentTab(item.id)}">{{item.name}}</span>
           </slot>
         </li>
       </ul>
@@ -16,32 +15,50 @@
 <script type="text/ecmascript-6">
   import Scroll from 'example/components/scroll/scroll.vue'
 
-  const EVENT_CHANGE_NAV = 'changeNavItem'
-  const EVENT_CHANGE_CONTENT = 'changeContent'
+  const EVENT_CHANGE = 'change'
 
   export default {
     props: {
       navList: {
         type: Array,
-        default: []
+        default() {
+          return [{
+            id: 1,
+            name: 'default'
+          }]
+        }
+      },
+      currentTabIndex: {
+        type: Number,
+        default: null
       }
     },
     data() {
       return {
-        currentTabId: 1,
-        scrollbar: true
+        currentTab: 4,
+        current: 1
       }
     },
     mounted() {
       this._initTabListWidth()
-      this._adjust(this.currentTabId)
+      this.$emit(EVENT_CHANGE)
+      if (this.currentTabIndex === null) {
+        this.current = this.currentTab
+      } else {
+        this.current = this.currentTabIndex
+      }
+      setTimeout(() => {
+        this._adjust(this.current)
+      }, 500)
     },
     methods: {
+      isCurrentTab (index) {
+        return index === this.current
+      },
       selectNav(item) {
+        this.current = item.id
         this._adjust(item.id)
-        this.$emit(EVENT_CHANGE_NAV, item.id)
-        // 触发相应nav item对应的变化
-        this.$emit(EVENT_CHANGE_CONTENT, item)
+        this.$emit(EVENT_CHANGE, item)
       },
       _initTabListWidth() {
         const tabList = this.$refs.tabList
