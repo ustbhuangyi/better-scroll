@@ -64,6 +64,11 @@
 
 <style lang='stylus' rel='stylesheet/stylus'>
   .form-list-render-view
+    position: absolute
+    top: 0
+    left:0
+    bottom: 0
+    right: 0
     .content
       li
         padding: 30px
