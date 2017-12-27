@@ -32,7 +32,7 @@
                       @update:value="updateStartY"></input-option>
       </div>
     </div>
-    <div slot="demo">
+    <div class="scroll-list-wrap" slot="demo">
       <scroll ref="scroll"
               :data="items"
               :scrollbar="scrollbarObj"

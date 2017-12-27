@@ -14,8 +14,8 @@ import NavigatorList from 'example/pages/navigator'
 import SlideRender from 'example/page-render/slide-render'
 import FormListRender from 'example/page-render/form-list-render'
 import SimpleScrollDemo from 'example/pages/simple-scroll-demo'
-import GoodListRender from 'example/page-render/goods-list-render.vue'
-import PickerRender from 'example/page-render/picker-render.vue'
+import GoodListRender from 'example/page-render/goods-list-render'
+import PickerRender from 'example/page-render/picker-render'
 
 Vue.use(Router)
 

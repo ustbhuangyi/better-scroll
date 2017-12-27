@@ -1,15 +1,10 @@
 <template>
   <page class="navigator-view" :title="$t('examples.navList')" :desc="$t('navigatorPage.desc')">
     <div slot="content">
-      <div class="scroll-container" ref="viewport" >
-        <scroll ref="scroll" direction="horizontal">
-          <ul class="tab-list" ref="tabList">
-            <li v-for="item in navList" class="tab-item" @click="selectNav(item)">
-              <span class="tab-name" :class="{'link-active':isCurrent(item)}">{{item.name}}
-              </span>
-            </li>
-          </ul>
-        </scroll>
+      <div class="navigator-container" ref="viewport">
+        <navigator :navList="navList" @change="change" :currentTabIndex="currentTabIndex">
+          <span slot="item" slot-scope="props" class="tab-name" :class="{'link-active':isCurrent(props.index)}">{{props.text}}</span>
+        </navigator>
       </div>
       <div class="tab-render-content">
         <router-view></router-view>
@@ -20,7 +15,7 @@
 
 <script type="text/ecmascript-6">
   import Page from 'example/components/page/page.vue'
-  import Scroll from 'example/components/scroll/scroll.vue'
+  import Navigator from 'example/components/navigator/navigator.vue'
 
   const navListEn = [
     {
@@ -66,119 +61,40 @@
       name: 'picker组件'
     }
   ]
-  const items = [
-    [
-      {
-        linkUrl: 'http://y.qq.com/w/album.html?albummid=0044K2vN1sT5mE',
-        picUrl: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000001YCZlY3aBifi.jpg',
-        id: 11351
-      },
-      {
-        linkUrl: 'https://y.qq.com/m/digitalbum/gold/index.html?_video=true&id=2197820&g_f=shoujijiaodian',
-        picUrl: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000004ckGfg3zaho0.jpg',
-        id: 11372
-      }
-    ],
-    [
-      {
-        linkUrl: 'http://y.qq.com/w/album.html?albummid=001tftZs2RX1Qz',
-        picUrl: 'http://y.gtimg.cn/music/photo_new/T003R720x288M00000236sfA406cmk.jpg',
-        id: 11378
-      },
-      {
-        linkUrl: 'https://y.qq.com/msa/218/0_4085.html',
-        picUrl: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000001s0BXx3Zxcwb.jpg',
-        id: 11375
-      },
-      {
-        linkUrl: 'https://y.qq.com/m/digitalbum/gold/index.html?_video=true&id=2195876&g_f=shoujijiaodian',
-        picUrl: 'http://y.gtimg.cn/music/photo_new/T003R720x288M000002cwng4353HKz.jpg',
-        id: 11287
-      }
-    ]
-  ]
 
   export default {
-    computed: {
-      data() {
-        return items[this.index]
-      }
-    },
     data() {
       return {
-        navList: this.$i18n.locale === 'en' ? navListEn : navListZh,
-        renderData: '',
-        currentTabId: 1,
-        scrollbar: true,
-        index: 0
+        navList: this.$i18n.locale === 'en' ? navListEn : navListZh,  // 渲染的列表数据
+        currentTabIndex: 1 // 当前默认tab
       }
     },
-    mounted() {
-      this._adjust(this.currentTabId)
-    },
     methods: {
-      isCurrent (item) {
-        return item.id === this.currentTabId
+      isCurrent (index) {
+        return index === this.currentTabIndex
       },
-      selectNav (item) {
-        this.currentTabId = item.id
-        this.renderData = item.name
-        this._adjust(item.id)
-        this.$router.replace('/examples/nav-list/' + item.id + '/' + this.$i18n.locale)
-      },
-      _adjust(tabId) {
-        const viewportWidth = this.$refs.viewport.clientWidth
-        const tabListWidth = this.$refs.tabList.clientWidth
-        const minTranslate = Math.min(0, viewportWidth - tabListWidth)
-        const middleTranslate = viewportWidth / 2
-        const items = this.$refs.tabList.children
-        let width = 0
-        this.navList.every((item, index) => {
-          if (item.id === tabId) {
-            return false
-          }
-          width += items[index].clientWidth
-          return true
-        })
-        let translate = middleTranslate - width
-        translate = Math.max(minTranslate, Math.min(0, translate))
-        this.$refs.scroll.scrollTo(translate, 0, 300)
+      change (item) {
+        if (item !== undefined) {
+          this.currentTabIndex = item.id
+        }
+
+        // 以下部分编写点击相应的navList item时，渲染的逻辑代码
+        this.$router.replace('/examples/nav-list/' + this.currentTabIndex + '/' + this.$i18n.locale)
       }
     },
     components: {
-        Page,
-        Scroll
+      Page,
+      Navigator
     }
   }
 </script>
-
 <style lang='stylus' rel='stylesheet/stylus' type="text/stylus">
   .navigator-view
-    .scroll-container
+    .navigator-container
       height: 52px;
       background: #fff;
       box-shadow: 0 2px 3px rgba(0, 0, 0, .12)
-      .list-wrapper
-        background: none
-        .scroll-content
-          display: inline-block
-          min-width: 100%
-          .tab-list
-            margin: 0 auto
-            width: 450px
-            .tab-item
-              display: inline-block
-              line-height: 54px;
-              .tab-name
-               display: block
-               position: relative
-               padding: 0 15px 0 14px
-               font-size: 14px
-               color: #666
-               &.link-active
-                 transition: all 0.2s
-                 transform: scale(1.04)
-                 color: #fc9153
+      overflow: hidden;
     .tab-render-content
       position: absolute;
       left: 0;
@@ -190,18 +106,4 @@
       background: #fff;
       line-height: 20px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-
-  .slide-wrapper
-    position: relative
-    width: 100%
-    height: 0
-    padding-top: 40%
-    margin-bottom: 10px
-    overflow: hidden
-    .slide-content
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-  </style>
+</style>
