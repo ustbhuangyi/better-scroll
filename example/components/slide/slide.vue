@@ -99,6 +99,9 @@
         this._setSlideWidth(true)
         this.slide.refresh()
       },
+      prev() {
+        this.slide.prev()
+      },
       next() {
         this.slide.next()
       },
@@ -175,6 +178,14 @@
         this.timer = setTimeout(() => {
           this.slide.next()
         }, this.interval)
+      }
+    },
+    watch: {
+      loop() {
+        this.update()
+      },
+      autoPlay() {
+        this.update()
       }
     }
   }

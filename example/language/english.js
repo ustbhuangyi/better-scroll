@@ -76,7 +76,13 @@ export default {
   },
 
   slidePage: {
-    desc: 'Slide is a typical component at mobile end, support horizontal move.'
+    desc: 'Slide is a typical component at mobile end, support horizontal move.',
+    click: 'click',
+    isAutoPlayTip: 'auto play',
+    isLoopTip: 'loop',
+    isShowDotTip: 'show dots',
+    changeData: 'change data',
+    pageTurn: 'page turn'
   },
 
   fullPageSlideComponent: {
