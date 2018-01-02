@@ -39,6 +39,7 @@
   - [disableMouse](options.md#disablemouse)
   - [disableTouch](options.md#disabletouch)
   - [observeDOM](options.md#observedomv153)
+  - [autoBlur](options.md#autoblurv170)
 - [Options / Advanced](options-advanced.md)
   - [wheel](options-advanced.md#wheel)
   - [snap](options-advanced.md#snap)

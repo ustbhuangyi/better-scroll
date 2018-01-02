@@ -169,3 +169,8 @@ let scroll = new BScroll('.wrapper',{
    - 类型：Boolean
    - 默认值：true
    - 作用：会检测 scroller 内部 DOM 变化，自动调用 refresh 方法重新计算来保证滚动的正确性。它会额外增加一些性能开销，如果你能明确地知道 scroller 内部 DOM 的变化时机并手动调用 refresh 重新计算，你可以把该选项设置为 false。
+   
+## autoBlur(v1.7.0+)  
+   - 类型：Boolean
+   - 默认值：true
+   - 作用：在滚动之前会让当前激活的元素（input、textarea）自动失去焦点。   

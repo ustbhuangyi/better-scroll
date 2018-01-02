@@ -60,7 +60,7 @@ I wrote an article [When better-scroll meets Vue](https://zhuanlan.zhihu.com/p/2
 
 A fantastic mobile ui lib implement by Vue: [cube-ui](https://github.com/didi/cube-ui/)
 
-## use better-scroll in the real project
+## Using better-scroll in the real project
 
 If you want to learn how to use better-scroll in the real project，you can learn my two practical courses(in Chinese)。
 

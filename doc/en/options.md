@@ -169,4 +169,9 @@ The code results in a clickable vertical scrolling effect. better-scroll support
 ## observeDOM(v1.5.3+)  
    - Type：Boolean
    - Default：true
-   - Usage：It will listen the DOM change inside of the scroller，and automatically call refresh method which will recalculate to ensure the correctness of the scroll. However, it will add some additional performance overhead，if you can clearly know the DOM change inside of the scroller and manually call the refresh method to recalculate, you can set this option to false.  
+   - Usage：It will listen the DOM change inside of the scroller，and automatically call refresh method which will recalculate to ensure the correctness of the scroll. However, it will add some additional performance overhead，if you can clearly know the DOM change inside of the scroller and manually call the refresh method to recalculate, you can set this option to false. 
+    
+## autoBlur(v1.7.0+)  
+   - Type：Boolean
+   - Default：true
+   - Usage：It will auto blur the active element(input、textarea) before scroll start. 
