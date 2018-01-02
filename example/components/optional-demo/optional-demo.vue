@@ -18,9 +18,7 @@
           </div>
           <div class="demo">
             <div class="title sub">Demo</div>
-            <div class="scroll-list-wrap">
-              <slot name="demo"></slot>
-            </div>
+            <slot name="demo"></slot>
           </div>
           <div class="methods">
             <div class="title sub">Methods</div>
@@ -147,9 +145,9 @@
             @media screen and (max-width: 42rem)
               flex: 0 0 100%
               margin-bottom: 1rem
-
             .scroll-list-wrap
               position relative
+              height: 200px
               @media screen and (min-width: 42rem)
                 height: 30rem
               @media screen and (max-width: 42rem)
