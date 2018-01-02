@@ -33,7 +33,7 @@ scrollbarMixin(BScroll)
 pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 
-BScroll.Version = '1.6.3'
+BScroll.Version = '1.7.0'
 
 export default BScroll
 
