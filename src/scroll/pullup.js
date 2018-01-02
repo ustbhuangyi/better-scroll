@@ -20,8 +20,8 @@ export function pullUpMixin(BScroll) {
 
     function checkToEnd(pos) {
       if (this.movingDirectionY === DIRECTION_UP && pos.y <= (this.maxScrollY + threshold)) {
-        this.trigger('pullingUp')
         this.pullupWatching = false
+        this.trigger('pullingUp')
         this.off('scroll', checkToEnd)
       }
     }

@@ -269,7 +269,7 @@ export function coreMixin(BScroll) {
 
       this.directionX = 0
       this.directionY = 0
-      easing = ease.bounce
+      easing = this.options.snap.easing || ease.bounce
     }
 
     if (newX !== this.x || newY !== this.y) {
@@ -311,7 +311,7 @@ export function coreMixin(BScroll) {
             tap(e, this.options.tap)
           }
 
-          if (this.options.click) {
+          if (this.options.click && !preventDefaultException(e.target, this.options.preventDefaultException)) {
             click(e)
           }
           return true
