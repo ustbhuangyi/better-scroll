@@ -48,7 +48,7 @@ Many developers have used better-scroll, but the most common problem they have m
 
 The phenomenon is 'the content can't scroll' and we need to figure out the root cause. Before that, let's take a look at the browser's scrolling principle: everyone can see the browser's scroll bar. When the height of the page content exceeds the viewport height, the vertical scroll bar will appear; When the width of page content exceeds the viewport width, the horizontal bar will appear. That is to say, when the viewport can't display all the content, the browser would guide the user to scroll the screen with scroll bar to see the rest of content.
 
-The principle of bett-scroll is samed as the browser. We can feel about this more obviously using a picture:
+The principle of better-scroll is samed as the browser. We can feel about this more obviously using a picture:
 
 ![布局](http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png)
 
