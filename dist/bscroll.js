@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.7.1
+ * better-normal-scroll v1.7.2
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2071,9 +2071,6 @@ function pullUpMixin(BScroll) {
   };
 
   BScroll.prototype._watchPullUp = function () {
-    if (this.pullupWatching) {
-      return;
-    }
     this.pullupWatching = true;
     var _options$pullUpLoad$t = this.options.pullUpLoad.threshold,
         threshold = _options$pullUpLoad$t === undefined ? 0 : _options$pullUpLoad$t;
@@ -2082,8 +2079,13 @@ function pullUpMixin(BScroll) {
     this.on('scroll', checkToEnd);
 
     function checkToEnd(pos) {
+      var _this = this;
+
       if (this.movingDirectionY === DIRECTION_UP && pos.y <= this.maxScrollY + threshold) {
-        this.pullupWatching = false;
+        // reset pullupWatching status after scroll end.
+        this.once('scrollEnd', function () {
+          _this.pullupWatching = false;
+        });
         this.trigger('pullingUp');
         this.off('scroll', checkToEnd);
       }
@@ -2091,11 +2093,11 @@ function pullUpMixin(BScroll) {
   };
 
   BScroll.prototype.finishPullUp = function () {
-    var _this = this;
+    var _this2 = this;
 
-    if (this.isInTransition) {
+    if (this.pullupWatching) {
       this.once('scrollEnd', function () {
-        _this._watchPullUp();
+        _this2._watchPullUp();
       });
     } else {
       this._watchPullUp();
@@ -2127,7 +2129,7 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.7.1';
+BScroll.Version = '1.7.2';
 
 return BScroll;
 
