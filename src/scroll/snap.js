@@ -275,7 +275,7 @@ export function snapMixin(BScroll) {
       if (snap.loop) {
         let len = this.pages.length - 2
         if (x >= len) {
-          x = len
+          x = len - 1
         } else if (x < 0) {
           x = 0
         }
