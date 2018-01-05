@@ -128,40 +128,36 @@ export function tap(e, eventName) {
 }
 
 export function click(e) {
-  let target = e.target
-
-  if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
-    let eventSource
-    if (e.type === 'mouseup' || e.type === 'mousecancel') {
-      eventSource = e
-    } else if (e.type === 'touchend' || e.type === 'touchcancel') {
-      eventSource = e.changedTouches[0]
-    }
-    let posSrc = {}
-    if (eventSource) {
-      posSrc.screenX = eventSource.screenX || 0
-      posSrc.screenY = eventSource.screenY || 0
-      posSrc.clientX = eventSource.clientX || 0
-      posSrc.clientY = eventSource.clientY || 0
-    }
-    let ev
-    const event = 'click'
-    const bubbles = true
-    // cancelable set to false in case of the conflict with fastclick
-    const cancelable = false
-    if (typeof MouseEvent !== 'undefined') {
-      ev = new MouseEvent(event, extend({
-        bubbles,
-        cancelable
-      }, posSrc))
-    } else {
-      ev = document.createEvent('Event')
-      ev.initEvent(event, bubbles, cancelable)
-      extend(ev, posSrc)
-    }
-    ev._constructed = true
-    target.dispatchEvent(ev)
+  let eventSource
+  if (e.type === 'mouseup' || e.type === 'mousecancel') {
+    eventSource = e
+  } else if (e.type === 'touchend' || e.type === 'touchcancel') {
+    eventSource = e.changedTouches[0]
   }
+  let posSrc = {}
+  if (eventSource) {
+    posSrc.screenX = eventSource.screenX || 0
+    posSrc.screenY = eventSource.screenY || 0
+    posSrc.clientX = eventSource.clientX || 0
+    posSrc.clientY = eventSource.clientY || 0
+  }
+  let ev
+  const event = 'click'
+  const bubbles = true
+  // cancelable set to false in case of the conflict with fastclick
+  const cancelable = false
+  if (typeof MouseEvent !== 'undefined') {
+    ev = new MouseEvent(event, extend({
+      bubbles,
+      cancelable
+    }, posSrc))
+  } else {
+    ev = document.createEvent('Event')
+    ev.initEvent(event, bubbles, cancelable)
+    extend(ev, posSrc)
+  }
+  ev._constructed = true
+  e.target.dispatchEvent(ev)
 }
 
 export function prepend(el, target) {

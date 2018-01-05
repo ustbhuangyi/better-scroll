@@ -6,12 +6,14 @@
         <template v-for="(item, index) in items">
           <li ref="listItem" @click="clickItem(index)">
             <input :id="'input'+index" type="checkbox" :value="index" v-model="checkedItems">
-            <label :for="'input'+index">{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt')
+            <label @click.stop
+                   :for="'input'+index">{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt')
               }}</label>
             <input class="text-input" @click.stop="clickInpunt(index)" type="text" @focus="focusHandle(index)"
                    @blur="blurHandle(index)">
             <span>input {{ index }}</span>
             <a href="https://github.com/didi/cube-ui">cube-ui</a>
+            <button @click.stop="clickButton(index)">click me</button>
           </li>
         </template>
       </ul>
@@ -45,12 +47,15 @@
       clickInpunt(index) {
         console.log('click input', index)
       },
-      // 用于input blur
+      clickButton(index) {
+        console.log('click button', index)
+      },
+      // supported in better-scroll core
       beforeScrollStart() {
-        let inputList = this.$refs.formList.querySelectorAll('.text-input')
-        inputList.forEach((item) => {
-          item.blur()
-        })
+//        let inputList = this.$refs.formList.querySelectorAll('.text-input')
+//        inputList.forEach((item) => {
+//          item.blur()
+//        })
       },
       focusHandle(index) {
         console.log(`input ${index}: focus`)
@@ -66,7 +71,7 @@
   .form-list-render-view
     position: absolute
     top: 0
-    left:0
+    left: 0
     bottom: 0
     right: 0
     .content

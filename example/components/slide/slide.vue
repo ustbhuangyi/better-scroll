@@ -148,7 +148,7 @@
 
         this.slide.on('scrollEnd', this._onScrollEnd)
 
-        this.slide.on('touchend', () => {
+        this.slide.on('touchEnd', () => {
           if (this.autoPlay) {
             this._play()
           }

@@ -609,6 +609,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.3.31" data-path="options.html">
+            
+                <a href="options.html#autoblurv170">
+            
+                    
+                    autoBlur
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1327,7 +1340,22 @@ rotate: 25, adjustTime: 400, wheelWrapperClass: &apos;wheel-scroll&apos;, wheelI
 <ul>
 <li>&#x7C7B;&#x578B;&#xFF1A;Boolean | Object</li>
 <li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
-<li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x662F;&#x4E3A;&#x4E86;&#x505A; slide &#x7EC4;&#x4EF6;&#x7528;&#x7684;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#xFF0C;&#x5982;&#x679C;&#x5F00;&#x542F;&#x5219;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Object&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;<code>* snap: {loop: false,threshold: 0.1,stepX: 100,stepY: 100}</code>&#xFF0C;&#x6CE8;&#x610F;&#xFF1A;loop &#x4E3A; true &#x662F;&#x4E3A;&#x4E86;&#x652F;&#x6301;&#x6A2A;&#x5411;&#x5FAA;&#x73AF;&#x8F6E;&#x64AD;&#xFF0C;&#x5E76;&#x4E0D;&#x652F;&#x6301;&#x7EB5;&#x5411;&#x3002;</li>
+<li><p>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x662F;&#x4E3A;&#x4E86;&#x505A; slide &#x7EC4;&#x4EF6;&#x7528;&#x7684;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#xFF0C;&#x5982;&#x679C;&#x5F00;&#x542F;&#x5219;&#x9700;&#x8981;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Object&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;</p>
+<pre><code class="lang-js">snap: {
+ loop: <span class="hljs-literal">false</span>,
+ threshold: <span class="hljs-number">0.1</span>,
+ stepX: <span class="hljs-number">100</span>,
+ stepY: <span class="hljs-number">100</span>,
+ easing: {
+   style: <span class="hljs-string">&apos;cubic-bezier(0.25, 0.46, 0.45, 0.94)&apos;</span>,
+   fn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+     <span class="hljs-keyword">return</span> t * (<span class="hljs-number">2</span> - t)
+   }
+ }
+}
+</code></pre>
+<p>&#x6CE8;&#x610F;&#xFF1A;loop &#x4E3A; true &#x662F;&#x4E3A;&#x4E86;&#x652F;&#x6301;&#x6A2A;&#x5411;&#x5FAA;&#x73AF;&#x8F6E;&#x64AD;&#xFF0C;&#x5E76;&#x4E0D;&#x652F;&#x6301;&#x7EB5;&#x5411;&#x3002;</p>
+</li>
 <li>&#x5907;&#x6CE8;&#xFF1A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x9AD8;&#x7EA7;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x4E00;&#x822C;&#x573A;&#x666F;&#x4E0D;&#x9700;&#x8981;&#x914D;&#x7F6E;&#xFF0C;&#x5177;&#x4F53;&#x5E94;&#x7528;&#x573A;&#x666F;&#x53EF;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/slide" target="_blank">Slide Demo</a> &#x3002;&#x60F3;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue" target="_blank">slide</a> &#x7EC4;&#x4EF6;&#x7684;&#x4EE3;&#x7801;&#x3002;</li>
 </ul>
 <h2 id="scrollbar">scrollbar</h2>
@@ -1375,7 +1403,7 @@ rotate: 25, adjustTime: 400, wheelWrapperClass: &apos;wheel-scroll&apos;, wheelI
 
             
                 
-                <a href="options.html#observedomv153" class="navigation navigation-prev " aria-label="Previous page: observeDOM">
+                <a href="options.html#autoblurv170" class="navigation navigation-prev " aria-label="Previous page: autoBlur">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -1391,7 +1419,7 @@ rotate: 25, adjustTime: 400, wheelWrapperClass: &apos;wheel-scroll&apos;, wheelI
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"选项 / 高级","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"observeDOM","level":"1.3.30","depth":2,"anchor":"#observedomv153","path":"options.md","ref":"options.md#observedomv153","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2017-12-16T15:52:00.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-12-24T08:03:56.277Z"},"basePath":".","book":{"language":"zh-hans"}});
+            gitbook.page.hasChanged({"page":{"title":"选项 / 高级","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"autoBlur","level":"1.3.31","depth":2,"anchor":"#autoblurv170","path":"options.md","ref":"options.md#autoblurv170","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-01-02T17:43:41.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-02T17:49:33.298Z"},"basePath":".","book":{"language":"zh-hans"}});
         });
     </script>
 </div>

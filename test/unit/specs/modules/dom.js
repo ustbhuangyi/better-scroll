@@ -71,16 +71,6 @@ describe('dom.js', () => {
     click(event)
     expect(cb)
       .to.be.calledOnce
-    // input
-    ele = document.createElement('input')
-    cb = sinon.spy()
-    event = {
-      target: ele
-    }
-    addEvent(ele, 'click', cb)
-    click(event)
-    expect(cb)
-      .not.to.be.called
   })
   it('#prepend', () => {
     const ele = document.createElement('div')

@@ -46,6 +46,7 @@ const DEFAULT_OPTIONS = {
   disableMouse: hasTouch,
   disableTouch: !hasTouch,
   observeDOM: true,
+  autoBlur: true,
   /**
    * for picker
    * wheel: {
@@ -65,6 +66,13 @@ const DEFAULT_OPTIONS = {
    *   threshold: 0.1,
    *   stepX: 100,
    *   stepY: 100,
+   *   speed: 400,
+   *   easing: {
+   *     style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+   *     fn: function (t) {
+   *       return t * (2 - t)
+   *     }
+   *   }
    *   listenFlick: true
    * }
    */
@@ -113,6 +121,10 @@ export function initMixin(BScroll) {
 
     if (this.options.observeDOM) {
       this._initDOMObserver()
+    }
+
+    if (this.options.autoBlur) {
+      this._handleAutoBlur()
     }
 
     this.refresh()
@@ -219,6 +231,15 @@ export function initMixin(BScroll) {
         for (let i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents
         }
+      }
+    })
+  }
+
+  BScroll.prototype._handleAutoBlur = function () {
+    this.on('beforeScrollStart', () => {
+      let activeElement = document.activeElement
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        activeElement.blur()
       }
     })
   }

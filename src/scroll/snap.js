@@ -226,12 +226,14 @@ export function snapMixin(BScroll) {
     }
   }
 
-  BScroll.prototype._goToPage = function (x, y = 0, time, easing = ease.bounce) {
+  BScroll.prototype._goToPage = function (x, y = 0, time, easing) {
     const snap = this.options.snap
 
     if (!snap || !this.pages) {
       return
     }
+
+    easing = easing || snap.easing || ease.bounce
 
     if (x >= this.pages.length) {
       x = this.pages.length - 1

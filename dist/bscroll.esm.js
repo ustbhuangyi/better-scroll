@@ -1,6 +1,6 @@
 /*!
- * better-normal-scroll v1.6.3
- * (c) 2016-2017 ustbhuangyi
+ * better-normal-scroll v1.7.2
+ * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
 var slicedToArray = function () {
@@ -274,40 +274,36 @@ function tap(e, eventName) {
 }
 
 function click(e) {
-  var target = e.target;
-
-  if (!/(SELECT|INPUT|TEXTAREA)/i.test(target.tagName)) {
-    var eventSource = void 0;
-    if (e.type === 'mouseup' || e.type === 'mousecancel') {
-      eventSource = e;
-    } else if (e.type === 'touchend' || e.type === 'touchcancel') {
-      eventSource = e.changedTouches[0];
-    }
-    var posSrc = {};
-    if (eventSource) {
-      posSrc.screenX = eventSource.screenX || 0;
-      posSrc.screenY = eventSource.screenY || 0;
-      posSrc.clientX = eventSource.clientX || 0;
-      posSrc.clientY = eventSource.clientY || 0;
-    }
-    var ev = void 0;
-    var event = 'click';
-    var bubbles = true;
-    // cancelable set to false in case of the conflict with fastclick
-    var cancelable = false;
-    if (typeof MouseEvent !== 'undefined') {
-      ev = new MouseEvent(event, extend({
-        bubbles: bubbles,
-        cancelable: cancelable
-      }, posSrc));
-    } else {
-      ev = document.createEvent('Event');
-      ev.initEvent(event, bubbles, cancelable);
-      extend(ev, posSrc);
-    }
-    ev._constructed = true;
-    target.dispatchEvent(ev);
+  var eventSource = void 0;
+  if (e.type === 'mouseup' || e.type === 'mousecancel') {
+    eventSource = e;
+  } else if (e.type === 'touchend' || e.type === 'touchcancel') {
+    eventSource = e.changedTouches[0];
   }
+  var posSrc = {};
+  if (eventSource) {
+    posSrc.screenX = eventSource.screenX || 0;
+    posSrc.screenY = eventSource.screenY || 0;
+    posSrc.clientX = eventSource.clientX || 0;
+    posSrc.clientY = eventSource.clientY || 0;
+  }
+  var ev = void 0;
+  var event = 'click';
+  var bubbles = true;
+  // cancelable set to false in case of the conflict with fastclick
+  var cancelable = false;
+  if (typeof MouseEvent !== 'undefined') {
+    ev = new MouseEvent(event, extend({
+      bubbles: bubbles,
+      cancelable: cancelable
+    }, posSrc));
+  } else {
+    ev = document.createEvent('Event');
+    ev.initEvent(event, bubbles, cancelable);
+    extend(ev, posSrc);
+  }
+  ev._constructed = true;
+  e.target.dispatchEvent(ev);
 }
 
 function prepend(el, target) {
@@ -359,6 +355,7 @@ var DEFAULT_OPTIONS = {
   disableMouse: hasTouch,
   disableTouch: !hasTouch,
   observeDOM: true,
+  autoBlur: true,
   /**
    * for picker
    * wheel: {
@@ -378,6 +375,13 @@ var DEFAULT_OPTIONS = {
    *   threshold: 0.1,
    *   stepX: 100,
    *   stepY: 100,
+   *   speed: 400,
+   *   easing: {
+   *     style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+   *     fn: function (t) {
+   *       return t * (2 - t)
+   *     }
+   *   }
    *   listenFlick: true
    * }
    */
@@ -426,6 +430,10 @@ function initMixin(BScroll) {
 
     if (this.options.observeDOM) {
       this._initDOMObserver();
+    }
+
+    if (this.options.autoBlur) {
+      this._handleAutoBlur();
     }
 
     this.refresh();
@@ -532,6 +540,15 @@ function initMixin(BScroll) {
         for (var i = 0; i < el.length; i++) {
           el[i].style.pointerEvents = pointerEvents;
         }
+      }
+    });
+  };
+
+  BScroll.prototype._handleAutoBlur = function () {
+    this.on('beforeScrollStart', function () {
+      var activeElement = document.activeElement;
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        activeElement.blur();
       }
     });
   };
@@ -1045,7 +1062,7 @@ function coreMixin(BScroll) {
 
       this.directionX = 0;
       this.directionY = 0;
-      easing = ease.bounce;
+      easing = this.options.snap.easing || ease.bounce;
     }
 
     if (newX !== this.x || newY !== this.y) {
@@ -1087,7 +1104,7 @@ function coreMixin(BScroll) {
             tap(e, this.options.tap);
           }
 
-          if (this.options.click) {
+          if (this.options.click && !preventDefaultException(e.target, this.options.preventDefaultException)) {
             click(e);
           }
           return true;
@@ -1124,6 +1141,7 @@ function coreMixin(BScroll) {
       var pos = me.getComputedPosition();
       me.trigger('scroll', pos);
       if (!me.isInTransition) {
+        me.trigger('scrollEnd', pos);
         return;
       }
       me.probeTimer = requestAnimationFrame(probe);
@@ -1178,10 +1196,12 @@ function coreMixin(BScroll) {
     this._transitionTime();
     if (!this.pulling && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false;
-      this.trigger('scrollEnd', {
-        x: this.x,
-        y: this.y
-      });
+      if (this.options.probeType !== 3) {
+        this.trigger('scrollEnd', {
+          x: this.x,
+          y: this.y
+        });
+      }
     }
   };
 
@@ -1638,13 +1658,15 @@ function snapMixin(BScroll) {
   BScroll.prototype._goToPage = function (x) {
     var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var time = arguments[2];
-    var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ease.bounce;
+    var easing = arguments[3];
 
     var snap = this.options.snap;
 
     if (!snap || !this.pages) {
       return;
     }
+
+    easing = easing || snap.easing || ease.bounce;
 
     if (x >= this.pages.length) {
       x = this.pages.length - 1;
@@ -2043,9 +2065,6 @@ function pullUpMixin(BScroll) {
   };
 
   BScroll.prototype._watchPullUp = function () {
-    if (this.pullupWatching) {
-      return;
-    }
     this.pullupWatching = true;
     var _options$pullUpLoad$t = this.options.pullUpLoad.threshold,
         threshold = _options$pullUpLoad$t === undefined ? 0 : _options$pullUpLoad$t;
@@ -2054,20 +2073,25 @@ function pullUpMixin(BScroll) {
     this.on('scroll', checkToEnd);
 
     function checkToEnd(pos) {
+      var _this = this;
+
       if (this.movingDirectionY === DIRECTION_UP && pos.y <= this.maxScrollY + threshold) {
+        // reset pullupWatching status after scroll end.
+        this.once('scrollEnd', function () {
+          _this.pullupWatching = false;
+        });
         this.trigger('pullingUp');
-        this.pullupWatching = false;
         this.off('scroll', checkToEnd);
       }
     }
   };
 
   BScroll.prototype.finishPullUp = function () {
-    var _this = this;
+    var _this2 = this;
 
-    if (this.isInTransition) {
+    if (this.pullupWatching) {
       this.once('scrollEnd', function () {
-        _this._watchPullUp();
+        _this2._watchPullUp();
       });
     } else {
       this._watchPullUp();
@@ -2099,6 +2123,6 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 
-BScroll.Version = '1.6.3';
+BScroll.Version = '1.7.2';
 
 export default BScroll;

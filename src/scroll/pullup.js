@@ -10,9 +10,6 @@ export function pullUpMixin(BScroll) {
   }
 
   BScroll.prototype._watchPullUp = function () {
-    if (this.pullupWatching) {
-      return
-    }
     this.pullupWatching = true
     const {threshold = 0} = this.options.pullUpLoad
 
@@ -20,15 +17,18 @@ export function pullUpMixin(BScroll) {
 
     function checkToEnd(pos) {
       if (this.movingDirectionY === DIRECTION_UP && pos.y <= (this.maxScrollY + threshold)) {
+        // reset pullupWatching status after scroll end.
+        this.once('scrollEnd', () => {
+          this.pullupWatching = false
+        })
         this.trigger('pullingUp')
-        this.pullupWatching = false
         this.off('scroll', checkToEnd)
       }
     }
   }
 
   BScroll.prototype.finishPullUp = function () {
-    if (this.isInTransition) {
+    if (this.pullupWatching) {
       this.once('scrollEnd', () => {
         this._watchPullUp()
       })
