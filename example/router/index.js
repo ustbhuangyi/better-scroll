@@ -7,6 +7,7 @@ import IndexView from 'example/pages/index-list/'
 import Picker from 'example/pages/picker'
 import Slide from 'example/pages/slide'
 import FullPageSlide from 'example/pages/full-page-slide'
+import FullPageVerticalSlide from 'example/pages/full-page-vertical-slide'
 import FreeScroll from 'example/pages/free-scroll'
 import FormList from 'example/pages/form-list'
 import GoodsList from 'example/pages/goods-list'
@@ -56,6 +57,10 @@ export default new Router({
         {
           path: 'full-page-slide/:lang',
           component: FullPageSlide
+        },
+        {
+          path: 'full-page-vertical-slide/:lang',
+          component: FullPageVerticalSlide
         },
         {
           path: 'free-scroll/:lang',
