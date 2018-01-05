@@ -32,6 +32,12 @@
         </router-link>
       </li>
       <li class="example-item">
+        <router-link :to="fullPageVerticalSlide">
+          <img :src="startGuidanceImg">
+          <span>{{ $t('examples.fullPageVerticalSlide') }}</span>
+        </router-link>
+      </li>
+      <li class="example-item">
         <router-link :to="freeScrollPath">
           <img :src="freeScrollImg">
           <span>{{ $t('examples.freeScroll') }}</span>
@@ -114,6 +120,9 @@
       },
       startGuidancePath() {
         return '/examples/full-page-slide/' + this.$i18n.locale
+      },
+      fullPageVerticalSlide() {
+        return '/examples/full-page-vertical-slide/' + this.$i18n.local
       },
       freeScrollPath() {
         return '/examples/free-scroll/' + this.$i18n.locale

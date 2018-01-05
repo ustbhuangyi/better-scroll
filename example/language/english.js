@@ -27,6 +27,7 @@ export default {
     picker: 'Picker',
     slide: 'Slide',
     startGuidance: 'Start Guidance',
+    fullPageVerticalSlide: 'Vertical Slide',
     freeScroll: 'Free Scroll',
     formList: 'Form List',
     goodsList: 'Goods List',

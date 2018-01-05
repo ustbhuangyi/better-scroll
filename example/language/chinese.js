@@ -27,6 +27,7 @@ export default {
     picker: 'Picker 组件',
     slide: 'Slide 组件',
     startGuidance: '开屏引导',
+    fullPageVerticalSlide: '全屏纵向slide',
     freeScroll: '自由滚动',
     formList: '表单列表',
     goodsList: '商品列表',
