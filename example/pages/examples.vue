@@ -122,7 +122,7 @@
         return '/examples/full-page-slide/' + this.$i18n.locale
       },
       fullPageVerticalSlide() {
-        return '/examples/full-page-vertical-slide/' + this.$i18n.local
+        return '/examples/full-page-vertical-slide/' + this.$i18n.locale
       },
       freeScrollPath() {
         return '/examples/free-scroll/' + this.$i18n.locale
