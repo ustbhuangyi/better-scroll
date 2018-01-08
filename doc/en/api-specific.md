@@ -60,7 +60,16 @@ better-scroll also have several specific API to help you implement customized fe
      - `{String} type`, event 
      - `{Function} fn`, callback
    - Return: none
-   - Usage: Listen for a custom event on the current BScroll.
+   - Usage: Listen for a [custom event](/events.html) on the current BScroll, such as "scroll", "scrollEnd", "pullingUp", "pullingDown" and so on.
+   - Example:
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper')
+   function onScroll(pos) {
+       console.log(`Now position is x: ${pos.x}, y: ${pos.y}`)
+   }
+   scroll.on('scroll', onScroll)
+   ```
    
 ## once()
    - Parameters:
@@ -77,9 +86,13 @@ better-scroll also have several specific API to help you implement customized fe
    - Usage: Remove custom event listener. Only remove the listener for that specific callback.
    - Example：
    ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper')
    function onPullingUp() {
-     console.log('pullingup success!')
+       console.log('pullingup success!')
    }
-   BScroll.on('pullingUp', onPullingUp)
-   BScroll.off('pullingUp', onPullingUp) 
+   scroll.on('pullingUp', onPullingUp) // add pullingup event callback
+   ...
+   scroll.off('pullingUp', onPullingUp) // remove pullingup event callback
+   ...
    ```
