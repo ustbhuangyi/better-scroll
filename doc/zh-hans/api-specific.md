@@ -50,3 +50,47 @@ better-scroll 还提供了一些定制的方法，专门用来实现某一个 fe
    - 参数：无
    - 返回值：无
    - 作用：当上拉加载数据加载完毕后，需要调用此方法告诉 better-scroll 数据已加载。
+
+## on()
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+   - 返回值：无
+   - 作用：监听当前实例上的[自定义事件](/events.html)。如：scroll, scrollEnd, pullingUp, pullingDown等。
+   - 示例：
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper')
+   function onScroll(pos) {
+       console.log(`Now position is x: ${pos.x}, y: ${pos.y}`)
+   }
+   scroll.on('scroll', onScroll)
+   ```
+   
+## once()
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+   - 返回值：无
+   - 作用：监听一个自定义事件，但是只触发一次，在第一次触发之后移除监听器。
+
+## off()
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+   - 返回值：无
+   - 作用：移除自定义事件监听器。只会移除这个回调的监听器。
+   - 示例：
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper', {
+       pullUpLoad: true
+   })
+   function onPullingUp() {
+       console.log('pullingup success!')
+   }
+   scroll.on('pullingUp', onPullingUp) // 添加pullingup事件回调onPullingUp
+   ...
+   scroll.off('pullingUp', onPullingUp) // 移除pullingup事件回调onPullingUp
+   ...
+   ```
