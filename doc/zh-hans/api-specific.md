@@ -83,7 +83,9 @@ better-scroll 还提供了一些定制的方法，专门用来实现某一个 fe
    - 示例：
    ```javascript
    import BScroll from 'better-scroll'
-   let scroll = new BScroll('.wrapper')
+   let scroll = new BScroll('.wrapper', {
+       pullUpLoad: true
+   })
    function onPullingUp() {
        console.log('pullingup success!')
    }

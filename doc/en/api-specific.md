@@ -87,7 +87,9 @@ better-scroll also have several specific API to help you implement customized fe
    - Example：
    ```javascript
    import BScroll from 'better-scroll'
-   let scroll = new BScroll('.wrapper')
+   let scroll = new BScroll('.wrapper', {
+       pullUpLoad: true
+   })
    function onPullingUp() {
        console.log('pullingup success!')
    }
