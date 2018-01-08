@@ -54,3 +54,32 @@ better-scroll also have several specific API to help you implement customized fe
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling up is finished, use this method to tell better-scroll that data is already loaded.
+
+## on()
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+   - Return: none
+   - Usage: Listen for a custom event on the current BScroll.
+   
+## once()
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+   - Return: none
+   - Usage: Listen for a custom event, but only once. The listener will be removed once it triggers for the first time.
+
+## off()
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+   - Return: none
+   - Usage: Remove custom event listener. Only remove the listener for that specific callback.
+   - Example：
+   ```javascript
+   function onPullingUp() {
+     console.log('pullingup success!')
+   }
+   BScroll.on('pullingUp', onPullingUp)
+   BScroll.off('pullingUp', onPullingUp) 
+   ```
