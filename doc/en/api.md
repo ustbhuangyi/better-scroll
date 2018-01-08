@@ -54,3 +54,49 @@ better-scroll supports lots of flexible API. It's really useful when implementin
    - Parameters: none.
    - Return: none.
    - Usage: destroy better-scroll，remove events and free some memory when the scroll is not needed anymore.
+
+## on(type, fn, context)
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+     - `{Fnctuon} context`, context,default is this.
+   - Return: none
+   - Usage: Listen for a [custom event](/events.html) on the current BScroll, such as "scroll", "scrollEnd", "pullingUp", "pullingDown" and so on.
+   - Example:
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper')
+   function onScroll(pos) {
+       console.log(`Now position is x: ${pos.x}, y: ${pos.y}`)
+   }
+   scroll.on('scroll', onScroll)
+   ```
+   
+## once(type, fn, context)
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+     - `{Fnctuon} context`, context,default is this.
+   - Return: none
+   - Usage: Listen for a custom event, but only once. The listener will be removed once it triggers for the first time.
+
+## off(type, fn)
+   - Parameters:
+     - `{String} type`, event 
+     - `{Function} fn`, callback
+   - Return: none
+   - Usage: Remove custom event listener. Only remove the listener for that specific callback.
+   - Example：
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper', {
+       pullUpLoad: true
+   })
+   function onPullingUp() {
+       console.log('pullingup success!')
+   }
+   scroll.on('pullingUp', onPullingUp) // add pullingup event callback
+   ...
+   scroll.off('pullingUp', onPullingUp) // remove pullingup event callback
+   ...
+   ```
