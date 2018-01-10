@@ -76,7 +76,13 @@ export default {
   },
 
   slidePage: {
-    desc: '轮播图是移动端常见的需求，支持左右滑动。'
+    desc: '轮播图是移动端常见的需求，支持左右滑动。',
+    click: '点击',
+    isAutoPlayTip: '自动播放',
+    isLoopTip: '循环播放',
+    isShowDotTip: '显示dots',
+    changeData: '改变数据',
+    pageTurn: '翻页'
   },
 
   fullPageSlideComponent: {
