@@ -95,18 +95,6 @@
       }
     },
     methods: {
-//      init() {
-//        const transitionEl = document.querySelector('.slide-group')
-//        const intervalVal = this.interval || 4000  // 4000为组件中默认设置的间隔时间
-//        transitionEl.addEventListener('webkitTransitionEnd', () => {
-//          this.isTransitionEnd = true // 标志动画结束
-//          console.log(this.isTransitionEnd)
-//          setTimeout(() => {
-//            console.log(11111)
-//            this.isTransitionEnd = false // 标志动画开始
-//          }, intervalVal)
-//        }, false)
-//      },
       changeData() {
         this.index = (this.index + 1) % 2
         this.turnToPrev = false
