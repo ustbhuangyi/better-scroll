@@ -4,9 +4,6 @@
       <slot>
       </slot>
     </div>
-    <div v-if="showDot" class="dots">
-      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
-    </div>
   </div>
 </template>
 
@@ -30,10 +27,6 @@
       interval: {
         type: Number,
         default: 4000
-      },
-      showDot: {
-        type: Boolean,
-        default: true
       },
       click: {
         type: Boolean,
@@ -106,9 +99,6 @@
         clearTimeout(this.timer)
         this.currentPageIndex = 0
         this._setSlideHeight()
-        if (this.showDot) {
-          this._initDots()
-        }
         this._initSlide()
 
         if (this.autoPlay) {
@@ -204,23 +194,4 @@
         img
           display: block
           height: 100%
-    .dots
-      position: absolute
-      right: 0
-      left: 0
-      bottom: 12px
-      transform: translateZ(1px)
-      text-align: center
-      font-size: 0
-      .dot
-        display: inline-block
-        margin: 0 4px
-        height: 8px
-        height: 8px
-        border-radius: 50%
-        background: $color-light-grey-s
-        &.active
-          height: 20px
-          border-radius: 5px
-          background: $color-white
 </style>
