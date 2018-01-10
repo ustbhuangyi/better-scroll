@@ -38,6 +38,14 @@
       click: {
         type: Boolean,
         default: true
+      },
+      threshold: {
+        type: Number,
+        default: 0.3
+      },
+      speed: {
+        type: Number,
+        default: 400
       }
     },
     data() {
@@ -136,14 +144,15 @@
         this.$refs.slideGroup.style.width = width + 'px'
       },
       _initSlide() {
+        console.log(this.threshold)
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
           momentum: false,
           snap: {
             loop: this.loop,
-            threshold: 0.3,
-            speed: 400
+            threshold: this.threshold,
+            speed: this.speed
           },
           bounce: false,
           click: this.click
@@ -185,6 +194,12 @@
         this.update()
       },
       autoPlay() {
+        this.update()
+      },
+      speed() {
+        this.update()
+      },
+      threshold() {
         this.update()
       }
     }

@@ -2,7 +2,7 @@
   <div class="slide-render-view">
     <div class="slide-wrapper">
       <div class="slide-content">
-        <slide ref="slide" :autoPlay="isAutoPlay" :loop="isLoop" :showDot="isShowDot">
+        <slide ref="slide" :autoPlay="isAutoPlay" :loop="isLoop" :showDot="isShowDot" :interval="interval" :threshold="threshold" :speed="speed">
           <div v-for="item in data">
             <a :href="item.linkUrl">
               <img :src="item.picUrl">
@@ -14,8 +14,14 @@
     <div class="group">
       <switch-option class="item sub" :name="$t('slidePage.isAutoPlayTip')" :value="isAutoPlay"
                      @update:value="updateAutoPlay"></switch-option>
+      <input-option v-if="isAutoPlay" class="item sub" name="interval" :value="interval"
+                     @update:value="updateInterval"></input-option>
       <switch-option class="item sub" :name="$t('slidePage.isLoopTip')" :value="isLoop"
                      @update:value="updateLoop"></switch-option>
+      <input-option class="item sub" name="threshold" :value="threshold"
+                     @update:value="updateThreshold"></input-option>
+      <input-option class="item sub" name="speed" :value="speed"
+                     @update:value="updateSpeed"></input-option>
       <switch-option class="item sub" :name="$t('slidePage.isShowDotTip')" :value="isShowDot"
                      @update:value="updateShowDot"></switch-option>
       <free-option class="free-option item" :name="$t('slidePage.pageTurn')" >
@@ -32,6 +38,7 @@
 <script type="text/ecmascript-6">
   import Slide from 'example/components/slide/slide.vue'
   import SwitchOption from 'example/components/switch-option/switch-option.vue'
+  import InputOption from 'example/components/input-option/input-option.vue'
   import FreeOption from 'example/components/free-option/free-option.vue'
 
   const items = [
@@ -81,7 +88,10 @@
         turnToNext: false,
         isAutoPlay: true,
         isLoop: true,
-        isShowDot: true
+        isShowDot: true,
+        speed: 400,
+        threshold: 0.3,
+        interval: 4000
       }
     },
     methods: {
@@ -105,6 +115,11 @@
       updateAutoPlay(val) {
         this.isAutoPlay = val
       },
+      updateInterval(val) {
+        if (val) {
+          this.interval = +val
+        }
+      },
       updateLoop(val) {
         this.isLoop = val
       },
@@ -126,11 +141,18 @@
       turnTo(index) {
         index === 1 ? this.turnToPrev = true : this.turnToPrev = false
         index === 2 ? this.turnToNext = true : this.turnToNext = false
+      },
+      updateThreshold(val) {
+        if (val) {
+          this.threshold = +val
+        }
+      },
+      updateSpeed(val) {
+        if (val) {
+          this.speed = +val
+        }
       }
     },
-//    mounted() {
-//      this.init()
-//    },
     watch: {
       index() {
         this.$refs.slide.update()
@@ -139,7 +161,8 @@
     components: {
       Slide,
       SwitchOption,
-      FreeOption
+      FreeOption,
+      InputOption
     }
   }
 </script>
@@ -178,7 +201,6 @@
     .button-container
       button
         padding: 5px
-        border: 1px solid #fff
         border-radius: 5px
         background-color: #fff
         outline: none
