@@ -46,6 +46,7 @@
   - [scrollbar](options-advanced.md#scrollbar)
   - [pullDownRefresh](options-advanced.md#pulldownrefresh)
   - [pullUpLoad](options-advanced.md#pullupload)
+  - [mouseWheel](options-advanced.md#mousewheelv180)
 - [方法 / 通用](api.md)
   - [refresh](api.md#refresh)
   - [scrollTo](api.md#scrolltox-y-time-easing)
