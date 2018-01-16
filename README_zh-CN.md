@@ -4,9 +4,9 @@
 
 ## better-scroll 是什么
 
-better-scroll 是一款重点解决移动端（未来可能会考虑 PC 端）各种滚动场景需求的插件。它的核心是借鉴的 [iscroll](https://github.com/cubiq/iscroll) 的实现，它的 API 设计基本兼容 iscroll，在 iscroll 的基础上又扩展了一些 feature 以及做了一些性能优化。
+better-scroll 是一款重点解决移动端（现已支持 PC 端）各种滚动场景需求的插件。它的核心是借鉴的 [iscroll](https://github.com/cubiq/iscroll) 的实现，它的 API 设计基本兼容 iscroll，在 iscroll 的基础上又扩展了一些 feature 以及做了一些性能优化。
 
-better-scroll 是基于原生 JS 实现的，不依赖任何框架。它编译后的代码大小是 56kb，压缩后是 31kb，gzip 后仅有 8kb，是一款非常轻量的 JS lib。
+better-scroll 是基于原生 JS 实现的，不依赖任何框架。它编译后的代码大小是 63kb，压缩后是 35kb，gzip 后仅有 9kb，是一款非常轻量的 JS lib。
 
 ## 起步
 
