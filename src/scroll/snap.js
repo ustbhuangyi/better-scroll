@@ -157,66 +157,28 @@ export function snapMixin(BScroll) {
       return {x: 0, y: 0, pageX: 0, pageY: 0}
     }
 
-    let i = 0
+    let i, m
     // Check if we exceeded the snap threshold
     if (Math.abs(x - this.absStartX) <= this.snapThresholdX &&
       Math.abs(y - this.absStartY) <= this.snapThresholdY) {
       return this.currentPage
     }
 
-    if (x > 0) {
-      x = 0
-    } else if (x < this.maxScrollX) {
-      x = this.maxScrollX
+    i = this.currentPage.pageX + this.directionX
+    if (i < 0) {
+      i = 0
+    } else if (i >= this.pages.length) {
+      i = this.pages.length - 1
     }
+    x = this.pages[i][0].x
 
-    if (y > 0) {
-      y = 0
-    } else if (y < this.maxScrollY) {
-      y = this.maxScrollY
+    m = this.currentPage.pageY + this.directionY
+    if (m < 0) {
+      m = 0
+    } else if (m >= this.pages[0].length) {
+      m = this.pages[0].length - 1
     }
-
-    let l = this.pages.length
-    for (; i < l; i++) {
-      if (x >= this.pages[i][0].cx) {
-        x = this.pages[i][0].x
-        break
-      }
-    }
-
-    l = this.pages[i].length
-
-    let m = 0
-    for (; m < l; m++) {
-      if (y >= this.pages[0][m].cy) {
-        y = this.pages[0][m].y
-        break
-      }
-    }
-
-    if (i === this.currentPage.pageX) {
-      i += this.directionX
-
-      if (i < 0) {
-        i = 0
-      } else if (i >= this.pages.length) {
-        i = this.pages.length - 1
-      }
-
-      x = this.pages[i][0].x
-    }
-
-    if (m === this.currentPage.pageY) {
-      m += this.directionY
-
-      if (m < 0) {
-        m = 0
-      } else if (m >= this.pages[0].length) {
-        m = this.pages[0].length - 1
-      }
-
-      y = this.pages[0][m].y
-    }
+    y = this.pages[0][m].y
 
     return {
       x,

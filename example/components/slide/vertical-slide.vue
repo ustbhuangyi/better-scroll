@@ -129,7 +129,7 @@
           momentum: false,
           snap: {
             // loop: this.loop,
-            threshold: 0.3,
+            threshold: 0.15,
             speed: 400,
             easing: {
               style: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
