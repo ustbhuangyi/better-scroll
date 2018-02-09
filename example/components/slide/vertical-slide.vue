@@ -4,9 +4,6 @@
       <slot>
       </slot>
     </div>
-    <div v-if="showDot" class="dots">
-      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
-    </div>
   </div>
 </template>
 
@@ -31,21 +28,9 @@
         type: Number,
         default: 4000
       },
-      showDot: {
-        type: Boolean,
-        default: true
-      },
       click: {
         type: Boolean,
         default: true
-      },
-      threshold: {
-        type: Number,
-        default: 0.3
-      },
-      speed: {
-        type: Number,
-        default: 400
       }
     },
     data() {
@@ -104,11 +89,8 @@
         })
       },
       refresh() {
-        this._setSlideWidth(true)
+        this._setSlideHeight(true)
         this.slide.refresh()
-      },
-      prev() {
-        this.slide.prev()
       },
       next() {
         this.slide.next()
@@ -116,43 +98,42 @@
       init() {
         clearTimeout(this.timer)
         this.currentPageIndex = 0
-        this._setSlideWidth()
-        if (this.showDot) {
-          this._initDots()
-        }
+        this._setSlideHeight()
         this._initSlide()
 
         if (this.autoPlay) {
           this._play()
         }
       },
-      _setSlideWidth(isResize) {
+      _setSlideHeight(isResize) {
         this.children = this.$refs.slideGroup.children
 
-        let width = 0
-        let slideWidth = this.$refs.slide.clientWidth
+        let height = 0
+        let slideHeight = this.$refs.slide.clientHeight
         for (let i = 0; i < this.children.length; i++) {
           let child = this.children[i]
           addClass(child, 'slide-item')
 
-          child.style.width = slideWidth + 'px'
-          width += slideWidth
+          child.style.height = slideHeight + 'px'
+          height += slideHeight
         }
-        if (this.loop && !isResize) {
-          width += 2 * slideWidth
-        }
-        this.$refs.slideGroup.style.width = width + 'px'
+        // if (this.loop && !isResize) {
+        //   height += 2 * slideHeight
+        // }
+        this.$refs.slideGroup.style.height = height + 'px'
       },
       _initSlide() {
-        console.log(this.threshold)
         this.slide = new BScroll(this.$refs.slide, {
-          scrollX: true,
-          scrollY: false,
+          scrollX: false,
+          scrollY: true,
           momentum: false,
           snap: {
-            loop: this.loop,
-            threshold: this.threshold,
-            speed: this.speed
+            // loop: this.loop,
+            threshold: 0.3,
+            speed: 400,
+            easing: {
+              style: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            }
           },
           bounce: false,
           click: this.click
@@ -188,20 +169,6 @@
           this.slide.next()
         }, this.interval)
       }
-    },
-    watch: {
-      loop() {
-        this.update()
-      },
-      autoPlay() {
-        this.update()
-      },
-      speed() {
-        this.update()
-      },
-      threshold() {
-        this.update()
-      }
     }
   }
 </script>
@@ -216,35 +183,15 @@
       overflow: hidden
       white-space: nowrap
       .slide-item
-        float: left
         box-sizing: border-box
         overflow: hidden
         text-align: center
         a
           display: block
-          width: 100%
+          height: 100%
           overflow: hidden
           text-decoration: none
         img
           display: block
-          width: 100%
-    .dots
-      position: absolute
-      right: 0
-      left: 0
-      bottom: 12px
-      transform: translateZ(1px)
-      text-align: center
-      font-size: 0
-      .dot
-        display: inline-block
-        margin: 0 4px
-        width: 8px
-        height: 8px
-        border-radius: 50%
-        background: $color-light-grey-s
-        &.active
-          width: 20px
-          border-radius: 5px
-          background: $color-white
+          height: 100%
 </style>

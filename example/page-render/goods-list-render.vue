@@ -44,8 +44,27 @@
     },
     mounted() {
       this.$nextTick(() => {
-        this.scroll = new BScroll(this.$refs.scroll)
-        this._appendFood()
+        this.scroll = new BScroll(this.$refs.scroll, {
+          mouseWheel: true,
+          scrollbar: {
+            fade: false,
+            interactive: true
+          },
+          probeType: 3
+        })
+
+        this.scroll.on('scrollStart', () => {
+          console.log('scrollStart')
+        })
+
+        this.scroll.on('scroll', (pos) => {
+          console.log('pos:', pos)
+        })
+
+        this.scroll.on('scrollEnd', () => {
+          console.log('scrollEnd')
+        })
+//        this._appendFood()
       })
     },
     methods: {

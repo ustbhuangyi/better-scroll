@@ -27,6 +27,7 @@ export default {
     picker: 'Picker 组件',
     slide: 'Slide 组件',
     startGuidance: '开屏引导',
+    fullPageVerticalSlide: '全屏纵向slide',
     freeScroll: '自由滚动',
     formList: '表单列表',
     goodsList: '商品列表',
@@ -75,7 +76,13 @@ export default {
   },
 
   slidePage: {
-    desc: '轮播图是移动端常见的需求，支持左右滑动。'
+    desc: '轮播图是移动端常见的需求，支持左右滑动。',
+    click: '点击',
+    isAutoPlayTip: '自动播放',
+    isLoopTip: '循环播放',
+    isShowDotTip: '显示dots',
+    changeData: '改变数据',
+    pageTurn: '翻页'
   },
 
   fullPageSlideComponent: {

@@ -80,7 +80,8 @@ const DEFAULT_OPTIONS = {
   /**
    * for scrollbar
    * scrollbar: {
-   *   fade: true
+   *   fade: true,
+   *   interactive: false
    * }
    */
   scrollbar: false,
@@ -98,7 +99,15 @@ const DEFAULT_OPTIONS = {
    *   threshold: 50
    * }
    */
-  pullUpLoad: false
+  pullUpLoad: false,
+  /**
+   * for mouse wheel
+   * mouseWheel:{
+   *   speed: 20,
+   *   invert: false
+   * }
+   */
+  mouseWheel: false
 }
 
 export function initMixin(BScroll) {
@@ -210,6 +219,9 @@ export function initMixin(BScroll) {
     }
     if (this.options.wheel) {
       this._initWheel()
+    }
+    if (this.options.mouseWheel) {
+      this._initMouseWheel()
     }
   }
 
@@ -363,6 +375,11 @@ export function initMixin(BScroll) {
             e.stopPropagation()
           }
         }
+        break
+      case 'wheel':
+      case 'DOMMouseScroll':
+      case 'mousewheel':
+        this._onMouseWheel(e)
         break
     }
   }

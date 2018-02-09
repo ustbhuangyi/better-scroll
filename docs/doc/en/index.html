@@ -704,6 +704,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.6" data-path="options-advanced.html">
+            
+                <a href="options-advanced.html#mousewheelv180">
+            
+                    
+                    mouseWheel
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -820,6 +833,45 @@
             
                     
                     destroy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.9" data-path="api.html">
+            
+                <a href="api.html#ontype-fn-context">
+            
+                    
+                    on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.10" data-path="api.html">
+            
+                <a href="api.html#oncetype-fn-context">
+            
+                    
+                    once
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.11" data-path="api.html">
+            
+                <a href="api.html#offtype-fn">
+            
+                    
+                    off
             
                 </a>
             
@@ -1326,8 +1378,8 @@
                                 
                                 <h1 id="introduction">Introduction</h1>
 <h2 id="what-is-better-scroll-">What is better-scroll ?</h2>
-<p>better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (perhaps supporting the PC side in the future). The core is inspired by the implementation of <a href="https://github.com/cubiq/iscroll" target="_blank">iscroll</a>, so the APIs of better-scroll are compatible with iscroll on the whole. What&apos;s more, better-scroll also extends some features and optimizes for performance based on iscroll.</p>
-<p>better-scroll is implemented with plain JavaScript, which means it&apos;s dependency free. The size of compiled code is 56 KB, 31 KB after compressed, and only 8KB after gzip. better-scroll is a really lightweight JavaScript lib.</p>
+<p>better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (PC supported already). The core is inspired by the implementation of <a href="https://github.com/cubiq/iscroll" target="_blank">iscroll</a>, so the APIs of better-scroll are compatible with iscroll on the whole. What&apos;s more, better-scroll also extends some features and optimizes for performance based on iscroll.</p>
+<p>better-scroll is implemented with plain JavaScript, which means it&apos;s dependency free. The size of compiled code is 63 KB, 35 KB after compressed, and only 9KB after gzip. better-scroll is a really lightweight JavaScript lib.</p>
 <h2 id="getting-started">Getting started</h2>
 <p>The best way to learn and use better-scroll is by viewing its demo. We have put all the code in <a href="https://github.com/ustbhuangyi/better-scroll/tree/master/example" target="_blank">example</a> directory. Considering that one of the most suitable JavaScript MVVM framework for mobile development currently is <a href="https://github.com/vuejs/vue" target="_blank">Vue</a>, and better-scroll can be applied in conjunction with Vue very well, so I rewrote the demo with Vue.</p>
 <p>The most common application scenario of better-scroll is list scrolling. Let&apos;s see its HTML:</p>
@@ -1356,7 +1408,7 @@
 <p>I have initiated better-scroll, but the content can&apos;t scroll.</p>
 </blockquote>
 <p>The phenomenon is &apos;the content can&apos;t scroll&apos; and we need to figure out the root cause. Before that, let&apos;s take a look at the browser&apos;s scrolling principle: everyone can see the browser&apos;s scroll bar. When the height of the page content exceeds the viewport height, the vertical scroll bar will appear; When the width of page content exceeds the viewport width, the horizontal bar will appear. That is to say, when the viewport can&apos;t display all the content, the browser would guide the user to scroll the screen with scroll bar to see the rest of content.</p>
-<p>The principle of bett-scroll is samed as the browser. We can feel about this more obviously using a picture:</p>
+<p>The principle of better-scroll is samed as the browser. We can feel about this more obviously using a picture:</p>
 <p><img src="http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png" alt="&#x5E03;&#x5C40;"></p>
 <p>The green part is the wrapper, also known as the parent container, which has <strong>fixed height</strong>. The yellow part is the content, which is <strong>the first child element</strong> of the parent container and whose height would grow with the size of its content. Then, when the height of the content doesn&apos;t exceed the height of the parent container, the content would not scroll. Once exceeded, the content can be scrolled. That is the principle of better-scroll.</p>
 <h2 id="using-better-scroll-with-mvvm-frameworks">Using better-scroll with MVVM frameworks</h2>
@@ -1409,7 +1461,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"What is BetterScroll ?","level":"1.1.1","depth":2,"anchor":"#what-is-better-scroll-","path":"README.md","ref":"README.md#what-is-better-scroll-","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"README.md","mtime":"2018-01-02T17:29:34.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-02T17:49:33.298Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"What is BetterScroll ?","level":"1.1.1","depth":2,"anchor":"#what-is-better-scroll-","path":"README.md","ref":"README.md#what-is-better-scroll-","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"README.md","mtime":"2018-01-16T10:05:18.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-16T10:25:38.212Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>

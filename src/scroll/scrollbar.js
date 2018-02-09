@@ -1,10 +1,12 @@
-import { style } from '../util/dom'
+import { style, addEvent, removeEvent } from '../util/dom'
+import { getNow } from '../util/lang'
+import { ease } from '../util/ease'
 
 const INDICATOR_MIN_LEN = 8
 
 export function scrollbarMixin(BScroll) {
   BScroll.prototype._initScrollbar = function () {
-    const {fade = true} = this.options.scrollbar
+    const {fade = true, interactive = false} = this.options.scrollbar
     this.indicators = []
     let indicator
 
@@ -12,7 +14,8 @@ export function scrollbarMixin(BScroll) {
       indicator = {
         el: createScrollbar('horizontal'),
         direction: 'horizontal',
-        fade
+        fade,
+        interactive
       }
       this._insertScrollBar(indicator.el)
 
@@ -23,7 +26,8 @@ export function scrollbarMixin(BScroll) {
       indicator = {
         el: createScrollbar('vertical'),
         direction: 'vertical',
-        fade
+        fade,
+        interactive
       }
       this._insertScrollBar(indicator.el)
       this.indicators.push(new Indicator(this, indicator))
@@ -71,9 +75,8 @@ export function scrollbarMixin(BScroll) {
   }
 
   BScroll.prototype._removeScrollBars = function () {
-    for (var i = 0; i < this.indicators.length; i++) {
-      let indicator = this.indicators[i]
-      indicator.remove()
+    for (let i = 0; i < this.indicators.length; i++) {
+      this.indicators[i].destroy()
     }
   }
 }
@@ -115,6 +118,36 @@ function Indicator(scroller, options) {
     this.wrapperStyle.opacity = '0'
   } else {
     this.visible = 1
+  }
+
+  this.sizeRatioX = 1
+  this.sizeRatioY = 1
+  this.maxPosX = 0
+  this.maxPosY = 0
+  this.x = 0
+  this.y = 0
+
+  if (options.interactive) {
+    this._addDOMEvents()
+  }
+}
+
+Indicator.prototype.handleEvent = function (e) {
+  switch (e.type) {
+    case 'touchstart':
+    case 'mousedown':
+      this._start(e)
+      break
+    case 'touchmove':
+    case 'mousemove':
+      this._move(e)
+      break
+    case 'touchend':
+    case 'mouseup':
+    case 'touchcancel':
+    case 'mousecancel':
+      this._end(e)
+      break
   }
 }
 
@@ -201,8 +234,113 @@ Indicator.prototype.transitionTimingFunction = function (easing) {
   this.indicatorStyle[style.transitionTimingFunction] = easing
 }
 
-Indicator.prototype.remove = function () {
+Indicator.prototype.destroy = function () {
+  this._removeDOMEvents()
   this.wrapper.parentNode.removeChild(this.wrapper)
+}
+
+Indicator.prototype._start = function (e) {
+  let point = e.touches ? e.touches[0] : e
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  this.transitionTime()
+
+  this.initiated = true
+  this.moved = false
+  this.lastPointX = point.pageX
+  this.lastPointY = point.pageY
+
+  this.startTime = getNow()
+
+  this._handleMoveEvents(addEvent)
+  this.scroller.trigger('beforeScrollStart')
+}
+
+Indicator.prototype._move = function (e) {
+  let point = e.touches ? e.touches[0] : e
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  if (!this.moved) {
+    this.scroller.trigger('scrollStart')
+  }
+
+  this.moved = true
+
+  let deltaX = point.pageX - this.lastPointX
+  this.lastPointX = point.pageX
+
+  let deltaY = point.pageY - this.lastPointY
+  this.lastPointY = point.pageY
+
+  let newX = this.x + deltaX
+  let newY = this.y + deltaY
+
+  this._pos(newX, newY)
+}
+
+Indicator.prototype._end = function (e) {
+  if (!this.initiated) {
+    return
+  }
+  this.initiated = false
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  this._handleMoveEvents(removeEvent)
+
+  const snapOption = this.scroller.options.snap
+  if (snapOption) {
+    let {speed, easing = ease.bounce} = snapOption
+    let snap = this.scroller._nearestSnap(this.scroller.x, this.scroller.y)
+
+    let time = speed || Math.max(
+        Math.max(
+          Math.min(Math.abs(this.scroller.x - snap.x), 1000),
+          Math.min(Math.abs(this.scroller.y - snap.y), 1000)
+        ), 300)
+
+    if (this.scroller.x !== snap.x || this.scroller.y !== snap.y) {
+      this.scroller.directionX = 0
+      this.scroller.directionY = 0
+      this.scroller.currentPage = snap
+      this.scroller.scrollTo(snap.x, snap.y, time, easing)
+    }
+  }
+
+  if (this.moved) {
+    this.scroller.trigger('scrollEnd', {
+      x: this.scroller.x,
+      y: this.scroller.y
+    })
+  }
+}
+
+Indicator.prototype._pos = function (x, y) {
+  if (x < 0) {
+    x = 0
+  } else if (x > this.maxPosX) {
+    x = this.maxPosX
+  }
+
+  if (y < 0) {
+    y = 0
+  } else if (y > this.maxPosY) {
+    y = this.maxPosY
+  }
+
+  x = Math.round(x / this.sizeRatioX)
+  y = Math.round(y / this.sizeRatioY)
+
+  this.scroller.scrollTo(x, y)
+  this.scroller.trigger('scroll', {
+    x: this.scroller.x,
+    y: this.scroller.y
+  })
 }
 
 Indicator.prototype._calculate = function () {
@@ -222,6 +360,37 @@ Indicator.prototype._calculate = function () {
     this.maxPosX = wrapperWidth - this.indicatorWidth
 
     this.sizeRatioX = this.maxPosX / this.scroller.maxScrollX
+  }
+}
+
+Indicator.prototype._addDOMEvents = function () {
+  let eventOperation = addEvent
+  this._handleDOMEvents(eventOperation)
+}
+
+Indicator.prototype._removeDOMEvents = function () {
+  let eventOperation = removeEvent
+  this._handleDOMEvents(eventOperation)
+  this._handleMoveEvents(eventOperation)
+}
+
+Indicator.prototype._handleMoveEvents = function (eventOperation) {
+  if (!this.scroller.options.disableTouch) {
+    eventOperation(window, 'touchmove', this)
+  }
+  if (!this.scroller.options.disableMouse) {
+    eventOperation(window, 'mousemove', this)
+  }
+}
+
+Indicator.prototype._handleDOMEvents = function (eventOperation) {
+  if (!this.scroller.options.disableTouch) {
+    eventOperation(this.indicator, 'touchstart', this)
+    eventOperation(window, 'touchend', this)
+  }
+  if (!this.scroller.options.disableMouse) {
+    eventOperation(this.indicator, 'mousedown', this)
+    eventOperation(window, 'mouseup', this)
   }
 }
 

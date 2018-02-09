@@ -54,3 +54,49 @@ better-scroll 提供了很多灵活的 API，当我们基于 better-scroll 去�
    - 参数：无
    - 返回值：无
    - 作用：销毁 better-scroll，解绑事件。
+   
+## on(type, fn, context)
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+     - {context} 函数执行的上下文环境，默认是 this
+   - 返回值：无
+   - 作用：监听当前实例上的[自定义事件](/events.html)。如：scroll, scrollEnd, pullingUp, pullingDown等。
+   - 示例：
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper')
+   function onScroll(pos) {
+       console.log(`Now position is x: ${pos.x}, y: ${pos.y}`)
+   }
+   scroll.on('scroll', onScroll)
+   ```
+   
+## once(type, fn, context)
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+     - {context} 函数执行的上下文环境，默认是 this
+   - 返回值：无
+   - 作用：监听一个自定义事件，但是只触发一次，在第一次触发之后移除监听器。
+
+## off(type, fn)
+   - 参数：
+     - {String} type 事件名
+     - {Function} fn 回调函数
+   - 返回值：无
+   - 作用：移除自定义事件监听器。只会移除这个回调的监听器。
+   - 示例：
+   ```javascript
+   import BScroll from 'better-scroll'
+   let scroll = new BScroll('.wrapper', {
+       pullUpLoad: true
+   })
+   function onPullingUp() {
+       console.log('pullingup success!')
+   }
+   scroll.on('pullingUp', onPullingUp) // 添加pullingup事件回调onPullingUp
+   ...
+   scroll.off('pullingUp', onPullingUp) // 移除pullingup事件回调onPullingUp
+   ...
+   ```   

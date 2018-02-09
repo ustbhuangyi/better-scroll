@@ -706,6 +706,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.6" data-path="options-advanced.html">
+            
+                <a href="options-advanced.html#mousewheelv180">
+            
+                    
+                    mouseWheel
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -822,6 +835,45 @@
             
                     
                     destroy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.9" data-path="api.html">
+            
+                <a href="api.html#ontype-fn-context">
+            
+                    
+                    on
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.10" data-path="api.html">
+            
+                <a href="api.html#oncetype-fn-context">
+            
+                    
+                    once
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.11" data-path="api.html">
+            
+                <a href="api.html#offtype-fn">
+            
+                    
+                    off
             
                 </a>
             
@@ -1395,6 +1447,59 @@
 <li>Return: none.</li>
 <li>Usage: destroy better-scroll&#xFF0C;remove events and free some memory when the scroll is not needed anymore.</li>
 </ul>
+<h2 id="ontype-fn-context">on(type, fn, context)</h2>
+<ul>
+<li>Parameters:<ul>
+<li><code>{String} type</code>, event </li>
+<li><code>{Function} fn</code>, callback</li>
+<li><code>{Fnctuon} context</code>, context,default is this.</li>
+</ul>
+</li>
+<li>Return: none</li>
+<li>Usage: Listen for a <a href="events.html">custom event</a> on the current BScroll, such as &quot;scroll&quot;, &quot;scrollEnd&quot;, &quot;pullingUp&quot;, &quot;pullingDown&quot; and so on.</li>
+<li>Example:<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> BScroll <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;better-scroll&apos;</span>
+<span class="hljs-keyword">let</span> scroll = <span class="hljs-keyword">new</span> BScroll(<span class="hljs-string">&apos;.wrapper&apos;</span>)
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onScroll</span>(<span class="hljs-params">pos</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Now position is x: <span class="hljs-subst">${pos.x}</span>, y: <span class="hljs-subst">${pos.y}</span>`</span>)
+}
+scroll.on(<span class="hljs-string">&apos;scroll&apos;</span>, onScroll)
+</code></pre>
+</li>
+</ul>
+<h2 id="oncetype-fn-context">once(type, fn, context)</h2>
+<ul>
+<li>Parameters:<ul>
+<li><code>{String} type</code>, event </li>
+<li><code>{Function} fn</code>, callback</li>
+<li><code>{Fnctuon} context</code>, context,default is this.</li>
+</ul>
+</li>
+<li>Return: none</li>
+<li>Usage: Listen for a custom event, but only once. The listener will be removed once it triggers for the first time.</li>
+</ul>
+<h2 id="offtype-fn">off(type, fn)</h2>
+<ul>
+<li>Parameters:<ul>
+<li><code>{String} type</code>, event </li>
+<li><code>{Function} fn</code>, callback</li>
+</ul>
+</li>
+<li>Return: none</li>
+<li>Usage: Remove custom event listener. Only remove the listener for that specific callback.</li>
+<li>Example&#xFF1A;<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> BScroll <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;better-scroll&apos;</span>
+<span class="hljs-keyword">let</span> scroll = <span class="hljs-keyword">new</span> BScroll(<span class="hljs-string">&apos;.wrapper&apos;</span>, {
+  pullUpLoad: <span class="hljs-literal">true</span>
+})
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onPullingUp</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;pullingup success!&apos;</span>)
+}
+scroll.on(<span class="hljs-string">&apos;pullingUp&apos;</span>, onPullingUp) <span class="hljs-comment">// add pullingup event callback</span>
+...
+scroll.off(<span class="hljs-string">&apos;pullingUp&apos;</span>, onPullingUp) <span class="hljs-comment">// remove pullingup event callback</span>
+...
+</code></pre>
+</li>
+</ul>
 
                                 
                                 </section>
@@ -1422,7 +1527,7 @@
 
             
                 
-                <a href="options-advanced.html#pullupload" class="navigation navigation-prev " aria-label="Previous page: pullUpLoad">
+                <a href="options-advanced.html#mousewheelv180" class="navigation navigation-prev " aria-label="Previous page: mouseWheel">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -1438,7 +1543,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Methods / Common","level":"1.5","depth":1,"next":{"title":"refresh","level":"1.5.1","depth":2,"anchor":"#refresh","path":"api.md","ref":"api.md#refresh","articles":[]},"previous":{"title":"pullUpLoad","level":"1.4.5","depth":2,"anchor":"#pullupload","path":"options-advanced.md","ref":"options-advanced.md#pullupload","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"api.md","mtime":"2017-09-19T03:24:25.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-02T17:49:33.298Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Methods / Common","level":"1.5","depth":1,"next":{"title":"refresh","level":"1.5.1","depth":2,"anchor":"#refresh","path":"api.md","ref":"api.md#refresh","articles":[]},"previous":{"title":"mouseWheel","level":"1.4.6","depth":2,"anchor":"#mousewheelv180","path":"options-advanced.md","ref":"options-advanced.md#mousewheelv180","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"api.md","mtime":"2018-01-08T12:02:09.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-16T10:25:38.212Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>

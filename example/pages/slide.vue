@@ -1,6 +1,6 @@
 <template>
   <page :title="$t('examples.slide')" :desc="$t('slidePage.desc')">
-    <div slot="content">
+    <div slot="content" class="slid">
       <slide-render></slide-render>
     </div>
   </page>
@@ -17,3 +17,10 @@
     }
   }
 </script>
+<style lang='stylus' rel='stylesheet/stylus'>
+  .example
+    .page
+      .wrapper
+        overflow: auto
+        padding-bottom: 50px
+</style>
