@@ -1,4 +1,4 @@
-import { inBrowser } from 'env'
+import { inBrowser } from './env'
 
 const DEFAULT_INTERVAL = 100 / 60
 
