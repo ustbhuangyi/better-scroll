@@ -1,9 +1,12 @@
-import { isWeChatDevTools } from './env'
+import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
 
-let elementStyle = document.createElement('div').style
+let elementStyle = inBrowser && document.createElement('div').style
 
 let vendor = (() => {
+  if (!inBrowser) {
+    return false
+  }
   let transformNames = {
     webkit: 'webkitTransform',
     Moz: 'MozTransform',
@@ -62,11 +65,11 @@ export function offset(el) {
 
 let transform = prefixStyle('transform')
 
-export const hasPerspective = prefixStyle('perspective') in elementStyle
+export const hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle
 // fix issue #361
-export const hasTouch = 'ontouchstart' in window || isWeChatDevTools
+export const hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools)
 export const hasTransform = transform !== false
-export const hasTransition = prefixStyle('transition') in elementStyle
+export const hasTransition = inBrowser && prefixStyle('transition') in elementStyle
 
 export const style = {
   transform,

@@ -1,6 +1,15 @@
+import { inBrowser } from './env'
+
 const DEFAULT_INTERVAL = 100 / 60
 
+function noop() {
+}
+
 export const requestAnimationFrame = (() => {
+  if (!inBrowser) {
+    /* istanbul ignore if */
+    return noop
+  }
   return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
@@ -12,6 +21,10 @@ export const requestAnimationFrame = (() => {
 })()
 
 export const cancelAnimationFrame = (() => {
+  if (!inBrowser) {
+    /* istanbul ignore if */
+    return noop
+  }
   return window.cancelAnimationFrame ||
     window.webkitCancelAnimationFrame ||
     window.mozCancelAnimationFrame ||
