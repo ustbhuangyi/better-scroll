@@ -152,9 +152,9 @@ interface BScroll {
   // 当我们做 slide 组件的时候，slide 通常会分成多个页面。调用此方法可以滚动到指定的页面。
   goToPage(x: number, y: number, time?: number, easing?: object): void;
   // 滚动到下一个页面
-  next(time: number, easing: object): void;
+  next(time?: number, easing?: object): void;
   // 滚动到上一个页面
-  prev(time: number, easing: object): void;
+  prev(time?: number, easing?: object): void;
   // 获取当前页面的信息
   getCurrentPage(): {
     x: number;
