@@ -13,6 +13,7 @@ import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
 import { getNow } from '../util/lang'
 import { DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT } from '../util/const'
 import { isAndroid } from '../util/env'
+import { warn } from '../util/debug'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -407,6 +408,10 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype._translate = function (x, y) {
+    if (x === undefined || x === null || y === undefined || y === null) {
+      warn('Oops! translate X or Y is undefined. please check your code.')
+      return
+    }
     if (this.options.useTransform) {
       this.scrollerStyle[style.transform] = `translate(${x}px,${y}px)${this.translateZ}`
     } else {

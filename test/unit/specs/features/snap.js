@@ -97,6 +97,7 @@ describe('BScroll - snap', () => {
         threshold: 0.3,
         speed: 400
       },
+      startX: 0,
       click: true
     })
   })
