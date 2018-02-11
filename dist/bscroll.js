@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.8.0
+ * better-normal-scroll v1.8.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -130,10 +130,11 @@ function eventMixin(BScroll) {
   };
 }
 
-var ua = navigator.userAgent.toLowerCase();
-
-var isWeChatDevTools = /wechatdevtools/.test(ua);
-var isAndroid = ua.indexOf('android') > 0;
+// ssr support
+var inBrowser = typeof window !== 'undefined';
+var ua = inBrowser && navigator.userAgent.toLowerCase();
+var isWeChatDevTools = ua && /wechatdevtools/.test(ua);
+var isAndroid = ua && ua.indexOf('android') > 0;
 
 function getNow() {
   return window.performance && window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : +new Date();
@@ -153,9 +154,16 @@ function extend(target) {
   return target;
 }
 
-var elementStyle = document.createElement('div').style;
+function isUndef(v) {
+  return v === undefined || v === null;
+}
+
+var elementStyle = inBrowser && document.createElement('div').style;
 
 var vendor = function () {
+  if (!inBrowser) {
+    return false;
+  }
   var transformNames = {
     webkit: 'webkitTransform',
     Moz: 'MozTransform',
@@ -214,11 +222,11 @@ function offset(el) {
 
 var transform = prefixStyle('transform');
 
-var hasPerspective = prefixStyle('perspective') in elementStyle;
+var hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle;
 // fix issue #361
-var hasTouch = 'ontouchstart' in window || isWeChatDevTools;
+var hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools);
 var hasTransform = transform !== false;
-var hasTransition = prefixStyle('transition') in elementStyle;
+var hasTransition = inBrowser && prefixStyle('transition') in elementStyle;
 
 var style = {
   transform: transform,
@@ -818,7 +826,13 @@ function momentum(current, start, time, lowerMargin, wrapperSize, options) {
 
 var DEFAULT_INTERVAL = 100 / 60;
 
+function noop() {}
+
 var requestAnimationFrame = function () {
+  if (!inBrowser) {
+    /* istanbul ignore if */
+    return noop;
+  }
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
   // if all else fails, use setTimeout
   function (callback) {
@@ -827,6 +841,10 @@ var requestAnimationFrame = function () {
 }();
 
 var cancelAnimationFrame = function () {
+  if (!inBrowser) {
+    /* istanbul ignore if */
+    return noop;
+  }
   return window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || function (id) {
     window.clearTimeout(id);
   };
@@ -836,6 +854,16 @@ var DIRECTION_UP = 1;
 var DIRECTION_DOWN = -1;
 var DIRECTION_LEFT = 1;
 var DIRECTION_RIGHT = -1;
+
+function warn(msg) {
+  console.error('[BScroll warn]: ' + msg);
+}
+
+function assert(condition, msg) {
+  if (!condition) {
+    throw new Error('[BScroll] ' + msg);
+  }
+}
 
 function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -1229,6 +1257,7 @@ function coreMixin(BScroll) {
   };
 
   BScroll.prototype._translate = function (x, y) {
+    assert(!isUndef(x) && !isUndef(y), 'Oops! translate x or y is null or undefined. please check your code.');
     if (this.options.useTransform) {
       this.scrollerStyle[style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.translateZ;
     } else {
@@ -1776,10 +1805,6 @@ function snapMixin(BScroll) {
     }
     return null;
   };
-}
-
-function warn(msg) {
-  console.error("[BScroll warn]: " + msg);
 }
 
 function wheelMixin(BScroll) {
@@ -2450,7 +2475,7 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.8.0';
+BScroll.Version = '1.8.1';
 
 return BScroll;
 
