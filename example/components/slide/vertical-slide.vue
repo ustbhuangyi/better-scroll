@@ -64,7 +64,7 @@
         return
       }
       this.slide.enable()
-      let pageIndex = this.slide.getCurrentPage().pageX
+      let pageIndex = this.slide.getCurrentPage().pageY
       this.slide.goToPage(pageIndex, 0, 0)
       this.currentPageIndex = pageIndex
       if (this.autoPlay) {
