@@ -117,9 +117,6 @@
           child.style.height = slideHeight + 'px'
           height += slideHeight
         }
-        // if (this.loop && !isResize) {
-        //   height += 2 * slideHeight
-        // }
         this.$refs.slideGroup.style.height = height + 'px'
       },
       _initSlide() {
@@ -154,7 +151,7 @@
         })
       },
       _onScrollEnd() {
-        let pageIndex = this.slide.getCurrentPage().pageX
+        let pageIndex = this.slide.getCurrentPage().pageY
         this.currentPageIndex = pageIndex
         if (this.autoPlay) {
           this._play()
