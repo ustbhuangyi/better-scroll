@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.8.1
+ * better-normal-scroll v1.8.2
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -301,15 +301,24 @@ function click(e) {
   // cancelable set to false in case of the conflict with fastclick
   var cancelable = false;
   if (typeof MouseEvent !== 'undefined') {
-    ev = new MouseEvent(event, extend({
-      bubbles: bubbles,
-      cancelable: cancelable
-    }, posSrc));
+    try {
+      ev = new MouseEvent(event, extend({
+        bubbles: bubbles,
+        cancelable: cancelable
+      }, posSrc));
+    } catch (e) {
+      createEvent();
+    }
   } else {
+    createEvent();
+  }
+
+  function createEvent() {
     ev = document.createEvent('Event');
     ev.initEvent(event, bubbles, cancelable);
     extend(ev, posSrc);
   }
+
   ev._constructed = true;
   e.target.dispatchEvent(ev);
 }
@@ -2469,6 +2478,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.8.1';
+BScroll.Version = '1.8.2';
 
 export default BScroll;
