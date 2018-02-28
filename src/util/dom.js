@@ -150,15 +150,24 @@ export function click(e) {
   // cancelable set to false in case of the conflict with fastclick
   const cancelable = false
   if (typeof MouseEvent !== 'undefined') {
-    ev = new MouseEvent(event, extend({
-      bubbles,
-      cancelable
-    }, posSrc))
+    try {
+      ev = new MouseEvent(event, extend({
+        bubbles,
+        cancelable
+      }, posSrc))
+    } catch (e) {
+      createEvent()
+    }
   } else {
+    createEvent()
+  }
+
+  function createEvent() {
     ev = document.createEvent('Event')
     ev.initEvent(event, bubbles, cancelable)
     extend(ev, posSrc)
   }
+
   ev._constructed = true
   e.target.dispatchEvent(ev)
 }
