@@ -147,8 +147,7 @@ export function click(e) {
   let ev
   const event = 'click'
   const bubbles = true
-  // cancelable set to false in case of the conflict with fastclick
-  const cancelable = false
+  const cancelable = true
   if (typeof MouseEvent !== 'undefined') {
     try {
       ev = new MouseEvent(event, extend({
@@ -168,6 +167,8 @@ export function click(e) {
     extend(ev, posSrc)
   }
 
+  // forwardedTouchEvent set to true in case of the conflict with fastclick
+  ev.forwardedTouchEvent = true
   ev._constructed = true
   e.target.dispatchEvent(ev)
 }
