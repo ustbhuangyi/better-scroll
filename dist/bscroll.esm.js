@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.8.2
+ * better-normal-scroll v1.8.3
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -298,8 +298,7 @@ function click(e) {
   var ev = void 0;
   var event = 'click';
   var bubbles = true;
-  // cancelable set to false in case of the conflict with fastclick
-  var cancelable = false;
+  var cancelable = true;
   if (typeof MouseEvent !== 'undefined') {
     try {
       ev = new MouseEvent(event, extend({
@@ -319,6 +318,8 @@ function click(e) {
     extend(ev, posSrc);
   }
 
+  // forwardedTouchEvent set to true in case of the conflict with fastclick
+  ev.forwardedTouchEvent = true;
   ev._constructed = true;
   e.target.dispatchEvent(ev);
 }
@@ -2478,6 +2479,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.8.2';
+BScroll.Version = '1.8.3';
 
 export default BScroll;
