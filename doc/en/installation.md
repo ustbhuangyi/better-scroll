@@ -24,4 +24,4 @@ var BScroll = require('better-scroll')
 
 better-scroll also supports the way of loading script directly. There will be a BScroll object in window when loaded.
 
-You can use the following address:  `https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js`. Alternative is copying the files in the directory of dist and publishing them in your own cdn servers.
+You can use the following address:  `https://unpkg.com/better-scroll/dist/bscroll.min.js`. Alternative is copying the files in the directory of dist and publishing them in your own cdn servers.
