@@ -9,7 +9,7 @@ describe('momentum.js', () => {
       swipeTime: 2500
     })
     expect(ret.destination)
-      .to.equal(245)
+      .to.equal(104)
     expect(ret.duration)
       .to.equal(500)
 
