@@ -68,7 +68,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
 
 ## bounceTime
    - Type: `Number`
-   - Default: `700` (ms, modification is not recommended)
+   - Default: `800` (ms, modification is not recommended)
    - Usage: Set the duration in millisecond of the bounce animation.
 
 ## momentum

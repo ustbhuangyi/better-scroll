@@ -67,7 +67,7 @@ let scroll = new BScroll('.wrapper',{
    
 ## bounceTime
    - 类型：Number
-   - 默认值：700（单位ms，不建议修改）
+   - 默认值：800（单位ms，不建议修改）
    - 作用：设置回弹动画的动画时长。
 
 ## momentum
