@@ -13,10 +13,10 @@ export function momentum(current, start, time, lowerMargin, wrapperSize, options
   }
 
   if (destination < lowerMargin) {
-    destination = wrapperSize ? lowerMargin - (wrapperSize / rate * speed) : lowerMargin
+    destination = wrapperSize ? Math.max(lowerMargin - wrapperSize / 4, lowerMargin - (wrapperSize / rate * speed)) : lowerMargin
     duration = swipeBounceTime
   } else if (destination > 0) {
-    destination = wrapperSize ? wrapperSize / rate * speed : 0
+    destination = wrapperSize ? Math.min(wrapperSize / 4, wrapperSize / rate * speed) : 0
     duration = swipeBounceTime
   }
 

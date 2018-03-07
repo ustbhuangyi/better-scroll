@@ -24,7 +24,7 @@ const DEFAULT_OPTIONS = {
   click: false,
   tap: false,
   bounce: true,
-  bounceTime: 700,
+  bounceTime: 800,
   momentum: true,
   momentumLimitTime: 300,
   momentumLimitDistance: 15,
