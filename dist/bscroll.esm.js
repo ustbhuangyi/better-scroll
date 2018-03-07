@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.8.3
+ * better-normal-scroll v1.8.4
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -351,7 +351,7 @@ var DEFAULT_OPTIONS = {
   click: false,
   tap: false,
   bounce: true,
-  bounceTime: 700,
+  bounceTime: 800,
   momentum: true,
   momentumLimitTime: 300,
   momentumLimitDistance: 15,
@@ -815,10 +815,10 @@ function momentum(current, start, time, lowerMargin, wrapperSize, options) {
   }
 
   if (destination < lowerMargin) {
-    destination = wrapperSize ? lowerMargin - wrapperSize / rate * speed : lowerMargin;
+    destination = wrapperSize ? Math.max(lowerMargin - wrapperSize / 4, lowerMargin - wrapperSize / rate * speed) : lowerMargin;
     duration = swipeBounceTime;
   } else if (destination > 0) {
-    destination = wrapperSize ? wrapperSize / rate * speed : 0;
+    destination = wrapperSize ? Math.min(wrapperSize / 4, wrapperSize / rate * speed) : 0;
     duration = swipeBounceTime;
   }
 
@@ -2479,6 +2479,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.8.3';
+BScroll.Version = '1.8.4';
 
 export default BScroll;
