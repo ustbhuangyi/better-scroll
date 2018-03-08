@@ -40,11 +40,11 @@ function prefixStyle(style) {
 }
 
 export function addEvent(el, type, fn, capture) {
-  el.addEventListener(type, fn, {passive: false, capture: !!capture})
+  el.addEventListener(type, fn, { passive: false, capture: !!capture })
 }
 
 export function removeEvent(el, type, fn, capture) {
-  el.removeEventListener(type, fn, {passive: false, capture: !!capture})
+  el.removeEventListener(type, fn, { passive: false, capture: !!capture })
 }
 
 export function offset(el) {
@@ -95,22 +95,18 @@ export const eventType = {
 }
 
 export function getRect(el) {
-  if (el instanceof window.SVGElement) {
-    var rect = el.getBoundingClientRect()
-    return {
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height
-    }
-  } else {
-    return {
+  var rect = el.getBoundingClientRect && el.getBoundingClientRect()
+  return rect ? {
+    top: rect.top,
+    left: rect.left,
+    width: rect.width,
+    height: rect.height
+  } : {
       top: el.offsetTop,
       left: el.offsetLeft,
       width: el.offsetWidth,
       height: el.offsetHeight
     }
-  }
 }
 
 export function preventDefaultException(el, exceptions) {
