@@ -13,11 +13,11 @@ import { warn } from './util/debug'
 function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
   if (!this.wrapper) {
-    warn('can not resolve the wrapper dom')
+    warn('Can not resolve the wrapper DOM.')
   }
   this.scroller = this.wrapper.children[0]
   if (!this.scroller) {
-    warn('the wrapper need at least one child element to be scroller')
+    warn('The wrapper need at least one child element to be scroller.')
   }
   // cache style for better performance
   this.scrollerStyle = this.scroller.style
