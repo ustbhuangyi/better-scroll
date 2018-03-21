@@ -3,7 +3,6 @@ import { DIRECTION_UP, PROBE_REALTIME } from '../util/const'
 export function pullUpMixin(BScroll) {
   BScroll.prototype._initPullUp = function () {
     // must watch scroll in real time
-    this._prevProbeType = this.options.probeType
     this.options.probeType = PROBE_REALTIME
 
     this.pullupWatching = false
@@ -51,9 +50,6 @@ export function pullUpMixin(BScroll) {
       return
     }
     this.pullupWatching = false
-    if (this._prevProbeType) {
-      this.options.probeType = this._prevProbeType
-    }
     this.off('scroll', this._checkToEnd)
   }
 }

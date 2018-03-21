@@ -232,6 +232,9 @@
         })
 
         this.scroll.on('scroll', (pos) => {
+          if (!this.pullDownRefresh) {
+            return
+          }
           if (this.beforePullDown) {
             this.bubbleY = Math.max(0, pos.y + this.pullDownInitTop)
             this.pullDownStyle = `top:${Math.min(pos.y + this.pullDownInitTop, 10)}px`
