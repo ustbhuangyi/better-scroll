@@ -113,14 +113,24 @@
         deep: true
       },
       pullDownRefreshObj: {
-        handler() {
-          this.rebuildScroll()
+        handler(val) {
+          const scroll = this.$refs.scroll.scroll
+          if (val) {
+            scroll.openPullDown()
+          } else {
+            scroll.closePullDown()
+          }
         },
         deep: true
       },
       pullUpLoadObj: {
-        handler() {
-          this.rebuildScroll()
+        handler(val) {
+          const scroll = this.$refs.scroll.scroll
+          if (val) {
+            scroll.openPullUp()
+          } else {
+            scroll.closePullUp()
+          }
         },
         deep: true
       },

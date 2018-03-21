@@ -11,7 +11,14 @@ import { ease } from '../util/ease'
 import { momentum } from '../util/momentum'
 import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
 import { getNow, isUndef } from '../util/lang'
-import { DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT } from '../util/const'
+import {
+  DIRECTION_DOWN,
+  DIRECTION_UP,
+  DIRECTION_LEFT,
+  DIRECTION_RIGHT,
+  PROBE_DEBOUNCE,
+  PROBE_REALTIME
+} from '../util/const'
 import { isAndroid } from '../util/env'
 import { assert } from '../util/debug'
 
@@ -156,7 +163,7 @@ export function coreMixin(BScroll) {
       this.startX = this.x
       this.startY = this.y
 
-      if (this.options.probeType === 1) {
+      if (this.options.probeType === PROBE_DEBOUNCE) {
         this.trigger('scroll', {
           x: this.x,
           y: this.y
@@ -164,7 +171,7 @@ export function coreMixin(BScroll) {
       }
     }
 
-    if (this.options.probeType > 1) {
+    if (this.options.probeType > PROBE_DEBOUNCE) {
       this.trigger('scroll', {
         x: this.x,
         y: this.y
@@ -398,7 +405,7 @@ export function coreMixin(BScroll) {
     this._transitionTime()
     if (!this.pulling && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false
-      if (this.options.probeType !== 3) {
+      if (this.options.probeType !== PROBE_REALTIME) {
         this.trigger('scrollEnd', {
           x: this.x,
           y: this.y
@@ -469,7 +476,7 @@ export function coreMixin(BScroll) {
         me.animateTimer = requestAnimationFrame(step)
       }
 
-      if (me.options.probeType === 3) {
+      if (me.options.probeType === PROBE_REALTIME) {
         me.trigger('scroll', {
           x: me.x,
           y: me.y
@@ -498,7 +505,7 @@ export function coreMixin(BScroll) {
       this._transitionTime(time)
       this._translate(x, y)
 
-      if (time && this.options.probeType === 3) {
+      if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
       }
 

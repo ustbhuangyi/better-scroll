@@ -1,29 +1,32 @@
-import { DIRECTION_UP } from '../util/const'
+import { DIRECTION_UP, PROBE_REALTIME } from '../util/const'
 
 export function pullUpMixin(BScroll) {
   BScroll.prototype._initPullUp = function () {
     // must watch scroll in real time
-    this.options.probeType = 3
+    this._prevProbeType = this.options.probeType
+    this.options.probeType = PROBE_REALTIME
 
     this.pullupWatching = false
     this._watchPullUp()
   }
 
   BScroll.prototype._watchPullUp = function () {
+    if (this.pullupWatching) {
+      return
+    }
     this.pullupWatching = true
+    this.on('scroll', this._checkToEnd)
+  }
+
+  BScroll.prototype._checkToEnd = function (pos) {
     const {threshold = 0} = this.options.pullUpLoad
-
-    this.on('scroll', checkToEnd)
-
-    function checkToEnd(pos) {
-      if (this.movingDirectionY === DIRECTION_UP && pos.y <= (this.maxScrollY + threshold)) {
-        // reset pullupWatching status after scroll end.
-        this.once('scrollEnd', () => {
-          this.pullupWatching = false
-        })
-        this.trigger('pullingUp')
-        this.off('scroll', checkToEnd)
-      }
+    if (this.movingDirectionY === DIRECTION_UP && pos.y <= (this.maxScrollY + threshold)) {
+      // reset pullupWatching status after scroll end.
+      this.once('scrollEnd', () => {
+        this.pullupWatching = false
+      })
+      this.trigger('pullingUp')
+      this.off('scroll', this._checkToEnd)
     }
   }
 
@@ -35,5 +38,22 @@ export function pullUpMixin(BScroll) {
     } else {
       this._watchPullUp()
     }
+  }
+
+  BScroll.prototype.openPullUp = function (config = true) {
+    this.options.pullUpLoad = config
+    this._initPullUp()
+  }
+
+  BScroll.prototype.closePullUp = function () {
+    this.options.pullUpLoad = false
+    if (!this.pullupWatching) {
+      return
+    }
+    this.pullupWatching = false
+    if (this._prevProbeType) {
+      this.options.probeType = this._prevProbeType
+    }
+    this.off('scroll', this._checkToEnd)
   }
 }
