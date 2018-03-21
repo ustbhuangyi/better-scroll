@@ -24,4 +24,4 @@ var BScroll = require('better-scroll')
 
 better-scroll 也支持直接用 script 加载的方式，加载后会在 window 上挂载一个 BScroll 的对象。 
 
-你可以直接用：`https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js` 这个地址。也可以把 dist 目录下的文件拷贝出去发布到自己的 cdn 服务器。
+你可以直接用：`https://unpkg.com/better-scroll/dist/bscroll.min.js` 这个地址。也可以把 dist 目录下的文件拷贝出去发布到自己的 cdn 服务器。
