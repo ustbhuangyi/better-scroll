@@ -107,7 +107,8 @@ const DEFAULT_OPTIONS = {
    *   invert: false
    * }
    */
-  mouseWheel: false
+  mouseWheel: false,
+  stopPropagation: false
 }
 
 export function initMixin(BScroll) {

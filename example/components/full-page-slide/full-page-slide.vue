@@ -7,7 +7,7 @@
             <span class="button">{{ $t('fullPageSlideComponent.buttonTxt') }}</span>
           </div>
           <slide class="sub-slide" v-if="index===0"
-                 :loop="false">
+                 :loop="true">
             <div v-for="slideItem in slideData">
               <a :href="slideItem.linkUrl">
                 <img :src="slideItem.picUrl">

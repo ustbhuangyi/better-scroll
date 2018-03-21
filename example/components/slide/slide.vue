@@ -155,6 +155,7 @@
             speed: this.speed
           },
           bounce: false,
+          stopPropagation: true,
           click: this.click
         })
 

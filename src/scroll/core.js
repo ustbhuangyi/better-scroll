@@ -38,6 +38,9 @@ export function coreMixin(BScroll) {
     if (this.options.preventDefault && !preventDefaultException(e.target, this.options.preventDefaultException)) {
       e.preventDefault()
     }
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
+    }
 
     this.moved = false
     this.distX = 0
@@ -76,6 +79,9 @@ export function coreMixin(BScroll) {
 
     if (this.options.preventDefault) {
       e.preventDefault()
+    }
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
     }
 
     let point = e.touches ? e.touches[0] : e
@@ -198,6 +204,9 @@ export function coreMixin(BScroll) {
 
     if (this.options.preventDefault && !preventDefaultException(e.target, this.options.preventDefaultException)) {
       e.preventDefault()
+    }
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
     }
 
     this.trigger('touchEnd', {
