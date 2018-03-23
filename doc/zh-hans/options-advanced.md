@@ -35,7 +35,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
       }
     }
    ``` 
-   注意：`loop` 为 true 是为了支持横向循环轮播，并不支持纵向，`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
+   注意：`loop` 为 true 是为了支持循环轮播，`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
    - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) 。想了解更多的细节可以去看 example 中的 [slide](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue) 组件的代码。
 
 ## scrollbar

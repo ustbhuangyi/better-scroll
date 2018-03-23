@@ -36,7 +36,7 @@ better-scroll also supports several advanced options to implement some special f
        }
      }
    ``` 
-  Notice：`loop` set to true only support slide loop in horizontal axis，but not in vertical axis, `threshold` is the threshold of going to the next snap,`easing` is the scroll easing function.
+  Notice：`loop` set to true to support slide loop，but not in vertical axis, `threshold` is the threshold of going to the next snap,`easing` is the scroll easing function.
    - Note: it's an advanced option which doesn't need to configure in normal scene. You can see the specific application scene in [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) and more details in the source code of [slide component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue).
 
 ## scrollbar

@@ -45,10 +45,34 @@ better-scroll 还提供了一些定制的方法，专门用来实现某一个 fe
    - 参数：无
    - 返回值：无
    - 作用：当下拉刷新数据加载完毕后，需要调用此方法告诉 better-scroll 数据已加载。
+   
+## openPullDown(config) (v1.9.0+)  
+   - 参数：
+     - {Object} config，参考 `pullDownRefresh` 的配置，默认为 true。
+   - 返回值：无
+   - 作用：动态开启下拉刷新功能。
+   
+## closePullDown() (v1.9.0+) 
+   - 参数：无
+   - 返回值：无
+   - 作用：动态关闭下拉刷新功能。
 
 ## finishPullUp() 
    - 参数：无
    - 返回值：无
    - 作用：当上拉加载数据加载完毕后，需要调用此方法告诉 better-scroll 数据已加载。
+   
+## openPullUp(config) (v1.9.0+) 
+   - 参数：
+     - {Object} config，参考 `pullUpLoad` 的配置，默认为 true。
+   - 返回值：无
+   - 作用：动态开启上拉加载功能。
+   
+## closePullUp() (v1.9.0+) 
+   - 参数：无
+   - 返回值：无
+   - 作用：动态关闭上拉加载功能。   
+   
+   
 
 

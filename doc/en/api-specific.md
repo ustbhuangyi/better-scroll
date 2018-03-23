@@ -49,8 +49,30 @@ better-scroll also have several specific API to help you implement customized fe
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling down is finished, use this method to tell better-scroll that data is already loaded.
+   
+## openPullDown(config) (v1.9.0+)  
+   - Parameters：
+     - {Object} config，see the config of `pullDownRefresh`，default is true.
+   - Return：none.
+   - Usage：dynamic open the feature of `pullDownRefresh`.
+   
+## closePullDown() (v1.9.0+) 
+   - Parameters：none.
+   - Return：none.
+   - Usage：dynamic close the feature of `pullDownRefresh`.  
 
 ## finishPullUp()
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling up is finished, use this method to tell better-scroll that data is already loaded.
+   
+## openPullUp(config) (v1.9.0+) 
+   - Parameters：
+     - {Object} config，see the config of `pullUpLoad`，default is true.
+   - Return：none.
+   - Usage：dynamic open the feature of `pullUpLoad`. 
+   
+## closePullUp() (v1.9.0+) 
+   - Parameters：none.
+   - Return：none.
+   - Usage：dynamic close the feature of `pullUpLoad`.    

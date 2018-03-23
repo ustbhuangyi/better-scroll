@@ -174,3 +174,8 @@ let scroll = new BScroll('.wrapper',{
    - 类型：Boolean
    - 默认值：true
    - 作用：在滚动之前会让当前激活的元素（input、textarea）自动失去焦点。   
+   
+## stopPropagation(v1.9.0+)
+   - 类型：Boolean
+   - 默认值：false
+   - 作用：是否阻止事件冒泡。

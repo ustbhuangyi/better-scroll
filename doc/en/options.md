@@ -175,3 +175,8 @@ The code results in a clickable vertical scrolling effect. better-scroll support
    - Type：Boolean
    - Default：true
    - Usage：It will auto blur the active element(input、textarea) before scroll start. 
+   
+## stopPropagation(v1.9.0+)
+   - Type：Boolean
+   - Default：false
+   - Usage：Whether stop event propagation.   
