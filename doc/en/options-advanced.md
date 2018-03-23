@@ -61,7 +61,7 @@ better-scroll also supports several advanced options to implement some special f
         stop: 20
       }
     ```  
- `threshold` is about the distance exceeded the border which decide the trigger of `pullingDown` event. Stop is the position where rebound stop at. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
+ `threshold` is about the distance exceeded the border which decide the trigger of `pullingDown` event. Stop is the position where rebound stop at. When the data loading cause by pulling down is finished, you must call [`finshiPullDown`](/api-specific.html#finishpulldown) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
 
 ## pullUpLoad
    - Type: `Boolean | Object`
@@ -72,7 +72,7 @@ better-scroll also supports several advanced options to implement some special f
       threshold: 50
     }
   ``` 
- `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
+ `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. When the data loading cause by pulling up is finished, you must call [`finshiPullUp`](/api-specific.html#finishpullup) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
  
 ## mouseWheel(v1.8.0+)    
   - Type：Boolean | Object
