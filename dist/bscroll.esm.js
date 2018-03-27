@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.9.0
+ * better-normal-scroll v1.9.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2357,6 +2357,7 @@ function pullDownMixin(BScroll) {
     var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
     this.options.pullDownRefresh = config;
+    this._initPullDown();
   };
 
   BScroll.prototype.closePullDown = function () {
@@ -2585,6 +2586,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.9.0';
+BScroll.Version = '1.9.1';
 
 export default BScroll;
