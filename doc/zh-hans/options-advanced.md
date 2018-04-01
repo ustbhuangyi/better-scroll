@@ -61,7 +61,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
        stop: 20
      }
    ```
-   可以配置顶部下拉的距离（`threshold`） 来决定刷新时机以及回弹停留的距离（`stop`）。当下拉刷新数据加载完毕后，需要执行 [`finshiPullDown`](/api-specific.html#finishpulldown) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
+   可以配置顶部下拉的距离（`threshold`） 来决定刷新时机以及回弹停留的距离（`stop`）。当下拉刷新数据加载完毕后，需要执行 [`finishPullDown`](/api-specific.html#finishpulldown) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
    了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
 
 ## pullUpLoad
