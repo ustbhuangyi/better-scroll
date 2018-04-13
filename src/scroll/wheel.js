@@ -1,10 +1,10 @@
 import { warn } from '../util/debug'
 
 export function wheelMixin(BScroll) {
-  BScroll.prototype.wheelTo = function (index = 0) {
+  BScroll.prototype.wheelTo = function (index = 0, time, easing) {
     if (this.options.wheel) {
       this.y = -index * this.itemHeight
-      this.scrollTo(0, this.y)
+      this.scrollTo(0, this.y, time, easing)
     }
   }
 

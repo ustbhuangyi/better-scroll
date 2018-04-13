@@ -34,9 +34,11 @@ better-scroll also have several specific API to help you implement customized fe
      - `pageY`: page number on vertical axis.
    - Usage: get information of current page.
 
-## wheelTo(index)
+## wheelTo(index, time, easing)
    - Parameters:
      - `{Number} index`.
+     - `{Number} time`, animation duration. (unit: ms)
+     - `{Object} easing`, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
    - Usage: in picker component, use this methods scrolling to the indexed position.
 
@@ -49,14 +51,14 @@ better-scroll also have several specific API to help you implement customized fe
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling down is finished, use this method to tell better-scroll that data is already loaded.
-   
+
 ## openPullDown(config) (v1.9.0+)  
    - Parameters：
      - {Object} config，see the config of `pullDownRefresh`，default is true.
    - Return：none.
    - Usage：dynamic open the feature of `pullDownRefresh`.
-   
-## closePullDown() (v1.9.0+) 
+
+## closePullDown() (v1.9.0+)
    - Parameters：none.
    - Return：none.
    - Usage：dynamic close the feature of `pullDownRefresh`.  
@@ -65,14 +67,14 @@ better-scroll also have several specific API to help you implement customized fe
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling up is finished, use this method to tell better-scroll that data is already loaded.
-   
-## openPullUp(config) (v1.9.0+) 
+
+## openPullUp(config) (v1.9.0+)
    - Parameters：
      - {Object} config，see the config of `pullUpLoad`，default is true.
    - Return：none.
-   - Usage：dynamic open the feature of `pullUpLoad`. 
-   
-## closePullUp() (v1.9.0+) 
+   - Usage：dynamic open the feature of `pullUpLoad`.
+
+## closePullUp() (v1.9.0+)
    - Parameters：none.
    - Return：none.
    - Usage：dynamic close the feature of `pullUpLoad`.    
