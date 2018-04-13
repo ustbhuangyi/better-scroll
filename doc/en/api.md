@@ -14,7 +14,7 @@ better-scroll supports lots of flexible API. It's really useful when implementin
      - `{Number} time`, animation duration. (unit: ms)
      - `{Object} easing`, easing function, usually don't suggest modifying. If you really need to modify, please consult the format in ease.js of source code.
    - Return: none.
-   - Usage: scroll to target position. See [Demo](https://ustbhuangyi.github.io/better-scroll/demo/#/vertical-scroll) .
+   - Usage: scroll to target position. See [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) .
 
 ## scrollBy(x, y, time, easing)
    - Parameters:
