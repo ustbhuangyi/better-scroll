@@ -73,7 +73,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
        threshold: 50
      }
    ```
-   可以配置离（`threshold`）来决定开始加载的时机。当上拉加载数据加载完毕后，需要执行 [`finishiPullUp`](/api-specific.html#finishpullup) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
+   可以配置离（`threshold`）来决定开始加载的时机。当上拉加载数据加载完毕后，需要执行 [`finishPullUp`](/api-specific.html#finishpullup) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
    了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
    
 ## mouseWheel(v1.8.0+)   

@@ -72,7 +72,7 @@ better-scroll also supports several advanced options to implement some special f
       threshold: 50
     }
   ``` 
- `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. When the data loading cause by pulling up is finished, you must call [`finishiPullUp`](/api-specific.html#finishpullup) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
+ `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. When the data loading cause by pulling up is finished, you must call [`finishPullUp`](/api-specific.html#finishpullup) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
  
 ## mouseWheel(v1.8.0+)    
   - Type：Boolean | Object
