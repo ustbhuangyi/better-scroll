@@ -19,5 +19,12 @@ export const ease = {
 		fn: function (t) {
 			return 1 - (--t * t * t * t)
 		}
-	}
+	},
+  // linear
+  linear: {
+    style: 'linear',
+    fn: function (t) {
+      return t
+    }
+  }
 }
