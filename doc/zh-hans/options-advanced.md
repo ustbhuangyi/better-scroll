@@ -35,7 +35,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
       }
     }
    ``` 
-   注意：`loop` 为 true 是为了支持循环轮播，`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
+   注意：`loop` 为 true 是为了支持循环轮播，但只有一个元素的时候，`loop` 为 true 是无效的，也并不会 clone 节点。`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
    - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) 。想了解更多的细节可以去看 example 中的 [slide](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue) 组件的代码。
 
 ## scrollbar
@@ -83,10 +83,11 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
   ```js
     mouseWheel: {
       speed: 20,
-      invert: false
+      invert: false,
+      easeTime: 300
     }
   ``` 
-  `speed` 表示鼠标滚轮滚动的速度，`invert` 为 true 表示滚轮滚动和时机滚动方向相反，见[Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh)。
+  `speed` 表示鼠标滚轮滚动的速度，`invert` 为 true 表示滚轮滚动和时机滚动方向相反，`easeTime` 表示滚动动画的缓动时长，见[Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh)。
    
 
   

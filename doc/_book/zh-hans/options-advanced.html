@@ -1477,7 +1477,7 @@
  }
 }
 </code></pre>
-&#x6CE8;&#x610F;&#xFF1A;<code>loop</code> &#x4E3A; true &#x662F;&#x4E3A;&#x4E86;&#x652F;&#x6301;&#x5FAA;&#x73AF;&#x8F6E;&#x64AD;&#xFF0C;<code>threshold</code> &#x8868;&#x793A;&#x53EF;&#x6EDA;&#x52A8;&#x5230;&#x4E0B;&#x4E00;&#x4E2A;&#x7684;&#x9608;&#x503C;&#xFF0C;<code>easing</code> &#x8868;&#x793A;&#x6EDA;&#x52A8;&#x7684;&#x7F13;&#x52A8;&#x51FD;&#x6570;&#x3002;</li>
+&#x6CE8;&#x610F;&#xFF1A;<code>loop</code> &#x4E3A; true &#x662F;&#x4E3A;&#x4E86;&#x652F;&#x6301;&#x5FAA;&#x73AF;&#x8F6E;&#x64AD;&#xFF0C;&#x4F46;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x5143;&#x7D20;&#x7684;&#x65F6;&#x5019;&#xFF0C;<code>loop</code> &#x4E3A; true &#x662F;&#x65E0;&#x6548;&#x7684;&#xFF0C;&#x4E5F;&#x5E76;&#x4E0D;&#x4F1A; clone &#x8282;&#x70B9;&#x3002;<code>threshold</code> &#x8868;&#x793A;&#x53EF;&#x6EDA;&#x52A8;&#x5230;&#x4E0B;&#x4E00;&#x4E2A;&#x7684;&#x9608;&#x503C;&#xFF0C;<code>easing</code> &#x8868;&#x793A;&#x6EDA;&#x52A8;&#x7684;&#x7F13;&#x52A8;&#x51FD;&#x6570;&#x3002;</li>
 <li>&#x5907;&#x6CE8;&#xFF1A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x9AD8;&#x7EA7;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x4E00;&#x822C;&#x573A;&#x666F;&#x4E0D;&#x9700;&#x8981;&#x914D;&#x7F6E;&#xFF0C;&#x5177;&#x4F53;&#x5E94;&#x7528;&#x573A;&#x666F;&#x53EF;&#x89C1; <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en" target="_blank">Slide Demo</a> &#x3002;&#x60F3;&#x4E86;&#x89E3;&#x66F4;&#x591A;&#x7684;&#x7EC6;&#x8282;&#x53EF;&#x4EE5;&#x53BB;&#x770B; example &#x4E2D;&#x7684; <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue" target="_blank">slide</a> &#x7EC4;&#x4EF6;&#x7684;&#x4EE3;&#x7801;&#x3002;</li>
 </ul>
 <h2 id="scrollbar">scrollbar</h2>
@@ -1521,10 +1521,11 @@
 <li>&#x9ED8;&#x8BA4;&#x503C;&#xFF1A;false</li>
 <li>&#x4F5C;&#x7528;&#xFF1A;&#x8FD9;&#x4E2A;&#x914D;&#x7F6E;&#x7528;&#x4E8E; PC &#x7AEF;&#x7684;&#x9F20;&#x6807;&#x6EDA;&#x8F6E;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; false&#xFF0C;&#x3002;&#x5F53;&#x8BBE;&#x7F6E;&#x4E3A; true &#x6216;&#x8005;&#x662F;&#x4E00;&#x4E2A; Object &#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x5F00;&#x542F;&#x9F20;&#x6807;&#x6EDA;&#x8F6E;&#xFF0C;&#x4F8B;&#x5982;&#xFF1A;<pre><code class="lang-js">mouseWheel: {
  speed: <span class="hljs-number">20</span>,
- invert: <span class="hljs-literal">false</span>
+ invert: <span class="hljs-literal">false</span>,
+ easeTime: <span class="hljs-number">300</span>
 }
 </code></pre>
-<code>speed</code> &#x8868;&#x793A;&#x9F20;&#x6807;&#x6EDA;&#x8F6E;&#x6EDA;&#x52A8;&#x7684;&#x901F;&#x5EA6;&#xFF0C;<code>invert</code> &#x4E3A; true &#x8868;&#x793A;&#x6EDA;&#x8F6E;&#x6EDA;&#x52A8;&#x548C;&#x65F6;&#x673A;&#x6EDA;&#x52A8;&#x65B9;&#x5411;&#x76F8;&#x53CD;&#xFF0C;&#x89C1;<a href="https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh" target="_blank">Demo</a>&#x3002;</li>
+<code>speed</code> &#x8868;&#x793A;&#x9F20;&#x6807;&#x6EDA;&#x8F6E;&#x6EDA;&#x52A8;&#x7684;&#x901F;&#x5EA6;&#xFF0C;<code>invert</code> &#x4E3A; true &#x8868;&#x793A;&#x6EDA;&#x8F6E;&#x6EDA;&#x52A8;&#x548C;&#x65F6;&#x673A;&#x6EDA;&#x52A8;&#x65B9;&#x5411;&#x76F8;&#x53CD;&#xFF0C;<code>easeTime</code> &#x8868;&#x793A;&#x6EDA;&#x52A8;&#x52A8;&#x753B;&#x7684;&#x7F13;&#x52A8;&#x65F6;&#x957F;&#xFF0C;&#x89C1;<a href="https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh" target="_blank">Demo</a>&#x3002;</li>
 </ul>
 
                                 
@@ -1569,7 +1570,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"选项 / 高级","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-04-13T04:16:00.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-13T04:16:35.077Z"},"basePath":".","book":{"language":"zh-hans"}});
+            gitbook.page.hasChanged({"page":{"title":"选项 / 高级","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"zh-hans","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-04-19T11:45:58.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-19T11:50:53.069Z"},"basePath":".","book":{"language":"zh-hans"}});
         });
     </script>
 </div>
@@ -1580,6 +1581,10 @@
     
         
         <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
