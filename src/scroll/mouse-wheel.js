@@ -1,4 +1,5 @@
 import { addEvent, removeEvent } from '../util/dom'
+import { ease } from '../util/ease'
 
 export function mouseWheelMixin(BScroll) {
   BScroll.prototype._initMouseWheel = function () {
@@ -40,7 +41,7 @@ export function mouseWheelMixin(BScroll) {
       this.firstWheelOpreation = true
     }, 400)
 
-    const {speed = 20, invert = false} = this.options.mouseWheel
+    const {speed = 20, invert = false, easeTime = 300} = this.options.mouseWheel
     let wheelDeltaX
     let wheelDeltaY
 
@@ -117,7 +118,7 @@ export function mouseWheelMixin(BScroll) {
       newY = this.maxScrollY
     }
 
-    this.scrollTo(newX, newY)
+    this.scrollTo(newX, newY, easeTime, ease.swipe)
     this.trigger('scroll', {
       x: this.x,
       y: this.y

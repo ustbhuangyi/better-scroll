@@ -102,9 +102,10 @@ const DEFAULT_OPTIONS = {
   pullUpLoad: false,
   /**
    * for mouse wheel
-   * mouseWheel:{
+   * mouseWheel: {
    *   speed: 20,
-   *   invert: false
+   *   invert: false,
+   *   easeTime: 300
    * }
    */
   mouseWheel: false,
