@@ -23,6 +23,15 @@ const DEFAULT_OPTIONS = {
   eventPassthrough: '',
   click: false,
   tap: false,
+  /**
+   * support any side
+   * bounce: {
+   *   top: true,
+   *   bottom: true,
+   *   left: true,
+   *   right: true
+   * }
+   */
   bounce: true,
   bounceTime: 800,
   momentum: true,

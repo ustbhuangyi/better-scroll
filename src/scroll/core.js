@@ -142,15 +142,16 @@ export function coreMixin(BScroll) {
     let newY = this.y + deltaY
 
     // Slow down or stop if outside of the boundaries
+    const {top = true, bottom = true, left = true, right = true} = this.options.bounce
     if (newX > 0 || newX < this.maxScrollX) {
-      if (this.options.bounce) {
+      if ((newX > 0 && left) || (newX < this.maxScrollX && right)) {
         newX = this.x + deltaX / 3
       } else {
         newX = newX > 0 ? 0 : this.maxScrollX
       }
     }
     if (newY > 0 || newY < this.maxScrollY) {
-      if (this.options.bounce) {
+      if ((newY > 0 && top) || (newY < this.maxScrollY && bottom)) {
         newY = this.y + deltaY / 3
       } else {
         newY = newY > 0 ? 0 : this.maxScrollY
@@ -257,9 +258,12 @@ export function coreMixin(BScroll) {
     let time = 0
     // start momentum animation if needed
     if (this.options.momentum && duration < this.options.momentumLimitTime && (absDistY > this.options.momentumLimitDistance || absDistX > this.options.momentumLimitDistance)) {
-      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options)
+      const {top = true, bottom = true, left = true, right = true} = this.options.bounce
+      const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
+      const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
+      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options)
         : {destination: newX, duration: 0}
-      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options)
+      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options)
         : {destination: newY, duration: 0}
       newX = momentumX.destination
       newY = momentumY.destination
