@@ -103,8 +103,8 @@ export function mouseWheelMixin(BScroll) {
     newX = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0)
     newY = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0)
 
-    this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0
-    this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0
+    this.movingDirectionX = this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0
+    this.movingDirectionY = this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0
 
     if (newX > 0) {
       newX = 0
