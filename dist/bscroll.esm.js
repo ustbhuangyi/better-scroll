@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.9.1
+ * better-normal-scroll v1.10.0
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -350,6 +350,15 @@ var DEFAULT_OPTIONS = {
   eventPassthrough: '',
   click: false,
   tap: false,
+  /**
+   * support any side
+   * bounce: {
+   *   top: true,
+   *   bottom: true,
+   *   left: true,
+   *   right: true
+   * }
+   */
   bounce: true,
   bounceTime: 800,
   momentum: true,
@@ -429,9 +438,10 @@ var DEFAULT_OPTIONS = {
   pullUpLoad: false,
   /**
    * for mouse wheel
-   * mouseWheel:{
+   * mouseWheel: {
    *   speed: 20,
-   *   invert: false
+   *   invert: false,
+   *   easeTime: 300
    * }
    */
   mouseWheel: false,
@@ -994,15 +1004,25 @@ function coreMixin(BScroll) {
     var newY = this.y + deltaY;
 
     // Slow down or stop if outside of the boundaries
+    var _options$bounce = this.options.bounce,
+        _options$bounce$top = _options$bounce.top,
+        top = _options$bounce$top === undefined ? true : _options$bounce$top,
+        _options$bounce$botto = _options$bounce.bottom,
+        bottom = _options$bounce$botto === undefined ? true : _options$bounce$botto,
+        _options$bounce$left = _options$bounce.left,
+        left = _options$bounce$left === undefined ? true : _options$bounce$left,
+        _options$bounce$right = _options$bounce.right,
+        right = _options$bounce$right === undefined ? true : _options$bounce$right;
+
     if (newX > 0 || newX < this.maxScrollX) {
-      if (this.options.bounce) {
+      if (newX > 0 && left || newX < this.maxScrollX && right) {
         newX = this.x + deltaX / 3;
       } else {
         newX = newX > 0 ? 0 : this.maxScrollX;
       }
     }
     if (newY > 0 || newY < this.maxScrollY) {
-      if (this.options.bounce) {
+      if (newY > 0 && top || newY < this.maxScrollY && bottom) {
         newY = this.y + deltaY / 3;
       } else {
         newY = newY > 0 ? 0 : this.maxScrollY;
@@ -1108,8 +1128,20 @@ function coreMixin(BScroll) {
     var time = 0;
     // start momentum animation if needed
     if (this.options.momentum && duration < this.options.momentumLimitTime && (absDistY > this.options.momentumLimitDistance || absDistX > this.options.momentumLimitDistance)) {
-      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options) : { destination: newX, duration: 0 };
-      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options) : { destination: newY, duration: 0 };
+      var _options$bounce2 = this.options.bounce,
+          _options$bounce2$top = _options$bounce2.top,
+          top = _options$bounce2$top === undefined ? true : _options$bounce2$top,
+          _options$bounce2$bott = _options$bounce2.bottom,
+          bottom = _options$bounce2$bott === undefined ? true : _options$bounce2$bott,
+          _options$bounce2$left = _options$bounce2.left,
+          left = _options$bounce2$left === undefined ? true : _options$bounce2$left,
+          _options$bounce2$righ = _options$bounce2.right,
+          right = _options$bounce2$righ === undefined ? true : _options$bounce2$righ;
+
+      var wrapperWidth = this.directionX === DIRECTION_RIGHT && left || this.directionX === DIRECTION_LEFT && right ? this.wrapperWidth : 0;
+      var wrapperHeight = this.directionY === DIRECTION_DOWN && top || this.directionY === DIRECTION_UP && bottom ? this.wrapperHeight : 0;
+      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options) : { destination: newX, duration: 0 };
+      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options) : { destination: newY, duration: 0 };
       newX = momentumX.destination;
       newY = momentumY.destination;
       time = Math.max(momentumX.duration, momentumY.duration);
@@ -2475,7 +2507,9 @@ function mouseWheelMixin(BScroll) {
         _options$mouseWheel$s = _options$mouseWheel.speed,
         speed = _options$mouseWheel$s === undefined ? 20 : _options$mouseWheel$s,
         _options$mouseWheel$i = _options$mouseWheel.invert,
-        invert = _options$mouseWheel$i === undefined ? false : _options$mouseWheel$i;
+        invert = _options$mouseWheel$i === undefined ? false : _options$mouseWheel$i,
+        _options$mouseWheel$e = _options$mouseWheel.easeTime,
+        easeTime = _options$mouseWheel$e === undefined ? 300 : _options$mouseWheel$e;
 
     var wheelDeltaX = void 0;
     var wheelDeltaY = void 0;
@@ -2538,8 +2572,8 @@ function mouseWheelMixin(BScroll) {
     newX = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0);
     newY = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0);
 
-    this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0;
-    this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0;
+    this.movingDirectionX = this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0;
+    this.movingDirectionY = this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0;
 
     if (newX > 0) {
       newX = 0;
@@ -2553,7 +2587,7 @@ function mouseWheelMixin(BScroll) {
       newY = this.maxScrollY;
     }
 
-    this.scrollTo(newX, newY);
+    this.scrollTo(newX, newY, easeTime, ease.swipe);
     this.trigger('scroll', {
       x: this.x,
       y: this.y
@@ -2586,6 +2620,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.9.1';
+BScroll.Version = '1.10.0';
 
 export default BScroll;
