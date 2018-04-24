@@ -263,7 +263,7 @@ export function snapMixin(BScroll) {
   BScroll.prototype._goToPage = function (x, y = 0, time, easing) {
     const snap = this.options.snap
 
-    if (!snap.loop || !this.pages || !this.pages.length) {
+    if (!snap || !this.pages || !this.pages.length) {
       return
     }
 
@@ -305,7 +305,7 @@ export function snapMixin(BScroll) {
 
   BScroll.prototype.goToPage = function (x, y, time, easing) {
     const snap = this.options.snap
-    if (!snap.loop || !this.pages || !this.pages.length) {
+    if (!snap || !this.pages || !this.pages.length) {
       return
     }
 
