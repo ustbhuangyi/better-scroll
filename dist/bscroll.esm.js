@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.10.0
+ * better-normal-scroll v1.10.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1702,7 +1702,7 @@ function snapMixin(BScroll) {
   BScroll.prototype._checkSnapLoop = function () {
     var snap = this.options.snap;
 
-    if (!snap.loop || !this.pages) {
+    if (!snap.loop || !this.pages || !this.pages.length) {
       return;
     }
 
@@ -1797,7 +1797,7 @@ function snapMixin(BScroll) {
 
     var snap = this.options.snap;
 
-    if (!snap || !this.pages) {
+    if (!snap || !this.pages || !this.pages.length) {
       return;
     }
 
@@ -1835,7 +1835,7 @@ function snapMixin(BScroll) {
 
   BScroll.prototype.goToPage = function (x, y, time, easing) {
     var snap = this.options.snap;
-    if (!snap) {
+    if (!snap || !this.pages || !this.pages.length) {
       return;
     }
 
@@ -2620,6 +2620,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.10.0';
+BScroll.Version = '1.10.1';
 
 export default BScroll;
