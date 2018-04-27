@@ -34,8 +34,10 @@
           interactive: true
         },
         bounce: {
+          bottom: false,
+          left: false,
           right: false,
-          bottom: false
+          top: false
         },
         mouseWheel: true,
         imgUrl: require('../common/images/vertical-scroll.jpeg')

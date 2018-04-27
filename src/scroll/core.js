@@ -141,8 +141,18 @@ export function coreMixin(BScroll) {
     let newX = this.x + deltaX
     let newY = this.y + deltaY
 
+    let top = false
+    let bottom = false
+    let left = false
+    let right = false
     // Slow down or stop if outside of the boundaries
-    const {top = true, bottom = true, left = true, right = true} = this.options.bounce
+    const bounce = this.options.bounce
+    if (bounce !== false) {
+      top = bounce.top === undefined ? true : bounce.top
+      bottom = bounce.bottom === undefined ? true : bounce.bottom
+      left = bounce.left === undefined ? true : bounce.left
+      right = bounce.right === undefined ? true : bounce.right
+    }
     if (newX > 0 || newX < this.maxScrollX) {
       if ((newX > 0 && left) || (newX < this.maxScrollX && right)) {
         newX = this.x + deltaX / 3
@@ -258,7 +268,17 @@ export function coreMixin(BScroll) {
     let time = 0
     // start momentum animation if needed
     if (this.options.momentum && duration < this.options.momentumLimitTime && (absDistY > this.options.momentumLimitDistance || absDistX > this.options.momentumLimitDistance)) {
-      const {top = true, bottom = true, left = true, right = true} = this.options.bounce
+      let top = false
+      let bottom = false
+      let left = false
+      let right = false
+      const bounce = this.options.bounce
+      if (bounce !== false) {
+        top = bounce.top === undefined ? true : bounce.top
+        bottom = bounce.bottom === undefined ? true : bounce.bottom
+        left = bounce.left === undefined ? true : bounce.left
+        right = bounce.right === undefined ? true : bounce.right
+      }
       const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
       const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
       let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options)

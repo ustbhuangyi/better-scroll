@@ -1003,17 +1003,18 @@ function coreMixin(BScroll) {
     var newX = this.x + deltaX;
     var newY = this.y + deltaY;
 
+    var top = false;
+    var bottom = false;
+    var left = false;
+    var right = false;
     // Slow down or stop if outside of the boundaries
-    var _options$bounce = this.options.bounce,
-        _options$bounce$top = _options$bounce.top,
-        top = _options$bounce$top === undefined ? true : _options$bounce$top,
-        _options$bounce$botto = _options$bounce.bottom,
-        bottom = _options$bounce$botto === undefined ? true : _options$bounce$botto,
-        _options$bounce$left = _options$bounce.left,
-        left = _options$bounce$left === undefined ? true : _options$bounce$left,
-        _options$bounce$right = _options$bounce.right,
-        right = _options$bounce$right === undefined ? true : _options$bounce$right;
-
+    var bounce = this.options.bounce;
+    if (bounce !== false) {
+      top = bounce.top === undefined ? true : bounce.top;
+      bottom = bounce.bottom === undefined ? true : bounce.bottom;
+      left = bounce.left === undefined ? true : bounce.left;
+      right = bounce.right === undefined ? true : bounce.right;
+    }
     if (newX > 0 || newX < this.maxScrollX) {
       if (newX > 0 && left || newX < this.maxScrollX && right) {
         newX = this.x + deltaX / 3;
@@ -1128,16 +1129,17 @@ function coreMixin(BScroll) {
     var time = 0;
     // start momentum animation if needed
     if (this.options.momentum && duration < this.options.momentumLimitTime && (absDistY > this.options.momentumLimitDistance || absDistX > this.options.momentumLimitDistance)) {
-      var _options$bounce2 = this.options.bounce,
-          _options$bounce2$top = _options$bounce2.top,
-          top = _options$bounce2$top === undefined ? true : _options$bounce2$top,
-          _options$bounce2$bott = _options$bounce2.bottom,
-          bottom = _options$bounce2$bott === undefined ? true : _options$bounce2$bott,
-          _options$bounce2$left = _options$bounce2.left,
-          left = _options$bounce2$left === undefined ? true : _options$bounce2$left,
-          _options$bounce2$righ = _options$bounce2.right,
-          right = _options$bounce2$righ === undefined ? true : _options$bounce2$righ;
-
+      var top = false;
+      var bottom = false;
+      var left = false;
+      var right = false;
+      var bounce = this.options.bounce;
+      if (bounce !== false) {
+        top = bounce.top === undefined ? true : bounce.top;
+        bottom = bounce.bottom === undefined ? true : bounce.bottom;
+        left = bounce.left === undefined ? true : bounce.left;
+        right = bounce.right === undefined ? true : bounce.right;
+      }
       var wrapperWidth = this.directionX === DIRECTION_RIGHT && left || this.directionX === DIRECTION_LEFT && right ? this.wrapperWidth : 0;
       var wrapperHeight = this.directionY === DIRECTION_DOWN && top || this.directionY === DIRECTION_UP && bottom ? this.wrapperHeight : 0;
       var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options) : { destination: newX, duration: 0 };
