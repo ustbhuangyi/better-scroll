@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.8.4
+ * better-normal-scroll v1.10.2
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -350,6 +350,15 @@ var DEFAULT_OPTIONS = {
   eventPassthrough: '',
   click: false,
   tap: false,
+  /**
+   * support any side
+   * bounce: {
+   *   top: true,
+   *   bottom: true,
+   *   left: true,
+   *   right: true
+   * }
+   */
   bounce: true,
   bounceTime: 800,
   momentum: true,
@@ -429,12 +438,14 @@ var DEFAULT_OPTIONS = {
   pullUpLoad: false,
   /**
    * for mouse wheel
-   * mouseWheel:{
+   * mouseWheel: {
    *   speed: 20,
-   *   invert: false
+   *   invert: false,
+   *   easeTime: 300
    * }
    */
-  mouseWheel: false
+  mouseWheel: false,
+  stopPropagation: false
 };
 
 function initMixin(BScroll) {
@@ -859,6 +870,10 @@ var DIRECTION_DOWN = -1;
 var DIRECTION_LEFT = 1;
 var DIRECTION_RIGHT = -1;
 
+var PROBE_DEBOUNCE = 1;
+
+var PROBE_REALTIME = 3;
+
 function warn(msg) {
   console.error('[BScroll warn]: ' + msg);
 }
@@ -884,6 +899,9 @@ function coreMixin(BScroll) {
 
     if (this.options.preventDefault && !preventDefaultException(e.target, this.options.preventDefaultException)) {
       e.preventDefault();
+    }
+    if (this.options.stopPropagation) {
+      e.stopPropagation();
     }
 
     this.moved = false;
@@ -923,6 +941,9 @@ function coreMixin(BScroll) {
 
     if (this.options.preventDefault) {
       e.preventDefault();
+    }
+    if (this.options.stopPropagation) {
+      e.stopPropagation();
     }
 
     var point = e.touches ? e.touches[0] : e;
@@ -982,16 +1003,27 @@ function coreMixin(BScroll) {
     var newX = this.x + deltaX;
     var newY = this.y + deltaY;
 
+    var top = false;
+    var bottom = false;
+    var left = false;
+    var right = false;
     // Slow down or stop if outside of the boundaries
+    var bounce = this.options.bounce;
+    if (bounce !== false) {
+      top = bounce.top === undefined ? true : bounce.top;
+      bottom = bounce.bottom === undefined ? true : bounce.bottom;
+      left = bounce.left === undefined ? true : bounce.left;
+      right = bounce.right === undefined ? true : bounce.right;
+    }
     if (newX > 0 || newX < this.maxScrollX) {
-      if (this.options.bounce) {
+      if (newX > 0 && left || newX < this.maxScrollX && right) {
         newX = this.x + deltaX / 3;
       } else {
         newX = newX > 0 ? 0 : this.maxScrollX;
       }
     }
     if (newY > 0 || newY < this.maxScrollY) {
-      if (this.options.bounce) {
+      if (newY > 0 && top || newY < this.maxScrollY && bottom) {
         newY = this.y + deltaY / 3;
       } else {
         newY = newY > 0 ? 0 : this.maxScrollY;
@@ -1010,7 +1042,7 @@ function coreMixin(BScroll) {
       this.startX = this.x;
       this.startY = this.y;
 
-      if (this.options.probeType === 1) {
+      if (this.options.probeType === PROBE_DEBOUNCE) {
         this.trigger('scroll', {
           x: this.x,
           y: this.y
@@ -1018,7 +1050,7 @@ function coreMixin(BScroll) {
       }
     }
 
-    if (this.options.probeType > 1) {
+    if (this.options.probeType > PROBE_DEBOUNCE) {
       this.trigger('scroll', {
         x: this.x,
         y: this.y
@@ -1044,6 +1076,9 @@ function coreMixin(BScroll) {
 
     if (this.options.preventDefault && !preventDefaultException(e.target, this.options.preventDefaultException)) {
       e.preventDefault();
+    }
+    if (this.options.stopPropagation) {
+      e.stopPropagation();
     }
 
     this.trigger('touchEnd', {
@@ -1094,8 +1129,21 @@ function coreMixin(BScroll) {
     var time = 0;
     // start momentum animation if needed
     if (this.options.momentum && duration < this.options.momentumLimitTime && (absDistY > this.options.momentumLimitDistance || absDistX > this.options.momentumLimitDistance)) {
-      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options) : { destination: newX, duration: 0 };
-      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options) : { destination: newY, duration: 0 };
+      var top = false;
+      var bottom = false;
+      var left = false;
+      var right = false;
+      var bounce = this.options.bounce;
+      if (bounce !== false) {
+        top = bounce.top === undefined ? true : bounce.top;
+        bottom = bounce.bottom === undefined ? true : bounce.bottom;
+        left = bounce.left === undefined ? true : bounce.left;
+        right = bounce.right === undefined ? true : bounce.right;
+      }
+      var wrapperWidth = this.directionX === DIRECTION_RIGHT && left || this.directionX === DIRECTION_LEFT && right ? this.wrapperWidth : 0;
+      var wrapperHeight = this.directionY === DIRECTION_DOWN && top || this.directionY === DIRECTION_UP && bottom ? this.wrapperHeight : 0;
+      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options) : { destination: newX, duration: 0 };
+      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options) : { destination: newY, duration: 0 };
       newX = momentumX.destination;
       newY = momentumY.destination;
       time = Math.max(momentumX.duration, momentumY.duration);
@@ -1251,7 +1299,7 @@ function coreMixin(BScroll) {
     this._transitionTime();
     if (!this.pulling && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false;
-      if (this.options.probeType !== 3) {
+      if (this.options.probeType !== PROBE_REALTIME) {
         this.trigger('scrollEnd', {
           x: this.x,
           y: this.y
@@ -1324,7 +1372,7 @@ function coreMixin(BScroll) {
         me.animateTimer = requestAnimationFrame(step);
       }
 
-      if (me.options.probeType === 3) {
+      if (me.options.probeType === PROBE_REALTIME) {
         me.trigger('scroll', {
           x: me.x,
           y: me.y
@@ -1359,7 +1407,7 @@ function coreMixin(BScroll) {
       this._transitionTime(time);
       this._translate(x, y);
 
-      if (time && this.options.probeType === 3) {
+      if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe();
       }
 
@@ -1503,9 +1551,12 @@ function snapMixin(BScroll) {
 
     if (snap.loop) {
       var children = this.scroller.children;
-      if (children.length > 0) {
+      if (children.length > 1) {
         prepend(children[children.length - 1].cloneNode(true), this.scroller);
         this.scroller.appendChild(children[1].cloneNode(true));
+      } else {
+        // Loop does not make any sense if there is only one child.
+        snap.loop = false;
       }
     }
 
@@ -1594,10 +1645,13 @@ function snapMixin(BScroll) {
         }
       }
 
-      var initPage = snap.loop ? 1 : 0;
-      _this._goToPage(_this.currentPage.pageX || initPage, _this.currentPage.pageY || 0, 0);
+      _this._checkSnapLoop();
 
-      // Update snap threshold if needed
+      var initPageX = snap._loopX ? 1 : 0;
+      var initPageY = snap._loopY ? 1 : 0;
+      _this._goToPage(_this.currentPage.pageX || initPageX, _this.currentPage.pageY || initPageY, 0);
+
+      // Update snap threshold if needed.
       var snapThreshold = snap.threshold;
       if (snapThreshold % 1 === 0) {
         _this.snapThresholdX = snapThreshold;
@@ -1610,11 +1664,20 @@ function snapMixin(BScroll) {
 
     this.on('scrollEnd', function () {
       if (snap.loop) {
-        if (_this.currentPage.pageX === 0) {
-          _this._goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0);
-        }
-        if (_this.currentPage.pageX === _this.pages.length - 1) {
-          _this._goToPage(1, _this.currentPage.pageY, 0);
+        if (snap._loopX) {
+          if (_this.currentPage.pageX === 0) {
+            _this._goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0);
+          }
+          if (_this.currentPage.pageX === _this.pages.length - 1) {
+            _this._goToPage(1, _this.currentPage.pageY, 0);
+          }
+        } else {
+          if (_this.currentPage.pageY === 0) {
+            _this._goToPage(_this.currentPage.pageX, _this.pages[0].length - 2, 0);
+          }
+          if (_this.currentPage.pageY === _this.pages[0].length - 1) {
+            _this._goToPage(_this.currentPage.pageX, 1, 0);
+          }
         }
       }
     });
@@ -1636,6 +1699,24 @@ function snapMixin(BScroll) {
         }
       }
     });
+  };
+
+  BScroll.prototype._checkSnapLoop = function () {
+    var snap = this.options.snap;
+
+    if (!snap.loop || !this.pages || !this.pages.length) {
+      return;
+    }
+
+    if (this.pages.length > 1) {
+      snap._loopX = true;
+    }
+    if (this.pages[0] && this.pages[0].length > 1) {
+      snap._loopY = true;
+    }
+    if (snap._loopX && snap._loopY) {
+      warn('Loop does not support two direction at the same time.');
+    }
   };
 
   BScroll.prototype._nearestSnap = function (x, y) {
@@ -1718,7 +1799,7 @@ function snapMixin(BScroll) {
 
     var snap = this.options.snap;
 
-    if (!snap || !this.pages) {
+    if (!snap || !this.pages || !this.pages.length) {
       return;
     }
 
@@ -1756,21 +1837,39 @@ function snapMixin(BScroll) {
 
   BScroll.prototype.goToPage = function (x, y, time, easing) {
     var snap = this.options.snap;
-    if (snap) {
-      if (snap.loop) {
-        var len = this.pages.length - 2;
+    if (!snap || !this.pages || !this.pages.length) {
+      return;
+    }
+
+    if (snap.loop) {
+      var len = void 0;
+      if (snap._loopX) {
+        len = this.pages.length - 2;
         if (x >= len) {
           x = len - 1;
         } else if (x < 0) {
           x = 0;
         }
         x += 1;
+      } else {
+        len = this.pages[0].length - 2;
+        if (y >= len) {
+          y = len - 1;
+        } else if (y < 0) {
+          y = 0;
+        }
+        y += 1;
       }
-      this._goToPage(x, y, time, easing);
     }
+    this._goToPage(x, y, time, easing);
   };
 
   BScroll.prototype.next = function (time, easing) {
+    var snap = this.options.snap;
+    if (!snap) {
+      return;
+    }
+
     var x = this.currentPage.pageX;
     var y = this.currentPage.pageY;
 
@@ -1784,6 +1883,11 @@ function snapMixin(BScroll) {
   };
 
   BScroll.prototype.prev = function (time, easing) {
+    var snap = this.options.snap;
+    if (!snap) {
+      return;
+    }
+
     var x = this.currentPage.pageX;
     var y = this.currentPage.pageY;
 
@@ -1798,16 +1902,24 @@ function snapMixin(BScroll) {
 
   BScroll.prototype.getCurrentPage = function () {
     var snap = this.options.snap;
-    if (snap) {
-      if (snap.loop) {
-        var currentPage = extend({}, this.currentPage, {
+    if (!snap) {
+      return null;
+    }
+
+    if (snap.loop) {
+      var currentPage = void 0;
+      if (snap._loopX) {
+        currentPage = extend({}, this.currentPage, {
           pageX: this.currentPage.pageX - 1
         });
-        return currentPage;
+      } else {
+        currentPage = extend({}, this.currentPage, {
+          pageY: this.currentPage.pageY - 1
+        });
       }
-      return this.currentPage;
+      return currentPage;
     }
-    return null;
+    return this.currentPage;
   };
 }
 
@@ -2245,7 +2357,7 @@ Indicator.prototype._handleDOMEvents = function (eventOperation) {
 function pullDownMixin(BScroll) {
   BScroll.prototype._initPullDown = function () {
     // must watch scroll in real time
-    this.options.probeType = 3;
+    this.options.probeType = PROBE_REALTIME;
   };
 
   BScroll.prototype._checkPullDown = function () {
@@ -2274,36 +2386,49 @@ function pullDownMixin(BScroll) {
     this.pulling = false;
     this.resetPosition(this.options.bounceTime, ease.bounce);
   };
+
+  BScroll.prototype.openPullDown = function () {
+    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+    this.options.pullDownRefresh = config;
+    this._initPullDown();
+  };
+
+  BScroll.prototype.closePullDown = function () {
+    this.options.pullDownRefresh = false;
+  };
 }
 
 function pullUpMixin(BScroll) {
   BScroll.prototype._initPullUp = function () {
     // must watch scroll in real time
-    this.options.probeType = 3;
+    this.options.probeType = PROBE_REALTIME;
 
     this.pullupWatching = false;
     this._watchPullUp();
   };
 
   BScroll.prototype._watchPullUp = function () {
+    if (this.pullupWatching) {
+      return;
+    }
     this.pullupWatching = true;
+    this.on('scroll', this._checkToEnd);
+  };
+
+  BScroll.prototype._checkToEnd = function (pos) {
+    var _this = this;
+
     var _options$pullUpLoad$t = this.options.pullUpLoad.threshold,
         threshold = _options$pullUpLoad$t === undefined ? 0 : _options$pullUpLoad$t;
 
-
-    this.on('scroll', checkToEnd);
-
-    function checkToEnd(pos) {
-      var _this = this;
-
-      if (this.movingDirectionY === DIRECTION_UP && pos.y <= this.maxScrollY + threshold) {
-        // reset pullupWatching status after scroll end.
-        this.once('scrollEnd', function () {
-          _this.pullupWatching = false;
-        });
-        this.trigger('pullingUp');
-        this.off('scroll', checkToEnd);
-      }
+    if (this.movingDirectionY === DIRECTION_UP && pos.y <= this.maxScrollY + threshold) {
+      // reset pullupWatching status after scroll end.
+      this.once('scrollEnd', function () {
+        _this.pullupWatching = false;
+      });
+      this.trigger('pullingUp');
+      this.off('scroll', this._checkToEnd);
     }
   };
 
@@ -2317,6 +2442,22 @@ function pullUpMixin(BScroll) {
     } else {
       this._watchPullUp();
     }
+  };
+
+  BScroll.prototype.openPullUp = function () {
+    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+    this.options.pullUpLoad = config;
+    this._initPullUp();
+  };
+
+  BScroll.prototype.closePullUp = function () {
+    this.options.pullUpLoad = false;
+    if (!this.pullupWatching) {
+      return;
+    }
+    this.pullupWatching = false;
+    this.off('scroll', this._checkToEnd);
   };
 }
 
@@ -2368,7 +2509,9 @@ function mouseWheelMixin(BScroll) {
         _options$mouseWheel$s = _options$mouseWheel.speed,
         speed = _options$mouseWheel$s === undefined ? 20 : _options$mouseWheel$s,
         _options$mouseWheel$i = _options$mouseWheel.invert,
-        invert = _options$mouseWheel$i === undefined ? false : _options$mouseWheel$i;
+        invert = _options$mouseWheel$i === undefined ? false : _options$mouseWheel$i,
+        _options$mouseWheel$e = _options$mouseWheel.easeTime,
+        easeTime = _options$mouseWheel$e === undefined ? 300 : _options$mouseWheel$e;
 
     var wheelDeltaX = void 0;
     var wheelDeltaY = void 0;
@@ -2431,8 +2574,8 @@ function mouseWheelMixin(BScroll) {
     newX = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0);
     newY = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0);
 
-    this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0;
-    this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0;
+    this.movingDirectionX = this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0;
+    this.movingDirectionY = this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0;
 
     if (newX > 0) {
       newX = 0;
@@ -2446,7 +2589,7 @@ function mouseWheelMixin(BScroll) {
       newY = this.maxScrollY;
     }
 
-    this.scrollTo(newX, newY);
+    this.scrollTo(newX, newY, easeTime, ease.swipe);
     this.trigger('scroll', {
       x: this.x,
       y: this.y
@@ -2457,11 +2600,11 @@ function mouseWheelMixin(BScroll) {
 function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el;
   if (!this.wrapper) {
-    warn('can not resolve the wrapper dom');
+    warn('Can not resolve the wrapper DOM.');
   }
   this.scroller = this.wrapper.children[0];
   if (!this.scroller) {
-    warn('the wrapper need at least one child element to be scroller');
+    warn('The wrapper need at least one child element to be scroller.');
   }
   // cache style for better performance
   this.scrollerStyle = this.scroller.style;
@@ -2479,6 +2622,6 @@ pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 
-BScroll.Version = '1.8.4';
+BScroll.Version = '1.10.2';
 
 export default BScroll;

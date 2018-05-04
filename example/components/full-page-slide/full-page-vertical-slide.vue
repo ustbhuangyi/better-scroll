@@ -1,6 +1,6 @@
 <template>
   <div v-if="items.length" class="full-page-slide-wrapper">
-    <slide ref="slide" :loop="false" :autoPlay="false" :showDot="false">
+    <slide ref="slide" :loop="true" :autoPlay="false" :showDot="false">
       <div v-for="(item, index) in items">
         <div class="full-page-img-wrapper" :style="getStyle(index)">
           <div v-if="index === items.length -1" class="button-wrapper" @click="handleClick()">

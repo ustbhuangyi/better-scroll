@@ -61,9 +61,18 @@ let scroll = new BScroll('.wrapper',{
   - 作用：因为 better-scroll 会阻止原生的 click 事件，我们可以设置 tap 为 true，它会在区域被点击的时候派发一个 tap 事件，你可以像监听原生事件那样去监听它，如 `element.addEventListener('tap', doSomething, false);`。如果 tap 设置为字符串, 那么这个字符串就作为自定义事件名称。如 `tap: 'myCustomTapEvent'`。
   
 ## bounce
-   - 类型：Boolean
+   - 类型：Boolean | Object
    - 默认值：true
    - 作用：当滚动超过边缘的时候会有一小段回弹动画。设置为 true 则开启动画。
+   ```js
+     bounce: {
+       top: true,
+       bottom: true,
+       left: true,
+       right: true
+     }
+   ``` 
+   自 1.10.0 版本以后，`bounce` 可以支持关闭某些边的回弹效果，可以设置对应边的 `key` 为 false 即可。
    
 ## bounceTime
    - 类型：Number

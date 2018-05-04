@@ -62,9 +62,18 @@ The code results in a clickable vertical scrolling effect. better-scroll support
   - Usage: Because better-scroll will inhibit standard click event, we can set tap to true. When the area is clicked, it will dispatch a tap event, you can add an event listener as you would do for a standard event like `element.addEventListener('tap', doSomething, false);`. If tap is setted to string, then the string value is regareded as the name of the custom event, like `tap: 'myCustomTapEvent'`.
 
 ## bounce
-   - Type: `Boolean`
+   - Type: `Boolean` | `Object`
    - Default: `true`
    - Usage: When the scroller meets the boundary it performs a small bounce animation. Setting this to true will enable the animation.
+   ```js
+     bounce: {
+       top: true,
+       bottom: true,
+       left: true,
+       right: true
+     }
+   ```    
+   Since the 1.10.0 version, `bounce` can support closing the springback effect of some edges, and can set the corresponding edge `key` to false.
 
 ## bounceTime
    - Type: `Number`

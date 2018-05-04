@@ -31,6 +31,7 @@ export function pullDownMixin(BScroll) {
 
   BScroll.prototype.openPullDown = function (config = true) {
     this.options.pullDownRefresh = config
+    this._initPullDown()
   }
 
   BScroll.prototype.closePullDown = function () {

@@ -110,6 +110,9 @@
       mouseWheel: {
         type: Boolean,
         default: false
+      },
+      bounce: {
+        default: true
       }
     },
     data() {
@@ -162,7 +165,8 @@
           pullUpLoad: this.pullUpLoad,
           startY: this.startY,
           freeScroll: this.freeScroll,
-          mouseWheel: this.mouseWheel
+          mouseWheel: this.mouseWheel,
+          bounce: this.bounce
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)

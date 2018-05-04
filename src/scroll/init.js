@@ -23,6 +23,15 @@ const DEFAULT_OPTIONS = {
   eventPassthrough: '',
   click: false,
   tap: false,
+  /**
+   * support any side
+   * bounce: {
+   *   top: true,
+   *   bottom: true,
+   *   left: true,
+   *   right: true
+   * }
+   */
   bounce: true,
   bounceTime: 800,
   momentum: true,
@@ -102,9 +111,10 @@ const DEFAULT_OPTIONS = {
   pullUpLoad: false,
   /**
    * for mouse wheel
-   * mouseWheel:{
+   * mouseWheel: {
    *   speed: 20,
-   *   invert: false
+   *   invert: false,
+   *   easeTime: 300
    * }
    */
   mouseWheel: false,

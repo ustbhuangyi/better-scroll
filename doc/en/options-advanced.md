@@ -36,7 +36,7 @@ better-scroll also supports several advanced options to implement some special f
        }
      }
    ``` 
-  Notice：`loop` set to true to support slide loop，but not in vertical axis, `threshold` is the threshold of going to the next snap,`easing` is the scroll easing function.
+  Notice：`loop` set to true to support slide loop，but when there is only one element, `loop` is invalid for true, and it won't clone nodes. `threshold` is the threshold of going to the next snap,`easing` is the scroll easing function.
    - Note: it's an advanced option which doesn't need to configure in normal scene. You can see the specific application scene in [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) and more details in the source code of [slide component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue).
 
 ## scrollbar
@@ -61,7 +61,7 @@ better-scroll also supports several advanced options to implement some special f
         stop: 20
       }
     ```  
- `threshold` is about the distance exceeded the border which decide the trigger of `pullingDown` event. Stop is the position where rebound stop at. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
+ `threshold` is about the distance exceeded the border which decide the trigger of `pullingDown` event. Stop is the position where rebound stop at. When the data loading cause by pulling down is finished, you must call [`finishPullDown`](/api-specific.html#finishpulldown) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
 
 ## pullUpLoad
    - Type: `Boolean | Object`
@@ -72,17 +72,17 @@ better-scroll also supports several advanced options to implement some special f
       threshold: 50
     }
   ``` 
- `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
+ `threshold` is about the distance exceeded the border which decide the trigger of `pullingUp` event. When the data loading cause by pulling up is finished, you must call [`finishPullUp`](/api-specific.html#finishpullup) method. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en) and more details in the source code of [scroll component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue).
  
 ## mouseWheel(v1.8.0+)    
   - Type：Boolean | Object
   - Default：false
-  - Usage：this option is used for PC mouse wheel，You can enable mouse wheel by configure it as true or an Object，like：
+  - Usage：this option is used for PC mouse wheel. You can enable mouse wheel by configure it as true or an Object，like：
   ```js
     mouseWheel: {
       speed: 20,
       invert: false
     }
   ``` 
- `speed` is the speed of mouse wheel，`invert` is about whether the direction of mouse wheel and the direction of real scroll are opposite. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/en)。
+ `speed` is the speed of mouse wheel, `invert` is about whether the direction of mouse wheel and the direction of real scroll are opposite, `easeTime` is the ease time of the rolling animation. You can see [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/en)。
 

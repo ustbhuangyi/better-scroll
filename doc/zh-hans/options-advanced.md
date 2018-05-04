@@ -35,7 +35,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
       }
     }
    ``` 
-   注意：`loop` 为 true 是为了支持循环轮播，`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
+   注意：`loop` 为 true 是为了支持循环轮播，但只有一个元素的时候，`loop` 为 true 是无效的，也并不会 clone 节点。`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
    - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) 。想了解更多的细节可以去看 example 中的 [slide](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue) 组件的代码。
 
 ## scrollbar
@@ -61,7 +61,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
        stop: 20
      }
    ```
-   可以配置顶部下拉的距离（`threshold`） 来决定刷新时机以及回弹停留的距离（`stop`），见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
+   可以配置顶部下拉的距离（`threshold`） 来决定刷新时机以及回弹停留的距离（`stop`）。当下拉刷新数据加载完毕后，需要执行 [`finishPullDown`](/api-specific.html#finishpulldown) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
    了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
 
 ## pullUpLoad
@@ -73,7 +73,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
        threshold: 50
      }
    ```
-   可以配置离（`threshold`）来决定开始加载的时机，见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
+   可以配置离（`threshold`）来决定开始加载的时机。当上拉加载数据加载完毕后，需要执行 [`finishPullUp`](/api-specific.html#finishpullup) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
    了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
    
 ## mouseWheel(v1.8.0+)   
@@ -83,10 +83,11 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
   ```js
     mouseWheel: {
       speed: 20,
-      invert: false
+      invert: false,
+      easeTime: 300
     }
   ``` 
-  `speed` 表示鼠标滚轮滚动的速度，`invert` 为 true 表示滚轮滚动和时机滚动方向相反，见[Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh)。
+  `speed` 表示鼠标滚轮滚动的速度，`invert` 为 true 表示滚轮滚动和时机滚动方向相反，`easeTime` 表示滚动动画的缓动时长，见[Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh)。
    
 
   
