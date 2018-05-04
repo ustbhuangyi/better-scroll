@@ -412,7 +412,8 @@ export function coreMixin(BScroll) {
     }
 
     this._transitionTime()
-    if (!this.pulling && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
+    const needReset = !this.pulling || this.movingDirectionY === DIRECTION_UP
+    if (needReset && !this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.isInTransition = false
       if (this.options.probeType !== PROBE_REALTIME) {
         this.trigger('scrollEnd', {
