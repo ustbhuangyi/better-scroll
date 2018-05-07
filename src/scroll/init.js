@@ -259,7 +259,7 @@ export function initMixin(BScroll) {
   }
 
   BScroll.prototype._handleAutoBlur = function () {
-    this.on('beforeScrollStart', () => {
+    this.on('scrollStart', () => {
       let activeElement = document.activeElement
       if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
         activeElement.blur()
