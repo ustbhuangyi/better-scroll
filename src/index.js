@@ -35,7 +35,7 @@ pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 mouseWheelMixin(BScroll)
 
-BScroll.Version = '1.10.2'
+BScroll.Version = '1.10.3'
 
 export default BScroll
 
