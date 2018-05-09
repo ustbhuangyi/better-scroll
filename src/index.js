@@ -7,6 +7,7 @@ import { scrollbarMixin } from './scroll/scrollbar'
 import { pullDownMixin } from './scroll/pulldown'
 import { pullUpMixin } from './scroll/pullup'
 import { mouseWheelMixin } from './scroll/mouse-wheel'
+import { zoomMixin } from './scroll/zoom'
 
 import { warn } from './util/debug'
 
@@ -34,6 +35,7 @@ scrollbarMixin(BScroll)
 pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 mouseWheelMixin(BScroll)
+zoomMixin(BScroll)
 
 BScroll.Version = '1.10.3'
 

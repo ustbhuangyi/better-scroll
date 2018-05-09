@@ -113,6 +113,9 @@
       },
       bounce: {
         default: true
+      },
+      zoom: {
+        default: false
       }
     },
     data() {
@@ -166,7 +169,8 @@
           startY: this.startY,
           freeScroll: this.freeScroll,
           mouseWheel: this.mouseWheel,
-          bounce: this.bounce
+          bounce: this.bounce,
+          zoom: this.zoom
         }
 
         this.scroll = new BScroll(this.$refs.wrapper, options)

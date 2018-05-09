@@ -301,10 +301,10 @@ export function coreMixin(BScroll) {
       let snap = this._nearestSnap(newX, newY)
       this.currentPage = snap
       time = this.options.snapSpeed || Math.max(
-          Math.max(
-            Math.min(Math.abs(newX - snap.x), 1000),
-            Math.min(Math.abs(newY - snap.y), 1000)
-          ), 300)
+        Math.max(
+          Math.min(Math.abs(newX - snap.x), 1000),
+          Math.min(Math.abs(newY - snap.y), 1000)
+        ), 300)
       newX = snap.x
       newY = snap.y
 
@@ -449,9 +449,9 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype._translate = function (x, y) {
-    assert(!isUndef(x) && !isUndef(y), 'Oops! translate x or y is null or undefined. please check your code.')
+    assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.  ')
     if (this.options.useTransform) {
-      this.scrollerStyle[style.transform] = `translate(${x}px,${y}px)${this.translateZ}`
+      this.scrollerStyle[style.transform] = `translate(${x}px,${y}px) scale(${this.scale})${this.translateZ}`
     } else {
       x = Math.round(x)
       y = Math.round(y)

@@ -118,7 +118,16 @@ const DEFAULT_OPTIONS = {
    * }
    */
   mouseWheel: false,
-  stopPropagation: false
+  stopPropagation: false,
+  /**
+   * for zoom
+   * zoom: {
+   *   start: 1,
+   *   min: 1,
+   *   max: 4
+   * }
+   */
+  zoom: false
 }
 
 export function initMixin(BScroll) {
@@ -130,6 +139,7 @@ export function initMixin(BScroll) {
 
     this.x = 0
     this.y = 0
+    this.scale = 1
     this.directionX = 0
     this.directionY = 0
 
@@ -233,6 +243,9 @@ export function initMixin(BScroll) {
     }
     if (this.options.mouseWheel) {
       this._initMouseWheel()
+    }
+    if (this.options.zoom) {
+      this._initZoom()
     }
   }
 
@@ -358,16 +371,27 @@ export function initMixin(BScroll) {
       case 'touchstart':
       case 'mousedown':
         this._start(e)
+        if (this.options.zoom && e.touches && e.touches.length > 1) {
+          this._zoomStart(e)
+        }
         break
       case 'touchmove':
       case 'mousemove':
-        this._move(e)
+        if (this.options.zoom && e.touches && e.touches.length > 1) {
+          this._zoom(e)
+        } else {
+          this._move(e)
+        }
         break
       case 'touchend':
       case 'mouseup':
       case 'touchcancel':
       case 'mousecancel':
-        this._end(e)
+        if (this.scaled) {
+          this._zoomEnd(e)
+        } else {
+          this._end(e)
+        }
         break
       case 'orientationchange':
       case 'resize':
@@ -401,8 +425,8 @@ export function initMixin(BScroll) {
     this.wrapperHeight = wrapperRect.height
 
     let scrollerRect = getRect(this.scroller)
-    this.scrollerWidth = scrollerRect.width
-    this.scrollerHeight = scrollerRect.height
+    this.scrollerWidth = Math.round(scrollerRect.width * this.scale)
+    this.scrollerHeight = Math.round(scrollerRect.height * this.scale)
 
     const wheel = this.options.wheel
     if (wheel) {
