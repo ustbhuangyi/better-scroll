@@ -732,6 +732,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.7" data-path="options-advanced.html">
+            
+                <a href="options-advanced.html#zoomv1110">
+            
+                    
+                    zoom
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1231,6 +1244,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.7.12" data-path="events.html">
+            
+                <a href="events.html#zoomstart">
+            
+                    
+                    zoomStart
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.13" data-path="events.html">
+            
+                <a href="events.html#zoomend">
+            
+                    
+                    zoomEnd
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1451,9 +1490,9 @@
 <li>Default: <code>false</code></li>
 <li>Usage: this option is used to configure Picker component. You can enable picker by configure it as an Object, like:<pre><code class="lang-js">wheel:{
   selectedIndex: <span class="hljs-number">0</span>,
-  rotate: <span class="hljs-number">25</span>, 
-  adjustTime: <span class="hljs-number">400</span>, 
-  wheelWrapperClass: <span class="hljs-string">&apos;wheel-scroll&apos;</span>, 
+  rotate: <span class="hljs-number">25</span>,
+  adjustTime: <span class="hljs-number">400</span>,
+  wheelWrapperClass: <span class="hljs-string">&apos;wheel-scroll&apos;</span>,
   wheelItemClass: <span class="hljs-string">&apos;wheel-item&apos;</span>
 }
 </code></pre>
@@ -1486,9 +1525,9 @@
 <ul>
 <li>Type: <code>Boolean | Object</code></li>
 <li>Default: <code>false</code></li>
-<li>Usage: this option is used to configure scroll bar. You can enable scroll bar by configure it as true or an Object, like: <pre><code class="lang-js">scrollbar: {
+<li>Usage: this option is used to configure scroll bar. You can enable scroll bar by configure it as true or an Object, like:<pre><code class="lang-js">scrollbar: {
   fade: <span class="hljs-literal">true</span>,
-  interactive: <span class="hljs-literal">false</span> <span class="hljs-comment">// new in 1.8.0 </span>
+  interactive: <span class="hljs-literal">false</span> <span class="hljs-comment">// new in 1.8.0</span>
 }
 </code></pre>
 <code>fade</code> is about whether the scroll bar fade when scroll stop, and it&apos;s true by default.<code>interactive</code> is about whether the scroll bar could be interactive.You can see <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/en" target="_blank">Demo</a> and more details in the source code of <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue" target="_blank">scroll component</a>.</li>
@@ -1508,7 +1547,7 @@
 <ul>
 <li>Type: <code>Boolean | Object</code></li>
 <li>Default: <code>false</code></li>
-<li>Usage: this option is used to configure pulling up load. You can enable pulling up load by configure it as true or an Object, like: <pre><code class="lang-js">pullUpLoad: {
+<li>Usage: this option is used to configure pulling up load. You can enable pulling up load by configure it as true or an Object, like:<pre><code class="lang-js">pullUpLoad: {
  threshold: <span class="hljs-number">50</span>
 }
 </code></pre>
@@ -1524,6 +1563,18 @@
 }
 </code></pre>
 <code>speed</code> is the speed of mouse wheel, <code>invert</code> is about whether the direction of mouse wheel and the direction of real scroll are opposite, <code>easeTime</code> is the ease time of the rolling animation. You can see <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/en" target="_blank">Demo</a>&#x3002;</li>
+</ul>
+<h2 id="zoomv1110">zoom(v1.11.0+)</h2>
+<ul>
+<li>Type&#xFF1A;Boolean | Object</li>
+<li>Default&#xFF1A;false</li>
+<li>Usage&#xFF1A;this option is used to zoom in scroll content&#xFF0C;default to false&#x3002;When you set it to true or a Object, you can zoom in&#xFF0C;like&#xFF1A;<pre><code class="lang-js">zoom: {
+ start: <span class="hljs-number">1</span>,
+ min: <span class="hljs-number">1</span>,
+ max: <span class="hljs-number">4</span>
+}
+</code></pre>
+<code>start</code> represents the initial scaling, <code>min</code> represents the smallest scaling, and <code>max</code> represents the maximum scaling.</li>
 </ul>
 
                                 
@@ -1568,7 +1619,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-04-19T11:55:13.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-04-20T09:00:46.799Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-05-10T05:42:23.098Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-05-10T05:48:25.675Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
