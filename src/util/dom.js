@@ -48,6 +48,22 @@ export function removeEvent(el, type, fn, capture) {
 }
 
 export function offset(el) {
+  let left = 0
+  let top = 0
+
+  while (el) {
+    left -= el.offsetLeft
+    top -= el.offsetTop
+    el = el.offsetParent
+  }
+
+  return {
+    left,
+    top
+  }
+}
+
+export function offsetToBody(el) {
   let rect = el.getBoundingClientRect()
 
   return {

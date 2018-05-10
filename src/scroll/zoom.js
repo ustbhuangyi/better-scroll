@@ -1,4 +1,4 @@
-import { eventType, style } from '../util/dom'
+import { eventType, style, offsetToBody } from '../util/dom'
 import { getDistance } from '../util/lang'
 
 export function zoomMixin(BScroll) {
@@ -16,8 +16,11 @@ export function zoomMixin(BScroll) {
 
     this.startDistance = getDistance(deltaX, deltaY)
     this.startScale = this.scale
-    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + this.wrapperOffset.left - this.x
-    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + this.wrapperOffset.top - this.y
+
+    let {left, top} = offsetToBody(this.wrapper)
+
+    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + left - this.x
+    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + top - this.y
 
     this.trigger('zoomStart')
   }
