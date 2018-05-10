@@ -48,18 +48,11 @@ export function removeEvent(el, type, fn, capture) {
 }
 
 export function offset(el) {
-  let left = 0
-  let top = 0
-
-  while (el) {
-    left -= el.offsetLeft
-    top -= el.offsetTop
-    el = el.offsetParent
-  }
+  let rect = el.getBoundingClientRect()
 
   return {
-    left,
-    top
+    left: -(rect.left + window.pageXOffset),
+    top: -(rect.top + window.pageYOffset)
   }
 }
 
@@ -96,7 +89,7 @@ export const eventType = {
 
 export function getRect(el) {
   if (el instanceof window.SVGElement) {
-    var rect = el.getBoundingClientRect()
+    let rect = el.getBoundingClientRect()
     return {
       top: rect.top,
       left: rect.left,
