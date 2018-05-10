@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.11.0
+ * better-normal-scroll v1.11.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -215,6 +215,15 @@ function offset(el) {
   return {
     left: left,
     top: top
+  };
+}
+
+function offsetToBody(el) {
+  var rect = el.getBoundingClientRect();
+
+  return {
+    left: -(rect.left + window.pageXOffset),
+    top: -(rect.top + window.pageYOffset)
   };
 }
 
@@ -1224,7 +1233,7 @@ function coreMixin(BScroll) {
       if (this.options.wheel) {
         if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
           var index = Math.abs(Math.round(this.y / this.itemHeight));
-          var _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight);
+          var _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight);
           this.target = this.items[index + _offset];
         }
         this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe);
@@ -2659,8 +2668,13 @@ function zoomMixin(BScroll) {
 
     this.startDistance = getDistance(deltaX, deltaY);
     this.startScale = this.scale;
-    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + this.wrapperOffset.left - this.x;
-    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + this.wrapperOffset.top - this.y;
+
+    var _offsetToBody = offsetToBody(this.wrapper),
+        left = _offsetToBody.left,
+        top = _offsetToBody.top;
+
+    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + left - this.x;
+    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + top - this.y;
 
     this.trigger('zoomStart');
   };
@@ -2786,6 +2800,6 @@ pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 
-BScroll.Version = '1.11.0';
+BScroll.Version = '1.11.1';
 
 export default BScroll;
