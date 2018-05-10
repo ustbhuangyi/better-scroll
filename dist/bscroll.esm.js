@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.10.3
+ * better-normal-scroll v1.11.0
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -150,6 +150,10 @@ function extend(target) {
 
 function isUndef(v) {
   return v === undefined || v === null;
+}
+
+function getDistance(x, y) {
+  return Math.sqrt(x * x + y * y);
 }
 
 var elementStyle = inBrowser && document.createElement('div').style;
@@ -445,7 +449,16 @@ var DEFAULT_OPTIONS = {
    * }
    */
   mouseWheel: false,
-  stopPropagation: false
+  stopPropagation: false,
+  /**
+   * for zoom
+   * zoom: {
+   *   start: 1,
+   *   min: 1,
+   *   max: 4
+   * }
+   */
+  zoom: false
 };
 
 function initMixin(BScroll) {
@@ -457,6 +470,7 @@ function initMixin(BScroll) {
 
     this.x = 0;
     this.y = 0;
+    this.scale = 1;
     this.directionX = 0;
     this.directionY = 0;
 
@@ -560,6 +574,9 @@ function initMixin(BScroll) {
     }
     if (this.options.mouseWheel) {
       this._initMouseWheel();
+    }
+    if (this.options.zoom) {
+      this._initZoom();
     }
   };
 
@@ -689,16 +706,27 @@ function initMixin(BScroll) {
       case 'touchstart':
       case 'mousedown':
         this._start(e);
+        if (this.options.zoom && e.touches && e.touches.length > 1) {
+          this._zoomStart(e);
+        }
         break;
       case 'touchmove':
       case 'mousemove':
-        this._move(e);
+        if (this.options.zoom && e.touches && e.touches.length > 1) {
+          this._zoom(e);
+        } else {
+          this._move(e);
+        }
         break;
       case 'touchend':
       case 'mouseup':
       case 'touchcancel':
       case 'mousecancel':
-        this._end(e);
+        if (this.scaled) {
+          this._zoomEnd(e);
+        } else {
+          this._end(e);
+        }
         break;
       case 'orientationchange':
       case 'resize':
@@ -732,8 +760,8 @@ function initMixin(BScroll) {
     this.wrapperHeight = wrapperRect.height;
 
     var scrollerRect = getRect(this.scroller);
-    this.scrollerWidth = scrollerRect.width;
-    this.scrollerHeight = scrollerRect.height;
+    this.scrollerWidth = Math.round(scrollerRect.width * this.scale);
+    this.scrollerHeight = Math.round(scrollerRect.height * this.scale);
 
     var wheel = this.options.wheel;
     if (wheel) {
@@ -1310,9 +1338,9 @@ function coreMixin(BScroll) {
   };
 
   BScroll.prototype._translate = function (x, y) {
-    assert(!isUndef(x) && !isUndef(y), 'Oops! translate x or y is null or undefined. please check your code.');
+    assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.');
     if (this.options.useTransform) {
-      this.scrollerStyle[style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.translateZ;
+      this.scrollerStyle[style.transform] = 'translate(' + x + 'px,' + y + 'px) scale(' + this.scale + ')' + this.translateZ;
     } else {
       x = Math.round(x);
       y = Math.round(y);
@@ -2609,6 +2637,129 @@ function mouseWheelMixin(BScroll) {
   };
 }
 
+function zoomMixin(BScroll) {
+  BScroll.prototype._initZoom = function () {
+    var _options$zoom = this.options.zoom,
+        _options$zoom$start = _options$zoom.start,
+        start = _options$zoom$start === undefined ? 1 : _options$zoom$start,
+        _options$zoom$min = _options$zoom.min,
+        min = _options$zoom$min === undefined ? 1 : _options$zoom$min,
+        _options$zoom$max = _options$zoom.max,
+        max = _options$zoom$max === undefined ? 4 : _options$zoom$max;
+
+    this.scale = Math.min(Math.max(start, min), max);
+    this.scrollerStyle[style.transformOrigin] = '0 0';
+  };
+
+  BScroll.prototype._zoomStart = function (e) {
+    var firstFinger = e.touches[0];
+    var secondFinger = e.touches[1];
+    var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
+    var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
+
+    this.startDistance = getDistance(deltaX, deltaY);
+    this.startScale = this.scale;
+    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + this.wrapperOffset.left - this.x;
+    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + this.wrapperOffset.top - this.y;
+
+    this.trigger('zoomStart');
+  };
+
+  BScroll.prototype._zoom = function (e) {
+    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
+      return;
+    }
+
+    if (this.options.preventDefault) {
+      e.preventDefault();
+    }
+
+    var firstFinger = e.touches[0];
+    var secondFinger = e.touches[1];
+    var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
+    var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
+    var distance = getDistance(deltaX, deltaY);
+    var scale = distance / this.startDistance * this.startScale;
+
+    this.scaled = true;
+
+    var _options$zoom2 = this.options.zoom,
+        _options$zoom2$min = _options$zoom2.min,
+        min = _options$zoom2$min === undefined ? 1 : _options$zoom2$min,
+        _options$zoom2$max = _options$zoom2.max,
+        max = _options$zoom2$max === undefined ? 4 : _options$zoom2$max;
+
+
+    if (scale < min) {
+      scale = 0.5 * min * Math.pow(2.0, scale / min);
+    } else if (scale > max) {
+      scale = 2.0 * max * Math.pow(0.5, max / scale);
+    }
+
+    var lastScale = scale / this.startScale;
+
+    var x = this.originX - this.originX * lastScale + this.startX;
+    var y = this.originY - this.originY * lastScale + this.startY;
+
+    this.scale = scale;
+
+    this.scrollTo(x, y, 0);
+  };
+
+  BScroll.prototype._zoomEnd = function (e) {
+    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
+      return;
+    }
+
+    if (this.options.preventDefault) {
+      e.preventDefault();
+    }
+
+    this.isInTransition = false;
+    this.initiated = 0;
+
+    var _options$zoom3 = this.options.zoom,
+        _options$zoom3$min = _options$zoom3.min,
+        min = _options$zoom3$min === undefined ? 1 : _options$zoom3$min,
+        _options$zoom3$max = _options$zoom3.max,
+        max = _options$zoom3$max === undefined ? 4 : _options$zoom3$max;
+
+
+    if (this.scale > max) {
+      this.scale = max;
+    } else if (this.scale < min) {
+      this.scale = min;
+    }
+
+    this.refresh();
+
+    var lastScale = this.scale / this.startScale;
+
+    var newX = this.originX - this.originX * lastScale + this.startX;
+    var newY = this.originY - this.originY * lastScale + this.startY;
+
+    if (newX > 0) {
+      newX = 0;
+    } else if (newX < this.maxScrollX) {
+      newX = this.maxScrollX;
+    }
+
+    if (newY > 0) {
+      newY = 0;
+    } else if (newY < this.maxScrollY) {
+      newY = this.maxScrollY;
+    }
+
+    if (this.x !== newX || this.y !== newY) {
+      this.scrollTo(newX, newY, this.options.bounceTime);
+    }
+
+    this.scaled = false;
+
+    this.trigger('zoomEnd');
+  };
+}
+
 function BScroll(el, options) {
   this.wrapper = typeof el === 'string' ? document.querySelector(el) : el;
   if (!this.wrapper) {
@@ -2633,7 +2784,8 @@ scrollbarMixin(BScroll);
 pullDownMixin(BScroll);
 pullUpMixin(BScroll);
 mouseWheelMixin(BScroll);
+zoomMixin(BScroll);
 
-BScroll.Version = '1.10.3';
+BScroll.Version = '1.11.0';
 
 export default BScroll;
