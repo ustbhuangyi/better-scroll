@@ -449,7 +449,7 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype._translate = function (x, y) {
-    assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.  ')
+    assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.')
     if (this.options.useTransform) {
       this.scrollerStyle[style.transform] = `translate(${x}px,${y}px) scale(${this.scale})${this.translateZ}`
     } else {

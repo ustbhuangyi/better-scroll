@@ -46,6 +46,14 @@ Besides rich API methods, better-scroll also emits several events to interact. W
    - Parameters: none.
    - Trigger timing: when the action of pulling up happens. This timing usually use to request data.
 
+## zoomStart
+   - Parameters：none.
+   - Trigger timing：when zoom start.
+
+## zoomEnd
+   - Parameters：none.
+   - Trigger timing：when zoom end.
+
 
 
 

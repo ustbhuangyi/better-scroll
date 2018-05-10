@@ -9,9 +9,9 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
    ```js
      wheel:{
        selectedIndex: 0,
-       rotate: 25, 
-       adjustTime: 400, 
-       wheelWrapperClass: 'wheel-scroll', 
+       rotate: 25,
+       adjustTime: 400,
+       wheelWrapperClass: 'wheel-scroll',
        wheelItemClass: 'wheel-item'
      }
    ```
@@ -34,7 +34,7 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
         }
       }
     }
-   ``` 
+   ```
    注意：`loop` 为 true 是为了支持循环轮播，但只有一个元素的时候，`loop` 为 true 是无效的，也并不会 clone 节点。`threshold` 表示可滚动到下一个的阈值，`easing` 表示滚动的缓动函数。
    - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Slide Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/slide/en) 。想了解更多的细节可以去看 example 中的 [slide](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/slide/slide.vue) 组件的代码。
 
@@ -75,8 +75,8 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
    ```
    可以配置离（`threshold`）来决定开始加载的时机。当上拉加载数据加载完毕后，需要执行 [`finishPullUp`](/api-specific.html#finishpullup) 方法。见 [Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/vertical-scroll/zh) 。
    了解更多的细节可以去看 example 中的 [scroll](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/scroll/scroll.vue) 组件代码。
-   
-## mouseWheel(v1.8.0+)   
+
+## mouseWheel(v1.8.0+)
    - 类型：Boolean | Object
    - 默认值：false
    - 作用：这个配置用于 PC 端的鼠标滚轮，默认为 false，。当设置为 true 或者是一个 Object 的时候，可以开启鼠标滚轮，例如：
@@ -86,9 +86,23 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
       invert: false,
       easeTime: 300
     }
-  ``` 
+  ```
   `speed` 表示鼠标滚轮滚动的速度，`invert` 为 true 表示滚轮滚动和时机滚动方向相反，`easeTime` 表示滚动动画的缓动时长，见[Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/free-scroll/zh)。
-   
 
-  
+## zoom(v1.11.0+)
+   - 类型：Boolean | Object
+   - 默认值：false
+   - 作用：这个配置用于对滚动内容的缩放，默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启缩放，例如：
+  ```js
+    zoom: {
+      start: 1,
+      min: 1,
+      max: 4
+    }
+  ```
+  `start` 表示开始的缩放比例，`min` 表示最小缩放比例，`max` 表示最大缩放比例。
+
+
+
+
 

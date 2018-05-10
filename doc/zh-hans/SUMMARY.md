@@ -48,6 +48,7 @@
   - [pullDownRefresh](options-advanced.md#pulldownrefresh)
   - [pullUpLoad](options-advanced.md#pullupload)
   - [mouseWheel](options-advanced.md#mousewheelv180)
+  - [zoom](options-advanced.md#zoomv1110)
 - [方法 / 通用](api.md)
   - [refresh](api.md#refresh)
   - [scrollTo](api.md#scrolltox-y-time-easing)
@@ -85,6 +86,8 @@
   - [destroy](events.md#destroy)
   - [pullingDown](events.md#pullingdown)
   - [pullingUp](events.md#pullingup)
+  - [zoomStart](events.md#zoomstart)
+  - [zoomEnd](events.md#zoomend)
 - [属性](property.md)
   - [x](property.md#x)
   - [y](property.md#y)
@@ -97,8 +100,8 @@
   - [enabled](property.md#enabled)
   - [isInTransition](property.md#isintransition)
   - [isAnimating](property.md#isanimating)
- 
-  
-  
-    
+
+
+
+
 
