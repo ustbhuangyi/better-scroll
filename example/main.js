@@ -8,7 +8,7 @@ import 'common/stylus/base.styl'
 fastclick.attach(document.body)
 
 /* eslint-disable no-unused-vars */
-import vConsole from 'vconsole' // develop console
+// import vConsole from 'vconsole' // develop console
 
 /* eslint-disable no-new */
 new Vue({
