@@ -5,7 +5,8 @@ import {
   tap,
   click,
   style,
-  offset
+  offset,
+  offsetToBody
 } from '../util/dom'
 import { ease } from '../util/ease'
 import { momentum } from '../util/momentum'
@@ -341,7 +342,7 @@ export function coreMixin(BScroll) {
       if (this.options.wheel) {
         if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
           let index = Math.abs(Math.round(this.y / this.itemHeight))
-          let _offset = Math.round((this.pointY + offset(this.target).top - this.itemHeight / 2) / this.itemHeight)
+          let _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight)
           this.target = this.items[index + _offset]
         }
         this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe)
