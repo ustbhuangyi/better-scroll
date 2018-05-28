@@ -56,7 +56,6 @@
       }
     }
   }
-
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
@@ -78,5 +77,4 @@
       height: 100%
       width: 95%
       margin: 0 auto
-
 </style>

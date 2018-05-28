@@ -404,4 +404,3 @@ Indicator.prototype._handleDOMEvents = function (eventOperation) {
     eventOperation(window, 'mouseup', this)
   }
 }
-

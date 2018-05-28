@@ -32,6 +32,7 @@ export default {
     formList: '表单列表',
     goodsList: '商品列表',
     navList: '导航列表',
+    infinity: '无限滚动',
     verticalScrollImg: 'vertical-scroll.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker.jpeg',
@@ -40,7 +41,8 @@ export default {
     freeScrollImg: 'free-scroll.jpeg',
     formListImg: 'form-list.jpeg',
     goodsListImg: 'goods-list.jpeg',
-    navListImg: 'navigator-zh.jpg'
+    navListImg: 'navigator-zh.jpg',
+    infinityScrollImg: 'infinity-scroll.png'
   },
 
   normalScrollListPage: {

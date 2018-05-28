@@ -64,14 +64,14 @@
         this.scroll.on('scrollEnd', () => {
           console.log('scrollEnd')
         })
-//        this._appendFood()
+        this._appendFood()
       })
     },
     methods: {
       _appendFood() {
-        if (this.foods.length < 100) {
+        while (this.foods.length < 1000) {
           this.foods = this.foods.concat(_foods)
-          setTimeout(this._appendFood, 5000)
+          this._appendFood()
         }
       }
     },

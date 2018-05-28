@@ -32,6 +32,7 @@ export default {
     formList: 'Form List',
     goodsList: 'Goods List',
     navList: 'Navigation List',
+    infinity: 'Infinity Scroll',
     verticalScrollImg: 'vertical-scroll-en.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker-en.jpeg',
@@ -40,7 +41,8 @@ export default {
     freeScrollImg: 'free-scroll.jpeg',
     formListImg: 'form-list-en.jpeg',
     goodsListImg: 'goods-list.jpeg',
-    navListImg: 'navigator-en.jpg'
+    navListImg: 'navigator-en.jpg',
+    infinityScrollImg: 'infinity-scroll.png'
   },
 
   normalScrollListPage: {

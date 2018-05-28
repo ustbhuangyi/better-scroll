@@ -39,7 +39,7 @@ const DEFAULT_OPTIONS = {
   momentumLimitDistance: 15,
   swipeTime: 2500,
   swipeBounceTime: 500,
-  deceleration: 0.001,
+  deceleration: 0.002,
   flickLimitTime: 200,
   flickLimitDistance: 100,
   resizePolling: 60,
@@ -127,7 +127,19 @@ const DEFAULT_OPTIONS = {
    *   max: 4
    * }
    */
-  zoom: false
+  zoom: false,
+  /**
+   * for infinity
+   * infinity: {
+   *   render(item, div) {
+   *   },
+   *   createTombstone() {
+   *   },
+   *   fetch(count) {
+   *   }
+   * }
+   */
+  infinity: false
 }
 
 export function initMixin(BScroll) {
@@ -246,6 +258,9 @@ export function initMixin(BScroll) {
     }
     if (this.options.zoom) {
       this._initZoom()
+    }
+    if (this.options.infinity) {
+      this._initInfinite()
     }
   }
 
@@ -440,7 +455,9 @@ export function initMixin(BScroll) {
       this.maxScrollY = -this.itemHeight * (this.items.length - 1)
     } else {
       this.maxScrollX = this.wrapperWidth - this.scrollerWidth
-      this.maxScrollY = this.wrapperHeight - this.scrollerHeight
+      if (!this.options.infinity) {
+        this.maxScrollY = this.wrapperHeight - this.scrollerHeight
+      }
     }
 
     this.hasHorizontalScroll = this.options.scrollX && this.maxScrollX < 0

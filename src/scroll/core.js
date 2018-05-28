@@ -108,11 +108,11 @@ export function coreMixin(BScroll) {
     // If you are scrolling in one direction lock the other
     if (!this.directionLocked && !this.options.freeScroll) {
       if (absDistX > absDistY + this.options.directionLockThreshold) {
-        this.directionLocked = 'h'		// lock horizontally
+        this.directionLocked = 'h' // lock horizontally
       } else if (absDistY >= absDistX + this.options.directionLockThreshold) {
-        this.directionLocked = 'v'		// lock vertically
+        this.directionLocked = 'v' // lock vertically
       } else {
-        this.directionLocked = 'n'		// no lock
+        this.directionLocked = 'n' // no lock
       }
     }
 

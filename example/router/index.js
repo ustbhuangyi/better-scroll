@@ -12,6 +12,7 @@ import FreeScroll from 'example/pages/free-scroll'
 import FormList from 'example/pages/form-list'
 import GoodsList from 'example/pages/goods-list'
 import NavigatorList from 'example/pages/navigator'
+import Infinity from 'example/pages/infinity'
 import SlideRender from 'example/page-render/slide-render'
 import FormListRender from 'example/page-render/form-list-render'
 import SimpleScrollDemo from 'example/pages/simple-scroll-demo'
@@ -99,6 +100,10 @@ export default new Router({
               component: PickerRender
             }
           ]
+        },
+        {
+          path: 'infinity/:lang',
+          component: Infinity
         }
       ]
     }

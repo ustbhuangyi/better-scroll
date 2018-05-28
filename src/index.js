@@ -8,6 +8,7 @@ import { pullDownMixin } from './scroll/pulldown'
 import { pullUpMixin } from './scroll/pullup'
 import { mouseWheelMixin } from './scroll/mouse-wheel'
 import { zoomMixin } from './scroll/zoom'
+import { infiniteMixin } from './scroll/inifinity'
 
 import { warn } from './util/debug'
 
@@ -36,8 +37,8 @@ pullDownMixin(BScroll)
 pullUpMixin(BScroll)
 mouseWheelMixin(BScroll)
 zoomMixin(BScroll)
+infiniteMixin(BScroll)
 
 BScroll.Version = '1.11.1'
 
 export default BScroll
-
