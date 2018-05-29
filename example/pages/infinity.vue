@@ -57,7 +57,7 @@
         this.scroll = new BScroll(this.$refs.chat, {
           // HWCompositing: false,
           observeDOM: false,
-          // useTransition: false,
+          useTransition: false,
           infinity: {
             render: (item, div) => {
               div = div || this.$refs.message.cloneNode(true)
