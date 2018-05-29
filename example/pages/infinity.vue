@@ -55,7 +55,6 @@
     methods: {
       createInfinityScroll() {
         this.scroll = new BScroll(this.$refs.chat, {
-          // HWCompositing: false,
           observeDOM: false,
           useTransition: false,
           infinity: {
