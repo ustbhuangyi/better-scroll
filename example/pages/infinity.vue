@@ -93,8 +93,7 @@
               return new Promise((resolve, reject) => {
                 // Assume 50 ms per item.
                 setTimeout(() => {
-                  console.log(this.pageNum)
-                  if (this.pageNum++ > 10) {
+                  if (this.pageNum++ > 20) {
                     resolve(false)
                   } else {
                     let items = []

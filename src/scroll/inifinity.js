@@ -1,4 +1,5 @@
 import { assert } from '../util/debug'
+// import { ease } from '../util/ease'
 
 // Number of items to instantiate beyond current view in the scroll direction.
 const RUNWAY_ITEMS = 30
@@ -10,7 +11,7 @@ const RUNWAY_ITEMS_OPPOSITE = 10
 const ANIMATION_DURATION_MS = 200
 
 // The number of pixels of default additional length to allow scrolling to.
-const DEFAULT_SCROLL_RUNWAY = 2000
+const DEFAULT_SCROLL_RUNWAY = 300
 
 export function infiniteMixin(BScroll) {
   BScroll.prototype._initInfinite = function () {
@@ -131,9 +132,20 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
       this.addContent(items)
     } else {
       this.hasMore = false
-      this._removeTombstones()
-      let curPos = this._fixScrollPosition()
-      this._setupAnimations([], curPos)
+      let tombstoneLen = this._removeTombstones()
+      let curPos = 0
+      if (this.anchorItem.index <= this.items.length) {
+        curPos = this._fixScrollPosition()
+        this._setupAnimations({}, curPos)
+        this.scroller.resetPosition(this.scroller.options.bounceTime)
+      } else {
+        this.anchorItem.index -= tombstoneLen
+        curPos = this._fixScrollPosition()
+        this._setupAnimations({}, curPos)
+        this.scroller.stop()
+        this.scroller.resetPosition()
+        this.onScroll()
+      }
     }
   })
 }
@@ -147,6 +159,7 @@ InfiniteScroller.prototype.addContent = function (items) {
     this.items[this.loadedItems++].data = items[i]
   }
   this.attachContent()
+  this.maybeRequestContent()
 }
 
 InfiniteScroller.prototype.attachContent = function () {
@@ -160,18 +173,24 @@ InfiniteScroller.prototype.attachContent = function () {
 
 InfiniteScroller.prototype._removeTombstones = function () {
   let markIndex
-  for (let i = this.firstAttachedItem; i < this.items.length; i++) {
+  let tombstoneLen = 0
+  let itemLen = this.items.length
+  for (let i = 0; i < itemLen; i++) {
     const currentNode = this.items[i].node
     const currentData = this.items[i].data
-    if (isTombstoneNode(currentNode) && !currentData) {
+    if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
       if (!markIndex) {
         markIndex = i
       }
-      this.scrollerEl.removeChild(this.items[i].node)
+      if (currentNode) {
+        this.scrollerEl.removeChild(currentNode)
+      }
     }
   }
+  tombstoneLen = itemLen - markIndex
   this.items.splice(markIndex)
   this.lastAttachedItem = Math.min(this.lastAttachedItem, this.items.length)
+  return tombstoneLen
 }
 
 InfiniteScroller.prototype._collectUnusedNodes = function () {
