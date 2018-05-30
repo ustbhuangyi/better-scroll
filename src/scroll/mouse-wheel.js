@@ -30,9 +30,11 @@ export function mouseWheelMixin(BScroll) {
     }
     this.firstWheelOpreation = false
 
+    const {speed = 20, invert = false, easeTime = 300} = this.options.mouseWheel
+
     clearTimeout(this.mouseWheelTimer)
     this.mouseWheelTimer = setTimeout(() => {
-      if (!this.options.snap) {
+      if (!this.options.snap && !easeTime) {
         this.trigger('scrollEnd', {
           x: this.x,
           y: this.y
@@ -41,7 +43,6 @@ export function mouseWheelMixin(BScroll) {
       this.firstWheelOpreation = true
     }, 400)
 
-    const {speed = 20, invert = false, easeTime = 300} = this.options.mouseWheel
     let wheelDeltaX
     let wheelDeltaY
 

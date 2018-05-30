@@ -79,6 +79,10 @@
         type: Boolean,
         default: false
       },
+      listenScrollEnd: {
+        type: Boolean,
+        default: false
+      },
       direction: {
         type: String,
         default: DIRECTION_V
@@ -181,9 +185,19 @@
           })
         }
 
+        if (this.listenScrollEnd) {
+          this.scroll.on('scrollEnd', (pos) => {
+            this.$emit('scroll-end', pos)
+          })
+        }
+
         if (this.listenBeforeScroll) {
           this.scroll.on('beforeScrollStart', () => {
             this.$emit('beforeScrollStart')
+          })
+
+          this.scroll.on('scrollStart', () => {
+            this.$emit('scroll-start')
           })
         }
 

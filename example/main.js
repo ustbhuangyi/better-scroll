@@ -6,7 +6,7 @@ import fastclick from 'fastclick'
 import 'common/stylus/base.styl'
 
 /* eslint-disable no-unused-vars */
-import vConsole from 'vconsole' // develop console
+// import vConsole from 'vconsole' // develop console
 
 fastclick.attach(document.body)
 
