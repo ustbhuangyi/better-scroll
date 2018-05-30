@@ -56,7 +56,8 @@
       createInfinityScroll() {
         this.scroll = new BScroll(this.$refs.chat, {
           observeDOM: false,
-          useTransition: false,
+          // useTransition: false,
+          // useTransform: false,
           infinity: {
             render: (item, div) => {
               div = div || this.$refs.message.cloneNode(true)
@@ -161,6 +162,13 @@
     box-sizing: border-box;
     contain: layout;
     will-change: transform;
+    /*-webkit-backface-visibility: hidden;*/
+    /*-webkit-transform-style: preserve-3d*/
+  }
+
+  .chat-timeline > ul {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: flat
   }
 
   .chat-item {

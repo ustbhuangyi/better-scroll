@@ -6,7 +6,8 @@ describe('BScroll - core scroll', () => {
   let scroller
   let scrollOptions = {
     bindToWrapper: true,
-    probeType: 3
+    probeType: 3,
+    deceleration: 0.001
   }
   beforeEach(() => {
     const wrapper = document.createElement('div')
