@@ -34,6 +34,10 @@ export function zoomMixin(BScroll) {
       e.preventDefault()
     }
 
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
+    }
+
     const firstFinger = e.touches[0]
     const secondFinger = e.touches[1]
     const deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX)
@@ -68,6 +72,10 @@ export function zoomMixin(BScroll) {
 
     if (this.options.preventDefault) {
       e.preventDefault()
+    }
+
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
     }
 
     this.isInTransition = false

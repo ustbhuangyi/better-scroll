@@ -39,7 +39,7 @@ const DEFAULT_OPTIONS = {
   momentumLimitDistance: 15,
   swipeTime: 2500,
   swipeBounceTime: 500,
-  deceleration: 0.002,
+  deceleration: 0.0015,
   flickLimitTime: 200,
   flickLimitDistance: 100,
   resizePolling: 60,
