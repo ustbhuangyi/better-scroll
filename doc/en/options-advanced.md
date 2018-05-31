@@ -99,3 +99,30 @@ better-scroll also supports several advanced options to implement some special f
   ```
   `start` represents the initial scaling, `min` represents the smallest scaling, and `max` represents the maximum scaling.
 
+
+## infinity(v1.12.0+)
+   - Type: Boolean | Object
+   - Default：false
+   - Usage：The configuration scenario is long list scroll or infinity scroll, and the default is false. If the configuration is turned on, it needs to be configured as an object to implement 3 functions, like：
+   ```js
+     infinity: {
+       fetch(count) {
+          // Fetch data that is larger than count, the function is asynchronous, and it needs to return a Promise.。
+          // After you have successfully fetch the data, you need resolve an array of data (or resolve Promise).
+          // Each element of the array is list data, which will be rendered when the render method executes。
+          // If there is no data, you can resolve (false) to tell the infinite scroll list that there is no more data。
+       }
+       render(item, div) {
+          // Rendering each element node, item is data, and div is a container for wrapping element nodes.
+          // The function needs to return to the rendered DOM node.
+       },
+       createTombstone() {
+         // Returns a tombstone DOM node.。
+       }
+     }
+   ```
+   The specific sample code can [refer to here](https://github.com/ustbhuangyi/better-scroll/blob/master/example/pages/infinity.vue)，The corresponding [demo](https://ustbhuangyi.github.io/better-scroll/#/examples/infinity/en)。
+   The implementation of infinity is a reference to [this article](https://developers.google.com/web/updates/2016/07/infinite-scroller)，on the basis of this, the ability of rolling end is added.
+   Note: unless you have a lot of data rendering requirements, you can use normal scrolling.
+
+

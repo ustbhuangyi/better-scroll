@@ -745,6 +745,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.8" data-path="options-advanced.html">
+            
+                <a href="options-advanced.html#infinityv1120">
+            
+                    
+                    infinity
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -1576,6 +1589,30 @@
 </code></pre>
 <code>start</code> represents the initial scaling, <code>min</code> represents the smallest scaling, and <code>max</code> represents the maximum scaling.</li>
 </ul>
+<h2 id="infinityv1120">infinity(v1.12.0+)</h2>
+<ul>
+<li>Type: Boolean | Object</li>
+<li>Default&#xFF1A;false</li>
+<li>Usage&#xFF1A;The configuration scenario is long list scroll or infinity scroll, and the default is false. If the configuration is turned on, it needs to be configured as an object to implement 3 functions, like&#xFF1A;<pre><code class="lang-js">infinity: {
+  fetch(count) {
+     <span class="hljs-comment">// Fetch data that is larger than count, the function is asynchronous, and it needs to return a Promise.&#x3002;</span>
+     <span class="hljs-comment">// After you have successfully fetch the data, you need resolve an array of data (or resolve Promise).</span>
+     <span class="hljs-comment">// Each element of the array is list data, which will be rendered when the render method executes&#x3002;</span>
+     <span class="hljs-comment">// If there is no data, you can resolve (false) to tell the infinite scroll list that there is no more data&#x3002;</span>
+  }
+  render(item, div) {
+     <span class="hljs-comment">// Rendering each element node, item is data, and div is a container for wrapping element nodes.</span>
+     <span class="hljs-comment">// The function needs to return to the rendered DOM node.</span>
+  },
+  createTombstone() {
+    <span class="hljs-comment">// Returns a tombstone DOM node.&#x3002;</span>
+  }
+}
+</code></pre>
+The specific sample code can <a href="https://github.com/ustbhuangyi/better-scroll/blob/master/example/pages/infinity.vue" target="_blank">refer to here</a>&#xFF0C;The corresponding <a href="https://ustbhuangyi.github.io/better-scroll/#/examples/infinity/en" target="_blank">demo</a>&#x3002;
+The implementation of infinity is a reference to <a href="https://developers.google.com/web/updates/2016/07/infinite-scroller" target="_blank">this article</a>&#xFF0C;on the basis of this, the ability of rolling end is added.
+Note: unless you have a lot of data rendering requirements, you can use normal scrolling.</li>
+</ul>
 
                                 
                                 </section>
@@ -1619,7 +1656,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"scripts":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-05-10T05:42:23.098Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-05-10T05:48:25.675Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Options / Advanced","level":"1.4","depth":1,"next":{"title":"wheel","level":"1.4.1","depth":2,"anchor":"#wheel","path":"options-advanced.md","ref":"options-advanced.md#wheel","articles":[]},"previous":{"title":"stopPropagation","level":"1.3.32","depth":2,"anchor":"#stoppropagationv190","path":"options.md","ref":"options.md#stoppropagationv190","articles":[]},"dir":"ltr"},"config":{"plugins":["scripts","edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"scripts":{},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/ustbhuangyi/better-scroll/tree/master/doc"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"better-scroll","language":"en","links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options-advanced.md","mtime":"2018-05-31T08:10:48.280Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-05-31T07:09:50.236Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
@@ -1630,6 +1667,10 @@
     
         
         <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         

@@ -49,6 +49,7 @@
   - [pullUpLoad](options-advanced.md#pullupload)
   - [mouseWheel](options-advanced.md#mousewheelv180)
   - [zoom](options-advanced.md#zoomv1110)
+  - [infinity](options-advanced.md#infinityv1120)
 - [方法 / 通用](api.md)
   - [refresh](api.md#refresh)
   - [scrollTo](api.md#scrolltox-y-time-easing)
