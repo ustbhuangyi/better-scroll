@@ -636,6 +636,7 @@ export function coreMixin(BScroll) {
   BScroll.prototype.stop = function () {
     if (this.options.useTransition && this.isInTransition) {
       this.isInTransition = false
+      cancelAnimationFrame(this.probeTimer)
       let pos = this.getComputedPosition()
       this._translate(pos.x, pos.y)
       if (this.options.wheel) {
@@ -649,6 +650,7 @@ export function coreMixin(BScroll) {
       this.stopFromTransition = true
     } else if (!this.options.useTransition && this.isAnimating) {
       this.isAnimating = false
+      cancelAnimationFrame(this.animateTimer)
       this.trigger('scrollEnd', {
         x: this.x,
         y: this.y
@@ -660,7 +662,11 @@ export function coreMixin(BScroll) {
   BScroll.prototype.destroy = function () {
     this.destroyed = true
     this.trigger('destroy')
-
+    if (this.options.useTransition) {
+      cancelAnimationFrame(this.probeTimer)
+    } else {
+      cancelAnimationFrame(this.animateTimer)
+    }
     this._removeDOMEvents()
     // remove custom events
     this._events = {}

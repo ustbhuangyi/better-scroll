@@ -67,6 +67,9 @@
         this._appendFood()
       })
     },
+    destroyed() {
+      this.scroll && this.scroll.destroy()
+    },
     methods: {
       _appendFood() {
         while (this.foods.length < 1000) {

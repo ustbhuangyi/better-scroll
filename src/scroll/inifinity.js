@@ -11,7 +11,7 @@ const RUNWAY_ITEMS_OPPOSITE = 10
 const ANIMATION_DURATION_MS = 200
 
 // The number of pixels of default additional length to allow scrolling to.
-const DEFAULT_SCROLL_RUNWAY = 300
+const DEFAULT_SCROLL_RUNWAY = 2000
 
 export function infiniteMixin(BScroll) {
   BScroll.prototype._initInfinite = function () {

@@ -153,6 +153,9 @@
         this.initScroll()
       }, 20)
     },
+    destroyed() {
+      this.$refs.scroll && this.$refs.scroll.destroy()
+    },
     methods: {
       initScroll() {
         if (!this.$refs.wrapper) {
