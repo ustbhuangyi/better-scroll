@@ -5,6 +5,7 @@ export function zoomMixin(BScroll) {
   BScroll.prototype._initZoom = function () {
     const {start = 1, min = 1, max = 4} = this.options.zoom
     this.scale = Math.min(Math.max(start, min), max)
+    this.setScale(this.scale)
     this.scrollerStyle[style.transformOrigin] = '0 0'
   }
 
@@ -57,10 +58,10 @@ export function zoomMixin(BScroll) {
 
     const lastScale = scale / this.startScale
 
-    const x = this.originX - this.originX * lastScale + this.startX
-    const y = this.originY - this.originY * lastScale + this.startY
+    const x = this.startX - (this.originX - this.relativeX) * (lastScale - 1)
+    const y = this.startY - (this.originY - this.relativeY) * (lastScale - 1)
 
-    this.scale = scale
+    this.setScale(scale)
 
     this.scrollTo(x, y, 0)
   }
@@ -79,31 +80,29 @@ export function zoomMixin(BScroll) {
     }
 
     this.isInTransition = false
+    this.isAnimating = false
     this.initiated = 0
 
     const {min = 1, max = 4} = this.options.zoom
 
-    if (this.scale > max) {
-      this.scale = max
-    } else if (this.scale < min) {
-      this.scale = min
-    }
+    const scale = this.scale > max ? max : this.scale < min ? min : this.scale
+    this.setScale(scale)
 
     this.refresh()
 
-    const lastScale = this.scale / this.startScale
+    const lastScale = scale / this.startScale
 
-    let newX = this.originX - this.originX * lastScale + this.startX
-    let newY = this.originY - this.originY * lastScale + this.startY
+    let newX = this.startX - (this.originX - this.relativeX) * (lastScale - 1)
+    let newY = this.startY - (this.originY - this.relativeY) * (lastScale - 1)
 
-    if (newX > 0) {
-      newX = 0
+    if (newX > this.minScrollX) {
+      newX = this.minScrollX
     } else if (newX < this.maxScrollX) {
       newX = this.maxScrollX
     }
 
-    if (newY > 0) {
-      newY = 0
+    if (newY > this.minScrollY) {
+      newY = this.minScrollY
     } else if (newY < this.maxScrollY) {
       newY = this.maxScrollY
     }

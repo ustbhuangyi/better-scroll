@@ -107,14 +107,14 @@ export function mouseWheelMixin(BScroll) {
     this.movingDirectionX = this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0
     this.movingDirectionY = this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0
 
-    if (newX > 0) {
-      newX = 0
+    if (newX > this.minScrollX) {
+      newX = this.minScrollX
     } else if (newX < this.maxScrollX) {
       newX = this.maxScrollX
     }
 
-    if (newY > 0) {
-      newY = 0
+    if (newY > this.minScrollY) {
+      newY = this.minScrollY
     } else if (newY < this.maxScrollY) {
       newY = this.maxScrollY
     }
