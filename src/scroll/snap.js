@@ -204,8 +204,8 @@ export function snapMixin(BScroll) {
       x = this.maxScrollX
     }
 
-    if (y > minScrollY) {
-      y = minScrollY
+    if (y > this.minScrollY) {
+      y = this.minScrollY
     } else if (y < this.maxScrollY) {
       y = this.maxScrollY
     }
