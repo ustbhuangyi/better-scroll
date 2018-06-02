@@ -198,14 +198,14 @@ export function snapMixin(BScroll) {
       return this.currentPage
     }
 
-    if (x > 0) {
-      x = 0
+    if (x > this.minScrollX) {
+      x = this.minScrollX
     } else if (x < this.maxScrollX) {
       x = this.maxScrollX
     }
 
-    if (y > 0) {
-      y = 0
+    if (y > this.minScrollY) {
+      y = this.minScrollY
     } else if (y < this.maxScrollY) {
       y = this.maxScrollY
     }
