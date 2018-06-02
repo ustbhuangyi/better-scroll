@@ -154,18 +154,18 @@ export function coreMixin(BScroll) {
       left = bounce.left === undefined ? true : bounce.left
       right = bounce.right === undefined ? true : bounce.right
     }
-    if (newX > 0 || newX < this.maxScrollX) {
-      if ((newX > 0 && left) || (newX < this.maxScrollX && right)) {
+    if (newX > this.minScrollX || newX < this.maxScrollX) {
+      if ((newX > this.minScrollX && left) || (newX < this.maxScrollX && right)) {
         newX = this.x + deltaX / 3
       } else {
-        newX = newX > 0 ? 0 : this.maxScrollX
+        newX = newX > this.minScrollX ? this.minScrollX : this.maxScrollX
       }
     }
-    if (newY > 0 || newY < this.maxScrollY) {
-      if ((newY > 0 && top) || (newY < this.maxScrollY && bottom)) {
+    if (newY > this.minScrollY || newY < this.maxScrollY) {
+      if ((newY > this.minScrollY && top) || (newY < this.maxScrollY && bottom)) {
         newY = this.y + deltaY / 3
       } else {
-        newY = newY > 0 ? 0 : this.maxScrollY
+        newY = newY > this.minScrollY ? this.minScrollY : this.maxScrollY
       }
     }
 
@@ -282,9 +282,9 @@ export function coreMixin(BScroll) {
       }
       const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
       const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
-      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options)
+      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options)
         : {destination: newX, duration: 0}
-      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options)
+      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options)
         : {destination: newY, duration: 0}
       newX = momentumX.destination
       newY = momentumY.destination
@@ -316,7 +316,7 @@ export function coreMixin(BScroll) {
 
     if (newX !== this.x || newY !== this.y) {
       // change easing function when scroller goes out of the boundaries
-      if (newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY) {
+      if (newX > this.minScrollX || newX < this.maxScrollX || newY > this.minScrollY || newY < this.maxScrollY) {
         easing = ease.swipeBounce
       }
       this.scrollTo(newX, newY, time, easing)
@@ -445,10 +445,13 @@ export function coreMixin(BScroll) {
     }
   }
 
-  BScroll.prototype._translate = function (x, y) {
+  BScroll.prototype._translate = function (x, y, scale) {
     assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.')
+    if (isUndef(scale)) {
+      scale = this.scale
+    }
     if (this.options.useTransform) {
-      this.scrollerStyle[style.transform] = `translate(${x}px,${y}px) scale(${this.scale})${this.translateZ}`
+      this.scrollerStyle[style.transform] = `translate(${x}px,${y}px) scale(${scale})${this.translateZ}`
     } else {
       x = Math.round(x)
       y = Math.round(y)
@@ -466,6 +469,7 @@ export function coreMixin(BScroll) {
 
     this.x = x
     this.y = y
+    this.setScale(scale)
 
     if (this.indicators) {
       for (let i = 0; i < this.indicators.length; i++) {
@@ -478,6 +482,8 @@ export function coreMixin(BScroll) {
     let me = this
     let startX = this.x
     let startY = this.y
+    let startScale = this.lastScale
+    let destScale = this.scale
     let startTime = getNow()
     let destTime = startTime + duration
 
@@ -486,7 +492,7 @@ export function coreMixin(BScroll) {
 
       if (now >= destTime) {
         me.isAnimating = false
-        me._translate(destX, destY)
+        me._translate(destX, destY, destScale)
 
         if (!me.pulling && !me.resetPosition(me.options.bounceTime)) {
           me.trigger('scrollEnd', {
@@ -500,8 +506,9 @@ export function coreMixin(BScroll) {
       let easing = easingFn(now)
       let newX = (destX - startX) * easing + startX
       let newY = (destY - startY) * easing + startY
+      let newScale = (destScale - startScale) * easing + startScale
 
-      me._translate(newX, newY)
+      me._translate(newX, newY, newScale)
 
       if (me.isAnimating) {
         me.animateTimer = requestAnimationFrame(step)
@@ -540,7 +547,7 @@ export function coreMixin(BScroll) {
       }
 
       if (this.options.wheel) {
-        if (y > 0) {
+        if (y > this.minScrollY) {
           this.selectedIndex = 0
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1
@@ -577,8 +584,8 @@ export function coreMixin(BScroll) {
 
     pos.left -= offsetX || 0
     pos.top -= offsetY || 0
-    pos.left = pos.left > 0 ? 0 : pos.left < this.maxScrollX ? this.maxScrollX : pos.left
-    pos.top = pos.top > 0 ? 0 : pos.top < this.maxScrollY ? this.maxScrollY : pos.top
+    pos.left = pos.left > this.minScrollX ? this.minScrollX : pos.left < this.maxScrollX ? this.maxScrollX : pos.left
+    pos.top = pos.top > this.minScrollY ? this.minScrollY : pos.top < this.maxScrollY ? this.maxScrollY : pos.top
 
     if (this.options.wheel) {
       pos.top = Math.round(pos.top / this.itemHeight) * this.itemHeight
@@ -590,16 +597,16 @@ export function coreMixin(BScroll) {
   BScroll.prototype.resetPosition = function (time = 0, easeing = ease.bounce) {
     let x = this.x
     let roundX = Math.round(x)
-    if (!this.hasHorizontalScroll || roundX > 0) {
-      x = 0
+    if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
+      x = this.minScrollX
     } else if (roundX < this.maxScrollX) {
       x = this.maxScrollX
     }
 
     let y = this.y
     let roundY = Math.round(y)
-    if (!this.hasVerticalScroll || roundY > 0) {
-      y = 0
+    if (!this.hasVerticalScroll || roundY > this.minScrollY) {
+      y = this.minScrollY
     } else if (roundY < this.maxScrollY) {
       y = this.maxScrollY
     }

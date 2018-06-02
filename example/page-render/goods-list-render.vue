@@ -98,6 +98,7 @@
       .scroll
         height: 100%
         .foods-wrapper
+          overflow: hidden
           .food-item
             display: flex
             margin: 18px
