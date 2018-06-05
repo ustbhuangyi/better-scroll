@@ -125,17 +125,17 @@ export function snapMixin(BScroll) {
       if (snap.loop) {
         if (snap._loopX) {
           if (this.currentPage.pageX === 0) {
-            this._goToPage(this.pages.length - 2, this.currentPage.pageY, 1)
+            this._goToPage(this.pages.length - 2, this.currentPage.pageY, 0)
           }
           if (this.currentPage.pageX === this.pages.length - 1) {
-            this._goToPage(1, this.currentPage.pageY, 1)
+            this._goToPage(1, this.currentPage.pageY, 0)
           }
         } else {
           if (this.currentPage.pageY === 0) {
-            this._goToPage(this.currentPage.pageX, this.pages[0].length - 2, 1)
+            this._goToPage(this.currentPage.pageX, this.pages[0].length - 2, 0)
           }
           if (this.currentPage.pageY === this.pages[0].length - 1) {
-            this._goToPage(this.currentPage.pageX, 1, 1)
+            this._goToPage(this.currentPage.pageX, 1, 0)
           }
         }
       }
