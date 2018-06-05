@@ -138,7 +138,7 @@ export function tap(e, eventName) {
   e.target.dispatchEvent(ev)
 }
 
-export function click(e) {
+export function click(e, event = 'click') {
   let eventSource
   if (e.type === 'mouseup' || e.type === 'mousecancel') {
     eventSource = e
@@ -153,7 +153,6 @@ export function click(e) {
     posSrc.clientY = eventSource.clientY || 0
   }
   let ev
-  const event = 'click'
   const bubbles = true
   const cancelable = true
   if (typeof MouseEvent !== 'undefined') {
@@ -179,6 +178,12 @@ export function click(e) {
   ev.forwardedTouchEvent = true
   ev._constructed = true
   e.target.dispatchEvent(ev)
+
+  return ev
+}
+
+export function dblclick(e) {
+  return click(e, 'dblclick')
 }
 
 export function prepend(el, target) {

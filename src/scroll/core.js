@@ -4,6 +4,7 @@ import {
   preventDefaultException,
   tap,
   click,
+  dblclick,
   style,
   offset,
   offsetToBody
@@ -349,6 +350,16 @@ export function coreMixin(BScroll) {
         return true
       } else {
         if (!preventClick) {
+          const _dblclick = this.options.dblclick
+          let dblclickTrigged = false
+          if (_dblclick && this.lastClickTime) {
+            const {delay = 300} = _dblclick
+            if (getNow() - this.lastClickTime < delay) {
+              dblclickTrigged = true
+              let ev = dblclick(e)
+              this.trigger('dblclick', ev)
+            }
+          }
           if (this.options.tap) {
             tap(e, this.options.tap)
           }
@@ -356,6 +367,7 @@ export function coreMixin(BScroll) {
           if (this.options.click && !preventDefaultException(e.target, this.options.preventDefaultException)) {
             click(e)
           }
+          this.lastClickTime = dblclickTrigged ? null : getNow()
           return true
         }
         return false

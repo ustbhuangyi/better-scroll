@@ -123,7 +123,8 @@ const DEFAULT_OPTIONS = {
    * zoom: {
    *   start: 1,
    *   min: 1,
-   *   max: 4
+   *   max: 4,
+   *   step: 1
    * }
    */
   zoom: false,
@@ -138,7 +139,14 @@ const DEFAULT_OPTIONS = {
    *   }
    * }
    */
-  infinity: false
+  infinity: false,
+  /**
+   * for double click
+   * dblclick: {
+   *   delay: 300
+   * }
+   */
+  dblclick: false
 }
 
 export function initMixin(BScroll) {
@@ -448,8 +456,8 @@ export function initMixin(BScroll) {
     this.scrollerWidth = Math.round(scrollerRect.width * this.scale)
     this.scrollerHeight = Math.round(scrollerRect.height * this.scale)
 
-    this.relativeX = scrollerRect.left
-    this.relativeY = scrollerRect.top
+    this.relativeX = scrollerRect.left - wrapperRect.left
+    this.relativeY = scrollerRect.top - wrapperRect.top
 
     this.minScrollX = 0
     this.minScrollY = 0

@@ -3,10 +3,52 @@ import { getDistance } from '../util/lang'
 
 export function zoomMixin(BScroll) {
   BScroll.prototype._initZoom = function () {
-    const {start = 1, min = 1, max = 4} = this.options.zoom
+    const {start = 1, min = 1, max = 4, step = 1} = this.options.zoom
     this.scale = Math.min(Math.max(start, min), max)
     this.setScale(this.scale)
     this.scrollerStyle[style.transformOrigin] = '0 0'
+    if (!this.options.dblclick) {
+      this.options.dblclick = true
+    }
+
+    this.on('dblclick', (e) => {
+      let {left, top} = offsetToBody(this.wrapper)
+      let originX = e.pageX + left - this.x
+      let originY = e.pageY + top - this.y
+      this.startScale = this.scale
+      let scale = Math.min(this.scale + step, max)
+      this.zoomTo(scale, originX, originY, this.startScale)
+    })
+  }
+
+  BScroll.prototype.zoomTo = function (scale, originX, originY, startScale) {
+    this.scaled = true
+
+    const lastScale = scale / (startScale || this.scale)
+
+    this.setScale(scale)
+    let newX = this.startX - (originX - this.relativeX) * (lastScale - 1)
+    let newY = this.startY - (originY - this.relativeY) * (lastScale - 1)
+
+    if (newX > this.minScrollX) {
+      newX = this.minScrollX
+    } else if (newX < this.maxScrollX) {
+      newX = this.maxScrollX
+    }
+
+    if (newY > this.minScrollY) {
+      newY = this.minScrollY
+    } else if (newY < this.maxScrollY) {
+      newY = this.maxScrollY
+    }
+
+    if (this.x !== newX || this.y !== newY) {
+      this.scrollTo(newX, newY, this.options.bounceTime)
+    }
+
+    this.refresh()
+
+    this.scaled = false
   }
 
   BScroll.prototype._zoomStart = function (e) {
@@ -86,32 +128,8 @@ export function zoomMixin(BScroll) {
     const {min = 1, max = 4} = this.options.zoom
 
     const scale = this.scale > max ? max : this.scale < min ? min : this.scale
-    this.setScale(scale)
 
-    this.refresh()
-
-    const lastScale = scale / this.startScale
-
-    let newX = this.startX - (this.originX - this.relativeX) * (lastScale - 1)
-    let newY = this.startY - (this.originY - this.relativeY) * (lastScale - 1)
-
-    if (newX > this.minScrollX) {
-      newX = this.minScrollX
-    } else if (newX < this.maxScrollX) {
-      newX = this.maxScrollX
-    }
-
-    if (newY > this.minScrollY) {
-      newY = this.minScrollY
-    } else if (newY < this.maxScrollY) {
-      newY = this.maxScrollY
-    }
-
-    if (this.x !== newX || this.y !== newY) {
-      this.scrollTo(newX, newY, this.options.bounceTime)
-    }
-
-    this.scaled = false
+    this.zoomTo(scale, this.originX, this.originY, this.startScale)
 
     this.trigger('zoomEnd')
   }
