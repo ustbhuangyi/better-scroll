@@ -25,7 +25,7 @@ describe('BScroll - pull', () => {
     document.body.appendChild(wrapper)
     wrapper.style.height = '500px'
     wrapper.style.overflow = 'hidden'
-    // wrapper.style.position = 'relative'
+    wrapper.style.position = 'relative'
     let listHTML = ''
     list.style.margin = '0'
     for (let i = 0; i < 100; i++) {

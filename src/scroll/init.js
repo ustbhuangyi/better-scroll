@@ -456,8 +456,8 @@ export function initMixin(BScroll) {
     this.scrollerWidth = Math.round(scrollerRect.width * this.scale)
     this.scrollerHeight = Math.round(scrollerRect.height * this.scale)
 
-    this.relativeX = scrollerRect.left - wrapperRect.left
-    this.relativeY = scrollerRect.top - wrapperRect.top
+    this.relativeX = scrollerRect.left
+    this.relativeY = scrollerRect.top
 
     this.minScrollX = 0
     this.minScrollY = 0
