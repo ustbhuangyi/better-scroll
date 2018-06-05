@@ -123,8 +123,7 @@ const DEFAULT_OPTIONS = {
    * zoom: {
    *   start: 1,
    *   min: 1,
-   *   max: 4,
-   *   step: 1
+   *   max: 4
    * }
    */
   zoom: false,
