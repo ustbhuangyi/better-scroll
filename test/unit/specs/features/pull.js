@@ -53,7 +53,7 @@ describe('BScroll - pull', () => {
     expect(pullingDownHandler)
       .to.be.calledOnce
   })
-  it.only('pulling down and reset', (done) => {
+  it('pulling down and reset', (done) => {
     scroll.on('pullingDown', () => {
       setTimeout(() => {
         scroll.finishPullDown()
