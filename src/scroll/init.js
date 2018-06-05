@@ -282,7 +282,8 @@ export function initMixin(BScroll) {
     }
     let me = this
     let isInTransition = false
-    Object.defineProperty(this, 'isInTransition', {
+    let key = this.useTransition ? 'isInTransition' : 'isAnimating'
+    Object.defineProperty(this, key, {
       get() {
         return isInTransition
       },

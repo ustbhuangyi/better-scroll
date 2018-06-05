@@ -9,7 +9,7 @@ export function zoomMixin(BScroll) {
     this.scrollerStyle[style.transformOrigin] = '0 0'
   }
 
-  BScroll.prototype.zoomTo = function (scale, originX, originY, startScale) {
+  BScroll.prototype._zoomTo = function (scale, originX, originY, startScale) {
     this.scaled = true
 
     const lastScale = scale / (startScale || this.scale)
@@ -17,8 +17,8 @@ export function zoomMixin(BScroll) {
 
     this.refresh()
 
-    let newX = this.startX - (originX - this.relativeX) * (lastScale - 1)
-    let newY = this.startY - (originY - this.relativeY) * (lastScale - 1)
+    let newX = Math.round(this.startX - (originX - this.relativeX) * (lastScale - 1))
+    let newY = Math.round(this.startY - (originY - this.relativeY) * (lastScale - 1))
 
     if (newX > this.minScrollX) {
       newX = this.minScrollX
@@ -37,6 +37,13 @@ export function zoomMixin(BScroll) {
     }
 
     this.scaled = false
+  }
+
+  BScroll.prototype.zoomTo = function (scale, x, y) {
+    let {left, top} = offsetToBody(this.wrapper)
+    let originX = x + left - this.x
+    let originY = y + top - this.y
+    this._zoomTo(scale, originX, originY)
   }
 
   BScroll.prototype._zoomStart = function (e) {
@@ -117,7 +124,7 @@ export function zoomMixin(BScroll) {
 
     const scale = this.scale > max ? max : this.scale < min ? min : this.scale
 
-    this.zoomTo(scale, this.originX, this.originY, this.startScale)
+    this._zoomTo(scale, this.originX, this.originY, this.startScale)
 
     this.trigger('zoomEnd')
   }
