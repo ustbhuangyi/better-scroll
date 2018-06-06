@@ -356,8 +356,7 @@ export function coreMixin(BScroll) {
             const {delay = 300} = _dblclick
             if (getNow() - this.lastClickTime < delay) {
               dblclickTrigged = true
-              let ev = dblclick(e)
-              this.trigger('dblclick', ev)
+              dblclick(e)
             }
           }
           if (this.options.tap) {

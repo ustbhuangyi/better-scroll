@@ -53,7 +53,18 @@ let scroll = new BScroll('.wrapper',{
 ## click
   - 类型：Boolean
   - 默认值：false
-  - 作用：better-scroll 默认会阻止浏览器的原生 click 事件。当设置为 true，better-scroll 会派发一个 click 事件，我们会给派发的 event 参数加一个私有属性 _constructed，值为 true。
+  - 作用：better-scroll 默认会阻止浏览器的原生 click 事件。当设置为 true，better-scroll 会派发一个 click 事件，我们会给派发的 event 参数加一个私有属性 `_constructed`，值为 true。
+
+
+## dblclick(v1.12.0+)
+  - 类型：Boolean | Object
+  - 默认值：false
+  - 作用：派发双击点击事件。当配置成 true 的时候，默认 2 次点击的延时为 300 ms，如果配置成对象可以修改 `delay`。
+  ```js
+    dblclick: {
+      delay: 300
+    }
+  ```
 
 ## tap
   - 类型：Boolean | String

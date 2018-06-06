@@ -56,6 +56,16 @@ The code results in a clickable vertical scrolling effect. better-scroll support
   - Default: `false`
   - Usage: To override the native scrolling better-scroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to `true`. And then better-scroll will add a private attribute called ·`_constructed` to the dispatched event whose value is true.
 
+## dblclick(v1.12.0+)
+  - Type：`Boolean | Object`
+  - Default：`false`
+  - Usage：Send double click event. When configured to true, by default the two times click delay is 300 ms. If configured to an object, the `delay` can be modified.
+  ```js
+    dblclick: {
+      delay: 300
+    }
+  ```
+
 ## tap
   - Type: `Boolean | String`
   - Default: `false`

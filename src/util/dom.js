@@ -178,12 +178,10 @@ export function click(e, event = 'click') {
   ev.forwardedTouchEvent = true
   ev._constructed = true
   e.target.dispatchEvent(ev)
-
-  return ev
 }
 
 export function dblclick(e) {
-  return click(e, 'dblclick')
+  click(e, 'dblclick')
 }
 
 export function prepend(el, target) {
