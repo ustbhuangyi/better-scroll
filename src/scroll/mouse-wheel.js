@@ -25,6 +25,10 @@ export function mouseWheelMixin(BScroll) {
     }
     e.preventDefault()
 
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
+    }
+
     if (this.firstWheelOpreation) {
       this.trigger('scrollStart')
     }
