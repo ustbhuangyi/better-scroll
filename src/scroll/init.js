@@ -448,6 +448,7 @@ export function initMixin(BScroll) {
   }
 
   BScroll.prototype.refresh = function () {
+    const isWrapperStatic = window.getComputedStyle(this.wrapper, null).position === 'static'
     let wrapperRect = getRect(this.wrapper)
     this.wrapperWidth = wrapperRect.width
     this.wrapperHeight = wrapperRect.height
@@ -458,6 +459,11 @@ export function initMixin(BScroll) {
 
     this.relativeX = scrollerRect.left
     this.relativeY = scrollerRect.top
+
+    if (isWrapperStatic) {
+      this.relativeX -= wrapperRect.left
+      this.relativeY -= wrapperRect.top
+    }
 
     this.minScrollX = 0
     this.minScrollY = 0
