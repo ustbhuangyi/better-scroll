@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.12.0
+ * better-normal-scroll v1.12.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -797,6 +797,7 @@ function initMixin(BScroll) {
   };
 
   BScroll.prototype.refresh = function () {
+    var isWrapperStatic = window.getComputedStyle(this.wrapper, null).position === 'static';
     var wrapperRect = getRect(this.wrapper);
     this.wrapperWidth = wrapperRect.width;
     this.wrapperHeight = wrapperRect.height;
@@ -807,6 +808,11 @@ function initMixin(BScroll) {
 
     this.relativeX = scrollerRect.left;
     this.relativeY = scrollerRect.top;
+
+    if (isWrapperStatic) {
+      this.relativeX -= wrapperRect.left;
+      this.relativeY -= wrapperRect.top;
+    }
 
     this.minScrollX = 0;
     this.minScrollY = 0;
@@ -3280,6 +3286,6 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.12.0';
+BScroll.Version = '1.12.1';
 
 export default BScroll;
