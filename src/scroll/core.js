@@ -254,7 +254,7 @@ export function coreMixin(BScroll) {
       return
     }
 
-    this.scrollTo(newX, newY)
+    this._translate(newX, newY)
 
     this.endTime = getNow()
     let duration = this.endTime - this.startTime
@@ -551,6 +551,10 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce) {
+    if (x === this.x && y === this.y) {
+      return
+    }
+
     this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y)
 
     if (!time || this.options.useTransition) {
