@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.12.1
+ * better-normal-scroll v1.12.2
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1470,6 +1470,11 @@ function coreMixin(BScroll) {
         me.isAnimating = false;
         me._translate(destX, destY, destScale);
 
+        me.trigger('scroll', {
+          x: me.x,
+          y: me.y
+        });
+
         if (!me.pulling && !me.resetPosition(me.options.bounceTime)) {
           me.trigger('scrollEnd', {
             x: me.x,
@@ -1526,6 +1531,21 @@ function coreMixin(BScroll) {
 
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe();
+      }
+
+      if (!time) {
+        this.trigger('scroll', {
+          x: x,
+          y: y
+        });
+        // force reflow to put everything in position
+        this._reflow = document.body.offsetHeight;
+        if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
+          this.trigger('scrollEnd', {
+            x: x,
+            y: y
+          });
+        }
       }
 
       if (this.options.wheel) {
@@ -3292,7 +3312,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.12.1';
+BScroll.Version = '1.12.2';
 
 return BScroll;
 
