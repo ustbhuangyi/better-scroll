@@ -88,6 +88,8 @@ Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
 ![QR Code](http://webapp.didistatic.com/static/webapp/shield/better-scroll-qq.jpg)
 
+<img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>
+
 ## Demo
 
 Visit [Demo](https://ustbhuangyi.github.io/better-scroll/)
