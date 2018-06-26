@@ -505,6 +505,11 @@ export function coreMixin(BScroll) {
         me.isAnimating = false
         me._translate(destX, destY, destScale)
 
+        me.trigger('scroll', {
+          x: me.x,
+          y: me.y
+        })
+
         if (!me.pulling && !me.resetPosition(me.options.bounceTime)) {
           me.trigger('scrollEnd', {
             x: me.x,
@@ -555,6 +560,21 @@ export function coreMixin(BScroll) {
 
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
+      }
+
+      if (!time) {
+        this.trigger('scroll', {
+          x,
+          y
+        })
+        // force reflow to put everything in position
+        this._reflow = document.body.offsetHeight
+        if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
+          this.trigger('scrollEnd', {
+            x,
+            y
+          })
+        }
       }
 
       if (this.options.wheel) {
