@@ -80,9 +80,9 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 访问 [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
-## 交流群
+## 交流群（一群已满）
 
-![QR Code](http://webapp.didistatic.com/static/webapp/shield/better-scroll-qq.jpg)
+<img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>
 
 ## Demo
 
