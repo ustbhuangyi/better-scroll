@@ -67,6 +67,9 @@ declare namespace BScroll {
     bindToWrapper: boolean;
     disableMouse: boolean;
     disableTouch: boolean;
+    observeDOM: boolean;
+    autoBlur: boolean;
+    stopPropagation: boolean;
 		/**
 		 * for picker
 		 * wheel: {
