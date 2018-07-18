@@ -341,7 +341,7 @@ export function coreMixin(BScroll) {
     // we scrolled less than 15 pixels
     if (!this.moved) {
       if (this.options.wheel) {
-        if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
+        if (this.target && this.target.classList.contains(this.options.wheel.wheelWrapperClass)) {
           let index = Math.abs(Math.round(this.y / this.itemHeight))
           let _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight)
           this.target = this.items[index + _offset]
@@ -597,7 +597,7 @@ export function coreMixin(BScroll) {
     }
     el = el.nodeType ? el : this.scroller.querySelector(el)
 
-    if (this.options.wheel && el.className !== this.options.wheel.wheelItemClass) {
+    if (this.options.wheel && !el.classList.contains(this.options.wheel.wheelItemClass)) {
       return
     }
 
