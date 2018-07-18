@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.12.4
+ * better-normal-scroll v1.12.5
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1292,7 +1292,7 @@ function coreMixin(BScroll) {
     // we scrolled less than 15 pixels
     if (!this.moved) {
       if (this.options.wheel) {
-        if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
+        if (this.target && this.target.classList.contains(this.options.wheel.wheelWrapperClass)) {
           var index = Math.abs(Math.round(this.y / this.itemHeight));
           var _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight);
           this.target = this.items[index + _offset];
@@ -1562,7 +1562,7 @@ function coreMixin(BScroll) {
     }
     el = el.nodeType ? el : this.scroller.querySelector(el);
 
-    if (this.options.wheel && el.className !== this.options.wheel.wheelItemClass) {
+    if (this.options.wheel && !el.classList.contains(this.options.wheel.wheelItemClass)) {
       return;
     }
 
@@ -3306,6 +3306,6 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.12.4';
+BScroll.Version = '1.12.5';
 
 export default BScroll;
