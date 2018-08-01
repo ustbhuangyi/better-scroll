@@ -1,4 +1,4 @@
-import * as BScroll from 'better-scroll';
+import BScroll from './';
 
 const BScroll1 = new BScroll('#wrapper')
 const BScroll2 = new BScroll('#wrapper', { scrollX: false, scrollY: false })
