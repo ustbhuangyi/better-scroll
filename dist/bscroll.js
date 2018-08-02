@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.12.5
+ * better-normal-scroll v1.12.6
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2623,6 +2623,7 @@ function mouseWheelMixin(BScroll) {
 
     this.on('destroy', function () {
       clearTimeout(_this.mouseWheelTimer);
+      clearTimeout(_this.mouseWheelEndTimer);
       _this._handleMouseWheelEvent(removeEvent);
     });
 
@@ -2748,11 +2749,21 @@ function mouseWheelMixin(BScroll) {
       newY = this.maxScrollY;
     }
 
+    var needTriggerEnd = this.y === newY;
     this.scrollTo(newX, newY, easeTime, ease.swipe);
     this.trigger('scroll', {
       x: this.x,
       y: this.y
     });
+    clearTimeout(this.mouseWheelEndTimer);
+    if (needTriggerEnd) {
+      this.mouseWheelEndTimer = setTimeout(function () {
+        _this2.trigger('scrollEnd', {
+          x: _this2.x,
+          y: _this2.y
+        });
+      }, easeTime);
+    }
   };
 }
 
@@ -3040,6 +3051,7 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
   }
   this.requestInProgress = true;
   this.options.fetch(itemsNeeded).then(function (items) {
+    _this2.requestInProgress = false;
     if (items) {
       _this2.addContent(items);
     } else {
@@ -3063,7 +3075,6 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
 };
 
 InfiniteScroller.prototype.addContent = function (items) {
-  this.requestInProgress = false;
   for (var i = 0; i < items.length; i++) {
     if (this.items.length <= this.loadedItems) {
       this._addItem();
@@ -3081,6 +3092,10 @@ InfiniteScroller.prototype.attachContent = function () {
   this._cacheNodeSize();
   var curPos = this._fixScrollPosition();
   this._setupAnimations(tombstoneAnimations, curPos);
+};
+
+InfiniteScroller.prototype.resetMore = function () {
+  this.hasMore = true;
 };
 
 InfiniteScroller.prototype._removeTombstones = function () {
@@ -3312,7 +3327,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.12.5';
+BScroll.Version = '1.12.6';
 
 return BScroll;
 
