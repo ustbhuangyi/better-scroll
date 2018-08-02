@@ -7,6 +7,7 @@ export function mouseWheelMixin(BScroll) {
 
     this.on('destroy', () => {
       clearTimeout(this.mouseWheelTimer)
+      clearTimeout(this.mouseWheelEndTimer)
       this._handleMouseWheelEvent(removeEvent)
     })
 
@@ -123,10 +124,20 @@ export function mouseWheelMixin(BScroll) {
       newY = this.maxScrollY
     }
 
+    const needTriggerEnd = this.y === newY
     this.scrollTo(newX, newY, easeTime, ease.swipe)
     this.trigger('scroll', {
       x: this.x,
       y: this.y
     })
+    clearTimeout(this.mouseWheelEndTimer)
+    if (needTriggerEnd) {
+      this.mouseWheelEndTimer = setTimeout(() => {
+        this.trigger('scrollEnd', {
+          x: this.x,
+          y: this.y
+        })
+      }, easeTime)
+    }
   }
 }
