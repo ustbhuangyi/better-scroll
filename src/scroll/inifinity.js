@@ -128,6 +128,7 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
   }
   this.requestInProgress = true
   this.options.fetch(itemsNeeded).then((items) => {
+    this.requestInProgress = false
     if (items) {
       this.addContent(items)
     } else {
@@ -151,7 +152,6 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
 }
 
 InfiniteScroller.prototype.addContent = function (items) {
-  this.requestInProgress = false
   for (let i = 0; i < items.length; i++) {
     if (this.items.length <= this.loadedItems) {
       this._addItem()
@@ -169,6 +169,10 @@ InfiniteScroller.prototype.attachContent = function () {
   this._cacheNodeSize()
   let curPos = this._fixScrollPosition()
   this._setupAnimations(tombstoneAnimations, curPos)
+}
+
+InfiniteScroller.prototype.resetMore = function () {
+  this.hasMore = true
 }
 
 InfiniteScroller.prototype._removeTombstones = function () {
