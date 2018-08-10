@@ -36,6 +36,13 @@ export interface PullUpOption {
   threshold: number;
 }
 
+export interface BounceObjectOption {
+    top?: boolean;
+    bottom?: boolean;
+    left?: boolean;
+    right?: boolean;
+}
+
 export interface BsOption {
   startX: number;
   startY: number;
@@ -46,7 +53,7 @@ export interface BsOption {
   eventPassthrough: string | boolean;
   click: boolean;
   tap: boolean;
-  bounce: boolean;
+  bounce: boolean | BounceObjectOption;
   bounceTime: number;
   momentum: boolean;
   momentumLimitTime: number;
