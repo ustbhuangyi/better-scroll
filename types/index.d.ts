@@ -25,6 +25,7 @@ export interface SlideOption {
 
 export interface ScrollBarOption {
   fade: boolean;
+  interactive: boolean;
 }
 
 export interface PullDownOption {
@@ -36,11 +37,16 @@ export interface PullUpOption {
   threshold: number;
 }
 
+export interface MouseWheelOption {
+  speed: number,
+  invert: boolean
+}
+
 export interface BounceObjectOption {
-    top?: boolean;
-    bottom?: boolean;
-    left?: boolean;
-    right?: boolean;
+  top?: boolean;
+  bottom?: boolean;
+  left?: boolean;
+  right?: boolean;
 }
 
 export interface BsOption {
@@ -101,6 +107,7 @@ export interface BsOption {
    * for scrollbar
    * scrollbar: {
  *   fade: true
+ *   interactive: true
  * }
    */
   scrollbar: Partial<ScrollBarOption> | boolean;
@@ -119,6 +126,14 @@ export interface BsOption {
  * }
    */
   pullUpLoad: Partial<PullUpOption> | boolean;
+  /**
+    * for mouseWheel
+    * mouseWheel: {
+   *   fade: true,
+   *   interactive: false;
+   * }
+    */
+  mouseWheel: Partial<MouseWheelOption> | boolean;
 }
 
 export interface Position {
