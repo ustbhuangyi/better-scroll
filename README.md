@@ -84,6 +84,12 @@ If you want to learn how to use better-scroll in the real project，you can lear
 
 Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
+## Type declaration(since 1.13.0+)
+```
+npm i @types/better-scroll -D
+```
+Maintained by https://github.com/stoneChen(thanks to https://github.com/taoqf for providing initial type code).
+
 ## Communication
 
 <img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>

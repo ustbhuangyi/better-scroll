@@ -80,6 +80,12 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 
 访问 [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
+## 类型声明文件(since 1.13.0+)
+```
+npm i @types/better-scroll -D
+```
+目前由 https://github.com/stoneChen(感谢 https://github.com/taoqf 提供初始类型代码)维护。
+
 ## 交流群（一群已满）
 
 <img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>
