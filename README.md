@@ -88,7 +88,7 @@ Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 ```
 npm i @types/better-scroll -D
 ```
-Maintained by https://github.com/stoneChen(thanks to https://github.com/taoqf for providing initial type code).
+Maintained by [stoneChen](https://github.com/stoneChen)(thanks to [taoqf](https://github.com/taoqf) for providing initial type code).
 
 ## Communication
 

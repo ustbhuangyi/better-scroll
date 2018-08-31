@@ -84,7 +84,7 @@ better-scroll 也是一样的原理，我们可以用一张图更直观的感受
 ```
 npm i @types/better-scroll -D
 ```
-目前由 https://github.com/stoneChen(感谢 https://github.com/taoqf 提供初始类型代码)维护。
+目前由[stoneChen](https://github.com/stoneChen)(感谢[taoqf](https://github.com/taoqf) 提供初始类型代码)维护。
 
 ## 交流群（一群已满）
 
