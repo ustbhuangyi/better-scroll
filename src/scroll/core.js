@@ -43,7 +43,6 @@ export function coreMixin(BScroll) {
       e.stopPropagation()
     }
 
-    this.startMoment = true
     this.moved = false
     this.distX = 0
     this.distY = 0
@@ -102,8 +101,7 @@ export function coreMixin(BScroll) {
     let timestamp = getNow()
 
     // We need to move at least momentumLimitDistance pixels for the scrolling to initiate
-    if (timestamp - this.endTime > this.options.momentumLimitTime && this.startMoment && (absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance)) {
-      this.startMoment = false
+    if (timestamp - this.endTime > this.options.momentumLimitTime && !this.moved && (absDistY < this.options.momentumLimitDistance && absDistX < this.options.momentumLimitDistance)) {
       return
     }
 
