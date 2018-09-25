@@ -72,16 +72,20 @@ export function offsetToBody(el) {
   }
 }
 
+export const cssVendor = (vendor && vendor !== 'standard') ? '-' + vendor.toLowerCase() + '-' : ''
+
 let transform = prefixStyle('transform')
+let transition = prefixStyle('transition')
 
 export const hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle
 // fix issue #361
 export const hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools)
 export const hasTransform = transform !== false
-export const hasTransition = inBrowser && prefixStyle('transition') in elementStyle
+export const hasTransition = inBrowser && transition in elementStyle
 
 export const style = {
   transform,
+  transition,
   transitionTimingFunction: prefixStyle('transitionTimingFunction'),
   transitionDuration: prefixStyle('transitionDuration'),
   transitionDelay: prefixStyle('transitionDelay'),
