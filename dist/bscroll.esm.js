@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.12.6
+ * better-normal-scroll v1.13.0
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -227,16 +227,20 @@ function offsetToBody(el) {
   };
 }
 
+var cssVendor = vendor && vendor !== 'standard' ? '-' + vendor.toLowerCase() + '-' : '';
+
 var transform = prefixStyle('transform');
+var transition = prefixStyle('transition');
 
 var hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle;
 // fix issue #361
 var hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools);
 var hasTransform = transform !== false;
-var hasTransition = inBrowser && prefixStyle('transition') in elementStyle;
+var hasTransition = inBrowser && transition in elementStyle;
 
 var style = {
   transform: transform,
+  transition: transition,
   transitionTimingFunction: prefixStyle('transitionTimingFunction'),
   transitionDuration: prefixStyle('transitionDuration'),
   transitionDelay: prefixStyle('transitionDelay'),
@@ -2976,9 +2980,32 @@ function InfiniteScroller(scroller, options) {
   this.scroller.on('resize', function () {
     _this.onResize();
   });
+  this.scroller.on('destroy', function () {
+    _this.destroy();
+  });
 
-  this.onResize();
+  // wait scroll core init
+  setTimeout(function () {
+    _this.onResize();
+  });
 }
+
+InfiniteScroller.prototype.destroy = function () {
+  var _this2 = this;
+
+  this.items.forEach(function (item) {
+    if (item.node) {
+      _this2.scrollerEl.removeChild(item.node);
+      item.node = null;
+    }
+  });
+  this.scroller.infiniteScroller = null;
+  this.scroller = null;
+  this.wrapperEl = null;
+  this.scrollerEl = null;
+  this.items = null;
+  this.tombstones = null;
+};
 
 InfiniteScroller.prototype.onScroll = function () {
   var scrollTop = -this.scroller.y;
@@ -2993,7 +3020,7 @@ InfiniteScroller.prototype.onScroll = function () {
   }
 
   this.anchorScrollTop = scrollTop;
-  var lastScreenItem = this._calculateAnchoredItem(this.anchorItem, this.wrapperEl.offsetHeight);
+  var lastScreenItem = this._calculateAnchoredItem(this.anchorItem, this.scroller.wrapperHeight);
 
   var start = this.anchorItem.index;
   var end = lastScreenItem.index;
@@ -3034,7 +3061,7 @@ InfiniteScroller.prototype.fill = function (start, end) {
 };
 
 InfiniteScroller.prototype.maybeRequestContent = function () {
-  var _this2 = this;
+  var _this3 = this;
 
   if (this.requestInProgress || !this.hasMore) {
     return;
@@ -3045,24 +3072,24 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
   }
   this.requestInProgress = true;
   this.options.fetch(itemsNeeded).then(function (items) {
-    _this2.requestInProgress = false;
+    _this3.requestInProgress = false;
     if (items) {
-      _this2.addContent(items);
+      _this3.addContent(items);
     } else {
-      _this2.hasMore = false;
-      var tombstoneLen = _this2._removeTombstones();
+      _this3.hasMore = false;
+      var tombstoneLen = _this3._removeTombstones();
       var curPos = 0;
-      if (_this2.anchorItem.index <= _this2.items.length) {
-        curPos = _this2._fixScrollPosition();
-        _this2._setupAnimations({}, curPos);
-        _this2.scroller.resetPosition(_this2.scroller.options.bounceTime);
+      if (_this3.anchorItem.index <= _this3.items.length) {
+        curPos = _this3._fixScrollPosition();
+        _this3._setupAnimations({}, curPos);
+        _this3.scroller.resetPosition(_this3.scroller.options.bounceTime);
       } else {
-        _this2.anchorItem.index -= tombstoneLen;
-        curPos = _this2._fixScrollPosition();
-        _this2._setupAnimations({}, curPos);
-        _this2.scroller.stop();
-        _this2.scroller.resetPosition();
-        _this2.onScroll();
+        _this3.anchorItem.index -= tombstoneLen;
+        curPos = _this3._fixScrollPosition();
+        _this3._setupAnimations({}, curPos);
+        _this3.scroller.stop();
+        _this3.scroller.resetPosition();
+        _this3.onScroll();
       }
     }
   });
@@ -3171,10 +3198,12 @@ InfiniteScroller.prototype._cleanupUnusedNodes = function (unusedNodes) {
 
 InfiniteScroller.prototype._cacheNodeSize = function () {
   for (var i = this.firstAttachedItem; i < this.lastAttachedItem; i++) {
+    var item = this.items[i];
     // Only cache the height if we have the real contents, not a placeholder.
-    if (this.items[i].data && !this.items[i].height) {
-      this.items[i].height = this.items[i].node.offsetHeight;
-      this.items[i].width = this.items[i].node.offsetWidth;
+    if (item.data && !item.height) {
+      var isTombstone = isTombstoneNode(item.node);
+      item.height = isTombstone ? this.tombstoneHeight : item.node.offsetHeight;
+      item.width = isTombstone ? this.tombstoneWidth : item.node.offsetWidth;
     }
   }
 };
@@ -3198,44 +3227,44 @@ InfiniteScroller.prototype._fixScrollPosition = function () {
 };
 
 InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, curPos) {
-  var _this3 = this;
+  var _this4 = this;
 
   for (var i in tombstoneAnimations) {
     var animation = tombstoneAnimations[i];
-    this.items[i].node.style.transform = 'translateY(' + (this.anchorScrollTop + animation[1]) + 'px) scale(' + this.tombstoneWidth / this.items[i].width + ', ' + this.tombstoneHeight / this.items[i].height + ')';
+    this.items[i].node.style[style.transform] = 'translateY(' + (this.anchorScrollTop + animation[1]) + 'px) scale(' + this.tombstoneWidth / this.items[i].width + ', ' + this.tombstoneHeight / this.items[i].height + ')';
     // Call offsetTop on the nodes to be animated to force them to apply current transforms.
     /* eslint-disable no-unused-expressions */
     this.items[i].node.offsetTop;
     animation[0].offsetTop;
-    this.items[i].node.style.transition = 'transform ' + ANIMATION_DURATION_MS + 'ms';
+    this.items[i].node.style[style.transition] = cssVendor + 'transform ' + ANIMATION_DURATION_MS + 'ms';
   }
 
   for (var _i2 = this.firstAttachedItem; _i2 < this.lastAttachedItem; _i2++) {
     var _animation = tombstoneAnimations[_i2];
     if (_animation) {
       var tombstoneNode = _animation[0];
-      tombstoneNode.style.transition = 'transform ' + ANIMATION_DURATION_MS + 'ms, opacity ' + ANIMATION_DURATION_MS + 'ms';
-      tombstoneNode.style.transform = 'translateY(' + curPos + 'px) scale(' + this.items[_i2].width / this.tombstoneWidth + ', ' + this.items[_i2].height / this.tombstoneHeight + ')';
+      tombstoneNode.style[style.transition] = cssVendor + 'transform ' + ANIMATION_DURATION_MS + 'ms, opacity ' + ANIMATION_DURATION_MS + 'ms';
+      tombstoneNode.style[style.transform] = 'translateY(' + curPos + 'px) scale(' + this.items[_i2].width / this.tombstoneWidth + ', ' + this.items[_i2].height / this.tombstoneHeight + ')';
       tombstoneNode.style.opacity = 0;
     }
     if (curPos !== this.items[_i2].top) {
       if (!_animation) {
-        this.items[_i2].node.style.transition = '';
+        this.items[_i2].node.style[style.transition] = '';
       }
-      this.items[_i2].node.style.transform = 'translateY(' + curPos + 'px)';
+      this.items[_i2].node.style[style.transform] = 'translateY(' + curPos + 'px)';
     }
     this.items[_i2].top = curPos;
     curPos += this.items[_i2].height || this.tombstoneHeight;
   }
 
-  this.scroller.maxScrollY = -(curPos - this.wrapperEl.offsetHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0));
+  this.scroller.maxScrollY = -(curPos - this.scroller.wrapperHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0));
 
   setTimeout(function () {
     for (var _i3 in tombstoneAnimations) {
       var _animation2 = tombstoneAnimations[_i3];
       _animation2[0].style.display = 'none';
       // Tombstone can be recycled now.
-      _this3.tombstones.push(_animation2[0]);
+      _this4.tombstones.push(_animation2[0]);
     }
   }, ANIMATION_DURATION_MS);
 };
@@ -3245,8 +3274,8 @@ InfiniteScroller.prototype._getTombStone = function () {
   if (tombstone) {
     tombstone.style.display = '';
     tombstone.style.opacity = 1;
-    tombstone.style.transform = '';
-    tombstone.style.transition = '';
+    tombstone.style[style.transform] = '';
+    tombstone.style[style.transition] = '';
     return tombstone;
   }
   return this.options.createTombstone();
@@ -3321,6 +3350,6 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.12.6';
+BScroll.Version = '1.13.0';
 
 export default BScroll;
