@@ -79,8 +79,7 @@ InfiniteScroller.prototype.destroy = function () {
   // In extreme scene, destroy is triggered before _onResizeHandler
   clearTimeout(this._onResizeHandler)
   this.items.forEach((item) => {
-    // ensure node is a child of this.scrollerEl
-    if (item.node && this.scrollerEl && this.scrollerEl.children.length) {
+    if (item.node) {
       this.scrollerEl.removeChild(item.node)
       item.node = null
     }
@@ -211,7 +210,8 @@ InfiniteScroller.prototype._removeTombstones = function () {
     const currentNode = this.items[i].node
     const currentData = this.items[i].data
     if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
-      if (!markIndex) {
+      // 0 should be excluded
+      if (markIndex !== void 0) {
         markIndex = i
       }
       if (currentNode) {
