@@ -70,14 +70,17 @@ function InfiniteScroller(scroller, options) {
   })
 
   // wait scroll core init
-  setTimeout(() => {
+  this._onResizeHandler = setTimeout(() => {
     this.onResize()
   })
 }
 
 InfiniteScroller.prototype.destroy = function () {
+  // In extreme scene, destroy is triggered before _onResizeHandler
+  clearTimeout(this._onResizeHandler)
   this.items.forEach((item) => {
-    if (item.node) {
+    // ensure node is a child of this.scrollerEl
+    if (item.node && this.scrollerEl && this.scrollerEl.children.length) {
       this.scrollerEl.removeChild(item.node)
       item.node = null
     }
