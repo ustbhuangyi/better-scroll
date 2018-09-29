@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.13.1
+ * better-normal-scroll v1.13.2
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2971,6 +2971,7 @@ function InfiniteScroller(scroller, options) {
   this.tombstoneHeight = 0;
   this.tombstoneWidth = 0;
   this.tombstones = [];
+  this.tombstonesAnimationHandlers = [];
 
   this.items = [];
   this.loadedItems = 0;
@@ -3001,6 +3002,10 @@ InfiniteScroller.prototype.destroy = function () {
 
   // In extreme scene, destroy is triggered before _onResizeHandler
   clearTimeout(this._onResizeHandler);
+  this.tombstonesAnimationHandlers.forEach(function (handler) {
+    clearTimeout(handler);
+  });
+  this.tombstonesAnimationHandlers = null;
   this.items.forEach(function (item) {
     if (item.node) {
       _this2.scrollerEl.removeChild(item.node);
@@ -3136,7 +3141,7 @@ InfiniteScroller.prototype._removeTombstones = function () {
     var currentData = this.items[i].data;
     if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
       // 0 should be excluded
-      if (markIndex !== void 0) {
+      if (markIndex === void 0) {
         markIndex = i;
       }
       if (currentNode) {
@@ -3268,7 +3273,7 @@ InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, cur
 
   this.scroller.maxScrollY = -(curPos - this.scroller.wrapperHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0));
 
-  setTimeout(function () {
+  var tombstoneAnimationsHandler = setTimeout(function () {
     for (var _i3 in tombstoneAnimations) {
       var _animation2 = tombstoneAnimations[_i3];
       _animation2[0].style.display = 'none';
@@ -3276,6 +3281,8 @@ InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, cur
       _this4.tombstones.push(_animation2[0]);
     }
   }, ANIMATION_DURATION_MS);
+
+  this.tombstonesAnimationHandlers.push(tombstoneAnimationsHandler);
 };
 
 InfiniteScroller.prototype._getTombStone = function () {
@@ -3359,7 +3366,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.13.1';
+BScroll.Version = '1.13.2';
 
 return BScroll;
 
