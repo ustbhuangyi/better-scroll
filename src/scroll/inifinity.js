@@ -50,6 +50,7 @@ function InfiniteScroller(scroller, options) {
   this.tombstoneHeight = 0
   this.tombstoneWidth = 0
   this.tombstones = []
+  this.tombstonesAnimationHandlers = []
 
   this.items = []
   this.loadedItems = 0
@@ -78,6 +79,10 @@ function InfiniteScroller(scroller, options) {
 InfiniteScroller.prototype.destroy = function () {
   // In extreme scene, destroy is triggered before _onResizeHandler
   clearTimeout(this._onResizeHandler)
+  this.tombstonesAnimationHandlers.forEach(function (handler) {
+    clearTimeout(handler)
+  })
+  this.tombstonesAnimationHandlers = null
   this.items.forEach((item) => {
     if (item.node) {
       this.scrollerEl.removeChild(item.node)
@@ -211,7 +216,7 @@ InfiniteScroller.prototype._removeTombstones = function () {
     const currentData = this.items[i].data
     if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
       // 0 should be excluded
-      if (markIndex !== void 0) {
+      if (markIndex === void 0) {
         markIndex = i
       }
       if (currentNode) {
@@ -341,7 +346,7 @@ InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, cur
 
   this.scroller.maxScrollY = -(curPos - this.scroller.wrapperHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0))
 
-  setTimeout(() => {
+  const tombstoneAnimationsHandler = setTimeout(() => {
     for (let i in tombstoneAnimations) {
       const animation = tombstoneAnimations[i]
       animation[0].style.display = 'none'
@@ -349,6 +354,8 @@ InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, cur
       this.tombstones.push(animation[0])
     }
   }, ANIMATION_DURATION_MS)
+
+  this.tombstonesAnimationHandlers.push(tombstoneAnimationsHandler)
 }
 
 InfiniteScroller.prototype._getTombStone = function () {
