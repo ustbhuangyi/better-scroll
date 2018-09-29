@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.13.0
+ * better-normal-scroll v1.13.1
  * (c) 2016-2018 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2991,7 +2991,7 @@ function InfiniteScroller(scroller, options) {
   });
 
   // wait scroll core init
-  setTimeout(function () {
+  this._onResizeHandler = setTimeout(function () {
     _this.onResize();
   });
 }
@@ -2999,6 +2999,8 @@ function InfiniteScroller(scroller, options) {
 InfiniteScroller.prototype.destroy = function () {
   var _this2 = this;
 
+  // In extreme scene, destroy is triggered before _onResizeHandler
+  clearTimeout(this._onResizeHandler);
   this.items.forEach(function (item) {
     if (item.node) {
       _this2.scrollerEl.removeChild(item.node);
@@ -3133,7 +3135,8 @@ InfiniteScroller.prototype._removeTombstones = function () {
     var currentNode = this.items[i].node;
     var currentData = this.items[i].data;
     if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
-      if (!markIndex) {
+      // 0 should be excluded
+      if (markIndex !== void 0) {
         markIndex = i;
       }
       if (currentNode) {
@@ -3356,7 +3359,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.13.0';
+BScroll.Version = '1.13.1';
 
 return BScroll;
 
