@@ -138,7 +138,7 @@
           child.style.width = slideWidth + 'px'
           width += slideWidth
         }
-        if (this.loop && !isResize) {
+        if (this.loop && !isResize && this.children.length > 1) {
           width += 2 * slideWidth
         }
         this.$refs.slideGroup.style.width = width + 'px'
