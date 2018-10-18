@@ -1,3 +1,5 @@
+import { spliceOne } from '../util/spliceOne'
+
 export function eventMixin(BScroll) {
   BScroll.prototype.on = function (type, fn, context = this) {
     if (!this._events[type]) {
@@ -28,7 +30,7 @@ export function eventMixin(BScroll) {
     let count = _events.length
     while (count--) {
       if (_events[count][0] === fn || (_events[count][0] && _events[count][0].fn === fn)) {
-        _events[count][0] = undefined
+        spliceOne(_events, count)
       }
     }
   }

@@ -17,7 +17,7 @@ describe('BScroll - events', () => {
     expect(scroll._events['test'][0][0].fn)
       .to.be.equal(test)
     scroll.off('test', test)
-    expect(scroll._events['test'][0][0])
+    expect(scroll._events['test'][0])
       .to.not.be.ok
   })
 })
