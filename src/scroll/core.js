@@ -341,9 +341,9 @@ export function coreMixin(BScroll) {
     if (!this.moved) {
       if (this.options.wheel) {
         if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
-          let tempIndex = this._getWheelValidIndex(this.y)
+          let index = this._getWheelValidIndex(this.y)
           let _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight)
-          this.target = this.items[tempIndex + _offset]
+          this.target = this.items[index + _offset]
         }
         let top = offset(this.target).top
         let left = offset(this.target).left
