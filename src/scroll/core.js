@@ -282,9 +282,9 @@ export function coreMixin(BScroll) {
       }
       const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
       const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
-      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options)
+      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, wrapperWidth, this.options, this)
         : {destination: newX, duration: 0}
-      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options)
+      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, wrapperHeight, this.options, this)
         : {destination: newY, duration: 0}
       newX = momentumX.destination
       newY = momentumY.destination
@@ -292,7 +292,7 @@ export function coreMixin(BScroll) {
       this.isInTransition = true
     } else {
       if (this.options.wheel) {
-        newY = Math.round(newY / this.itemHeight) * this.itemHeight
+        newY = this._getWheelValidY(newY)
         time = this.options.wheel.adjustTime || 400
       }
     }
@@ -324,7 +324,7 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      this.selectedIndex = Math.round(Math.abs(this.y / this.itemHeight))
+      this.selectedIndex = this._getWheelValidIndex(this.y)
     }
     this.trigger('scrollEnd', {
       x: this.x,
@@ -341,11 +341,19 @@ export function coreMixin(BScroll) {
     if (!this.moved) {
       if (this.options.wheel) {
         if (this.target && this.target.className === this.options.wheel.wheelWrapperClass) {
-          let index = Math.abs(Math.round(this.y / this.itemHeight))
+          let tempIndex = this._getWheelValidIndex(this.y)
           let _offset = Math.round((this.pointY + offsetToBody(this.wrapper).top - this.wrapperHeight / 2) / this.itemHeight)
-          this.target = this.items[index + _offset]
+          this.target = this.items[tempIndex + _offset]
         }
-        this.scrollToElement(this.target, this.options.wheel.adjustTime || 400, true, true, ease.swipe)
+        let top = offset(this.target).top
+        let left = offset(this.target).left
+        top -= this.wrapperOffset.top
+        top -= Math.round(this.target.offsetHeight / 2 - this.wrapper.offsetHeight / 2) || 0
+        left -= this.wrapperOffset.left
+        left -= Math.round(this.target.offsetWidth / 2 - this.wrapper.offsetWidth / 2) || 0
+
+        top = this._getWheelValidY(top)
+        this.scrollTo(left, top, this.options.wheel.adjustTime || 400, ease.swipe)
         return true
       } else {
         if (!preventClick) {
@@ -550,7 +558,7 @@ export function coreMixin(BScroll) {
         } else if (y < this.maxScrollY) {
           this.selectedIndex = this.items.length - 1
         } else {
-          this.selectedIndex = Math.round(Math.abs(y / this.itemHeight))
+          this.selectedIndex = this._getWheelValidIndex(y)
         }
       }
     } else {
@@ -586,7 +594,7 @@ export function coreMixin(BScroll) {
     pos.top = pos.top > 0 ? 0 : pos.top < this.maxScrollY ? this.maxScrollY : pos.top
 
     if (this.options.wheel) {
-      pos.top = Math.round(pos.top / this.itemHeight) * this.itemHeight
+      pos.top = this._getWheelValidY(pos.top)
     }
 
     this.scrollTo(pos.left, pos.top, time, easing)
@@ -611,6 +619,12 @@ export function coreMixin(BScroll) {
 
     if (x === this.x && y === this.y) {
       return false
+    }
+
+    if (this.options.wheel) {
+      y = this._getWheelValidY(y)
+      this.scrollTo(x, y, this.options.wheel.adjustTime || 400, easeing)
+      return true
     }
 
     this.scrollTo(x, y, time, easeing)
@@ -644,7 +658,7 @@ export function coreMixin(BScroll) {
       let pos = this.getComputedPosition()
       this._translate(pos.x, pos.y)
       if (this.options.wheel) {
-        this.target = this.items[Math.round(-pos.y / this.itemHeight)]
+        this.target = this.items[this._getWheelValidIndex(pos.y)]
       } else {
         this.trigger('scrollEnd', {
           x: this.x,

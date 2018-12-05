@@ -171,6 +171,10 @@ export function initMixin(BScroll) {
 
     this.refresh()
 
+    if (this.options.wheel) {
+      this._checkWheelhasValidIndex()
+    }
+
     if (!this.options.snap) {
       this.scrollTo(this.options.startX, this.options.startY)
     }

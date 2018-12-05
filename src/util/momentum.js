@@ -1,4 +1,4 @@
-export function momentum(current, start, time, lowerMargin, wrapperSize, options) {
+export function momentum(current, start, time, lowerMargin, wrapperSize, options, scroll) {
   let distance = current - start
   let speed = Math.abs(distance) / time
 
@@ -9,7 +9,7 @@ export function momentum(current, start, time, lowerMargin, wrapperSize, options
   let destination = current + speed / deceleration * (distance < 0 ? -1 : 1)
 
   if (wheel && itemHeight) {
-    destination = Math.round(destination / itemHeight) * itemHeight
+    destination = scroll._getWheelValidY(destination)
   }
 
   if (destination < lowerMargin) {
