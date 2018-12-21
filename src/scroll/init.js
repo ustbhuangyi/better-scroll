@@ -45,7 +45,7 @@ const DEFAULT_OPTIONS = {
   probeType: 0,
   preventDefault: true,
   preventDefaultException: {
-    tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/
+    tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
   },
   HWCompositing: true,
   useTransition: true,
