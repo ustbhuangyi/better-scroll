@@ -50,7 +50,7 @@ let scroll = new BScroll('.wrapper')
 
 better-scroll 也是一样的原理，我们可以用一张图更直观的感受一下：
 
-![布局](http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png)
+![布局](./static/image/layout-description-image.png)
 
 绿色部分为 wrapper，也就是父容器，它会有**固定的高度**。黄色部分为 content，它是父容器的**第一个子元素**，它的高度会随着内容的大小而撑高。那么，当 content 的高度不超过父容器的高度，是不能滚动的，而它一旦超过了父容器的高度，我们就可以滚动内容区了，这就是 better-scroll 的滚动原理。
 
