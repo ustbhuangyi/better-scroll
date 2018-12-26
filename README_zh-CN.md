@@ -86,9 +86,9 @@ npm i @types/better-scroll -D
 ```
 目前由[stoneChen](https://github.com/stoneChen)(感谢[taoqf](https://github.com/taoqf) 提供初始类型代码)维护。
 
-## 交流群（一群已满）
+## 交流群（一、二群已满）
 
-<img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>
+<img src="./static/image/bs-qq3.jpg" width=280 height=384>
 
 ## Demo
 

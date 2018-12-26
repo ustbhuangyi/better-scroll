@@ -92,7 +92,7 @@ Maintained by [stoneChen](https://github.com/stoneChen)(thanks to [taoqf](https:
 
 ## Communication
 
-<img src="http://static.galileo.xiaojukeji.com/static/tms/shield/better-scroll-qq2.jpeg" width=280 height=384>
+<img src="./static/image/bs-qq3.jpg" width=280 height=384>
 
 ## Demo
 
