@@ -1,13 +1,15 @@
 import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
 
-let elementStyle = inBrowser && document.createElement('div').style
+let elementStyle = (inBrowser && document.createElement('div').style) as any
 
 let vendor = (() => {
   if (!inBrowser) {
     return false
   }
-  let transformNames = {
+  let transformNames: {
+    [prefix: string]: string
+  } = {
     webkit: 'webkitTransform',
     Moz: 'MozTransform',
     O: 'OTransform',
@@ -24,7 +26,7 @@ let vendor = (() => {
   return false
 })()
 
-function prefixStyle(style) {
+function prefixStyle(style: string) {
   if (vendor === false) {
     return false
   }
@@ -39,22 +41,42 @@ function prefixStyle(style) {
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
 
-export function addEvent(el, type, fn, capture) {
-  el.addEventListener(type, fn, {passive: false, capture: !!capture})
+interface handleEventDOMElement {
+  handleEvent: () => void
 }
 
-export function removeEvent(el, type, fn, capture) {
-  el.removeEventListener(type, fn, {passive: false, capture: !!capture})
+export function addEvent(
+  el: HTMLElement,
+  type: string,
+  fn: handleEventDOMElement,
+  capture?: any
+) {
+  el.addEventListener(type, fn, {
+    passive: false,
+    capture: !!capture
+  })
 }
 
-export function offset(el) {
+export function removeEvent(
+  el: HTMLElement,
+  type: string,
+  fn: handleEventDOMElement,
+  capture?: any
+) {
+  el.removeEventListener(type, fn, {
+    passive: false,
+    capture: !!capture
+  } as EventListenerOptions)
+}
+
+export function offset(el: HTMLElement | null) {
   let left = 0
   let top = 0
 
   while (el) {
     left -= el.offsetLeft
     top -= el.offsetTop
-    el = el.offsetParent
+    el = el.offsetParent as HTMLElement
   }
 
   return {
@@ -63,7 +85,7 @@ export function offset(el) {
   }
 }
 
-export function offsetToBody(el) {
+export function offsetToBody(el: HTMLElement) {
   let rect = el.getBoundingClientRect()
 
   return {
@@ -72,14 +94,17 @@ export function offsetToBody(el) {
   }
 }
 
-export const cssVendor = (vendor && vendor !== 'standard') ? '-' + vendor.toLowerCase() + '-' : ''
+export const cssVendor =
+  vendor && vendor !== 'standard' ? '-' + vendor.toLowerCase() + '-' : ''
 
 let transform = prefixStyle('transform')
 let transition = prefixStyle('transition')
 
-export const hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle
+export const hasPerspective =
+  inBrowser && prefixStyle('perspective') in elementStyle
 // fix issue #361
-export const hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools)
+export const hasTouch =
+  inBrowser && ('ontouchstart' in window || isWeChatDevTools)
 export const hasTransform = transform !== false
 export const hasTransition = inBrowser && transition in elementStyle
 
@@ -106,8 +131,8 @@ export const eventType = {
   mouseup: MOUSE_EVENT
 }
 
-export function getRect(el) {
-  if (el instanceof window.SVGElement) {
+export function getRect(el: HTMLElement) {
+  if (el instanceof (window as any).SVGElement) {
     let rect = el.getBoundingClientRect()
     return {
       top: rect.top,
@@ -125,46 +150,62 @@ export function getRect(el) {
   }
 }
 
-export function preventDefaultException(el, exceptions) {
+export function preventDefaultException(
+  el: HTMLElement,
+  exceptions: {
+    tagName: RegExp
+  }
+) {
   for (let i in exceptions) {
-    if (exceptions[i].test(el[i])) {
+    if (exceptions.i.test(el[i])) {
       return true
     }
   }
   return false
 }
 
-export function tap(e, eventName) {
-  let ev = document.createEvent('Event')
+export function tap(e: any, eventName: string) {
+  let ev = document.createEvent('Event') as any
   ev.initEvent(eventName, true, true)
   ev.pageX = e.pageX
   ev.pageY = e.pageY
   e.target.dispatchEvent(ev)
 }
 
-export function click(e, event = 'click') {
+export function click(e: any, event = 'click') {
   let eventSource
   if (e.type === 'mouseup' || e.type === 'mousecancel') {
     eventSource = e
   } else if (e.type === 'touchend' || e.type === 'touchcancel') {
     eventSource = e.changedTouches[0]
   }
-  let posSrc = {}
+  let posSrc: {
+    screenX?: number
+    screenY?: number
+    clientX?: number
+    clientY?: number
+  } = {}
   if (eventSource) {
     posSrc.screenX = eventSource.screenX || 0
     posSrc.screenY = eventSource.screenY || 0
     posSrc.clientX = eventSource.clientX || 0
     posSrc.clientY = eventSource.clientY || 0
   }
-  let ev
+  let ev: any
   const bubbles = true
   const cancelable = true
   if (typeof MouseEvent !== 'undefined') {
     try {
-      ev = new MouseEvent(event, extend({
-        bubbles,
-        cancelable
-      }, posSrc))
+      ev = new MouseEvent(
+        event,
+        extend(
+          {
+            bubbles,
+            cancelable
+          },
+          posSrc
+        )
+      )
     } catch (e) {
       createEvent()
     }
@@ -184,22 +225,23 @@ export function click(e, event = 'click') {
   e.target.dispatchEvent(ev)
 }
 
-export function dblclick(e) {
+export function dblclick(e: Event) {
   click(e, 'dblclick')
 }
 
-export function prepend(el, target) {
-  if (target.firstChild) {
-    before(el, target.firstChild)
+export function prepend(el: HTMLElement, target: HTMLElement) {
+  const firstChild = target.firstChild as HTMLElement
+  if (firstChild) {
+    before(el, firstChild)
   } else {
     target.appendChild(el)
   }
 }
 
-export function before(el, target) {
-  target.parentNode.insertBefore(el, target)
+export function before(el: HTMLElement, target: HTMLElement) {
+  ;(target.parentNode as HTMLElement).insertBefore(el, target)
 }
 
-export function removeChild(el, child) {
+export function removeChild(el: HTMLElement, child: HTMLElement) {
   el.removeChild(child)
 }
