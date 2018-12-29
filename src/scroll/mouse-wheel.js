@@ -24,7 +24,10 @@ export function mouseWheelMixin(BScroll) {
     if (!this.enabled) {
       return
     }
-    e.preventDefault()
+
+    if (this.options.preventDefault) {
+      e.preventDefault()
+    }
 
     if (this.options.stopPropagation) {
       e.stopPropagation()
