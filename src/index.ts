@@ -36,7 +36,7 @@ export default class BScroll extends EventEmitter {
   y?: number
   directionX?: number
   directionY?: number
-  options?: BScrollOptions
+  options: BScrollOptions
   translateZ?: string
   lastScale?: number
   scale?: number
