@@ -41,14 +41,14 @@ function prefixStyle(style: string) {
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
 
-interface handleEventDOMElement {
+interface HandleEventDOMElement {
   handleEvent: () => void
 }
 
 export function addEvent(
   el: HTMLElement,
   type: string,
-  fn: handleEventDOMElement,
+  fn: HandleEventDOMElement,
   capture?: any
 ) {
   el.addEventListener(type, fn, {
@@ -151,13 +151,15 @@ export function getRect(el: HTMLElement) {
 }
 
 export function preventDefaultException(
-  el: HTMLElement,
+  el: any,
   exceptions: {
-    tagName: RegExp
+    tagName?: RegExp
+    className?: RegExp
+    [key: string]: any
   }
 ) {
   for (let i in exceptions) {
-    if (exceptions.i.test(el[i])) {
+    if (exceptions[i].test(el[i])) {
       return true
     }
   }

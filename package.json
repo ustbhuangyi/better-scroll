@@ -49,6 +49,7 @@
     "scroll",
     "iscroll",
     "javascript",
+    "typescript",
     "ios"
   ],
   "licenses": "MIT",

@@ -1,9 +1,9 @@
-interface eventsMap {
+interface EventsMap {
   [name: string]: Array<any>[]
 }
 
-export class EventEmitter {
-  _events: eventsMap
+export default class EventEmitter {
+  _events: EventsMap
 
   constructor() {
     this._events = {}

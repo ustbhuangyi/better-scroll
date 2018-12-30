@@ -3,5 +3,21 @@
   "extends": [
     "tslint-config-standard",
     "tslint-config-prettier"
-  ]
+  ],
+  "rules": {
+    "max-line-length": {
+        "options": [120]
+    },
+    "no-empty": false,
+    "deprecation": false,
+    "strict-type-predicates": false,
+    "no-angle-bracket-type-assertion": false,
+    "no-unnecessary-type-assertion": false,
+    "no-unused-expression": false,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": false,
+    "no-console": false
+  }
 }

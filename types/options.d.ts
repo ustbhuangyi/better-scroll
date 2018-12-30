@@ -1,4 +1,5 @@
 // type
+type tap = 'tap' | ''
 type bounceOptions = Partial<bounceConfig> | boolean
 type wheelOptions = Partial<wheelConfig> | boolean
 type snapOptions = Partial<snapConfig> | boolean
@@ -21,10 +22,10 @@ export enum ProbeType {
 
 // interface
 interface bounceConfig {
-  top?: boolean,
-  bottom?: boolean,
-  left?: boolean,
-  right?: boolean
+  top: boolean,
+  bottom: boolean,
+  left: boolean,
+  right: boolean
 }
 
 interface wheelConfig {
@@ -86,6 +87,7 @@ interface dblclickConfig {
 }
 
 export interface BScrollOptions {
+  [key: string]:any,
   startX: number,
   startY: number,
   scrollX: boolean,
@@ -94,7 +96,7 @@ export interface BScrollOptions {
   directionLockThreshold: number,
   eventPassthrough: string,
   click: boolean,
-  tap: boolean,
+  tap: tap,
   bounce: bounceOptions,
   bounceTime: number,
   momentum: boolean,
@@ -109,14 +111,15 @@ export interface BScrollOptions {
   probeType: ProbeType,
   preventDefault: boolean,
   preventDefaultException: {
-    tagName: RegExp
+    tagName?: RegExp
+    className?: RegExp
   },
   HWCompositing: boolean,
   useTransition: boolean,
   useTransform: boolean,
   bindToWrapper: boolean,
-  disableMouse: boolean,
-  disableTouch: boolean,
+  disableMouse: boolean | '',
+  disableTouch: boolean | '',
   observeDOM: boolean,
   autoBlur: boolean,
   stopPropagation: boolean,
