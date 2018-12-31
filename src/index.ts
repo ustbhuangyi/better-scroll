@@ -2,18 +2,19 @@ import { PluginObject, PluginFunction } from '../types/plugin'
 
 import EventEmitter from './scroll/event-emitter'
 import BScrollOptions from './scroll/options'
+import BScrollProcessor from './scroll/processor'
 
 import { warn } from './util/debug'
-import { extend, isUndef } from './util/lang'
+import { isUndef } from './util/lang'
 
 import {
   hasTouch,
   style,
   offset,
-  addEvent,
   getRect,
   preventDefaultException
 } from './util/dom'
+import Processor from './scroll/processor';
 
 // Type Guards
 export function isPluginObject(
@@ -22,30 +23,32 @@ export function isPluginObject(
   return typeof (plugin as PluginObject).install === 'function'
 }
 
+interface plugin {
+  [key: string]: {
+    new (bscroll: BScroll): void
+  }
+}
 export default class BScroll extends EventEmitter {
   static readonly Version: string = '2.0.0'
   static _installedPlugins?: (Object | Function)[]
-  static _plugins: {
-    [name: string]: any
-  }
+  static _plugins : plugin
 
   wrapper: HTMLElement | null
-  scroller?: HTMLElement
+  scroller: HTMLElement
   scrollerStyle?: object
-  x?: number
-  y?: number
+  x: number
+  y: number
   directionX?: number
   directionY?: number
   options: BScrollOptions
   translateZ?: string
-  lastScale?: number
-  scale?: number
-  enabled?: boolean
+  lastScale: number
+  scale: number
+  enabled: boolean
   [key: string]: any
 
   static use(plugin: PluginObject | PluginFunction, ...options: any[]) {
-    const installedPlugins =
-      this._installedPlugins || (this._installedPlugins = [])
+    const installedPlugins = this._installedPlugins || (this._installedPlugins = [])
     if (installedPlugins.indexOf(plugin) > -1) {
       return this
     }
@@ -60,13 +63,15 @@ export default class BScroll extends EventEmitter {
     return this
   }
 
-  static plugin<T>(name: string, ctor: T): void {
+  static plugin(name: string, ctor: {
+    new (): void
+  }): void {
     if (!this._plugins) {
-      this._plugins = []
+      this._plugins = {}
     }
     if (this._plugins[name]) {
       warn(
-        "This plugin has been registered, maybe you need change plugin's name"
+        `This plugin has been registered, maybe you need change plugin's name`
       )
     }
     this._plugins[name] = ctor
@@ -92,6 +97,14 @@ export default class BScroll extends EventEmitter {
   }
 
   private init() {
+    const {
+      observeDOM,
+      autoBlur,
+      snap,
+      startX,
+      startY
+    } = this.options
+
     this.x = 0
     this.y = 0
     this.directionX = 0
@@ -99,24 +112,24 @@ export default class BScroll extends EventEmitter {
 
     this.setScale(1)
 
-    this.addDOMEvents()
+    this.processor = new BScrollProcessor(this)
 
     this.applyPlugins()
 
     this.watchTransition()
 
-    if (this.options.observeDOM) {
+    if (observeDOM) {
       this.initDOMObserver()
     }
 
-    if (this.options.autoBlur) {
+    if (autoBlur) {
       this.handleAutoBlur()
     }
 
     this.refresh()
 
-    if (!this.options.snap) {
-      this.scrollTo(this.options.startX, this.options.startY)
+    if (!snap) {
+      this.scrollTo(startX, startY)
     }
 
     this.enable()
@@ -125,49 +138,20 @@ export default class BScroll extends EventEmitter {
     this.lastScale = isUndef(this.scale) ? scale : this.scale
     this.scale = scale
   }
-  private addDOMEvents() {
-    let eventOperation = addEvent
-    this.handleDOMEvents(eventOperation)
-  }
-  private handleDOMEvents(eventOperation: Function) {
-    const _options = this.options as any
-    let target = _options.bindToWrapper ? this.wrapper : window
-    eventOperation(window, 'orientationchange', this)
-    eventOperation(window, 'resize', this)
-
-    if (_options.click) {
-      eventOperation(this.wrapper, 'click', this, true)
-    }
-
-    if (!_options.disableMouse) {
-      eventOperation(this.wrapper, 'mousedown', this)
-      eventOperation(target, 'mousemove', this)
-      eventOperation(target, 'mousecancel', this)
-      eventOperation(target, 'mouseup', this)
-    }
-
-    if (hasTouch && !_options.disableTouch) {
-      eventOperation(this.wrapper, 'touchstart', this)
-      eventOperation(target, 'touchmove', this)
-      eventOperation(target, 'touchcancel', this)
-      eventOperation(target, 'touchend', this)
-    }
-
-    eventOperation(this.scroller, style.transitionEnd, this)
-  }
   private applyPlugins() {
-    const _options = this.options as any
-    const _plugins = (<typeof BScroll>this.constructor)._plugins || []
-    for (let i = 0; i < _plugins.length; i++) {
-      const [name, ctor] = _plugins[i]
-      if (_options[name]) {
+    const options = this.options
+    const _plugins = (<typeof BScroll>this.constructor)._plugins || {}
+    let ctor
+    for (let pluginName in _plugins) {
+      ctor = _plugins[pluginName]
+      if (options[pluginName]) {
         typeof ctor === 'function' && new ctor(this)
       }
     }
   }
   private initDOMObserver() {
     if (typeof MutationObserver !== 'undefined') {
-      let timer: any
+      let timer: number
       let observer = new MutationObserver(mutations => {
         // don't do any refresh during the transition, or outside of the boundaries
         if (this.shouldNotRefresh()) {
@@ -204,8 +188,9 @@ export default class BScroll extends EventEmitter {
         childList: true,
         subtree: true
       }
-      observer.observe(this.scroller as Node, config)
+      observer.observe(this.scroller, config)
 
+      // TODO
       this.on('destroy', () => {
         observer.disconnect()
       })
@@ -251,7 +236,30 @@ export default class BScroll extends EventEmitter {
 
     next.call(this)
   }
-  private watchTransition() {}
+  private watchTransition() {
+    if (typeof Object.defineProperty !== 'function') {
+      return
+    }
+    let me = this
+    let isInTransition = false
+    let key = this.useTransition ? 'isInTransition' : 'isAnimating'
+    Object.defineProperty(this, key, {
+      get() {
+        return isInTransition
+      },
+      set(newVal) {
+        isInTransition = newVal
+        // fix issue #359
+        let el = me.scroller.children.length
+          ? me.scroller.children
+          : [me.scroller]
+        let pointerEvents = isInTransition && !me.pulling ? 'none' : 'auto'
+        for (let i = 0; i < el.length; i++) {
+          (el[i] as HTMLElement).style.pointerEvents = pointerEvents
+        }
+      }
+    })
+  }
   private handleAutoBlur() {
     this.on('scrollStart', () => {
       let activeElement = document.activeElement as HTMLElement
@@ -322,9 +330,10 @@ export default class BScroll extends EventEmitter {
     }
   }
   refresh() {
+    const wrapper = this.wrapper as HTMLElement
     const isWrapperStatic =
-      window.getComputedStyle(this.wrapper, null).position === 'static'
-    let wrapperRect = getRect(this.wrapper)
+      window.getComputedStyle(wrapper, null).position === 'static'
+    let wrapperRect = getRect(wrapper)
     this.wrapperWidth = wrapperRect.width
     this.wrapperHeight = wrapperRect.height
 
@@ -342,39 +351,6 @@ export default class BScroll extends EventEmitter {
 
     this.minScrollX = 0
     this.minScrollY = 0
-
-    const wheel = this.options.wheel
-    if (wheel) {
-      this.items = this.scroller.children
-      this.options.itemHeight = this.itemHeight = this.items.length
-        ? this.scrollerHeight / this.items.length
-        : 0
-      if (this.selectedIndex === undefined) {
-        this.selectedIndex = wheel.selectedIndex || 0
-      }
-      this.options.startY = -this.selectedIndex * this.itemHeight
-      this.maxScrollX = 0
-      this.maxScrollY = -this.itemHeight * (this.items.length - 1)
-    } else {
-      this.maxScrollX = this.wrapperWidth - this.scrollerWidth
-      if (!this.options.infinity) {
-        this.maxScrollY = this.wrapperHeight - this.scrollerHeight
-      }
-      if (this.maxScrollX < 0) {
-        this.maxScrollX -= this.relativeX
-        this.minScrollX = -this.relativeX
-      } else if (this.scale > 1) {
-        this.maxScrollX = this.maxScrollX / 2 - this.relativeX
-        this.minScrollX = this.maxScrollX
-      }
-      if (this.maxScrollY < 0) {
-        this.maxScrollY -= this.relativeY
-        this.minScrollY = -this.relativeY
-      } else if (this.scale > 1) {
-        this.maxScrollY = this.maxScrollY / 2 - this.relativeY
-        this.minScrollY = this.maxScrollY
-      }
-    }
 
     this.hasHorizontalScroll =
       this.options.scrollX && this.maxScrollX < this.minScrollX

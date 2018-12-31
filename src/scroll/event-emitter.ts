@@ -1,5 +1,5 @@
 interface EventsMap {
-  [name: string]: Array<any>[]
+  [name: string]: [Function, Object][]
 }
 
 export default class EventEmitter {

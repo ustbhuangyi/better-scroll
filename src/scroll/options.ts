@@ -60,6 +60,7 @@ export default class Options {
   zoom: zoomOptions
   infinity: infinityOptions
   dblclick: dblclickOptions
+
   constructor() {
     this.startX = 0
     this.startY = 0

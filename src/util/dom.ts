@@ -121,7 +121,15 @@ export const style = {
 export const TOUCH_EVENT = 1
 export const MOUSE_EVENT = 2
 
-export const eventType = {
+export const eventType: {
+  [key: string]: number,
+  touchstart: number,
+  touchmove: number,
+  touchend: number,
+  mousedown: number,
+  mousemove: number,
+  mouseup: number
+} = {
   touchstart: TOUCH_EVENT,
   touchmove: TOUCH_EVENT,
   touchend: TOUCH_EVENT,
