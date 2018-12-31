@@ -1,15 +1,15 @@
 // type
-type tap = 'tap' | ''
-type bounceOptions = Partial<bounceConfig> | boolean
-type wheelOptions = Partial<wheelConfig> | boolean
-type snapOptions = Partial<snapConfig> | boolean
-type scrollbarOptions = Partial<scrollbarConfig> | boolean
-type pullDownRefreshOptions = Partial<pullDownRefreshConfig> | boolean
-type pullUpLoadOptions = Partial<pullUpLoadConfig> | boolean
-type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
-type zoomOptions = Partial<zoomConfig> | boolean
-type infinityOptions = Partial<infinityConfig> | boolean
-type dblclickOptions = Partial<dblclickConfig> | boolean
+export type tap = 'tap' | ''
+export type bounceOptions = Partial<bounceConfig> | boolean
+export type pickerOptions = Partial<pickerConfig> | boolean
+export type slideOptions = Partial<slideConfig> | boolean
+export type scrollbarOptions = Partial<scrollbarConfig> | boolean
+export type pullDownRefreshOptions = Partial<pullDownRefreshConfig> | boolean
+export type pullUpLoadOptions = Partial<pullUpLoadConfig> | boolean
+export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
+export type zoomOptions = Partial<zoomConfig> | boolean
+export type infinityOptions = Partial<infinityConfig> | boolean
+export type dblclickOptions = Partial<dblclickConfig> | boolean
 
 
 // enum
@@ -28,7 +28,7 @@ interface bounceConfig {
   right: boolean
 }
 
-interface wheelConfig {
+interface pickerConfig {
   selectedIndex: number,
   rotate: number,
   adjustTime: number
@@ -36,7 +36,7 @@ interface wheelConfig {
   wheelItemClass: string
 }
 
-interface snapConfig {
+interface slideConfig {
   loop: boolean,
   el: HTMLElement,
   threshold: number,
@@ -84,52 +84,4 @@ interface infinityConfig {
 
 interface dblclickConfig {
   delay: number
-}
-
-export interface BScrollOptions {
-  [key: string]:any,
-  startX: number,
-  startY: number,
-  scrollX: boolean,
-  scrollY: boolean,
-  freeScroll: boolean,
-  directionLockThreshold: number,
-  eventPassthrough: string,
-  click: boolean,
-  tap: tap,
-  bounce: bounceOptions,
-  bounceTime: number,
-  momentum: boolean,
-  momentumLimitTime: number,
-  momentumLimitDistance: number,
-  swipeTime: number,
-  swipeBounceTime: number,
-  deceleration: number,
-  flickLimitTime: number,
-  flickLimitDistance: number,
-  resizePolling: number,
-  probeType: ProbeType,
-  preventDefault: boolean,
-  preventDefaultException: {
-    tagName?: RegExp
-    className?: RegExp
-  },
-  HWCompositing: boolean,
-  useTransition: boolean,
-  useTransform: boolean,
-  bindToWrapper: boolean,
-  disableMouse: boolean | '',
-  disableTouch: boolean | '',
-  observeDOM: boolean,
-  autoBlur: boolean,
-  stopPropagation: boolean,
-  wheel: wheelOptions,
-  snap: snapOptions,
-  scrollbar: scrollbarOptions,
-  pullDownRefresh: pullDownRefreshOptions,
-  pullUpLoad: pullUpLoadOptions,
-  mouseWheel: mouseWheelOptions,
-  zoom: zoomOptions,
-  infinity: infinityOptions,
-  dblclick: dblclickOptions
 }

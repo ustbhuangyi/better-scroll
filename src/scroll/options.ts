@@ -1,18 +1,76 @@
 import { hasTransition, hasTransform, hasTouch } from '../util/dom'
+import {
+  tap,
+  bounceOptions,
+  pickerOptions,
+  slideOptions,
+  scrollbarOptions,
+  pullDownRefreshOptions,
+  pullUpLoadOptions,
+  mouseWheelOptions,
+  zoomOptions,
+  infinityOptions,
+  dblclickOptions
+} from '../../types/options'
 
 export default class Options {
   [key: string]: any
+  startX: number
+  startY: number
+  scrollX: boolean
+  scrollY: boolean
+  freeScroll: boolean
+  directionLockThreshold: number
+  eventPassthrough: string
+  click: boolean
+  tap: tap
+  bounce: bounceOptions
+  bounceTime: number
+  momentum: boolean
+  momentumLimitTime: number
+  momentumLimitDistance: number
+  swipeTime: number
+  swipeBounceTime: number
+  deceleration: number
+  flickLimitTime: number
+  flickLimitDistance: number
+  resizePolling: number
+  probeType: number
+  stopPropagation: boolean
+  preventDefault: boolean
+  preventDefaultException: {
+    tagName?: RegExp
+    className?: RegExp
+  }
+  HWCompositing: boolean
+  useTransition: boolean
+  useTransform: boolean
+  bindToWrapper: boolean
+  disableMouse: boolean | ''
+  disableTouch: boolean | ''
+  observeDOM: boolean
+  autoBlur: boolean
+  // plugins options
+  picker: pickerOptions
+  slide: slideOptions
+  scrollbar: scrollbarOptions
+  pullDownRefresh: pullDownRefreshOptions
+  pullUpLoad: pullUpLoadOptions
+  mouseWheel: mouseWheelOptions
+  zoom: zoomOptions
+  infinity: infinityOptions
+  dblclick: dblclickOptions
   constructor() {
-    this.set('startX', 0)
-    this.set('startY', 0)
+    this.startX = 0
+    this.startY = 0
 
-    this.set('scrollX', false)
-    this.set('scrollY', true)
-    this.set('freeScroll', false)
-    this.set('directionLockThreshold', 5)
-    this.set('eventPassthrough', '')
-    this.set('click', false)
-    this.set('tap', '')
+    this.scrollX = false
+    this.scrollY = true
+    this.freeScroll = false
+    this.directionLockThreshold = 5
+    this.eventPassthrough = ''
+    this.click = false
+    this.tap = ''
 
     /**
      * support any side
@@ -23,39 +81,39 @@ export default class Options {
      *   right: true
      * }
      */
-    this.set('bounce', true)
-    this.set('bounceTime', 800)
+    this.bounce = true
+    this.bounceTime = 800
 
-    this.set('momentum', true)
-    this.set('momentumLimitTime', 300)
-    this.set('momentumLimitDistance', 15)
+    this.momentum = true
+    this.momentumLimitTime = 300
+    this.momentumLimitDistance = 15
 
-    this.set('swipeTime', 2500)
-    this.set('swipeBounceTime', 500)
+    this.swipeTime = 2500
+    this.swipeBounceTime = 500
 
-    this.set('deceleration', 0.0015)
+    this.deceleration = 0.0015
 
-    this.set('flickLimitTime', 200)
-    this.set('flickLimitDistance', 100)
+    this.flickLimitTime = 200
+    this.flickLimitDistance = 100
 
-    this.set('resizePolling', 60)
-    this.set('probeType', 0)
+    this.resizePolling = 60
+    this.probeType = 0
 
-    this.set('stopPropagation', false)
-    this.set('preventDefault', true)
-    this.set('preventDefaultException', {
+    this.stopPropagation = false
+    this.preventDefault = true
+    this.preventDefaultException = {
       tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
-    })
+    }
 
-    this.set('HWCompositing', true)
+    this.HWCompositing = true
 
-    this.set('useTransition', true)
-    this.set('useTransform', true)
-    this.set('bindToWrapper', false)
-    this.set('disableMouse', hasTouch)
-    this.set('disableTouch', !hasTouch)
-    this.set('observeDOM', true)
-    this.set('autoBlur', true)
+    this.useTransition = true
+    this.useTransform = true
+    this.bindToWrapper = false
+    this.disableMouse = hasTouch
+    this.disableTouch = !hasTouch
+    this.observeDOM = true
+    this.autoBlur = true
 
     // plugins config
 
@@ -69,7 +127,7 @@ export default class Options {
      *   wheelItemClass: 'wheel-item'
      * }
      */
-    this.set('picker', false)
+    this.picker = false
 
     /**
      * for slide
@@ -89,7 +147,7 @@ export default class Options {
      *   listenFlick: true
      * }
      */
-    this.set('slide', false)
+    this.slide = false
 
     /**
      * for scrollbar
@@ -98,7 +156,7 @@ export default class Options {
      *   interactive: false
      * }
      */
-    this.set('scrollbar', false)
+    this.scrollbar = false
 
     /**
      * for pull down and refresh
@@ -107,7 +165,7 @@ export default class Options {
      *   stop: 20
      * }
      */
-    this.set('pullDownRefresh', false)
+    this.pullDownRefresh = false
 
     /**
      * for pull up and load
@@ -115,7 +173,7 @@ export default class Options {
      *   threshold: 50
      * }
      */
-    this.set('pullUpLoad', false)
+    this.pullUpLoad = false
 
     /**
      * for mouse wheel
@@ -125,7 +183,7 @@ export default class Options {
      *   easeTime: 300
      * }
      */
-    this.set('mouseWheel', false)
+    this.mouseWheel = false
 
     /**
      * for zoom
@@ -135,7 +193,7 @@ export default class Options {
      *   max: 4
      * }
      */
-    this.set('zoom', false)
+    this.zoom = false
 
     /**
      * for infinity
@@ -148,7 +206,7 @@ export default class Options {
      *   }
      * }
      */
-    this.set('infinity', false)
+    this.infinity = false
 
     /**
      * for double click
@@ -156,10 +214,7 @@ export default class Options {
      *   delay: 300
      * }
      */
-    this.set('dblclick', false)
-  }
-  set(key: string, value: any) {
-    this[key] = value
+    this.dblclick = false
   }
   merge(options: { [key: string]: any }) {
     for (let key in options) {
