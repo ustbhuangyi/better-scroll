@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
@@ -58,7 +58,6 @@
     "url": "git@github.com:ustbhuangyi/better-scroll.git"
   },
   "dependencies": {
-    "babel-runtime": "^6.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
