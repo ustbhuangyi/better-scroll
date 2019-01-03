@@ -149,7 +149,7 @@ const DEFAULT_OPTIONS = {
 }
 
 export function initMixin(BScroll) {
-  BScroll.prototype._init = function (el, options) {
+  BScroll.prototype._init = function (options) {
     this._handleOptions(options)
 
     // init private custom events
@@ -282,7 +282,7 @@ export function initMixin(BScroll) {
     }
     let me = this
     let isInTransition = false
-    let key = this.useTransition ? 'isInTransition' : 'isAnimating'
+    let key = this.options.useTransition ? 'isInTransition' : 'isAnimating'
     Object.defineProperty(this, key, {
       get() {
         return isInTransition
