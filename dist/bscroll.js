@@ -1,6 +1,6 @@
 /*!
- * better-normal-scroll v1.13.2
- * (c) 2016-2018 ustbhuangyi
+ * better-normal-scroll v1.13.3
+ * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -8,6 +8,16 @@
 	typeof define === 'function' && define.amd ? define(factory) :
 	(global.BScroll = factory());
 }(this, (function () { 'use strict';
+
+// As of V8 6.6, depending on the size of the array, this is anywhere
+// between 1.5-10x faster than the two-arg version of Array#splice()
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++) {
+    list[index] = list[index + 1];
+  }
+
+  list.pop();
+}
 
 var slicedToArray = function () {
   function sliceIterator(arr, i) {
@@ -103,7 +113,7 @@ function eventMixin(BScroll) {
     var count = _events.length;
     while (count--) {
       if (_events[count][0] === fn || _events[count][0] && _events[count][0].fn === fn) {
-        _events[count][0] = undefined;
+        spliceOne(_events, count);
       }
     }
   };
@@ -400,7 +410,7 @@ var DEFAULT_OPTIONS = {
   probeType: 0,
   preventDefault: true,
   preventDefaultException: {
-    tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/
+    tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
   },
   HWCompositing: true,
   useTransition: true,
@@ -504,7 +514,7 @@ var DEFAULT_OPTIONS = {
 };
 
 function initMixin(BScroll) {
-  BScroll.prototype._init = function (el, options) {
+  BScroll.prototype._init = function (options) {
     this._handleOptions(options);
 
     // init private custom events
@@ -637,7 +647,7 @@ function initMixin(BScroll) {
     }
     var me = this;
     var isInTransition = false;
-    var key = this.useTransition ? 'isInTransition' : 'isAnimating';
+    var key = this.options.useTransition ? 'isInTransition' : 'isAnimating';
     Object.defineProperty(this, key, {
       get: function get() {
         return isInTransition;
@@ -3366,7 +3376,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.13.2';
+BScroll.Version = '1.13.3';
 
 return BScroll;
 
