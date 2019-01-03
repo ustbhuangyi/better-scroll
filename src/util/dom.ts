@@ -41,15 +41,11 @@ function prefixStyle(style: string) {
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
 
-interface HandleEventDOMElement {
-  handleEvent: () => void
-}
-
 export function addEvent(
   el: HTMLElement,
   type: string,
-  fn: HandleEventDOMElement,
-  capture?: any
+  fn: EventListenerOrEventListenerObject,
+  capture?: AddEventListenerOptions
 ) {
   el.addEventListener(type, fn, {
     passive: false,
@@ -60,13 +56,12 @@ export function addEvent(
 export function removeEvent(
   el: HTMLElement,
   type: string,
-  fn: handleEventDOMElement,
-  capture?: any
+  fn: EventListenerOrEventListenerObject,
+  capture?: EventListenerOptions
 ) {
   el.removeEventListener(type, fn, {
-    passive: false,
     capture: !!capture
-  } as EventListenerOptions)
+  })
 }
 
 export function offset(el: HTMLElement | null) {
@@ -122,12 +117,12 @@ export const TOUCH_EVENT = 1
 export const MOUSE_EVENT = 2
 
 export const eventType: {
-  [key: string]: number,
-  touchstart: number,
-  touchmove: number,
-  touchend: number,
-  mousedown: number,
-  mousemove: number,
+  [key: string]: number
+  touchstart: number
+  touchmove: number
+  touchend: number
+  mousedown: number
+  mousemove: number
   mouseup: number
 } = {
   touchstart: TOUCH_EVENT,
