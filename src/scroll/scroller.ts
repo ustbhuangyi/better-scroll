@@ -1,14 +1,13 @@
 import BScroll from '../index'
 import Options from './options'
-import { style } from '../util/dom'
-
-import { ease } from '../util/ease'
+import { style, assert, ease, isUndef } from '../util'
 
 export default class Scroller {
   scrollElementStyle: CSSStyleDeclaration
   bscroll: BScroll
   options: Options
   probeTimer: number
+  animateTimer: number
   scrollElement: HTMLElement
   constructor(public bs: BScroll) {
     this.options = bs.options
@@ -194,6 +193,27 @@ export default class Scroller {
     step()
   }
 
+  private translate(x: number, y: number, scale: number) {
+    assert(!isUndef(x) && !isUndef(y), 'Translate x or y is null or undefined.')
+    if (isUndef(scale)) {
+      scale = this.scale
+    }
+    if (this.options.useTransform) {
+      this.scrollerStyle[
+        style.transform
+      ] = `translate(${x}px,${y}px) scale(${scale})${this.translateZ}`
+    } else {
+      x = Math.round(x)
+      y = Math.round(y)
+      this.scrollerStyle.left = `${x}px`
+      this.scrollerStyle.top = `${y}px`
+    }
+
+    this.x = x
+    this.y = y
+    this.setScale(scale)
+  }
+
   resetPosition(time = 0, easeing = ease.bounce) {
     let x = this.x
     let roundX = Math.round(x)
@@ -225,7 +245,7 @@ export default class Scroller {
       this.isInTransition = false
       cancelAnimationFrame(this.probeTimer)
       let pos = this.getComputedPosition()
-      this._translate(pos.x, pos.y)
+      this.translate(pos.x, pos.y)
       if (this.options.wheel) {
         this.target = this.items[Math.round(-pos.y / this.itemHeight)]
       } else {

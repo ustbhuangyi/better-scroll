@@ -40,7 +40,7 @@ export default class EventEmitter {
     while (count--) {
       if (
         _events[count][0] === fn ||
-        (_events[count][0] && _events[count][0].fn === fn)
+        (_events[count][0] && (_events[count][0] as any).fn === fn)
       ) {
         _events.splice(count, 1)
       }
@@ -52,19 +52,21 @@ export default class EventEmitter {
   trigger(type: string, ...args: any[]) {
     let events = this._events[type]
     if (!events) {
-      return this
+      return
     }
 
     let len = events.length
     let eventsCopy = [...events]
+    let ret
     for (let i = 0; i < len; i++) {
       let event = eventsCopy[i]
       let [fn, context] = event
       if (fn) {
-        fn.apply(context, args)
+        let output = fn.apply(context, args)
+        ret = output === false ? output : ret
       }
     }
 
-    return this
+    return ret
   }
 }

@@ -1,19 +1,33 @@
 import BScroll from '../index'
 import Options from './options'
+
 import {
+  // const
+  DIRECTION_DOWN,
+  DIRECTION_UP,
+  DIRECTION_LEFT,
+  DIRECTION_RIGHT,
+  PROBE_DEBOUNCE,
+  PROBE_REALTIME,
+  // dom
   hasTouch,
+  TOUCH_EVENT,
   style,
   addEvent,
   removeEvent,
   preventDefaultException,
   eventType,
-  TOUCH_EVENT
-} from '../util/dom'
-import { getNow } from '../util/lang'
-import { isAndroid } from '../util/env'
+  // ease
+  ease,
+  // lang
+  getNow,
+  // env
+  isAndroid
+} from '../util'
 
 export default class Processor {
   options: Options
+  initiated: number | boolean
   moved: boolean
   distX: number
   distY: number
@@ -22,8 +36,8 @@ export default class Processor {
   movingDirectionX: number
   movingDirectionY: number
   directionLocked: number
+  resizeTimeout: number
   startTime: number
-  initiated: number | boolean
   constructor(public bs: BScroll) {
     this.options = bs.options
     this.init()
@@ -75,28 +89,19 @@ export default class Processor {
       case 'touchstart':
       case 'mousedown':
         this.start(e)
-
-        if (this.options.zoom && e.touches && e.touches.length > 1) {
-          this._zoomStart(e)
-        }
+        this.bs.trigger('processStart')
         break
       case 'touchmove':
       case 'mousemove':
-        if (this.options.zoom && e.touches && e.touches.length > 1) {
-          this._zoom(e)
-        } else {
-          this.move(e)
-        }
+        if (this.bs.trigger('processContinuing')) break
+        this.move(e)
         break
       case 'touchend':
       case 'mouseup':
       case 'touchcancel':
       case 'mousecancel':
-        if (this.scaled) {
-          this.zoomEnd(e)
-        } else {
-          this._end(e)
-        }
+        if (this.bs.trigger('processEnd')) break
+        this.end(e)
         break
       case 'orientationchange':
       case 'resize':
@@ -525,17 +530,19 @@ export default class Processor {
     })
   }
   private resize() {
-    if (!this.enabled) {
+    const { enabled, wrapper } = this.bs
+    const { resizePolling } = this.options
+    if (enabled) {
       return
     }
     // fix a scroll problem under Android condition
     if (isAndroid) {
-      this.wrapper.scrollTop = 0
+      ;(wrapper as HTMLElement).scrollTop = 0
     }
     clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = setTimeout(() => {
-      this.refresh()
-    }, this.options.resizePolling)
+    this.resizeTimeout = window.setTimeout(() => {
+      this.bs.refresh()
+    }, resizePolling)
   }
   private transitionEnd(e: Event) {
     if (e.target !== this.scroller || !this.isInTransition) {
@@ -550,7 +557,7 @@ export default class Processor {
     ) {
       this.isInTransition = false
       if (this.options.probeType !== PROBE_REALTIME) {
-        this.trigger('scrollEnd', {
+        this.bs.trigger('scrollEnd', {
           x: this.x,
           y: this.y
         })
