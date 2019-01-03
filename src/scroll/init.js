@@ -148,7 +148,7 @@ const DEFAULT_OPTIONS = {
   dblclick: false
 }
 
-export function initMixin(BScroll) {
+export function initMixin (BScroll) {
   BScroll.prototype._init = function (options) {
     this._handleOptions(options)
 
@@ -284,10 +284,10 @@ export function initMixin(BScroll) {
     let isInTransition = false
     let key = this.options.useTransition ? 'isInTransition' : 'isAnimating'
     Object.defineProperty(this, key, {
-      get() {
+      get () {
         return isInTransition
       },
-      set(newVal) {
+      set (newVal) {
         isInTransition = newVal
         // fix issue #359
         let el = me.scroller.children.length ? me.scroller.children : [me.scroller]
@@ -368,7 +368,7 @@ export function initMixin(BScroll) {
     let oldWidth = scrollerRect.width
     let oldHeight = scrollerRect.height
 
-    function check() {
+    function check () {
       if (this.destroyed) {
         return
       }
@@ -385,7 +385,7 @@ export function initMixin(BScroll) {
       next.call(this)
     }
 
-    function next() {
+    function next () {
       setTimeout(() => {
         check.call(this)
       }, 1000)

@@ -24,7 +24,7 @@ function BScroll(el, options) {
   // cache style for better performance
   this.scrollerStyle = this.scroller.style
 
-  this._init(el, options)
+  this._init(options)
 }
 
 initMixin(BScroll)
