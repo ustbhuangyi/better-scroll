@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.13.3
+ * better-normal-scroll v1.13.4
  * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
@@ -3376,7 +3376,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.13.3';
+BScroll.Version = '1.13.4';
 
 return BScroll;
 
