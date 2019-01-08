@@ -1,4 +1,4 @@
-import { hasTransition, hasTransform, hasTouch } from '../util/dom'
+import { hasTransition, hasTransform, hasTouch } from './util'
 
 // type
 export type tap = 'tap' | ''
@@ -13,16 +13,8 @@ export type zoomOptions = Partial<zoomConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
 export type dblclickOptions = Partial<dblclickConfig> | boolean
 
-// enum
-export enum ProbeType {
-  NO_SCROLL,
-  NOT_REAL_TIME_SCROll,
-  REAL_TIME_SCROLL,
-  REAL_TIME_MOMENTUM_SCROLL
-}
-
 // interface
-interface bounceConfig {
+export interface bounceConfig {
   top: boolean
   bottom: boolean
   left: boolean

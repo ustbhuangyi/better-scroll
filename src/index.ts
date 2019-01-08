@@ -1,30 +1,23 @@
 import { PluginObject, PluginFunction } from '../types/plugin'
 
-import EventEmitter from './scroll/event-emitter'
-import BScrollOptions from './scroll/options'
-import BScrollProcessor from './scroll/processor'
-import BScrollScroller from './scroll/scroller'
+import EventEmitter from './EventEmitter'
+import Options from './Options'
+import ActionsHandler from './ActionsHandler'
+import Scroller from './scroller/Scroller'
 
 import { warn } from './util/debug'
 import { isUndef } from './util/lang'
 
 import { style, offset, getRect } from './util/dom'
 
-// Type Guards
-export function isPluginObject(
-  plugin: PluginObject | PluginFunction
-): plugin is PluginObject {
-  return typeof (plugin as PluginObject).install === 'function'
+export interface Plugin {
+  install: (ctor: BScroll, options?: any[]) => void
+  new (): void
 }
 
-interface plugin {
-  [key: string]: {
-    new (bscroll: BScroll): void
-  }
-}
 export default class BScroll extends EventEmitter {
   static readonly Version: string = '2.0.0'
-  static _installedPlugins?: (Object | Function)[]
+  static _installedPlugins?: Plugin[]
   static _plugins: plugin
 
   wrapper: HTMLElement | null
@@ -32,28 +25,45 @@ export default class BScroll extends EventEmitter {
   scrollElementStyle: CSSStyleDeclaration
   x: number
   y: number
-  directionX?: number
-  directionY?: number
-  options: BScrollOptions
-  translateZ?: string
+  directionX: number
+  directionY: number
+  options: Options
+  translateZ: string
   lastScale: number
   scale: number
   enabled: boolean
+  wrapperWidth: number
+  wrapperHeight: number
+  scrollerWidth: number
+  scrollerHeight: number
+  relativeX: number
+  relativeY: number
+  minScrollX: number
+  maxScrollX: number
+  minScrollY: number
+  maxScrollY: number
+  hasHorizontalScroll: boolean
+  hasVerticalScroll: boolean
+  isAnimating: boolean
+  isInTransition: boolean
+  stopFromTransition: boolean
+  actionsHandler: ActionsHandler
+  scroller: Scroller
+  wrapperOffset: {
+    left: number
+    top: number
+  }
   [key: string]: any
 
-  static use(plugin: PluginObject | PluginFunction, ...options: any[]) {
+  static use(plugin: Plugin, ...options: any[]) {
     const installedPlugins =
       this._installedPlugins || (this._installedPlugins = [])
     if (installedPlugins.indexOf(plugin) > -1) {
       return this
     }
-
     options.unshift(this)
-    if (isPluginObject(plugin)) {
-      plugin.install.apply(plugin, options as any)
-    } else if (typeof plugin === 'function') {
-      plugin.apply(null, options as any)
-    }
+    plugin.install && plugin.install.apply(plugin, options as any)
+
     installedPlugins.push(plugin)
     return this
   }
@@ -63,7 +73,7 @@ export default class BScroll extends EventEmitter {
     ctor: {
       new (): void
     }
-  ): void {
+  ) {
     if (!this._plugins) {
       this._plugins = {}
     }
@@ -88,30 +98,22 @@ export default class BScroll extends EventEmitter {
       warn('The wrapper need at least one child element to be scroller.')
       return
     }
-    this.options = new BScrollOptions().merge(options).process()
+    this.options = new Options().merge(options).process()
     this.init()
   }
 
   private init() {
-    const { observeDOM, autoBlur, snap, startX, startY } = this.options
+    const { autoBlur, startX, startY } = this.options
 
     this.x = 0
     this.y = 0
-    this.directionX = 0
-    this.directionY = 0
 
     this.setScale(1)
 
-    this.processor = new BScrollProcessor(this)
-    this.scroller = new BScrollScroller(this)
+    this.actionsHandler = new ActionsHandler(this)
+    this.scroller = new Scroller(this)
 
     this.applyPlugins()
-
-    this.watchTransition()
-
-    if (observeDOM) {
-      this.initDOMObserver()
-    }
 
     if (autoBlur) {
       this.handleAutoBlur()
@@ -119,16 +121,16 @@ export default class BScroll extends EventEmitter {
 
     this.refresh()
 
-    if (!snap) {
-      this.scrollTo(startX, startY)
-    }
-
     this.enable()
+
+    this.scrollTo(startX, startY)
   }
+
   setScale(scale: number) {
     this.lastScale = isUndef(this.scale) ? scale : this.scale
     this.scale = scale
   }
+
   private applyPlugins() {
     const options = this.options
     const _plugins = (<typeof BScroll>this.constructor)._plugins || {}
@@ -140,93 +142,7 @@ export default class BScroll extends EventEmitter {
       }
     }
   }
-  private initDOMObserver() {
-    if (typeof MutationObserver !== 'undefined') {
-      let timer: number
-      let observer = new MutationObserver(mutations => {
-        // don't do any refresh during the transition, or outside of the boundaries
-        if (this.shouldNotRefresh()) {
-          return
-        }
-        let immediateRefresh = false
-        let deferredRefresh = false
-        for (let i = 0; i < mutations.length; i++) {
-          const mutation = mutations[i]
-          if (mutation.type !== 'attributes') {
-            immediateRefresh = true
-            break
-          } else {
-            if (mutation.target !== this.scroller) {
-              deferredRefresh = true
-              break
-            }
-          }
-        }
-        if (immediateRefresh) {
-          this.refresh()
-        } else if (deferredRefresh) {
-          // attributes changes too often
-          clearTimeout(timer)
-          timer = window.setTimeout(() => {
-            if (!this.shouldNotRefresh()) {
-              this.refresh()
-            }
-          }, 60)
-        }
-      })
-      const config = {
-        attributes: true,
-        childList: true,
-        subtree: true
-      }
-      observer.observe(this.scroller, config)
 
-      // TODO
-      this.on('destroy', () => {
-        observer.disconnect()
-      })
-    } else {
-      this.checkDOMUpdate()
-    }
-  }
-  private shouldNotRefresh() {
-    let outsideBoundaries =
-      this.x > this.minScrollX ||
-      this.x < this.maxScrollX ||
-      this.y > this.minScrollY ||
-      this.y < this.maxScrollY
-    return this.isInTransition || this.stopFromTransition || outsideBoundaries
-  }
-  private checkDOMUpdate() {
-    let scrollerRect = getRect(this.scroller)
-    let oldWidth = scrollerRect.width
-    let oldHeight = scrollerRect.height
-
-    function check(this: BScroll) {
-      if (this.destroyed) {
-        return
-      }
-      scrollerRect = getRect(this.scroller)
-      let newWidth = scrollerRect.width
-      let newHeight = scrollerRect.height
-
-      if (oldWidth !== newWidth || oldHeight !== newHeight) {
-        this.refresh()
-      }
-      oldWidth = newWidth
-      oldHeight = newHeight
-
-      next.call(this)
-    }
-
-    function next(this: BScroll) {
-      setTimeout(() => {
-        check.call(this)
-      }, 1000)
-    }
-
-    next.call(this)
-  }
   private handleAutoBlur() {
     this.on('scrollStart', () => {
       let activeElement = document.activeElement as HTMLElement
@@ -247,9 +163,9 @@ export default class BScroll extends EventEmitter {
     this.wrapperWidth = wrapperRect.width
     this.wrapperHeight = wrapperRect.height
 
-    let scrollerRect = getRect(this.scroller)
-    this.scrollerWidth = Math.round(scrollerRect.width * this.scale)
-    this.scrollerHeight = Math.round(scrollerRect.height * this.scale)
+    let scrollerRect = getRect(this.scrollElement)
+    this.scrollElementWidth = Math.round(scrollerRect.width * this.scale)
+    this.scrollElementHeight = Math.round(scrollerRect.height * this.scale)
 
     this.relativeX = scrollerRect.left
     this.relativeY = scrollerRect.top
@@ -269,12 +185,12 @@ export default class BScroll extends EventEmitter {
 
     if (!this.hasHorizontalScroll) {
       this.maxScrollX = this.minScrollX
-      this.scrollerWidth = this.wrapperWidth
+      this.scrollElementWidth = this.wrapperWidth
     }
 
     if (!this.hasVerticalScroll) {
       this.maxScrollY = this.minScrollY
-      this.scrollerHeight = this.wrapperHeight
+      this.scrollElementHeight = this.wrapperHeight
     }
 
     this.endTime = 0
@@ -286,42 +202,14 @@ export default class BScroll extends EventEmitter {
 
     !this.scaled && this.resetPosition()
   }
-  getComputedPosition() {
-    let matrix: CSSStyleDeclaration | Array<string> =
-      window.getComputedStyle(this.scrollElement, null) || {}
-    let x
-    let y
-    const { useTransform } = this.options
 
-    if (useTransform) {
-      matrix = matrix[style.transform as any].split(')')[0].split(', ')
-      x = +(matrix[12] || matrix[4])
-      y = +(matrix[13] || matrix[5])
-    } else {
-      x = +(matrix.left as string).replace(/[^-\d.]/g, '')
-      y = +(matrix.top as string).replace(/[^-\d.]/g, '')
-    }
-
-    return {
-      x,
-      y
-    }
-  }
   enable() {
     this.enabled = true
   }
+
   disable() {
     this.enabled = false
   }
-  destroy() {
-    const { useTransition } = this.options
-    this.destroyed = true
-    this.trigger('destroy')
-    useTransition
-      ? cancelAnimationFrame(this.probeTimer)
-      : cancelAnimationFrame(this.animateTimer)
-    this._removeDOMEvents()
-    // remove custom events
-    this._events = {}
-  }
+
+  destroy() {}
 }

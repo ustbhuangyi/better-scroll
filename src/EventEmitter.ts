@@ -63,7 +63,7 @@ export default class EventEmitter {
       let [fn, context] = event
       if (fn) {
         let output = fn.apply(context, args)
-        ret = output === false ? output : ret
+        ret = output === true ? output : ret
       }
     }
 
