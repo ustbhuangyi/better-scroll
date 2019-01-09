@@ -3,52 +3,31 @@ import { PluginObject, PluginFunction } from '../types/plugin'
 import EventEmitter from './EventEmitter'
 import Options from './Options'
 import ActionsHandler from './ActionsHandler'
-import Scroller from './scroller/Scroller'
 
-import { warn } from './util/debug'
-import { isUndef } from './util/lang'
-
-import { style, offset, getRect } from './util/dom'
+import { style, offset, getRect, warn } from './util'
 
 export interface Plugin {
   install: (ctor: BScroll, options?: any[]) => void
   new (): void
 }
 
+interface PluginsMap {
+  [name: string]: {
+    new (bs: BScroll): void
+  }
+}
+
 export default class BScroll extends EventEmitter {
   static readonly Version: string = '2.0.0'
   static _installedPlugins?: Plugin[]
-  static _plugins: plugin
+  static _pluginsMap: PluginsMap
 
   wrapper: HTMLElement | null
   scrollElement: HTMLElement
-  scrollElementStyle: CSSStyleDeclaration
-  x: number
-  y: number
-  directionX: number
-  directionY: number
   options: Options
-  translateZ: string
-  lastScale: number
-  scale: number
   enabled: boolean
-  wrapperWidth: number
-  wrapperHeight: number
-  scrollerWidth: number
-  scrollerHeight: number
-  relativeX: number
-  relativeY: number
-  minScrollX: number
-  maxScrollX: number
-  minScrollY: number
-  maxScrollY: number
-  hasHorizontalScroll: boolean
-  hasVerticalScroll: boolean
-  isAnimating: boolean
-  isInTransition: boolean
-  stopFromTransition: boolean
   actionsHandler: ActionsHandler
-  scroller: Scroller
+  hooks: EventEmitter
   wrapperOffset: {
     left: number
     top: number
@@ -74,15 +53,15 @@ export default class BScroll extends EventEmitter {
       new (): void
     }
   ) {
-    if (!this._plugins) {
-      this._plugins = {}
+    if (!this._pluginsMap) {
+      this._pluginsMap = {}
     }
-    if (this._plugins[name]) {
+    if (this._pluginsMap[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
     }
-    this._plugins[name] = ctor
+    this._pluginsMap[name] = ctor
   }
 
   constructor(el: HTMLElement | string, options: object) {
@@ -99,44 +78,30 @@ export default class BScroll extends EventEmitter {
       return
     }
     this.options = new Options().merge(options).process()
+    this.hooks = new EventEmitter()
     this.init()
   }
 
   private init() {
-    const { autoBlur, startX, startY } = this.options
+    new ActionsHandler().apply(this)
 
-    this.x = 0
-    this.y = 0
-
-    this.setScale(1)
-
-    this.actionsHandler = new ActionsHandler(this)
-    this.scroller = new Scroller(this)
-
+    this.hooks.trigger('init')
     this.applyPlugins()
 
-    if (autoBlur) {
+    if (this.options.autoBlur) {
       this.handleAutoBlur()
     }
 
     this.refresh()
-
     this.enable()
-
-    this.scrollTo(startX, startY)
-  }
-
-  setScale(scale: number) {
-    this.lastScale = isUndef(this.scale) ? scale : this.scale
-    this.scale = scale
   }
 
   private applyPlugins() {
     const options = this.options
-    const _plugins = (<typeof BScroll>this.constructor)._plugins || {}
+    const _pluginsMap = (<typeof BScroll>this.constructor)._pluginsMap || {}
     let ctor
-    for (let pluginName in _plugins) {
-      ctor = _plugins[pluginName]
+    for (let pluginName in _pluginsMap) {
+      ctor = _pluginsMap[pluginName]
       if (options[pluginName]) {
         typeof ctor === 'function' && new ctor(this)
       }
@@ -156,51 +121,8 @@ export default class BScroll extends EventEmitter {
     })
   }
   refresh() {
-    const wrapper = this.wrapper as HTMLElement
-    const isWrapperStatic =
-      window.getComputedStyle(wrapper, null).position === 'static'
-    let wrapperRect = getRect(wrapper)
-    this.wrapperWidth = wrapperRect.width
-    this.wrapperHeight = wrapperRect.height
-
-    let scrollerRect = getRect(this.scrollElement)
-    this.scrollElementWidth = Math.round(scrollerRect.width * this.scale)
-    this.scrollElementHeight = Math.round(scrollerRect.height * this.scale)
-
-    this.relativeX = scrollerRect.left
-    this.relativeY = scrollerRect.top
-
-    if (isWrapperStatic) {
-      this.relativeX -= wrapperRect.left
-      this.relativeY -= wrapperRect.top
-    }
-
-    this.minScrollX = 0
-    this.minScrollY = 0
-
-    this.hasHorizontalScroll =
-      this.options.scrollX && this.maxScrollX < this.minScrollX
-    this.hasVerticalScroll =
-      this.options.scrollY && this.maxScrollY < this.minScrollY
-
-    if (!this.hasHorizontalScroll) {
-      this.maxScrollX = this.minScrollX
-      this.scrollElementWidth = this.wrapperWidth
-    }
-
-    if (!this.hasVerticalScroll) {
-      this.maxScrollY = this.minScrollY
-      this.scrollElementHeight = this.wrapperHeight
-    }
-
-    this.endTime = 0
-    this.directionX = 0
-    this.directionY = 0
-    this.wrapperOffset = offset(this.wrapper)
-
+    this.hooks.trigger('refresh', this)
     this.trigger('refresh')
-
-    !this.scaled && this.resetPosition()
   }
 
   enable() {
