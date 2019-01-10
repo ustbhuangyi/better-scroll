@@ -1,8 +1,8 @@
 import { PluginObject, PluginFunction } from '../types/plugin'
 
-import EventEmitter from './EventEmitter'
+import EventEmitter from './base/EventEmitter'
 import Options from './Options'
-import ActionsHandler from './ActionsHandler'
+import ActionsHandler from './base/ActionsHandler'
 
 import { style, offset, getRect, warn } from './util'
 
@@ -18,7 +18,7 @@ interface PluginsMap {
 }
 
 export default class BScroll extends EventEmitter {
-  static readonly Version: string = '2.0.0'
+  static readonly version: string = '2.0.0'
   static _installedPlugins?: Plugin[]
   static _pluginsMap: PluginsMap
 
@@ -65,7 +65,7 @@ export default class BScroll extends EventEmitter {
   }
 
   constructor(el: HTMLElement | string, options: object) {
-    super()
+    super(['refresh'])
     this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
 
     if (!this.wrapper) {
@@ -78,14 +78,17 @@ export default class BScroll extends EventEmitter {
       return
     }
     this.options = new Options().merge(options).process()
-    this.hooks = new EventEmitter()
+    this.hooks = new EventEmitter([
+      'init',
+      'refresh'
+    ])
     this.init()
   }
 
   private init() {
-    new ActionsHandler().apply(this)
+    new ActionsHandler(this.wrapper)
 
-    this.hooks.trigger('init')
+    this.hooks.trigger(this.hooks.eventTypes.init)
     this.applyPlugins()
 
     if (this.options.autoBlur) {
@@ -121,8 +124,8 @@ export default class BScroll extends EventEmitter {
     })
   }
   refresh() {
-    this.hooks.trigger('refresh', this)
-    this.trigger('refresh')
+    this.hooks.trigger(this.hooks.eventTypes.refresh, this)
+    this.trigger(this.eventTypes.refresh)
   }
 
   enable() {

@@ -1,37 +1,7 @@
-import BScroll from './index'
-import Options, { bounceConfig } from './Options'
+import BScroll from '../index'
+import Options, { bounceConfig } from '../Options'
 import EventEmitter from './EventEmitter'
-
-export interface TouchEvent extends UIEvent {
-  touches: TouchList
-  targetTouches: TouchList
-  changedTouches: TouchList
-  altKey: boolean
-  metaKey: boolean
-  ctrlKey: boolean
-  shiftKey: boolean
-  rotation: number
-  scale: number
-  button: number
-  _constructed?: boolean
-}
-
-interface TouchList {
-  length: number
-  [index: number]: Touch
-  item: (index: number) => Touch
-}
-
-interface Touch {
-  identifier: number
-  target: EventTarget
-  screenX: number
-  screenY: number
-  clientX: number
-  clientY: number
-  pageX: number
-  pageY: number
-}
+import { TouchEvent } from '../util/Touch'
 
 import {
   PROBE_THROTTLE,
@@ -53,7 +23,7 @@ import {
   getNow,
   // env
   isAndroid
-} from './util'
+} from '../util'
 
 export default class ActionsHandler {
   bs: BScroll
@@ -71,19 +41,19 @@ export default class ActionsHandler {
   }
 
   private addDOMEvents() {
-    let eventOperation = addEvent
+    const eventOperation = addEvent
     this.handleDOMEvents(eventOperation)
   }
 
   private removeDOMEvents() {
-    let eventOperation = removeEvent
+    const eventOperation = removeEvent
     this.handleDOMEvents(eventOperation)
   }
 
   private handleDOMEvents(eventOperation: Function) {
     const { wrapper, scrollElement } = this.bs
     const { bindToWrapper, click, disableMouse, disableTouch } = this.options
-    let target = bindToWrapper ? wrapper : window
+    const target = bindToWrapper ? wrapper : window
     eventOperation(window, 'orientationchange', this)
     eventOperation(window, 'resize', this)
 

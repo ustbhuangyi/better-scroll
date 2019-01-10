@@ -1,15 +1,27 @@
+import { warn } from '../util/debug'
+
 interface EventsMap {
   [name: string]: [Function, Object][]
 }
 
+interface TypesMap {
+  [type: string]: string
+}
+
 export default class EventEmitter {
   _events: EventsMap
+  eventTypes: TypesMap
 
-  constructor() {
+  constructor(names: string[]) {
     this._events = {}
+    this.eventTypes = {}
+    names.forEach((type: string) => {
+      this.eventTypes[type] = type
+    })
   }
 
   on(type: string, fn: Function, context = this) {
+    this._checkInTypes(type)
     if (!this._events[type]) {
       this._events[type] = []
     }
@@ -19,6 +31,7 @@ export default class EventEmitter {
   }
 
   once(type: string, fn: Function, context = this) {
+    this._checkInTypes(type)
     const magic = (...args: any[]) => {
       this.off(type, magic)
 
@@ -31,6 +44,7 @@ export default class EventEmitter {
   }
 
   off(type: string, fn: Function) {
+    this._checkInTypes(type)
     let _events = this._events[type]
     if (!_events) {
       return this
@@ -50,6 +64,7 @@ export default class EventEmitter {
   }
 
   trigger(type: string, ...args: any[]) {
+    this._checkInTypes(type)
     let events = this._events[type]
     if (!events) {
       return
@@ -68,5 +83,13 @@ export default class EventEmitter {
     }
 
     return ret
+  }
+
+  private _checkInTypes(type: string) {
+    const types = this.eventTypes
+    const inTypes = types[type] === type
+    if (!inTypes) {
+      warn(`EventEmitter used unknown event type: "${type}", should be oneof ${types}`)
+    }
   }
 }
