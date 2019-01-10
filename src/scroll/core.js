@@ -292,7 +292,6 @@ export function coreMixin(BScroll) {
       this.isInTransition = true
     } else {
       if (this.options.wheel) {
-        newY = this._getWheelValidY(newY)
         time = this.options.wheel.adjustTime || 400
       }
     }
@@ -546,6 +545,10 @@ export function coreMixin(BScroll) {
       this._transitionProperty()
       this._transitionTimingFunction(easing.style)
       this._transitionTime(time)
+      // check valid item
+      if (this.options.wheel) {
+        y = this._getWheelValidY(y)
+      }
       this._translate(x, y)
 
       if (time && this.options.probeType === PROBE_REALTIME) {

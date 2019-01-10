@@ -1,4 +1,5 @@
 import { warn } from '../util/debug'
+import { DIRECTION_UP } from '../util/const'
 
 export function wheelMixin(BScroll) {
   BScroll.prototype.wheelTo = function (index = 0) {
@@ -39,33 +40,32 @@ export function wheelMixin(BScroll) {
   }
 
   BScroll.prototype._getWheelValidIndex = function (y) {
-    let tempIndex = Math.round(-y / this.itemHeight)
-    let step = 1
-    let direction = tempIndex * this.itemHeight < -y ? 1 : -1
-    let reverse = true
+    const STEP_SIZE = 1
+    let setpCount = 1
+    let hasReversed = false
+    let validIndex = Math.abs(Math.round(-y / this.itemHeight))
+    let direction = this.movingDirectionY === DIRECTION_UP ? STEP_SIZE : -STEP_SIZE
 
     // has no valid item
     if (!this.wheelHasValidIndex) {
-      return tempIndex
+      return validIndex
     }
 
-    // check tempIndex valid or not
-    while (this.items[tempIndex].className.indexOf('disabled') !== -1) {
-      // has reversed, step reduced to 1, in one direction
-      if (!reverse) {
-        step = 1
-      }
-      tempIndex += step * direction
-      step++
-      if (reverse) {
+    // check index valid or not
+    while (this.items[validIndex].className.indexOf('disabled') !== -1) {
+      validIndex += STEP_SIZE * direction
+      setpCount++
+      // In one direction, at the end, reversed direction
+      if (!hasReversed && (validIndex < 0 || validIndex >= this.items.length)) {
+        // Reversed
         direction = -direction
-      }
-      if ((tempIndex < 0 || tempIndex >= this.items.length) && reverse) {
-        tempIndex += step * direction
-        reverse = false
+        validIndex += setpCount * direction
+        // has reversed, setpCount reduced to 1, in another direction
+        setpCount = 1
+        hasReversed = true
       }
     }
-    return tempIndex
+    return validIndex
   }
 
   // get valid y
