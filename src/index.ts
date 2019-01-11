@@ -1,10 +1,8 @@
-import { PluginObject, PluginFunction } from '../types/plugin'
-
 import EventEmitter from './base/EventEmitter'
 import Options from './Options'
-import ActionsHandler from './base/ActionsHandler'
+import Scroller from './scroller/Scroller'
 
-import { style, offset, getRect, warn } from './util'
+import { warn } from './util'
 
 export interface Plugin {
   install: (ctor: BScroll, options?: any[]) => void
@@ -22,16 +20,9 @@ export default class BScroll extends EventEmitter {
   static _installedPlugins?: Plugin[]
   static _pluginsMap: PluginsMap
 
-  wrapper: HTMLElement | null
-  scrollElement: HTMLElement
+  scroller: Scroller
   options: Options
-  enabled: boolean
-  actionsHandler: ActionsHandler
   hooks: EventEmitter
-  wrapperOffset: {
-    left: number
-    top: number
-  }
   [key: string]: any
 
   static use(plugin: Plugin, ...options: any[]) {
@@ -64,29 +55,28 @@ export default class BScroll extends EventEmitter {
     this._pluginsMap[name] = ctor
   }
 
-  constructor(el: HTMLElement | string, options: object) {
-    super(['refresh'])
-    this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
+  constructor(el: HTMLElement | string, options?: object) {
+    super(['refresh', 'scrollStart'])
+    const wrapper = (typeof el === 'string'
+      ? document.querySelector(el)
+      : el) as HTMLElement
 
-    if (!this.wrapper) {
+    if (!wrapper) {
       warn('Can not resolve the wrapper DOM.')
       return
     }
-    this.scrollElement = this.wrapper.children[0] as HTMLElement
-    if (!this.scrollElement) {
+    const scrollElement = wrapper.children[0]
+    if (!scrollElement) {
       warn('The wrapper need at least one child element to be scroller.')
       return
     }
     this.options = new Options().merge(options).process()
-    this.hooks = new EventEmitter([
-      'init',
-      'refresh'
-    ])
-    this.init()
+    this.hooks = new EventEmitter(['init'])
+    this.init(wrapper)
   }
 
-  private init() {
-    new ActionsHandler(this.wrapper)
+  private init(wrapper: HTMLElement) {
+    this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
     this.hooks.trigger(this.hooks.eventTypes.init)
     this.applyPlugins()
@@ -96,6 +86,10 @@ export default class BScroll extends EventEmitter {
     }
 
     this.refresh()
+
+    if (!this.options.slide) {
+      this.scroller.scrollTo(this.options.startX, this.options.startY)
+    }
     this.enable()
   }
 
@@ -112,7 +106,7 @@ export default class BScroll extends EventEmitter {
   }
 
   private handleAutoBlur() {
-    this.on('scrollStart', () => {
+    this.on(this.eventTypes.scrollStart, () => {
       let activeElement = document.activeElement as HTMLElement
       if (
         activeElement &&
@@ -124,17 +118,14 @@ export default class BScroll extends EventEmitter {
     })
   }
   refresh() {
-    this.hooks.trigger(this.hooks.eventTypes.refresh, this)
+    this.scroller.refresh()
     this.trigger(this.eventTypes.refresh)
+    this.scroller.resetPosition()
   }
 
-  enable() {
-    this.enabled = true
-  }
+  enable() {}
 
-  disable() {
-    this.enabled = false
-  }
+  disable() {}
 
   destroy() {}
 }

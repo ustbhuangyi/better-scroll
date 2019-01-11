@@ -1,48 +1,43 @@
-import BScroll from '../index'
-import Options, { bounceConfig } from '../Options'
 import EventEmitter from './EventEmitter'
-import { TouchEvent } from '../util/Touch'
+import { EventType, TouchEvent } from '../util'
 
 import {
-  PROBE_THROTTLE,
-  PROBE_REALTIME,
   // dom
-  hasTouch,
-  TOUCH_EVENT,
-  style,
   addEvent,
   removeEvent,
-  preventDefaultException,
-  eventType,
-  dblclick,
-  click,
-  tap,
-  // ease
-  ease,
-  // lang
-  getNow,
-  // env
-  isAndroid
+  preventDefaultExceptionFn,
+  eventTypeMap
 } from '../util'
 
+export interface Options {
+  [key: string]: any
+  bindToWrapper: boolean
+  click: boolean
+  disableMouse: boolean
+  preventDefault: boolean
+  stopPropagation: boolean
+  preventDefaultException: {
+    tagName?: RegExp
+    className?: RegExp
+  }
+}
+
 export default class ActionsHandler {
-  bs: BScroll
   options: Options
   hooks: EventEmitter
   initiated: number | boolean
-  resizeTimeout: number
-  constructor() {
-    this.addDOMEvents()
+  wrapper: HTMLElement
+  pointX: number
+  pointY: number
+  constructor(wrapper: HTMLElement, options: Options) {
+    this.hooks = new EventEmitter(['start', 'move', 'end'])
+    this.wrapper = wrapper
+    this.addDOMEvents(options)
   }
 
-  apply(bs: BScroll) {
-    this.bs = bs
-    this.options = this.bs.options
-  }
-
-  private addDOMEvents() {
+  private addDOMEvents(options: Options) {
     const eventOperation = addEvent
-    this.handleDOMEvents(eventOperation)
+    this.handleDOMEvents(eventOperation, options)
   }
 
   private removeDOMEvents() {
@@ -50,9 +45,14 @@ export default class ActionsHandler {
     this.handleDOMEvents(eventOperation)
   }
 
-  private handleDOMEvents(eventOperation: Function) {
-    const { wrapper, scrollElement } = this.bs
-    const { bindToWrapper, click, disableMouse, disableTouch } = this.options
+  private handleDOMEvents(eventOperation: Function, options?: Options) {
+    const {
+      bindToWrapper,
+      click,
+      disableMouse,
+      wrapper,
+      scroller
+    } = this.options
     const target = bindToWrapper ? wrapper : window
     eventOperation(window, 'orientationchange', this)
     eventOperation(window, 'resize', this)
@@ -68,81 +68,50 @@ export default class ActionsHandler {
       eventOperation(target, 'mouseup', this)
     }
 
-    if (hasTouch && !disableTouch) {
+    if (disableMouse) {
       eventOperation(wrapper, 'touchstart', this)
       eventOperation(target, 'touchmove', this)
       eventOperation(target, 'touchcancel', this)
       eventOperation(target, 'touchend', this)
     }
-
-    eventOperation(scrollElement, style.transitionEnd, this)
   }
   private handleEvent(e: TouchEvent) {
     switch (e.type) {
       case 'touchstart':
       case 'mousedown':
         this.start(e)
-        this.hooks.trigger('actionsStart')
         break
       case 'touchmove':
       case 'mousemove':
-        if (this.hooks.trigger('actionsContinuing') === true) return
         this.move(e)
         break
       case 'touchend':
       case 'mouseup':
       case 'touchcancel':
       case 'mousecancel':
-        if (this.hooks.trigger('actionsEnd') === true) return
         this.end(e)
-        break
-      case 'orientationchange':
-      case 'resize':
-        this.resize()
-        break
-      case 'transitionend':
-      case 'webkitTransitionEnd':
-      case 'oTransitionEnd':
-      case 'MSTransitionEnd':
-        this.transitionEnd(e)
-        break
-      case 'click':
-        if (this.bs.enabled && !e._constructed) {
-          if (
-            !preventDefaultException(
-              e.target,
-              this.options.preventDefaultException
-            )
-          ) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-        }
         break
     }
   }
   private start(e: TouchEvent) {
-    const _eventType = eventType[e.type]
+    const _eventType = eventTypeMap[e.type]
 
-    const { enabled, destroyed } = this.bs
-
-    const { preventDefault, stopPropagation } = this.options
-
-    // not mouse left button
-    if (_eventType !== TOUCH_EVENT && e.button !== 0) return
-
-    if (
-      !enabled ||
-      destroyed ||
-      (this.initiated && this.initiated !== _eventType)
-    ) {
+    if (this.initiated && this.initiated !== _eventType) {
       return
     }
     this.initiated = _eventType
 
+    // no mouse left button
+    if (_eventType === EventType.Mouse && e.button !== 0) return
+
+    const {
+      preventDefault,
+      stopPropagation,
+      preventDefaultException
+    } = this.options
     if (
       preventDefault &&
-      !preventDefaultException(e.target, this.options.preventDefaultException)
+      !preventDefaultExceptionFn(e.target, preventDefaultException)
     ) {
       e.preventDefault()
     }
@@ -150,40 +119,49 @@ export default class ActionsHandler {
       e.stopPropagation()
     }
 
-    this.hooks.trigger('start')
+    let point = (e.touches ? e.touches[0] : e) as Touch
 
-    this.bs.trigger('beforeScrollStart')
+    this.pointX = point.pageX
+    this.pointY = point.pageY
+
+    this.hooks.trigger(this.hooks.eventTypes.start)
   }
   private move(e: TouchEvent) {
-    const { enabled, destroyed } = this.bs
-    if (!enabled || destroyed || eventType[e.type] !== this.initiated) {
+    if (eventTypeMap[e.type] !== this.initiated) {
       return
     }
 
+    const {
+      preventDefault,
+      stopPropagation,
+      preventDefaultException
+    } = this.options
     if (
-      this.options.preventDefault &&
-      !preventDefaultException(e.target, this.options.preventDefaultException)
+      preventDefault &&
+      !preventDefaultExceptionFn(e.target, preventDefaultException)
     ) {
       e.preventDefault()
     }
-    if (this.options.stopPropagation) {
+    if (stopPropagation) {
       e.stopPropagation()
     }
 
-    this.hooks.trigger('move', e, this)
+    this.hooks.trigger(this.hooks.eventTypes.move)
   }
   end(e: TouchEvent) {
-    const { enabled, destroyed } = this.bs
-    if (!enabled || destroyed || eventType[e.type] !== this.initiated) {
+    if (eventTypeMap[e.type] !== this.initiated) {
       return
     }
     this.initiated = false
 
-    const { preventDefault, stopPropagation } = this.options
-
+    const {
+      preventDefault,
+      stopPropagation,
+      preventDefaultException
+    } = this.options
     if (
       preventDefault &&
-      !preventDefaultException(e.target, this.options.preventDefaultException)
+      !preventDefaultExceptionFn(e.target, preventDefaultException)
     ) {
       e.preventDefault()
     }
@@ -191,63 +169,6 @@ export default class ActionsHandler {
       e.stopPropagation()
     }
 
-    this.hooks.trigger('end', this)
-  }
-  private checkClick(e: TouchEvent) {
-    // when transition or animation is stopped manually
-    let preventClick = this.bs.stopFromTransition
-    this.bs.stopFromTransition = false
-
-    // we scrolled less than momentumLimitDistance pixels
-    if (!this.moved) {
-      if (!preventClick) {
-        if (this.options.tap) {
-          tap(e, this.options.tap)
-        }
-        if (
-          this.options.click &&
-          !preventDefaultException(
-            e.target,
-            this.options.preventDefaultException
-          )
-        ) {
-          click(e)
-        }
-        return true
-      }
-    }
-    return false
-  }
-  private resize() {
-    const { enabled, wrapper } = this.bs
-    if (!enabled) return
-    // fix a scroll problem under Android condition
-    if (isAndroid) {
-      ;(wrapper as HTMLElement).scrollTop = 0
-    }
-    clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = window.setTimeout(() => {
-      this.bs.refresh()
-    }, this.options.resizePolling)
-  }
-  private transitionEnd(e: Event) {
-    const { isInTransition, scrollElement, scroller, x, y } = this.bs
-    const { bounceTime, probeType } = this.options
-    if (e.target !== scrollElement || !isInTransition) {
-      return
-    }
-
-    scroller.transitionTime()
-    // TODO pullup
-    const needReset = this.movingDirectionY === DIRECTION_UP
-    if (!scroller.resetPosition(bounceTime, ease.bounce)) {
-      this.bs.isInTransition = false
-      if (probeType !== PROBE_REALTIME) {
-        this.bs.trigger('scrollEnd', {
-          x,
-          y
-        })
-      }
-    }
+    this.hooks.trigger(this.hooks.eventTypes.end)
   }
 }

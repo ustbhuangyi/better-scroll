@@ -1,5 +1,6 @@
 import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
+import { EventType } from './const'
 
 let elementStyle = (inBrowser && document.createElement('div').style) as any
 
@@ -113,10 +114,7 @@ export const style = {
   transitionEnd: prefixStyle('transitionEnd')
 }
 
-export const TOUCH_EVENT = 1
-export const MOUSE_EVENT = 2
-
-export const eventType: {
+export const eventTypeMap: {
   [key: string]: number
   touchstart: number
   touchmove: number
@@ -125,13 +123,13 @@ export const eventType: {
   mousemove: number
   mouseup: number
 } = {
-  touchstart: TOUCH_EVENT,
-  touchmove: TOUCH_EVENT,
-  touchend: TOUCH_EVENT,
+  touchstart: EventType.Touch,
+  touchmove: EventType.Touch,
+  touchend: EventType.Touch,
 
-  mousedown: MOUSE_EVENT,
-  mousemove: MOUSE_EVENT,
-  mouseup: MOUSE_EVENT
+  mousedown: EventType.Mouse,
+  mousemove: EventType.Mouse,
+  mouseup: EventType.Mouse
 }
 
 export function getRect(el: HTMLElement) {
@@ -153,7 +151,7 @@ export function getRect(el: HTMLElement) {
   }
 }
 
-export function preventDefaultException(
+export function preventDefaultExceptionFn(
   el: any,
   exceptions: {
     tagName?: RegExp

@@ -113,7 +113,6 @@ export default class Options {
   useTransform: boolean
   bindToWrapper: boolean
   disableMouse: boolean | ''
-  disableTouch: boolean | ''
   observeDOM: boolean
   autoBlur: boolean
   // plugins options
@@ -178,7 +177,6 @@ export default class Options {
     this.useTransform = true
     this.bindToWrapper = false
     this.disableMouse = hasTouch
-    this.disableTouch = !hasTouch
     this.observeDOM = true
     this.autoBlur = true
 
@@ -283,7 +281,8 @@ export default class Options {
      */
     this.dblclick = false
   }
-  merge(options: { [key: string]: any }) {
+  merge(options?: { [key: string]: any }) {
+    if (!options) return this
     for (let key in options) {
       this[key] = options[key]
     }

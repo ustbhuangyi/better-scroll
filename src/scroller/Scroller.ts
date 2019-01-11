@@ -1,32 +1,33 @@
-import BScroll from '../index'
-import Options, { bounceConfig } from '../Options'
-import ActionsHandler from '../ActionsHandler'
-import { TouchEvent } from '../ActionsHandler'
+import ActionsHandler, {
+  Options as ActionsHandlerOptions
+} from '../base/ActionsHandler'
+import EventEmitter from '../base/EventEmitter'
+import BScrollOptions, { bounceConfig } from '../Options'
 
 import {
-  // const
-  DIRECTION_DOWN,
-  DIRECTION_UP,
-  DIRECTION_LEFT,
-  DIRECTION_RIGHT,
+  Direction,
+  Probe,
   style,
   assert,
   ease,
   isUndef,
   getNow,
-  PROBE_REALTIME,
   offset,
   getRect,
-  PROBE_THROTTLE,
-  momentum
+  momentum,
+  TouchEvent
 } from '../util'
 
 export default class Scroller {
+  wrapper: HTMLElement
+  scrollElement: HTMLElement
+  actionsHandler: ActionsHandler
   element: HTMLElement
-  elementStyle: CSSStyleDeclaration
-  options: Options
+  hooks: EventEmitter
+  options: BScrollOptions
   x: number
   y: number
+  enabled: boolean
   startX: number
   startY: number
   absStartX: number
@@ -48,8 +49,6 @@ export default class Scroller {
   maxScrollY: number
   hasHorizontalScroll: boolean
   hasVerticalScroll: boolean
-  distX: number
-  distY: number
   directionX: number
   directionY: number
   movingDirectionX: number
@@ -67,78 +66,51 @@ export default class Scroller {
   probeTimer: number
   animateTimer: number
   _reflow: number
+  constructor(wrapper: HTMLElement, options: BScrollOptions) {
+    this.hooks = new EventEmitter(['scroll', 'scrollEnd'])
+    this.options = options
+    this.wrapper = wrapper
+    this.scrollElement = wrapper.children[0] as HTMLElement
+    this.x = 0
+    this.y = 0
+    const actionsHandlerOptions = [
+      'bindToWrapper',
+      'click',
+      'disableMouse',
+      'preventDefault',
+      'stopPropagation',
+      'preventDefaultException'
+    ].reduce<ActionsHandlerOptions>(
+      (prev, cur) => {
+        return (prev[cur] = options[cur])
+      },
+      {} as ActionsHandlerOptions
+    )
+
+    const actionsHandler = new ActionsHandler(wrapper, actionsHandlerOptions)
+
+    actionsHandler.hooks.trigger('start', (e: TouchEvent) => {
+      if (!this.enabled) return
+    })
+
+    actionsHandler.hooks.trigger('move', () => {})
+
+    actionsHandler.hooks.trigger('end', () => {})
+  }
+
+  setScale(scale: number) {
+    this.lastScale = isUndef(this.scale) ? scale : this.scale
+    this.scale = scale
+  }
+
   apply(actionsHandler: ActionsHandler) {
-    this.options = actionsHandler.bs.options
-
-    actionsHandler.bs.hooks.on('init', (bs: BScroll) => {
-      this.x = 0
-      this.y = 0
-      this.setScale(1)
-    })
-
-    actionsHandler.bs.hooks.on('refresh', (bs: BScroll) => {
-      const wrapper = bs.wrapper as HTMLElement
-      const isWrapperStatic =
-        window.getComputedStyle(wrapper, null).position === 'static'
-      let wrapperRect = getRect(wrapper)
-      this.wrapperWidth = wrapperRect.width
-      this.wrapperHeight = wrapperRect.height
-
-      let scrollElementRect = getRect(bs.scrollElement)
-      this.scrollElementWidth = Math.round(scrollElementRect.width * this.scale)
-      this.scrollElementHeight = Math.round(
-        scrollElementRect.height * this.scale
-      )
-
-      this.relativeX = scrollElementRect.left
-      this.relativeY = scrollElementRect.top
-
-      if (isWrapperStatic) {
-        this.relativeX -= wrapperRect.left
-        this.relativeY -= wrapperRect.top
-      }
-
-      this.minScrollX = 0
-      this.minScrollY = 0
-
-      this.hasHorizontalScroll =
-        this.options.scrollX && this.maxScrollX < this.minScrollX
-      this.hasVerticalScroll =
-        this.options.scrollY && this.maxScrollY < this.minScrollY
-
-      if (!this.hasHorizontalScroll) {
-        this.maxScrollX = this.minScrollX
-        this.scrollElementWidth = this.wrapperWidth
-      }
-
-      if (!this.hasVerticalScroll) {
-        this.maxScrollY = this.minScrollY
-        this.scrollElementHeight = this.wrapperHeight
-      }
-
-      this.endTime = 0
-      this.directionX = 0
-      this.directionY = 0
-      this.wrapperOffset = offset(wrapper)
-    })
-
-    actionsHandler.bs.on('refresh', () => {
-      const { startX, startY } = this.options
-      this.resetPosition()
-      this.scrollTo(startX, startY)
-    })
-
     actionsHandler.hooks.on('start', (e: TouchEvent) => {
       this.moved = false
-      this.distX = 0
-      this.distY = 0
       this.directionX = 0
       this.directionY = 0
       this.movingDirectionX = 0
       this.movingDirectionY = 0
       this.directionLocked = 0
-
-      this.transitionTime()
       this.startTime = getNow()
 
       this.stop()
@@ -447,32 +419,71 @@ export default class Scroller {
       }
     )
   }
-  setScale(scale: number) {
-    this.lastScale = isUndef(this.scale) ? scale : this.scale
-    this.scale = scale
+
+  refresh() {
+    const wrapper = this.wrapper as HTMLElement
+    const isWrapperStatic =
+      window.getComputedStyle(wrapper, null).position === 'static'
+    let wrapperRect = getRect(wrapper)
+    this.wrapperWidth = wrapperRect.width
+    this.wrapperHeight = wrapperRect.height
+
+    let scrollElementRect = getRect(this.scrollElement)
+    this.scrollElementWidth = Math.round(scrollElementRect.width * this.scale)
+    this.scrollElementHeight = Math.round(scrollElementRect.height * this.scale)
+
+    this.relativeX = scrollElementRect.left
+    this.relativeY = scrollElementRect.top
+
+    if (isWrapperStatic) {
+      this.relativeX -= wrapperRect.left
+      this.relativeY -= wrapperRect.top
+    }
+
+    this.minScrollX = 0
+    this.minScrollY = 0
+
+    this.hasHorizontalScroll =
+      this.options.scrollX && this.maxScrollX < this.minScrollX
+    this.hasVerticalScroll =
+      this.options.scrollY && this.maxScrollY < this.minScrollY
+
+    if (!this.hasHorizontalScroll) {
+      this.maxScrollX = this.minScrollX
+      this.scrollElementWidth = this.wrapperWidth
+    }
+
+    if (!this.hasVerticalScroll) {
+      this.maxScrollY = this.minScrollY
+      this.scrollElementHeight = this.wrapperHeight
+    }
+
+    this.endTime = 0
+    this.directionX = 0
+    this.directionY = 0
+    this.wrapperOffset = offset(wrapper)
   }
+
   transitionTime(time = 0) {
-    this.elementStyle[style.transitionDuration as any] = time + 'ms'
+    this.scrollElement.style[style.transitionDuration as any] = time + 'ms'
   }
   transitionTimingFunction(easing: string) {
-    this.elementStyle[style.transitionTimingFunction as any] = easing
+    this.scrollElement.style[style.transitionTimingFunction as any] = easing
   }
   startProbe() {
     cancelAnimationFrame(this.probeTimer)
-    this.probeTimer = requestAnimationFrame(probe)
-    const bs = this.bs
 
-    let me = this
-
-    function probe() {
-      let pos = me.getComputedPosition()
-      bs.trigger('scroll', pos)
-      if (!bs.isInTransition) {
-        bs.trigger('scrollEnd', pos)
+    const probe = () => {
+      let pos = this.getComputedPosition()
+      this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
+      if (!this.isInTransition) {
+        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
         return
       }
-      me.probeTimer = requestAnimationFrame(probe)
+      this.probeTimer = requestAnimationFrame(probe)
     }
+
+    this.probeTimer = requestAnimationFrame(probe)
   }
 
   scrollBy(deltaX: number, deltaY: number, time = 0, easing = ease.bounce) {
@@ -492,21 +503,21 @@ export default class Scroller {
       this.transitionTime(time)
       this.translate(destX, destY)
 
-      if (time && probeType === PROBE_REALTIME) {
+      if (time && probeType === Probe.Realtime) {
         this.startProbe()
       }
 
       if (!time && (destX !== this.x || destY !== this.y)) {
-        this.bs.trigger('scroll', {
+        this.hooks.trigger(this.hooks.eventTypes.scroll, {
           destX,
           destY
         })
         // force reflow to put everything in position
         this._reflow = document.body.offsetHeight
         if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
-          this.bs.trigger('scrollEnd', {
-            x,
-            y
+          this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+            x: this.x,
+            y: this.y
           })
         }
       }
@@ -520,7 +531,10 @@ export default class Scroller {
     time: number,
     offsetX: number | boolean,
     offsetY: number | boolean,
-    easing: Object
+    easing: {
+      style: string
+      fn: (t: number) => number
+    }
   ) {
     if (!el) {
       return
@@ -528,15 +542,6 @@ export default class Scroller {
     el = ((el as HTMLElement).nodeType
       ? el
       : this.element.querySelector(el as string)) as HTMLElement
-
-    const {
-      wrapperOffset,
-      wrapper,
-      minScrollX,
-      maxScrollX,
-      minScrollY,
-      maxScrollY
-    } = this.bs
 
     let pos = offset(el)
     pos.left -= this.wrapperOffset.left
@@ -547,25 +552,25 @@ export default class Scroller {
       offsetX = Math.round(el.offsetWidth / 2 - this.wrapper.offsetWidth / 2)
     }
     if (offsetY === true) {
-      offsetY = Math.round(el.offsetHeight / 2 - wrapper.offsetHeight / 2)
+      offsetY = Math.round(el.offsetHeight / 2 - this.wrapper.offsetHeight / 2)
     }
 
     pos.left -= offsetX || 0
     pos.top -= offsetY || 0
     pos.left =
-      pos.left > minScrollX
-        ? minScrollX
-        : pos.left < maxScrollX
-        ? maxScrollX
+      pos.left > this.minScrollX
+        ? this.minScrollX
+        : pos.left < this.maxScrollX
+        ? this.maxScrollX
         : pos.left
     pos.top =
-      pos.top > minScrollY
-        ? minScrollY
-        : pos.top < maxScrollY
-        ? maxScrollY
+      pos.top > this.minScrollY
+        ? this.minScrollY
+        : pos.top < this.maxScrollY
+        ? this.maxScrollY
         : pos.top
 
-    this.scrollTo(pos.left, pos.top, time, easing as any)
+    this.scrollTo(pos.left, pos.top, time, easing)
   }
 
   private animate(
@@ -574,7 +579,6 @@ export default class Scroller {
     duration: number,
     easingFn: Function
   ) {
-    let me = this
     let startX = this.x
     let startY = this.y
     let startScale = this.lastScale
@@ -582,22 +586,22 @@ export default class Scroller {
     let startTime = getNow()
     let destTime = startTime + duration
 
-    function step() {
+    const step = () => {
       let now = getNow()
 
       if (now >= destTime) {
-        me.isAnimating = false
-        me.translate(destX, destY, destScale)
+        this.isAnimating = false
+        this.translate(destX, destY, destScale)
 
-        me.bs.trigger('scroll', {
-          x: me.x,
-          y: me.y
+        this.hooks.trigger(this.hooks.eventTypes.scroll, {
+          x: this.x,
+          y: this.y
         })
 
-        if (!me.resetPosition(me.options.bounceTime)) {
-          me.bs.trigger('scrollEnd', {
-            x: me.x,
-            y: me.y
+        if (!this.resetPosition(this.options.bounceTime)) {
+          this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+            x: this.x,
+            y: this.y
           })
         }
         return
@@ -608,16 +612,16 @@ export default class Scroller {
       let newY = (destY - startY) * easing + startY
       let newScale = (destScale - startScale) * easing + startScale
 
-      me.translate(newX, newY, newScale)
+      this.translate(newX, newY, newScale)
 
-      if (me.isAnimating) {
-        me.animateTimer = requestAnimationFrame(step)
+      if (this.isAnimating) {
+        this.animateTimer = requestAnimationFrame(step)
       }
 
-      if (me.options.probeType === PROBE_REALTIME) {
-        me.bs.trigger('scroll', {
-          x: me.x,
-          y: me.y
+      if (this.options.probeType === Probe.Realtime) {
+        this.hooks.trigger(this.hooks.eventTypes.scroll, {
+          x: this.x,
+          y: this.y
         })
       }
     }
@@ -654,8 +658,9 @@ export default class Scroller {
       this.isInTransition = false
       cancelAnimationFrame(this.probeTimer)
       let pos = this.getComputedPosition()
+      this.transitionTime()
       this.translate(pos.x, pos.y)
-      this.bs.trigger('scrollEnd', {
+      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
         x: this.x,
         y: this.y
       })
@@ -663,7 +668,7 @@ export default class Scroller {
     } else if (!this.options.useTransition && this.isAnimating) {
       this.isAnimating = false
       cancelAnimationFrame(this.animateTimer)
-      this.bs.trigger('scrollEnd', {
+      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
         x: this.x,
         y: this.y
       })
@@ -672,7 +677,7 @@ export default class Scroller {
   }
 
   getComputedPosition() {
-    let matrix = window.getComputedStyle(this.element, null) as any
+    let matrix = window.getComputedStyle(this.scrollElement, null) as any
     let x
     let y
 

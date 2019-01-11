@@ -77,8 +77,8 @@ export default class EventEmitter {
       let event = eventsCopy[i]
       let [fn, context] = event
       if (fn) {
-        let output = fn.apply(context, args)
-        ret = output === true ? output : ret
+        let ret = fn.apply(context, args)
+        if (ret === true) break
       }
     }
 
@@ -89,7 +89,9 @@ export default class EventEmitter {
     const types = this.eventTypes
     const inTypes = types[type] === type
     if (!inTypes) {
-      warn(`EventEmitter used unknown event type: "${type}", should be oneof ${types}`)
+      warn(
+        `EventEmitter has used unknown event type: "${type}", should be oneof ${types}`
+      )
     }
   }
 }
