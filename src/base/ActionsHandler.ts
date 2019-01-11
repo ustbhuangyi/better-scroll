@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter'
-import { EventType, TouchEvent } from '../util'
+import { EventType, TouchEvent, MouseButton } from '../util'
 
 import {
   // dom
@@ -102,7 +102,7 @@ export default class ActionsHandler {
     this.initiated = _eventType
 
     // no mouse left button
-    if (_eventType === EventType.Mouse && e.button !== 0) return
+    if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
 
     const {
       preventDefault,
@@ -124,7 +124,9 @@ export default class ActionsHandler {
     this.pointX = point.pageX
     this.pointY = point.pageY
 
-    this.hooks.trigger(this.hooks.eventTypes.start)
+    this.hooks.trigger(this.hooks.eventTypes.start, {
+      timeStamp: e.timeStamp
+    })
   }
   private move(e: TouchEvent) {
     if (eventTypeMap[e.type] !== this.initiated) {
@@ -146,7 +148,18 @@ export default class ActionsHandler {
       e.stopPropagation()
     }
 
-    this.hooks.trigger(this.hooks.eventTypes.move)
+    let point = (e.touches ? e.touches[0] : e) as Touch
+    let deltaX = point.pageX - this.pointX
+    let deltaY = point.pageY - this.pointY
+
+    this.pointX = point.pageX
+    this.pointY = point.pageY
+
+    this.hooks.trigger(this.hooks.eventTypes.move, {
+      timeStamp: e.timeStamp,
+      deltaX,
+      deltaY
+    })
   }
   end(e: TouchEvent) {
     if (eventTypeMap[e.type] !== this.initiated) {

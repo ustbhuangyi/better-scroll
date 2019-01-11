@@ -17,8 +17,14 @@ export enum EventType {
 }
 
 export enum DirectionLock {
-  Initial,
+  Default,
   Horizontal,
   Vertical,
   None
+}
+
+export enum MouseButton {
+  Left,
+  Middle,
+  Right
 }
