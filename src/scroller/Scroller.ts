@@ -3,6 +3,7 @@ import ActionsHandler, {
 } from '../base/ActionsHandler'
 import EventEmitter from '../base/EventEmitter'
 import { Transform, Position } from '../translater'
+import { Animation, Transition } from '../animater'
 import BScrollOptions, { bounceConfig } from '../Options'
 
 import {
@@ -10,14 +11,11 @@ import {
   DirectionLock,
   Probe,
   style,
-  assert,
   ease,
   isUndef,
   getNow,
   offset,
-  getRect,
-  momentum,
-  TouchEvent
+  getRect
 } from '../util'
 
 export default class Scroller {
@@ -25,6 +23,7 @@ export default class Scroller {
   scrollElement: HTMLElement
   actionsHandler: ActionsHandler
   translater: Position | Transform
+  animater: Animation | Transition
   element: HTMLElement
   hooks: EventEmitter
   options: BScrollOptions
@@ -76,28 +75,21 @@ export default class Scroller {
           translateZ: this.options.translateZ
         })
       : new Position(this.scrollElement)
+    this.animater = this.options.useTransition
+      ? new Transition(this.scrollElement)
+      : new Animation(this.scrollElement)
     this.options = options
     this.wrapper = wrapper
     this.scrollElement = wrapper.children[0] as HTMLElement
     this.x = 0
     this.y = 0
-    const actionsHandlerOptions = [
-      'bindToWrapper',
-      'click',
-      'disableMouse',
-      'preventDefault',
-      'stopPropagation',
-      'preventDefaultException'
-    ].reduce<ActionsHandlerOptions>(
-      (prev, cur) => {
-        return (prev[cur] = options[cur])
-      },
-      {} as ActionsHandlerOptions
+
+    const actionsHandler = new ActionsHandler(
+      wrapper,
+      this.createActionsHandlerOpt()
     )
 
-    const actionsHandler = new ActionsHandler(wrapper, actionsHandlerOptions)
-
-    actionsHandler.hooks.trigger('start', (e: TouchEvent) => {
+    actionsHandler.hooks.trigger('start', () => {
       if (!this.enabled) return true
 
       this.moved = false
@@ -111,6 +103,23 @@ export default class Scroller {
     actionsHandler.hooks.trigger('move', () => {})
 
     actionsHandler.hooks.trigger('end', () => {})
+  }
+
+  createActionsHandlerOpt() {
+    const options = [
+      'bindToWrapper',
+      'click',
+      'disableMouse',
+      'preventDefault',
+      'stopPropagation',
+      'preventDefaultException'
+    ].reduce<ActionsHandlerOptions>(
+      (prev, cur) => {
+        return (prev[cur] = this.options[cur])
+      },
+      {} as ActionsHandlerOptions
+    )
+    return options
   }
 
   setScale(scale: number) {
@@ -160,28 +169,6 @@ export default class Scroller {
     this.directionX = 0
     this.directionY = 0
     this.wrapperOffset = offset(wrapper)
-  }
-
-  transitionTime(time = 0) {
-    this.scrollElement.style[style.transitionDuration as any] = time + 'ms'
-  }
-  transitionTimingFunction(easing: string) {
-    this.scrollElement.style[style.transitionTimingFunction as any] = easing
-  }
-  startProbe() {
-    cancelAnimationFrame(this.probeTimer)
-
-    const probe = () => {
-      let pos = this.translater.getPosition()
-      this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
-      if (!this.isInTransition) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
-        return
-      }
-      this.probeTimer = requestAnimationFrame(probe)
-    }
-
-    this.probeTimer = requestAnimationFrame(probe)
   }
 
   scrollBy(deltaX: number, deltaY: number, time = 0, easing = ease.bounce) {
@@ -234,9 +221,6 @@ export default class Scroller {
       fn: (t: number) => number
     }
   ) {
-    if (!el) {
-      return
-    }
     el = ((el as HTMLElement).nodeType
       ? el
       : this.element.querySelector(el as string)) as HTMLElement
@@ -339,29 +323,6 @@ export default class Scroller {
     this.y = y
 
     this.setScale(scale as number)
-  }
-
-  stop() {
-    if (this.options.useTransition && this.isInTransition) {
-      this.isInTransition = false
-      cancelAnimationFrame(this.probeTimer)
-      let pos = this.translater.getPosition()
-      this.transitionTime()
-      this.translate(pos.x, pos.y)
-      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-        x: this.x,
-        y: this.y
-      })
-      this.stopFromTransition = true
-    } else if (!this.options.useTransition && this.isAnimating) {
-      this.isAnimating = false
-      cancelAnimationFrame(this.animateTimer)
-      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-        x: this.x,
-        y: this.y
-      })
-      this.stopFromTransition = true
-    }
   }
 
   resetPosition(time = 0, easeing = ease.bounce) {
