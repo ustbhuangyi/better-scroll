@@ -1,13 +1,10 @@
-export default class Position {
-  element: HTMLElement
-  style: CSSStyleDeclaration
+import Base from './Base'
+export default class Position extends Base {
   constructor(element: HTMLElement) {
-    this.element = element
-    // cache for better performance
-    this.style = element.style
+    super(element)
   }
 
-  getPosition() {
+  getComputedPosition() {
     let cssStyle = window.getComputedStyle(this.element, null) as any
     let x = +cssStyle.left.replace(/[^-\d.]/g, '')
     let y = +cssStyle.top.replace(/[^-\d.]/g, '')
@@ -18,8 +15,10 @@ export default class Position {
     }
   }
 
-  setPosition(x: number, y: number, scale: number) {
+  updatePosition(x: number, y: number, scale: number) {
     this.style.left = `${Math.round(x)}px`
     this.style.top = `${Math.round(y)}px`
+
+    this.updateProps(x, y, scale)
   }
 }

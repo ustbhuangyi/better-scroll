@@ -18,7 +18,7 @@ export default class Transition {
 
   startProbe() {
     const probe = () => {
-      let pos = this.translater.getPosition()
+      let pos = this.translater.getComputedPosition()
       this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
       if (!this.pending) {
         this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
@@ -39,7 +39,7 @@ export default class Transition {
   }
 
   translate(x: number, y: number, scale: number) {
-    this.translater.setPosition(x, y, scale)
+    this.translater.updatePosition(x, y, scale)
   }
   scrollTo() {
     this.pending = true
@@ -49,9 +49,9 @@ export default class Transition {
     if (this.pending) {
       this.pending = false
       cancelAnimationFrame(this.timer)
-      let pos = this.translater.getPosition()
+      let pos = this.translater.getComputedPosition()
       this.transitionTime()
-      this.translate(pos.x, pos.y)
+      this.translate(pos.x, pos.y, this.translater.scale)
       this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
         x: pos.x,
         y: pos.y
