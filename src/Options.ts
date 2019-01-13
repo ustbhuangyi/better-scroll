@@ -1,4 +1,10 @@
-import { hasTransition, hasTransform, hasTouch } from './util'
+import {
+  hasTransition,
+  hasTransform,
+  hasTouch,
+  Probe,
+  EventPassthrough
+} from './util'
 
 // type
 export type tap = 'tap' | ''
@@ -129,12 +135,11 @@ export default class Options {
   constructor() {
     this.startX = 0
     this.startY = 0
-
     this.scrollX = false
     this.scrollY = true
     this.freeScroll = false
     this.directionLockThreshold = 5
-    this.eventPassthrough = ''
+    this.eventPassthrough = EventPassthrough.None
     this.click = false
     this.tap = ''
 
@@ -163,7 +168,7 @@ export default class Options {
     this.flickLimitDistance = 100
 
     this.resizePolling = 60
-    this.probeType = 0
+    this.probeType = Probe.Default
 
     this.stopPropagation = false
     this.preventDefault = true
