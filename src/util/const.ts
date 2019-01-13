@@ -1,5 +1,6 @@
 export enum Probe {
-  Throttle = 1,
+  Default,
+  Throttle,
   Normal,
   Realtime
 }
@@ -27,4 +28,10 @@ export enum MouseButton {
   Left,
   Middle,
   Right
+}
+
+export enum EventPassthrough {
+  None = '',
+  Horizontal = 'horizontal',
+  Vertical = 'vertical'
 }
