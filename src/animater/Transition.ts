@@ -1,25 +1,32 @@
-import { style } from '../util'
-import EventEmitter from '../base/EventEmitter'
+import {
+  style,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+  EaseObj,
+  Probe,
+  ease
+} from '../util'
+import Base from './Base'
 import { Position, Transform } from '../translater'
 
-export default class Transition {
-  style: CSSStyleDeclaration
-  hooks: EventEmitter
-  timer: number
-  pending: boolean
-  stopFromTransition?: boolean
+export default class Transition extends Base {
+  _reflow?: number
   constructor(
-    public element: HTMLElement,
-    public translater: Position | Transform
+    element: HTMLElement,
+    translater: Position | Transform,
+    public options: {
+      probeType: number
+      bounceTime: number
+    }
   ) {
-    this.hooks = new EventEmitter(['scroll', 'scrollEnd'])
-    this.style = element.style
+    super(element, translater)
   }
 
   startProbe() {
     const probe = () => {
       let pos = this.translater.getComputedPosition()
       this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
+      // excuted when transition ends
       if (!this.pending) {
         this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
         return
@@ -41,9 +48,36 @@ export default class Transition {
   translate(x: number, y: number, scale: number) {
     this.translater.updatePosition(x, y, scale)
   }
-  scrollTo() {
-    this.pending = true
+
+  scrollTo(x: number, y: number, time: number, easingFn: string) {
+    this.pending = time > 0
+    this.transitionTimingFunction(easingFn)
+    this.transitionTime(time)
+    this.translater.updatePosition(x, y, this.translater.scale)
+
+    // TODO when probeType is not Realtime, need to dispatch scroll ?
+    if (time && this.options.probeType === Probe.Realtime) {
+      this.startProbe()
+    }
+
+    // when time is 0
+    if (!time) {
+      this.hooks.trigger(this.hooks.eventTypes.scroll, {
+        x,
+        y
+      })
+      // force reflow to put everything in position
+      this._reflow = document.body.offsetHeight
+      if (!this.resetPosition(this.options.bounceTime)) {
+        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+          x: this.translater.x,
+          y: this.translater.y
+        })
+      }
+    }
   }
+
+  // arguments is just for ts validating
   stop(x: number, y: number) {
     // still in transition
     if (this.pending) {
@@ -58,5 +92,9 @@ export default class Transition {
       })
       this.stopFromTransition = true
     }
+  }
+
+  resetPosition(time = 0, easing = ease.bounce.style) {
+    return this._resetPosition(time, easing)
   }
 }
