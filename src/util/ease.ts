@@ -1,4 +1,15 @@
-export const ease = {
+interface EaseMap {
+  [key: string]: {
+    style: string
+    fn: EaseFn
+  }
+}
+
+export interface EaseFn {
+  (t: number): number
+}
+
+export const ease: EaseMap = {
   // easeOutQuint
   swipe: {
     style: 'cubic-bezier(0.23, 1, 0.32, 1)',
