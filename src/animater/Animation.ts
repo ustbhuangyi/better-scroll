@@ -21,7 +21,7 @@ export default class Animation extends Base {
     super(element, translater, options)
   }
 
-  scrollTo(x: number, y: number, time: number, easingFn: EaseFn) {
+  scrollTo(x: number, y: number, time: number, easingFn: EaseFn | string) {
     // time is 0
     if (!time) {
       this.translater.updatePosition(x, y, this.translater.scale)
@@ -40,7 +40,7 @@ export default class Animation extends Base {
       }
       return
     }
-    this.animate(x, y, time, easingFn)
+    this.animate(x, y, time, easingFn as EaseFn)
   }
 
   private animate(
@@ -92,20 +92,22 @@ export default class Animation extends Base {
     step()
   }
 
-  stop(x: number, y: number) {
+  stop() {
     // still in requestFrameAnimation
+    const { x, y } = this.translater
     if (this.pending) {
       this.pending = false
       cancelAnimationFrame(this.timer)
-      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+      this.callHooks(this.hooks.eventTypes.scrollEnd, {
         x,
         y
       })
-      this.stopFromTransition = true
+      this.forceStopped = true
     }
   }
 
-  resetPosition(time = 0, easing = ease.bounce.fn) {
-    return this._resetPosition(time, easing)
+  resetPosition(time = 0, easing = ease.bounce) {
+    const easingFn = easing.fn
+    return this._resetPosition(time, easingFn)
   }
 }

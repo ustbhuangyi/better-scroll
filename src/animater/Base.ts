@@ -13,7 +13,7 @@ export default class Base {
   maxScrollY: number
   hasHorizontalScroll: boolean
   hasVerticalScroll: boolean
-  stopFromTransition?: boolean
+  forceStopped?: boolean
   _reflow?: number
   [key: string]: any
 

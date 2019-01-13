@@ -3,7 +3,8 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   Probe,
-  ease
+  ease,
+  EaseFn
 } from '../util'
 import Base from './Base'
 import { Position, Transform } from '../translater'
@@ -43,9 +44,9 @@ export default class Transition extends Base {
     this.style[style.transitionTimingFunction as any] = easing
   }
 
-  scrollTo(x: number, y: number, time: number, easingFn: string) {
+  scrollTo(x: number, y: number, time: number, easingFn: string | EaseFn) {
     this.pending = time > 0
-    this.transitionTimingFunction(easingFn)
+    this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
     this.translater.updatePosition(x, y, this.translater.scale)
 
@@ -68,8 +69,7 @@ export default class Transition extends Base {
     }
   }
 
-  // arguments is just for ts validating
-  stop(x: number, y: number) {
+  stop() {
     // still in transition
     if (this.pending) {
       this.pending = false
@@ -81,11 +81,12 @@ export default class Transition extends Base {
         x: pos.x,
         y: pos.y
       })
-      this.stopFromTransition = true
+      this.forceStopped = true
     }
   }
 
-  resetPosition(time = 0, easing = ease.bounce.style) {
-    return this._resetPosition(time, easing)
+  resetPosition(time = 0, easing = ease.bounce) {
+    const easingStyle = easing.style
+    return this._resetPosition(time, easingStyle)
   }
 }
