@@ -120,7 +120,6 @@ export default class ActionsHandler {
     }
 
     let point = (e.touches ? e.touches[0] : e) as Touch
-
     this.pointX = point.pageX
     this.pointY = point.pageY
 
@@ -128,6 +127,7 @@ export default class ActionsHandler {
       timeStamp: e.timeStamp
     })
   }
+
   private move(e: TouchEvent) {
     if (eventTypeMap[e.type] !== this.initiated) {
       return
@@ -155,11 +155,42 @@ export default class ActionsHandler {
     this.pointX = point.pageX
     this.pointY = point.pageY
 
-    this.hooks.trigger(this.hooks.eventTypes.move, {
-      timeStamp: e.timeStamp,
-      deltaX,
-      deltaY
-    })
+    if (
+      this.hooks.trigger(this.hooks.eventTypes.move, {
+        timeStamp: e.timeStamp,
+        deltaX,
+        deltaY,
+        e,
+        actionsHandler: this
+      })
+    )
+      return
+
+    // auto end when out of wrapper
+    let scrollLeft =
+      document.documentElement.scrollLeft ||
+      window.pageXOffset ||
+      document.body.scrollLeft
+    let scrollTop =
+      document.documentElement.scrollTop ||
+      window.pageYOffset ||
+      document.body.scrollTop
+
+    let pX = this.pointX - scrollLeft
+    let pY = this.pointY - scrollTop
+
+    if (
+      pX >
+        document.documentElement.clientWidth -
+          this.options.momentumLimitDistance ||
+      pX < this.options.momentumLimitDistance ||
+      pY < this.options.momentumLimitDistance ||
+      pY >
+        document.documentElement.clientHeight -
+          this.options.momentumLimitDistance
+    ) {
+      this.end(e)
+    }
   }
   end(e: TouchEvent) {
     if (eventTypeMap[e.type] !== this.initiated) {
@@ -182,6 +213,14 @@ export default class ActionsHandler {
       e.stopPropagation()
     }
 
-    this.hooks.trigger(this.hooks.eventTypes.end)
+    this.hooks.trigger(this.hooks.eventTypes.end, e)
+  }
+
+  private setPointPosition(e: TouchEvent) {
+    let point = (e.touches ? e.touches[0] : e) as Touch
+    this.pointX = point.pageX
+    this.pointY = point.pageY
+
+    return point
   }
 }

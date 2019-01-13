@@ -9,7 +9,8 @@ export enum Direction {
   Up = 1,
   Left = 1,
   Down = -1,
-  Right = -1
+  Right = -1,
+  Default = 0
 }
 
 export enum EventType {
