@@ -2,7 +2,6 @@ import {
   style,
   requestAnimationFrame,
   cancelAnimationFrame,
-  EaseObj,
   Probe,
   ease
 } from '../util'
@@ -10,25 +9,24 @@ import Base from './Base'
 import { Position, Transform } from '../translater'
 
 export default class Transition extends Base {
-  _reflow?: number
   constructor(
     element: HTMLElement,
     translater: Position | Transform,
-    public options: {
+    options: {
       probeType: number
       bounceTime: number
     }
   ) {
-    super(element, translater)
+    super(element, translater, options)
   }
 
   startProbe() {
     const probe = () => {
       let pos = this.translater.getComputedPosition()
-      this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
+      this.callHooks(this.hooks.eventTypes.scroll, pos)
       // excuted when transition ends
       if (!this.pending) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+        this.callHooks(this.hooks.eventTypes.scrollEnd, pos)
         return
       }
       this.timer = requestAnimationFrame(probe)
@@ -45,10 +43,6 @@ export default class Transition extends Base {
     this.style[style.transitionTimingFunction as any] = easing
   }
 
-  translate(x: number, y: number, scale: number) {
-    this.translater.updatePosition(x, y, scale)
-  }
-
   scrollTo(x: number, y: number, time: number, easingFn: string) {
     this.pending = time > 0
     this.transitionTimingFunction(easingFn)
@@ -62,17 +56,14 @@ export default class Transition extends Base {
 
     // when time is 0
     if (!time) {
-      this.hooks.trigger(this.hooks.eventTypes.scroll, {
+      this.callHooks(this.hooks.eventTypes.scroll, {
         x,
         y
       })
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
       if (!this.resetPosition(this.options.bounceTime)) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-          x: this.translater.x,
-          y: this.translater.y
-        })
+        this.callHooks(this.hooks.eventTypes.scrollEnd)
       }
     }
   }
@@ -86,7 +77,7 @@ export default class Transition extends Base {
       let pos = this.translater.getComputedPosition()
       this.transitionTime()
       this.translate(pos.x, pos.y, this.translater.scale)
-      this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+      this.callHooks(this.hooks.eventTypes.scrollEnd, {
         x: pos.x,
         y: pos.y
       })
