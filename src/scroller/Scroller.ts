@@ -581,11 +581,8 @@ export default class Scroller {
 
     ;(this.animater as Transition).transitionTime()
     // TODO when pullingDown, do not reset position
-    const needReset = this.movingDirectionY === Direction.Up
-    if (
-      needReset &&
-      !this.resetPosition(this.options.bounceTime, ease.bounce)
-    ) {
+    // const needReset = this.movingDirectionY === Direction.Up
+    if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.animater.pending = false
       if (this.options.probeType !== Probe.Realtime) {
         this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {

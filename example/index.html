@@ -1,17 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>BetterScroll by ustbhuangyi</title>
-  <meta charset="utf-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="static/css/reset.css">
-  <link rel="stylesheet" type="text/css" href="static/css/normalize.css" media="screen">
-  <!--<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>-->
-  <link rel="stylesheet" type="text/css" href="static/css/stylesheet.css" media="screen">
-  <link rel="stylesheet" type="text/css" href="static/css/github-light.css" media="screen">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src='../dist/bscroll.js'></script>
+  <!-- <script src="https://unpkg.com/better-scroll/dist/bscroll.js"></script> -->
 </head>
+<style>
+  .wrapper {
+    height: 600px;
+    overflow: hidden;
+    background: lightcoral
+  }
+  .scroller {
+    background: goldenrod
+  }
+  .scroller li {
+    height: 400px;
+  }
+</style>
 <body>
-<div id="app"></div>
+  <div class="wrapper">
+    <ul class="scroller">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+  </div>
+  <script>
+    let bs = new BScroll('.wrapper', {
+      observeDOM: false
+    })
+    console.log(bs)
+  </script>
 </body>
 </html>
