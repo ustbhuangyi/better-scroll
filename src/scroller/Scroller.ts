@@ -108,10 +108,10 @@ export default class Scroller {
         if (!this.enabled) return true
 
         this.moved = false
-        this.directionX = 0
-        this.directionY = 0
-        this.movingDirectionX = 0
-        this.movingDirectionY = 0
+        this.directionX = Direction.Default
+        this.directionY = Direction.Default
+        this.movingDirectionX = Direction.Default
+        this.movingDirectionY = Direction.Default
         this.directionLocked = DirectionLock.Default
 
         this.startX = this.translater.x
