@@ -1,6 +1,7 @@
 import {
   hasTransition,
   hasTransform,
+  hasPerspective,
   hasTouch,
   Probe,
   EventPassthrough
@@ -121,6 +122,7 @@ export default class Options {
   disableMouse: boolean | ''
   observeDOM: boolean
   autoBlur: boolean
+  translateZ: string
   // plugins options
   picker: pickerOptions
   slide: slideOptions
@@ -294,6 +296,9 @@ export default class Options {
     return this
   }
   process() {
+    this.translateZ =
+      this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
+
     this.useTransition = this.useTransition && hasTransition
     this.useTransform = this.useTransform && hasTransform
 

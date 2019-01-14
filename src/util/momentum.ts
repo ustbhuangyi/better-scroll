@@ -1,11 +1,11 @@
 export function momentum(
-  current,
-  start,
-  time,
-  lowerMargin,
-  upperMargin,
-  wrapperSize,
-  options
+  current: number,
+  start: number,
+  time: number,
+  lowerMargin: number,
+  upperMargin: number,
+  wrapperSize: number,
+  options: any
 ) {
   let distance = current - start
   let speed = Math.abs(distance) / time

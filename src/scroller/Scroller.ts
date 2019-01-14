@@ -25,6 +25,7 @@ import {
   click,
   tap
 } from '../util'
+import { truncateSync } from 'fs'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -102,6 +103,10 @@ export default class Scroller {
       this.createActionsHandlerOpt()
     )
 
+    this.enabled = true
+
+    this.addDOMEvents()
+
     actionsHandler.hooks.on(
       actionsHandler.hooks.eventTypes.start,
       ({ timeStamp }: { timeStamp: number }) => {
@@ -143,6 +148,8 @@ export default class Scroller {
         actionsHandler: ActionsHandler
         e: TouchEvent
       }) => {
+        if (!this.enabled) return true
+
         const absDistX = Math.abs(deltaX)
         const absDistY = Math.abs(deltaY)
 
@@ -279,6 +286,8 @@ export default class Scroller {
     actionsHandler.hooks.on(
       actionsHandler.hooks.eventTypes.end,
       (e: TouchEvent) => {
+        if (!this.enabled) return true
+
         const { x, y, scale } = this.translater
         this.hooks.trigger(this.hooks.eventTypes.touchEnd, {
           x,
@@ -427,7 +436,8 @@ export default class Scroller {
       'preventDefaultException'
     ].reduce<ActionsHandlerOptions>(
       (prev, cur) => {
-        return (prev[cur] = this.options[cur])
+        prev[cur] = this.options[cur]
+        return prev
       },
       {} as ActionsHandlerOptions
     )
@@ -456,6 +466,23 @@ export default class Scroller {
 
     this.minScrollX = 0
     this.minScrollY = 0
+
+    this.maxScrollX = this.wrapperWidth - this.elementWidth
+    this.maxScrollY = this.wrapperHeight - this.elementHeight
+    if (this.maxScrollX < 0) {
+      this.maxScrollX -= this.relativeX
+      this.minScrollX = -this.relativeX
+    } else if (this.translater.scale > 1) {
+      this.maxScrollX = this.maxScrollX / 2 - this.relativeX
+      this.minScrollX = this.maxScrollX
+    }
+    if (this.maxScrollY < 0) {
+      this.maxScrollY -= this.relativeY
+      this.minScrollY = -this.relativeY
+    } else if (this.translater.scale > 1) {
+      this.maxScrollY = this.maxScrollY / 2 - this.relativeY
+      this.minScrollY = this.maxScrollY
+    }
 
     this.hasHorizontalScroll =
       this.options.scrollX && this.maxScrollX < this.minScrollX

@@ -120,7 +120,7 @@ export default class BScroll extends EventEmitter {
   refresh() {
     this.scroller.refresh()
     this.trigger(this.eventTypes.refresh)
-    this.scroller.animater.resetPosition()
+    this.scroller.resetPosition()
   }
 
   enable() {}

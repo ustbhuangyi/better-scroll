@@ -23,21 +23,18 @@ export interface Options {
 }
 
 export default class ActionsHandler {
-  options: Options
   hooks: EventEmitter
   initiated: number | boolean
-  wrapper: HTMLElement
   pointX: number
   pointY: number
-  constructor(wrapper: HTMLElement, options: Options) {
+  constructor(public wrapper: HTMLElement, public options: Options) {
     this.hooks = new EventEmitter(['start', 'move', 'end'])
-    this.wrapper = wrapper
-    this.addDOMEvents(options)
+    this.addDOMEvents()
   }
 
-  private addDOMEvents(options: Options) {
+  private addDOMEvents() {
     const eventOperation = addEvent
-    this.handleDOMEvents(eventOperation, options)
+    this.handleDOMEvents(eventOperation)
   }
 
   private removeDOMEvents() {
@@ -45,14 +42,9 @@ export default class ActionsHandler {
     this.handleDOMEvents(eventOperation)
   }
 
-  private handleDOMEvents(eventOperation: Function, options?: Options) {
-    const {
-      bindToWrapper,
-      click,
-      disableMouse,
-      wrapper,
-      scroller
-    } = this.options
+  private handleDOMEvents(eventOperation: Function) {
+    const { bindToWrapper, click, disableMouse } = this.options
+    const wrapper = this.wrapper
     const target = bindToWrapper ? wrapper : window
     eventOperation(window, 'orientationchange', this)
     eventOperation(window, 'resize', this)
