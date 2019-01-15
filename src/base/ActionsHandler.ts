@@ -1,7 +1,9 @@
 import EventEmitter from './EventEmitter'
-import { EventType, TouchEvent, MouseButton } from '../util'
 
 import {
+  EventType,
+  TouchEvent,
+  MouseButton,
   // dom
   addEvent,
   removeEvent,

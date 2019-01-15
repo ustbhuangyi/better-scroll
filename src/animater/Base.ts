@@ -2,7 +2,7 @@ import EventEmitter from '../base/EventEmitter'
 import { Position, Transform } from '../translater'
 import { EaseFn, isUndef } from '../util'
 
-export default class Base {
+export default abstract class Base {
   style: CSSStyleDeclaration
   hooks: EventEmitter
   timer: number
@@ -74,9 +74,7 @@ export default class Base {
     return true
   }
 
-  scrollTo(x: number, y: number, time: number, easing: string | EaseFn) {
-    throw new Error('Abstract: should be overriden')
-  }
+  abstract scrollTo(x: number, y: number, time: number, easing: string | EaseFn): void
 
   protected callHooks(
     eventType: string,

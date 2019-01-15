@@ -296,8 +296,7 @@ export default class Options {
     return this
   }
   process() {
-    this.translateZ =
-      this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
+    this.translateZ = this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
     this.useTransition = this.useTransition && hasTransition
     this.useTransform = this.useTransform && hasTransform
