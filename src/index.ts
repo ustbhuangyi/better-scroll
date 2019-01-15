@@ -3,47 +3,23 @@ import Options from './Options'
 import Scroller from './scroller/Scroller'
 
 import { warn } from './util'
-
-export interface Plugin {
-  install: (ctor: BScroll, options?: any[]) => void
-  new (): void
+interface PluginsMap<T> {
+  [name: string]: PluginCtor<T>
 }
 
-interface PluginsMap {
-  [name: string]: {
-    new (bs: BScroll): void
-  }
+interface PluginCtor<T> {
+  new (bs: BScroll): T
 }
-
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static _installedPlugins?: Plugin[]
-  static _pluginsMap: PluginsMap
+  static _pluginsMap?: PluginsMap<any>
 
   scroller: Scroller
   options: Options
   hooks: EventEmitter
   [key: string]: any
 
-  static use(plugin: Plugin, ...options: any[]) {
-    const installedPlugins =
-      this._installedPlugins || (this._installedPlugins = [])
-    if (installedPlugins.indexOf(plugin) > -1) {
-      return this
-    }
-    options.unshift(this)
-    plugin.install && plugin.install.apply(plugin, options as any)
-
-    installedPlugins.push(plugin)
-    return this
-  }
-
-  static plugin(
-    name: string,
-    ctor: {
-      new (): void
-    }
-  ) {
+  static plugin<T>(name: string, ctor: PluginCtor<T>) {
     if (!this._pluginsMap) {
       this._pluginsMap = {}
     }
@@ -78,7 +54,6 @@ export default class BScroll extends EventEmitter {
   private init(wrapper: HTMLElement) {
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
-    this.hooks.trigger(this.hooks.eventTypes.init)
     this.applyPlugins()
 
     if (this.options.autoBlur) {
@@ -123,9 +98,13 @@ export default class BScroll extends EventEmitter {
     this.scroller.resetPosition()
   }
 
-  enable() {}
+  enable() {
+    this.scroller.enabled = true
+  }
 
-  disable() {}
+  disable() {
+    this.scroller.enabled = false
+  }
 
   destroy() {}
 }
