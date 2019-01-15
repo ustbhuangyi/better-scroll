@@ -10,16 +10,6 @@ import {
 } from '../util'
 
 export default class Animation extends Base {
-  constructor(
-    element: HTMLElement,
-    translater: Position | Transform,
-    options: {
-      bounceTime: number
-      probeType: number
-    }
-  ) {
-    super(element, translater, options)
-  }
 
   scrollTo(x: number, y: number, time: number, easingFn: EaseFn | string) {
     // time is 0

@@ -10,16 +10,6 @@ import Base from './Base'
 import { Position, Transform } from '../translater'
 
 export default class Transition extends Base {
-  constructor(
-    element: HTMLElement,
-    translater: Position | Transform,
-    options: {
-      probeType: number
-      bounceTime: number
-    }
-  ) {
-    super(element, translater, options)
-  }
 
   startProbe() {
     const probe = () => {

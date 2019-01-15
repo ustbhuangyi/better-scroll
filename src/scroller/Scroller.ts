@@ -2,13 +2,12 @@ import ActionsHandler, {
   Options as ActionsHandlerOptions
 } from '../base/ActionsHandler'
 import EventEmitter from '../base/EventEmitter'
+import EventRegister from '../base/EventRegister'
 import { Transform, Position } from '../translater'
 import { Animation, Transition } from '../animater'
 import BScrollOptions, { bounceConfig } from '../Options'
 
 import {
-  addEvent,
-  removeEvent,
   Direction,
   DirectionLock,
   EventPassthrough,
@@ -33,6 +32,8 @@ export default class Scroller {
   translater: Position | Transform
   animater: Animation | Transition
   hooks: EventEmitter
+  resizeRegister: EventRegister
+  transitionEndRegister: EventRegister
   options: BScrollOptions
   enabled: boolean
   startX: number
@@ -101,10 +102,27 @@ export default class Scroller {
       wrapper,
       this.createActionsHandlerOpt()
     )
+    
+    const resizeHandler = this.resize.bind(this)
+    this.resizeRegister = new EventRegister(window, [
+      {
+        name: 'orientationchange',
+        handler: resizeHandler
+      },
+      {
+        name: 'resize',
+        handler: resizeHandler
+      }
+    ])
+    const transitionEndHandler = this.transitionEnd.bind(this)
+    this.transitionEndRegister = new EventRegister(this.element, [
+      {
+        name: style.transitionEnd,
+        handler: transitionEndHandler
+      }
+    ])
 
     this.enabled = true
-
-    this.addDOMEvents()
 
     actionsHandler.hooks.on(
       actionsHandler.hooks.eventTypes.start,
@@ -423,12 +441,25 @@ export default class Scroller {
         })
       }
     )
+
+    actionsHandler.hooks.on(
+      actionsHandler.hooks.eventTypes.click,
+      (e: TouchEvent) => {
+        // handle native click event
+        if (this.enabled && !e._constructed) {
+          if (!preventDefaultExceptionFn(e.target, this.options.preventDefaultException)) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }
+      }
+    )
   }
 
   createActionsHandlerOpt() {
     const options = [
-      'bindToWrapper',
       'click',
+      'bindToWrapper',
       'disableMouse',
       'preventDefault',
       'stopPropagation',
@@ -511,51 +542,6 @@ export default class Scroller {
       hasHorizontalScroll: this.hasHorizontalScroll,
       hasVerticalScroll: this.hasVerticalScroll
     })
-  }
-
-  private addDOMEvents() {
-    const eventOperation = addEvent
-    this.handleDOMEvents(eventOperation)
-  }
-
-  private removeDOMEvents() {
-    const eventOperation = removeEvent
-    this.handleDOMEvents(eventOperation)
-  }
-
-  private handleDOMEvents(eventOperation: Function) {
-    eventOperation(window, 'orientationchange', this)
-    eventOperation(window, 'resize', this)
-
-    eventOperation(this.element, style.transitionEnd, this)
-  }
-  private handleEvent(e: TouchEvent) {
-    switch (e.type) {
-      case 'orientationchange':
-      case 'resize':
-        this.resize()
-        break
-      case 'click':
-        // ensure click event triggered only once in pc
-        if (this.enabled && !e._constructed) {
-          if (
-            !preventDefaultExceptionFn(
-              e.target,
-              this.options.preventDefaultException
-            )
-          ) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-        }
-        break
-      case 'transitionend':
-      case 'webkitTransitionEnd':
-      case 'oTransitionEnd':
-      case 'MSTransitionEnd':
-        this.transitionEnd(e)
-        break
-    }
   }
 
   private resize() {

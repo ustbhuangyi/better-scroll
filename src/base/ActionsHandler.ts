@@ -1,20 +1,19 @@
 import EventEmitter from './EventEmitter'
+import EventRegister from './EventRegister'
 
 import {
   EventType,
   TouchEvent,
   MouseButton,
   // dom
-  addEvent,
-  removeEvent,
   preventDefaultExceptionFn,
   eventTypeMap
 } from '../util'
 
 export interface Options {
   [key: string]: any
-  bindToWrapper: boolean
   click: boolean
+  bindToWrapper: boolean
   disableMouse: boolean
   preventDefault: boolean
   stopPropagation: boolean
@@ -29,75 +28,51 @@ export default class ActionsHandler {
   initiated: number | boolean
   pointX: number
   pointY: number
+  startClickRegister: EventRegister
+  moveEndRegister: EventRegister
   constructor(public wrapper: HTMLElement, public options: Options) {
-    this.hooks = new EventEmitter(['start', 'move', 'end'])
-    this.addDOMEvents()
+    this.hooks = new EventEmitter(['start', 'move', 'end', 'click'])
+    this.handleDOMEvents()
   }
 
-  private addDOMEvents() {
-    const eventOperation = addEvent
-    this.handleDOMEvents(eventOperation)
+  destroy() {
+    this.startClickRegister.destroy()
+    this.moveEndRegister.destroy()
   }
 
-  private removeDOMEvents() {
-    const eventOperation = removeEvent
-    this.handleDOMEvents(eventOperation)
-  }
-
-  private handleDOMEvents(eventOperation: Function) {
-    const { bindToWrapper, click, disableMouse } = this.options
+  private handleDOMEvents() {
+    const { bindToWrapper, disableMouse } = this.options
     const wrapper = this.wrapper
     const target = bindToWrapper ? wrapper : window
-    eventOperation(window, 'orientationchange', this)
-    eventOperation(window, 'resize', this)
 
-    if (click) {
-      eventOperation(wrapper, 'click', this, true)
-    }
-
-    if (!disableMouse) {
-      eventOperation(wrapper, 'mousedown', this)
-      eventOperation(target, 'mousemove', this)
-      eventOperation(target, 'mousecancel', this)
-      eventOperation(target, 'mouseup', this)
-    }
-
-    if (disableMouse) {
-      eventOperation(wrapper, 'touchstart', this)
-      eventOperation(target, 'touchmove', this)
-      eventOperation(target, 'touchcancel', this)
-      eventOperation(target, 'touchend', this)
-    }
+    this.startClickRegister = new EventRegister(wrapper, [
+      {
+        name: disableMouse ? 'touchstart' : 'mousedown',
+        handler: this.start.bind(this)
+      },
+      {
+        name: 'click',
+        handler: this.click.bind(this)
+      }
+    ])
+    this.moveEndRegister = new EventRegister(target, [
+      {
+        name: disableMouse ? 'touchmove' : 'mousemove',
+        handler: this.move.bind(this)
+      },
+      {
+        name: disableMouse ? 'touchend' : 'mouseup',
+        handler: this.end.bind(this)
+      },
+      {
+        // mousecancel what?
+        name: disableMouse ? 'touchcancel' : 'mousecancel',
+        handler: this.end.bind(this)
+      }
+    ])
   }
-  private handleEvent(e: TouchEvent) {
-    switch (e.type) {
-      case 'touchstart':
-      case 'mousedown':
-        this.start(e)
-        break
-      case 'touchmove':
-      case 'mousemove':
-        this.move(e)
-        break
-      case 'touchend':
-      case 'mouseup':
-      case 'touchcancel':
-      case 'mousecancel':
-        this.end(e)
-        break
-    }
-  }
-  private start(e: TouchEvent) {
-    const _eventType = eventTypeMap[e.type]
 
-    if (this.initiated && this.initiated !== _eventType) {
-      return
-    }
-    this.initiated = _eventType
-
-    // no mouse left button
-    if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
-
+  private beforeHandler(e: TouchEvent) {
     const {
       preventDefault,
       stopPropagation,
@@ -112,6 +87,20 @@ export default class ActionsHandler {
     if (stopPropagation) {
       e.stopPropagation()
     }
+  }
+
+  private start(e: TouchEvent) {
+    const _eventType = eventTypeMap[e.type]
+
+    if (this.initiated && this.initiated !== _eventType) {
+      return
+    }
+    this.initiated = _eventType
+
+    // no mouse left button
+    if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
+
+    this.beforeHandler(e)
 
     let point = (e.touches ? e.touches[0] : e) as Touch
     this.pointX = point.pageX
@@ -127,20 +116,7 @@ export default class ActionsHandler {
       return
     }
 
-    const {
-      preventDefault,
-      stopPropagation,
-      preventDefaultException
-    } = this.options
-    if (
-      preventDefault &&
-      !preventDefaultExceptionFn(e.target, preventDefaultException)
-    ) {
-      e.preventDefault()
-    }
-    if (stopPropagation) {
-      e.stopPropagation()
-    }
+    this.beforeHandler(e)
 
     let point = (e.touches ? e.touches[0] : e) as Touch
     let deltaX = point.pageX - this.pointX
@@ -186,28 +162,19 @@ export default class ActionsHandler {
       this.end(e)
     }
   }
-  end(e: TouchEvent) {
+  private end(e: TouchEvent) {
     if (eventTypeMap[e.type] !== this.initiated) {
       return
     }
     this.initiated = false
 
-    const {
-      preventDefault,
-      stopPropagation,
-      preventDefaultException
-    } = this.options
-    if (
-      preventDefault &&
-      !preventDefaultExceptionFn(e.target, preventDefaultException)
-    ) {
-      e.preventDefault()
-    }
-    if (stopPropagation) {
-      e.stopPropagation()
-    }
+    this.beforeHandler(e)
 
     this.hooks.trigger(this.hooks.eventTypes.end, e)
+  }
+
+  private click(e: TouchEvent) {
+    this.hooks.trigger(this.hooks.eventTypes.click, e)
   }
 
   private setPointPosition(e: TouchEvent) {
