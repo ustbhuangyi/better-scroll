@@ -2,9 +2,9 @@ const fs = require('fs')
 const path = require('path')
 const rollup = require('rollup')
 const version = require('../package.json').version
-const babel = require('rollup-plugin-babel')
-const uglify = require('uglify-js')
 const zlib = require('zlib')
+const typescript = require('rollup-plugin-typescript2')
+const uglify = require('rollup-plugin-uglify').uglify
 
 if (!fs.existsSync('dist')) {
   fs.mkdirSync('dist')
@@ -22,38 +22,39 @@ const banner =
   ' */'
 
 const builds = [{
-  entry: resolve('src/index.js'),
-  dest: resolve('dist/bscroll.js'),
-  format: 'umd',
-  moduleName: 'BScroll',
+  input: resolve('src/index.ts'),
+  output: {
+    file: resolve('dist/bscroll.js'),
+    name: 'BScroll',
+    format: 'umd',
+    banner
+  },
   plugins: [
-    babel({
-      exclude: 'node_modules/**' // only transpile our source code
-    })
-  ],
-  banner
+    typescript()
+  ]
 }, {
-  entry: resolve('src/index.js'),
-  dest: resolve('dist/bscroll.esm.js'),
-  format: 'es',
-  moduleName: 'BScroll',
+  input: resolve('src/index.ts'),
+  output: {
+    file: resolve('dist/bscroll.esm.js'),
+    name: 'BScroll',
+    format: 'es',
+    banner
+  },
   plugins: [
-    babel({
-      exclude: 'node_modules/**' // only transpile our source code
-    })
-  ],
-  banner
+    typescript()
+  ]
 }, {
-  entry: resolve('src/index.js'),
-  dest: resolve('dist/bscroll.min.js'),
-  format: 'umd',
-  moduleName: 'BScroll',
+  input: resolve('src/index.ts'),
+  output: {
+    file: resolve('dist/bscroll.min.js'),
+    name: 'BScroll',
+    format: 'umd',
+    banner
+  },
   plugins: [
-    babel({
-      exclude: 'node_modules/**' // only transpile our source code
-    })
-  ],
-  banner
+    uglify(),
+    typescript()
+  ]
 }]
 
 function build(builds) {
@@ -72,22 +73,11 @@ function build(builds) {
 }
 
 function buildEntry(config) {
-  const isProd = /min\.js$/.test(config.dest)
+  const isProd = /min\.js$/.test(config.output.file)
   return rollup.rollup(config).then((bundle) => {
-    const code = bundle.generate(config).code
-    if (isProd) {
-      var minified = (config.banner ? config.banner + '\n' : '') + uglify.minify(code, {
-          output: {
-            ascii_only: true
-          },
-          compress: {
-            pure_funcs: ['makeMap']
-          }
-        }).code
-      return write(config.dest, minified, true)
-    } else {
-      return write(config.dest, code)
-    }
+    bundle.generate(config).then(({ code }) => {
+      return write(config.output.file, code, isProd)
+    })
   }).catch(logError)
 }
 
@@ -97,11 +87,13 @@ function write(dest, code, zip) {
       console.log(blue(path.relative(process.cwd(), dest)) + ' ' + getSize(code) + (extra || ''))
       resolve()
     }
-
+    console.log(dest)
     fs.writeFile(dest, code, (err) => {
       if (err) {
         return reject(err)
       }
+      console.log('------------')
+      console.log(zip)
       if (zip) {
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)

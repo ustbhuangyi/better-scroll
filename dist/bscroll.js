@@ -1,2 +1,1596 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.BScroll=e()}(this,function(){"use strict";var o=function(t,e){return(o=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var i in e)e.hasOwnProperty(i)&&(t[i]=e[i])})(t,e)};function i(t,e){function i(){this.constructor=t}o(t,e),t.prototype=null===e?Object.create(e):(i.prototype=e.prototype,new i)}function s(t){console.error("[BScroll warn]: "+t)}var y,t,x,e,a,n,d,r,l,h,v,c,p=function(){function t(t){var e=this;this._events={},this.eventTypes={},t.forEach(function(t){e.eventTypes[t]=t})}return t.prototype.on=function(t,e,i){return void 0===i&&(i=this),this._checkInTypes(t),this._events[t]||(this._events[t]=[]),this._events[t].push([e,i]),this},t.prototype.once=function(i,o,n){var s=this;void 0===n&&(n=this),this._checkInTypes(i);var r=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];s.off(i,r),o.apply(n,t)};return r.fn=o,this.on(i,r),this},t.prototype.off=function(t,e){this._checkInTypes(t);var i=this._events[t];if(!i)return this;for(var o=i.length;o--;)(i[o][0]===e||i[o][0]&&i[o][0].fn===e)&&i.splice(o,1);return this},t.prototype.trigger=function(t){for(var e=[],i=1;i<arguments.length;i++)e[i-1]=arguments[i];this._checkInTypes(t);var o=this._events[t];if(o)for(var n=o.length,s=o.slice(),r=0;r<n;r++){var a=s[r],l=a[0],h=a[1];if(l)if(!0===l.apply(h,e))break}},t.prototype._checkInTypes=function(t){var e=this.eventTypes;e[t]===t||s('EventEmitter has used unknown event type: "'+t+'", should be oneof '+e)},t}();(t=y||(y={}))[t.Default=0]="Default",t[t.Throttle=1]="Throttle",t[t.Normal=2]="Normal",t[t.Realtime=3]="Realtime",(e=x||(x={}))[e.Up=1]="Up",e[e.Left=1]="Left",e[e.Down=-1]="Down",e[e.Right=-1]="Right",e[e.Default=0]="Default",(n=a||(a={}))[n.Touch=1]="Touch",n[n.Mouse=2]="Mouse",(r=d||(d={}))[r.Default=0]="Default",r[r.Horizontal=1]="Horizontal",r[r.Vertical=2]="Vertical",r[r.None=3]="None",(h=l||(l={}))[h.Left=0]="Left",h[h.Middle=1]="Middle",h[h.Right=2]="Right",(c=v||(v={})).None="",c.Horizontal="horizontal",c.Vertical="vertical";var u="undefined"!=typeof window,m=u&&navigator.userAgent.toLowerCase(),f=m&&/wechatdevtools/.test(m),g=m&&0<m.indexOf("android");function T(){return window.performance&&window.performance.now?window.performance.now()+window.performance.timing.navigationStart:+new Date}function S(t){for(var e=[],i=1;i<arguments.length;i++)e[i-1]=arguments[i];for(var o=0;o<e.length;o++){var n=e[o];for(var s in n)t[s]=n[s]}return t}function w(t){return null==t}var k=u&&document.createElement("div").style,b=function(){if(!u)return!1;var t={webkit:"webkitTransform",Moz:"MozTransform",O:"OTransform",ms:"msTransform",standard:"transform"};for(var e in t)if(void 0!==k[t[e]])return e;return!1}();function X(t){return!1!==b&&("standard"===b?"transitionEnd"===t?"transitionend":t:b+t.charAt(0).toUpperCase()+t.substr(1))}function D(t,e,i,o){t.addEventListener(e,i,{passive:!1,capture:!!o})}function Y(t,e,i,o){t.removeEventListener(e,i,{capture:!!o})}function E(t){for(var e=0,i=0;t;)e-=t.offsetLeft,i-=t.offsetTop,t=t.offsetParent;return{left:e,top:i}}b&&"standard"!==b&&b.toLowerCase();var P=X("transform"),M=X("transition"),L=u&&X("perspective")in k,H=u&&("ontouchstart"in window||f),O=!1!==P,_=u&&M in k,z={transform:P,transition:M,transitionTimingFunction:X("transitionTimingFunction"),transitionDuration:X("transitionDuration"),transitionDelay:X("transitionDelay"),transformOrigin:X("transformOrigin"),transitionEnd:X("transitionEnd")},C={touchstart:a.Touch,touchmove:a.Touch,touchend:a.Touch,mousedown:a.Mouse,mousemove:a.Mouse,mouseup:a.Mouse};function A(t){if(t instanceof window.SVGElement){var e=t.getBoundingClientRect();return{top:e.top,left:e.left,width:e.width,height:e.height}}return{top:t.offsetTop,left:t.offsetLeft,width:t.offsetWidth,height:t.offsetHeight}}function R(t,e){for(var i in e)if(e[i].test(t[i]))return!0;return!1}var W={style:"cubic-bezier(0.25, 0.46, 0.45, 0.94)",fn:function(t){return t*(2-t)}},V={style:"cubic-bezier(0.165, 0.84, 0.44, 1)",fn:function(t){return 1- --t*t*t*t}};function F(t,e,i,o,n,s,r){var a=t-e,l=Math.abs(a)/i,h=r.deceleration,c=r.itemHeight,p=r.swipeBounceTime,u=r.wheel,m=r.swipeTime,f=u?4:15,d=t+l/h*(a<0?-1:1);return u&&c&&(d=Math.round(d/c)*c),d<o?(d=s?Math.max(o-s/4,o-s/f*l):o,m=p):n<d&&(d=s?Math.min(n+s/4,n+s/f*l):n,m=p),{destination:Math.round(d),duration:m}}var N=window;function U(){}var B=u?N.requestAnimationFrame||N.webkitRequestAnimationFrame||N.mozRequestAnimationFrame||N.oRequestAnimationFrame||function(t){return window.setTimeout(t,(t.interval||100/60)/2)}:U,I=u?N.cancelAnimationFrame||N.webkitCancelAnimationFrame||N.mozCancelAnimationFrame||N.oCancelAnimationFrame||function(t){window.clearTimeout(t)}:U,q=function(){function t(){this.startX=0,this.startY=0,this.scrollX=!1,this.scrollY=!0,this.freeScroll=!1,this.directionLockThreshold=5,this.eventPassthrough=v.None,this.click=!1,this.tap="",this.bounce=!0,this.bounceTime=800,this.momentum=!0,this.momentumLimitTime=300,this.momentumLimitDistance=15,this.swipeTime=2500,this.swipeBounceTime=500,this.deceleration=.0015,this.flickLimitTime=200,this.flickLimitDistance=100,this.resizePolling=60,this.probeType=y.Default,this.stopPropagation=!1,this.preventDefault=!0,this.preventDefaultException={tagName:/^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/},this.HWCompositing=!0,this.useTransition=!0,this.useTransform=!0,this.bindToWrapper=!1,this.disableMouse=H,this.observeDOM=!0,this.autoBlur=!0,this.picker=!1,this.slide=!1,this.scrollbar=!1,this.pullDownRefresh=!1,this.pullUpLoad=!1,this.mouseWheel=!1,this.zoom=!1,this.infinity=!1,this.dblclick=!1}return t.prototype.merge=function(t){if(!t)return this;for(var e in t)this[e]=t[e];return this},t.prototype.process=function(){return this.translateZ=this.HWCompositing&&L?" translateZ(0)":"",this.useTransition=this.useTransition&&_,this.useTransform=this.useTransform&&O,this.preventDefault=!this.eventPassthrough&&this.preventDefault,this.scrollX="horizontal"!==this.eventPassthrough&&this.scrollX,this.scrollY="vertical"!==this.eventPassthrough&&this.scrollY,this.freeScroll=this.freeScroll&&!this.eventPassthrough,this.directionLockThreshold=this.eventPassthrough?0:this.directionLockThreshold,this},t}(),Z=function(){function t(t,e){this.wrapper=t,this.options=e,this.hooks=new p(["start","move","end"]),this.addDOMEvents()}return t.prototype.addDOMEvents=function(){var t=D;this.handleDOMEvents(t)},t.prototype.removeDOMEvents=function(){var t=Y;this.handleDOMEvents(t)},t.prototype.handleDOMEvents=function(t){var e=this.options,i=e.bindToWrapper,o=e.click,n=e.disableMouse,s=this.wrapper,r=i?s:window;t(window,"orientationchange",this),t(window,"resize",this),o&&t(s,"click",this,!0),n||(t(s,"mousedown",this),t(r,"mousemove",this),t(r,"mousecancel",this),t(r,"mouseup",this)),n&&(t(s,"touchstart",this),t(r,"touchmove",this),t(r,"touchcancel",this),t(r,"touchend",this))},t.prototype.handleEvent=function(t){switch(t.type){case"touchstart":case"mousedown":this.start(t);break;case"touchmove":case"mousemove":this.move(t);break;case"touchend":case"mouseup":case"touchcancel":case"mousecancel":this.end(t)}},t.prototype.start=function(t){var e=C[t.type];if(!(this.initiated&&this.initiated!==e||(this.initiated=e)===a.Mouse&&t.button!==l.Left)){var i=this.options,o=i.preventDefault,n=i.stopPropagation,s=i.preventDefaultException;o&&!R(t.target,s)&&t.preventDefault(),n&&t.stopPropagation();var r=t.touches?t.touches[0]:t;this.pointX=r.pageX,this.pointY=r.pageY,this.hooks.trigger(this.hooks.eventTypes.start,{timeStamp:t.timeStamp})}},t.prototype.move=function(t){if(C[t.type]===this.initiated){var e=this.options,i=e.preventDefault,o=e.stopPropagation,n=e.preventDefaultException;i&&!R(t.target,n)&&t.preventDefault(),o&&t.stopPropagation();var s=t.touches?t.touches[0]:t,r=s.pageX-this.pointX,a=s.pageY-this.pointY;if(this.pointX=s.pageX,this.pointY=s.pageY,!this.hooks.trigger(this.hooks.eventTypes.move,{timeStamp:t.timeStamp,deltaX:r,deltaY:a,e:t,actionsHandler:this})){var l=document.documentElement.scrollLeft||window.pageXOffset||document.body.scrollLeft,h=document.documentElement.scrollTop||window.pageYOffset||document.body.scrollTop,c=this.pointX-l,p=this.pointY-h;(c>document.documentElement.clientWidth-this.options.momentumLimitDistance||c<this.options.momentumLimitDistance||p<this.options.momentumLimitDistance||p>document.documentElement.clientHeight-this.options.momentumLimitDistance)&&this.end(t)}}},t.prototype.end=function(t){if(C[t.type]===this.initiated){this.initiated=!1;var e=this.options,i=e.preventDefault,o=e.stopPropagation,n=e.preventDefaultException;i&&!R(t.target,n)&&t.preventDefault(),o&&t.stopPropagation(),this.hooks.trigger(this.hooks.eventTypes.end,t)}},t.prototype.setPointPosition=function(t){var e=t.touches?t.touches[0]:t;return this.pointX=e.pageX,this.pointY=e.pageY,e},t}(),j=function(){function t(t){this.element=t,this.style=t.style,this.setUpProps()}return t.prototype.setScale=function(t){this.lastScale=w(this.scale)?t:this.scale,this.scale=t},t.prototype.setUpProps=function(){this.x=0,this.y=0,this.setScale(1)},t.prototype.updateProps=function(t,e,i){this.x=t,this.y=e,this.setScale(i)},t}(),G=function(e){function t(t){return e.call(this,t)||this}return i(t,e),t.prototype.getComputedPosition=function(){var t=window.getComputedStyle(this.element,null);return{x:+t.left.replace(/[^-\d.]/g,""),y:+t.top.replace(/[^-\d.]/g,"")}},t.prototype.updatePosition=function(t,e,i){this.style.left=Math.round(t)+"px",this.style.top=Math.round(e)+"px",this.updateProps(t,e,i)},t}(j),$=function(o){function t(t,e){var i=o.call(this,t)||this;return i.options=e,i}return i(t,o),t.prototype.getComputedPosition=function(){var t=window.getComputedStyle(this.element,null)[z.transform].split(")")[0].split(", ");return{x:+(t[12]||t[4]),y:+(t[13]||t[5])}},t.prototype.updatePosition=function(t,e,i){this.style[z.transform]="translate("+t+"px,"+e+"px) scale("+i+")"+this.options.translateZ,this.updateProps(t,e,i)},t}(j),J=function(){function t(t,e,i){this.element=t,this.translater=e,this.options=i,this.hooks=new p(["scroll","scrollEnd"]),this.style=t.style}return t.prototype.refresh=function(e){var i=this;Object.keys(e).forEach(function(t){i[t]=e[t]})},t.prototype.translate=function(t,e,i){this.translater.updatePosition(t,e,i)},t.prototype._resetPosition=function(t,e){var i=this.translater.x,o=Math.round(i);!this.hasHorizontalScroll||o>this.minScrollX?i=this.minScrollX:o<this.maxScrollX&&(i=this.maxScrollX);var n=this.translater.y,s=Math.round(n);return!this.hasVerticalScroll||s>this.minScrollY?n=this.minScrollY:s<this.maxScrollY&&(n=this.maxScrollY),(i!==this.translater.x||n!==this.translater.y)&&(this.scrollTo(i,n,t,e),!0)},t.prototype.scrollTo=function(t,e,i,o){throw new Error("Abstract: should be overriden")},t.prototype.callHooks=function(t,e){e=w(e)?{x:this.translater.x,y:this.translater.y}:e,this.hooks.trigger(t,e)},t}(),K=function(o){function t(t,e,i){return o.call(this,t,e,i)||this}return i(t,o),t.prototype.startProbe=function(){var e=this,i=function(){var t=e.translater.getComputedPosition();e.callHooks(e.hooks.eventTypes.scroll,t),e.pending?e.timer=B(i):e.callHooks(e.hooks.eventTypes.scrollEnd,t)};I(this.timer),this.timer=B(i)},t.prototype.transitionTime=function(t){void 0===t&&(t=0),this.style[z.transitionDuration]=t+"ms"},t.prototype.transitionTimingFunction=function(t){this.style[z.transitionTimingFunction]=t},t.prototype.scrollTo=function(t,e,i,o){this.pending=0<i,this.transitionTimingFunction(o),this.transitionTime(i),this.translater.updatePosition(t,e,this.translater.scale),i&&this.options.probeType===y.Realtime&&this.startProbe(),i||(this.callHooks(this.hooks.eventTypes.scroll,{x:t,y:e}),this._reflow=document.body.offsetHeight,this.resetPosition(this.options.bounceTime)||this.callHooks(this.hooks.eventTypes.scrollEnd))},t.prototype.stop=function(){if(this.pending){this.pending=!1,I(this.timer);var t=this.translater.getComputedPosition();this.transitionTime(),this.translate(t.x,t.y,this.translater.scale),this.callHooks(this.hooks.eventTypes.scrollEnd,{x:t.x,y:t.y}),this.forceStopped=!0}},t.prototype.resetPosition=function(t,e){void 0===t&&(t=0),void 0===e&&(e=V);var i=e.style;return this._resetPosition(t,i)},t}(J),Q=function(o){function t(t,e,i){return o.call(this,t,e,i)||this}return i(t,o),t.prototype.scrollTo=function(t,e,i,o){if(!i)return this.translater.updatePosition(t,e,this.translater.scale),this.hooks.trigger(this.hooks.eventTypes.scroll,{x:t,y:e}),this._reflow=document.body.offsetHeight,void(this.resetPosition(this.options.bounceTime)||this.hooks.trigger(this.hooks.eventTypes.scrollEnd,{x:this.translater.x,y:this.translater.y}));this.animate(t,e,i,o)},t.prototype.animate=function(s,r,a,l){var h=this,c=this.translater.x,p=this.translater.y,u=this.translater.lastScale,m=this.translater.scale,f=T(),d=f+a,v=function(){var t=T();if(d<=t)return h.pending=!1,h.translate(s,r,m),h.callHooks(h.hooks.eventTypes.scroll),void(h.resetPosition(h.options.bounceTime)||h.callHooks(h.hooks.eventTypes.scrollEnd));var e=l(t=(t-f)/a),i=(s-c)*e+c,o=(r-p)*e+p,n=(m-u)*e+u;h.translate(i,o,n),h.pending&&(h.timer=B(v)),h.options.probeType===y.Realtime&&h.callHooks(h.hooks.eventTypes.scroll)};this.pending=!0,I(this.timer),v()},t.prototype.stop=function(){var t=this.translater,e=t.x,i=t.y;this.pending&&(this.pending=!1,I(this.timer),this.callHooks(this.hooks.eventTypes.scrollEnd,{x:e,y:i}),this.forceStopped=!0)},t.prototype.resetPosition=function(t,e){void 0===t&&(t=0),void 0===e&&(e=V);var i=e.fn;return this._resetPosition(t,i)},t}(J),tt=function(){function t(t,e){var b=this;this.hooks=new p(["scroll","scrollEnd","refresh","beforeScrollStart","scrollStart","touchEnd","flick","scrollCancel"]),this.wrapper=t,this.element=t.children[0],this.options=e,this.translater=this.options.useTransform?new $(this.element,{translateZ:this.options.translateZ}):new G(this.element),this.animater=this.options.useTransition?new K(this.element,this.translater,{probeType:this.options.probeType,bounceTime:this.options.bounceTime}):new Q(this.element,this.translater,{probeType:this.options.probeType,bounceTime:this.options.bounceTime});var i=new Z(t,this.createActionsHandlerOpt());this.enabled=!0,this.addDOMEvents(),i.hooks.on(i.hooks.eventTypes.start,function(t){var e=t.timeStamp;if(!b.enabled)return!0;b.moved=!1,b.directionX=x.Default,b.directionY=x.Default,b.movingDirectionX=x.Default,b.movingDirectionY=x.Default,b.directionLocked=d.Default,b.startX=b.translater.x,b.startY=b.translater.y,b.absStartX=b.translater.x,b.absStartY=b.translater.y,b.startTime=e,b.animater.stop(),b.hooks.trigger(b.hooks.eventTypes.beforeScrollStart)}),i.hooks.on(i.hooks.eventTypes.move,function(t){var e=t.timeStamp,i=t.deltaX,o=t.deltaY,n=t.actionsHandler,s=t.e;if(!b.enabled)return!0;var r=Math.abs(i),a=Math.abs(o);if(e-b.endTime>b.options.momentumLimitTime&&a<b.options.momentumLimitDistance&&r<b.options.momentumLimitDistance)return!0;if(b.directionLocked||b.options.freeScroll||(r>a+b.options.directionLockThreshold?b.directionLocked=d.Horizontal:a>=r+b.options.directionLockThreshold?b.directionLocked=d.Vertical:b.directionLocked=d.None),b.directionLocked===d.Horizontal){if(b.options.eventPassthrough===v.Vertical)s.preventDefault();else if(b.options.eventPassthrough===v.Horizontal)return!(n.initiated=!1);o=0}else if(b.directionLocked===d.Vertical){if(b.options.eventPassthrough===v.Horizontal)s.preventDefault();else if(b.options.eventPassthrough===v.Vertical)return!(n.initiated=!1);i=0}i=b.hasHorizontalScroll?i:0,o=b.hasVerticalScroll?o:0,b.movingDirectionX=0<i?x.Right:i<0?x.Left:x.Default,b.movingDirectionY=0<o?x.Down:o<0?x.Up:x.Default;var l=b.translater.x+i,h=b.translater.y+o,c=!1,p=!1,u=!1,m=!1,f=b.options.bounce;!1!==f&&(c=void 0===f.top||f.top,p=void 0===f.bottom||f.bottom,u=void 0===f.left||f.left,m=void 0===f.right||f.right),(l>b.minScrollX||l<b.maxScrollX)&&(l=l>b.minScrollX&&u||l<b.maxScrollX&&m?b.translater.x+i/3:l>b.minScrollX?b.minScrollX:b.maxScrollX),(h>b.minScrollY||h<b.maxScrollY)&&(h=h>b.minScrollY&&c||h<b.maxScrollY&&p?b.translater.y+o/3:h>b.minScrollY?b.minScrollY:b.maxScrollY),b.moved||(b.moved=!0,b.hooks.trigger(b.hooks.eventTypes.scrollStart)),b.animater.translate(l,h,b.translater.scale),e-b.startTime>b.options.momentumLimitTime&&(b.startTime=e,b.startX=b.translater.x,b.startY=b.translater.y,b.options.probeType===y.Throttle&&b.hooks.trigger(b.hooks.eventTypes.scroll,{x:b.translater.x,y:b.translater.y})),b.options.probeType>y.Throttle&&b.hooks.trigger(b.hooks.eventTypes.scroll,{x:b.translater.x,y:b.translater.y})}),i.hooks.on(i.hooks.eventTypes.end,function(t){if(!b.enabled)return!0;var e=b.translater,i=e.x,o=e.y,n=e.scale;b.hooks.trigger(b.hooks.eventTypes.touchEnd,{x:i,y:o}),b.animater.pending=!1;var s=Math.round(i),r=Math.round(o),a=s-b.absStartX,l=r-b.absStartY;if(b.directionX=0<a?x.Right:a<0?x.Left:x.Default,b.directionY=0<l?x.Down:l<0?x.Up:x.Default,b.checkClick(t))b.hooks.trigger(b.hooks.eventTypes.scrollCancel);else if(!b.resetPosition(b.options.bounceTime,V)){b.animater.translate(s,r,n),b.endTime=t.timeStamp;var h=b.endTime-b.startTime,c=Math.abs(s-b.startX),p=Math.abs(r-b.startY);if(h<b.options.flickLimitTime&&c<b.options.flickLimitDistance&&p<b.options.flickLimitDistance)b.hooks.trigger("flick");else{var u,m=0;if(b.options.momentum&&h<b.options.momentumLimitTime&&(p>b.options.momentumLimitDistance||c>b.options.momentumLimitDistance)){var f=!1,d=!1,v=!1,y=!1,g=b.options.bounce;!1!==g&&(f=void 0===g.top||g.top,d=void 0===g.bottom||g.bottom,v=void 0===g.left||g.left,y=void 0===g.right||g.right);var T=b.directionX===x.Right&&v||b.directionX===x.Left&&y?b.wrapperWidth:0,S=b.directionY===x.Down&&f||b.directionY===x.Up&&d?b.wrapperHeight:0,w=b.hasHorizontalScroll?F(b.translater.x,b.startX,h,b.maxScrollX,b.minScrollX,T,b.options):{destination:s,duration:0},k=b.hasVerticalScroll?F(b.translater.y,b.startY,h,b.maxScrollY,b.minScrollY,S,b.options):{destination:r,duration:0};s=w.destination,r=k.destination,m=Math.max(w.duration,k.duration),b.animater.pending=!0}if(s!==b.translater.x||r!==b.translater.y)return(s>b.minScrollX||s<b.maxScrollX||r>b.minScrollY||r<b.maxScrollY)&&(u=W),void b.scrollTo(s,r,m,u);b.hooks.trigger(b.hooks.eventTypes.scrollEnd,{x:b.translater.x,y:b.translater.y})}}})}return t.prototype.createActionsHandlerOpt=function(){var i=this;return["bindToWrapper","click","disableMouse","preventDefault","stopPropagation","preventDefaultException"].reduce(function(t,e){return t[e]=i.options[e],t},{})},t.prototype.refresh=function(){var t=this.wrapper,e="static"===window.getComputedStyle(t,null).position,i=A(t);this.wrapperWidth=i.width,this.wrapperHeight=i.height;var o=A(this.element);this.elementWidth=Math.round(o.width*this.translater.scale),this.elementHeight=Math.round(o.height*this.translater.scale),this.relativeX=o.left,this.relativeY=o.top,e&&(this.relativeX-=i.left,this.relativeY-=i.top),this.minScrollX=0,this.minScrollY=0,this.maxScrollX=this.wrapperWidth-this.elementWidth,this.maxScrollY=this.wrapperHeight-this.elementHeight,this.maxScrollX<0?(this.maxScrollX-=this.relativeX,this.minScrollX=-this.relativeX):1<this.translater.scale&&(this.maxScrollX=this.maxScrollX/2-this.relativeX,this.minScrollX=this.maxScrollX),this.maxScrollY<0?(this.maxScrollY-=this.relativeY,this.minScrollY=-this.relativeY):1<this.translater.scale&&(this.maxScrollY=this.maxScrollY/2-this.relativeY,this.minScrollY=this.maxScrollY),this.hasHorizontalScroll=this.options.scrollX&&this.maxScrollX<this.minScrollX,this.hasVerticalScroll=this.options.scrollY&&this.maxScrollY<this.minScrollY,this.hasHorizontalScroll||(this.maxScrollX=this.minScrollX,this.elementWidth=this.wrapperWidth),this.hasVerticalScroll||(this.maxScrollY=this.minScrollY,this.elementHeight=this.wrapperHeight),this.endTime=0,this.directionX=0,this.directionY=0,this.wrapperOffset=E(t),this.animater.refresh({minScrollX:this.minScrollX,maxScrollX:this.maxScrollX,minScrollY:this.minScrollY,maxScrollY:this.maxScrollY,hasHorizontalScroll:this.hasHorizontalScroll,hasVerticalScroll:this.hasVerticalScroll})},t.prototype.addDOMEvents=function(){var t=D;this.handleDOMEvents(t)},t.prototype.removeDOMEvents=function(){var t=Y;this.handleDOMEvents(t)},t.prototype.handleDOMEvents=function(t){t(window,"orientationchange",this),t(window,"resize",this),t(this.element,z.transitionEnd,this)},t.prototype.handleEvent=function(t){switch(t.type){case"orientationchange":case"resize":this.resize();break;case"click":this.enabled&&!t._constructed&&(R(t.target,this.options.preventDefaultException)||(t.preventDefault(),t.stopPropagation()));break;case"transitionend":case"webkitTransitionEnd":case"oTransitionEnd":case"MSTransitionEnd":this.transitionEnd(t)}},t.prototype.resize=function(){var t=this;this.enabled&&(g&&(this.wrapper.scrollTop=0),clearTimeout(this.resizeTimeout),this.resizeTimeout=window.setTimeout(function(){t.refresh()},this.options.resizePolling))},t.prototype.transitionEnd=function(t){t.target===this.element&&this.animater.pending&&(this.animater.transitionTime(),this.resetPosition(this.options.bounceTime,V)||(this.animater.pending=!1,this.options.probeType!==y.Realtime&&this.hooks.trigger(this.hooks.eventTypes.scrollEnd,{x:this.translater.x,y:this.translater.y})))},t.prototype.checkClick=function(t){var e,i,o,n=this.animater.forceStopped;return this.animater.forceStopped=!1,!this.moved&&(!n&&(this.options.tap&&(e=t,i=this.options.tap,(o=document.createEvent("Event")).initEvent(i,!0,!0),o.pageX=e.pageX,o.pageY=e.pageY,e.target.dispatchEvent(o)),this.options.click&&!R(t.target,this.options.preventDefaultException)&&function(t,e){var i;void 0===e&&(e="click"),"mouseup"===t.type||"mousecancel"===t.type?i=t:"touchend"!==t.type&&"touchcancel"!==t.type||(i=t.changedTouches[0]);var o,n={};i&&(n.screenX=i.screenX||0,n.screenY=i.screenY||0,n.clientX=i.clientX||0,n.clientY=i.clientY||0);var s=!0,r=!0;if("undefined"!=typeof MouseEvent)try{o=new MouseEvent(e,S({bubbles:s,cancelable:r},n))}catch(t){a()}else a();function a(){(o=document.createEvent("Event")).initEvent(e,s,r),S(o,n)}o.forwardedTouchEvent=!0,o._constructed=!0,t.target.dispatchEvent(o)}(t),!0))},t.prototype.scrollBy=function(t,e,i,o){void 0===i&&(i=0),void 0===o&&(o=V),t+=this.translater.x,e+=this.translater.y,this.scrollTo(t,e,i,o)},t.prototype.scrollTo=function(t,e,i,o){void 0===i&&(i=0),void 0===o&&(o=V);var n=this.options.useTransition?o.style:o.fn;t===this.translater.x&&e===this.translater.y||this.animater.scrollTo(t,e,i,n)},t.prototype.scrollToElement=function(t,e,i,o,n){var s=E(t=t.nodeType?t:this.element.querySelector(t));s.left-=this.wrapperOffset.left,s.top-=this.wrapperOffset.top,!0===i&&(i=Math.round(t.offsetWidth/2-this.wrapper.offsetWidth/2)),!0===o&&(o=Math.round(t.offsetHeight/2-this.wrapper.offsetHeight/2)),s.left-=i||0,s.top-=o||0,s.left=s.left>this.minScrollX?this.minScrollX:s.left<this.maxScrollX?this.maxScrollX:s.left,s.top=s.top>this.minScrollY?this.minScrollY:s.top<this.maxScrollY?this.maxScrollY:s.top,this.scrollTo(s.left,s.top,e,n)},t.prototype.resetPosition=function(t,e){return void 0===t&&(t=0),void 0===e&&(e=V),this.animater.resetPosition(t,e)},t}();return function(n){function t(t,e){var i=n.call(this,["refresh","scrollStart"])||this,o="string"==typeof t?document.querySelector(t):t;return o?o.children[0]?(i.options=(new q).merge(e).process(),i.hooks=new p(["init"]),i.init(o)):s("The wrapper need at least one child element to be scroller."):s("Can not resolve the wrapper DOM."),i}return i(t,n),t.use=function(t){for(var e=[],i=1;i<arguments.length;i++)e[i-1]=arguments[i];var o=this._installedPlugins||(this._installedPlugins=[]);return-1<o.indexOf(t)||(e.unshift(this),t.install&&t.install.apply(t,e),o.push(t)),this},t.plugin=function(t,e){this._pluginsMap||(this._pluginsMap={}),this._pluginsMap[t]&&s("This plugin has been registered, maybe you need change plugin's name"),this._pluginsMap[t]=e},t.prototype.init=function(t){this.scroller=new tt(t,this.options),this.hooks.trigger(this.hooks.eventTypes.init),this.applyPlugins(),this.options.autoBlur&&this.handleAutoBlur(),this.refresh(),this.options.slide||this.scroller.scrollTo(this.options.startX,this.options.startY),this.enable()},t.prototype.applyPlugins=function(){var t,e=this.options,i=this.constructor._pluginsMap||{};for(var o in i)t=i[o],e[o]&&"function"==typeof t&&new t(this)},t.prototype.handleAutoBlur=function(){this.on(this.eventTypes.scrollStart,function(){var t=document.activeElement;!t||"INPUT"!==t.tagName&&"TEXTAREA"!==t.tagName||t.blur()})},t.prototype.refresh=function(){this.scroller.refresh(),this.trigger(this.eventTypes.refresh),this.scroller.resetPosition()},t.prototype.enable=function(){},t.prototype.disable=function(){},t.prototype.destroy=function(){},t.version="2.0.0",t}(p)});
-//# sourceMappingURL=bscroll.js.map
+/*!
+ * better-normal-scroll v2.0.0
+ * (c) 2016-2019 ustbhuangyi
+ * Released under the MIT License.
+ */
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.BScroll = factory());
+}(this, (function () { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    function warn(msg) {
+        console.error("[BScroll warn]: " + msg);
+    }
+
+    var EventEmitter = /** @class */ (function () {
+        function EventEmitter(names) {
+            var _this = this;
+            this._events = {};
+            this.eventTypes = {};
+            names.forEach(function (type) {
+                _this.eventTypes[type] = type;
+            });
+        }
+        EventEmitter.prototype.on = function (type, fn, context) {
+            if (context === void 0) { context = this; }
+            this._checkInTypes(type);
+            if (!this._events[type]) {
+                this._events[type] = [];
+            }
+            this._events[type].push([fn, context]);
+            return this;
+        };
+        EventEmitter.prototype.once = function (type, fn, context) {
+            var _this = this;
+            if (context === void 0) { context = this; }
+            this._checkInTypes(type);
+            var magic = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                _this.off(type, magic);
+                fn.apply(context, args);
+            };
+            magic.fn = fn;
+            this.on(type, magic);
+            return this;
+        };
+        EventEmitter.prototype.off = function (type, fn) {
+            this._checkInTypes(type);
+            var _events = this._events[type];
+            if (!_events) {
+                return this;
+            }
+            var count = _events.length;
+            while (count--) {
+                if (_events[count][0] === fn ||
+                    (_events[count][0] && _events[count][0].fn === fn)) {
+                    _events.splice(count, 1);
+                }
+            }
+            return this;
+        };
+        EventEmitter.prototype.trigger = function (type) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            this._checkInTypes(type);
+            var events = this._events[type];
+            if (!events) {
+                return;
+            }
+            var len = events.length;
+            var eventsCopy = events.slice();
+            var ret;
+            for (var i = 0; i < len; i++) {
+                var event_1 = eventsCopy[i];
+                var fn = event_1[0], context = event_1[1];
+                if (fn) {
+                    var ret_1 = fn.apply(context, args);
+                    if (ret_1 === true)
+                        break;
+                }
+            }
+            return ret;
+        };
+        EventEmitter.prototype._checkInTypes = function (type) {
+            var types = this.eventTypes;
+            var inTypes = types[type] === type;
+            if (!inTypes) {
+                warn("EventEmitter has used unknown event type: \"" + type + "\", should be oneof " + types);
+            }
+        };
+        return EventEmitter;
+    }());
+
+    var Probe;
+    (function (Probe) {
+        Probe[Probe["Default"] = 0] = "Default";
+        Probe[Probe["Throttle"] = 1] = "Throttle";
+        Probe[Probe["Normal"] = 2] = "Normal";
+        Probe[Probe["Realtime"] = 3] = "Realtime";
+    })(Probe || (Probe = {}));
+    var Direction;
+    (function (Direction) {
+        Direction[Direction["Up"] = 1] = "Up";
+        Direction[Direction["Left"] = 1] = "Left";
+        Direction[Direction["Down"] = -1] = "Down";
+        Direction[Direction["Right"] = -1] = "Right";
+        Direction[Direction["Default"] = 0] = "Default";
+    })(Direction || (Direction = {}));
+    var EventType;
+    (function (EventType) {
+        EventType[EventType["Touch"] = 1] = "Touch";
+        EventType[EventType["Mouse"] = 2] = "Mouse";
+    })(EventType || (EventType = {}));
+    var DirectionLock;
+    (function (DirectionLock) {
+        DirectionLock[DirectionLock["Default"] = 0] = "Default";
+        DirectionLock[DirectionLock["Horizontal"] = 1] = "Horizontal";
+        DirectionLock[DirectionLock["Vertical"] = 2] = "Vertical";
+        DirectionLock[DirectionLock["None"] = 3] = "None";
+    })(DirectionLock || (DirectionLock = {}));
+    var MouseButton;
+    (function (MouseButton) {
+        MouseButton[MouseButton["Left"] = 0] = "Left";
+        MouseButton[MouseButton["Middle"] = 1] = "Middle";
+        MouseButton[MouseButton["Right"] = 2] = "Right";
+    })(MouseButton || (MouseButton = {}));
+    var EventPassthrough;
+    (function (EventPassthrough) {
+        EventPassthrough["None"] = "";
+        EventPassthrough["Horizontal"] = "horizontal";
+        EventPassthrough["Vertical"] = "vertical";
+    })(EventPassthrough || (EventPassthrough = {}));
+
+    // ssr support
+    var inBrowser = typeof window !== 'undefined';
+    var ua = inBrowser && navigator.userAgent.toLowerCase();
+    var isWeChatDevTools = ua && /wechatdevtools/.test(ua);
+    var isAndroid = ua && ua.indexOf('android') > 0;
+
+    function getNow() {
+        return window.performance && window.performance.now
+            ? window.performance.now() + window.performance.timing.navigationStart
+            : +new Date();
+    }
+    function extend(target) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        for (var i = 0; i < rest.length; i++) {
+            var source = rest[i];
+            for (var key in source) {
+                target[key] = source[key];
+            }
+        }
+        return target;
+    }
+    function isUndef(v) {
+        return v === undefined || v === null;
+    }
+
+    var elementStyle = (inBrowser && document.createElement('div').style);
+    var vendor = (function () {
+        if (!inBrowser) {
+            return false;
+        }
+        var transformNames = {
+            webkit: 'webkitTransform',
+            Moz: 'MozTransform',
+            O: 'OTransform',
+            ms: 'msTransform',
+            standard: 'transform'
+        };
+        for (var key in transformNames) {
+            if (elementStyle[transformNames[key]] !== undefined) {
+                return key;
+            }
+        }
+        return false;
+    })();
+    function prefixStyle(style) {
+        if (vendor === false) {
+            return false;
+        }
+        if (vendor === 'standard') {
+            if (style === 'transitionEnd') {
+                return 'transitionend';
+            }
+            return style;
+        }
+        return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+    }
+    function addEvent(el, type, fn, capture) {
+        el.addEventListener(type, fn, {
+            passive: false,
+            capture: !!capture
+        });
+    }
+    function removeEvent(el, type, fn, capture) {
+        el.removeEventListener(type, fn, {
+            capture: !!capture
+        });
+    }
+    function offset(el) {
+        var left = 0;
+        var top = 0;
+        while (el) {
+            left -= el.offsetLeft;
+            top -= el.offsetTop;
+            el = el.offsetParent;
+        }
+        return {
+            left: left,
+            top: top
+        };
+    }
+    var cssVendor = vendor && vendor !== 'standard' ? '-' + vendor.toLowerCase() + '-' : '';
+    var transform = prefixStyle('transform');
+    var transition = prefixStyle('transition');
+    var hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle;
+    // fix issue #361
+    var hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools);
+    var hasTransform = transform !== false;
+    var hasTransition = inBrowser && transition in elementStyle;
+    var style = {
+        transform: transform,
+        transition: transition,
+        transitionTimingFunction: prefixStyle('transitionTimingFunction'),
+        transitionDuration: prefixStyle('transitionDuration'),
+        transitionDelay: prefixStyle('transitionDelay'),
+        transformOrigin: prefixStyle('transformOrigin'),
+        transitionEnd: prefixStyle('transitionEnd')
+    };
+    var eventTypeMap = {
+        touchstart: EventType.Touch,
+        touchmove: EventType.Touch,
+        touchend: EventType.Touch,
+        mousedown: EventType.Mouse,
+        mousemove: EventType.Mouse,
+        mouseup: EventType.Mouse
+    };
+    function getRect(el) {
+        if (el instanceof window.SVGElement) {
+            var rect = el.getBoundingClientRect();
+            return {
+                top: rect.top,
+                left: rect.left,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+        else {
+            return {
+                top: el.offsetTop,
+                left: el.offsetLeft,
+                width: el.offsetWidth,
+                height: el.offsetHeight
+            };
+        }
+    }
+    function preventDefaultExceptionFn(el, exceptions) {
+        for (var i in exceptions) {
+            if (exceptions[i].test(el[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function tap(e, eventName) {
+        var ev = document.createEvent('Event');
+        ev.initEvent(eventName, true, true);
+        ev.pageX = e.pageX;
+        ev.pageY = e.pageY;
+        e.target.dispatchEvent(ev);
+    }
+    function click(e, event) {
+        if (event === void 0) { event = 'click'; }
+        var eventSource;
+        if (e.type === 'mouseup' || e.type === 'mousecancel') {
+            eventSource = e;
+        }
+        else if (e.type === 'touchend' || e.type === 'touchcancel') {
+            eventSource = e.changedTouches[0];
+        }
+        var posSrc = {};
+        if (eventSource) {
+            posSrc.screenX = eventSource.screenX || 0;
+            posSrc.screenY = eventSource.screenY || 0;
+            posSrc.clientX = eventSource.clientX || 0;
+            posSrc.clientY = eventSource.clientY || 0;
+        }
+        var ev;
+        var bubbles = true;
+        var cancelable = true;
+        if (typeof MouseEvent !== 'undefined') {
+            try {
+                ev = new MouseEvent(event, extend({
+                    bubbles: bubbles,
+                    cancelable: cancelable
+                }, posSrc));
+            }
+            catch (e) {
+                createEvent();
+            }
+        }
+        else {
+            createEvent();
+        }
+        function createEvent() {
+            ev = document.createEvent('Event');
+            ev.initEvent(event, bubbles, cancelable);
+            extend(ev, posSrc);
+        }
+        // forwardedTouchEvent set to true in case of the conflict with fastclick
+        ev.forwardedTouchEvent = true;
+        ev._constructed = true;
+        e.target.dispatchEvent(ev);
+    }
+
+    var ease = {
+        // easeOutQuint
+        swipe: {
+            style: 'cubic-bezier(0.23, 1, 0.32, 1)',
+            fn: function (t) {
+                return 1 + --t * t * t * t * t;
+            }
+        },
+        // easeOutQuard
+        swipeBounce: {
+            style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            fn: function (t) {
+                return t * (2 - t);
+            }
+        },
+        // easeOutQuart
+        bounce: {
+            style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+            fn: function (t) {
+                return 1 - --t * t * t * t;
+            }
+        }
+    };
+
+    function momentum(current, start, time, lowerMargin, upperMargin, wrapperSize, options) {
+        var distance = current - start;
+        var speed = Math.abs(distance) / time;
+        var deceleration = options.deceleration, itemHeight = options.itemHeight, swipeBounceTime = options.swipeBounceTime, wheel = options.wheel, swipeTime = options.swipeTime;
+        var duration = swipeTime;
+        var rate = wheel ? 4 : 15;
+        var destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1);
+        if (wheel && itemHeight) {
+            destination = Math.round(destination / itemHeight) * itemHeight;
+        }
+        if (destination < lowerMargin) {
+            destination = wrapperSize
+                ? Math.max(lowerMargin - wrapperSize / 4, lowerMargin - (wrapperSize / rate) * speed)
+                : lowerMargin;
+            duration = swipeBounceTime;
+        }
+        else if (destination > upperMargin) {
+            destination = wrapperSize
+                ? Math.min(upperMargin + wrapperSize / 4, upperMargin + (wrapperSize / rate) * speed)
+                : upperMargin;
+            duration = swipeBounceTime;
+        }
+        return {
+            destination: Math.round(destination),
+            duration: duration
+        };
+    }
+
+    var DEFAULT_INTERVAL = 100 / 60;
+    var windowCompat = window;
+    function noop() { }
+    var requestAnimationFrame = (function () {
+        if (!inBrowser) {
+            /* istanbul ignore if */
+            return noop;
+        }
+        return (windowCompat.requestAnimationFrame ||
+            windowCompat.webkitRequestAnimationFrame ||
+            windowCompat.mozRequestAnimationFrame ||
+            windowCompat.oRequestAnimationFrame ||
+            // if all else fails, use setTimeout
+            function (callback) {
+                return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL) / 2); // make interval as precise as possible.
+            });
+    })();
+    var cancelAnimationFrame = (function () {
+        if (!inBrowser) {
+            /* istanbul ignore if */
+            return noop;
+        }
+        return (windowCompat.cancelAnimationFrame ||
+            windowCompat.webkitCancelAnimationFrame ||
+            windowCompat.mozCancelAnimationFrame ||
+            windowCompat.oCancelAnimationFrame ||
+            function (id) {
+                window.clearTimeout(id);
+            });
+    })();
+
+    var Options = /** @class */ (function () {
+        function Options() {
+            this.startX = 0;
+            this.startY = 0;
+            this.scrollX = false;
+            this.scrollY = true;
+            this.freeScroll = false;
+            this.directionLockThreshold = 5;
+            this.eventPassthrough = EventPassthrough.None;
+            this.click = false;
+            this.tap = '';
+            /**
+             * support any side
+             * bounce: {
+             *   top: true,
+             *   bottom: true,
+             *   left: true,
+             *   right: true
+             * }
+             */
+            this.bounce = true;
+            this.bounceTime = 800;
+            this.momentum = true;
+            this.momentumLimitTime = 300;
+            this.momentumLimitDistance = 15;
+            this.swipeTime = 2500;
+            this.swipeBounceTime = 500;
+            this.deceleration = 0.0015;
+            this.flickLimitTime = 200;
+            this.flickLimitDistance = 100;
+            this.resizePolling = 60;
+            this.probeType = Probe.Default;
+            this.stopPropagation = false;
+            this.preventDefault = true;
+            this.preventDefaultException = {
+                tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+            };
+            this.HWCompositing = true;
+            this.useTransition = true;
+            this.useTransform = true;
+            this.bindToWrapper = false;
+            this.disableMouse = hasTouch;
+            this.observeDOM = true;
+            this.autoBlur = true;
+            // plugins config
+            /**
+             * for picker
+             * wheel: {
+             *   selectedIndex: 0,
+             *   rotate: 25,
+             *   adjustTime: 400
+             *   wheelWrapperClass: 'wheel-scroll',
+             *   wheelItemClass: 'wheel-item'
+             * }
+             */
+            this.picker = false;
+            /**
+             * for slide
+             * slide: {
+             *   loop: false,
+             *   el: domEl,
+             *   threshold: 0.1,
+             *   stepX: 100,
+             *   stepY: 100,
+             *   speed: 400,
+             *   easing: {
+             *     style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+             *     fn: function (t) {
+             *       return t * (2 - t)
+             *     }
+             *   }
+             *   listenFlick: true
+             * }
+             */
+            this.slide = false;
+            /**
+             * for scrollbar
+             * scrollbar: {
+             *   fade: true,
+             *   interactive: false
+             * }
+             */
+            this.scrollbar = false;
+            /**
+             * for pull down and refresh
+             * pullDownRefresh: {
+             *   threshold: 50,
+             *   stop: 20
+             * }
+             */
+            this.pullDownRefresh = false;
+            /**
+             * for pull up and load
+             * pullUpLoad: {
+             *   threshold: 50
+             * }
+             */
+            this.pullUpLoad = false;
+            /**
+             * for mouse wheel
+             * mouseWheel: {
+             *   speed: 20,
+             *   invert: false,
+             *   easeTime: 300
+             * }
+             */
+            this.mouseWheel = false;
+            /**
+             * for zoom
+             * zoom: {
+             *   start: 1,
+             *   min: 1,
+             *   max: 4
+             * }
+             */
+            this.zoom = false;
+            /**
+             * for infinity
+             * infinity: {
+             *   render(item, div) {
+             *   },
+             *   createTombstone() {
+             *   },
+             *   fetch(count) {
+             *   }
+             * }
+             */
+            this.infinity = false;
+            /**
+             * for double click
+             * dblclick: {
+             *   delay: 300
+             * }
+             */
+            this.dblclick = false;
+        }
+        Options.prototype.merge = function (options) {
+            if (!options)
+                return this;
+            for (var key in options) {
+                this[key] = options[key];
+            }
+            return this;
+        };
+        Options.prototype.process = function () {
+            this.translateZ = this.HWCompositing && hasPerspective ? ' translateZ(0)' : '';
+            this.useTransition = this.useTransition && hasTransition;
+            this.useTransform = this.useTransform && hasTransform;
+            this.preventDefault = !this.eventPassthrough && this.preventDefault;
+            // If you want eventPassthrough I have to lock one of the axes
+            this.scrollX = this.eventPassthrough === 'horizontal' ? false : this.scrollX;
+            this.scrollY = this.eventPassthrough === 'vertical' ? false : this.scrollY;
+            // With eventPassthrough we also need lockDirection mechanism
+            this.freeScroll = this.freeScroll && !this.eventPassthrough;
+            this.directionLockThreshold = this.eventPassthrough
+                ? 0
+                : this.directionLockThreshold;
+            return this;
+        };
+        return Options;
+    }());
+
+    var ActionsHandler = /** @class */ (function () {
+        function ActionsHandler(wrapper, options) {
+            this.wrapper = wrapper;
+            this.options = options;
+            this.hooks = new EventEmitter(['start', 'move', 'end']);
+            this.addDOMEvents();
+        }
+        ActionsHandler.prototype.addDOMEvents = function () {
+            var eventOperation = addEvent;
+            this.handleDOMEvents(eventOperation);
+        };
+        ActionsHandler.prototype.removeDOMEvents = function () {
+            var eventOperation = removeEvent;
+            this.handleDOMEvents(eventOperation);
+        };
+        ActionsHandler.prototype.handleDOMEvents = function (eventOperation) {
+            var _a = this.options, bindToWrapper = _a.bindToWrapper, click$$1 = _a.click, disableMouse = _a.disableMouse;
+            var wrapper = this.wrapper;
+            var target = bindToWrapper ? wrapper : window;
+            eventOperation(window, 'orientationchange', this);
+            eventOperation(window, 'resize', this);
+            if (click$$1) {
+                eventOperation(wrapper, 'click', this, true);
+            }
+            if (!disableMouse) {
+                eventOperation(wrapper, 'mousedown', this);
+                eventOperation(target, 'mousemove', this);
+                eventOperation(target, 'mousecancel', this);
+                eventOperation(target, 'mouseup', this);
+            }
+            if (disableMouse) {
+                eventOperation(wrapper, 'touchstart', this);
+                eventOperation(target, 'touchmove', this);
+                eventOperation(target, 'touchcancel', this);
+                eventOperation(target, 'touchend', this);
+            }
+        };
+        ActionsHandler.prototype.handleEvent = function (e) {
+            switch (e.type) {
+                case 'touchstart':
+                case 'mousedown':
+                    this.start(e);
+                    break;
+                case 'touchmove':
+                case 'mousemove':
+                    this.move(e);
+                    break;
+                case 'touchend':
+                case 'mouseup':
+                case 'touchcancel':
+                case 'mousecancel':
+                    this.end(e);
+                    break;
+            }
+        };
+        ActionsHandler.prototype.start = function (e) {
+            var _eventType = eventTypeMap[e.type];
+            if (this.initiated && this.initiated !== _eventType) {
+                return;
+            }
+            this.initiated = _eventType;
+            // no mouse left button
+            if (_eventType === EventType.Mouse && e.button !== MouseButton.Left)
+                return;
+            var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
+            if (preventDefault &&
+                !preventDefaultExceptionFn(e.target, preventDefaultException)) {
+                e.preventDefault();
+            }
+            if (stopPropagation) {
+                e.stopPropagation();
+            }
+            var point = (e.touches ? e.touches[0] : e);
+            this.pointX = point.pageX;
+            this.pointY = point.pageY;
+            this.hooks.trigger(this.hooks.eventTypes.start, {
+                timeStamp: e.timeStamp
+            });
+        };
+        ActionsHandler.prototype.move = function (e) {
+            if (eventTypeMap[e.type] !== this.initiated) {
+                return;
+            }
+            var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
+            if (preventDefault &&
+                !preventDefaultExceptionFn(e.target, preventDefaultException)) {
+                e.preventDefault();
+            }
+            if (stopPropagation) {
+                e.stopPropagation();
+            }
+            var point = (e.touches ? e.touches[0] : e);
+            var deltaX = point.pageX - this.pointX;
+            var deltaY = point.pageY - this.pointY;
+            this.pointX = point.pageX;
+            this.pointY = point.pageY;
+            if (this.hooks.trigger(this.hooks.eventTypes.move, {
+                timeStamp: e.timeStamp,
+                deltaX: deltaX,
+                deltaY: deltaY,
+                e: e,
+                actionsHandler: this
+            }))
+                return;
+            // auto end when out of wrapper
+            var scrollLeft = document.documentElement.scrollLeft ||
+                window.pageXOffset ||
+                document.body.scrollLeft;
+            var scrollTop = document.documentElement.scrollTop ||
+                window.pageYOffset ||
+                document.body.scrollTop;
+            var pX = this.pointX - scrollLeft;
+            var pY = this.pointY - scrollTop;
+            if (pX >
+                document.documentElement.clientWidth -
+                    this.options.momentumLimitDistance ||
+                pX < this.options.momentumLimitDistance ||
+                pY < this.options.momentumLimitDistance ||
+                pY >
+                    document.documentElement.clientHeight -
+                        this.options.momentumLimitDistance) {
+                this.end(e);
+            }
+        };
+        ActionsHandler.prototype.end = function (e) {
+            if (eventTypeMap[e.type] !== this.initiated) {
+                return;
+            }
+            this.initiated = false;
+            var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
+            if (preventDefault &&
+                !preventDefaultExceptionFn(e.target, preventDefaultException)) {
+                e.preventDefault();
+            }
+            if (stopPropagation) {
+                e.stopPropagation();
+            }
+            this.hooks.trigger(this.hooks.eventTypes.end, e);
+        };
+        ActionsHandler.prototype.setPointPosition = function (e) {
+            var point = (e.touches ? e.touches[0] : e);
+            this.pointX = point.pageX;
+            this.pointY = point.pageY;
+            return point;
+        };
+        return ActionsHandler;
+    }());
+
+    var Base = /** @class */ (function () {
+        function Base(element) {
+            this.element = element;
+            // cache for better performance
+            this.style = element.style;
+            this.setUpProps();
+        }
+        Base.prototype.setScale = function (scale) {
+            this.lastScale = isUndef(this.scale) ? scale : this.scale;
+            this.scale = scale;
+        };
+        Base.prototype.updateProps = function (x, y, scale) {
+            this.x = x;
+            this.y = y;
+            this.setScale(scale);
+        };
+        Base.prototype.setUpProps = function () {
+            this.x = 0;
+            this.y = 0;
+            this.setScale(1);
+        };
+        return Base;
+    }());
+
+    var Position = /** @class */ (function (_super) {
+        __extends(Position, _super);
+        function Position(element) {
+            return _super.call(this, element) || this;
+        }
+        Position.prototype.getComputedPosition = function () {
+            var cssStyle = window.getComputedStyle(this.element, null);
+            var x = +cssStyle.left.replace(/[^-\d.]/g, '');
+            var y = +cssStyle.top.replace(/[^-\d.]/g, '');
+            return {
+                x: x,
+                y: y
+            };
+        };
+        Position.prototype.updatePosition = function (x, y, scale) {
+            this.style.left = Math.round(x) + "px";
+            this.style.top = Math.round(y) + "px";
+            this.updateProps(x, y, scale);
+        };
+        return Position;
+    }(Base));
+
+    var Transform = /** @class */ (function (_super) {
+        __extends(Transform, _super);
+        function Transform(element, options) {
+            var _this = _super.call(this, element) || this;
+            _this.options = options;
+            return _this;
+        }
+        Transform.prototype.getComputedPosition = function () {
+            var cssStyle = window.getComputedStyle(this.element, null);
+            var matrix = cssStyle[style.transform].split(')')[0].split(', ');
+            var x = +(matrix[12] || matrix[4]);
+            var y = +(matrix[13] || matrix[5]);
+            return {
+                x: x,
+                y: y
+            };
+        };
+        Transform.prototype.updatePosition = function (x, y, scale) {
+            this.style[style.transform] = "translate(" + x + "px," + y + "px) scale(" + scale + ")" + this.options.translateZ;
+            this.updateProps(x, y, scale);
+        };
+        return Transform;
+    }(Base));
+
+    var Base$1 = /** @class */ (function () {
+        function Base(element, translater, options) {
+            this.element = element;
+            this.translater = translater;
+            this.options = options;
+            this.hooks = new EventEmitter(['scroll', 'scrollEnd']);
+            this.style = element.style;
+        }
+        Base.prototype.refresh = function (boundaryInfo) {
+            var _this = this;
+            Object.keys(boundaryInfo).forEach(function (key) {
+                _this[key] = boundaryInfo[key];
+            });
+        };
+        Base.prototype.translate = function (x, y, scale) {
+            this.translater.updatePosition(x, y, scale);
+        };
+        Base.prototype._resetPosition = function (time, easing) {
+            var x = this.translater.x;
+            var roundX = Math.round(x);
+            if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
+                x = this.minScrollX;
+            }
+            else if (roundX < this.maxScrollX) {
+                x = this.maxScrollX;
+            }
+            var y = this.translater.y;
+            var roundY = Math.round(y);
+            if (!this.hasVerticalScroll || roundY > this.minScrollY) {
+                y = this.minScrollY;
+            }
+            else if (roundY < this.maxScrollY) {
+                y = this.maxScrollY;
+            }
+            // in boundary
+            if (x === this.translater.x && y === this.translater.y) {
+                return false;
+            }
+            // out of boundary
+            this.scrollTo(x, y, time, easing);
+            return true;
+        };
+        Base.prototype.callHooks = function (eventType, pos) {
+            pos = isUndef(pos)
+                ? {
+                    x: this.translater.x,
+                    y: this.translater.y
+                }
+                : pos;
+            this.hooks.trigger(eventType, pos);
+        };
+        return Base;
+    }());
+
+    var Transition = /** @class */ (function (_super) {
+        __extends(Transition, _super);
+        function Transition(element, translater, options) {
+            return _super.call(this, element, translater, options) || this;
+        }
+        Transition.prototype.startProbe = function () {
+            var _this = this;
+            var probe = function () {
+                var pos = _this.translater.getComputedPosition();
+                _this.callHooks(_this.hooks.eventTypes.scroll, pos);
+                // excuted when transition ends
+                if (!_this.pending) {
+                    _this.callHooks(_this.hooks.eventTypes.scrollEnd, pos);
+                    return;
+                }
+                _this.timer = requestAnimationFrame(probe);
+            };
+            cancelAnimationFrame(this.timer);
+            this.timer = requestAnimationFrame(probe);
+        };
+        Transition.prototype.transitionTime = function (time) {
+            if (time === void 0) { time = 0; }
+            this.style[style.transitionDuration] = time + 'ms';
+        };
+        Transition.prototype.transitionTimingFunction = function (easing) {
+            this.style[style.transitionTimingFunction] = easing;
+        };
+        Transition.prototype.scrollTo = function (x, y, time, easingFn) {
+            this.pending = time > 0;
+            this.transitionTimingFunction(easingFn);
+            this.transitionTime(time);
+            this.translater.updatePosition(x, y, this.translater.scale);
+            // TODO when probeType is not Realtime, need to dispatch scroll ?
+            if (time && this.options.probeType === Probe.Realtime) {
+                this.startProbe();
+            }
+            // when time is 0
+            if (!time) {
+                this.callHooks(this.hooks.eventTypes.scroll, {
+                    x: x,
+                    y: y
+                });
+                // force reflow to put everything in position
+                this._reflow = document.body.offsetHeight;
+                if (!this.resetPosition(this.options.bounceTime)) {
+                    this.callHooks(this.hooks.eventTypes.scrollEnd);
+                }
+            }
+        };
+        Transition.prototype.stop = function () {
+            // still in transition
+            if (this.pending) {
+                this.pending = false;
+                cancelAnimationFrame(this.timer);
+                var pos = this.translater.getComputedPosition();
+                this.transitionTime();
+                this.translate(pos.x, pos.y, this.translater.scale);
+                this.callHooks(this.hooks.eventTypes.scrollEnd, {
+                    x: pos.x,
+                    y: pos.y
+                });
+                this.forceStopped = true;
+            }
+        };
+        Transition.prototype.resetPosition = function (time, easing) {
+            if (time === void 0) { time = 0; }
+            if (easing === void 0) { easing = ease.bounce; }
+            var easingStyle = easing.style;
+            return this._resetPosition(time, easingStyle);
+        };
+        return Transition;
+    }(Base$1));
+
+    var Animation = /** @class */ (function (_super) {
+        __extends(Animation, _super);
+        function Animation(element, translater, options) {
+            return _super.call(this, element, translater, options) || this;
+        }
+        Animation.prototype.scrollTo = function (x, y, time, easingFn) {
+            // time is 0
+            if (!time) {
+                this.translater.updatePosition(x, y, this.translater.scale);
+                this.hooks.trigger(this.hooks.eventTypes.scroll, {
+                    x: x,
+                    y: y
+                });
+                // force reflow to put everything in position
+                this._reflow = document.body.offsetHeight;
+                if (!this.resetPosition(this.options.bounceTime)) {
+                    this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+                        x: this.translater.x,
+                        y: this.translater.y
+                    });
+                }
+                return;
+            }
+            this.animate(x, y, time, easingFn);
+        };
+        Animation.prototype.animate = function (destX, destY, duration, easingFn) {
+            var _this = this;
+            var startX = this.translater.x;
+            var startY = this.translater.y;
+            var startScale = this.translater.lastScale;
+            var destScale = this.translater.scale;
+            var startTime = getNow();
+            var destTime = startTime + duration;
+            var step = function () {
+                var now = getNow();
+                if (now >= destTime) {
+                    _this.pending = false;
+                    _this.translate(destX, destY, destScale);
+                    _this.callHooks(_this.hooks.eventTypes.scroll);
+                    if (!_this.resetPosition(_this.options.bounceTime)) {
+                        _this.callHooks(_this.hooks.eventTypes.scrollEnd);
+                    }
+                    return;
+                }
+                now = (now - startTime) / duration;
+                var easing = easingFn(now);
+                var newX = (destX - startX) * easing + startX;
+                var newY = (destY - startY) * easing + startY;
+                var newScale = (destScale - startScale) * easing + startScale;
+                _this.translate(newX, newY, newScale);
+                if (_this.pending) {
+                    _this.timer = requestAnimationFrame(step);
+                }
+                if (_this.options.probeType === Probe.Realtime) {
+                    _this.callHooks(_this.hooks.eventTypes.scroll);
+                }
+            };
+            this.pending = true;
+            cancelAnimationFrame(this.timer);
+            step();
+        };
+        Animation.prototype.stop = function () {
+            // still in requestFrameAnimation
+            var _a = this.translater, x = _a.x, y = _a.y;
+            if (this.pending) {
+                this.pending = false;
+                cancelAnimationFrame(this.timer);
+                this.callHooks(this.hooks.eventTypes.scrollEnd, {
+                    x: x,
+                    y: y
+                });
+                this.forceStopped = true;
+            }
+        };
+        Animation.prototype.resetPosition = function (time, easing) {
+            if (time === void 0) { time = 0; }
+            if (easing === void 0) { easing = ease.bounce; }
+            var easingFn = easing.fn;
+            return this._resetPosition(time, easingFn);
+        };
+        return Animation;
+    }(Base$1));
+
+    var Scroller = /** @class */ (function () {
+        function Scroller(wrapper, options) {
+            var _this = this;
+            this.hooks = new EventEmitter([
+                'scroll',
+                'scrollEnd',
+                'refresh',
+                'beforeScrollStart',
+                'scrollStart',
+                'touchEnd',
+                'flick',
+                'scrollCancel'
+            ]);
+            this.wrapper = wrapper;
+            this.element = wrapper.children[0];
+            this.options = options;
+            this.translater = this.options.useTransform
+                ? new Transform(this.element, {
+                    translateZ: this.options.translateZ
+                })
+                : new Position(this.element);
+            this.animater = this.options.useTransition
+                ? new Transition(this.element, this.translater, {
+                    probeType: this.options.probeType,
+                    bounceTime: this.options.bounceTime
+                })
+                : new Animation(this.element, this.translater, {
+                    probeType: this.options.probeType,
+                    bounceTime: this.options.bounceTime
+                });
+            var actionsHandler = new ActionsHandler(wrapper, this.createActionsHandlerOpt());
+            this.enabled = true;
+            this.addDOMEvents();
+            actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.start, function (_a) {
+                var timeStamp = _a.timeStamp;
+                if (!_this.enabled)
+                    return true;
+                _this.moved = false;
+                _this.directionX = Direction.Default;
+                _this.directionY = Direction.Default;
+                _this.movingDirectionX = Direction.Default;
+                _this.movingDirectionY = Direction.Default;
+                _this.directionLocked = DirectionLock.Default;
+                _this.startX = _this.translater.x;
+                _this.startY = _this.translater.y;
+                _this.absStartX = _this.translater.x;
+                _this.absStartY = _this.translater.y;
+                _this.startTime = timeStamp;
+                // force stopping last transition or animation
+                _this.animater.stop();
+                _this.hooks.trigger(_this.hooks.eventTypes.beforeScrollStart);
+            });
+            actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.move, function (_a) {
+                var timeStamp = _a.timeStamp, deltaX = _a.deltaX, deltaY = _a.deltaY, actionsHandler = _a.actionsHandler, e = _a.e;
+                if (!_this.enabled)
+                    return true;
+                var absDistX = Math.abs(deltaX);
+                var absDistY = Math.abs(deltaY);
+                // We need to move at least momentumLimitDistance pixels for the scrolling to initiate
+                if (timeStamp - _this.endTime > _this.options.momentumLimitTime &&
+                    (absDistY < _this.options.momentumLimitDistance &&
+                        absDistX < _this.options.momentumLimitDistance)) {
+                    return true;
+                }
+                // If you are scrolling in one direction lock the other
+                if (!_this.directionLocked && !_this.options.freeScroll) {
+                    if (absDistX > absDistY + _this.options.directionLockThreshold) {
+                        _this.directionLocked = DirectionLock.Horizontal; // lock horizontally
+                    }
+                    else if (absDistY >=
+                        absDistX + _this.options.directionLockThreshold) {
+                        _this.directionLocked = DirectionLock.Vertical; // lock vertically
+                    }
+                    else {
+                        _this.directionLocked = DirectionLock.None; // no lock
+                    }
+                }
+                if (_this.directionLocked === DirectionLock.Horizontal) {
+                    if (_this.options.eventPassthrough === EventPassthrough.Vertical) {
+                        e.preventDefault();
+                    }
+                    else if (_this.options.eventPassthrough === EventPassthrough.Horizontal) {
+                        actionsHandler.initiated = false;
+                        return true;
+                    }
+                    deltaY = 0;
+                }
+                else if (_this.directionLocked === DirectionLock.Vertical) {
+                    if (_this.options.eventPassthrough === EventPassthrough.Horizontal) {
+                        e.preventDefault();
+                    }
+                    else if (_this.options.eventPassthrough === EventPassthrough.Vertical) {
+                        actionsHandler.initiated = false;
+                        return true;
+                    }
+                    deltaX = 0;
+                }
+                deltaX = _this.hasHorizontalScroll ? deltaX : 0;
+                deltaY = _this.hasVerticalScroll ? deltaY : 0;
+                _this.movingDirectionX =
+                    deltaX > 0
+                        ? Direction.Right
+                        : deltaX < 0
+                            ? Direction.Left
+                            : Direction.Default;
+                _this.movingDirectionY =
+                    deltaY > 0
+                        ? Direction.Down
+                        : deltaY < 0
+                            ? Direction.Up
+                            : Direction.Default;
+                var newX = _this.translater.x + deltaX;
+                var newY = _this.translater.y + deltaY;
+                var top = false;
+                var bottom = false;
+                var left = false;
+                var right = false;
+                // Slow down or stop if outside of the boundaries
+                var bounce = _this.options.bounce;
+                if (bounce !== false) {
+                    top = bounce.top === undefined ? true : bounce.top;
+                    bottom = bounce.bottom === undefined ? true : bounce.bottom;
+                    left = bounce.left === undefined ? true : bounce.left;
+                    right = bounce.right === undefined ? true : bounce.right;
+                }
+                if (newX > _this.minScrollX || newX < _this.maxScrollX) {
+                    if ((newX > _this.minScrollX && left) ||
+                        (newX < _this.maxScrollX && right)) {
+                        newX = _this.translater.x + deltaX / 3;
+                    }
+                    else {
+                        newX = newX > _this.minScrollX ? _this.minScrollX : _this.maxScrollX;
+                    }
+                }
+                if (newY > _this.minScrollY || newY < _this.maxScrollY) {
+                    if ((newY > _this.minScrollY && top) ||
+                        (newY < _this.maxScrollY && bottom)) {
+                        newY = _this.translater.y + deltaY / 3;
+                    }
+                    else {
+                        newY = newY > _this.minScrollY ? _this.minScrollY : _this.maxScrollY;
+                    }
+                }
+                if (!_this.moved) {
+                    _this.moved = true;
+                    _this.hooks.trigger(_this.hooks.eventTypes.scrollStart);
+                }
+                _this.animater.translate(newX, newY, _this.translater.scale);
+                // dispatch scroll in interval time
+                if (timeStamp - _this.startTime > _this.options.momentumLimitTime) {
+                    // refresh time and start position to initiate a momentum
+                    _this.startTime = timeStamp;
+                    _this.startX = _this.translater.x;
+                    _this.startY = _this.translater.y;
+                    if (_this.options.probeType === Probe.Throttle) {
+                        _this.hooks.trigger(_this.hooks.eventTypes.scroll, {
+                            x: _this.translater.x,
+                            y: _this.translater.y
+                        });
+                    }
+                }
+                // dispatch scroll all the time
+                if (_this.options.probeType > Probe.Throttle) {
+                    _this.hooks.trigger(_this.hooks.eventTypes.scroll, {
+                        x: _this.translater.x,
+                        y: _this.translater.y
+                    });
+                }
+            });
+            actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.end, function (e) {
+                if (!_this.enabled)
+                    return true;
+                var _a = _this.translater, x = _a.x, y = _a.y, scale = _a.scale;
+                _this.hooks.trigger(_this.hooks.eventTypes.touchEnd, {
+                    x: x,
+                    y: y
+                });
+                _this.animater.pending = false;
+                // ensures that the last position is rounded
+                var newX = Math.round(x);
+                var newY = Math.round(y);
+                var deltaX = newX - _this.absStartX;
+                var deltaY = newY - _this.absStartY;
+                _this.directionX =
+                    deltaX > 0
+                        ? Direction.Right
+                        : deltaX < 0
+                            ? Direction.Left
+                            : Direction.Default;
+                _this.directionY =
+                    deltaY > 0
+                        ? Direction.Down
+                        : deltaY < 0
+                            ? Direction.Up
+                            : Direction.Default;
+                // TODO PullDown
+                // check if it is a click operation
+                if (_this.checkClick(e)) {
+                    _this.hooks.trigger(_this.hooks.eventTypes.scrollCancel);
+                    return;
+                }
+                // reset if we are outside of the boundaries
+                if (_this.resetPosition(_this.options.bounceTime, ease.bounce)) {
+                    return;
+                }
+                _this.animater.translate(newX, newY, scale);
+                _this.endTime = e.timeStamp;
+                var duration = _this.endTime - _this.startTime;
+                var absDistX = Math.abs(newX - _this.startX);
+                var absDistY = Math.abs(newY - _this.startY);
+                // flick
+                if (duration < _this.options.flickLimitTime &&
+                    absDistX < _this.options.flickLimitDistance &&
+                    absDistY < _this.options.flickLimitDistance) {
+                    _this.hooks.trigger('flick');
+                    return;
+                }
+                var time = 0;
+                // start momentum animation if needed
+                if (_this.options.momentum &&
+                    duration < _this.options.momentumLimitTime &&
+                    (absDistY > _this.options.momentumLimitDistance ||
+                        absDistX > _this.options.momentumLimitDistance)) {
+                    var top_1 = false;
+                    var bottom = false;
+                    var left = false;
+                    var right = false;
+                    var bounce = _this.options.bounce;
+                    if (bounce !== false) {
+                        top_1 = bounce.top === undefined ? true : bounce.top;
+                        bottom = bounce.bottom === undefined ? true : bounce.bottom;
+                        left = bounce.left === undefined ? true : bounce.left;
+                        right = bounce.right === undefined ? true : bounce.right;
+                    }
+                    var wrapperWidth = (_this.directionX === Direction.Right && left) ||
+                        (_this.directionX === Direction.Left && right)
+                        ? _this.wrapperWidth
+                        : 0;
+                    var wrapperHeight = (_this.directionY === Direction.Down && top_1) ||
+                        (_this.directionY === Direction.Up && bottom)
+                        ? _this.wrapperHeight
+                        : 0;
+                    var momentumX = _this.hasHorizontalScroll
+                        ? momentum(_this.translater.x, _this.startX, duration, _this.maxScrollX, _this.minScrollX, wrapperWidth, _this.options)
+                        : { destination: newX, duration: 0 };
+                    var momentumY = _this.hasVerticalScroll
+                        ? momentum(_this.translater.y, _this.startY, duration, _this.maxScrollY, _this.minScrollY, wrapperHeight, _this.options)
+                        : { destination: newY, duration: 0 };
+                    newX = momentumX.destination;
+                    newY = momentumY.destination;
+                    time = Math.max(momentumX.duration, momentumY.duration);
+                    _this.animater.pending = true;
+                }
+                var easing;
+                if (newX !== _this.translater.x || newY !== _this.translater.y) {
+                    // change easing function when scroller goes out of the boundaries
+                    if (newX > _this.minScrollX ||
+                        newX < _this.maxScrollX ||
+                        newY > _this.minScrollY ||
+                        newY < _this.maxScrollY) {
+                        easing = ease.swipeBounce;
+                    }
+                    _this.scrollTo(newX, newY, time, easing);
+                    return;
+                }
+                _this.hooks.trigger(_this.hooks.eventTypes.scrollEnd, {
+                    x: _this.translater.x,
+                    y: _this.translater.y
+                });
+            });
+        }
+        Scroller.prototype.createActionsHandlerOpt = function () {
+            var _this = this;
+            var options = [
+                'bindToWrapper',
+                'click',
+                'disableMouse',
+                'preventDefault',
+                'stopPropagation',
+                'preventDefaultException'
+            ].reduce(function (prev, cur) {
+                prev[cur] = _this.options[cur];
+                return prev;
+            }, {});
+            return options;
+        };
+        Scroller.prototype.refresh = function () {
+            var wrapper = this.wrapper;
+            var isWrapperStatic = window.getComputedStyle(wrapper, null).position === 'static';
+            var wrapperRect = getRect(wrapper);
+            this.wrapperWidth = wrapperRect.width;
+            this.wrapperHeight = wrapperRect.height;
+            var elementRect = getRect(this.element);
+            this.elementWidth = Math.round(elementRect.width * this.translater.scale);
+            this.elementHeight = Math.round(elementRect.height * this.translater.scale);
+            this.relativeX = elementRect.left;
+            this.relativeY = elementRect.top;
+            if (isWrapperStatic) {
+                this.relativeX -= wrapperRect.left;
+                this.relativeY -= wrapperRect.top;
+            }
+            this.minScrollX = 0;
+            this.minScrollY = 0;
+            this.maxScrollX = this.wrapperWidth - this.elementWidth;
+            this.maxScrollY = this.wrapperHeight - this.elementHeight;
+            if (this.maxScrollX < 0) {
+                this.maxScrollX -= this.relativeX;
+                this.minScrollX = -this.relativeX;
+            }
+            else if (this.translater.scale > 1) {
+                this.maxScrollX = this.maxScrollX / 2 - this.relativeX;
+                this.minScrollX = this.maxScrollX;
+            }
+            if (this.maxScrollY < 0) {
+                this.maxScrollY -= this.relativeY;
+                this.minScrollY = -this.relativeY;
+            }
+            else if (this.translater.scale > 1) {
+                this.maxScrollY = this.maxScrollY / 2 - this.relativeY;
+                this.minScrollY = this.maxScrollY;
+            }
+            this.hasHorizontalScroll =
+                this.options.scrollX && this.maxScrollX < this.minScrollX;
+            this.hasVerticalScroll =
+                this.options.scrollY && this.maxScrollY < this.minScrollY;
+            if (!this.hasHorizontalScroll) {
+                this.maxScrollX = this.minScrollX;
+                this.elementWidth = this.wrapperWidth;
+            }
+            if (!this.hasVerticalScroll) {
+                this.maxScrollY = this.minScrollY;
+                this.elementHeight = this.wrapperHeight;
+            }
+            this.endTime = 0;
+            this.directionX = 0;
+            this.directionY = 0;
+            this.wrapperOffset = offset(wrapper);
+            this.animater.refresh({
+                minScrollX: this.minScrollX,
+                maxScrollX: this.maxScrollX,
+                minScrollY: this.minScrollY,
+                maxScrollY: this.maxScrollY,
+                hasHorizontalScroll: this.hasHorizontalScroll,
+                hasVerticalScroll: this.hasVerticalScroll
+            });
+        };
+        Scroller.prototype.addDOMEvents = function () {
+            var eventOperation = addEvent;
+            this.handleDOMEvents(eventOperation);
+        };
+        Scroller.prototype.removeDOMEvents = function () {
+            var eventOperation = removeEvent;
+            this.handleDOMEvents(eventOperation);
+        };
+        Scroller.prototype.handleDOMEvents = function (eventOperation) {
+            eventOperation(window, 'orientationchange', this);
+            eventOperation(window, 'resize', this);
+            eventOperation(this.element, style.transitionEnd, this);
+        };
+        Scroller.prototype.handleEvent = function (e) {
+            switch (e.type) {
+                case 'orientationchange':
+                case 'resize':
+                    this.resize();
+                    break;
+                case 'click':
+                    // ensure click event triggered only once in pc
+                    if (this.enabled && !e._constructed) {
+                        if (!preventDefaultExceptionFn(e.target, this.options.preventDefaultException)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    }
+                    break;
+                case 'transitionend':
+                case 'webkitTransitionEnd':
+                case 'oTransitionEnd':
+                case 'MSTransitionEnd':
+                    this.transitionEnd(e);
+                    break;
+            }
+        };
+        Scroller.prototype.resize = function () {
+            var _this = this;
+            if (!this.enabled) {
+                return;
+            }
+            // fix a scroll problem under Android condition
+            if (isAndroid) {
+                this.wrapper.scrollTop = 0;
+            }
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = window.setTimeout(function () {
+                _this.refresh();
+            }, this.options.resizePolling);
+        };
+        Scroller.prototype.transitionEnd = function (e) {
+            // ensure pending
+            if (e.target !== this.element || !this.animater.pending) {
+                return;
+            }
+            this.animater.transitionTime();
+            // TODO when pullingDown, do not reset position
+            // const needReset = this.movingDirectionY === Direction.Up
+            if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
+                this.animater.pending = false;
+                if (this.options.probeType !== Probe.Realtime) {
+                    this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+                        x: this.translater.x,
+                        y: this.translater.y
+                    });
+                }
+            }
+        };
+        Scroller.prototype.checkClick = function (e) {
+            // when in the process of pulling down, it should not prevent click
+            var preventClick = this.animater.forceStopped;
+            this.animater.forceStopped = false;
+            // we scrolled less than momentumLimitDistance pixels
+            if (!this.moved) {
+                if (!preventClick) {
+                    if (this.options.tap) {
+                        tap(e, this.options.tap);
+                    }
+                    if (this.options.click &&
+                        !preventDefaultExceptionFn(e.target, this.options.preventDefaultException)) {
+                        click(e);
+                    }
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        };
+        Scroller.prototype.scrollBy = function (deltaX, deltaY, time, easing) {
+            if (time === void 0) { time = 0; }
+            if (easing === void 0) { easing = ease.bounce; }
+            deltaX += this.translater.x;
+            deltaY += this.translater.y;
+            this.scrollTo(deltaX, deltaY, time, easing);
+        };
+        Scroller.prototype.scrollTo = function (x, y, time, easing) {
+            if (time === void 0) { time = 0; }
+            if (easing === void 0) { easing = ease.bounce; }
+            var easingFn = this.options.useTransition ? easing.style : easing.fn;
+            // when x or y has changed
+            if (x !== this.translater.x || y !== this.translater.y) {
+                this.animater.scrollTo(x, y, time, easingFn);
+            }
+        };
+        Scroller.prototype.scrollToElement = function (el, time, offsetX, offsetY, easing) {
+            el = (el.nodeType
+                ? el
+                : this.element.querySelector(el));
+            var pos = offset(el);
+            pos.left -= this.wrapperOffset.left;
+            pos.top -= this.wrapperOffset.top;
+            // if offsetX/Y are true we center the element to the screen
+            if (offsetX === true) {
+                offsetX = Math.round(el.offsetWidth / 2 - this.wrapper.offsetWidth / 2);
+            }
+            if (offsetY === true) {
+                offsetY = Math.round(el.offsetHeight / 2 - this.wrapper.offsetHeight / 2);
+            }
+            pos.left -= offsetX || 0;
+            pos.top -= offsetY || 0;
+            pos.left =
+                pos.left > this.minScrollX
+                    ? this.minScrollX
+                    : pos.left < this.maxScrollX
+                        ? this.maxScrollX
+                        : pos.left;
+            pos.top =
+                pos.top > this.minScrollY
+                    ? this.minScrollY
+                    : pos.top < this.maxScrollY
+                        ? this.maxScrollY
+                        : pos.top;
+            this.scrollTo(pos.left, pos.top, time, easing);
+        };
+        Scroller.prototype.resetPosition = function (time, easing) {
+            if (time === void 0) { time = 0; }
+            if (easing === void 0) { easing = ease.bounce; }
+            return this.animater.resetPosition(time, easing);
+        };
+        return Scroller;
+    }());
+
+    var BScroll = /** @class */ (function (_super) {
+        __extends(BScroll, _super);
+        function BScroll(el, options) {
+            var _this = _super.call(this, ['refresh', 'scrollStart']) || this;
+            var wrapper = (typeof el === 'string'
+                ? document.querySelector(el)
+                : el);
+            if (!wrapper) {
+                warn('Can not resolve the wrapper DOM.');
+                return _this;
+            }
+            var scrollElement = wrapper.children[0];
+            if (!scrollElement) {
+                warn('The wrapper need at least one child element to be scroller.');
+                return _this;
+            }
+            _this.options = new Options().merge(options).process();
+            _this.hooks = new EventEmitter(['init']);
+            _this.init(wrapper);
+            return _this;
+        }
+        BScroll.plugin = function (name, ctor) {
+            if (!this._pluginsMap) {
+                this._pluginsMap = {};
+            }
+            if (this._pluginsMap[name]) {
+                warn("This plugin has been registered, maybe you need change plugin's name");
+            }
+            this._pluginsMap[name] = ctor;
+        };
+        BScroll.prototype.init = function (wrapper) {
+            this.scroller = new Scroller(wrapper, this.options);
+            this.applyPlugins();
+            if (this.options.autoBlur) {
+                this.handleAutoBlur();
+            }
+            this.refresh();
+            if (!this.options.slide) {
+                this.scroller.scrollTo(this.options.startX, this.options.startY);
+            }
+            this.enable();
+        };
+        BScroll.prototype.applyPlugins = function () {
+            var options = this.options;
+            var _pluginsMap = this.constructor._pluginsMap || {};
+            var ctor;
+            for (var pluginName in _pluginsMap) {
+                ctor = _pluginsMap[pluginName];
+                if (options[pluginName]) {
+                    typeof ctor === 'function' && new ctor(this);
+                }
+            }
+        };
+        BScroll.prototype.handleAutoBlur = function () {
+            this.on(this.eventTypes.scrollStart, function () {
+                var activeElement = document.activeElement;
+                if (activeElement &&
+                    (activeElement.tagName === 'INPUT' ||
+                        activeElement.tagName === 'TEXTAREA')) {
+                    activeElement.blur();
+                }
+            });
+        };
+        BScroll.prototype.refresh = function () {
+            this.scroller.refresh();
+            this.trigger(this.eventTypes.refresh);
+            this.scroller.resetPosition();
+        };
+        BScroll.prototype.enable = function () {
+            this.scroller.enabled = true;
+        };
+        BScroll.prototype.disable = function () {
+            this.scroller.enabled = false;
+        };
+        BScroll.prototype.destroy = function () { };
+        BScroll.version = '2.0.0';
+        return BScroll;
+    }(EventEmitter));
+
+    return BScroll;
+
+})));
