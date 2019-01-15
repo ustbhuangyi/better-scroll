@@ -25,7 +25,6 @@ import {
   click,
   tap
 } from '../util'
-import { truncateSync } from 'fs'
 
 export default class Scroller {
   wrapper: HTMLElement
