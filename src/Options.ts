@@ -296,7 +296,8 @@ export default class Options {
     return this
   }
   process() {
-    this.translateZ = this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
+    this.translateZ =
+      this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
     this.useTransition = this.useTransition && hasTransition
     this.useTransform = this.useTransform && hasTransform
@@ -309,6 +310,11 @@ export default class Options {
 
     // With eventPassthrough we also need lockDirection mechanism
     this.freeScroll = this.freeScroll && !this.eventPassthrough
+
+    // force true when freeScroll is true
+    this.scrollX = this.freeScroll ? true : this.scrollX
+    this.scrollY = this.freeScroll ? true : this.scrollY
+
     this.directionLockThreshold = this.eventPassthrough
       ? 0
       : this.directionLockThreshold
