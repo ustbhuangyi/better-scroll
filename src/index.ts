@@ -8,6 +8,7 @@ interface PluginsMap<T> {
 }
 
 interface PluginCtor<T> {
+  static: string
   new (bs: BScroll): T
 }
 export default class BScroll extends EventEmitter {
@@ -19,7 +20,8 @@ export default class BScroll extends EventEmitter {
   hooks: EventEmitter
   [key: string]: any
 
-  static plugin<T>(name: string, ctor: PluginCtor<T>) {
+  static use<T>(ctor: PluginCtor<T>) {
+    const name = ctor.name
     if (!this._pluginsMap) {
       this._pluginsMap = {}
     }
