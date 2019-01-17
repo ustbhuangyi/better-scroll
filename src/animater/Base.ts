@@ -1,95 +1,37 @@
 import EventEmitter from '../base/EventEmitter'
+import { EaseFn, safeCSSStyleDeclaration } from '../util'
 import { Position, Transform } from '../translater'
-import { EaseFn, isUndef } from '../util'
 
+export type Displacement = [number, number]
 export default abstract class Base {
-  style: CSSStyleDeclaration
+  style: safeCSSStyleDeclaration
   hooks: EventEmitter
   timer: number
   pending: boolean
-  minScrollX: number
-  maxScrollX: number
-  minScrollY: number
-  maxScrollY: number
-  hasHorizontalScroll: boolean
-  hasVerticalScroll: boolean
-  forceStopped?: boolean
-  _reflow?: number
+  forceStopped: boolean
+  _reflow: number
   [key: string]: any
 
   constructor(
     public element: HTMLElement,
-    public translater: Position | Transform,
+    public translater: Transform | Position,
     public options: {
-      bounceTime: number
       probeType: number
     }
   ) {
-    this.hooks = new EventEmitter(['scroll', 'scrollEnd'])
-    this.style = element.style
+    this.hooks = new EventEmitter(['move', 'end', 'forceStop'])
+    this.style = element.style as safeCSSStyleDeclaration
   }
 
-  refresh(boundaryInfo: {
-    minScrollX: number
-    maxScrollX: number
-    minScrollY: number
-    maxScrollY: number
-    hasHorizontalScroll: boolean
-    hasVerticalScroll: boolean
-    [key: string]: number | boolean
-  }) {
-    Object.keys(boundaryInfo).forEach(key => {
-      this[key] = boundaryInfo[key]
-    })
+  translate(x: number, y: number) {
+    this.translater.translateTo(x, y)
   }
 
-  translate(x: number, y: number, scale: number) {
-    this.translater.updatePosition(x, y, scale)
-  }
-
-  _resetPosition(time: number, easing: string | EaseFn) {
-    let x = this.translater.x
-    let roundX = Math.round(x)
-    if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
-      x = this.minScrollX
-    } else if (roundX < this.maxScrollX) {
-      x = this.maxScrollX
-    }
-
-    let y = this.translater.y
-    let roundY = Math.round(y)
-    if (!this.hasVerticalScroll || roundY > this.minScrollY) {
-      y = this.minScrollY
-    } else if (roundY < this.maxScrollY) {
-      y = this.maxScrollY
-    }
-
-    // in boundary
-    if (x === this.translater.x && y === this.translater.y) {
-      return false
-    }
-
-    // out of boundary
-    this.scrollTo(x, y, time, easing)
-    return true
-  }
-
-  abstract scrollTo(x: number, y: number, time: number, easing: string | EaseFn): void
-
-  protected callHooks(
-    eventType: string,
-    pos?: {
-      x: number
-      y: number
-    }
-  ) {
-    pos = isUndef(pos)
-      ? {
-          x: this.translater.x,
-          y: this.translater.y
-        }
-      : pos
-
-    this.hooks.trigger(eventType, pos)
-  }
+  abstract scrollTo(
+    x: Displacement,
+    y: Displacement,
+    time: number,
+    easing: string | EaseFn
+  ): void
+  abstract stop(): void
 }

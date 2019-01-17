@@ -3,21 +3,18 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   Probe,
-  ease,
   EaseFn
 } from '../util'
-import Base from './Base'
-import { Position, Transform } from '../translater'
+import Base, { Displacement } from './Base'
 
 export default class Transition extends Base {
-
   startProbe() {
     const probe = () => {
       let pos = this.translater.getComputedPosition()
-      this.callHooks(this.hooks.eventTypes.scroll, pos)
+      this.callHooks(this.hooks.eventTypes.move, pos)
       // excuted when transition ends
       if (!this.pending) {
-        this.callHooks(this.hooks.eventTypes.scrollEnd, pos)
+        this.callHooks(this.hooks.eventTypes.end, pos)
         return
       }
       this.timer = requestAnimationFrame(probe)
@@ -27,18 +24,27 @@ export default class Transition extends Base {
   }
 
   transitionTime(time = 0) {
-    this.style[style.transitionDuration as any] = time + 'ms'
+    this.style[style.transitionDuration] = time + 'ms'
   }
 
   transitionTimingFunction(easing: string) {
-    this.style[style.transitionTimingFunction as any] = easing
+    this.style[style.transitionTimingFunction] = easing
   }
 
-  scrollTo(x: number, y: number, time: number, easingFn: string | EaseFn) {
+  scrollTo(
+    DisplacementX: Displacement,
+    DisplacementY: Displacement,
+    time: number,
+    easingFn: string | EaseFn
+  ) {
+    // destinations
+    const x = DisplacementX[1]
+    const y = DisplacementY[1]
+
     this.pending = time > 0
     this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
-    this.translater.updatePosition(x, y, this.translater.scale)
+    this.translate(x, y)
 
     // TODO when probeType is not Realtime, need to dispatch scroll ?
     if (time && this.options.probeType === Probe.Realtime) {
@@ -47,15 +53,14 @@ export default class Transition extends Base {
 
     // when time is 0
     if (!time) {
-      this.callHooks(this.hooks.eventTypes.scroll, {
+      this.hooks.trigger(this.hooks.eventTypes.move, {
         x,
         y
       })
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
-      if (!this.resetPosition(this.options.bounceTime)) {
-        this.callHooks(this.hooks.eventTypes.scrollEnd)
-      }
+      // maybe need reset position
+      this.hooks.trigger(this.hooks.eventTypes.end)
     }
   }
 
@@ -64,19 +69,14 @@ export default class Transition extends Base {
     if (this.pending) {
       this.pending = false
       cancelAnimationFrame(this.timer)
-      let pos = this.translater.getComputedPosition()
+      const { x, y } = this.translater.getComputedPosition()
       this.transitionTime()
-      this.translate(pos.x, pos.y, this.translater.scale)
-      this.callHooks(this.hooks.eventTypes.scrollEnd, {
-        x: pos.x,
-        y: pos.y
+      this.translate(x, y)
+      this.callHooks(this.hooks.eventTypes.forceStop, {
+        x,
+        y
       })
       this.forceStopped = true
     }
-  }
-
-  resetPosition(time = 0, easing = ease.bounce) {
-    const easingStyle = easing.style
-    return this._resetPosition(time, easingStyle)
   }
 }

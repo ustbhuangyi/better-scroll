@@ -9,7 +9,7 @@ import {
 
 // type
 export type tap = 'tap' | ''
-export type bounceOptions = Partial<bounceConfig> | boolean
+export type bounceOptions = Partial<bounceConfig>
 export type pickerOptions = Partial<pickerConfig> | boolean
 export type slideOptions = Partial<slideConfig> | boolean
 export type scrollbarOptions = Partial<scrollbarConfig> | boolean
@@ -145,16 +145,12 @@ export default class Options {
     this.click = false
     this.tap = ''
 
-    /**
-     * support any side
-     * bounce: {
-     *   top: true,
-     *   bottom: true,
-     *   left: true,
-     *   right: true
-     * }
-     */
-    this.bounce = true
+    this.bounce = {
+      top: true,
+      bottom: true,
+      left: true,
+      right: true
+    }
     this.bounceTime = 800
 
     this.momentum = true

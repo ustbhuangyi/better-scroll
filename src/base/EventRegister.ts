@@ -8,6 +8,7 @@ import {
 interface EventMap {
   name: string
   handler(e: TouchEvent): void
+  capture?: boolean
 }
 
 export default class EventRegister {
@@ -32,7 +33,7 @@ export default class EventRegister {
     const wrapper = this.wrapper
 
     this.events.forEach((event: EventMap) => {
-      eventOperation(wrapper, event.name, this)
+      eventOperation(wrapper, event.name, this, !!event.capture)
     })
   }
 

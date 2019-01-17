@@ -6,10 +6,8 @@ export enum Probe {
 }
 
 export enum Direction {
-  Up = 1,
-  Left = 1,
-  Down = -1,
-  Right = -1,
+  Positive = 1, // top and left
+  Negative = -1, // down and right
   Default = 0
 }
 
@@ -19,10 +17,10 @@ export enum EventType {
 }
 
 export enum DirectionLock {
-  Default,
-  Horizontal,
-  Vertical,
-  None
+  Default = '',
+  Horizontal = 'horizontal',
+  Vertical = 'vertical',
+  None = 'none'
 }
 
 export enum MouseButton {

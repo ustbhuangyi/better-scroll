@@ -1,5 +1,6 @@
 import { style } from '../util'
 import Base from './Base'
+import { safeCSSStyleDeclaration } from '../util'
 
 interface Options {
   translateZ: string
@@ -11,8 +12,11 @@ export default class Transform extends Base {
     this.options = options
   }
   getComputedPosition() {
-    let cssStyle = window.getComputedStyle(this.element, null) as any
-    let matrix = cssStyle[style.transform as string].split(')')[0].split(', ')
+    let cssStyle = window.getComputedStyle(
+      this.element,
+      null
+    ) as safeCSSStyleDeclaration
+    let matrix = cssStyle[style.transform].split(')')[0].split(', ')
     const x = +(matrix[12] || matrix[4])
     const y = +(matrix[13] || matrix[5])
 
@@ -22,11 +26,9 @@ export default class Transform extends Base {
     }
   }
 
-  updatePosition(x: number, y: number, scale: number) {
-    this.style[
-      style.transform as any
-    ] = `translate(${x}px,${y}px) scale(${scale})${this.options.translateZ}`
-
-    this.updateProps(x, y, scale)
+  translateTo(x: number, y: number) {
+    this.style[style.transform as any] = `translate(${x}px,${y}px)${
+      this.options.translateZ
+    }`
   }
 }

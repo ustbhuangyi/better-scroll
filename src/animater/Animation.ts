@@ -1,79 +1,76 @@
-import { Position, Transform } from '../translater'
-import Base from './Base'
+import Base, { Displacement } from './Base'
 import {
   getNow,
   Probe,
   requestAnimationFrame,
   cancelAnimationFrame,
-  ease,
   EaseFn
 } from '../util'
 
 export default class Animation extends Base {
-
-  scrollTo(x: number, y: number, time: number, easingFn: EaseFn | string) {
+  scrollTo(
+    displacementX: Displacement,
+    displacementY: Displacement,
+    time: number,
+    easingFn: EaseFn | string
+  ) {
     // time is 0
     if (!time) {
-      this.translater.updatePosition(x, y, this.translater.scale)
-
-      this.hooks.trigger(this.hooks.eventTypes.scroll, {
-        x,
-        y
-      })
+      const x = displacementX[1]
+      const y = displacementX[1]
+      this.translate(x, y)
+      this.hooks.trigger(this.hooks.eventTypes.move)
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
-      if (!this.resetPosition(this.options.bounceTime)) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-          x: this.translater.x,
-          y: this.translater.y
-        })
-      }
+      // maybe need reset position
+      this.hooks.trigger(this.hooks.eventTypes.end)
       return
     }
-    this.animate(x, y, time, easingFn as EaseFn)
+    this.animate(displacementX, displacementX, time, easingFn as EaseFn)
   }
 
   private animate(
-    destX: number,
-    destY: number,
+    displacementX: Displacement,
+    displacementY: Displacement,
     duration: number,
     easingFn: EaseFn
   ) {
-    let startX = this.translater.x
-    let startY = this.translater.y
-    let startScale = this.translater.lastScale
-    let destScale = this.translater.scale
+    // departure
+    let startX = displacementX[0]
+    let startY = displacementY[0]
+    // destinations
+    let destX = displacementX[1]
+    let destY = displacementY[1]
     let startTime = getNow()
     let destTime = startTime + duration
 
     const step = () => {
       let now = getNow()
 
+      // js animation end
       if (now >= destTime) {
         this.pending = false
-        this.translate(destX, destY, destScale)
+        this.translate(destX, destY)
 
-        this.callHooks(this.hooks.eventTypes.scroll)
+        this.callHooks(this.hooks.eventTypes.move)
 
-        if (!this.resetPosition(this.options.bounceTime)) {
-          this.callHooks(this.hooks.eventTypes.scrollEnd)
-        }
+        this.callHooks(this.hooks.eventTypes.end)
         return
       }
+
       now = (now - startTime) / duration
       let easing = easingFn(now)
       let newX = (destX - startX) * easing + startX
       let newY = (destY - startY) * easing + startY
-      let newScale = (destScale - startScale) * easing + startScale
 
-      this.translate(newX, newY, newScale)
+      this.translate(newX, newY)
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)
       }
 
       if (this.options.probeType === Probe.Realtime) {
-        this.callHooks(this.hooks.eventTypes.scroll)
+        this.callHooks(this.hooks.eventTypes.move)
       }
     }
 
@@ -84,20 +81,15 @@ export default class Animation extends Base {
 
   stop() {
     // still in requestFrameAnimation
-    const { x, y } = this.translater
     if (this.pending) {
       this.pending = false
       cancelAnimationFrame(this.timer)
-      this.callHooks(this.hooks.eventTypes.scrollEnd, {
+      const { x, y } = this.translater.getComputedPosition()
+      this.callHooks(this.hooks.eventTypes.forceStop, {
         x,
         y
       })
       this.forceStopped = true
     }
-  }
-
-  resetPosition(time = 0, easing = ease.bounce) {
-    const easingFn = easing.fn
-    return this._resetPosition(time, easingFn)
   }
 }

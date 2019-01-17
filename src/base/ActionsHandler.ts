@@ -35,11 +35,6 @@ export default class ActionsHandler {
     this.handleDOMEvents()
   }
 
-  destroy() {
-    this.startClickRegister.destroy()
-    this.moveEndRegister.destroy()
-  }
-
   private handleDOMEvents() {
     const { bindToWrapper, disableMouse } = this.options
     const wrapper = this.wrapper
@@ -65,8 +60,7 @@ export default class ActionsHandler {
         handler: this.end.bind(this)
       },
       {
-        // mousecancel what?
-        name: disableMouse ? 'touchcancel' : 'mousecancel',
+        name: disableMouse ? 'touchcancel' : 'mouseup',
         handler: this.end.bind(this)
       }
     ])
@@ -127,11 +121,9 @@ export default class ActionsHandler {
 
     if (
       this.hooks.trigger(this.hooks.eventTypes.move, {
-        timeStamp: e.timeStamp,
         deltaX,
         deltaY,
-        e,
-        actionsHandler: this
+        e
       })
     )
       return
@@ -177,11 +169,8 @@ export default class ActionsHandler {
     this.hooks.trigger(this.hooks.eventTypes.click, e)
   }
 
-  private setPointPosition(e: TouchEvent) {
-    let point = (e.touches ? e.touches[0] : e) as Touch
-    this.pointX = point.pageX
-    this.pointY = point.pageY
-
-    return point
+  destroy() {
+    this.startClickRegister.destroy()
+    this.moveEndRegister.destroy()
   }
 }

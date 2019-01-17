@@ -2,7 +2,19 @@ import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
 import { EventType } from './const'
 
-let elementStyle = (inBrowser && document.createElement('div').style) as any
+export type safeCSSStyleDeclaration = {
+  [key: string]: string
+} & CSSStyleDeclaration
+interface DOMRect {
+  left: number
+  top: number
+  width: number
+  height: number
+  [key: string]: number
+}
+
+let elementStyle = (inBrowser &&
+  document.createElement('div').style) as safeCSSStyleDeclaration
 
 let vendor = (() => {
   if (!inBrowser) {
@@ -132,7 +144,7 @@ export const eventTypeMap: {
   mouseup: EventType.Mouse
 }
 
-export function getRect(el: HTMLElement) {
+export function getRect(el: HTMLElement): DOMRect {
   if (el instanceof (window as any).SVGElement) {
     let rect = el.getBoundingClientRect()
     return {
