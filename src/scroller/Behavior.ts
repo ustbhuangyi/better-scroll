@@ -66,16 +66,17 @@ export default class Behavior {
   end({
     duration,
     bounces,
-    absDist,
     startX
   }: {
     duration: number
     bounces: [boolean | undefined, boolean | undefined]
-    absDist: number
     startX: number
   }) {
-    let momentumInfo
-    let easing
+    let momentumInfo: {
+      destination?: number
+      duration?: number
+    } = {}
+    const absDist = Math.abs(this.currentPos - startX)
     // start momentum animation if needed
     if (
       this.options.momentum &&
@@ -145,7 +146,8 @@ export default class Behavior {
     }
   }
 
-  updateDirection(absDist: number) {
+  updateDirection() {
+    const absDist = Math.round(this.currentPos) - this.absStartPos
     this.direction =
       absDist > 0
         ? Direction.Negative
@@ -164,7 +166,6 @@ export default class Behavior {
     this.elementSize = elementRect[size]
 
     this.relativeOffset = elementRect[position]
-
     if (isWrapperStatic) {
       this.relativeOffset -= wrapperRect[position]
     }
@@ -189,5 +190,17 @@ export default class Behavior {
 
   updatePosition(pos: number) {
     this.currentPos = pos
+  }
+
+  // ajust position when out of boundary
+  limitPosition() {
+    let pos = this.currentPos
+    let roundPos = Math.round(pos)
+    if (!this.options.hasScroll || roundPos > this.minScrollSize) {
+      pos = this.minScrollSize
+    } else if (roundPos < this.maxScrollSize) {
+      pos = this.maxScrollSize
+    }
+    return pos
   }
 }

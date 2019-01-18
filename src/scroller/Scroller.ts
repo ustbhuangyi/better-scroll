@@ -20,9 +20,9 @@ import {
   preventDefaultExceptionFn,
   TouchEvent,
   isAndroid,
-  momentum,
   click,
-  tap
+  tap,
+  isUndef
 } from '../util'
 
 export default class Scroller {
@@ -234,12 +234,11 @@ export default class Scroller {
         // ensures that the last position is rounded
         let newX = Math.round(this.x)
         let newY = Math.round(this.y)
+        let time = 0
+        let easing = ease.swiper
 
-        let absDistX = newX - this.absStartX
-        let absDistY = newY - this.absStartY
-
-        this.scrollBehaviorX.updateDirection(absDistX)
-        this.scrollBehaviorY.updateDirection(absDistY)
+        this.scrollBehaviorX.updateDirection()
+        this.scrollBehaviorY.updateDirection()
 
         // TODO PullDown
 
@@ -263,22 +262,55 @@ export default class Scroller {
         this.y = newY
 
         this.endTime = e.timeStamp
-        let duration = this.endTime - this.startTime
-        let deltaX = Math.abs(newX - this.startX)
-        let deltaY = Math.abs(newY - this.startY)
+        const duration = this.endTime - this.startTime
+        const deltaX = Math.abs(newX - this.startX)
+        const deltaY = Math.abs(newY - this.startY)
 
         // flick
         if (
           duration < this.options.flickLimitTime &&
-          absDistX < this.options.flickLimitDistance &&
-          absDistY < this.options.flickLimitDistance
+          deltaX < this.options.flickLimitDistance &&
+          deltaY < this.options.flickLimitDistance
         ) {
           this.hooks.trigger('flick')
           return
         }
+        // start momentum animation if needed
+        const momentumX = this.scrollBehaviorX.end({
+          duration,
+          bounces: [this.options.bounce.left, this.options.bounce.right],
+          startX: this.startX
+        })
+        const momentumY = this.scrollBehaviorY.end({
+          duration,
+          bounces: [this.options.bounce.top, this.options.bounce.bottom],
+          startX: this.startX
+        })
 
-        this.scrollBehaviorX.end()
-        this.scrollBehaviorY.end()
+        newX = isUndef(momentumX.destination)
+          ? newX
+          : (momentumX.destination as number)
+        newY = isUndef(momentumY.destination)
+          ? newY
+          : (momentumY.destination as number)
+        time = isUndef(momentumX.duration)
+          ? time
+          : (momentumX.duration as number)
+
+        // when x or y changed, do momentum animation now!
+        if (newX !== this.x || newY !== this.y) {
+          // change easing function when scroller goes out of the boundaries
+          if (
+            newX > this.scrollBehaviorX.minScrollSize ||
+            newX < this.scrollBehaviorX.maxScrollSize ||
+            newY > this.scrollBehaviorY.minScrollSize ||
+            newY < this.scrollBehaviorY.maxScrollSize
+          ) {
+            easing = ease.swipeBounce
+          }
+          this.scrollTo(newX, newY, time, easing)
+          return
+        }
 
         this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
           x: this.x,
@@ -308,7 +340,7 @@ export default class Scroller {
   }
 
   private computeDirectionLock(absDistX: number, absDistY: number) {
-    // If you are scrolling in one direction lock the other
+    // If you are scrolling in one direction, lock it
     if (
       this.directionLocked === Direction.Default &&
       !this.options.freeScroll
@@ -492,43 +524,28 @@ export default class Scroller {
     pos.left -= offsetX || 0
     pos.top -= offsetY || 0
     pos.left =
-      pos.left > this.minScrollX
-        ? this.minScrollX
-        : pos.left < this.maxScrollX
-        ? this.maxScrollX
+      pos.left > this.scrollBehaviorX.minScrollSize
+        ? this.scrollBehaviorX.minScrollSize
+        : pos.left < this.scrollBehaviorX.maxScrollSize
+        ? this.scrollBehaviorX.maxScrollSize
         : pos.left
     pos.top =
-      pos.top > this.minScrollY
-        ? this.minScrollY
-        : pos.top < this.maxScrollY
-        ? this.maxScrollY
+      pos.top > this.scrollBehaviorY.minScrollSize
+        ? this.scrollBehaviorY.minScrollSize
+        : pos.top < this.scrollBehaviorY.maxScrollSize
+        ? this.scrollBehaviorY.maxScrollSize
         : pos.top
 
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
   resetPosition(time = 0, easing = ease.bounce) {
-    let x = this.translater.x
-    let roundX = Math.round(x)
-    if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
-      x = this.minScrollX
-    } else if (roundX < this.maxScrollX) {
-      x = this.maxScrollX
-    }
-
-    let y = this.translater.y
-    let roundY = Math.round(y)
-    if (!this.hasVerticalScroll || roundY > this.minScrollY) {
-      y = this.minScrollY
-    } else if (roundY < this.maxScrollY) {
-      y = this.maxScrollY
-    }
-
+    const x = this.scrollBehaviorX.limitPosition()
+    const y = this.scrollBehaviorY.limitPosition()
     // in boundary
-    if (x === this.translater.x && y === this.translater.y) {
+    if (x === this.x && y === this.y) {
       return false
     }
-
     // out of boundary
     this.scrollTo(x, y, time, easing)
     return true
