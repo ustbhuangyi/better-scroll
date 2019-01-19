@@ -57,6 +57,15 @@
                        @update:value="updateScrollToEasing"></select-option>
         <button @click="scrollTo">scrollTo</button>
       </div>
+      <div class="group">
+        <input-option v-if="pullDownRefresh" class="item sub first" name="threshold"
+                      :value="pullDownRefreshThreshold" min-value="40"
+                      @update:value="updatePullDownRefreshThreshold"></input-option>
+        <input-option v-if="pullDownRefresh" class="item sub last" name="stop" :value="pullDownRefreshStop"
+
+                      @update:value="updatePullDownRefreshStop"></input-option>
+        <button @click="autoPullDownRefresh">autoPullDownRefresh</button>
+      </div>
     </div>
   </optional-demo>
 </template>
@@ -162,6 +171,9 @@
         const scrollToY = Number(this.scrollToY)
         const scrollToX = Number(this.scrollToX)
         this.$refs.scroll.scrollTo(scrollToX, scrollToY, scrollToTime, ease[this.scrollToEasing])
+      },
+      autoPullDownRefresh () {
+        this.$refs.scroll.autoPullDownRefresh()
       },
       onPullingDown() {
         // 模拟更新数据
