@@ -157,7 +157,11 @@
     },
     methods: {
       scrollTo() {
-        this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
+        // expect a number, not string
+        const scrollToTime = Number(this.scrollToTime)
+        const scrollToY = Number(this.scrollToY)
+        const scrollToX = Number(this.scrollToX)
+        this.$refs.scroll.scrollTo(scrollToX, scrollToY, scrollToTime, ease[this.scrollToEasing])
       },
       onPullingDown() {
         // 模拟更新数据
