@@ -17,7 +17,7 @@ export default class Animation extends Base {
     // time is 0
     if (!time) {
       const x = displacementX[1]
-      const y = displacementX[1]
+      const y = displacementY[1]
       this.translate(x, y)
       this.hooks.trigger(this.hooks.eventTypes.move)
       // force reflow to put everything in position

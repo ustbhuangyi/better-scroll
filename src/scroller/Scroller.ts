@@ -492,6 +492,10 @@ export default class Scroller {
     // when x or y has changed
     if (x !== this.x || y !== this.y) {
       this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn)
+      this.scrollBehaviorX.updatePosition(x)
+      this.scrollBehaviorY.updatePosition(y)
+      this.x = x
+      this.y = y
     }
   }
 
@@ -548,6 +552,11 @@ export default class Scroller {
     }
     // out of boundary
     this.scrollTo(x, y, time, easing)
+    // refresh all positions
+    this.scrollBehaviorX.updatePosition(x)
+    this.scrollBehaviorY.updatePosition(y)
+    this.x = x
+    this.y = y
     return true
   }
 }
