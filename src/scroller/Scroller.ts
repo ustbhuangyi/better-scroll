@@ -6,7 +6,7 @@ import EventRegister from '../base/EventRegister'
 import { Transform, Position } from '../translater'
 import { Animation, Transition } from '../animater'
 import BScrollOptions, { bounceConfig } from '../Options'
-import Behavior from './Behavior'
+import Behavior, { Options as BehaviorOptions } from './Behavior'
 
 import {
   Direction,
@@ -73,8 +73,14 @@ export default class Scroller {
     this.x = 0
     this.y = 0
 
-    this.scrollBehaviorX = new Behavior(wrapper, this.options.scrollX) // direction X
-    this.scrollBehaviorY = new Behavior(wrapper, this.options.scrollY) // direction Y
+    this.scrollBehaviorX = new Behavior(
+      wrapper,
+      this.createBehaviorOpt('scrollX')
+    ) // direction X
+    this.scrollBehaviorY = new Behavior(
+      wrapper,
+      this.createBehaviorOpt('scrollY')
+    ) // direction Y
 
     this.translater = this.options.useTransform
       ? new Transform(this.element, {
@@ -462,6 +468,26 @@ export default class Scroller {
       },
       {} as ActionsHandlerOptions
     )
+    return options
+  }
+
+  createBehaviorOpt(extraProp: 'scrollX' | 'scrollY') {
+    const options = [
+      'momentum',
+      'momentumLimitTime',
+      'momentumLimitDistance',
+      'deceleration',
+      'swipeBounceTime',
+      'swipeTime'
+    ].reduce<BehaviorOptions>(
+      (prev, cur) => {
+        prev[cur] = this.options[cur]
+        return prev
+      },
+      {} as BehaviorOptions
+    )
+    // add extra property
+    options.scrollable = this.options[extraProp]
     return options
   }
 

@@ -1,8 +1,8 @@
 import { Direction, getRect } from '../util'
 import { bounceConfig } from '../Options'
 
-interface Options {
-  hasScroll: boolean
+export interface Options {
+  scrollable: boolean
   momentum: boolean
   momentumLimitTime: number
   momentumLimitDistance: number
@@ -18,6 +18,7 @@ export default class Behavior {
   absStartPos: number
   minScrollSize: number
   maxScrollSize: number
+  hasScroll: boolean
   direction: number
   movingDirection: number
   relativeOffset: number
@@ -37,7 +38,7 @@ export default class Behavior {
   }
 
   move(delta: number, bounces: [boolean | undefined, boolean | undefined]) {
-    delta = this.options.hasScroll ? delta : 0
+    delta = this.hasScroll ? delta : 0
     this.movingDirection =
       delta > 0
         ? Direction.Positive // left to right or up to bottom
@@ -89,7 +90,7 @@ export default class Behavior {
           ? this.wrapperSize
           : 0
 
-      momentumInfo = this.options.hasScroll
+      momentumInfo = this.hasScroll
         ? this.momentum(
             this.currentPos,
             startX,
@@ -178,9 +179,10 @@ export default class Behavior {
       this.minScrollSize = -this.relativeOffset
     }
 
-    this.options.hasScroll = this.maxScrollSize < this.minScrollSize
+    this.hasScroll =
+      this.options.scrollable && this.maxScrollSize < this.minScrollSize
 
-    if (!this.options.hasScroll) {
+    if (!this.hasScroll) {
       this.maxScrollSize = this.minScrollSize
       this.elementSize = this.wrapperSize
     }
@@ -196,7 +198,7 @@ export default class Behavior {
   limitPosition() {
     let pos = this.currentPos
     let roundPos = Math.round(pos)
-    if (!this.options.hasScroll || roundPos > this.minScrollSize) {
+    if (!this.hasScroll || roundPos > this.minScrollSize) {
       pos = this.minScrollSize
     } else if (roundPos < this.maxScrollSize) {
       pos = this.maxScrollSize

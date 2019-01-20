@@ -6,8 +6,8 @@ export enum Probe {
 }
 
 export enum Direction {
-  Positive = 1, // top and left
-  Negative = -1, // down and right
+  Positive = 1, // top to bottom and left to right
+  Negative = -1, // bottom to top and right to left
   Default = 0
 }
 
