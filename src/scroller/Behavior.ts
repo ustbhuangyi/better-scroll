@@ -9,6 +9,7 @@ export interface Options {
   deceleration: number
   swipeBounceTime: number
   swipeTime: number
+  [key: string]: number | boolean
 }
 
 export default class Behavior {
