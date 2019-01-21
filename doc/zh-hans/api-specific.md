@@ -60,7 +60,7 @@ better-scroll 还提供了一些定制的方法，专门用来实现某一个 fe
 ## autoPullDownRefresh() (v1.14.0)
    - 参数：无
    - 返回值：无
-   - 作用：手动触发下拉刷新。
+   - 作用：自动触发下拉刷新。
 
 ## finishPullUp()
    - 参数：无

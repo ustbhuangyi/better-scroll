@@ -64,7 +64,7 @@ better-scroll also have several specific API to help you implement customized fe
 ## autoPullDownRefresh() (v1.14.0)
    - Parameters：none.
    - Return：none.
-   - Usage：trigger pullDownRefresh manully.
+   - Usage：auto trigger pullDownRefresh.
 
 ## finishPullUp()
    - Parameters: none.
