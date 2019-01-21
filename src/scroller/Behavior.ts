@@ -42,9 +42,9 @@ export default class Behavior {
     delta = this.hasScroll ? delta : 0
     this.movingDirection =
       delta > 0
-        ? Direction.Positive // left to right or up to bottom
+        ? Direction.Negative
         : delta < 0
-        ? Direction.Negative // Conversely
+        ? Direction.Positive
         : Direction.Default
 
     let newPos = this.currentPos + delta
