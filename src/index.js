@@ -39,6 +39,6 @@ mouseWheelMixin(BScroll)
 zoomMixin(BScroll)
 infiniteMixin(BScroll)
 
-BScroll.Version = '1.14.0'
+BScroll.Version = '1.14.1'
 
 export default BScroll
