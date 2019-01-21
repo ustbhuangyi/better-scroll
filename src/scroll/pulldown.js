@@ -1,14 +1,14 @@
 import { ease } from '../util/ease'
 import { DIRECTION_DOWN, PROBE_REALTIME } from '../util/const'
 
-export function pullDownMixin(BScroll) {
+export function pullDownMixin (BScroll) {
   BScroll.prototype._initPullDown = function () {
     // must watch scroll in real time
     this.options.probeType = PROBE_REALTIME
   }
 
   BScroll.prototype._checkPullDown = function () {
-    const {threshold = 90, stop = 40} = this.options.pullDownRefresh
+    const { threshold = 90, stop = 40 } = this.options.pullDownRefresh
 
     // check if a real pull down action
     if (this.directionY !== DIRECTION_DOWN || this.y < threshold) {
@@ -39,15 +39,15 @@ export function pullDownMixin(BScroll) {
   }
 
   BScroll.prototype.autoPullDownRefresh = function () {
-    const {threshold = 90, stop = 40} = this.options.pullDownRefresh
+    const { threshold = 90, stop = 40 } = this.options.pullDownRefresh
+
+    if (this.pulling) {
+      return
+    }
+    this.pulling = true
 
     this.scrollTo(this.x, threshold)
-
-    if (!this.pulling) {
-      this.pulling = true
-      this.trigger('pullingDown')
-    }
-
+    this.trigger('pullingDown')
     this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce)
   }
 }
