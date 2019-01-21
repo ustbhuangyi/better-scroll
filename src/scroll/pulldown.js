@@ -37,4 +37,17 @@ export function pullDownMixin(BScroll) {
   BScroll.prototype.closePullDown = function () {
     this.options.pullDownRefresh = false
   }
+
+  BScroll.prototype.autoPullDownRefresh = function () {
+    const {threshold = 90, stop = 40} = this.options.pullDownRefresh
+
+    this.scrollTo(this.x, threshold)
+
+    if (!this.pulling) {
+      this.pulling = true
+      this.trigger('pullingDown')
+    }
+
+    this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce)
+  }
 }
