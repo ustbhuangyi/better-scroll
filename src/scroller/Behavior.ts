@@ -17,8 +17,8 @@ export default class Behavior {
   currentPos: number
   startPos: number
   absStartPos: number
-  minScrollSize: number
-  maxScrollSize: number
+  minScrollPos: number
+  maxScrollPos: number
   hasScroll: boolean
   direction: number
   movingDirection: number
@@ -50,15 +50,15 @@ export default class Behavior {
     let newPos = this.currentPos + delta
 
     // Slow down or stop if outside of the boundaries
-    if (newPos > this.minScrollSize || newPos < this.maxScrollSize) {
+    if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
       if (
-        (newPos > this.minScrollSize && bounces[0]) ||
-        (newPos < this.maxScrollSize && bounces[1])
+        (newPos > this.minScrollPos && bounces[0]) ||
+        (newPos < this.maxScrollPos && bounces[1])
       ) {
         newPos = this.currentPos + delta / 3
       } else {
         newPos =
-          newPos > this.minScrollSize ? this.minScrollSize : this.maxScrollSize
+          newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
       }
     }
 
@@ -96,8 +96,8 @@ export default class Behavior {
             this.currentPos,
             startX,
             duration,
-            this.maxScrollSize,
-            this.minScrollSize,
+            this.maxScrollPos,
+            this.minScrollPos,
             wrapperSize,
             this.options
           )
@@ -172,19 +172,19 @@ export default class Behavior {
       this.relativeOffset -= wrapperRect[position]
     }
 
-    this.minScrollSize = 0
-    this.maxScrollSize = this.wrapperSize - this.elementSize
+    this.minScrollPos = 0
+    this.maxScrollPos = this.wrapperSize - this.elementSize
 
-    if (this.maxScrollSize < 0) {
-      this.maxScrollSize -= this.relativeOffset
-      this.minScrollSize = -this.relativeOffset
+    if (this.maxScrollPos < 0) {
+      this.maxScrollPos -= this.relativeOffset
+      this.minScrollPos = -this.relativeOffset
     }
 
     this.hasScroll =
-      this.options.scrollable && this.maxScrollSize < this.minScrollSize
+      this.options.scrollable && this.maxScrollPos < this.minScrollPos
 
     if (!this.hasScroll) {
-      this.maxScrollSize = this.minScrollSize
+      this.maxScrollPos = this.minScrollPos
       this.elementSize = this.wrapperSize
     }
 
@@ -199,10 +199,10 @@ export default class Behavior {
   limitPosition() {
     let pos = this.currentPos
     let roundPos = Math.round(pos)
-    if (!this.hasScroll || roundPos > this.minScrollSize) {
-      pos = this.minScrollSize
-    } else if (roundPos < this.maxScrollSize) {
-      pos = this.maxScrollSize
+    if (!this.hasScroll || roundPos > this.minScrollPos) {
+      pos = this.minScrollPos
+    } else if (roundPos < this.maxScrollPos) {
+      pos = this.maxScrollPos
     }
     return pos
   }

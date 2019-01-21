@@ -307,10 +307,10 @@ export default class Scroller {
         if (newX !== this.x || newY !== this.y) {
           // change easing function when scroller goes out of the boundaries
           if (
-            newX > this.scrollBehaviorX.minScrollSize ||
-            newX < this.scrollBehaviorX.maxScrollSize ||
-            newY > this.scrollBehaviorY.minScrollSize ||
-            newY < this.scrollBehaviorY.maxScrollSize
+            newX > this.scrollBehaviorX.minScrollPos ||
+            newX < this.scrollBehaviorX.maxScrollPos ||
+            newY > this.scrollBehaviorY.minScrollPos ||
+            newY < this.scrollBehaviorY.maxScrollPos
           ) {
             easing = ease.swipeBounce
           }
@@ -554,16 +554,16 @@ export default class Scroller {
     pos.left -= offsetX || 0
     pos.top -= offsetY || 0
     pos.left =
-      pos.left > this.scrollBehaviorX.minScrollSize
-        ? this.scrollBehaviorX.minScrollSize
-        : pos.left < this.scrollBehaviorX.maxScrollSize
-        ? this.scrollBehaviorX.maxScrollSize
+      pos.left > this.scrollBehaviorX.minScrollPos
+        ? this.scrollBehaviorX.minScrollPos
+        : pos.left < this.scrollBehaviorX.maxScrollPos
+        ? this.scrollBehaviorX.maxScrollPos
         : pos.left
     pos.top =
-      pos.top > this.scrollBehaviorY.minScrollSize
-        ? this.scrollBehaviorY.minScrollSize
-        : pos.top < this.scrollBehaviorY.maxScrollSize
-        ? this.scrollBehaviorY.maxScrollSize
+      pos.top > this.scrollBehaviorY.minScrollPos
+        ? this.scrollBehaviorY.minScrollPos
+        : pos.top < this.scrollBehaviorY.maxScrollPos
+        ? this.scrollBehaviorY.maxScrollPos
         : pos.top
 
     this.scrollTo(pos.left, pos.top, time, easing)
