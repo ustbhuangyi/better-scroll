@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.14.0
+ * better-normal-scroll v1.14.1
  * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
@@ -2088,8 +2088,8 @@ function wheelMixin(BScroll) {
     var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
     if (this.options.wheel) {
-      this.y = -index * this.itemHeight;
-      this.scrollTo(0, this.y);
+      var y = -index * this.itemHeight;
+      this.scrollTo(0, y);
     }
   };
 
@@ -3397,7 +3397,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.14.0';
+BScroll.Version = '1.14.1';
 
 return BScroll;
 
