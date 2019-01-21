@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.13.4
+ * better-normal-scroll v1.14.0
  * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1530,6 +1530,10 @@ function coreMixin(BScroll) {
     var time = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ease.bounce;
 
+    var isMoved = this.x !== x || this.y !== y;
+    // an useless scroll
+    if (!isMoved) return;
+
     this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y);
 
     if (!time || this.options.useTransition) {
@@ -1540,8 +1544,7 @@ function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe();
       }
-
-      if (!time && (x !== this.x || y !== this.y)) {
+      if (!time) {
         this.trigger('scroll', {
           x: x,
           y: y
@@ -2559,6 +2562,24 @@ function pullDownMixin(BScroll) {
   BScroll.prototype.closePullDown = function () {
     this.options.pullDownRefresh = false;
   };
+
+  BScroll.prototype.autoPullDownRefresh = function () {
+    var _options$pullDownRefr4 = this.options.pullDownRefresh,
+        _options$pullDownRefr5 = _options$pullDownRefr4.threshold,
+        threshold = _options$pullDownRefr5 === undefined ? 90 : _options$pullDownRefr5,
+        _options$pullDownRefr6 = _options$pullDownRefr4.stop,
+        stop = _options$pullDownRefr6 === undefined ? 40 : _options$pullDownRefr6;
+
+
+    if (this.pulling) {
+      return;
+    }
+    this.pulling = true;
+
+    this.scrollTo(this.x, threshold);
+    this.trigger('pullingDown');
+    this.scrollTo(this.x, stop, this.options.bounceTime, ease.bounce);
+  };
 }
 
 function pullUpMixin(BScroll) {
@@ -3370,6 +3391,6 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.13.4';
+BScroll.Version = '1.14.0';
 
 export default BScroll;
