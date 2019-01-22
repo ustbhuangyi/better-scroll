@@ -1,12 +1,13 @@
 module.exports = {
+  "verbose": true,
+  "roots": ["<rootDir>/test/unit"],
+  "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
   "transform": {
-    ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    ".ts": "ts-jest"
   },
-  "testEnvironment": "node",
-  "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+  "testEnvironment": "jsdom",
   "moduleFileExtensions": [
     "ts",
-    "tsx",
     "js"
   ],
   "coveragePathIgnorePatterns": [
