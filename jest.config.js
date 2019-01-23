@@ -10,6 +10,7 @@ module.exports = {
     "ts",
     "js"
   ],
+  "coverageDirectory": "<rootDir>/test/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/test/"
