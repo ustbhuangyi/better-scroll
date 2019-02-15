@@ -11,10 +11,10 @@ export default class Transition extends Base {
   startProbe() {
     const probe = () => {
       let pos = this.translater.getComputedPosition()
-      this.callHooks(this.hooks.eventTypes.move, pos)
-      // excuted when transition ends
+      this.hooks.trigger(this.hooks.eventTypes.move, pos)
+      // excute when transition ends
       if (!this.pending) {
-        this.callHooks(this.hooks.eventTypes.end, pos)
+        this.hooks.trigger(this.hooks.eventTypes.end, pos)
         return
       }
       this.timer = requestAnimationFrame(probe)
@@ -60,7 +60,10 @@ export default class Transition extends Base {
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
       // maybe need reset position
-      this.hooks.trigger(this.hooks.eventTypes.end)
+      this.hooks.trigger(this.hooks.eventTypes.end, {
+        x,
+        y
+      })
     }
   }
 
@@ -72,7 +75,7 @@ export default class Transition extends Base {
       const { x, y } = this.translater.getComputedPosition()
       this.transitionTime()
       this.translate(x, y)
-      this.callHooks(this.hooks.eventTypes.forceStop, {
+      this.hooks.trigger(this.hooks.eventTypes.forceStop, {
         x,
         y
       })

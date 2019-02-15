@@ -100,7 +100,7 @@ export default class ActionsHandler {
     this.pointX = point.pageX
     this.pointY = point.pageY
 
-    this.hooks.trigger(this.hooks.eventTypes.start, { e })
+    this.hooks.trigger(this.hooks.eventTypes.start)
   }
 
   private move(e: TouchEvent) {
@@ -113,7 +113,6 @@ export default class ActionsHandler {
     let point = (e.touches ? e.touches[0] : e) as Touch
     let deltaX = point.pageX - this.pointX
     let deltaY = point.pageY - this.pointY
-
     this.pointX = point.pageX
     this.pointY = point.pageY
 

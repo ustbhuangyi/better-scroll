@@ -22,7 +22,8 @@ import {
   isAndroid,
   click,
   tap,
-  isUndef
+  isUndef,
+  getNow
 } from '../util'
 
 export default class Scroller {
@@ -42,6 +43,8 @@ export default class Scroller {
   enabled: boolean
   startX: number
   startY: number
+  distX: number
+  distY: number
   absStartX: number
   absStartY: number
   pointX: number
@@ -121,24 +124,35 @@ export default class Scroller {
     ])
 
     // reset position
-    this.animater.hooks.on(this.animater.hooks.eventTypes.end, () => {
-      if (!this.resetPosition(this.options.bounceTime)) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd)
+    this.animater.hooks.on(
+      this.animater.hooks.eventTypes.end,
+      (pos: { x: number; y: number }) => {
+        if (!this.resetPosition(this.options.bounceTime)) {
+          this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+        }
       }
-    })
+    )
     // scroll
-    this.animater.hooks.on(this.animater.hooks.eventTypes.moving, () => {
-      this.hooks.trigger(this.hooks.eventTypes.scroll)
-    })
+    this.animater.hooks.on(
+      this.animater.hooks.eventTypes.move,
+      (pos: { x: number; y: number }) => {
+        this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
+      }
+    )
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
-      ({ timeStamp }: { timeStamp: number }) => {
+      () => {
         if (!this.enabled) return true
-
+        let timestamp = getNow()
         this.moved = false
         this.directionLocked = DirectionLock.Default
-        this.startTime = timeStamp
+        this.startTime = timestamp
+
+        this.distX = 0
+        this.distY = 0
+        this.startX = this.x
+        this.startY = this.y
 
         this.scrollBehaviorX.start()
         this.scrollBehaviorY.start()
@@ -163,13 +177,16 @@ export default class Scroller {
       }) => {
         if (!this.enabled) return true
 
-        const absDistX = Math.abs(deltaX)
-        const absDistY = Math.abs(deltaY)
+        this.distX += deltaX
+        this.distY += deltaY
 
+        const absDistX = Math.abs(this.distX)
+        const absDistY = Math.abs(this.distY)
+        let timestamp = getNow()
         // We need to move at least momentumLimitDistance pixels
         // for the scrolling to initiate
         if (
-          e.timeStamp - this.endTime > this.options.momentumLimitTime &&
+          timestamp - this.endTime > this.options.momentumLimitTime &&
           (absDistY < this.options.momentumLimitDistance &&
             absDistX < this.options.momentumLimitDistance)
         ) {
@@ -202,9 +219,9 @@ export default class Scroller {
         this.y = newY
 
         // dispatch scroll in interval time
-        if (e.timeStamp - this.startTime > this.options.momentumLimitTime) {
+        if (timestamp - this.startTime > this.options.momentumLimitTime) {
           // refresh time and starting position to initiate a momentum
-          this.startTime = e.timeStamp
+          this.startTime = timestamp
           this.startX = this.x
           this.startY = this.y
           if (this.options.probeType === Probe.Throttle) {
@@ -267,11 +284,10 @@ export default class Scroller {
         this.x = newX
         this.y = newY
 
-        this.endTime = e.timeStamp
+        this.endTime = getNow()
         const duration = this.endTime - this.startTime
         const deltaX = Math.abs(newX - this.startX)
         const deltaY = Math.abs(newY - this.startY)
-
         // flick
         if (
           duration < this.options.flickLimitTime &&
@@ -285,12 +301,12 @@ export default class Scroller {
         const momentumX = this.scrollBehaviorX.end({
           duration,
           bounces: [this.options.bounce.left, this.options.bounce.right],
-          startX: this.startX
+          startPos: this.startX
         })
         const momentumY = this.scrollBehaviorY.end({
           duration,
           bounces: [this.options.bounce.top, this.options.bounce.bottom],
-          startX: this.startX
+          startPos: this.startY
         })
 
         newX = isUndef(momentumX.destination)
@@ -299,9 +315,10 @@ export default class Scroller {
         newY = isUndef(momentumY.destination)
           ? newY
           : (momentumY.destination as number)
-        time = isUndef(momentumX.duration)
-          ? time
-          : (momentumX.duration as number)
+        time = Math.max(
+          momentumX.duration as number,
+          momentumY.duration as number
+        )
 
         // when x or y changed, do momentum animation now!
         if (newX !== this.x || newY !== this.y) {
@@ -496,7 +513,7 @@ export default class Scroller {
       size: 'width',
       position: 'left'
     })
-    this.scrollBehaviorX.refresh({
+    this.scrollBehaviorY.refresh({
       size: 'height',
       position: 'top'
     })

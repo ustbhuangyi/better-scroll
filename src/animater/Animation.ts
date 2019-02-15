@@ -19,11 +19,17 @@ export default class Animation extends Base {
       const x = displacementX[1]
       const y = displacementY[1]
       this.translate(x, y)
-      this.hooks.trigger(this.hooks.eventTypes.move)
+      this.hooks.trigger(this.hooks.eventTypes.move, {
+        x,
+        y
+      })
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
       // maybe need reset position
-      this.hooks.trigger(this.hooks.eventTypes.end)
+      this.hooks.trigger(this.hooks.eventTypes.end, {
+        x,
+        y
+      })
       return
     }
     this.animate(displacementX, displacementX, time, easingFn as EaseFn)
@@ -52,9 +58,15 @@ export default class Animation extends Base {
         this.pending = false
         this.translate(destX, destY)
 
-        this.callHooks(this.hooks.eventTypes.move)
+        this.hooks.trigger(this.hooks.eventTypes.move, {
+          x: destX,
+          y: destY
+        })
 
-        this.callHooks(this.hooks.eventTypes.end)
+        this.hooks.trigger(this.hooks.eventTypes.end, {
+          x: destX,
+          y: destY
+        })
         return
       }
 
@@ -70,7 +82,10 @@ export default class Animation extends Base {
       }
 
       if (this.options.probeType === Probe.Realtime) {
-        this.callHooks(this.hooks.eventTypes.move)
+        this.hooks.trigger(this.hooks.eventTypes.move, {
+          x: newX,
+          y: newY
+        })
       }
     }
 
@@ -84,11 +99,8 @@ export default class Animation extends Base {
     if (this.pending) {
       this.pending = false
       cancelAnimationFrame(this.timer)
-      const { x, y } = this.translater.getComputedPosition()
-      this.callHooks(this.hooks.eventTypes.forceStop, {
-        x,
-        y
-      })
+      const pos = this.translater.getComputedPosition()
+      this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
       this.forceStopped = true
     }
   }

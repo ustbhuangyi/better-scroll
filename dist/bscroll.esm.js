@@ -128,10 +128,8 @@ var Probe;
 })(Probe || (Probe = {}));
 var Direction;
 (function (Direction) {
-    Direction[Direction["Up"] = 1] = "Up";
-    Direction[Direction["Left"] = 1] = "Left";
-    Direction[Direction["Down"] = -1] = "Down";
-    Direction[Direction["Right"] = -1] = "Right";
+    Direction[Direction["Positive"] = 1] = "Positive";
+    Direction[Direction["Negative"] = -1] = "Negative";
     Direction[Direction["Default"] = 0] = "Default";
 })(Direction || (Direction = {}));
 var EventType;
@@ -141,10 +139,10 @@ var EventType;
 })(EventType || (EventType = {}));
 var DirectionLock;
 (function (DirectionLock) {
-    DirectionLock[DirectionLock["Default"] = 0] = "Default";
-    DirectionLock[DirectionLock["Horizontal"] = 1] = "Horizontal";
-    DirectionLock[DirectionLock["Vertical"] = 2] = "Vertical";
-    DirectionLock[DirectionLock["None"] = 3] = "None";
+    DirectionLock["Default"] = "";
+    DirectionLock["Horizontal"] = "horizontal";
+    DirectionLock["Vertical"] = "vertical";
+    DirectionLock["None"] = "none";
 })(DirectionLock || (DirectionLock = {}));
 var MouseButton;
 (function (MouseButton) {
@@ -187,7 +185,8 @@ function isUndef(v) {
     return v === undefined || v === null;
 }
 
-var elementStyle = (inBrowser && document.createElement('div').style);
+var elementStyle = (inBrowser &&
+    document.createElement('div').style);
 var vendor = (function () {
     if (!inBrowser) {
         return false;
@@ -208,7 +207,7 @@ var vendor = (function () {
 })();
 function prefixStyle(style) {
     if (vendor === false) {
-        return false;
+        return style;
     }
     if (vendor === 'standard') {
         if (style === 'transitionEnd') {
@@ -248,7 +247,7 @@ var transition = prefixStyle('transition');
 var hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle;
 // fix issue #361
 var hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools);
-var hasTransform = transform !== false;
+var hasTransform = transform in elementStyle;
 var hasTransition = inBrowser && transition in elementStyle;
 var style = {
     transform: transform,
@@ -369,34 +368,6 @@ var ease = {
     }
 };
 
-function momentum(current, start, time, lowerMargin, upperMargin, wrapperSize, options) {
-    var distance = current - start;
-    var speed = Math.abs(distance) / time;
-    var deceleration = options.deceleration, itemHeight = options.itemHeight, swipeBounceTime = options.swipeBounceTime, wheel = options.wheel, swipeTime = options.swipeTime;
-    var duration = swipeTime;
-    var rate = wheel ? 4 : 15;
-    var destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1);
-    if (wheel && itemHeight) {
-        destination = Math.round(destination / itemHeight) * itemHeight;
-    }
-    if (destination < lowerMargin) {
-        destination = wrapperSize
-            ? Math.max(lowerMargin - wrapperSize / 4, lowerMargin - (wrapperSize / rate) * speed)
-            : lowerMargin;
-        duration = swipeBounceTime;
-    }
-    else if (destination > upperMargin) {
-        destination = wrapperSize
-            ? Math.min(upperMargin + wrapperSize / 4, upperMargin + (wrapperSize / rate) * speed)
-            : upperMargin;
-        duration = swipeBounceTime;
-    }
-    return {
-        destination: Math.round(destination),
-        duration: duration
-    };
-}
-
 var DEFAULT_INTERVAL = 100 / 60;
 var windowCompat = window;
 function noop() { }
@@ -439,16 +410,12 @@ var Options = /** @class */ (function () {
         this.eventPassthrough = EventPassthrough.None;
         this.click = false;
         this.tap = '';
-        /**
-         * support any side
-         * bounce: {
-         *   top: true,
-         *   bottom: true,
-         *   left: true,
-         *   right: true
-         * }
-         */
-        this.bounce = true;
+        this.bounce = {
+            top: true,
+            bottom: true,
+            left: true,
+            right: true
+        };
         this.bounceTime = 800;
         this.momentum = true;
         this.momentumLimitTime = 300;
@@ -573,7 +540,8 @@ var Options = /** @class */ (function () {
         return this;
     };
     Options.prototype.process = function () {
-        this.translateZ = this.HWCompositing && hasPerspective ? ' translateZ(0)' : '';
+        this.translateZ =
+            this.HWCompositing && hasPerspective ? ' translateZ(0)' : '';
         this.useTransition = this.useTransition && hasTransition;
         this.useTransform = this.useTransform && hasTransform;
         this.preventDefault = !this.eventPassthrough && this.preventDefault;
@@ -582,6 +550,9 @@ var Options = /** @class */ (function () {
         this.scrollY = this.eventPassthrough === 'vertical' ? false : this.scrollY;
         // With eventPassthrough we also need lockDirection mechanism
         this.freeScroll = this.freeScroll && !this.eventPassthrough;
+        // force true when freeScroll is true
+        this.scrollX = this.freeScroll ? true : this.scrollX;
+        this.scrollY = this.freeScroll ? true : this.scrollY;
         this.directionLockThreshold = this.eventPassthrough
             ? 0
             : this.directionLockThreshold;
@@ -590,59 +561,86 @@ var Options = /** @class */ (function () {
     return Options;
 }());
 
+var EventRegister = /** @class */ (function () {
+    function EventRegister(wrapper, events) {
+        this.wrapper = wrapper;
+        this.events = events;
+        this.addDOMEvents();
+    }
+    EventRegister.prototype.destroy = function () {
+        this.removeDOMEvents();
+        this.events = [];
+    };
+    EventRegister.prototype.addDOMEvents = function () {
+        this.handleDOMEvents(addEvent);
+    };
+    EventRegister.prototype.removeDOMEvents = function () {
+        this.handleDOMEvents(removeEvent);
+    };
+    EventRegister.prototype.handleDOMEvents = function (eventOperation) {
+        var _this = this;
+        var wrapper = this.wrapper;
+        this.events.forEach(function (event) {
+            eventOperation(wrapper, event.name, _this, !!event.capture);
+        });
+    };
+    EventRegister.prototype.handleEvent = function (e) {
+        var eventType = e.type;
+        this.events.some(function (event) {
+            if (event.name === eventType) {
+                event.handler(e);
+                return true;
+            }
+            return false;
+        });
+    };
+    return EventRegister;
+}());
+
 var ActionsHandler = /** @class */ (function () {
     function ActionsHandler(wrapper, options) {
         this.wrapper = wrapper;
         this.options = options;
-        this.hooks = new EventEmitter(['start', 'move', 'end']);
-        this.addDOMEvents();
+        this.hooks = new EventEmitter(['start', 'move', 'end', 'click']);
+        this.handleDOMEvents();
     }
-    ActionsHandler.prototype.addDOMEvents = function () {
-        var eventOperation = addEvent;
-        this.handleDOMEvents(eventOperation);
-    };
-    ActionsHandler.prototype.removeDOMEvents = function () {
-        var eventOperation = removeEvent;
-        this.handleDOMEvents(eventOperation);
-    };
-    ActionsHandler.prototype.handleDOMEvents = function (eventOperation) {
-        var _a = this.options, bindToWrapper = _a.bindToWrapper, click$$1 = _a.click, disableMouse = _a.disableMouse;
+    ActionsHandler.prototype.handleDOMEvents = function () {
+        var _a = this.options, bindToWrapper = _a.bindToWrapper, disableMouse = _a.disableMouse;
         var wrapper = this.wrapper;
         var target = bindToWrapper ? wrapper : window;
-        eventOperation(window, 'orientationchange', this);
-        eventOperation(window, 'resize', this);
-        if (click$$1) {
-            eventOperation(wrapper, 'click', this, true);
-        }
-        if (!disableMouse) {
-            eventOperation(wrapper, 'mousedown', this);
-            eventOperation(target, 'mousemove', this);
-            eventOperation(target, 'mousecancel', this);
-            eventOperation(target, 'mouseup', this);
-        }
-        if (disableMouse) {
-            eventOperation(wrapper, 'touchstart', this);
-            eventOperation(target, 'touchmove', this);
-            eventOperation(target, 'touchcancel', this);
-            eventOperation(target, 'touchend', this);
-        }
+        this.startClickRegister = new EventRegister(wrapper, [
+            {
+                name: disableMouse ? 'touchstart' : 'mousedown',
+                handler: this.start.bind(this)
+            },
+            {
+                name: 'click',
+                handler: this.click.bind(this)
+            }
+        ]);
+        this.moveEndRegister = new EventRegister(target, [
+            {
+                name: disableMouse ? 'touchmove' : 'mousemove',
+                handler: this.move.bind(this)
+            },
+            {
+                name: disableMouse ? 'touchend' : 'mouseup',
+                handler: this.end.bind(this)
+            },
+            {
+                name: disableMouse ? 'touchcancel' : 'mouseup',
+                handler: this.end.bind(this)
+            }
+        ]);
     };
-    ActionsHandler.prototype.handleEvent = function (e) {
-        switch (e.type) {
-            case 'touchstart':
-            case 'mousedown':
-                this.start(e);
-                break;
-            case 'touchmove':
-            case 'mousemove':
-                this.move(e);
-                break;
-            case 'touchend':
-            case 'mouseup':
-            case 'touchcancel':
-            case 'mousecancel':
-                this.end(e);
-                break;
+    ActionsHandler.prototype.beforeHandler = function (e) {
+        var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
+        if (preventDefault &&
+            !preventDefaultExceptionFn(e.target, preventDefaultException)) {
+            e.preventDefault();
+        }
+        if (stopPropagation) {
+            e.stopPropagation();
         }
     };
     ActionsHandler.prototype.start = function (e) {
@@ -654,44 +652,26 @@ var ActionsHandler = /** @class */ (function () {
         // no mouse left button
         if (_eventType === EventType.Mouse && e.button !== MouseButton.Left)
             return;
-        var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
-        if (preventDefault &&
-            !preventDefaultExceptionFn(e.target, preventDefaultException)) {
-            e.preventDefault();
-        }
-        if (stopPropagation) {
-            e.stopPropagation();
-        }
+        this.beforeHandler(e);
         var point = (e.touches ? e.touches[0] : e);
         this.pointX = point.pageX;
         this.pointY = point.pageY;
-        this.hooks.trigger(this.hooks.eventTypes.start, {
-            timeStamp: e.timeStamp
-        });
+        this.hooks.trigger(this.hooks.eventTypes.start);
     };
     ActionsHandler.prototype.move = function (e) {
         if (eventTypeMap[e.type] !== this.initiated) {
             return;
         }
-        var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
-        if (preventDefault &&
-            !preventDefaultExceptionFn(e.target, preventDefaultException)) {
-            e.preventDefault();
-        }
-        if (stopPropagation) {
-            e.stopPropagation();
-        }
+        this.beforeHandler(e);
         var point = (e.touches ? e.touches[0] : e);
         var deltaX = point.pageX - this.pointX;
         var deltaY = point.pageY - this.pointY;
         this.pointX = point.pageX;
         this.pointY = point.pageY;
         if (this.hooks.trigger(this.hooks.eventTypes.move, {
-            timeStamp: e.timeStamp,
             deltaX: deltaX,
             deltaY: deltaY,
-            e: e,
-            actionsHandler: this
+            e: e
         }))
             return;
         // auto end when out of wrapper
@@ -719,21 +699,15 @@ var ActionsHandler = /** @class */ (function () {
             return;
         }
         this.initiated = false;
-        var _a = this.options, preventDefault = _a.preventDefault, stopPropagation = _a.stopPropagation, preventDefaultException = _a.preventDefaultException;
-        if (preventDefault &&
-            !preventDefaultExceptionFn(e.target, preventDefaultException)) {
-            e.preventDefault();
-        }
-        if (stopPropagation) {
-            e.stopPropagation();
-        }
+        this.beforeHandler(e);
         this.hooks.trigger(this.hooks.eventTypes.end, e);
     };
-    ActionsHandler.prototype.setPointPosition = function (e) {
-        var point = (e.touches ? e.touches[0] : e);
-        this.pointX = point.pageX;
-        this.pointY = point.pageY;
-        return point;
+    ActionsHandler.prototype.click = function (e) {
+        this.hooks.trigger(this.hooks.eventTypes.click, e);
+    };
+    ActionsHandler.prototype.destroy = function () {
+        this.startClickRegister.destroy();
+        this.moveEndRegister.destroy();
     };
     return ActionsHandler;
 }());
@@ -743,22 +717,7 @@ var Base = /** @class */ (function () {
         this.element = element;
         // cache for better performance
         this.style = element.style;
-        this.setUpProps();
     }
-    Base.prototype.setScale = function (scale) {
-        this.lastScale = isUndef(this.scale) ? scale : this.scale;
-        this.scale = scale;
-    };
-    Base.prototype.updateProps = function (x, y, scale) {
-        this.x = x;
-        this.y = y;
-        this.setScale(scale);
-    };
-    Base.prototype.setUpProps = function () {
-        this.x = 0;
-        this.y = 0;
-        this.setScale(1);
-    };
     return Base;
 }());
 
@@ -776,10 +735,9 @@ var Position = /** @class */ (function (_super) {
             y: y
         };
     };
-    Position.prototype.updatePosition = function (x, y, scale) {
+    Position.prototype.translateTo = function (x, y) {
         this.style.left = Math.round(x) + "px";
         this.style.top = Math.round(y) + "px";
-        this.updateProps(x, y, scale);
     };
     return Position;
 }(Base));
@@ -801,9 +759,8 @@ var Transform = /** @class */ (function (_super) {
             y: y
         };
     };
-    Transform.prototype.updatePosition = function (x, y, scale) {
-        this.style[style.transform] = "translate(" + x + "px," + y + "px) scale(" + scale + ")" + this.options.translateZ;
-        this.updateProps(x, y, scale);
+    Transform.prototype.translateTo = function (x, y) {
+        this.style[style.transform] = "translate(" + x + "px," + y + "px)" + this.options.translateZ;
     };
     return Transform;
 }(Base));
@@ -813,68 +770,28 @@ var Base$1 = /** @class */ (function () {
         this.element = element;
         this.translater = translater;
         this.options = options;
-        this.hooks = new EventEmitter(['scroll', 'scrollEnd']);
+        this.hooks = new EventEmitter(['move', 'end', 'forceStop']);
         this.style = element.style;
     }
-    Base.prototype.refresh = function (boundaryInfo) {
-        var _this = this;
-        Object.keys(boundaryInfo).forEach(function (key) {
-            _this[key] = boundaryInfo[key];
-        });
-    };
-    Base.prototype.translate = function (x, y, scale) {
-        this.translater.updatePosition(x, y, scale);
-    };
-    Base.prototype._resetPosition = function (time, easing) {
-        var x = this.translater.x;
-        var roundX = Math.round(x);
-        if (!this.hasHorizontalScroll || roundX > this.minScrollX) {
-            x = this.minScrollX;
-        }
-        else if (roundX < this.maxScrollX) {
-            x = this.maxScrollX;
-        }
-        var y = this.translater.y;
-        var roundY = Math.round(y);
-        if (!this.hasVerticalScroll || roundY > this.minScrollY) {
-            y = this.minScrollY;
-        }
-        else if (roundY < this.maxScrollY) {
-            y = this.maxScrollY;
-        }
-        // in boundary
-        if (x === this.translater.x && y === this.translater.y) {
-            return false;
-        }
-        // out of boundary
-        this.scrollTo(x, y, time, easing);
-        return true;
-    };
-    Base.prototype.callHooks = function (eventType, pos) {
-        pos = isUndef(pos)
-            ? {
-                x: this.translater.x,
-                y: this.translater.y
-            }
-            : pos;
-        this.hooks.trigger(eventType, pos);
+    Base.prototype.translate = function (x, y) {
+        this.translater.translateTo(x, y);
     };
     return Base;
 }());
 
 var Transition = /** @class */ (function (_super) {
     __extends(Transition, _super);
-    function Transition(element, translater, options) {
-        return _super.call(this, element, translater, options) || this;
+    function Transition() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     Transition.prototype.startProbe = function () {
         var _this = this;
         var probe = function () {
             var pos = _this.translater.getComputedPosition();
-            _this.callHooks(_this.hooks.eventTypes.scroll, pos);
-            // excuted when transition ends
+            _this.hooks.trigger(_this.hooks.eventTypes.move, pos);
+            // excute when transition ends
             if (!_this.pending) {
-                _this.callHooks(_this.hooks.eventTypes.scrollEnd, pos);
+                _this.hooks.trigger(_this.hooks.eventTypes.end, pos);
                 return;
             }
             _this.timer = requestAnimationFrame(probe);
@@ -889,26 +806,31 @@ var Transition = /** @class */ (function (_super) {
     Transition.prototype.transitionTimingFunction = function (easing) {
         this.style[style.transitionTimingFunction] = easing;
     };
-    Transition.prototype.scrollTo = function (x, y, time, easingFn) {
+    Transition.prototype.scrollTo = function (DisplacementX, DisplacementY, time, easingFn) {
+        // destinations
+        var x = DisplacementX[1];
+        var y = DisplacementY[1];
         this.pending = time > 0;
         this.transitionTimingFunction(easingFn);
         this.transitionTime(time);
-        this.translater.updatePosition(x, y, this.translater.scale);
+        this.translate(x, y);
         // TODO when probeType is not Realtime, need to dispatch scroll ?
         if (time && this.options.probeType === Probe.Realtime) {
             this.startProbe();
         }
         // when time is 0
         if (!time) {
-            this.callHooks(this.hooks.eventTypes.scroll, {
+            this.hooks.trigger(this.hooks.eventTypes.move, {
                 x: x,
                 y: y
             });
             // force reflow to put everything in position
             this._reflow = document.body.offsetHeight;
-            if (!this.resetPosition(this.options.bounceTime)) {
-                this.callHooks(this.hooks.eventTypes.scrollEnd);
-            }
+            // maybe need reset position
+            this.hooks.trigger(this.hooks.eventTypes.end, {
+                x: x,
+                y: y
+            });
         }
     };
     Transition.prototype.stop = function () {
@@ -916,80 +838,84 @@ var Transition = /** @class */ (function (_super) {
         if (this.pending) {
             this.pending = false;
             cancelAnimationFrame(this.timer);
-            var pos = this.translater.getComputedPosition();
+            var _a = this.translater.getComputedPosition(), x = _a.x, y = _a.y;
             this.transitionTime();
-            this.translate(pos.x, pos.y, this.translater.scale);
-            this.callHooks(this.hooks.eventTypes.scrollEnd, {
-                x: pos.x,
-                y: pos.y
+            this.translate(x, y);
+            this.hooks.trigger(this.hooks.eventTypes.forceStop, {
+                x: x,
+                y: y
             });
             this.forceStopped = true;
         }
-    };
-    Transition.prototype.resetPosition = function (time, easing) {
-        if (time === void 0) { time = 0; }
-        if (easing === void 0) { easing = ease.bounce; }
-        var easingStyle = easing.style;
-        return this._resetPosition(time, easingStyle);
     };
     return Transition;
 }(Base$1));
 
 var Animation = /** @class */ (function (_super) {
     __extends(Animation, _super);
-    function Animation(element, translater, options) {
-        return _super.call(this, element, translater, options) || this;
+    function Animation() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Animation.prototype.scrollTo = function (x, y, time, easingFn) {
+    Animation.prototype.scrollTo = function (displacementX, displacementY, time, easingFn) {
         // time is 0
         if (!time) {
-            this.translater.updatePosition(x, y, this.translater.scale);
-            this.hooks.trigger(this.hooks.eventTypes.scroll, {
+            var x = displacementX[1];
+            var y = displacementY[1];
+            this.translate(x, y);
+            this.hooks.trigger(this.hooks.eventTypes.move, {
                 x: x,
                 y: y
             });
             // force reflow to put everything in position
             this._reflow = document.body.offsetHeight;
-            if (!this.resetPosition(this.options.bounceTime)) {
-                this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-                    x: this.translater.x,
-                    y: this.translater.y
-                });
-            }
+            // maybe need reset position
+            this.hooks.trigger(this.hooks.eventTypes.end, {
+                x: x,
+                y: y
+            });
             return;
         }
-        this.animate(x, y, time, easingFn);
+        this.animate(displacementX, displacementX, time, easingFn);
     };
-    Animation.prototype.animate = function (destX, destY, duration, easingFn) {
+    Animation.prototype.animate = function (displacementX, displacementY, duration, easingFn) {
         var _this = this;
-        var startX = this.translater.x;
-        var startY = this.translater.y;
-        var startScale = this.translater.lastScale;
-        var destScale = this.translater.scale;
+        // departure
+        var startX = displacementX[0];
+        var startY = displacementY[0];
+        // destinations
+        var destX = displacementX[1];
+        var destY = displacementY[1];
         var startTime = getNow();
         var destTime = startTime + duration;
         var step = function () {
             var now = getNow();
+            // js animation end
             if (now >= destTime) {
                 _this.pending = false;
-                _this.translate(destX, destY, destScale);
-                _this.callHooks(_this.hooks.eventTypes.scroll);
-                if (!_this.resetPosition(_this.options.bounceTime)) {
-                    _this.callHooks(_this.hooks.eventTypes.scrollEnd);
-                }
+                _this.translate(destX, destY);
+                _this.hooks.trigger(_this.hooks.eventTypes.move, {
+                    x: destX,
+                    y: destY
+                });
+                _this.hooks.trigger(_this.hooks.eventTypes.end, {
+                    x: destX,
+                    y: destY
+                });
                 return;
             }
             now = (now - startTime) / duration;
             var easing = easingFn(now);
             var newX = (destX - startX) * easing + startX;
             var newY = (destY - startY) * easing + startY;
-            var newScale = (destScale - startScale) * easing + startScale;
-            _this.translate(newX, newY, newScale);
+            _this.translate(newX, newY);
             if (_this.pending) {
                 _this.timer = requestAnimationFrame(step);
             }
             if (_this.options.probeType === Probe.Realtime) {
-                _this.callHooks(_this.hooks.eventTypes.scroll);
+                _this.hooks.trigger(_this.hooks.eventTypes.move, {
+                    x: newX,
+                    y: newY
+                });
             }
         };
         this.pending = true;
@@ -998,25 +924,148 @@ var Animation = /** @class */ (function (_super) {
     };
     Animation.prototype.stop = function () {
         // still in requestFrameAnimation
-        var _a = this.translater, x = _a.x, y = _a.y;
         if (this.pending) {
             this.pending = false;
             cancelAnimationFrame(this.timer);
-            this.callHooks(this.hooks.eventTypes.scrollEnd, {
-                x: x,
-                y: y
-            });
+            var pos = this.translater.getComputedPosition();
+            this.hooks.trigger(this.hooks.eventTypes.forceStop, pos);
             this.forceStopped = true;
         }
     };
-    Animation.prototype.resetPosition = function (time, easing) {
-        if (time === void 0) { time = 0; }
-        if (easing === void 0) { easing = ease.bounce; }
-        var easingFn = easing.fn;
-        return this._resetPosition(time, easingFn);
-    };
     return Animation;
 }(Base$1));
+
+var Behavior = /** @class */ (function () {
+    function Behavior(wrapper, options) {
+        this.wrapper = wrapper;
+        this.options = options;
+        this.element = this.wrapper.children[0];
+        this.currentPos = 0;
+    }
+    Behavior.prototype.start = function () {
+        this.direction = Direction.Default;
+        this.movingDirection = Direction.Default;
+        this.startPos = this.currentPos;
+        this.absStartPos = this.currentPos;
+    };
+    Behavior.prototype.move = function (delta, bounces) {
+        delta = this.hasScroll ? delta : 0;
+        this.movingDirection =
+            delta > 0
+                ? Direction.Negative
+                : delta < 0
+                    ? Direction.Positive
+                    : Direction.Default;
+        var newPos = this.currentPos + delta;
+        // Slow down or stop if outside of the boundaries
+        if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
+            if ((newPos > this.minScrollPos && bounces[0]) ||
+                (newPos < this.maxScrollPos && bounces[1])) {
+                newPos = this.currentPos + delta / 3;
+            }
+            else {
+                newPos =
+                    newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos;
+            }
+        }
+        return newPos;
+    };
+    Behavior.prototype.end = function (_a) {
+        var duration = _a.duration, bounces = _a.bounces, startPos = _a.startPos;
+        var momentumInfo = {
+            duration: 0
+        };
+        var absDist = Math.abs(this.currentPos - startPos);
+        // start momentum animation if needed
+        if (this.options.momentum &&
+            duration < this.options.momentumLimitTime &&
+            absDist > this.options.momentumLimitDistance) {
+            var wrapperSize = (this.direction === Direction.Negative && bounces[0]) ||
+                (this.direction === Direction.Positive && bounces[1])
+                ? this.wrapperSize
+                : 0;
+            momentumInfo = this.hasScroll
+                ? this.momentum(this.currentPos, startPos, duration, this.maxScrollPos, this.minScrollPos, wrapperSize, this.options)
+                : { destination: this.currentPos, duration: 0 };
+        }
+        return momentumInfo;
+    };
+    Behavior.prototype.momentum = function (current, start, time, lowerMargin, upperMargin, wrapperSize, options) {
+        if (options === void 0) { options = this.options; }
+        var distance = current - start;
+        var speed = Math.abs(distance) / time;
+        var deceleration = options.deceleration, swipeBounceTime = options.swipeBounceTime, swipeTime = options.swipeTime;
+        var duration = swipeTime;
+        var rate = 15;
+        var destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1);
+        if (destination < lowerMargin) {
+            destination = wrapperSize
+                ? Math.max(lowerMargin - wrapperSize / 4, lowerMargin - (wrapperSize / rate) * speed)
+                : lowerMargin;
+            duration = swipeBounceTime;
+        }
+        else if (destination > upperMargin) {
+            destination = wrapperSize
+                ? Math.min(upperMargin + wrapperSize / 4, upperMargin + (wrapperSize / rate) * speed)
+                : upperMargin;
+            duration = swipeBounceTime;
+        }
+        return {
+            destination: Math.round(destination),
+            duration: duration
+        };
+    };
+    Behavior.prototype.updateDirection = function () {
+        var absDist = Math.round(this.currentPos) - this.absStartPos;
+        this.direction =
+            absDist > 0
+                ? Direction.Negative
+                : absDist < 0
+                    ? Direction.Positive
+                    : Direction.Default;
+    };
+    Behavior.prototype.refresh = function (_a) {
+        var size = _a.size, position = _a.position;
+        var isWrapperStatic = window.getComputedStyle(this.wrapper, null).position === 'static';
+        var wrapperRect = getRect(this.wrapper);
+        this.wrapperSize = wrapperRect[size];
+        var elementRect = getRect(this.element);
+        this.elementSize = elementRect[size];
+        this.relativeOffset = elementRect[position];
+        if (isWrapperStatic) {
+            this.relativeOffset -= wrapperRect[position];
+        }
+        this.minScrollPos = 0;
+        this.maxScrollPos = this.wrapperSize - this.elementSize;
+        if (this.maxScrollPos < 0) {
+            this.maxScrollPos -= this.relativeOffset;
+            this.minScrollPos = -this.relativeOffset;
+        }
+        this.hasScroll =
+            this.options.scrollable && this.maxScrollPos < this.minScrollPos;
+        if (!this.hasScroll) {
+            this.maxScrollPos = this.minScrollPos;
+            this.elementSize = this.wrapperSize;
+        }
+        this.direction = 0;
+    };
+    Behavior.prototype.updatePosition = function (pos) {
+        this.currentPos = pos;
+    };
+    // ajust position when out of boundary
+    Behavior.prototype.limitPosition = function () {
+        var pos = this.currentPos;
+        var roundPos = Math.round(pos);
+        if (!this.hasScroll || roundPos > this.minScrollPos) {
+            pos = this.minScrollPos;
+        }
+        else if (roundPos < this.maxScrollPos) {
+            pos = this.maxScrollPos;
+        }
+        return pos;
+    };
+    return Behavior;
+}());
 
 var Scroller = /** @class */ (function () {
     function Scroller(wrapper, options) {
@@ -1034,6 +1083,11 @@ var Scroller = /** @class */ (function () {
         this.wrapper = wrapper;
         this.element = wrapper.children[0];
         this.options = options;
+        this.enabled = true;
+        this.x = 0;
+        this.y = 0;
+        this.scrollBehaviorX = new Behavior(wrapper, this.createBehaviorOpt('scrollX')); // direction X
+        this.scrollBehaviorY = new Behavior(wrapper, this.createBehaviorOpt('scrollY')); // direction Y
         this.translater = this.options.useTransform
             ? new Transform(this.element, {
                 translateZ: this.options.translateZ
@@ -1041,178 +1095,128 @@ var Scroller = /** @class */ (function () {
             : new Position(this.element);
         this.animater = this.options.useTransition
             ? new Transition(this.element, this.translater, {
-                probeType: this.options.probeType,
-                bounceTime: this.options.bounceTime
+                probeType: this.options.probeType
             })
             : new Animation(this.element, this.translater, {
-                probeType: this.options.probeType,
-                bounceTime: this.options.bounceTime
+                probeType: this.options.probeType
             });
-        var actionsHandler = new ActionsHandler(wrapper, this.createActionsHandlerOpt());
-        this.enabled = true;
-        this.addDOMEvents();
-        actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.start, function (_a) {
-            var timeStamp = _a.timeStamp;
+        this.actionsHandler = new ActionsHandler(wrapper, this.createActionsHandlerOpt());
+        var resizeHandler = this.resize.bind(this);
+        this.resizeRegister = new EventRegister(window, [
+            {
+                name: 'orientationchange',
+                handler: resizeHandler
+            },
+            {
+                name: 'resize',
+                handler: resizeHandler
+            }
+        ]);
+        this.transitionEndRegister = new EventRegister(this.element, [
+            {
+                name: style.transitionEnd,
+                handler: this.transitionEnd.bind(this)
+            }
+        ]);
+        // reset position
+        this.animater.hooks.on(this.animater.hooks.eventTypes.end, function (pos) {
+            if (!_this.resetPosition(_this.options.bounceTime)) {
+                _this.hooks.trigger(_this.hooks.eventTypes.scrollEnd, pos);
+            }
+        });
+        // scroll
+        this.animater.hooks.on(this.animater.hooks.eventTypes.move, function (pos) {
+            _this.hooks.trigger(_this.hooks.eventTypes.scroll, pos);
+        });
+        // [mouse|touch]start event
+        this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.start, function () {
             if (!_this.enabled)
                 return true;
+            var timestamp = getNow();
             _this.moved = false;
-            _this.directionX = Direction.Default;
-            _this.directionY = Direction.Default;
-            _this.movingDirectionX = Direction.Default;
-            _this.movingDirectionY = Direction.Default;
             _this.directionLocked = DirectionLock.Default;
-            _this.startX = _this.translater.x;
-            _this.startY = _this.translater.y;
-            _this.absStartX = _this.translater.x;
-            _this.absStartY = _this.translater.y;
-            _this.startTime = timeStamp;
+            _this.startTime = timestamp;
+            _this.distX = 0;
+            _this.distY = 0;
+            _this.startX = _this.x;
+            _this.startY = _this.y;
+            _this.scrollBehaviorX.start();
+            _this.scrollBehaviorY.start();
             // force stopping last transition or animation
             _this.animater.stop();
             _this.hooks.trigger(_this.hooks.eventTypes.beforeScrollStart);
         });
-        actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.move, function (_a) {
-            var timeStamp = _a.timeStamp, deltaX = _a.deltaX, deltaY = _a.deltaY, actionsHandler = _a.actionsHandler, e = _a.e;
+        // [mouse|touch]move event
+        this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.move, function (_a) {
+            var deltaX = _a.deltaX, deltaY = _a.deltaY, e = _a.e;
             if (!_this.enabled)
                 return true;
-            var absDistX = Math.abs(deltaX);
-            var absDistY = Math.abs(deltaY);
-            // We need to move at least momentumLimitDistance pixels for the scrolling to initiate
-            if (timeStamp - _this.endTime > _this.options.momentumLimitTime &&
+            _this.distX += deltaX;
+            _this.distY += deltaY;
+            var absDistX = Math.abs(_this.distX);
+            var absDistY = Math.abs(_this.distY);
+            var timestamp = getNow();
+            // We need to move at least momentumLimitDistance pixels
+            // for the scrolling to initiate
+            if (timestamp - _this.endTime > _this.options.momentumLimitTime &&
                 (absDistY < _this.options.momentumLimitDistance &&
                     absDistX < _this.options.momentumLimitDistance)) {
                 return true;
             }
-            // If you are scrolling in one direction lock the other
-            if (!_this.directionLocked && !_this.options.freeScroll) {
-                if (absDistX > absDistY + _this.options.directionLockThreshold) {
-                    _this.directionLocked = DirectionLock.Horizontal; // lock horizontally
-                }
-                else if (absDistY >=
-                    absDistX + _this.options.directionLockThreshold) {
-                    _this.directionLocked = DirectionLock.Vertical; // lock vertically
-                }
-                else {
-                    _this.directionLocked = DirectionLock.None; // no lock
-                }
-            }
-            if (_this.directionLocked === DirectionLock.Horizontal) {
-                if (_this.options.eventPassthrough === EventPassthrough.Vertical) {
-                    e.preventDefault();
-                }
-                else if (_this.options.eventPassthrough === EventPassthrough.Horizontal) {
-                    actionsHandler.initiated = false;
-                    return true;
-                }
-                deltaY = 0;
-            }
-            else if (_this.directionLocked === DirectionLock.Vertical) {
-                if (_this.options.eventPassthrough === EventPassthrough.Horizontal) {
-                    e.preventDefault();
-                }
-                else if (_this.options.eventPassthrough === EventPassthrough.Vertical) {
-                    actionsHandler.initiated = false;
-                    return true;
-                }
-                deltaX = 0;
-            }
-            deltaX = _this.hasHorizontalScroll ? deltaX : 0;
-            deltaY = _this.hasVerticalScroll ? deltaY : 0;
-            _this.movingDirectionX =
-                deltaX > 0
-                    ? Direction.Right
-                    : deltaX < 0
-                        ? Direction.Left
-                        : Direction.Default;
-            _this.movingDirectionY =
-                deltaY > 0
-                    ? Direction.Down
-                    : deltaY < 0
-                        ? Direction.Up
-                        : Direction.Default;
-            var newX = _this.translater.x + deltaX;
-            var newY = _this.translater.y + deltaY;
-            var top = false;
-            var bottom = false;
-            var left = false;
-            var right = false;
-            // Slow down or stop if outside of the boundaries
-            var bounce = _this.options.bounce;
-            if (bounce !== false) {
-                top = bounce.top === undefined ? true : bounce.top;
-                bottom = bounce.bottom === undefined ? true : bounce.bottom;
-                left = bounce.left === undefined ? true : bounce.left;
-                right = bounce.right === undefined ? true : bounce.right;
-            }
-            if (newX > _this.minScrollX || newX < _this.maxScrollX) {
-                if ((newX > _this.minScrollX && left) ||
-                    (newX < _this.maxScrollX && right)) {
-                    newX = _this.translater.x + deltaX / 3;
-                }
-                else {
-                    newX = newX > _this.minScrollX ? _this.minScrollX : _this.maxScrollX;
-                }
-            }
-            if (newY > _this.minScrollY || newY < _this.maxScrollY) {
-                if ((newY > _this.minScrollY && top) ||
-                    (newY < _this.maxScrollY && bottom)) {
-                    newY = _this.translater.y + deltaY / 3;
-                }
-                else {
-                    newY = newY > _this.minScrollY ? _this.minScrollY : _this.maxScrollY;
-                }
-            }
+            _this.computeDirectionLock(absDistX, absDistY);
+            _this.handleEventPassthrough(e);
+            deltaX = _this.ajustDelta(deltaX, deltaY).deltaX;
+            deltaY = _this.ajustDelta(deltaX, deltaY).deltaY;
+            var _b = _this.options.bounce, left = _b.left, right = _b.right, top = _b.top, bottom = _b.bottom;
+            var newX = _this.scrollBehaviorX.move(deltaX, [left, right]);
+            var newY = _this.scrollBehaviorY.move(deltaY, [top, bottom]);
             if (!_this.moved) {
                 _this.moved = true;
                 _this.hooks.trigger(_this.hooks.eventTypes.scrollStart);
             }
-            _this.animater.translate(newX, newY, _this.translater.scale);
+            _this.animater.translate(newX, newY);
+            // refresh all positions
+            _this.scrollBehaviorX.updatePosition(newX);
+            _this.scrollBehaviorY.updatePosition(newY);
+            _this.x = newX;
+            _this.y = newY;
             // dispatch scroll in interval time
-            if (timeStamp - _this.startTime > _this.options.momentumLimitTime) {
-                // refresh time and start position to initiate a momentum
-                _this.startTime = timeStamp;
-                _this.startX = _this.translater.x;
-                _this.startY = _this.translater.y;
+            if (timestamp - _this.startTime > _this.options.momentumLimitTime) {
+                // refresh time and starting position to initiate a momentum
+                _this.startTime = timestamp;
+                _this.startX = _this.x;
+                _this.startY = _this.y;
                 if (_this.options.probeType === Probe.Throttle) {
                     _this.hooks.trigger(_this.hooks.eventTypes.scroll, {
-                        x: _this.translater.x,
-                        y: _this.translater.y
+                        x: _this.x,
+                        y: _this.y
                     });
                 }
             }
             // dispatch scroll all the time
             if (_this.options.probeType > Probe.Throttle) {
                 _this.hooks.trigger(_this.hooks.eventTypes.scroll, {
-                    x: _this.translater.x,
-                    y: _this.translater.y
+                    x: _this.x,
+                    y: _this.y
                 });
             }
         });
-        actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.end, function (e) {
+        // [mouse|touch]end event
+        this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.end, function (e) {
             if (!_this.enabled)
                 return true;
-            var _a = _this.translater, x = _a.x, y = _a.y, scale = _a.scale;
             _this.hooks.trigger(_this.hooks.eventTypes.touchEnd, {
-                x: x,
-                y: y
+                x: _this.x,
+                y: _this.y
             });
             _this.animater.pending = false;
             // ensures that the last position is rounded
-            var newX = Math.round(x);
-            var newY = Math.round(y);
-            var deltaX = newX - _this.absStartX;
-            var deltaY = newY - _this.absStartY;
-            _this.directionX =
-                deltaX > 0
-                    ? Direction.Right
-                    : deltaX < 0
-                        ? Direction.Left
-                        : Direction.Default;
-            _this.directionY =
-                deltaY > 0
-                    ? Direction.Down
-                    : deltaY < 0
-                        ? Direction.Up
-                        : Direction.Default;
+            var newX = Math.round(_this.x);
+            var newY = Math.round(_this.y);
+            var time = 0;
+            var easing = ease.swiper;
+            _this.scrollBehaviorX.updateDirection();
+            _this.scrollBehaviorY.updateDirection();
             // TODO PullDown
             // check if it is a click operation
             if (_this.checkClick(e)) {
@@ -1223,182 +1227,115 @@ var Scroller = /** @class */ (function () {
             if (_this.resetPosition(_this.options.bounceTime, ease.bounce)) {
                 return;
             }
-            _this.animater.translate(newX, newY, scale);
-            _this.endTime = e.timeStamp;
+            _this.animater.translate(newX, newY);
+            // refresh all positions
+            _this.scrollBehaviorX.updatePosition(newX);
+            _this.scrollBehaviorY.updatePosition(newY);
+            _this.x = newX;
+            _this.y = newY;
+            _this.endTime = getNow();
             var duration = _this.endTime - _this.startTime;
-            var absDistX = Math.abs(newX - _this.startX);
-            var absDistY = Math.abs(newY - _this.startY);
+            var deltaX = Math.abs(newX - _this.startX);
+            var deltaY = Math.abs(newY - _this.startY);
             // flick
             if (duration < _this.options.flickLimitTime &&
-                absDistX < _this.options.flickLimitDistance &&
-                absDistY < _this.options.flickLimitDistance) {
+                deltaX < _this.options.flickLimitDistance &&
+                deltaY < _this.options.flickLimitDistance) {
                 _this.hooks.trigger('flick');
                 return;
             }
-            var time = 0;
             // start momentum animation if needed
-            if (_this.options.momentum &&
-                duration < _this.options.momentumLimitTime &&
-                (absDistY > _this.options.momentumLimitDistance ||
-                    absDistX > _this.options.momentumLimitDistance)) {
-                var top_1 = false;
-                var bottom = false;
-                var left = false;
-                var right = false;
-                var bounce = _this.options.bounce;
-                if (bounce !== false) {
-                    top_1 = bounce.top === undefined ? true : bounce.top;
-                    bottom = bounce.bottom === undefined ? true : bounce.bottom;
-                    left = bounce.left === undefined ? true : bounce.left;
-                    right = bounce.right === undefined ? true : bounce.right;
-                }
-                var wrapperWidth = (_this.directionX === Direction.Right && left) ||
-                    (_this.directionX === Direction.Left && right)
-                    ? _this.wrapperWidth
-                    : 0;
-                var wrapperHeight = (_this.directionY === Direction.Down && top_1) ||
-                    (_this.directionY === Direction.Up && bottom)
-                    ? _this.wrapperHeight
-                    : 0;
-                var momentumX = _this.hasHorizontalScroll
-                    ? momentum(_this.translater.x, _this.startX, duration, _this.maxScrollX, _this.minScrollX, wrapperWidth, _this.options)
-                    : { destination: newX, duration: 0 };
-                var momentumY = _this.hasVerticalScroll
-                    ? momentum(_this.translater.y, _this.startY, duration, _this.maxScrollY, _this.minScrollY, wrapperHeight, _this.options)
-                    : { destination: newY, duration: 0 };
-                newX = momentumX.destination;
-                newY = momentumY.destination;
-                time = Math.max(momentumX.duration, momentumY.duration);
-                _this.animater.pending = true;
-            }
-            var easing;
-            if (newX !== _this.translater.x || newY !== _this.translater.y) {
+            var momentumX = _this.scrollBehaviorX.end({
+                duration: duration,
+                bounces: [_this.options.bounce.left, _this.options.bounce.right],
+                startPos: _this.startX
+            });
+            var momentumY = _this.scrollBehaviorY.end({
+                duration: duration,
+                bounces: [_this.options.bounce.top, _this.options.bounce.bottom],
+                startPos: _this.startY
+            });
+            newX = isUndef(momentumX.destination)
+                ? newX
+                : momentumX.destination;
+            newY = isUndef(momentumY.destination)
+                ? newY
+                : momentumY.destination;
+            time = Math.max(momentumX.duration, momentumY.duration);
+            // when x or y changed, do momentum animation now!
+            if (newX !== _this.x || newY !== _this.y) {
                 // change easing function when scroller goes out of the boundaries
-                if (newX > _this.minScrollX ||
-                    newX < _this.maxScrollX ||
-                    newY > _this.minScrollY ||
-                    newY < _this.maxScrollY) {
+                if (newX > _this.scrollBehaviorX.minScrollPos ||
+                    newX < _this.scrollBehaviorX.maxScrollPos ||
+                    newY > _this.scrollBehaviorY.minScrollPos ||
+                    newY < _this.scrollBehaviorY.maxScrollPos) {
                     easing = ease.swipeBounce;
                 }
                 _this.scrollTo(newX, newY, time, easing);
                 return;
             }
             _this.hooks.trigger(_this.hooks.eventTypes.scrollEnd, {
-                x: _this.translater.x,
-                y: _this.translater.y
+                x: _this.x,
+                y: _this.y
             });
         });
-    }
-    Scroller.prototype.createActionsHandlerOpt = function () {
-        var _this = this;
-        var options = [
-            'bindToWrapper',
-            'click',
-            'disableMouse',
-            'preventDefault',
-            'stopPropagation',
-            'preventDefaultException'
-        ].reduce(function (prev, cur) {
-            prev[cur] = _this.options[cur];
-            return prev;
-        }, {});
-        return options;
-    };
-    Scroller.prototype.refresh = function () {
-        var wrapper = this.wrapper;
-        var isWrapperStatic = window.getComputedStyle(wrapper, null).position === 'static';
-        var wrapperRect = getRect(wrapper);
-        this.wrapperWidth = wrapperRect.width;
-        this.wrapperHeight = wrapperRect.height;
-        var elementRect = getRect(this.element);
-        this.elementWidth = Math.round(elementRect.width * this.translater.scale);
-        this.elementHeight = Math.round(elementRect.height * this.translater.scale);
-        this.relativeX = elementRect.left;
-        this.relativeY = elementRect.top;
-        if (isWrapperStatic) {
-            this.relativeX -= wrapperRect.left;
-            this.relativeY -= wrapperRect.top;
-        }
-        this.minScrollX = 0;
-        this.minScrollY = 0;
-        this.maxScrollX = this.wrapperWidth - this.elementWidth;
-        this.maxScrollY = this.wrapperHeight - this.elementHeight;
-        if (this.maxScrollX < 0) {
-            this.maxScrollX -= this.relativeX;
-            this.minScrollX = -this.relativeX;
-        }
-        else if (this.translater.scale > 1) {
-            this.maxScrollX = this.maxScrollX / 2 - this.relativeX;
-            this.minScrollX = this.maxScrollX;
-        }
-        if (this.maxScrollY < 0) {
-            this.maxScrollY -= this.relativeY;
-            this.minScrollY = -this.relativeY;
-        }
-        else if (this.translater.scale > 1) {
-            this.maxScrollY = this.maxScrollY / 2 - this.relativeY;
-            this.minScrollY = this.maxScrollY;
-        }
-        this.hasHorizontalScroll =
-            this.options.scrollX && this.maxScrollX < this.minScrollX;
-        this.hasVerticalScroll =
-            this.options.scrollY && this.maxScrollY < this.minScrollY;
-        if (!this.hasHorizontalScroll) {
-            this.maxScrollX = this.minScrollX;
-            this.elementWidth = this.wrapperWidth;
-        }
-        if (!this.hasVerticalScroll) {
-            this.maxScrollY = this.minScrollY;
-            this.elementHeight = this.wrapperHeight;
-        }
-        this.endTime = 0;
-        this.directionX = 0;
-        this.directionY = 0;
-        this.wrapperOffset = offset(wrapper);
-        this.animater.refresh({
-            minScrollX: this.minScrollX,
-            maxScrollX: this.maxScrollX,
-            minScrollY: this.minScrollY,
-            maxScrollY: this.maxScrollY,
-            hasHorizontalScroll: this.hasHorizontalScroll,
-            hasVerticalScroll: this.hasVerticalScroll
-        });
-    };
-    Scroller.prototype.addDOMEvents = function () {
-        var eventOperation = addEvent;
-        this.handleDOMEvents(eventOperation);
-    };
-    Scroller.prototype.removeDOMEvents = function () {
-        var eventOperation = removeEvent;
-        this.handleDOMEvents(eventOperation);
-    };
-    Scroller.prototype.handleDOMEvents = function (eventOperation) {
-        eventOperation(window, 'orientationchange', this);
-        eventOperation(window, 'resize', this);
-        eventOperation(this.element, style.transitionEnd, this);
-    };
-    Scroller.prototype.handleEvent = function (e) {
-        switch (e.type) {
-            case 'orientationchange':
-            case 'resize':
-                this.resize();
-                break;
-            case 'click':
-                // ensure click event triggered only once in pc
-                if (this.enabled && !e._constructed) {
-                    if (!preventDefaultExceptionFn(e.target, this.options.preventDefaultException)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
+        // click
+        this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.click, function (e) {
+            // handle native click event
+            if (_this.enabled && !e._constructed) {
+                if (!preventDefaultExceptionFn(e.target, _this.options.preventDefaultException)) {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
-                break;
-            case 'transitionend':
-            case 'webkitTransitionEnd':
-            case 'oTransitionEnd':
-            case 'MSTransitionEnd':
-                this.transitionEnd(e);
-                break;
+            }
+        });
+    }
+    Scroller.prototype.computeDirectionLock = function (absDistX, absDistY) {
+        // If you are scrolling in one direction, lock it
+        if (this.directionLocked === Direction.Default &&
+            !this.options.freeScroll) {
+            if (absDistX > absDistY + this.options.directionLockThreshold) {
+                this.directionLocked = DirectionLock.Horizontal; // lock horizontally
+            }
+            else if (absDistY >= absDistX + this.options.directionLockThreshold) {
+                this.directionLocked = DirectionLock.Vertical; // lock vertically
+            }
+            else {
+                this.directionLocked = DirectionLock.None; // no lock
+            }
         }
+    };
+    Scroller.prototype.handleEventPassthrough = function (e) {
+        if (this.directionLocked === DirectionLock.Horizontal) {
+            if (this.options.eventPassthrough === EventPassthrough.Vertical) {
+                e.preventDefault();
+            }
+            else if (this.options.eventPassthrough === EventPassthrough.Horizontal) {
+                this.actionsHandler.initiated = false;
+                return true;
+            }
+        }
+        else if (this.directionLocked === DirectionLock.Vertical) {
+            if (this.options.eventPassthrough === EventPassthrough.Horizontal) {
+                e.preventDefault();
+            }
+            else if (this.options.eventPassthrough === EventPassthrough.Vertical) {
+                this.actionsHandler.initiated = false;
+                return true;
+            }
+        }
+    };
+    Scroller.prototype.ajustDelta = function (deltaX, deltaY) {
+        if (this.directionLocked === DirectionLock.Horizontal) {
+            deltaY = 0;
+        }
+        else if (this.directionLocked === DirectionLock.Vertical) {
+            deltaX = 0;
+        }
+        return {
+            deltaX: deltaX,
+            deltaY: deltaY
+        };
     };
     Scroller.prototype.resize = function () {
         var _this = this;
@@ -1415,7 +1352,6 @@ var Scroller = /** @class */ (function () {
         }, this.options.resizePolling);
     };
     Scroller.prototype.transitionEnd = function (e) {
-        // ensure pending
         if (e.target !== this.element || !this.animater.pending) {
             return;
         }
@@ -1426,8 +1362,8 @@ var Scroller = /** @class */ (function () {
             this.animater.pending = false;
             if (this.options.probeType !== Probe.Realtime) {
                 this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-                    x: this.translater.x,
-                    y: this.translater.y
+                    x: this.x,
+                    y: this.y
                 });
             }
         }
@@ -1452,11 +1388,55 @@ var Scroller = /** @class */ (function () {
         }
         return false;
     };
+    Scroller.prototype.createActionsHandlerOpt = function () {
+        var _this = this;
+        var options = [
+            'click',
+            'bindToWrapper',
+            'disableMouse',
+            'preventDefault',
+            'stopPropagation',
+            'preventDefaultException'
+        ].reduce(function (prev, cur) {
+            prev[cur] = _this.options[cur];
+            return prev;
+        }, {});
+        return options;
+    };
+    Scroller.prototype.createBehaviorOpt = function (extraProp) {
+        var _this = this;
+        var options = [
+            'momentum',
+            'momentumLimitTime',
+            'momentumLimitDistance',
+            'deceleration',
+            'swipeBounceTime',
+            'swipeTime'
+        ].reduce(function (prev, cur) {
+            prev[cur] = _this.options[cur];
+            return prev;
+        }, {});
+        // add extra property
+        options.scrollable = this.options[extraProp];
+        return options;
+    };
+    Scroller.prototype.refresh = function () {
+        this.scrollBehaviorX.refresh({
+            size: 'width',
+            position: 'left'
+        });
+        this.scrollBehaviorY.refresh({
+            size: 'height',
+            position: 'top'
+        });
+        this.endTime = 0;
+        this.wrapperOffset = offset(this.wrapper);
+    };
     Scroller.prototype.scrollBy = function (deltaX, deltaY, time, easing) {
         if (time === void 0) { time = 0; }
         if (easing === void 0) { easing = ease.bounce; }
-        deltaX += this.translater.x;
-        deltaY += this.translater.y;
+        deltaX += this.x;
+        deltaY += this.y;
         this.scrollTo(deltaX, deltaY, time, easing);
     };
     Scroller.prototype.scrollTo = function (x, y, time, easing) {
@@ -1464,8 +1444,12 @@ var Scroller = /** @class */ (function () {
         if (easing === void 0) { easing = ease.bounce; }
         var easingFn = this.options.useTransition ? easing.style : easing.fn;
         // when x or y has changed
-        if (x !== this.translater.x || y !== this.translater.y) {
-            this.animater.scrollTo(x, y, time, easingFn);
+        if (x !== this.x || y !== this.y) {
+            this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn);
+            this.scrollBehaviorX.updatePosition(x);
+            this.scrollBehaviorY.updatePosition(y);
+            this.x = x;
+            this.y = y;
         }
     };
     Scroller.prototype.scrollToElement = function (el, time, offsetX, offsetY, easing) {
@@ -1485,23 +1469,36 @@ var Scroller = /** @class */ (function () {
         pos.left -= offsetX || 0;
         pos.top -= offsetY || 0;
         pos.left =
-            pos.left > this.minScrollX
-                ? this.minScrollX
-                : pos.left < this.maxScrollX
-                    ? this.maxScrollX
+            pos.left > this.scrollBehaviorX.minScrollPos
+                ? this.scrollBehaviorX.minScrollPos
+                : pos.left < this.scrollBehaviorX.maxScrollPos
+                    ? this.scrollBehaviorX.maxScrollPos
                     : pos.left;
         pos.top =
-            pos.top > this.minScrollY
-                ? this.minScrollY
-                : pos.top < this.maxScrollY
-                    ? this.maxScrollY
+            pos.top > this.scrollBehaviorY.minScrollPos
+                ? this.scrollBehaviorY.minScrollPos
+                : pos.top < this.scrollBehaviorY.maxScrollPos
+                    ? this.scrollBehaviorY.maxScrollPos
                     : pos.top;
         this.scrollTo(pos.left, pos.top, time, easing);
     };
     Scroller.prototype.resetPosition = function (time, easing) {
         if (time === void 0) { time = 0; }
         if (easing === void 0) { easing = ease.bounce; }
-        return this.animater.resetPosition(time, easing);
+        var x = this.scrollBehaviorX.limitPosition();
+        var y = this.scrollBehaviorY.limitPosition();
+        // in boundary
+        if (x === this.x && y === this.y) {
+            return false;
+        }
+        // out of boundary
+        this.scrollTo(x, y, time, easing);
+        // refresh all positions
+        this.scrollBehaviorX.updatePosition(x);
+        this.scrollBehaviorY.updatePosition(y);
+        this.x = x;
+        this.y = y;
+        return true;
     };
     return Scroller;
 }());
@@ -1527,7 +1524,8 @@ var BScroll = /** @class */ (function (_super) {
         _this.init(wrapper);
         return _this;
     }
-    BScroll.plugin = function (name, ctor) {
+    BScroll.use = function (ctor) {
+        var name = ctor.name;
         if (!this._pluginsMap) {
             this._pluginsMap = {};
         }

@@ -1,5 +1,4 @@
 import { Direction, getRect } from '../util'
-import { bounceConfig } from '../Options'
 
 export interface Options {
   scrollable: boolean
@@ -61,24 +60,26 @@ export default class Behavior {
           newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
       }
     }
-
     return newPos
   }
 
   end({
     duration,
     bounces,
-    startX
+    startPos
   }: {
     duration: number
     bounces: [boolean | undefined, boolean | undefined]
-    startX: number
+    startPos: number
   }) {
     let momentumInfo: {
       destination?: number
       duration?: number
-    } = {}
-    const absDist = Math.abs(this.currentPos - startX)
+    } = {
+      duration: 0
+    }
+
+    const absDist = Math.abs(this.currentPos - startPos)
     // start momentum animation if needed
     if (
       this.options.momentum &&
@@ -94,7 +95,7 @@ export default class Behavior {
       momentumInfo = this.hasScroll
         ? this.momentum(
             this.currentPos,
-            startX,
+            startPos,
             duration,
             this.maxScrollPos,
             this.minScrollPos,

@@ -87,13 +87,11 @@ function write(dest, code, zip) {
       console.log(blue(path.relative(process.cwd(), dest)) + ' ' + getSize(code) + (extra || ''))
       resolve()
     }
-    console.log(dest)
     fs.writeFile(dest, code, (err) => {
       if (err) {
         return reject(err)
       }
       console.log('------------')
-      console.log(zip)
       if (zip) {
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)
