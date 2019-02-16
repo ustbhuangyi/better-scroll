@@ -1128,6 +1128,14 @@ var Scroller = /** @class */ (function () {
         this.animater.hooks.on(this.animater.hooks.eventTypes.move, function (pos) {
             _this.hooks.trigger(_this.hooks.eventTypes.scroll, pos);
         });
+        // forceStop
+        this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, function (_a) {
+            var x = _a.x, y = _a.y;
+            _this.x = x;
+            _this.y = y;
+            _this.scrollBehaviorX.updatePosition(x);
+            _this.scrollBehaviorY.updatePosition(y);
+        });
         // [mouse|touch]start event
         this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.start, function () {
             if (!_this.enabled)
@@ -1138,12 +1146,12 @@ var Scroller = /** @class */ (function () {
             _this.startTime = timestamp;
             _this.distX = 0;
             _this.distY = 0;
-            _this.startX = _this.x;
-            _this.startY = _this.y;
             _this.scrollBehaviorX.start();
             _this.scrollBehaviorY.start();
             // force stopping last transition or animation
             _this.animater.stop();
+            _this.startX = _this.x;
+            _this.startY = _this.y;
             _this.hooks.trigger(_this.hooks.eventTypes.beforeScrollStart);
         });
         // [mouse|touch]move event
