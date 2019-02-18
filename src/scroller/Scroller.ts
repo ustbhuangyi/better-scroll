@@ -127,6 +127,7 @@ export default class Scroller {
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.end,
       (pos: { x: number; y: number }) => {
+        this.updateAllPositions(pos.x, pos.y)
         if (!this.resetPosition(this.options.bounceTime)) {
           this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
         }
@@ -143,10 +144,7 @@ export default class Scroller {
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.forceStop,
       ({ x, y }: { x: number; y: number }) => {
-        this.x = x
-        this.y = y
-        this.scrollBehaviorX.updatePosition(x)
-        this.scrollBehaviorY.updatePosition(y)
+        this.updateAllPositions(x, y)
       }
     )
     // [mouse|touch]start event
@@ -223,11 +221,8 @@ export default class Scroller {
 
         this.animater.translate(newX, newY)
 
-        // refresh all positions
-        this.scrollBehaviorX.updatePosition(newX)
-        this.scrollBehaviorY.updatePosition(newY)
-        this.x = newX
-        this.y = newY
+        // update all positions
+        this.updateAllPositions(newX, newY)
 
         // dispatch scroll in interval time
         if (timestamp - this.startTime > this.options.momentumLimitTime) {
@@ -290,10 +285,7 @@ export default class Scroller {
         this.animater.translate(newX, newY)
 
         // refresh all positions
-        this.scrollBehaviorX.updatePosition(newX)
-        this.scrollBehaviorY.updatePosition(newY)
-        this.x = newX
-        this.y = newY
+        this.updateAllPositions(newX, newY)
 
         this.endTime = getNow()
         const duration = this.endTime - this.startTime
@@ -546,10 +538,7 @@ export default class Scroller {
     // when x or y has changed
     if (x !== this.x || y !== this.y) {
       this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn)
-      this.scrollBehaviorX.updatePosition(x)
-      this.scrollBehaviorY.updatePosition(y)
-      this.x = x
-      this.y = y
+      this.updateAllPositions(x, y)
     }
   }
 
@@ -598,19 +587,23 @@ export default class Scroller {
   }
 
   resetPosition(time = 0, easing = ease.bounce) {
-    const x = this.scrollBehaviorX.limitPosition()
-    const y = this.scrollBehaviorY.limitPosition()
+    const x = this.scrollBehaviorX.ajustPosition()
+    const y = this.scrollBehaviorY.ajustPosition()
     // in boundary
     if (x === this.x && y === this.y) {
       return false
     }
     // out of boundary
     this.scrollTo(x, y, time, easing)
-    // refresh all positions
+    // update all positions
+    this.updateAllPositions(x, y)
+    return true
+  }
+
+  updateAllPositions(x: number, y: number) {
     this.scrollBehaviorX.updatePosition(x)
     this.scrollBehaviorY.updatePosition(y)
     this.x = x
     this.y = y
-    return true
   }
 }

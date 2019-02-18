@@ -1053,7 +1053,7 @@ var Behavior = /** @class */ (function () {
         this.currentPos = pos;
     };
     // ajust position when out of boundary
-    Behavior.prototype.limitPosition = function () {
+    Behavior.prototype.ajustPosition = function () {
         var pos = this.currentPos;
         var roundPos = Math.round(pos);
         if (!this.hasScroll || roundPos > this.minScrollPos) {
@@ -1120,6 +1120,7 @@ var Scroller = /** @class */ (function () {
         ]);
         // reset position
         this.animater.hooks.on(this.animater.hooks.eventTypes.end, function (pos) {
+            _this.updateAllPositions(pos.x, pos.y);
             if (!_this.resetPosition(_this.options.bounceTime)) {
                 _this.hooks.trigger(_this.hooks.eventTypes.scrollEnd, pos);
             }
@@ -1131,10 +1132,7 @@ var Scroller = /** @class */ (function () {
         // forceStop
         this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, function (_a) {
             var x = _a.x, y = _a.y;
-            _this.x = x;
-            _this.y = y;
-            _this.scrollBehaviorX.updatePosition(x);
-            _this.scrollBehaviorY.updatePosition(y);
+            _this.updateAllPositions(x, y);
         });
         // [mouse|touch]start event
         this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.start, function () {
@@ -1183,11 +1181,8 @@ var Scroller = /** @class */ (function () {
                 _this.hooks.trigger(_this.hooks.eventTypes.scrollStart);
             }
             _this.animater.translate(newX, newY);
-            // refresh all positions
-            _this.scrollBehaviorX.updatePosition(newX);
-            _this.scrollBehaviorY.updatePosition(newY);
-            _this.x = newX;
-            _this.y = newY;
+            // update all positions
+            _this.updateAllPositions(newX, newY);
             // dispatch scroll in interval time
             if (timestamp - _this.startTime > _this.options.momentumLimitTime) {
                 // refresh time and starting position to initiate a momentum
@@ -1237,10 +1232,7 @@ var Scroller = /** @class */ (function () {
             }
             _this.animater.translate(newX, newY);
             // refresh all positions
-            _this.scrollBehaviorX.updatePosition(newX);
-            _this.scrollBehaviorY.updatePosition(newY);
-            _this.x = newX;
-            _this.y = newY;
+            _this.updateAllPositions(newX, newY);
             _this.endTime = getNow();
             var duration = _this.endTime - _this.startTime;
             var deltaX = Math.abs(newX - _this.startX);
@@ -1454,10 +1446,7 @@ var Scroller = /** @class */ (function () {
         // when x or y has changed
         if (x !== this.x || y !== this.y) {
             this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn);
-            this.scrollBehaviorX.updatePosition(x);
-            this.scrollBehaviorY.updatePosition(y);
-            this.x = x;
-            this.y = y;
+            this.updateAllPositions(x, y);
         }
     };
     Scroller.prototype.scrollToElement = function (el, time, offsetX, offsetY, easing) {
@@ -1493,20 +1482,23 @@ var Scroller = /** @class */ (function () {
     Scroller.prototype.resetPosition = function (time, easing) {
         if (time === void 0) { time = 0; }
         if (easing === void 0) { easing = ease.bounce; }
-        var x = this.scrollBehaviorX.limitPosition();
-        var y = this.scrollBehaviorY.limitPosition();
+        var x = this.scrollBehaviorX.ajustPosition();
+        var y = this.scrollBehaviorY.ajustPosition();
         // in boundary
         if (x === this.x && y === this.y) {
             return false;
         }
         // out of boundary
         this.scrollTo(x, y, time, easing);
-        // refresh all positions
+        // update all positions
+        this.updateAllPositions(x, y);
+        return true;
+    };
+    Scroller.prototype.updateAllPositions = function (x, y) {
         this.scrollBehaviorX.updatePosition(x);
         this.scrollBehaviorY.updatePosition(y);
         this.x = x;
         this.y = y;
-        return true;
     };
     return Scroller;
 }());
