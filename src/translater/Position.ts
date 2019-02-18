@@ -15,7 +15,7 @@ export default class Position extends Base {
     }
   }
 
-  translateTo(x: number, y: number) {
+  translate(x: number, y: number) {
     this.style.left = `${Math.round(x)}px`
     this.style.top = `${Math.round(y)}px`
   }

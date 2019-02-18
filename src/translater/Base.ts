@@ -13,4 +13,6 @@ export default abstract class Base {
     x: number
     y: number
   }
+
+  abstract translate(x: number, y: number): void
 }

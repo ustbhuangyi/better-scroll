@@ -32,7 +32,7 @@ export default class Animation extends Base {
       })
       return
     }
-    this.animate(displacementX, displacementX, time, easingFn as EaseFn)
+    this.animate(displacementX, displacementY, time, easingFn as EaseFn)
   }
 
   private animate(

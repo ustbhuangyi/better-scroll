@@ -11,6 +11,7 @@ export default class Transform extends Base {
     super(element)
     this.options = options
   }
+
   getComputedPosition() {
     let cssStyle = window.getComputedStyle(
       this.element,
@@ -26,7 +27,7 @@ export default class Transform extends Base {
     }
   }
 
-  translateTo(x: number, y: number) {
+  translate(x: number, y: number) {
     this.style[style.transform as any] = `translate(${x}px,${y}px)${
       this.options.translateZ
     }`

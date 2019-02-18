@@ -123,16 +123,24 @@ export default class Scroller {
       }
     ])
 
+    // translate
+    this.animater.hooks.on(
+      this.animater.hooks.eventTypes.translate,
+      ({ x, y }: { x: number; y: number }) => {
+        this.updateAllPositions(x, y)
+      }
+    )
+
     // reset position
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.end,
       (pos: { x: number; y: number }) => {
-        this.updateAllPositions(pos.x, pos.y)
         if (!this.resetPosition(this.options.bounceTime)) {
           this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
         }
       }
     )
+
     // scroll
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.move,
@@ -143,9 +151,7 @@ export default class Scroller {
     // forceStop
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.forceStop,
-      ({ x, y }: { x: number; y: number }) => {
-        this.updateAllPositions(x, y)
-      }
+      ({ x, y }: { x: number; y: number }) => {}
     )
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
@@ -221,9 +227,6 @@ export default class Scroller {
 
         this.animater.translate(newX, newY)
 
-        // update all positions
-        this.updateAllPositions(newX, newY)
-
         // dispatch scroll in interval time
         if (timestamp - this.startTime > this.options.momentumLimitTime) {
           // refresh time and starting position to initiate a momentum
@@ -283,9 +286,6 @@ export default class Scroller {
         }
 
         this.animater.translate(newX, newY)
-
-        // refresh all positions
-        this.updateAllPositions(newX, newY)
 
         this.endTime = getNow()
         const duration = this.endTime - this.startTime
@@ -538,7 +538,6 @@ export default class Scroller {
     // when x or y has changed
     if (x !== this.x || y !== this.y) {
       this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn)
-      this.updateAllPositions(x, y)
     }
   }
 
@@ -595,8 +594,7 @@ export default class Scroller {
     }
     // out of boundary
     this.scrollTo(x, y, time, easing)
-    // update all positions
-    this.updateAllPositions(x, y)
+
     return true
   }
 

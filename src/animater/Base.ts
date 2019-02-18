@@ -19,12 +19,16 @@ export default abstract class Base {
       probeType: number
     }
   ) {
-    this.hooks = new EventEmitter(['move', 'end', 'forceStop'])
+    this.hooks = new EventEmitter(['move', 'end', 'forceStop', 'translate'])
     this.style = element.style as safeCSSStyleDeclaration
   }
 
   translate(x: number, y: number) {
-    this.translater.translateTo(x, y)
+    this.translater.translate(x, y)
+    this.hooks.trigger(this.hooks.eventTypes.translate, {
+      x,
+      y
+    })
   }
 
   abstract scrollTo(
@@ -33,5 +37,6 @@ export default abstract class Base {
     time: number,
     easing: string | EaseFn
   ): void
+
   abstract stop(): void
 }

@@ -735,7 +735,7 @@ var Position = /** @class */ (function (_super) {
             y: y
         };
     };
-    Position.prototype.translateTo = function (x, y) {
+    Position.prototype.translate = function (x, y) {
         this.style.left = Math.round(x) + "px";
         this.style.top = Math.round(y) + "px";
     };
@@ -759,7 +759,7 @@ var Transform = /** @class */ (function (_super) {
             y: y
         };
     };
-    Transform.prototype.translateTo = function (x, y) {
+    Transform.prototype.translate = function (x, y) {
         this.style[style.transform] = "translate(" + x + "px," + y + "px)" + this.options.translateZ;
     };
     return Transform;
@@ -770,11 +770,15 @@ var Base$1 = /** @class */ (function () {
         this.element = element;
         this.translater = translater;
         this.options = options;
-        this.hooks = new EventEmitter(['move', 'end', 'forceStop']);
+        this.hooks = new EventEmitter(['move', 'end', 'forceStop', 'translate']);
         this.style = element.style;
     }
     Base.prototype.translate = function (x, y) {
-        this.translater.translateTo(x, y);
+        this.translater.translate(x, y);
+        this.hooks.trigger(this.hooks.eventTypes.translate, {
+            x: x,
+            y: y
+        });
     };
     return Base;
 }());
@@ -875,7 +879,7 @@ var Animation = /** @class */ (function (_super) {
             });
             return;
         }
-        this.animate(displacementX, displacementX, time, easingFn);
+        this.animate(displacementX, displacementY, time, easingFn);
     };
     Animation.prototype.animate = function (displacementX, displacementY, duration, easingFn) {
         var _this = this;
@@ -1118,9 +1122,13 @@ var Scroller = /** @class */ (function () {
                 handler: this.transitionEnd.bind(this)
             }
         ]);
+        // translate
+        this.animater.hooks.on(this.animater.hooks.eventTypes.translate, function (_a) {
+            var x = _a.x, y = _a.y;
+            _this.updateAllPositions(x, y);
+        });
         // reset position
         this.animater.hooks.on(this.animater.hooks.eventTypes.end, function (pos) {
-            _this.updateAllPositions(pos.x, pos.y);
             if (!_this.resetPosition(_this.options.bounceTime)) {
                 _this.hooks.trigger(_this.hooks.eventTypes.scrollEnd, pos);
             }
@@ -1132,7 +1140,6 @@ var Scroller = /** @class */ (function () {
         // forceStop
         this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, function (_a) {
             var x = _a.x, y = _a.y;
-            _this.updateAllPositions(x, y);
         });
         // [mouse|touch]start event
         this.actionsHandler.hooks.on(this.actionsHandler.hooks.eventTypes.start, function () {
@@ -1181,8 +1188,6 @@ var Scroller = /** @class */ (function () {
                 _this.hooks.trigger(_this.hooks.eventTypes.scrollStart);
             }
             _this.animater.translate(newX, newY);
-            // update all positions
-            _this.updateAllPositions(newX, newY);
             // dispatch scroll in interval time
             if (timestamp - _this.startTime > _this.options.momentumLimitTime) {
                 // refresh time and starting position to initiate a momentum
@@ -1231,8 +1236,6 @@ var Scroller = /** @class */ (function () {
                 return;
             }
             _this.animater.translate(newX, newY);
-            // refresh all positions
-            _this.updateAllPositions(newX, newY);
             _this.endTime = getNow();
             var duration = _this.endTime - _this.startTime;
             var deltaX = Math.abs(newX - _this.startX);
@@ -1446,7 +1449,6 @@ var Scroller = /** @class */ (function () {
         // when x or y has changed
         if (x !== this.x || y !== this.y) {
             this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn);
-            this.updateAllPositions(x, y);
         }
     };
     Scroller.prototype.scrollToElement = function (el, time, offsetX, offsetY, easing) {
@@ -1490,8 +1492,6 @@ var Scroller = /** @class */ (function () {
         }
         // out of boundary
         this.scrollTo(x, y, time, easing);
-        // update all positions
-        this.updateAllPositions(x, y);
         return true;
     };
     Scroller.prototype.updateAllPositions = function (x, y) {
