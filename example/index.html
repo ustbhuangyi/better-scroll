@@ -36,9 +36,13 @@
     let bs = new BScroll('.wrapper', {
       observeDOM: false,
       useTransition: false,
-      probeType: 3
+      probeType: 3,
+      click: true
     })
-    console.log(bs)
+    let wrapperDOM = document.querySelector('.wrapper')
+    wrapperDOM.addEventListener('click', function() {
+      console.log(123)
+    })
   </script>
 </body>
 </html>

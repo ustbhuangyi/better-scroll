@@ -2,28 +2,32 @@ import EventEmitter from './base/EventEmitter'
 import Options from './Options'
 import Scroller from './scroller/Scroller'
 
-import { warn } from './util'
+import { warn, isUndef } from './util'
 interface PluginsMap<T> {
   [name: string]: PluginCtor<T>
 }
 
 interface PluginCtor<T> {
-  static: string
+  name: string
   new (bs: BScroll): T
 }
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static _pluginsMap?: PluginsMap<any>
+  static _pluginsMap: PluginsMap<any> = {}
 
   scroller: Scroller
   options: Options
   hooks: EventEmitter
+  plugins: { [name: string]: any }
   [key: string]: any
 
   static use<T>(ctor: PluginCtor<T>) {
     const name = ctor.name
-    if (!this._pluginsMap) {
-      this._pluginsMap = {}
+
+    if (isUndef(name)) {
+      warn(
+        `Plugin Class must specify plugin's name in static property by 'name' field.`
+      )
     }
     if (this._pluginsMap[name]) {
       warn(
@@ -48,6 +52,7 @@ export default class BScroll extends EventEmitter {
       warn('The wrapper need at least one child element to be scroller.')
       return
     }
+    this.plugins = {}
     this.options = new Options().merge(options).process()
     this.hooks = new EventEmitter(['init'])
     this.init(wrapper)
@@ -56,18 +61,17 @@ export default class BScroll extends EventEmitter {
   private init(wrapper: HTMLElement) {
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
-    this.applyPlugins()
-
     if (this.options.autoBlur) {
       this.handleAutoBlur()
     }
 
     this.refresh()
 
-    if (!this.options.slide) {
-      this.scroller.scrollTo(this.options.startX, this.options.startY)
-    }
+    this.scroller.scrollTo(this.options.startX, this.options.startY)
+
     this.enable()
+
+    this.applyPlugins()
   }
 
   private applyPlugins() {
@@ -76,8 +80,8 @@ export default class BScroll extends EventEmitter {
     let ctor
     for (let pluginName in _pluginsMap) {
       ctor = _pluginsMap[pluginName]
-      if (options[pluginName]) {
-        typeof ctor === 'function' && new ctor(this)
+      if (options[pluginName] && typeof ctor === 'function') {
+        this.plugins[pluginName] = new ctor(this)
       }
     }
   }
