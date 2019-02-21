@@ -36,7 +36,7 @@ interface pickerConfig {
   wheelItemClass: string
 }
 
-interface slideConfig {
+export interface slideConfig {
   loop: boolean
   el: HTMLElement
   threshold: number

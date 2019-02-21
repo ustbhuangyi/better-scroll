@@ -33,6 +33,17 @@ const builds = [{
     typescript()
   ]
 }, {
+  input: resolve('src/plugins/slide.ts'),
+  output: {
+    file: resolve('dist/slide.js'),
+    name: 'Slide',
+    format: 'umd',
+    banner
+  },
+  plugins: [
+    typescript()
+  ]
+}, {
   input: resolve('src/index.ts'),
   output: {
     file: resolve('dist/bscroll.esm.js'),

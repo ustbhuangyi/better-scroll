@@ -1,19 +1,16 @@
 import EventEmitter from './base/EventEmitter'
 import Options from './Options'
 import Scroller from './scroller/Scroller'
-
+import { PluginCtor } from './plugins/type'
 import { warn, isUndef } from './util'
-interface PluginsCtorMap<T> {
-  [name: string]: PluginCtor<T>
+
+interface PluginsCtorMap {
+  [name: string]: PluginCtor
 }
 
-interface PluginCtor<T> {
-  name: string
-  new (bs: BScroll): T
-}
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static pluginsCtorMap: PluginsCtorMap<any> = {}
+  static pluginsCtorMap: PluginsCtorMap = {}
 
   scroller: Scroller
   options: Options
@@ -21,8 +18,8 @@ export default class BScroll extends EventEmitter {
   plugins: { [name: string]: any }
   [key: string]: any
 
-  static use<T>(ctor: PluginCtor<T>) {
-    const name = ctor.name
+  static use(ctor: PluginCtor) {
+    const name = ctor.pluginName
 
     if (isUndef(name)) {
       warn(
