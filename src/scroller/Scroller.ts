@@ -140,13 +140,7 @@ export default class Scroller {
       }
     )
     // forceStop
-    this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, () => {
-      this.scrollBehaviorX.updateStartPos()
-      this.scrollBehaviorX.updateAbsStartPos()
-
-      this.scrollBehaviorY.updateStartPos()
-      this.scrollBehaviorY.updateAbsStartPos()
-    })
+    this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, () => {})
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
@@ -162,6 +156,11 @@ export default class Scroller {
 
         // force stopping last transition or animation
         this.animater.stop()
+
+        this.scrollBehaviorX.updateStartPos()
+        this.scrollBehaviorX.updateAbsStartPos()
+        this.scrollBehaviorY.updateStartPos()
+        this.scrollBehaviorY.updateAbsStartPos()
 
         this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart)
       }
