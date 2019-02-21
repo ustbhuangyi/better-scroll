@@ -58,7 +58,9 @@ export default class Scroller {
       'scrollStart',
       'touchEnd',
       'flick',
-      'scrollCancel'
+      'scrollCancel',
+      'end',
+      'modifyScrollMeta'
     ])
     this.wrapper = wrapper
     this.element = wrapper.children[0] as HTMLElement
@@ -139,8 +141,7 @@ export default class Scroller {
         this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
       }
     )
-    // forceStop
-    this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, () => {})
+
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
@@ -252,13 +253,13 @@ export default class Scroller {
         // ensures that the last position is rounded
         let newX = Math.round(x)
         let newY = Math.round(y)
-        let time = 0
-        let easing = ease.swiper
 
         this.scrollBehaviorX.updateDirection()
         this.scrollBehaviorY.updateDirection()
 
-        // TODO PullDown
+        if (this.hooks.trigger(this.hooks.eventTypes.end)) {
+          return
+        }
 
         // check if it is a click operation
         if (this.checkClick(e)) {
@@ -286,6 +287,13 @@ export default class Scroller {
           this.hooks.trigger('flick')
           return
         }
+
+        const scrollMeta = {
+          time: 0,
+          easing: ease.swiper,
+          newX,
+          newY
+        }
         // start momentum animation if needed
         const momentumX = this.scrollBehaviorX.end({
           duration,
@@ -296,15 +304,21 @@ export default class Scroller {
           bounces: [this.options.bounce.top, this.options.bounce.bottom]
         })
 
-        newX = isUndef(momentumX.destination)
-          ? newX
+        scrollMeta.newX = isUndef(momentumX.destination)
+          ? scrollMeta.newX
           : (momentumX.destination as number)
-        newY = isUndef(momentumY.destination)
-          ? newY
+        scrollMeta.newY = isUndef(momentumY.destination)
+          ? scrollMeta.newY
           : (momentumY.destination as number)
-        time = Math.max(
+        scrollMeta.time = Math.max(
           momentumX.duration as number,
           momentumY.duration as number
+        )
+
+        this.hooks.trigger(
+          this.hooks.eventTypes.modifyScrollMeta,
+          scrollMeta,
+          this
         )
 
         const currentPos = this.getCurrentPos()
@@ -317,9 +331,14 @@ export default class Scroller {
             newY > this.scrollBehaviorY.minScrollPos ||
             newY < this.scrollBehaviorY.maxScrollPos
           ) {
-            easing = ease.swipeBounce
+            scrollMeta.easing = ease.swipeBounce
           }
-          this.scrollTo(newX, newY, time, easing)
+          this.scrollTo(
+            scrollMeta.newX,
+            scrollMeta.newY,
+            scrollMeta.time,
+            scrollMeta.easing
+          )
           return
         }
 
