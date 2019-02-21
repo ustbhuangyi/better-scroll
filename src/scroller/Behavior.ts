@@ -16,6 +16,7 @@ export default class Behavior {
   currentPos: number
   startPos: number
   absStartPos: number
+  dist: number
   minScrollPos: number
   maxScrollPos: number
   hasScroll: boolean
@@ -32,9 +33,7 @@ export default class Behavior {
   start() {
     this.direction = Direction.Default
     this.movingDirection = Direction.Default
-
-    this.startPos = this.currentPos
-    this.absStartPos = this.currentPos
+    this.dist = 0
   }
 
   move(delta: number, bounces: [boolean | undefined, boolean | undefined]) {
@@ -65,12 +64,10 @@ export default class Behavior {
 
   end({
     duration,
-    bounces,
-    startPos
+    bounces
   }: {
     duration: number
     bounces: [boolean | undefined, boolean | undefined]
-    startPos: number
   }) {
     let momentumInfo: {
       destination?: number
@@ -79,7 +76,7 @@ export default class Behavior {
       duration: 0
     }
 
-    const absDist = Math.abs(this.currentPos - startPos)
+    const absDist = Math.abs(this.currentPos - this.startPos)
     // start momentum animation if needed
     if (
       this.options.momentum &&
@@ -95,7 +92,7 @@ export default class Behavior {
       momentumInfo = this.hasScroll
         ? this.momentum(
             this.currentPos,
-            startPos,
+            this.startPos,
             duration,
             this.maxScrollPos,
             this.minScrollPos,
@@ -206,5 +203,17 @@ export default class Behavior {
       pos = this.maxScrollPos
     }
     return pos
+  }
+
+  updateStartPos() {
+    this.startPos = this.currentPos
+  }
+
+  updateAbsStartPos() {
+    this.absStartPos = this.currentPos
+  }
+
+  updateDist(delta: number) {
+    this.dist += delta
   }
 }

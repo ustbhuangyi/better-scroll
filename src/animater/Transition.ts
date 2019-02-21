@@ -75,11 +75,8 @@ export default class Transition extends Base {
       const { x, y } = this.translater.getComputedPosition()
       this.transitionTime()
       this.translate(x, y)
-      this.hooks.trigger(this.hooks.eventTypes.forceStop, {
-        x,
-        y
-      })
       this.forceStopped = true
+      this.hooks.trigger(this.hooks.eventTypes.forceStop)
     }
   }
 }

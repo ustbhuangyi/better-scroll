@@ -3,7 +3,7 @@ import Options from './Options'
 import Scroller from './scroller/Scroller'
 
 import { warn, isUndef } from './util'
-interface PluginsMap<T> {
+interface PluginsCtorMap<T> {
   [name: string]: PluginCtor<T>
 }
 
@@ -13,7 +13,7 @@ interface PluginCtor<T> {
 }
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static _pluginsMap: PluginsMap<any> = {}
+  static pluginsCtorMap: PluginsCtorMap<any> = {}
 
   scroller: Scroller
   options: Options
@@ -29,12 +29,12 @@ export default class BScroll extends EventEmitter {
         `Plugin Class must specify plugin's name in static property by 'name' field.`
       )
     }
-    if (this._pluginsMap[name]) {
+    if (this.pluginsCtorMap[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
     }
-    this._pluginsMap[name] = ctor
+    this.pluginsCtorMap[name] = ctor
   }
 
   constructor(el: HTMLElement | string, options?: object) {
@@ -76,10 +76,10 @@ export default class BScroll extends EventEmitter {
 
   private applyPlugins() {
     const options = this.options
-    const _pluginsMap = (<typeof BScroll>this.constructor)._pluginsMap || {}
+    const pluginsCtorMap = (<typeof BScroll>this.constructor).pluginsCtorMap
     let ctor
-    for (let pluginName in _pluginsMap) {
-      ctor = _pluginsMap[pluginName]
+    for (let pluginName in pluginsCtorMap) {
+      ctor = pluginsCtorMap[pluginName]
       if (options[pluginName] && typeof ctor === 'function') {
         this.plugins[pluginName] = new ctor(this)
       }
@@ -98,6 +98,9 @@ export default class BScroll extends EventEmitter {
       }
     })
   }
+
+  proxy() {}
+
   refresh() {
     this.scroller.refresh()
     this.trigger(this.eventTypes.refresh)

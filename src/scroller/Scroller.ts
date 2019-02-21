@@ -5,7 +5,7 @@ import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
 import { Transform, Position } from '../translater'
 import { Animation, Transition } from '../animater'
-import BScrollOptions, { bounceConfig } from '../Options'
+import BScrollOptions from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
 
 import {
@@ -25,6 +25,7 @@ import {
   isUndef,
   getNow
 } from '../util'
+import { throws } from 'assert'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -38,17 +39,7 @@ export default class Scroller {
   resizeRegister: EventRegister
   transitionEndRegister: EventRegister
   options: BScrollOptions
-  x: number
-  y: number
   enabled: boolean
-  startX: number
-  startY: number
-  distX: number
-  distY: number
-  absStartX: number
-  absStartY: number
-  pointX: number
-  pointY: number
   moved: boolean
   directionLocked: string | number
   wrapperOffset: {
@@ -73,17 +64,17 @@ export default class Scroller {
     this.element = wrapper.children[0] as HTMLElement
     this.options = options
     this.enabled = true
-    this.x = 0
-    this.y = 0
 
+    // direction X
     this.scrollBehaviorX = new Behavior(
       wrapper,
       this.createBehaviorOpt('scrollX')
-    ) // direction X
+    )
+    // direction Y
     this.scrollBehaviorY = new Behavior(
       wrapper,
       this.createBehaviorOpt('scrollY')
-    ) // direction Y
+    )
 
     this.translater = this.options.useTransform
       ? new Transform(this.element, {
@@ -149,10 +140,13 @@ export default class Scroller {
       }
     )
     // forceStop
-    this.animater.hooks.on(
-      this.animater.hooks.eventTypes.forceStop,
-      ({ x, y }: { x: number; y: number }) => {}
-    )
+    this.animater.hooks.on(this.animater.hooks.eventTypes.forceStop, () => {
+      this.scrollBehaviorX.updateStartPos()
+      this.scrollBehaviorX.updateAbsStartPos()
+
+      this.scrollBehaviorY.updateStartPos()
+      this.scrollBehaviorY.updateAbsStartPos()
+    })
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
@@ -163,17 +157,11 @@ export default class Scroller {
         this.directionLocked = DirectionLock.Default
         this.startTime = timestamp
 
-        this.distX = 0
-        this.distY = 0
-
         this.scrollBehaviorX.start()
         this.scrollBehaviorY.start()
 
         // force stopping last transition or animation
         this.animater.stop()
-
-        this.startX = this.x
-        this.startY = this.y
 
         this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart)
       }
@@ -192,11 +180,11 @@ export default class Scroller {
       }) => {
         if (!this.enabled) return true
 
-        this.distX += deltaX
-        this.distY += deltaY
+        this.scrollBehaviorX.updateDist(deltaX)
+        this.scrollBehaviorY.updateDist(deltaY)
 
-        const absDistX = Math.abs(this.distX)
-        const absDistY = Math.abs(this.distY)
+        const absDistX = Math.abs(this.scrollBehaviorX.dist)
+        const absDistY = Math.abs(this.scrollBehaviorY.dist)
         let timestamp = getNow()
         // We need to move at least momentumLimitDistance pixels
         // for the scrolling to initiate
@@ -231,22 +219,19 @@ export default class Scroller {
         if (timestamp - this.startTime > this.options.momentumLimitTime) {
           // refresh time and starting position to initiate a momentum
           this.startTime = timestamp
-          this.startX = this.x
-          this.startY = this.y
+          this.scrollBehaviorX.updateStartPos()
+          this.scrollBehaviorY.updateStartPos()
           if (this.options.probeType === Probe.Throttle) {
-            this.hooks.trigger(this.hooks.eventTypes.scroll, {
-              x: this.x,
-              y: this.y
-            })
+            this.hooks.trigger(
+              this.hooks.eventTypes.scroll,
+              this.getCurrentPos()
+            )
           }
         }
 
         // dispatch scroll all the time
         if (this.options.probeType > Probe.Throttle) {
-          this.hooks.trigger(this.hooks.eventTypes.scroll, {
-            x: this.x,
-            y: this.y
-          })
+          this.hooks.trigger(this.hooks.eventTypes.scroll, this.getCurrentPos())
         }
       }
     )
@@ -256,16 +241,18 @@ export default class Scroller {
       (e: TouchEvent) => {
         if (!this.enabled) return true
 
+        const { x, y } = this.getCurrentPos()
+
         this.hooks.trigger(this.hooks.eventTypes.touchEnd, {
-          x: this.x,
-          y: this.y
+          x,
+          y
         })
 
         this.animater.pending = false
 
         // ensures that the last position is rounded
-        let newX = Math.round(this.x)
-        let newY = Math.round(this.y)
+        let newX = Math.round(x)
+        let newY = Math.round(y)
         let time = 0
         let easing = ease.swiper
 
@@ -289,8 +276,8 @@ export default class Scroller {
 
         this.endTime = getNow()
         const duration = this.endTime - this.startTime
-        const deltaX = Math.abs(newX - this.startX)
-        const deltaY = Math.abs(newY - this.startY)
+        const deltaX = Math.abs(newX - this.scrollBehaviorX.startPos)
+        const deltaY = Math.abs(newY - this.scrollBehaviorY.startPos)
         // flick
         if (
           duration < this.options.flickLimitTime &&
@@ -303,13 +290,11 @@ export default class Scroller {
         // start momentum animation if needed
         const momentumX = this.scrollBehaviorX.end({
           duration,
-          bounces: [this.options.bounce.left, this.options.bounce.right],
-          startPos: this.startX
+          bounces: [this.options.bounce.left, this.options.bounce.right]
         })
         const momentumY = this.scrollBehaviorY.end({
           duration,
-          bounces: [this.options.bounce.top, this.options.bounce.bottom],
-          startPos: this.startY
+          bounces: [this.options.bounce.top, this.options.bounce.bottom]
         })
 
         newX = isUndef(momentumX.destination)
@@ -323,8 +308,9 @@ export default class Scroller {
           momentumY.duration as number
         )
 
+        const currentPos = this.getCurrentPos()
         // when x or y changed, do momentum animation now!
-        if (newX !== this.x || newY !== this.y) {
+        if (newX !== currentPos.x || newY !== currentPos.y) {
           // change easing function when scroller goes out of the boundaries
           if (
             newX > this.scrollBehaviorX.minScrollPos ||
@@ -339,8 +325,8 @@ export default class Scroller {
         }
 
         this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-          x: this.x,
-          y: this.y
+          x,
+          y
         })
       }
     )
@@ -438,10 +424,10 @@ export default class Scroller {
     if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.animater.pending = false
       if (this.options.probeType !== Probe.Realtime) {
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-          x: this.x,
-          y: this.y
-        })
+        this.hooks.trigger(
+          this.hooks.eventTypes.scrollEnd,
+          this.getCurrentPos()
+        )
       }
     }
   }
@@ -526,18 +512,25 @@ export default class Scroller {
   }
 
   scrollBy(deltaX: number, deltaY: number, time = 0, easing = ease.bounce) {
-    deltaX += this.x
-    deltaY += this.y
+    const { x, y } = this.getCurrentPos()
+    deltaX += x
+    deltaY += y
 
     this.scrollTo(deltaX, deltaY, time, easing)
   }
 
   scrollTo(x: number, y: number, time = 0, easing = ease.bounce) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
+    const currentPos = this.getCurrentPos()
 
     // when x or y has changed
-    if (x !== this.x || y !== this.y) {
-      this.animater.scrollTo([this.x, x], [this.y, y], time, easingFn)
+    if (x !== currentPos.x || y !== currentPos.y) {
+      this.animater.scrollTo(
+        [currentPos.x, x],
+        [currentPos.y, y],
+        time,
+        easingFn
+      )
     }
   }
 
@@ -588,8 +581,9 @@ export default class Scroller {
   resetPosition(time = 0, easing = ease.bounce) {
     const x = this.scrollBehaviorX.ajustPosition()
     const y = this.scrollBehaviorY.ajustPosition()
+    const currentPos = this.getCurrentPos()
     // in boundary
-    if (x === this.x && y === this.y) {
+    if (x === currentPos.x && y === currentPos.y) {
       return false
     }
     // out of boundary
@@ -601,7 +595,12 @@ export default class Scroller {
   updateAllPositions(x: number, y: number) {
     this.scrollBehaviorX.updatePosition(x)
     this.scrollBehaviorY.updatePosition(y)
-    this.x = x
-    this.y = y
+  }
+
+  getCurrentPos() {
+    return {
+      x: this.scrollBehaviorX.currentPos,
+      y: this.scrollBehaviorY.currentPos
+    }
   }
 }
