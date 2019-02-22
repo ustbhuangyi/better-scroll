@@ -323,13 +323,16 @@ export default class Scroller {
 
         const currentPos = this.getCurrentPos()
         // when x or y changed, do momentum animation now!
-        if (newX !== currentPos.x || newY !== currentPos.y) {
+        if (
+          scrollMeta.newX !== currentPos.x ||
+          scrollMeta.newY !== currentPos.y
+        ) {
           // change easing function when scroller goes out of the boundaries
           if (
-            newX > this.scrollBehaviorX.minScrollPos ||
-            newX < this.scrollBehaviorX.maxScrollPos ||
-            newY > this.scrollBehaviorY.minScrollPos ||
-            newY < this.scrollBehaviorY.maxScrollPos
+            scrollMeta.newX > this.scrollBehaviorX.minScrollPos ||
+            scrollMeta.newX < this.scrollBehaviorX.maxScrollPos ||
+            scrollMeta.newY > this.scrollBehaviorY.minScrollPos ||
+            scrollMeta.newY < this.scrollBehaviorY.maxScrollPos
           ) {
             scrollMeta.easing = ease.swipeBounce
           }

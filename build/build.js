@@ -33,7 +33,7 @@ const builds = [{
     typescript()
   ]
 }, {
-  input: resolve('src/plugins/slide.ts'),
+  input: resolve('src/plugins/slide/index.ts'),
   output: {
     file: resolve('dist/slide.js'),
     name: 'Slide',

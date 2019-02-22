@@ -24,3 +24,12 @@ export function isUndef(v: any): boolean {
 export function getDistance(x: number, y: number) {
   return Math.sqrt(x * x + y * y)
 }
+export function fixInboundValue(x: number, min: number, max: number) {
+  if (x < min) {
+    return min
+  }
+  if (x > max) {
+    return max
+  }
+  return x
+}
