@@ -14,5 +14,29 @@ export const config = [
   {
     sourceKey: 'scroller.scrollBehaviorY.maxScrollPos',
     key: 'maxScrollY'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorX.movingDirection',
+    key: 'movingDirectionX'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorY.movingDirection',
+    key: 'movingDirectionY'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorX.direction',
+    key: 'directionX'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorY.direction',
+    key: 'directionY'
+  },
+  {
+    sourceKey: 'scroller.enabled',
+    key: 'enabled'
+  },
+  {
+    sourceKey: 'scroller.pending',
+    key: 'pending'
   }
 ]
