@@ -551,6 +551,10 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce) {
+    const isMoved = this.x !== x || this.y !== y
+    // an useless scroll
+    if (!isMoved) return
+
     this.isInTransition = this.options.useTransition && time > 0 && (x !== this.x || y !== this.y)
 
     if (!time || this.options.useTransition) {
@@ -561,8 +565,7 @@ export function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
       }
-
-      if (!time && (x !== this.x || y !== this.y)) {
+      if (!time) {
         this.trigger('scroll', {
           x,
           y

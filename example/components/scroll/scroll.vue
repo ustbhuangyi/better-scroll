@@ -224,6 +224,9 @@
       scrollTo() {
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
       },
+      autoPullDownRefresh () {
+        this.scroll && this.scroll.autoPullDownRefresh()
+      },
       scrollToElement() {
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       },

@@ -73,6 +73,7 @@
   - [finishPullDown](api-specific.md#finishpulldown)
   - [openPullDown](api-specific.md#openpulldownconfig-v190)
   - [closePullDown](api-specific.md#closepulldown-v190)
+  - [autoPullDownRefresh](api-specific.md#autopulldownrefresh-v1140)
   - [finishPullUp](api-specific.md#finishpullup)
   - [openPullUp](api-specific.md#openpullupconfig-v190)
   - [closePullUp](api-specific.md#closepullup-v190)
