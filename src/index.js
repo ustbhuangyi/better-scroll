@@ -24,7 +24,7 @@ function BScroll(el, options) {
   // cache style for better performance
   this.scrollerStyle = this.scroller.style
 
-  this._init(el, options)
+  this._init(options)
 }
 
 initMixin(BScroll)
@@ -39,6 +39,6 @@ mouseWheelMixin(BScroll)
 zoomMixin(BScroll)
 infiniteMixin(BScroll)
 
-BScroll.Version = '1.11.1'
+BScroll.Version = '1.14.1'
 
 export default BScroll

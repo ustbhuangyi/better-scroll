@@ -1,12 +1,11 @@
 {
   "name": "better-scroll",
-  "version": "1.11.1",
+  "version": "1.14.1",
   "description": "inspired by iscroll, and it has a better scroll perfermance",
   "author": {
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
   },
-  "types": "./types/index.d.ts",
   "main": "dist/bscroll.js",
   "module": "dist/bscroll.esm.js",
   "scripts": {

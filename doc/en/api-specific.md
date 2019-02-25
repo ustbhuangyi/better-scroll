@@ -49,30 +49,45 @@ better-scroll also have several specific API to help you implement customized fe
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling down is finished, use this method to tell better-scroll that data is already loaded.
-   
-## openPullDown(config) (v1.9.0+)  
+
+## openPullDown(config) (v1.9.0+)
    - Parameters：
      - {Object} config，see the config of `pullDownRefresh`，default is true.
    - Return：none.
    - Usage：dynamic open the feature of `pullDownRefresh`.
-   
-## closePullDown() (v1.9.0+) 
+
+## closePullDown() (v1.9.0+)
    - Parameters：none.
    - Return：none.
-   - Usage：dynamic close the feature of `pullDownRefresh`.  
+   - Usage：dynamic close the feature of `pullDownRefresh`.
+
+## autoPullDownRefresh() (v1.14.0)
+   - Parameters：none.
+   - Return：none.
+   - Usage：auto trigger pullDownRefresh.
 
 ## finishPullUp()
    - Parameters: none.
    - Return: none.
    - Usage: when the data loading cause by pulling up is finished, use this method to tell better-scroll that data is already loaded.
-   
-## openPullUp(config) (v1.9.0+) 
+
+## openPullUp(config) (v1.9.0+)
    - Parameters：
      - {Object} config，see the config of `pullUpLoad`，default is true.
    - Return：none.
-   - Usage：dynamic open the feature of `pullUpLoad`. 
-   
-## closePullUp() (v1.9.0+) 
+   - Usage：dynamic open the feature of `pullUpLoad`.
+
+## closePullUp() (v1.9.0+)
    - Parameters：none.
    - Return：none.
-   - Usage：dynamic close the feature of `pullUpLoad`.    
+   - Usage：dynamic close the feature of `pullUpLoad`.
+
+## zoomTo(scale, x, y) (v1.12.0+)
+   - Parameters:
+     - `{Number} scale`, zoom size.
+     - `{Number} x`, X coordinate of the zoom origin, relative to the left edge of the entire document.
+     - `{Number} y`, Y coordinate of the zoom origin, relative to the top edge of the entire document.
+   - Return: none.
+   - Usage: zoom the scroller to the specified size.
+
+

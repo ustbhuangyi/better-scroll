@@ -55,9 +55,9 @@
     methods: {
       createInfinityScroll() {
         this.scroll = new BScroll(this.$refs.chat, {
-          // HWCompositing: false,
           observeDOM: false,
           // useTransition: false,
+          // useTransform: false,
           infinity: {
             render: (item, div) => {
               div = div || this.$refs.message.cloneNode(true)
@@ -93,8 +93,7 @@
               return new Promise((resolve, reject) => {
                 // Assume 50 ms per item.
                 setTimeout(() => {
-                  console.log(this.pageNum)
-                  if (this.pageNum++ > 10) {
+                  if (this.pageNum++ > 20) {
                     resolve(false)
                   } else {
                     let items = []
@@ -163,6 +162,13 @@
     box-sizing: border-box;
     contain: layout;
     will-change: transform;
+    /*-webkit-backface-visibility: hidden;*/
+    /*-webkit-transform-style: preserve-3d*/
+  }
+
+  .chat-timeline > ul {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: flat
   }
 
   .chat-item {

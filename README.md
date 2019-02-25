@@ -1,6 +1,6 @@
 # better-scroll
 
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll)
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll)
 
 [中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/README_zh-CN.md)
 
@@ -54,7 +54,7 @@ The phenomenon is 'the content can't scroll' and we need to figure out the root 
 
 The principle of better-scroll is samed as the browser. We can feel about this more obviously using a picture:
 
-![布局](http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png)
+![layout](./static/image/layout-description-image.png)
 
 The green part is the wrapper, also known as the parent container, which has **fixed height**. The yellow part is the content, which is **the first child element** of the parent container and whose height would grow with the size of its content. Then, when the height of the content doesn't exceed the height of the parent container, the content would not scroll. Once exceeded, the content can be scrolled. That is the principle of better-scroll.
 
@@ -84,9 +84,15 @@ If you want to learn how to use better-scroll in the real project，you can lear
 
 Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
+## Type declaration(since 1.13.0+)
+```
+npm i @types/better-scroll -D
+```
+Maintained by [stoneChen](https://github.com/stoneChen)(thanks to [taoqf](https://github.com/taoqf) for providing initial type code).
+
 ## Communication
 
-![QR Code](http://webapp.didistatic.com/static/webapp/shield/better-scroll-qq.jpg)
+<img src="./static/image/bs-qq3.jpg" width=280 height=384>
 
 ## Demo
 

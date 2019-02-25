@@ -7,12 +7,13 @@ let vendor = (() => {
   if (!inBrowser) {
     return false
   }
+  // first pick up standard to fix #743
   let transformNames = {
+    standard: 'transform',
     webkit: 'webkitTransform',
     Moz: 'MozTransform',
     O: 'OTransform',
-    ms: 'msTransform',
-    standard: 'transform'
+    ms: 'msTransform'
   }
 
   for (let key in transformNames) {
@@ -72,19 +73,22 @@ export function offsetToBody(el) {
   }
 }
 
+export const cssVendor = (vendor && vendor !== 'standard') ? '-' + vendor.toLowerCase() + '-' : ''
+
 let transform = prefixStyle('transform')
+let transition = prefixStyle('transition')
 
 export const hasPerspective = inBrowser && prefixStyle('perspective') in elementStyle
 // fix issue #361
 export const hasTouch = inBrowser && ('ontouchstart' in window || isWeChatDevTools)
 export const hasTransform = transform !== false
-export const hasTransition = inBrowser && prefixStyle('transition') in elementStyle
+export const hasTransition = inBrowser && transition in elementStyle
 
 export const style = {
   transform,
+  transition,
   transitionTimingFunction: prefixStyle('transitionTimingFunction'),
   transitionDuration: prefixStyle('transitionDuration'),
-  transitionProperty: prefixStyle('transitionProperty'),
   transitionDelay: prefixStyle('transitionDelay'),
   transformOrigin: prefixStyle('transformOrigin'),
   transitionEnd: prefixStyle('transitionEnd')
@@ -139,7 +143,7 @@ export function tap(e, eventName) {
   e.target.dispatchEvent(ev)
 }
 
-export function click(e) {
+export function click(e, event = 'click') {
   let eventSource
   if (e.type === 'mouseup' || e.type === 'mousecancel') {
     eventSource = e
@@ -154,7 +158,6 @@ export function click(e) {
     posSrc.clientY = eventSource.clientY || 0
   }
   let ev
-  const event = 'click'
   const bubbles = true
   const cancelable = true
   if (typeof MouseEvent !== 'undefined') {
@@ -180,6 +183,10 @@ export function click(e) {
   ev.forwardedTouchEvent = true
   ev._constructed = true
   e.target.dispatchEvent(ev)
+}
+
+export function dblclick(e) {
+  click(e, 'dblclick')
 }
 
 export function prepend(el, target) {

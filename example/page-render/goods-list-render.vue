@@ -50,6 +50,7 @@
             fade: false,
             interactive: true
           },
+          dblclick: true,
           probeType: 3
         })
 
@@ -64,12 +65,20 @@
         this.scroll.on('scrollEnd', () => {
           console.log('scrollEnd')
         })
+
+        this.scroll.on('dblclick', (e) => {
+          console.log('dblclick:', e)
+        })
+
         this._appendFood()
       })
     },
+    destroyed() {
+      this.scroll && this.scroll.destroy()
+    },
     methods: {
       _appendFood() {
-        while (this.foods.length < 1000) {
+        while (this.foods.length < 100) {
           this.foods = this.foods.concat(_foods)
           this._appendFood()
         }
@@ -98,6 +107,7 @@
       .scroll
         height: 100%
         .foods-wrapper
+          overflow: hidden
           .food-item
             display: flex
             margin: 18px

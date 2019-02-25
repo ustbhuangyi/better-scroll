@@ -103,6 +103,28 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
   `start` 表示开始的缩放比例，`min` 表示最小缩放比例，`max` 表示最大缩放比例。
 
 
-
-
+## infinity(v1.12.0+)
+   - 类型：Boolean | Object
+   - 默认值：false
+   - 作用：该配置的使用场景是长列表滚动或者是无限滚动，默认为 false。如果开启需要配置成一个对象，实现 3 个函数，例如：
+   ```js
+     infinity: {
+       fetch(count) {
+          // 获取大于 count 数量的数据，该函数是异步的，它需要返回一个 Promise。
+          // 成功获取数据后，你需要 resolve 数据数组（也可以 resolve 一个 Promise）。
+          // 数组的每一个元素是列表数据，在 render 方法执行的时候会传递这个数据渲染。
+          // 如果没有数据的时候，你可以 resolve(false)，来告诉无限滚动列表已经没有更多数据了。
+       }
+       render(item, div) {
+          // 渲染每一个元素节点，item 是数据，div 是包裹元素节点的容器。
+          // 该函数需要返回渲染后的 DOM 节点。
+       },
+       createTombstone() {
+         // 返回一个墓碑 DOM 节点。
+       }
+     }
+   ```
+   具体的示例代码可以[参考这里](https://github.com/ustbhuangyi/better-scroll/blob/master/example/pages/infinity.vue)，对应的演示 [demo](https://ustbhuangyi.github.io/better-scroll/#/examples/infinity/zh)。
+   infinity 的实现参考了[这篇文章](https://www.jianshu.com/p/4e16b4211d84)，并在此基础上加入了滚动结束的能力。
+   注意：除非你有大量的数据渲染需求，否则使用普通的滚动即可。
 

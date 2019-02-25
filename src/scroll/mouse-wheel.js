@@ -7,6 +7,7 @@ export function mouseWheelMixin(BScroll) {
 
     this.on('destroy', () => {
       clearTimeout(this.mouseWheelTimer)
+      clearTimeout(this.mouseWheelEndTimer)
       this._handleMouseWheelEvent(removeEvent)
     })
 
@@ -25,14 +26,20 @@ export function mouseWheelMixin(BScroll) {
     }
     e.preventDefault()
 
+    if (this.options.stopPropagation) {
+      e.stopPropagation()
+    }
+
     if (this.firstWheelOpreation) {
       this.trigger('scrollStart')
     }
     this.firstWheelOpreation = false
 
+    const {speed = 20, invert = false, easeTime = 300} = this.options.mouseWheel
+
     clearTimeout(this.mouseWheelTimer)
     this.mouseWheelTimer = setTimeout(() => {
-      if (!this.options.snap) {
+      if (!this.options.snap && !easeTime) {
         this.trigger('scrollEnd', {
           x: this.x,
           y: this.y
@@ -41,7 +48,6 @@ export function mouseWheelMixin(BScroll) {
       this.firstWheelOpreation = true
     }, 400)
 
-    const {speed = 20, invert = false, easeTime = 300} = this.options.mouseWheel
     let wheelDeltaX
     let wheelDeltaY
 
@@ -106,22 +112,32 @@ export function mouseWheelMixin(BScroll) {
     this.movingDirectionX = this.directionX = wheelDeltaX > 0 ? -1 : wheelDeltaX < 0 ? 1 : 0
     this.movingDirectionY = this.directionY = wheelDeltaY > 0 ? -1 : wheelDeltaY < 0 ? 1 : 0
 
-    if (newX > 0) {
-      newX = 0
+    if (newX > this.minScrollX) {
+      newX = this.minScrollX
     } else if (newX < this.maxScrollX) {
       newX = this.maxScrollX
     }
 
-    if (newY > 0) {
-      newY = 0
+    if (newY > this.minScrollY) {
+      newY = this.minScrollY
     } else if (newY < this.maxScrollY) {
       newY = this.maxScrollY
     }
 
+    const needTriggerEnd = this.y === newY
     this.scrollTo(newX, newY, easeTime, ease.swipe)
     this.trigger('scroll', {
       x: this.x,
       y: this.y
     })
+    clearTimeout(this.mouseWheelEndTimer)
+    if (needTriggerEnd) {
+      this.mouseWheelEndTimer = setTimeout(() => {
+        this.trigger('scrollEnd', {
+          x: this.x,
+          y: this.y
+        })
+      }, easeTime)
+    }
   }
 }

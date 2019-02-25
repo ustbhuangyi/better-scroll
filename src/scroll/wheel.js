@@ -1,11 +1,11 @@
 import { warn } from '../util/debug'
 import { DIRECTION_UP } from '../util/const'
 
-export function wheelMixin(BScroll) {
+export function wheelMixin (BScroll) {
   BScroll.prototype.wheelTo = function (index = 0) {
     if (this.options.wheel) {
-      this.y = -index * this.itemHeight
-      this.scrollTo(0, this.y)
+      const y = -index * this.itemHeight
+      this.scrollTo(0, y)
     }
   }
 

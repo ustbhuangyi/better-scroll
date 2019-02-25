@@ -56,6 +56,16 @@ The code results in a clickable vertical scrolling effect. better-scroll support
   - Default: `false`
   - Usage: To override the native scrolling better-scroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to `true`. And then better-scroll will add a private attribute called ·`_constructed` to the dispatched event whose value is true.
 
+## dblclick(v1.12.0+)
+  - Type：`Boolean | Object`
+  - Default：`false`
+  - Usage：Send double click event. When configured to true, by default the two times click delay is 300 ms. If configured to an object, the `delay` can be modified.
+  ```js
+    dblclick: {
+      delay: 300
+    }
+  ```
+
 ## tap
   - Type: `Boolean | String`
   - Default: `false`
@@ -72,7 +82,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
        left: true,
        right: true
      }
-   ```    
+   ```
    Since the 1.10.0 version, `bounce` can support closing the springback effect of some edges, and can set the corresponding edge `key` to false.
 
 ## bounceTime
@@ -107,7 +117,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
 
 ## deceleration
    - Type: `Number`
-   - Default: `0.001` (modification is not recommended)
+   - Default: `0.0015` (modification is not recommended)
    - Usage: Represent the deceleration of the momentum animation.
 
 ## flickLimitTime
@@ -136,7 +146,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
    - Default: `true`
    - Usage: Whether or not to `preventDefault()` when events are fired. This should be left `true` unless you really know what you are doing. Usually you might use [preventDefaultException](/options.html#preventdefaultexception).
 
-## preventDefaultException  
+## preventDefaultException
    - Type: Object
    - Default: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }`
    - Usage: better-scroll will inhibit the native scrolling and menwhile inhibit some native components' default behaviours. In this situation, we can't 'preventDefault' on these elements, so we can configure 'preventDefaultException'. Default `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/}` represents that default behaviours of elements with tagnames like 'input', 'textarea', 'button', 'select' will not be inhibited
@@ -151,7 +161,7 @@ The code results in a clickable vertical scrolling effect. better-scroll support
 ## useTransition
    - Type: `Boolean`
    - Default: `true` (modification is not recommended)
-   - Usage: Whether to use CSS3 transition animation. If setted to false, the engine will use `requestAnimationFrame` to do animation. 
+   - Usage: Whether to use CSS3 transition animation. If setted to false, the engine will use `requestAnimationFrame` to do animation.
    - Note: Only browsers that support CSS3 has the effect.
 
 ## useTransform
@@ -174,18 +184,18 @@ The code results in a clickable vertical scrolling effect. better-scroll support
    - Type: `Boolean`
    - Default: get the result by current browser environment (modification is not recommended)
    - Usage: When in mobile environment (supporting touch event),  disableMouse will be false and touch event will be listened. While in PC environment, disableMouse will be true and touch event will not be listened. We suggest not modifying this unless you konw what you are doing.
-   
-## observeDOM(v1.5.3+)  
+
+## observeDOM(v1.5.3+)
    - Type：Boolean
    - Default：true
-   - Usage：It will listen the DOM change inside of the scroller，and automatically call refresh method which will recalculate to ensure the correctness of the scroll. However, it will add some additional performance overhead，if you can clearly know the DOM change inside of the scroller and manually call the refresh method to recalculate, you can set this option to false. 
-    
-## autoBlur(v1.7.0+)  
+   - Usage：It will listen the DOM change inside of the scroller，and automatically call refresh method which will recalculate to ensure the correctness of the scroll. However, it will add some additional performance overhead，if you can clearly know the DOM change inside of the scroller and manually call the refresh method to recalculate, you can set this option to false.
+
+## autoBlur(v1.7.0+)
    - Type：Boolean
    - Default：true
-   - Usage：It will auto blur the active element(input、textarea) before scroll start. 
-   
+   - Usage：It will auto blur the active element(input、textarea) before scroll start.
+
 ## stopPropagation(v1.9.0+)
    - Type：Boolean
    - Default：false
-   - Usage：Whether stop event propagation.   
+   - Usage：Whether stop event propagation. It is often used in nested scroll scenes.

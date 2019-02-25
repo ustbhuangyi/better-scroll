@@ -1,4 +1,9 @@
+import {
+  style,
+  cssVendor
+} from '../util/dom'
 import { assert } from '../util/debug'
+// import { ease } from '../util/ease'
 
 // Number of items to instantiate beyond current view in the scroll direction.
 const RUNWAY_ITEMS = 30
@@ -45,6 +50,7 @@ function InfiniteScroller(scroller, options) {
   this.tombstoneHeight = 0
   this.tombstoneWidth = 0
   this.tombstones = []
+  this.tombstonesAnimationHandlers = []
 
   this.items = []
   this.loadedItems = 0
@@ -60,8 +66,35 @@ function InfiniteScroller(scroller, options) {
   this.scroller.on('resize', () => {
     this.onResize()
   })
+  this.scroller.on('destroy', () => {
+    this.destroy()
+  })
 
-  this.onResize()
+  // wait scroll core init
+  this._onResizeHandler = setTimeout(() => {
+    this.onResize()
+  })
+}
+
+InfiniteScroller.prototype.destroy = function () {
+  // In extreme scene, destroy is triggered before _onResizeHandler
+  clearTimeout(this._onResizeHandler)
+  this.tombstonesAnimationHandlers.forEach(function (handler) {
+    clearTimeout(handler)
+  })
+  this.tombstonesAnimationHandlers = null
+  this.items.forEach((item) => {
+    if (item.node) {
+      this.scrollerEl.removeChild(item.node)
+      item.node = null
+    }
+  })
+  this.scroller.infiniteScroller = null
+  this.scroller = null
+  this.wrapperEl = null
+  this.scrollerEl = null
+  this.items = null
+  this.tombstones = null
 }
 
 InfiniteScroller.prototype.onScroll = function () {
@@ -77,7 +110,7 @@ InfiniteScroller.prototype.onScroll = function () {
   }
 
   this.anchorScrollTop = scrollTop
-  let lastScreenItem = this._calculateAnchoredItem(this.anchorItem, this.wrapperEl.offsetHeight)
+  let lastScreenItem = this._calculateAnchoredItem(this.anchorItem, this.scroller.wrapperHeight)
 
   let start = this.anchorItem.index
   let end = lastScreenItem.index
@@ -127,19 +160,30 @@ InfiniteScroller.prototype.maybeRequestContent = function () {
   }
   this.requestInProgress = true
   this.options.fetch(itemsNeeded).then((items) => {
+    this.requestInProgress = false
     if (items) {
       this.addContent(items)
     } else {
       this.hasMore = false
-      this._removeTombstones()
-      let curPos = this._fixScrollPosition()
-      this._setupAnimations([], curPos)
+      let tombstoneLen = this._removeTombstones()
+      let curPos = 0
+      if (this.anchorItem.index <= this.items.length) {
+        curPos = this._fixScrollPosition()
+        this._setupAnimations({}, curPos)
+        this.scroller.resetPosition(this.scroller.options.bounceTime)
+      } else {
+        this.anchorItem.index -= tombstoneLen
+        curPos = this._fixScrollPosition()
+        this._setupAnimations({}, curPos)
+        this.scroller.stop()
+        this.scroller.resetPosition()
+        this.onScroll()
+      }
     }
   })
 }
 
 InfiniteScroller.prototype.addContent = function (items) {
-  this.requestInProgress = false
   for (let i = 0; i < items.length; i++) {
     if (this.items.length <= this.loadedItems) {
       this._addItem()
@@ -147,6 +191,7 @@ InfiniteScroller.prototype.addContent = function (items) {
     this.items[this.loadedItems++].data = items[i]
   }
   this.attachContent()
+  this.maybeRequestContent()
 }
 
 InfiniteScroller.prototype.attachContent = function () {
@@ -158,20 +203,31 @@ InfiniteScroller.prototype.attachContent = function () {
   this._setupAnimations(tombstoneAnimations, curPos)
 }
 
+InfiniteScroller.prototype.resetMore = function () {
+  this.hasMore = true
+}
+
 InfiniteScroller.prototype._removeTombstones = function () {
   let markIndex
-  for (let i = this.firstAttachedItem; i < this.items.length; i++) {
+  let tombstoneLen = 0
+  let itemLen = this.items.length
+  for (let i = 0; i < itemLen; i++) {
     const currentNode = this.items[i].node
     const currentData = this.items[i].data
-    if (isTombstoneNode(currentNode) && !currentData) {
-      if (!markIndex) {
+    if ((!currentNode || isTombstoneNode(currentNode)) && !currentData) {
+      // 0 should be excluded
+      if (markIndex === void 0) {
         markIndex = i
       }
-      this.scrollerEl.removeChild(this.items[i].node)
+      if (currentNode) {
+        this.scrollerEl.removeChild(currentNode)
+      }
     }
   }
+  tombstoneLen = itemLen - markIndex
   this.items.splice(markIndex)
   this.lastAttachedItem = Math.min(this.lastAttachedItem, this.items.length)
+  return tombstoneLen
 }
 
 InfiniteScroller.prototype._collectUnusedNodes = function () {
@@ -231,10 +287,12 @@ InfiniteScroller.prototype._cleanupUnusedNodes = function (unusedNodes) {
 
 InfiniteScroller.prototype._cacheNodeSize = function () {
   for (let i = this.firstAttachedItem; i < this.lastAttachedItem; i++) {
+    const item = this.items[i]
     // Only cache the height if we have the real contents, not a placeholder.
-    if (this.items[i].data && !this.items[i].height) {
-      this.items[i].height = this.items[i].node.offsetHeight
-      this.items[i].width = this.items[i].node.offsetWidth
+    if (item.data && !item.height) {
+      const isTombstone = isTombstoneNode(item.node)
+      item.height = isTombstone ? this.tombstoneHeight : item.node.offsetHeight
+      item.width = isTombstone ? this.tombstoneWidth : item.node.offsetWidth
     }
   }
 }
@@ -260,35 +318,35 @@ InfiniteScroller.prototype._fixScrollPosition = function () {
 InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, curPos) {
   for (let i in tombstoneAnimations) {
     const animation = tombstoneAnimations[i]
-    this.items[i].node.style.transform = `translateY(${this.anchorScrollTop + animation[1]}px) scale(${this.tombstoneWidth / this.items[i].width}, ${this.tombstoneHeight / this.items[i].height})`
+    this.items[i].node.style[style.transform] = `translateY(${this.anchorScrollTop + animation[1]}px) scale(${this.tombstoneWidth / this.items[i].width}, ${this.tombstoneHeight / this.items[i].height})`
     // Call offsetTop on the nodes to be animated to force them to apply current transforms.
     /* eslint-disable no-unused-expressions */
     this.items[i].node.offsetTop
     animation[0].offsetTop
-    this.items[i].node.style.transition = `transform ${ANIMATION_DURATION_MS}ms`
+    this.items[i].node.style[style.transition] = `${cssVendor}transform ${ANIMATION_DURATION_MS}ms`
   }
 
   for (let i = this.firstAttachedItem; i < this.lastAttachedItem; i++) {
     const animation = tombstoneAnimations[i]
     if (animation) {
       const tombstoneNode = animation[0]
-      tombstoneNode.style.transition = `transform ${ANIMATION_DURATION_MS}ms, opacity ${ANIMATION_DURATION_MS}ms`
-      tombstoneNode.style.transform = `translateY(${curPos}px) scale(${this.items[i].width / this.tombstoneWidth}, ${this.items[i].height / this.tombstoneHeight})`
+      tombstoneNode.style[style.transition] = `${cssVendor}transform ${ANIMATION_DURATION_MS}ms, opacity ${ANIMATION_DURATION_MS}ms`
+      tombstoneNode.style[style.transform] = `translateY(${curPos}px) scale(${this.items[i].width / this.tombstoneWidth}, ${this.items[i].height / this.tombstoneHeight})`
       tombstoneNode.style.opacity = 0
     }
     if (curPos !== this.items[i].top) {
       if (!animation) {
-        this.items[i].node.style.transition = ''
+        this.items[i].node.style[style.transition] = ''
       }
-      this.items[i].node.style.transform = `translateY(${curPos}px)`
+      this.items[i].node.style[style.transform] = `translateY(${curPos}px)`
     }
     this.items[i].top = curPos
     curPos += this.items[i].height || this.tombstoneHeight
   }
 
-  this.scroller.maxScrollY = -(curPos - this.wrapperEl.offsetHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0))
+  this.scroller.maxScrollY = -(curPos - this.scroller.wrapperHeight + (this.hasMore ? DEFAULT_SCROLL_RUNWAY : 0))
 
-  setTimeout(() => {
+  const tombstoneAnimationsHandler = setTimeout(() => {
     for (let i in tombstoneAnimations) {
       const animation = tombstoneAnimations[i]
       animation[0].style.display = 'none'
@@ -296,6 +354,8 @@ InfiniteScroller.prototype._setupAnimations = function (tombstoneAnimations, cur
       this.tombstones.push(animation[0])
     }
   }, ANIMATION_DURATION_MS)
+
+  this.tombstonesAnimationHandlers.push(tombstoneAnimationsHandler)
 }
 
 InfiniteScroller.prototype._getTombStone = function () {
@@ -303,8 +363,8 @@ InfiniteScroller.prototype._getTombStone = function () {
   if (tombstone) {
     tombstone.style.display = ''
     tombstone.style.opacity = 1
-    tombstone.style.transform = ''
-    tombstone.style.transition = ''
+    tombstone.style[style.transform] = ''
+    tombstone.style[style.transition] = ''
     return tombstone
   }
   return this.options.createTombstone()
