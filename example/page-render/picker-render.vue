@@ -28,6 +28,7 @@
 
   let data1 = [
     {
+      disabled: true,
       text: '剧毒',
       value: 1
     }, {
@@ -43,21 +44,26 @@
       value: 4
     },
     {
+      disabled: true,
       text: '卡尔',
       value: 5
     },
     {
+      disabled: true,
       text: '宙斯',
       value: 6
     },
     {
+      disabled: true,
       text: '巫医',
       value: 7
     }, {
+      disabled: true,
       text: '巫妖',
       value: 8
     },
     {
+      disabled: true,
       text: '神谕者',
       value: 9
     },
