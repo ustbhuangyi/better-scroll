@@ -2,10 +2,16 @@ import EventEmitter from './base/EventEmitter'
 import Options from './Options'
 import Scroller from './scroller/Scroller'
 import { PluginCtor } from './plugins/type'
-import { warn, isUndef } from './util'
+import { warn, isUndef, propertiesProxy } from './util'
+import { propertiesConfig } from './propertiesConfig'
 
 interface PluginsCtorMap {
   [name: string]: PluginCtor
+}
+
+interface propertyConfig {
+  key: string
+  sourceKey: string
 }
 
 export default class BScroll extends EventEmitter {
@@ -69,6 +75,8 @@ export default class BScroll extends EventEmitter {
     this.enable()
 
     this.applyPlugins()
+
+    this.proxy(propertiesConfig)
   }
 
   private applyPlugins() {
@@ -96,7 +104,11 @@ export default class BScroll extends EventEmitter {
     })
   }
 
-  proxy() {}
+  proxy(propertiesConfig: propertyConfig[]) {
+    propertiesConfig.forEach(({ key, sourceKey }) => {
+      propertiesProxy(this, sourceKey, key)
+    })
+  }
 
   refresh() {
     this.scroller.refresh()

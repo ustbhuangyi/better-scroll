@@ -1,4 +1,4 @@
-export const config = [
+export const propertiesConfig = [
   {
     sourceKey: 'scroller.scrollBehaviorX.currentPos',
     key: 'x'
