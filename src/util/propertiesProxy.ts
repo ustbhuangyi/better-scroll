@@ -16,7 +16,14 @@ const getProperty = (obj: traversedObject, key: string) => {
     obj = obj[keys[i]]
     if (typeof obj !== 'object' || !obj) return
   }
-  return obj[keys.pop() as string]
+  const lastKey = keys.pop() as string
+  if (typeof obj[lastKey] === 'function') {
+    return function() {
+      return obj[lastKey].apply(obj, arguments)
+    }
+  } else {
+    return obj[lastKey]
+  }
 }
 
 const setProperty = (obj: traversedObject, key: string, value: any) => {

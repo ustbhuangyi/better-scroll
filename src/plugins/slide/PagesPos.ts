@@ -1,8 +1,8 @@
-import { getRect } from '../../util'
+import { getRect } from '../../util/dom'
 import BScroll from '../../index'
 import { slideConfig } from '../../Options'
 
-type pagePos = {
+interface PagePos {
   x: number
   y: number
   width: number
@@ -12,7 +12,7 @@ type pagePos = {
 }
 
 export default class PagesPos {
-  pages: Array<Array<pagePos>>
+  pages: Array<Array<PagePos>>
   xLen: number
   yLen: number
   private wrapperWidth: number
@@ -49,7 +49,7 @@ export default class PagesPos {
     }
     return true
   }
-  getPos(x: number, y: number): pagePos {
+  getPos(x: number, y: number): PagePos {
     return this.pages[x][y]
   }
   getNearestPage(
@@ -83,8 +83,8 @@ export default class PagesPos {
   private computePagePosInfo(
     stepX: number,
     stepY: number
-  ): Array<Array<pagePos>> {
-    let pages: Array<Array<pagePos>> = []
+  ): Array<Array<PagePos>> {
+    let pages: Array<Array<PagePos>> = []
     let x = 0
     let y
     let cx
@@ -123,8 +123,8 @@ export default class PagesPos {
   }
   private computePagePosInfoByEl(
     el: NodeListOf<HTMLElement>
-  ): Array<Array<pagePos>> {
-    let pages: Array<Array<pagePos>> = []
+  ): Array<Array<PagePos>> {
+    let pages: Array<Array<PagePos>> = []
     let x = 0
     let y
     let cx

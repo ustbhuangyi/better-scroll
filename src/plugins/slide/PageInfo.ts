@@ -1,9 +1,10 @@
-import { extend, fixInboundValue, warn } from '../../util'
+import { fixInboundValue, extend } from '../../util/lang'
+import { warn } from '../../util/debug'
 import BScroll from '../../index'
 import { slideConfig } from '../../Options'
 import PagesPos from './PagesPos'
 
-export type SlidePoint = {
+export interface SlidePoint {
   x?: number
   y?: number
   pageX: number

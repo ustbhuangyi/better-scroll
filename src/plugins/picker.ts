@@ -1,7 +1,5 @@
 import BScroll from '../index'
-import { staticImplements, PluginCtor } from './type'
 
-@staticImplements<PluginCtor>()
 export default class Picker {
   static pluginName = 'picker'
   constructor(public scroll: BScroll) {

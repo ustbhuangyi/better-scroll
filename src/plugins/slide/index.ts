@@ -1,11 +1,11 @@
 import BScroll from '../../index'
-import { staticImplements, PluginCtor } from '../type'
-import { prepend, removeChild, fixInboundValue } from '../../util'
-import { ease, EaseFn } from '../../util/ease'
+import { fixInboundValue } from '../../util/lang'
+import { prepend, removeChild, addClass } from '../../util/dom'
+import { ease, EaseItem } from '../../util/ease'
 import { slideConfig } from '../../Options'
 import PageInfo, { SlidePoint } from './PageInfo'
+import propertiesConfig from './propertiesConfig'
 
-@staticImplements<PluginCtor>()
 export default class Slide {
   private currentPage: SlidePoint
   private page: PageInfo
@@ -14,6 +14,7 @@ export default class Slide {
   private thresholdY: number
   static pluginName = 'slide'
   constructor(public scroll: BScroll) {
+    this.scroll.proxy(propertiesConfig)
     this.slideOpt = this.scroll.options.slide as Partial<slideConfig>
     this.page = new PageInfo(scroll, this.slideOpt)
     this.init()
@@ -32,7 +33,7 @@ export default class Slide {
         slide.loop = false
       }
     }
-
+    this.setSlideWidth(slideEls)
     this.page.currentPage = {
       x: 0,
       y: 0,
@@ -82,26 +83,21 @@ export default class Slide {
       this.scroll.refresh()
     }
   }
-  next(time?: number, easing?: { style: string; fn: EaseFn }) {
+  next(time?: number, easing?: EaseItem) {
     if (!this.hasValidOptions()) {
       return
     }
     const { pageX, pageY } = this.page.nextPage()
     this.goTo(pageX, pageY, time, easing)
   }
-  prev(time?: number, easing?: { style: string; fn: EaseFn }) {
+  prev(time?: number, easing?: EaseItem) {
     if (!this.hasValidOptions()) {
       return
     }
     const { pageX, pageY } = this.page.prevPage()
     this.goTo(pageX, pageY, time, easing)
   }
-  gotoPage(
-    x: number,
-    y: number,
-    time?: number,
-    easing?: { style: string; fn: EaseFn }
-  ) {
+  goToPage(x: number, y: number, time?: number, easing?: EaseItem) {
     const pageInfo = this.page.realPage2Page(x, y)
     if (!pageInfo) {
       return
@@ -186,12 +182,23 @@ export default class Slide {
     )
     slideEls.appendChild(children[1].cloneNode(true))
   }
-  private goTo(
-    x: number,
-    y: number = 0,
-    time?: number,
-    easing?: { style: string; fn: EaseFn }
-  ) {
+  private setSlideWidth(slideEls: HTMLElement) {
+    // if (this.slideOpt.disableSetWidth) {
+    //   return
+    // }
+    if (!this.scroll.options.scrollX) {
+      return
+    }
+    const children = slideEls.children
+    const slideItemWidth = children[0].clientWidth
+    for (let i = 0; i < children.length; i++) {
+      const slideItemDom = children[i] as HTMLElement
+      addClass(slideItemDom, 'slide-item')
+      slideItemDom.style.width = slideItemWidth + 'px'
+    }
+    slideEls.style.width = slideItemWidth * children.length + 'px'
+  }
+  private goTo(x: number, y: number = 0, time?: number, easing?: EaseItem) {
     const pageInfo = this.page.change2safePage(x, y)
     if (!pageInfo) {
       return

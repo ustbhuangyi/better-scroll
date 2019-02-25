@@ -1,15 +1,19 @@
 import EventEmitter from './base/EventEmitter'
 import Options from './Options'
 import Scroller from './scroller/Scroller'
-import { PluginCtor } from './plugins/type'
 import { warn, isUndef, propertiesProxy } from './util'
 import { propertiesConfig } from './propertiesConfig'
+
+interface PluginCtor {
+  pluginName: string
+  new (scroll: BScroll): any
+}
 
 interface PluginsCtorMap {
   [name: string]: PluginCtor
 }
 
-interface propertyConfig {
+interface PropertyConfig {
   key: string
   sourceKey: string
 }
@@ -104,7 +108,7 @@ export default class BScroll extends EventEmitter {
     })
   }
 
-  proxy(propertiesConfig: propertyConfig[]) {
+  proxy(propertiesConfig: PropertyConfig[]) {
     propertiesConfig.forEach(({ key, sourceKey }) => {
       propertiesProxy(this, sourceKey, key)
     })

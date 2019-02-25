@@ -1,8 +1,9 @@
+export interface EaseItem {
+  style: string
+  fn: EaseFn
+}
 interface EaseMap {
-  [key: string]: {
-    style: string
-    fn: EaseFn
-  }
+  [key: string]: EaseItem
 }
 
 export interface EaseFn {
