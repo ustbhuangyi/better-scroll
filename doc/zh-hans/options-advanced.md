@@ -12,10 +12,17 @@ better-scroll 还支持一些高级配置，来实现一些特殊的 feature。
        rotate: 25,
        adjustTime: 400,
        wheelWrapperClass: 'wheel-scroll',
-       wheelItemClass: 'wheel-item'
+       wheelItemClass: 'wheel-item',
+       wheelDisabledItemClass: 'wheel-disabled-item' // version 1.15.0 支持
      }
    ```
-   - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Picker Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/picker/zh) 。想了解更多的细节可以去看 example 中的 [picker](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue) 组件的代码。**注意**：如果配置为 Object 的时候`wheelWrapperClass` 和 `wheelItemClass` 必须对应于你的实例 `better-scroll` 的 `wrapper` 类名和 `wrapper` 内的子类名。二者的默认值是 "`wheel-scroll`"/"`wheel-item`"，如果你不配置或者配置的名称和你对应DOM节点的类名不一致的话会导致一个问题：滚动起来的时候点击一下终止滚动并不会触发 `scrollEnd` 事件，进而影响诸如城市选择器联动数据的这种组件的结果。
+   - 备注：这是一个高级的配置，一般场景不需要配置，具体应用场景可见 [Picker Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/picker/zh) 。想了解更多的细节可以去看 example 中的 [picker](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue) 组件的代码。
+
+   **注意**：
+
+   1.如果配置为 Object 的时候，`wheelWrapperClass` 和 `wheelItemClass` 必须对应于你的实例 `better-scroll` 的 `wrapper` 类名和 `wrapper` 内的子类名。二者的默认值是 "`wheel-scroll`"/"`wheel-item`"，如果你不配置或者配置的名称和你对应DOM节点的类名不一致的话会导致一个问题：滚动起来的时候点击一下终止滚动并不会触发 `scrollEnd` 事件，进而影响诸如城市选择器联动数据的这种组件的结果。
+
+   2.`wheelDisabledItemClass` 是用于配置禁止选中某选项的样式类名。better-scroll 实例上的属性 `selectedIndex` 是表示当前选中项的索引，如果你配置的选项都是禁止选中的状态，那么 `selectedIndex` 一直保持为 -1。我们是参照 [Web select 标签](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/select) 的交互实现的。
 
 ## snap
    - 类型：Boolean | Object
