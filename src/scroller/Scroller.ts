@@ -7,6 +7,7 @@ import { Transform, Position } from '../translater'
 import { Animation, Transition } from '../animater'
 import BScrollOptions from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
+import { bubbling } from '../util/bubbling'
 
 import {
   Direction,
@@ -370,6 +371,7 @@ export default class Scroller {
         }
       }
     )
+    this.bubblingEvent()
   }
 
   private computeDirectionLock(absDistX: number, absDistY: number) {
@@ -480,6 +482,14 @@ export default class Scroller {
     return false
   }
 
+  private bubblingEvent() {
+    bubbling(this.animater, this, [
+      {
+        source: 'forceStop',
+        target: 'scrollEnd'
+      }
+    ])
+  }
   createActionsHandlerOpt() {
     const options = [
       'click',

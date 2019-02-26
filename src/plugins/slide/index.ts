@@ -68,11 +68,9 @@ export default class Slide {
       }
     )
     this.scroll.scroller.hooks.on('scrollEnd', () => {
-      const changePage = this.page.resetLoopPage()
-      if (changePage) {
-        this.goTo(changePage.pageX, changePage.pageY, 0)
-      }
+      this.resetLoop()
     })
+
     if (slide.listenFlick !== false) {
       this.enablePageChangeForFlick()
     }
@@ -181,6 +179,12 @@ export default class Slide {
       slideEls
     )
     slideEls.appendChild(children[1].cloneNode(true))
+  }
+  private resetLoop() {
+    const changePage = this.page.resetLoopPage()
+    if (changePage) {
+      this.goTo(changePage.pageX, changePage.pageY, 0)
+    }
   }
   private setSlideWidth(slideEls: HTMLElement) {
     // if (this.slideOpt.disableSetWidth) {
