@@ -179,7 +179,7 @@ export function initMixin (BScroll) {
     this.refresh()
 
     if (this.options.wheel) {
-      this._checkWheelhasValidIndex()
+      this._checkWheelAllDisabled()
     }
 
     if (!this.options.snap) {
@@ -480,6 +480,7 @@ export function initMixin (BScroll) {
         this.selectedIndex = wheel.selectedIndex || 0
       }
       this.options.startY = -this.selectedIndex * this.itemHeight
+
       this.maxScrollX = 0
       this.maxScrollY = -this.itemHeight * (this.items.length - 1)
     } else {

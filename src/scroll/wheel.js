@@ -1,6 +1,3 @@
-import { warn } from '../util/debug'
-import { DIRECTION_UP } from '../util/const'
-
 export function wheelMixin (BScroll) {
   BScroll.prototype.wheelTo = function (index = 0) {
     if (this.options.wheel) {
@@ -21,58 +18,62 @@ export function wheelMixin (BScroll) {
     if (!wheel.wheelItemClass) {
       wheel.wheelItemClass = 'wheel-item'
     }
+    if (!wheel.wheelDisabledItemClass) {
+      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
+    }
     if (wheel.selectedIndex === undefined) {
       wheel.selectedIndex = 0
-      warn('wheel option selectedIndex is required!')
     }
   }
 
-  BScroll.prototype._checkWheelhasValidIndex = function () {
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].className.indexOf('disabled') === -1) {
-        this.wheelHasValidIndex = true
-        return
-      }
-    }
-
-    warn('checkWheelhasValidIndex: has no valid items in column')
-    this.wheelHasValidIndex = false
-  }
-
-  BScroll.prototype._getWheelValidIndex = function (y) {
-    const STEP_SIZE = 1
-    let setpCount = 1
-    let hasReversed = false
-    let validIndex = Math.abs(Math.round(-y / this.itemHeight))
-    let direction = this.movingDirectionY === DIRECTION_UP ? STEP_SIZE : -STEP_SIZE
-
-    // has no valid item
-    if (!this.wheelHasValidIndex) {
-      return validIndex
-    }
-
-    // check index valid or not
-    while (this.items[validIndex].className.indexOf('disabled') !== -1) {
-      validIndex += STEP_SIZE * direction
-      setpCount++
-      // In one direction, at the end, reversed direction
-      if (!hasReversed && (validIndex < 0 || validIndex >= this.items.length)) {
-        // Reversed
-        direction = -direction
-        validIndex += setpCount * direction
-        // has reversed, setpCount reduced to 1, in another direction
-        setpCount = 1
-        hasReversed = true
-      }
-    }
-    return validIndex
-  }
-
-  // get valid y
-  BScroll.prototype._getWheelValidY = function (y) {
-    // verify y
+  BScroll.prototype._findNearestValidWheel = function (y) {
     y = y > 0 ? 0 : y < this.maxScrollY ? this.maxScrollY : y
-    let temtIndex = this._getWheelValidIndex(y)
-    return -temtIndex * this.itemHeight
+    const wheel = this.options.wheel
+    let currentIndex = Math.abs(Math.round(-y / this.itemHeight))
+    const cacheIndex = currentIndex
+    const items = this.items
+    // Impersonation web native select
+    // first, check whether there is a enable item whose index is smaller than currentIndex
+    // then, check whether there is a enable item whose index is bigger than currentIndex
+    // otherwise, there are all disabled items, just keep currentIndex unchange
+    while (currentIndex >= 0) {
+      if (items[currentIndex].className.indexOf(wheel.wheelDisabledItemClass) === -1) {
+        break
+      }
+      currentIndex--
+    }
+
+    if (currentIndex < 0) {
+      currentIndex = cacheIndex
+      while (currentIndex <= items.length - 1) {
+        if (items[currentIndex].className.indexOf(wheel.wheelDisabledItemClass) === -1) {
+          break
+        }
+        currentIndex++
+      }
+    }
+
+    // keep it unchange when all the items are disabled
+    if (currentIndex === items.length) {
+      currentIndex = cacheIndex
+    }
+
+    // when items are disabled, this.selected = -1
+    return {
+      index: this.wheelItemsAllDisabled ? -1 : currentIndex,
+      y: -currentIndex * this.itemHeight
+    }
+  }
+
+  BScroll.prototype._checkWheelAllDisabled = function () {
+    const wheel = this.options.wheel
+    const items = this.items
+    this.wheelItemsAllDisabled = true
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].className.indexOf(wheel.wheelDisabledItemClass) === -1) {
+        this.wheelItemsAllDisabled = false
+        break
+      }
+    }
   }
 }

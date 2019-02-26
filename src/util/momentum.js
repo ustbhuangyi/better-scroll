@@ -9,7 +9,7 @@ export function momentum(current, start, time, lowerMargin, upperMargin, wrapper
   let destination = current + speed / deceleration * (distance < 0 ? -1 : 1)
 
   if (wheel && itemHeight) {
-    destination = scroll._getWheelValidY(destination)
+    destination = scroll._findNearestValidWheel(destination).y
   }
 
   if (destination < lowerMargin) {
