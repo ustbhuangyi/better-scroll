@@ -27,6 +27,9 @@ describe('BScroll - wheel', () => {
         line-height: 36px;
         list-style: none;
       }
+      .wheel-disabled-item {
+        color: red
+      }
     `
     style.appendChild(document.createTextNode(styleSheet))
     document.head.appendChild(style)
@@ -43,7 +46,11 @@ describe('BScroll - wheel', () => {
       const scroller = document.createElement('div')
       scroller.className = 'wheel'
       for (let i = 0; i < 100; i++) {
-        ulHTML += `<li class="wheel-item">${i}</li>`
+        if (i === 0) {
+          ulHTML += `<li class="wheel-item wheel-disabled-item">${i}</li>`
+        } else {
+          ulHTML += `<li class="wheel-item">${i}</li>`
+        }
       }
       ul.innerHTML = ulHTML
       listArr.push(ul)
@@ -51,7 +58,7 @@ describe('BScroll - wheel', () => {
       wrapper.appendChild(scroller)
       wheels[i] = new BScroll(wrapper.children[i], {
         wheel: {
-          selectedIndex: 2
+          selectedIndex: 0
         },
         probeType: 3
       })
@@ -78,13 +85,13 @@ describe('BScroll - wheel', () => {
   it('getSelectedIndex', () => {
     const [firstWheel, secondWheel, thirdWheel] = [...wheels]
     expect(firstWheel.getSelectedIndex())
-      .to.equal(2)
+      .to.equal(1)
     expect(secondWheel.getSelectedIndex())
-      .to.equal(2)
+      .to.equal(1)
     expect(thirdWheel.getSelectedIndex())
-      .to.equal(2)
+      .to.equal(1)
   })
-  it('it will report warning when wheel.getSelectedIndex is undefined', () => {
+  it('will set selectedIndex to 0 when wheel.getSelectedIndex is undefined', () => {
     const firstWheel = new BScroll(wrapper.children[0], {
       wheel: {
         selectedIndex: undefined
@@ -92,5 +99,14 @@ describe('BScroll - wheel', () => {
       probeType: 3
     })
     expect(firstWheel.options.startY).to.equal(0)
+  })
+  it('find nearest enable item', () => {
+    const firstWheel = new BScroll(wrapper.children[0], {
+      wheel: {
+        selectedIndex: 0
+      },
+      probeType: 3
+    })
+    expect(firstWheel.selectedIndex).to.equal(1)
   })
 })
