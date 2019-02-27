@@ -8,6 +8,14 @@ export default class ObserveDOM {
   constructor(public scroll: BScroll) {
     this.stopObserver = false
     this.init()
+    this.scroll.hooks.on('enable', () => {
+      if (this.stopObserver) {
+        this.init()
+      }
+    })
+    this.scroll.hooks.on('disable', () => {
+      this.destroy()
+    })
   }
   init() {
     if (typeof MutationObserver !== 'undefined') {
@@ -72,7 +80,7 @@ export default class ObserveDOM {
       scrollIns.y > scrollIns.minScrollY ||
       scrollIns.y < scrollIns.maxScrollY
 
-    return scrollIns.pedding || outsideBoundaries
+    return scrollIns.pending || outsideBoundaries
   }
   private checkDOMUpdate() {
     const me = this
@@ -83,7 +91,7 @@ export default class ObserveDOM {
     let oldHeight = scrollerRect.height
 
     function check() {
-      if (me.startObserve) {
+      if (me.stopObserver) {
         return
       }
       scrollerRect = getRect(scrollerEl)

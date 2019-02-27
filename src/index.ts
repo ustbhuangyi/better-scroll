@@ -45,7 +45,7 @@ export default class BScroll extends EventEmitter {
   }
 
   constructor(el: HTMLElement | string, options?: object) {
-    super(['refresh', 'scrollStart'])
+    super(['refresh', 'scrollStart', 'enable', 'disable'])
     const wrapper = (typeof el === 'string'
       ? document.querySelector(el)
       : el) as HTMLElement
@@ -122,10 +122,12 @@ export default class BScroll extends EventEmitter {
 
   enable() {
     this.scroller.enabled = true
+    this.hooks.trigger(this.hooks.eventTypes.enable)
   }
 
   disable() {
     this.scroller.enabled = false
+    this.hooks.trigger(this.hooks.eventTypes.disable)
   }
 
   destroy() {}
