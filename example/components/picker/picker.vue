@@ -14,7 +14,7 @@
             <div class="wheel-wrapper" ref="wheelWrapper">
               <div class="wheel" v-for="data in pickerData">
                 <ul class="wheel-scroll">
-                  <li v-for="item in data" :class="{'disabled':item.disabled}" class="wheel-item">{{item.text}}</li>
+                  <li v-for="item in data" :class="{'wheel-disabled-item':item.disabled}" class="wheel-item">{{item.text}}</li>
                 </ul>
               </div>
             </div>
@@ -334,7 +334,7 @@
               overflow: hidden
               white-space: nowrap
               color: $color-dark-grey
-              &.disabled
+              &.wheel-disabled-item
                 opacity: .2;
     .picker-footer
       height: 20px
