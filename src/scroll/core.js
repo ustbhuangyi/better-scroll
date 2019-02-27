@@ -560,14 +560,10 @@ export function coreMixin(BScroll) {
   }
 
   BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce) {
-    const isMoved = this.x !== x || this.y !== y
-    // an useless scroll
-    if (!isMoved) return
-
     if (this.options.wheel) {
       y = this._findNearestValidWheel(y).y
     }
-    this.isInTransition = this.options.useTransition && time > 0 && isMoved
+    this.isInTransition = this.options.useTransition && time > 0 && (this.x !== x || this.y !== y)
 
     if (!time || this.options.useTransition) {
       this._transitionTimingFunction(easing.style)
@@ -577,7 +573,9 @@ export function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
       }
-      if (!time) {
+      if (!time && (this.x !== x || this.y !== y)) {
+        // don't trigger resetPosition when zoom feature is open, fix #748
+        if (this.options.zoom) return
         this.trigger('scroll', {
           x,
           y

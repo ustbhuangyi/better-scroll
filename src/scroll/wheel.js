@@ -57,8 +57,7 @@ export function wheelMixin (BScroll) {
     if (currentIndex === items.length) {
       currentIndex = cacheIndex
     }
-
-    // when items are disabled, this.selected = -1
+    // when all the items are disabled, this.selectedIndex should always be -1
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
       y: -currentIndex * this.itemHeight
