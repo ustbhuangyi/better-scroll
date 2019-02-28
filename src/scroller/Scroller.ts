@@ -201,8 +201,8 @@ export default class Scroller {
 
         this.handleEventPassthrough(e)
 
-        deltaX = this.ajustDelta(deltaX, deltaY).deltaX
-        deltaY = this.ajustDelta(deltaX, deltaY).deltaY
+        deltaX = this.adjustDelta(deltaX, deltaY).deltaX
+        deltaY = this.adjustDelta(deltaX, deltaY).deltaY
 
         const { left, right, top, bottom } = this.options.bounce
 
@@ -410,7 +410,7 @@ export default class Scroller {
     }
   }
 
-  private ajustDelta(deltaX: number, deltaY: number) {
+  private adjustDelta(deltaX: number, deltaY: number) {
     if (this.directionLocked === DirectionLock.Horizontal) {
       deltaY = 0
     } else if (this.directionLocked === DirectionLock.Vertical) {
@@ -610,8 +610,8 @@ export default class Scroller {
   }
 
   resetPosition(time = 0, easing = ease.bounce) {
-    const x = this.scrollBehaviorX.ajustPosition()
-    const y = this.scrollBehaviorY.ajustPosition()
+    const x = this.scrollBehaviorX.adjustPosition()
+    const y = this.scrollBehaviorY.adjustPosition()
     const currentPos = this.getCurrentPos()
     // in boundary
     if (x === currentPos.x && y === currentPos.y) {

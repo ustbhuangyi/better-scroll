@@ -193,8 +193,8 @@ export default class Behavior {
     this.currentPos = pos
   }
 
-  // ajust position when out of boundary
-  ajustPosition() {
+  // adjust position when out of boundary
+  adjustPosition() {
     let pos = this.currentPos
     let roundPos = Math.round(pos)
     if (!this.hasScroll || roundPos > this.minScrollPos) {
