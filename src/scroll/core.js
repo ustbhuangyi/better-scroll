@@ -573,7 +573,7 @@ export function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
       }
-      if (!time && (this.x !== x || this.y !== y)) {
+      if (!time) {
         // don't trigger resetPosition when zoom feature is open, fix #748
         if (this.options.zoom) return
         this.trigger('scroll', {
