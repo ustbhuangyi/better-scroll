@@ -37,7 +37,9 @@ export default class Zoom {
     this.wrapperSize = getRect(this.wrapper)
     this.scaleElementInitSize = getRect(this.scaleElement)
     scrollerIns.hooks.on('beforeStart', (e: TouchEvent) => {
-      this.zoomStart(e)
+      if (e.touches && e.touches.length > 1) {
+        this.zoomStart(e)
+      }
     })
     scrollerIns.hooks.on('beforeMove', (e: TouchEvent) => {
       if (!e.touches || e.touches.length < 2) {
@@ -63,9 +65,6 @@ export default class Zoom {
     this.zooming = false
   }
   private zoomStart(e: TouchEvent) {
-    if (e.touches.length < 2) {
-      return
-    }
     this.zooming = true
     const firstFinger = e.touches[0]
     const secondFinger = e.touches[1]
@@ -90,7 +89,7 @@ export default class Zoom {
     const currentDistance = this.getFingerDistance(e)
     let currentScale = (currentDistance / this.startDistance) * this.startScale
     this.scale = this.scaleCure(currentScale)
-    const lastScale = currentScale / this.startScale
+    const lastScale = this.scale / this.startScale
     const scrollBehaviorX = scrollerIns.scrollBehaviorX
     const scrollBehaviorY = scrollerIns.scrollBehaviorY
     const x = this.getNewPos(this.origin.x, lastScale, scrollBehaviorX)
