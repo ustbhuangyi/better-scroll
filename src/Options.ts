@@ -70,7 +70,7 @@ interface mouseWheelConfig {
   easeTime: number
 }
 
-interface zoomConfig {
+export interface zoomConfig {
   start: number
   min: number
   max: number

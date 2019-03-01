@@ -5,7 +5,7 @@ import { EventType } from './const'
 export type safeCSSStyleDeclaration = {
   [key: string]: string
 } & CSSStyleDeclaration
-interface DOMRect {
+export interface DOMRect {
   left: number
   top: number
   width: number
