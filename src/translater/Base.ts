@@ -1,5 +1,11 @@
 import { isUndef } from '../util'
 
+export interface TransformPoint {
+  x: number
+  y: number
+  [key: string]: number
+}
+
 export default abstract class Base {
   element: HTMLElement
   style: CSSStyleDeclaration
@@ -9,10 +15,7 @@ export default abstract class Base {
     this.style = element.style
   }
 
-  abstract getComputedPosition(): {
-    x: number
-    y: number
-  }
+  abstract getComputedPosition(): TransformPoint
 
-  abstract translate(x: number, y: number): void
+  abstract translate(point: TransformPoint): void
 }

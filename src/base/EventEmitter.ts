@@ -77,7 +77,7 @@ export default class EventEmitter {
       let event = eventsCopy[i]
       let [fn, context] = event
       if (fn) {
-        let ret = fn.apply(context, args)
+        ret = fn.apply(context, args)
         if (ret === true) break
       }
     }

@@ -5,7 +5,8 @@ import {
   Probe,
   EaseFn
 } from '../util'
-import Base, { Displacement } from './Base'
+import Base from './Base'
+import { TransformPoint } from '../translater'
 
 export default class Transition extends Base {
   startProbe() {
@@ -32,19 +33,15 @@ export default class Transition extends Base {
   }
 
   scrollTo(
-    DisplacementX: Displacement,
-    DisplacementY: Displacement,
+    startPoint: TransformPoint,
+    endPoint: TransformPoint,
     time: number,
     easingFn: string | EaseFn
   ) {
-    // destinations
-    const x = DisplacementX[1]
-    const y = DisplacementY[1]
-
     this.pending = time > 0
     this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
-    this.translate(x, y)
+    this.translate(endPoint)
 
     // TODO when probeType is not Realtime, need to dispatch scroll ?
     if (time && this.options.probeType === Probe.Realtime) {
@@ -53,17 +50,11 @@ export default class Transition extends Base {
 
     // when time is 0
     if (!time) {
-      this.hooks.trigger(this.hooks.eventTypes.move, {
-        x,
-        y
-      })
+      this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
       // maybe need reset position
-      this.hooks.trigger(this.hooks.eventTypes.end, {
-        x,
-        y
-      })
+      this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
     }
   }
 
@@ -74,7 +65,7 @@ export default class Transition extends Base {
       cancelAnimationFrame(this.timer)
       const { x, y } = this.translater.getComputedPosition()
       this.transitionTime()
-      this.translate(x, y)
+      this.translate({ x, y })
       this.forceStopped = true
       this.hooks.trigger(this.hooks.eventTypes.forceStop)
     }

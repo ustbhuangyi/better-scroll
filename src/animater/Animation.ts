@@ -1,4 +1,5 @@
-import Base, { Displacement } from './Base'
+import Base from './Base'
+import { TransformPoint } from '../translater'
 import {
   getNow,
   Probe,
@@ -9,44 +10,30 @@ import {
 
 export default class Animation extends Base {
   scrollTo(
-    displacementX: Displacement,
-    displacementY: Displacement,
+    startPoint: TransformPoint,
+    endPoint: TransformPoint,
     time: number,
     easingFn: EaseFn | string
   ) {
     // time is 0
     if (!time) {
-      const x = displacementX[1]
-      const y = displacementY[1]
-      this.translate(x, y)
-      this.hooks.trigger(this.hooks.eventTypes.move, {
-        x,
-        y
-      })
+      this.translate(endPoint)
+      this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       // force reflow to put everything in position
       this._reflow = document.body.offsetHeight
       // maybe need reset position
-      this.hooks.trigger(this.hooks.eventTypes.end, {
-        x,
-        y
-      })
+      this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       return
     }
-    this.animate(displacementX, displacementY, time, easingFn as EaseFn)
+    this.animate(startPoint, endPoint, time, easingFn as EaseFn)
   }
 
   private animate(
-    displacementX: Displacement,
-    displacementY: Displacement,
+    startPoint: TransformPoint,
+    endPoint: TransformPoint,
     duration: number,
     easingFn: EaseFn
   ) {
-    // departure
-    let startX = displacementX[0]
-    let startY = displacementY[0]
-    // destinations
-    let destX = displacementX[1]
-    let destY = displacementY[1]
     let startTime = getNow()
     let destTime = startTime + duration
 
@@ -56,36 +43,31 @@ export default class Animation extends Base {
       // js animation end
       if (now >= destTime) {
         this.pending = false
-        this.translate(destX, destY)
+        this.translate(endPoint)
 
-        this.hooks.trigger(this.hooks.eventTypes.move, {
-          x: destX,
-          y: destY
-        })
+        this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
 
-        this.hooks.trigger(this.hooks.eventTypes.end, {
-          x: destX,
-          y: destY
-        })
+        this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
         return
       }
 
       now = (now - startTime) / duration
       let easing = easingFn(now)
-      let newX = (destX - startX) * easing + startX
-      let newY = (destY - startY) * easing + startY
+      const newPoint = {}
+      Object.keys(newPoint).forEach(key => {
+        const startValue = startPoint[key]
+        const endValue = endPoint[key]
+        startPoint[key] = (endValue - startValue) * easing + startValue
+      })
 
-      this.translate(newX, newY)
+      this.translate(<TransformPoint>newPoint)
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)
       }
 
       if (this.options.probeType === Probe.Realtime) {
-        this.hooks.trigger(this.hooks.eventTypes.move, {
-          x: newX,
-          y: newY
-        })
+        this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
       }
     }
 

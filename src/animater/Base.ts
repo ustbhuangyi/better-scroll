@@ -1,6 +1,6 @@
 import EventEmitter from '../base/EventEmitter'
 import { EaseFn, safeCSSStyleDeclaration } from '../util'
-import { Position, Transform } from '../translater'
+import { Position, Transform, TransformPoint } from '../translater'
 
 export type Displacement = [number, number]
 export default abstract class Base {
@@ -23,20 +23,16 @@ export default abstract class Base {
     this.style = element.style as safeCSSStyleDeclaration
   }
 
-  translate(x: number, y: number) {
-    this.translater.translate(x, y)
-    this.hooks.trigger(this.hooks.eventTypes.translate, {
-      x,
-      y
-    })
+  translate(endPoint: TransformPoint) {
+    this.translater.translate(endPoint)
+    this.hooks.trigger(this.hooks.eventTypes.translate, endPoint)
   }
 
   abstract scrollTo(
-    x: Displacement,
-    y: Displacement,
+    startPoint: TransformPoint,
+    endPoint: TransformPoint,
     time: number,
     easing: string | EaseFn
   ): void
-
   abstract stop(): void
 }

@@ -26,7 +26,6 @@ import {
   isUndef,
   getNow
 } from '../util'
-import { throws } from 'assert'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -55,11 +54,14 @@ export default class Scroller {
       'scroll',
       'scrollEnd',
       'refresh',
+      'beforeStart',
       'beforeScrollStart',
       'scrollStart',
+      'beforeMove',
       'touchEnd',
       'flick',
       'scrollCancel',
+      'beforeEnd',
       'end',
       'modifyScrollMeta'
     ])
@@ -146,7 +148,7 @@ export default class Scroller {
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
-      () => {
+      (e: TouchEvent) => {
         if (!this.enabled) return true
         let timestamp = getNow()
         this.moved = false
@@ -164,7 +166,8 @@ export default class Scroller {
         this.scrollBehaviorY.updateStartPos()
         this.scrollBehaviorY.updateAbsStartPos()
 
-        this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart)
+        this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)
+        this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart, e) // just for event api
       }
     )
     // [mouse|touch]move event
@@ -180,7 +183,9 @@ export default class Scroller {
         e: TouchEvent
       }) => {
         if (!this.enabled) return true
-
+        if (this.hooks.trigger(this.hooks.eventTypes.beforeMove, e)) {
+          return
+        }
         this.scrollBehaviorX.updateDist(deltaX)
         this.scrollBehaviorY.updateDist(deltaY)
 
@@ -214,7 +219,10 @@ export default class Scroller {
           this.hooks.trigger(this.hooks.eventTypes.scrollStart)
         }
 
-        this.animater.translate(newX, newY)
+        this.animater.translate({
+          x: newX,
+          y: newY
+        })
 
         // dispatch scroll in interval time
         if (timestamp - this.startTime > this.options.momentumLimitTime) {
@@ -241,6 +249,9 @@ export default class Scroller {
       this.actionsHandler.hooks.eventTypes.end,
       (e: TouchEvent) => {
         if (!this.enabled) return true
+        if (this.hooks.trigger(this.hooks.eventTypes.beforeEnd, e)) {
+          return
+        }
 
         const { x, y } = this.getCurrentPos()
 
@@ -258,7 +269,7 @@ export default class Scroller {
         this.scrollBehaviorX.updateDirection()
         this.scrollBehaviorY.updateDirection()
 
-        if (this.hooks.trigger(this.hooks.eventTypes.end)) {
+        if (this.hooks.trigger(this.hooks.eventTypes.end, e)) {
           return
         }
 
@@ -272,8 +283,10 @@ export default class Scroller {
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
           return
         }
-
-        this.animater.translate(newX, newY)
+        this.animater.translate({
+          x: newX,
+          y: newY
+        })
 
         this.endTime = getNow()
         const duration = this.endTime - this.startTime
@@ -550,18 +563,31 @@ export default class Scroller {
     this.scrollTo(deltaX, deltaY, time, easing)
   }
 
-  scrollTo(x: number, y: number, time = 0, easing = ease.bounce) {
+  scrollTo(
+    x: number,
+    y: number,
+    time = 0,
+    easing = ease.bounce,
+    extraTransform = {
+      start: {},
+      end: {}
+    }
+  ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
-
     // when x or y has changed
     if (x !== currentPos.x || y !== currentPos.y) {
-      this.animater.scrollTo(
-        [currentPos.x, x],
-        [currentPos.y, y],
-        time,
-        easingFn
-      )
+      const startPoint = {
+        x: currentPos.x,
+        y: currentPos.y,
+        ...extraTransform.start
+      }
+      const endPoint = {
+        x,
+        y,
+        ...extraTransform.end
+      }
+      this.animater.scrollTo(startPoint, endPoint, time, easingFn)
     }
   }
 

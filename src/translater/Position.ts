@@ -1,4 +1,5 @@
-import Base from './Base'
+import Base, { TransformPoint } from './Base'
+
 export default class Position extends Base {
   constructor(element: HTMLElement) {
     super(element)
@@ -15,8 +16,8 @@ export default class Position extends Base {
     }
   }
 
-  translate(x: number, y: number) {
-    this.style.left = `${Math.round(x)}px`
-    this.style.top = `${Math.round(y)}px`
+  translate(point: TransformPoint) {
+    this.style.left = `${Math.round(point.x)}px`
+    this.style.top = `${Math.round(point.y)}px`
   }
 }
