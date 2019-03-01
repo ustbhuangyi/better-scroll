@@ -2,24 +2,24 @@ const sourcePrefix = 'plugins.slide'
 const propertiesMap = [
   {
     key: 'next',
-    fnName: 'next'
+    name: 'next'
   },
   {
     key: 'prev',
-    fnName: 'prev'
+    name: 'prev'
   },
   {
     key: 'goToPage',
-    fnName: 'goToPage'
+    name: 'goToPage'
   },
   {
     key: 'getCurrentPage',
-    fnName: 'getCurrentPage'
+    name: 'getCurrentPage'
   }
 ]
 export default propertiesMap.map(item => {
   return {
     key: item.key,
-    sourceKey: `${sourcePrefix}.${item.fnName}`
+    sourceKey: `${sourcePrefix}.${item.name}`
   }
 })

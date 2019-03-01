@@ -82,16 +82,10 @@ export default class Slide {
     }
   }
   next(time?: number, easing?: EaseItem) {
-    if (!this.hasValidOptions()) {
-      return
-    }
     const { pageX, pageY } = this.page.nextPage()
     this.goTo(pageX, pageY, time, easing)
   }
   prev(time?: number, easing?: EaseItem) {
-    if (!this.hasValidOptions()) {
-      return
-    }
     const { pageX, pageY } = this.page.prevPage()
     this.goTo(pageX, pageY, time, easing)
   }
@@ -102,10 +96,7 @@ export default class Slide {
     }
     this.goTo(pageInfo.realX, pageInfo.realY, time, easing)
   }
-  getCurrentPage(): SlidePoint | null {
-    if (!this.hasValidOptions()) {
-      return null
-    }
+  getCurrentPage(): SlidePoint {
     return this.page.getRealPage()
   }
   nearestPage(x: number, y: number): SlidePoint {
