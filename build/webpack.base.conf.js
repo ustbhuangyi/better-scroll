@@ -22,7 +22,7 @@ module.exports = {
     chunkFilename: '[name].js'
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.js', '.vue', '.json', '.ts'],
     alias: {
       'scroll': resolve('src'),
       'example': resolve('example'),
@@ -32,15 +32,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: packFiles,
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
@@ -48,7 +39,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: packFiles,
+        include: [resolve('example'), resolve('test')],
         query: {
           presets: ['es2015', 'stage-2'],
           plugins: ['transform-runtime', 'add-module-exports']
@@ -62,6 +53,10 @@ module.exports = {
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader'
+      }
     ]
   }
 }
