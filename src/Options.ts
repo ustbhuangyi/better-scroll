@@ -60,7 +60,7 @@ interface pullDownRefreshConfig {
   stop: number
 }
 
-interface pullUpLoadConfig {
+export interface pullUpLoadConfig {
   threshold: number
 }
 
