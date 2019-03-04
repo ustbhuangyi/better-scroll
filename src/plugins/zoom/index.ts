@@ -12,6 +12,11 @@ interface Point {
   y: number
 }
 
+interface ScrollBoundary {
+  x: [number, number]
+  y: [number, number]
+}
+
 export default class Zoom {
   static pluginName = 'zoom'
   origin: Point
@@ -21,8 +26,8 @@ export default class Zoom {
   private startScale: number
   private wrapper: HTMLElement
   private scaleElement: HTMLElement
-  private wrapperSize: DOMRect
   private scaleElementInitSize: DOMRect
+  private initScrollBoundary: ScrollBoundary
   private zooming: boolean
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
@@ -34,8 +39,13 @@ export default class Zoom {
     this.wrapper = this.scroll.scroller.wrapper
     this.scaleElement = this.scroll.scroller.element
     this.scaleElement.style[style.transformOrigin as any] = '0 0'
-    this.wrapperSize = getRect(this.wrapper)
     this.scaleElementInitSize = getRect(this.scaleElement)
+    const scrollBehaviorX = scrollerIns.scrollBehaviorX
+    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+    this.initScrollBoundary = {
+      x: [scrollBehaviorX.minScrollPos, scrollBehaviorX.maxScrollPos],
+      y: [scrollBehaviorY.minScrollPos, scrollBehaviorY.maxScrollPos]
+    }
     scrollerIns.hooks.on('beforeStart', (e: TouchEvent) => {
       if (e.touches && e.touches.length > 1) {
         this.zoomStart(e)
@@ -158,26 +168,14 @@ export default class Zoom {
     direction: 'x' | 'y',
     extendValue?: number
   ) {
-    let min
-    let max
-    let hasScroll
-    if (scale < 1) {
-      min = 0
-      max = 0
-      hasScroll = false
-    } else {
-      min = 0
-      if (direction === 'x') {
-        max = -(
-          this.scaleElementInitSize.width * scale -
-          this.wrapperSize.width
-        )
-      } else {
-        max = -(
-          this.scaleElementInitSize.height * scale -
-          this.wrapperSize.height
-        )
-      }
+    let min = this.initScrollBoundary[direction][0]
+    let max = this.initScrollBoundary[direction][1]
+    let hasScroll = false
+    if (scale > 1) {
+      let sideName = direction === 'x' ? 'width' : 'height'
+      max =
+        -this.scaleElementInitSize[sideName] * (scale - 1) -
+        this.initScrollBoundary[direction][1]
       hasScroll = true
     }
     if (!isUndef(extendValue)) {
