@@ -571,12 +571,13 @@ export default class Scroller {
     extraTransform = {
       start: {},
       end: {}
-    }
+    },
+    forceScroll?: boolean
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
     // when x or y has changed
-    if (x !== currentPos.x || y !== currentPos.y) {
+    if (x !== currentPos.x || y !== currentPos.y || forceScroll) {
       const startPoint = {
         x: currentPos.x,
         y: currentPos.y,

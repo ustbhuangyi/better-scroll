@@ -114,10 +114,11 @@ export default class Zoom {
     return getDistance(deltaX, deltaY)
   }
   private zoomEnd() {
-    this._zoomTo(this.scale, this.origin, this.startScale)
+    this._zoomTo(this.scale, this.origin, this.startScale || this.scale)
     this.zooming = false
   }
   private _zoomTo(scale: number, origin: Point, startScale: number) {
+    const oldScale = this.scale
     this.scale = this.fixInScaleLimit(scale)
     const lastScale = this.scale / startScale
     const scrollerIns = this.scroll.scroller
@@ -131,7 +132,8 @@ export default class Zoom {
     const newY = this.getNewPos(origin.y, lastScale, scrollBehaviorY, true)
     if (
       scrollBehaviorX.currentPos !== Math.round(newX) ||
-      scrollBehaviorY.currentPos !== Math.round(newY)
+      scrollBehaviorY.currentPos !== Math.round(newY) ||
+      this.scale !== oldScale
     ) {
       scrollerIns.scrollTo(
         newX,
@@ -140,12 +142,13 @@ export default class Zoom {
         undefined,
         {
           start: {
-            scale: lastScale
+            scale: oldScale
           },
           end: {
             scale: this.scale
           }
-        }
+        },
+        true
       )
     }
   }

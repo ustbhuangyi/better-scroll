@@ -28,6 +28,7 @@ export default class Behavior {
   constructor(public wrapper: HTMLElement, public options: Options) {
     this.element = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
+    this.startPos = 0
   }
 
   start() {
