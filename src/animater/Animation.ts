@@ -53,13 +53,12 @@ export default class Animation extends Base {
 
       now = (now - startTime) / duration
       let easing = easingFn(now)
-      const newPoint = {}
-      Object.keys(newPoint).forEach(key => {
+      const newPoint = {} as { [key: string]: any }
+      Object.keys(endPoint).forEach(key => {
         const startValue = startPoint[key]
         const endValue = endPoint[key]
-        startPoint[key] = (endValue - startValue) * easing + startValue
+        newPoint[key] = (endValue - startValue) * easing + startValue
       })
-
       this.translate(<TransformPoint>newPoint)
 
       if (this.pending) {
