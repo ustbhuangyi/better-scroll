@@ -3,8 +3,8 @@ import ActionsHandler, {
 } from '../base/ActionsHandler'
 import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
-import { Transform, Position } from '../translater'
-import { Animation, Transition } from '../animater'
+import createTranslater, { Transform, Position } from '../translater'
+import createAnimater, { Animation, Transition } from '../animater'
 import BScrollOptions from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
 import { bubbling } from '../util/bubbling'
@@ -81,19 +81,9 @@ export default class Scroller {
       this.createBehaviorOpt('scrollY')
     )
 
-    this.translater = this.options.useTransform
-      ? new Transform(this.element, {
-          translateZ: this.options.translateZ
-        })
-      : new Position(this.element)
+    this.translater = createTranslater(this.element, this.options)
 
-    this.animater = this.options.useTransition
-      ? new Transition(this.element, this.translater, {
-          probeType: this.options.probeType
-        })
-      : new Animation(this.element, this.translater, {
-          probeType: this.options.probeType
-        })
+    this.animater = createAnimater(this.element, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
       wrapper,
@@ -571,12 +561,13 @@ export default class Scroller {
     extraTransform = {
       start: {},
       end: {}
-    }
+    },
+    forceScroll?: boolean
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
     // when x or y has changed
-    if (x !== currentPos.x || y !== currentPos.y) {
+    if (x !== currentPos.x || y !== currentPos.y || forceScroll) {
       const startPoint = {
         x: currentPos.x,
         y: currentPos.y,

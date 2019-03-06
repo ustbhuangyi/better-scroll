@@ -30,6 +30,7 @@ export default class Behavior {
     this.hooks = new EventEmitter(['momentum', 'end'])
     this.element = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
+    this.startPos = 0
   }
 
   start() {
