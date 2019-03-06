@@ -2,9 +2,7 @@ import { Direction, Probe } from '../util/const'
 import BScroll from '../index'
 import { pullUpLoadConfig, pullUpLoadOptions } from '../Options'
 import { propertiesProxy } from '../util/propertiesProxy'
-import { staticImplements, PluginCtor } from './type'
 
-@staticImplements<PluginCtor>()
 export default class PullUp {
   public watching = false
   static pluginName = 'pullUpLoad'
@@ -21,7 +19,11 @@ export default class PullUp {
     this.watch()
 
     // TODO 只运行一次
-    propertiesProxy(this.scroll, 'finishPullUp', 'plugins[pullUp].finish')
+    propertiesProxy(
+      this.scroll,
+      `plugins.${PullUp.pluginName}.finish`,
+      'finishPullUp'
+    )
   }
 
   private watch() {
