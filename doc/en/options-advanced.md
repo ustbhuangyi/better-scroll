@@ -12,10 +12,15 @@ better-scroll also supports several advanced options to implement some special f
        rotate: 25,
        adjustTime: 400,
        wheelWrapperClass: 'wheel-scroll',
-       wheelItemClass: 'wheel-item'
+       wheelItemClass: 'wheel-item',
+       wheelDisabledItemClass: 'wheel-disabled-item' // version 1.15.0
      }
    ```
    - Note: it's an advanced option which doesn't need to configure in normal scene. You can see the specific application scene in [Picker Demo](https://ustbhuangyi.github.io/better-scroll/#/examples/picker/en) and more details in the source code of [picker component](https://github.com/ustbhuangyi/better-scroll/blob/master/example/components/picker/picker.vue).
+
+   1.If configured as an Object , `wheelWrapperClass` and `wheelItemClass` must correspond to the `wrapper` class name of your instance `better-scroll` and the subclass name within `wrapper`. The default value of both is "`wheel-scroll`"/"`wheel-item`". If you don't configure or the name of the configuration is inconsistent with the class name of your corresponding DOM node, it will cause a problem: click when scrolling up. Terminating scrolling does not trigger the `scrollEnd` event, which in turn affects the results of such components such as city selector linkage data.
+
+   2.`wheelDisabledItemClass` is a style class name used to configure the option to disable an option. The attribute `selectedIndex` on the better-scroll instance is the index of the currently selected item. If you configure the option to disable the selected state, then `selectedIndex` will remain at -1. We implemented this with reference to the interaction of the [Web select tag] (https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/select).
 
 ## snap
    - Type: `Boolean | Object`

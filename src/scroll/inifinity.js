@@ -60,9 +60,7 @@ function InfiniteScroller(scroller, options) {
   this.scroller = scroller
   this.wrapperEl = this.scroller.wrapper
   this.scrollerEl = this.scroller.scroller
-  this.scroller.on('scroll', () => {
-    this.onScroll()
-  })
+
   this.scroller.on('resize', () => {
     this.onResize()
   })
@@ -73,6 +71,11 @@ function InfiniteScroller(scroller, options) {
   // wait scroll core init
   this._onResizeHandler = setTimeout(() => {
     this.onResize()
+
+    // must wait tombstoneHeight has size
+    this.scroller.on('scroll', () => {
+      this.onScroll()
+    })
   })
 }
 

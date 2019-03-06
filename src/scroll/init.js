@@ -471,11 +471,14 @@ export function initMixin (BScroll) {
     const wheel = this.options.wheel
     if (wheel) {
       this.items = this.scroller.children
+      // check whether there are all disable items or not when refresh
+      this._checkWheelAllDisabled()
       this.options.itemHeight = this.itemHeight = this.items.length ? this.scrollerHeight / this.items.length : 0
       if (this.selectedIndex === undefined) {
         this.selectedIndex = wheel.selectedIndex || 0
       }
       this.options.startY = -this.selectedIndex * this.itemHeight
+
       this.maxScrollX = 0
       this.maxScrollY = -this.itemHeight * (this.items.length - 1)
     } else {

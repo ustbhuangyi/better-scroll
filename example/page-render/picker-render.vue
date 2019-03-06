@@ -26,11 +26,79 @@
   import CityPicker from 'example/components/city-picker/city-picker.vue'
   import { provinceList, cityList, areaList } from '../data/areaData'
 
+  let data0 = [
+    {
+      disabled: true,
+      text: '剧毒',
+      value: 1
+    }, {
+      text: '蚂蚁',
+      value: 2
+    },
+    {
+      text: '幽鬼',
+      value: 3
+    },
+    {
+      text: '主宰',
+      value: 4
+    },
+    {
+      disabled: true,
+      text: '卡尔',
+      value: 5
+    },
+    {
+      disabled: true,
+      text: '宙斯',
+      value: 6
+    },
+    {
+      disabled: true,
+      text: '巫医',
+      value: 7
+    }, {
+      disabled: true,
+      text: '巫妖',
+      value: 8
+    },
+    {
+      disabled: true,
+      text: '神谕者',
+      value: 9
+    },
+    {
+      text: '撼地神牛',
+      value: 10
+    },
+    {
+      text: '蓝胖子',
+      value: 11
+    },
+    {
+      text: '水晶室女',
+      value: 12
+    },
+    {
+      text: '莉娜',
+      value: 13
+    },
+    {
+      text: '斯拉克',
+      value: 14
+    },
+    {
+      text: '斯拉达',
+      value: 15
+    }
+  ]
+
   let data1 = [
     {
       text: '剧毒',
       value: 1
-    }, {
+    },
+    {
       text: '蚂蚁',
       value: 2
     },
@@ -53,7 +121,8 @@
     {
       text: '巫医',
       value: 7
-    }, {
+    },
+    {
       text: '巫妖',
       value: 8
     },
@@ -148,13 +217,13 @@
 
   export default {
     mounted() {
-      this.$refs.picker0.setData([data1])
+      this.$refs.picker0.setData([data0])
       this.$refs.picker0.setSelectedIndex([1])
     },
     data() {
       return {
         data: [
-          [data1],
+          [data0],
           [data1, data2],
           [data1, data2, data3],
           [provinceList, cityList, areaList]
