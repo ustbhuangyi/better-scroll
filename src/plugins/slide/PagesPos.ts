@@ -24,15 +24,22 @@ export default class PagesPos {
     this.init()
   }
   init() {
-    const wrapper = getRect(this.scroll.scroller.wrapper)
-    const scroller = getRect(this.scroll.scroller.element)
+    const scrollerIns = this.scroll.scroller
+    const scrollBehaviorX = scrollerIns.scrollBehaviorX
+    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+    const wrapper = getRect(scrollerIns.wrapper)
+    const scroller = getRect(scrollerIns.element)
     this.wrapperWidth = wrapper.width
-    this.scrollerWidth = scroller.width
     this.wrapperHeight = wrapper.height
-    this.scrollerHeight = scroller.height
+    this.scrollerHeight = scrollBehaviorY.hasScroll
+      ? scroller.height
+      : wrapper.height
+    this.scrollerWidth = scrollBehaviorX.hasScroll
+      ? scroller.width
+      : wrapper.width
     let stepX = this.slideOpt.stepX || this.wrapperWidth
     let stepY = this.slideOpt.stepY || this.wrapperHeight
-    const slideEls = this.scroll.scroller.element
+    const slideEls = scrollerIns.element
     let el = this.slideOpt.el
     if (typeof el === 'string') {
       this.slideEl = slideEls.querySelectorAll(el)
