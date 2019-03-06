@@ -1,7 +1,9 @@
-import { Direction, Probe } from '../util/const'
-import BScroll from '../index'
-import { pullUpLoadConfig, pullUpLoadOptions } from '../Options'
-import { propertiesProxy } from '../util/propertiesProxy'
+import { Direction, Probe } from '../../util/const'
+import BScroll from '../../index'
+import { pullUpLoadConfig, pullUpLoadOptions } from '../../Options'
+import { propertiesProxy } from '../../util/propertiesProxy'
+import propertiesProxyConfig from './propertiesConfig'
+import propertiesConfig from '../zoom/propertiesConfig'
 
 export default class PullUp {
   public watching = false
@@ -9,6 +11,11 @@ export default class PullUp {
 
   constructor(public scroll: BScroll) {
     this.init()
+
+    const prefix = `plugins.${PullUp.pluginName}.`
+    propertiesConfig.forEach(({ key, sourceKey }) => {
+      propertiesProxy(this.scroll, prefix + sourceKey, key)
+    })
   }
 
   private init() {
@@ -17,13 +24,6 @@ export default class PullUp {
 
     this.watching = false
     this.watch()
-
-    // TODO 只运行一次
-    propertiesProxy(
-      this.scroll,
-      `plugins.${PullUp.pluginName}.finish`,
-      'finishPullUp'
-    )
   }
 
   private watch() {

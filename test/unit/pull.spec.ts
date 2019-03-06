@@ -1,5 +1,5 @@
 import BScroll from '../../src/index'
-import PullUp from '../../src/plugins/pull-up'
+import PullUp from '../../src/plugins/pull-up/pull-up'
 import Options, { pullUpLoadOptions } from '../../src/options'
 jest.mock('../../src/options')
 jest.mock('../../src/index')
