@@ -22,6 +22,7 @@ import {
   TouchEvent,
   isAndroid,
   click,
+  dblclick,
   tap,
   isUndef,
   getNow
@@ -49,6 +50,7 @@ export default class Scroller {
   resizeTimeout: number
   startTime: number
   endTime: number
+  lastClickTime: number | null
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
     this.hooks = new EventEmitter([
       'scroll',
@@ -462,12 +464,24 @@ export default class Scroller {
 
   private checkClick(e: TouchEvent) {
     // when in the process of pulling down, it should not prevent click
-    let preventClick = this.animater.forceStopped
+    let cancelable = {
+      preventClick: this.animater.forceStopped
+    }
     this.animater.forceStopped = false
 
     // we scrolled less than momentumLimitDistance pixels
     if (!this.moved) {
-      if (!preventClick) {
+      if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) return true
+      if (!cancelable.preventClick) {
+        const _dblclick = this.options.dblclick
+        let dblclickTrigged = false
+        if (_dblclick && this.lastClickTime) {
+          const { delay = 300 } = _dblclick as any
+          if (getNow() - this.lastClickTime < delay) {
+            dblclickTrigged = true
+            dblclick(e)
+          }
+        }
         if (this.options.tap) {
           tap(e, this.options.tap)
         }
@@ -480,6 +494,7 @@ export default class Scroller {
         ) {
           click(e)
         }
+        this.lastClickTime = dblclickTrigged ? null : getNow()
         return true
       }
       return false
