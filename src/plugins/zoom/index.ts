@@ -1,4 +1,5 @@
 import BScroll from '../../index'
+import EventEmitter from '../../base/EventEmitter'
 import propertiesConfig from './propertiesConfig'
 import { getDistance, isUndef } from '../../util/lang'
 import { offsetToBody, getRect, DOMRect } from '../../util/dom'
@@ -21,6 +22,7 @@ export default class Zoom {
   static pluginName = 'zoom'
   origin: Point
   scale = 1
+  hooks: EventEmitter
   private zoomOpt: Partial<zoomConfig>
   private startDistance: number
   private startScale: number
@@ -30,7 +32,9 @@ export default class Zoom {
   private initScrollBoundary: ScrollBoundary
   private zooming: boolean
   constructor(public scroll: BScroll) {
+    this.hooks = new EventEmitter(['zoomStart', 'zoomEnd'])
     this.scroll.proxy(propertiesConfig)
+    this.scroll.registerType(['zoomStart', 'zoomEnd'])
     this.zoomOpt = this.scroll.options.zoom as Partial<zoomConfig>
     this.init()
   }
@@ -93,6 +97,7 @@ export default class Zoom {
         top -
         this.scroll.y
     }
+    this.scroll.trigger(this.scroll.eventTypes.zoomStart)
   }
   private zoom(e: TouchEvent) {
     const scrollerIns = this.scroll.scroller
@@ -126,6 +131,7 @@ export default class Zoom {
   private zoomEnd() {
     this._zoomTo(this.scale, this.origin, this.startScale || this.scale)
     this.zooming = false
+    this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
   }
   private _zoomTo(scale: number, origin: Point, startScale: number) {
     const oldScale = this.scale

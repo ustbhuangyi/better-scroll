@@ -39,7 +39,7 @@ export default class Slide {
       pageX: 0,
       pageY: 0
     }
-    this.scroll.on('refresh', () => {
+    this.scroll.hooks.on('refresh', () => {
       this.initSlideState()
     })
     this.scroll.scroller.hooks.on(

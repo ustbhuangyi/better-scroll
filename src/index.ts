@@ -1,7 +1,7 @@
 import EventEmitter from './base/EventEmitter'
 import Options from './Options'
 import Scroller from './scroller/Scroller'
-import { warn, isUndef, propertiesProxy } from './util'
+import { warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
 
 interface PluginCtor {
@@ -45,7 +45,19 @@ export default class BScroll extends EventEmitter {
   }
 
   constructor(el: HTMLElement | string, options?: object) {
-    super(['refresh', 'scrollStart', 'enable', 'disable'])
+    super([
+      'refresh',
+      'enable',
+      'disable',
+      'beforeScrollStart',
+      'scrollStart',
+      'scroll',
+      'scrollEnd',
+      'touchEnd',
+      'flick',
+      'refresh',
+      'destroy'
+    ])
     const wrapper = (typeof el === 'string'
       ? document.querySelector(el)
       : el) as HTMLElement
@@ -61,13 +73,19 @@ export default class BScroll extends EventEmitter {
     }
     this.plugins = {}
     this.options = new Options().merge(options).process()
-    this.hooks = new EventEmitter(['init'])
+    this.hooks = new EventEmitter([
+      'init',
+      'refresh',
+      'enable',
+      'disable',
+      'destroy'
+    ])
     this.init(wrapper)
   }
 
   private init(wrapper: HTMLElement) {
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
-
+    this.eventBubbling()
     if (this.options.autoBlur) {
       this.handleAutoBlur()
     }
@@ -108,15 +126,26 @@ export default class BScroll extends EventEmitter {
     })
   }
 
+  private eventBubbling() {
+    bubbling(this.scroller.hooks, this, [
+      'beforeScrollStart',
+      'scrollStart',
+      'scroll',
+      'scrollEnd',
+      'touchEnd',
+      'flick'
+    ])
+    bubbling(this.hooks, this, ['destroy', 'enable', 'disable', 'refresh'])
+  }
+
   proxy(propertiesConfig: PropertyConfig[]) {
     propertiesConfig.forEach(({ key, sourceKey }) => {
       propertiesProxy(this, sourceKey, key)
     })
   }
-
   refresh() {
     this.scroller.refresh()
-    this.trigger(this.eventTypes.refresh)
+    this.hooks.trigger(this.eventTypes.refresh)
     this.scroller.resetPosition()
   }
 
@@ -130,5 +159,11 @@ export default class BScroll extends EventEmitter {
     this.hooks.trigger(this.hooks.eventTypes.disable)
   }
 
-  destroy() {}
+  destroy() {
+    this.hooks.trigger(this.hooks.eventTypes.destroy)
+    // TODO destroy
+  }
+  eventRegister(names: string[]) {
+    this.registerType(names)
+  }
 }

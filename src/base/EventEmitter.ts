@@ -11,13 +11,10 @@ interface TypesMap {
 export default class EventEmitter {
   _events: EventsMap
   eventTypes: TypesMap
-
   constructor(names: string[]) {
     this._events = {}
     this.eventTypes = {}
-    names.forEach((type: string) => {
-      this.eventTypes[type] = type
-    })
+    this.registerType(names)
   }
 
   on(type: string, fn: Function, context = this) {
@@ -81,10 +78,13 @@ export default class EventEmitter {
         if (ret === true) break
       }
     }
-
     return ret
   }
-
+  registerType(names: string[]) {
+    names.forEach((type: string) => {
+      this.eventTypes[type] = type
+    })
+  }
   private _checkInTypes(type: string) {
     const types = this.eventTypes
     const inTypes = types[type] === type
