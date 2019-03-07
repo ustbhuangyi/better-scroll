@@ -5,6 +5,7 @@ import { getDistance, isUndef } from '../../util/lang'
 import { offsetToBody, getRect, DOMRect } from '../../util/dom'
 import { zoomConfig } from '../../Options'
 import { style } from '../../util'
+import { staticImplements, PluginCtor } from '../type'
 
 import Behavior from '../../scroller/Behavior'
 
@@ -18,6 +19,7 @@ interface ScrollBoundary {
   y: [number, number]
 }
 
+@staticImplements<PluginCtor>()
 export default class Zoom {
   static pluginName = 'zoom'
   origin: Point

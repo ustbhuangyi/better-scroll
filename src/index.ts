@@ -3,11 +3,7 @@ import Options from './Options'
 import Scroller from './scroller/Scroller'
 import { warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
-
-interface PluginCtor {
-  pluginName: string
-  new (scroll: BScroll): any
-}
+import { PluginCtor } from './plugins/types'
 
 interface PluginsCtorMap {
   [name: string]: PluginCtor

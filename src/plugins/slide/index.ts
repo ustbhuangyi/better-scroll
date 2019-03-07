@@ -5,7 +5,9 @@ import { ease, EaseItem } from '../../util/ease'
 import { slideConfig } from '../../Options'
 import PageInfo, { SlidePoint } from './PageInfo'
 import propertiesConfig from './propertiesConfig'
+import { staticImplements, PluginCtor } from '../type'
 
+@staticImplements<PluginCtor>()
 export default class Slide {
   private page: PageInfo
   private slideOpt: Partial<slideConfig>

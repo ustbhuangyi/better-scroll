@@ -1,6 +1,8 @@
 import BScroll from '../../index'
 import { getRect } from '../../util/dom'
+import { staticImplements, PluginCtor } from '../type'
 
+@staticImplements<PluginCtor>()
 export default class ObserveDOM {
   static pluginName = 'observeDOM'
   private observer: MutationObserver
