@@ -1,4 +1,9 @@
 import BScroll from '../../index'
+import { style } from '../../util'
+const CONSTANTS = {
+  rate: 4,
+  time: 400
+}
 export default class Wheel {
   static pluginName = 'wheel'
   wheelItemsAllDisabled: boolean
@@ -17,8 +22,54 @@ export default class Wheel {
     this.scroll.scroller.actionsHandler.hooks.on(this.scroll.scroller.actionsHandler.hooks.eventTypes.start, (e: TouchEvent) => {
       this.target = e.target
     })
-    this.scroll.scroller.hooks.on(this.scroll.scroller.hooks.eventTypes.modifyScrollMeta, (scrollMeta: any) => {
+    this.scroll.scroller.scrollBehaviorY.hooks.on(this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.momentum, (momentumInfo: {
+      destination: number
+      duration: number
+      rate: number
+    }) => {
+      momentumInfo.rate = CONSTANTS.rate
+      momentumInfo.destination = this.findNearestValidWheel(momentumInfo.destination).y
+    })
 
+    this.scroll.scroller.scrollBehaviorY.hooks.on(this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end, (momentumInfo: {
+      destination: number
+      duration: number
+    }) => {
+      let validWheel = this.findNearestValidWheel(this.scroll.scroller.scrollBehaviorY.currentPos)
+      momentumInfo.destination = validWheel.y
+      momentumInfo.duration = this.scroll.options.wheel.time || CONSTANTS.time
+      this.selectedIndex = validWheel.index
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.time, (time: number) => {
+      for (let i = 0; i < this.items.length; i++) {
+        (this.items[i] as HTMLElement).style[style.transitionDuration as any] = time + 'ms'
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.timeFunction, (easing: string) => {
+      for (let i = 0; i < this.items.length; i++) {
+        (this.items[i] as HTMLElement).style[style.transitionTimingFunction as any] = easing
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.translate, (endPoint: {
+      x: number
+      y: number
+    }) => {
+      const { rotate = 25 } = this.scroll.options.wheel
+      for (let i = 0; i < this.items.length; i++) {
+        let deg = rotate * (endPoint.y / this.itemHeight + i);
+        (this.items[i] as HTMLElement).style[style.transform as any] = `rotateX(${deg}deg)`
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.scrollToElement, (el: HTMLElement, pos: { top: number, left: number}) => {
+      if (!el.classList.contains(this.scroll.options.wheel.wheelItemClass)) {
+        return true
+      } else {
+        pos.top = this.findNearestValidWheel(pos.top).y
+      }
     })
   }
   init() {
@@ -53,54 +104,6 @@ export default class Wheel {
   wheelTo (index = 0) {
     const y = -index * this.itemHeight
     this.scroll.scrollTo(0, y)
-  }
-
-  private momentum(
-    current: number,
-    start: number,
-    time: number,
-    lowerMargin: number,
-    upperMargin: number,
-    wrapperSize: number,
-    options: {
-      deceleration: number
-      swipeBounceTime: number
-      swipeTime: number
-    }
-  ) {
-    let distance = current - start
-    let speed = Math.abs(distance) / time
-
-    let { deceleration, swipeBounceTime, swipeTime } = options
-    let duration = swipeTime
-    let rate = 4
-
-    let destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1)
-
-    destination = this.findNearestValidWheel(destination).y
-
-    if (destination < lowerMargin) {
-      destination = wrapperSize
-        ? Math.max(
-            lowerMargin - wrapperSize / 4,
-            lowerMargin - (wrapperSize / rate) * speed
-          )
-        : lowerMargin
-      duration = swipeBounceTime
-    } else if (destination > upperMargin) {
-      destination = wrapperSize
-        ? Math.min(
-            upperMargin + wrapperSize / 4,
-            upperMargin + (wrapperSize / rate) * speed
-          )
-        : upperMargin
-      duration = swipeBounceTime
-    }
-
-    return {
-      destination: Math.round(destination),
-      duration
-    }
   }
 
   private findNearestValidWheel(y: number) {
