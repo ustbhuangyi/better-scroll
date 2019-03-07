@@ -3,41 +3,41 @@ import BScroll from '../../index'
 import { pullUpLoadConfig, pullUpLoadOptions } from '../../Options'
 import { propertiesProxy } from '../../util/propertiesProxy'
 import propertiesProxyConfig from './propertiesConfig'
-import propertiesConfig from '../zoom/propertiesConfig'
 
 export default class PullUp {
   public watching = false
   static pluginName = 'pullUpLoad'
 
   constructor(public scroll: BScroll) {
-    this.init()
+    this._init()
 
     const prefix = `plugins.${PullUp.pluginName}.`
-    propertiesConfig.forEach(({ key, sourceKey }) => {
+    propertiesProxyConfig.forEach(({ key, sourceKey }) => {
       propertiesProxy(this.scroll, prefix + sourceKey, key)
     })
   }
 
-  private init() {
+  private _init() {
     // must watch scroll in real time
     this.scroll.options.probeType = Probe.Realtime
+    this.scroll.registerType(['pullingUp'])
 
     this.watching = false
-    this.watch()
+    this._watch()
   }
 
-  private watch() {
+  private _watch() {
     if (this.watching) {
       return
     }
     this.watching = true
-    this.scroll.on('scroll', this.checkToEnd.bind(this))
+    this.scroll.scroller.hooks.on('scroll', this._checkToEnd.bind(this))
   }
 
-  private checkToEnd(pos: { y: number }) {
+  private _checkToEnd(pos: { y: number }) {
     const { threshold = 0 } = this.scroll.options.pullUpLoad as pullUpLoadConfig
     if (
-      this.scroll.movingDirectionY === Direction.Negative &&
+      this.scroll.movingDirectionY === Direction.Positive &&
       pos.y <= this.scroll.maxScrollY + threshold
     ) {
       // reset pullupWatching status after scroll end to promise that trigger 'pullingUp' only once when pulling up
@@ -45,22 +45,22 @@ export default class PullUp {
         this.watching = false
       })
       this.scroll.trigger('pullingUp')
-      this.scroll.off('scroll', this.checkToEnd)
+      this.scroll.off('scroll', this._checkToEnd)
     }
   }
 
   finish() {
     if (this.watching) {
-      this.scroll.once('scrollEnd', this.watch.bind(this))
+      this.scroll.once('scrollEnd', this._watch.bind(this))
     } else {
-      this.watch()
+      this._watch()
     }
   }
 
   open(config: pullUpLoadOptions = true) {
     this.scroll.options.pullUpLoad = config
 
-    this.init()
+    this._init()
   }
 
   close() {
@@ -69,6 +69,6 @@ export default class PullUp {
       return
     }
     this.watching = false
-    this.scroll.off('scroll', this.checkToEnd)
+    this.scroll.off('scroll', this._checkToEnd)
   }
 }
