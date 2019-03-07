@@ -2,6 +2,8 @@ import BScroll from '../../index'
 import { Probe, Direction } from '../../util/const'
 import { ease } from '../../util/ease'
 import { pullDownRefreshConfig, pullDownRefreshOptions } from '../../Options'
+import { propertiesProxy } from '../../util/propertiesProxy'
+import propertiesProxyConfig from './propertiesConfig'
 
 export default class PullDown {
   static pluginName = 'pullDownRefresh'
@@ -10,6 +12,11 @@ export default class PullDown {
 
   constructor(public scroll: BScroll) {
     this._init()
+
+    const prefix = `plugins.${PullDown.pluginName}.`
+    propertiesProxyConfig.forEach(({ key, sourceKey }) => {
+      propertiesProxy(this.scroll, prefix + sourceKey, key)
+    })
   }
 
   private _init() {
@@ -21,6 +28,8 @@ export default class PullDown {
     this.scroll.scroller.hooks.on('end', () => {
       return this.scroll.options.pullDownRefresh && this._checkPullDown()
     })
+
+    this.scroll.registerType(['pullingDown'])
   }
 
   private _checkPullDown() {
