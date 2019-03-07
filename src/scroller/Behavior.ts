@@ -1,5 +1,5 @@
 import { Direction, getRect } from '../util'
-
+import EventEmitter from '../base/EventEmitter'
 export interface Options {
   scrollable: boolean
   momentum: boolean
@@ -25,7 +25,9 @@ export default class Behavior {
   relativeOffset: number
   wrapperSize: number
   elementSize: number
+  hooks: EventEmitter
   constructor(public wrapper: HTMLElement, public options: Options) {
+    this.hooks = new EventEmitter(['momentum', 'end'])
     this.element = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
@@ -101,6 +103,8 @@ export default class Behavior {
             this.options
           )
         : { destination: this.currentPos, duration: 0 }
+    } else {
+      this.hooks.trigger(this.hooks.eventTypes.end, momentumInfo)
     }
     return momentumInfo
   }
@@ -114,37 +118,40 @@ export default class Behavior {
     wrapperSize: number,
     options = this.options
   ) {
+
     let distance = current - start
     let speed = Math.abs(distance) / time
 
     let { deceleration, swipeBounceTime, swipeTime } = options
-    let duration = swipeTime
-    let rate = 15
+    let ret = {
+      destination: swipeTime,
+      duration: 0,
+      rate: 15
+    }
+    ret.destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1)
 
-    let destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1)
+    this.hooks.trigger(this.hooks.eventTypes.momentum, ret)
 
-    if (destination < lowerMargin) {
-      destination = wrapperSize
+    if (ret.destination < lowerMargin) {
+      ret.destination = wrapperSize
         ? Math.max(
             lowerMargin - wrapperSize / 4,
-            lowerMargin - (wrapperSize / rate) * speed
+            lowerMargin - (wrapperSize / ret.rate) * speed
           )
         : lowerMargin
-      duration = swipeBounceTime
-    } else if (destination > upperMargin) {
-      destination = wrapperSize
+      ret.duration = swipeBounceTime
+    } else if (ret.destination > upperMargin) {
+      ret.destination = wrapperSize
         ? Math.min(
             upperMargin + wrapperSize / 4,
-            upperMargin + (wrapperSize / rate) * speed
+            upperMargin + (wrapperSize / ret.rate) * speed
           )
         : upperMargin
-      duration = swipeBounceTime
+      ret.duration = swipeBounceTime
     }
+    ret.destination = Math.round(ret.destination)
 
-    return {
-      destination: Math.round(destination),
-      duration
-    }
+    return ret
   }
 
   updateDirection() {

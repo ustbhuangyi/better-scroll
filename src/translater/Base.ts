@@ -1,5 +1,3 @@
-import { isUndef } from '../util'
-
 export interface TransformPoint {
   x: number
   y: number

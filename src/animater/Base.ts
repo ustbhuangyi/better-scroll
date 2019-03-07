@@ -19,7 +19,7 @@ export default abstract class Base {
       probeType: number
     }
   ) {
-    this.hooks = new EventEmitter(['move', 'end', 'forceStop', 'translate'])
+    this.hooks = new EventEmitter(['move', 'end', 'forceStop', 'translate', 'time', 'timeFunction'])
     this.style = element.style as safeCSSStyleDeclaration
   }
 

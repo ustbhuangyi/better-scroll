@@ -1,16 +1,75 @@
 import BScroll from '../../index'
-
+import { style } from '../../util'
+const CONSTANTS = {
+  rate: 4,
+  time: 400
+}
 export default class Wheel {
   static pluginName = 'wheel'
   wheelItemsAllDisabled: boolean
   items: HTMLCollection
   itemHeight: number
+  selectedIndex: number
+  target: EventTarget | null
   constructor(public scroll: BScroll) {
-    this.items = this.scroll.scroller.element.children
-    this.itemHeight = this.items.length ? this.scroll.scroller.scrollBehaviorY.elementSize / this.items.length : 0
     this.init()
+    this.refresh()
+    this.scroll.scroller.scrollTo(0, this.selectedIndex * this.itemHeight)
+    // refresh
     this.scroll.on(this.scroll.eventTypes.refresh, () => {
-      this._checkWheelAllDisabled()
+      this.refresh()
+    })
+    this.scroll.scroller.actionsHandler.hooks.on(this.scroll.scroller.actionsHandler.hooks.eventTypes.start, (e: TouchEvent) => {
+      this.target = e.target
+    })
+    this.scroll.scroller.scrollBehaviorY.hooks.on(this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.momentum, (momentumInfo: {
+      destination: number
+      duration: number
+      rate: number
+    }) => {
+      momentumInfo.rate = CONSTANTS.rate
+      momentumInfo.destination = this.findNearestValidWheel(momentumInfo.destination).y
+    })
+
+    this.scroll.scroller.scrollBehaviorY.hooks.on(this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end, (momentumInfo: {
+      destination: number
+      duration: number
+    }) => {
+      let validWheel = this.findNearestValidWheel(this.scroll.scroller.scrollBehaviorY.currentPos)
+      momentumInfo.destination = validWheel.y
+      momentumInfo.duration = this.scroll.options.wheel.time || CONSTANTS.time
+      this.selectedIndex = validWheel.index
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.time, (time: number) => {
+      for (let i = 0; i < this.items.length; i++) {
+        (this.items[i] as HTMLElement).style[style.transitionDuration as any] = time + 'ms'
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.timeFunction, (easing: string) => {
+      for (let i = 0; i < this.items.length; i++) {
+        (this.items[i] as HTMLElement).style[style.transitionTimingFunction as any] = easing
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.translate, (endPoint: {
+      x: number
+      y: number
+    }) => {
+      const { rotate = 25 } = this.scroll.options.wheel
+      for (let i = 0; i < this.items.length; i++) {
+        let deg = rotate * (endPoint.y / this.itemHeight + i);
+        (this.items[i] as HTMLElement).style[style.transform as any] = `rotateX(${deg}deg)`
+      }
+    })
+
+    this.scroll.scroller.animater.hooks.trigger(this.scroll.scroller.animater.hooks.eventTypes.scrollToElement, (el: HTMLElement, pos: { top: number, left: number}) => {
+      if (!el.classList.contains(this.scroll.options.wheel.wheelItemClass)) {
+        return true
+      } else {
+        pos.top = this.findNearestValidWheel(pos.top).y
+      }
     })
   }
   init() {
@@ -24,9 +83,27 @@ export default class Wheel {
     if (!wheel.wheelDisabledItemClass) {
       wheel.wheelDisabledItemClass = 'wheel-disabled-item'
     }
-    if (wheel.selectedIndex === undefined) {
-      wheel.selectedIndex = 0
+  }
+
+  refresh () {
+    const wheel = this.scroll.options.wheel
+    this._checkWheelAllDisabled()
+    this.items = this.scroll.scroller.element.children
+    this.itemHeight = this.items.length ? this.scroll.scroller.scrollBehaviorY.elementSize / this.items.length : 0
+    if (this.selectedIndex === undefined) {
+      this.selectedIndex = wheel.selectedIndex || 0
     }
+    this.scroll.maxScrollX = 0
+    this.scroll.maxScrollY = -this.itemHeight * (this.items.length - 1)
+  }
+
+  getSelectedIndex () {
+    return this.selectedIndex
+  }
+
+  wheelTo (index = 0) {
+    const y = -index * this.itemHeight
+    this.scroll.scrollTo(0, y)
   }
 
   private findNearestValidWheel(y: number) {
