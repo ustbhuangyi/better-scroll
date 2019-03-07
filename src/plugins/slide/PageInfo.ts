@@ -22,6 +22,8 @@ enum LoopStage {
 export default class PageInfo {
   loopX: boolean
   loopY: boolean
+  slideX: boolean
+  slideY: boolean
   needLoop: boolean
   pagesPos: PagesPos
   currentPage: SlidePoint
@@ -201,10 +203,10 @@ export default class PageInfo {
   ): { pageX: number; pageY: number } {
     let x = this.currentPage.pageX
     let y = this.currentPage.pageY
-    if (this.loopX) {
+    if (this.slideX) {
       x = direction === Direction.Negative ? x - 1 : x + 1
     }
-    if (this.loopY) {
+    if (this.slideY) {
       y = direction === Direction.Negative ? y - 1 : y + 1
     }
     return {
@@ -214,17 +216,17 @@ export default class PageInfo {
   }
   private checkSlideLoop() {
     this.needLoop = this.slideOpt.loop as boolean
-    if (!this.needLoop) {
-      return
-    }
     if (this.pagesPos.xLen > 1) {
-      this.loopX = true
+      this.slideX = true
     }
     if (this.pagesPos.pages[0] && this.pagesPos.yLen > 1) {
-      this.loopY = true
+      this.slideY = true
     }
-    if (this.loopX && this.loopY) {
-      warn('Loop does not support two direction at the same time.')
+    this.loopX = this.needLoop && this.slideX
+    this.loopY = this.needLoop && this.slideY
+
+    if (this.slideX && this.slideY) {
+      warn('slide does not support two direction at the same time.')
     }
   }
 }

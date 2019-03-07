@@ -7,7 +7,6 @@ import createTranslater, { Transform, Position } from '../translater'
 import createAnimater, { Animation, Transition } from '../animater'
 import BScrollOptions from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
-import { bubbling } from '../util/bubbling'
 
 import {
   Direction,
@@ -24,7 +23,8 @@ import {
   click,
   tap,
   isUndef,
-  getNow
+  getNow,
+  bubbling
 } from '../util'
 
 export default class Scroller {
@@ -63,7 +63,9 @@ export default class Scroller {
       'scrollCancel',
       'beforeEnd',
       'end',
-      'modifyScrollMeta'
+      'modifyScrollMeta',
+      'scrollTo',
+      'scrollToElement'
     ])
     this.wrapper = wrapper
     this.element = wrapper.children[0] as HTMLElement
@@ -486,7 +488,7 @@ export default class Scroller {
   }
 
   private bubblingEvent() {
-    bubbling(this.animater, this, [
+    bubbling(this.animater.hooks, this.hooks, [
       {
         source: 'forceStop',
         target: 'scrollEnd'
@@ -566,6 +568,7 @@ export default class Scroller {
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
+    this.hooks.trigger(this.hooks.eventTypes.scrollTo, currentPos)
     // when x or y has changed
     if (x !== currentPos.x || y !== currentPos.y || forceScroll) {
       const startPoint = {
@@ -622,7 +625,7 @@ export default class Scroller {
         : pos.top < this.scrollBehaviorY.maxScrollPos
         ? this.scrollBehaviorY.maxScrollPos
         : pos.top
-
+    if (this.hooks.trigger(this.hooks.eventTypes.scrollToElement, el, pos)) return
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 

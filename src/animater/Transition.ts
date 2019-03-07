@@ -26,10 +26,12 @@ export default class Transition extends Base {
 
   transitionTime(time = 0) {
     this.style[style.transitionDuration] = time + 'ms'
+    this.hooks.trigger(this.hooks.eventTypes.time, time)
   }
 
   transitionTimingFunction(easing: string) {
     this.style[style.transitionTimingFunction] = easing
+    this.hooks.trigger(this.hooks.eventTypes.timeFunction, easing)
   }
 
   scrollTo(

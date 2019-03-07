@@ -7,7 +7,6 @@ import PageInfo, { SlidePoint } from './PageInfo'
 import propertiesConfig from './propertiesConfig'
 
 export default class Slide {
-  private currentPage: SlidePoint
   private page: PageInfo
   private slideOpt: Partial<slideConfig>
   private thresholdX: number
@@ -40,7 +39,7 @@ export default class Slide {
       pageX: 0,
       pageY: 0
     }
-    this.scroll.on('refresh', () => {
+    this.scroll.hooks.on('refresh', () => {
       this.initSlideState()
     })
     this.scroll.scroller.hooks.on(
@@ -70,11 +69,15 @@ export default class Slide {
     this.scroll.scroller.hooks.on('scrollEnd', () => {
       this.resetLoop()
     })
-
+    this.scroll.scroller.animater.hooks.on('forceStop', () => {
+      this.resetLoop()
+    })
+    this.scroll.hooks.on('destroy', () => {
+      this.destroy()
+    })
     if (slide.listenFlick !== false) {
       this.enablePageChangeForFlick()
     }
-    // TODO: destroy Event
     if (!lazyInit2Refresh) {
       this.initSlideState()
     } else {
@@ -172,6 +175,9 @@ export default class Slide {
     slideEls.appendChild(children[1].cloneNode(true))
   }
   private resetLoop() {
+    if (!this.slideOpt.loop) {
+      return
+    }
     const changePage = this.page.resetLoopPage()
     if (changePage) {
       this.goTo(changePage.pageX, changePage.pageY, 0)
@@ -208,8 +214,8 @@ export default class Slide {
     this.page.currentPage = {
       x: posX,
       y: posY,
-      pageX: x,
-      pageY: y
+      pageX: pageInfo.pageX,
+      pageY: pageInfo.pageY
     }
     this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
