@@ -55,7 +55,7 @@ interface scrollbarConfig {
   interactive: boolean
 }
 
-interface pullDownRefreshConfig {
+export interface pullDownRefreshConfig {
   threshold: number
   stop: number
 }
