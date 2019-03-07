@@ -13,6 +13,9 @@
 <script type="text/ecmascript-6">
   import { addClass } from 'common/js/dom'
   import BScroll from 'scroll/index'
+  import SlidePlugin from 'scroll/plugins/slide/index'
+
+  BScroll.use(SlidePlugin)
 
   const COMPONENT_NAME = 'slide'
 
@@ -128,7 +131,6 @@
       },
       _setSlideWidth(isResize) {
         this.children = this.$refs.slideGroup.children
-
         let width = 0
         let slideWidth = this.$refs.slide.clientWidth
         for (let i = 0; i < this.children.length; i++) {
@@ -144,12 +146,11 @@
         this.$refs.slideGroup.style.width = width + 'px'
       },
       _initSlide() {
-        console.log(this.threshold)
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
           momentum: false,
-          snap: {
+          slide: {
             loop: this.loop,
             threshold: this.threshold,
             speed: this.speed

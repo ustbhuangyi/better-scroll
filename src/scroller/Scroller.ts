@@ -7,7 +7,6 @@ import createTranslater, { Transform, Position } from '../translater'
 import createAnimater, { Animation, Transition } from '../animater'
 import BScrollOptions from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
-import { bubbling } from '../util/bubbling'
 
 import {
   Direction,
@@ -25,7 +24,8 @@ import {
   dblclick,
   tap,
   isUndef,
-  getNow
+  getNow,
+  bubbling
 } from '../util'
 
 export default class Scroller {
@@ -503,7 +503,7 @@ export default class Scroller {
   }
 
   private bubblingEvent() {
-    bubbling(this.animater, this, [
+    bubbling(this.animater.hooks, this.hooks, [
       {
         source: 'forceStop',
         target: 'scrollEnd'
