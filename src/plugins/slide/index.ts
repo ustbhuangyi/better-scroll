@@ -235,13 +235,6 @@ export default class Slide {
       )
     })
   }
-  private hasValidOptions(): boolean {
-    const slide = this.scroll.options.slide
-    if (!slide) {
-      return false
-    }
-    return true
-  }
   private getAnimateTime(deltaX: number, deltaY: number): number {
     if (this.slideOpt.speed) {
       return this.slideOpt.speed
