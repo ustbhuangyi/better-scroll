@@ -9,7 +9,7 @@ import {
 
 // type
 export type tap = 'tap' | ''
-export type bounceOptions = Partial<bounceConfig>
+export type bounceOptions = Partial<bounceConfig> | boolean
 export type pickerOptions = Partial<pickerConfig> | boolean
 export type slideOptions = Partial<slideConfig> | boolean
 export type scrollbarOptions = Partial<scrollbarConfig> | boolean
@@ -55,7 +55,7 @@ interface scrollbarConfig {
   interactive: boolean
 }
 
-interface pullDownRefreshConfig {
+export interface pullDownRefreshConfig {
   threshold: number
   stop: number
 }

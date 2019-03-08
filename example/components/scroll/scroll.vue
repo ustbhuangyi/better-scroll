@@ -46,9 +46,14 @@
 
 <script type="text/ecmascript-6">
   import BScroll from '../../../src/index'
+  import PullDown from '../../../src/plugins/pull-down/pull-down'
+  import PullUp from '../../../src/plugins/pull-up/pull-up'
   import Loading from '../loading/loading.vue'
   import Bubble from '../bubble/bubble.vue'
   import { getRect } from '../../common/js/dom'
+
+  BScroll.use(PullDown)
+  BScroll.use(PullUp)
 
   const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'

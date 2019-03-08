@@ -5,7 +5,7 @@ import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
 import createTranslater, { Transform, Position } from '../translater'
 import createAnimater, { Animation, Transition } from '../animater'
-import BScrollOptions from '../Options'
+import BScrollOptions, { bounceConfig } from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
 
 import {
@@ -176,6 +176,7 @@ export default class Scroller {
         deltaY: number
         e: TouchEvent
       }) => {
+        console.log(this)
         if (!this.enabled) return true
         if (this.hooks.trigger(this.hooks.eventTypes.beforeMove, e)) {
           return
@@ -203,7 +204,8 @@ export default class Scroller {
         deltaX = this.adjustDelta(deltaX, deltaY).deltaX
         deltaY = this.adjustDelta(deltaX, deltaY).deltaY
 
-        const { left, right, top, bottom } = this.options.bounce
+        const { left = true, right = true, top = true, bottom = true } = this
+          .options.bounce as bounceConfig
 
         const newX = this.scrollBehaviorX.move(deltaX, [left, right])
         const newY = this.scrollBehaviorY.move(deltaY, [top, bottom])
@@ -302,14 +304,17 @@ export default class Scroller {
           newX,
           newY
         }
+
+        const { left = true, right = true, top = true, bottom = true } = this
+          .options.bounce as bounceConfig
         // start momentum animation if needed
         const momentumX = this.scrollBehaviorX.end({
           duration,
-          bounces: [this.options.bounce.left, this.options.bounce.right]
+          bounces: [left, right]
         })
         const momentumY = this.scrollBehaviorY.end({
           duration,
-          bounces: [this.options.bounce.top, this.options.bounce.bottom]
+          bounces: [top, bottom]
         })
 
         scrollMeta.newX = isUndef(momentumX.destination)
@@ -640,7 +645,8 @@ export default class Scroller {
         : pos.top < this.scrollBehaviorY.maxScrollPos
         ? this.scrollBehaviorY.maxScrollPos
         : pos.top
-    if (this.hooks.trigger(this.hooks.eventTypes.scrollToElement, el, pos)) return
+    if (this.hooks.trigger(this.hooks.eventTypes.scrollToElement, el, pos))
+      return
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
