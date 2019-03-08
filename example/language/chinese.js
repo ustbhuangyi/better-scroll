@@ -33,6 +33,7 @@ export default {
     goodsList: '商品列表',
     navList: '导航列表',
     infinity: '无限滚动',
+    zoom: '缩放',
     verticalScrollImg: 'vertical-scroll.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker.jpeg',
@@ -42,7 +43,8 @@ export default {
     formListImg: 'form-list.jpeg',
     goodsListImg: 'goods-list.jpeg',
     navListImg: 'navigator-zh.jpg',
-    infinityScrollImg: 'infinity-scroll.png'
+    infinityScrollImg: 'infinity-scroll.png',
+    zoomImg: 'zoom.jpg'
   },
 
   normalScrollListPage: {
@@ -104,5 +106,9 @@ export default {
     desc: '导航支持左右滑动;根据你所选择的菜单选项，可以渲染相对应的内容',
     txtPart1: '这里可以展示 ',
     txtPart2: ' 相应的内容'
+  },
+  zoomPage: {
+    desc: '缩放在 better-scroll 的使用例子',
+    changeZoom: 'zoomTo:'
   }
 }

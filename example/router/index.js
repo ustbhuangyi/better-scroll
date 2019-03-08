@@ -18,6 +18,7 @@ import FormListRender from 'example/page-render/form-list-render'
 import SimpleScrollDemo from 'example/pages/simple-scroll-demo'
 import GoodListRender from 'example/page-render/goods-list-render'
 import PickerRender from 'example/page-render/picker-render'
+import Zoom from 'example/pages/zoom'
 
 Vue.use(Router)
 
@@ -104,6 +105,10 @@ export default new Router({
         {
           path: 'infinity/:lang',
           component: Infinity
+        },
+        {
+          path: 'zoom/:lang',
+          component: Zoom
         }
       ]
     }

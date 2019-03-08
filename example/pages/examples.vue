@@ -67,6 +67,12 @@
           <span>{{ $t('examples.infinity') }}</span>
         </router-link>
       </li>
+      <li class="example-item">
+        <router-link :to="zoomPath">
+          <img :src="zoomImg">
+          <span>{{ $t('examples.zoom') }}</span>
+        </router-link>
+      </li>
       <li class="example-item placeholder">
       </li>
     </ul>
@@ -113,6 +119,9 @@
       infinityScrollImg() {
         return require('../common/images/' + this.$i18n.t('examples.infinityScrollImg'))
       },
+      zoomImg() {
+        return require('../common/images/' + this.$i18n.t('examples.zoomImg'))
+      },
       verticalScrollPath() {
         return '/examples/vertical-scroll/' + this.$i18n.locale
       },
@@ -145,6 +154,9 @@
       },
       infinityPath() {
         return '/examples/infinity/' + this.$i18n.locale
+      },
+      zoomPath() {
+        return '/examples/zoom/' + this.$i18n.locale
       }
     },
     created() {

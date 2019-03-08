@@ -33,6 +33,7 @@ export default {
     goodsList: 'Goods List',
     navList: 'Navigation List',
     infinity: 'Infinity Scroll',
+    zoom: 'Zoom',
     verticalScrollImg: 'vertical-scroll-en.jpeg',
     indexListImg: 'index-list.jpeg',
     pickerImg: 'picker-en.jpeg',
@@ -105,5 +106,9 @@ export default {
     'the blank area',
     txtPart1: 'The corresponding contents of the ',
     txtPart2: ' can be shown in this area'
+  },
+  zoomPage: {
+    desc: 'Zoom plugin demo',
+    changeZoom: 'zoomTo:'
   }
 }
