@@ -1,9 +1,19 @@
 import { Direction, Probe } from '../../util/const'
 import BScroll from '../../index'
-import { pullUpLoadConfig, pullUpLoadOptions } from '../../Options'
+import { Options } from '../../Options'
 import { propertiesProxy } from '../../util/propertiesProxy'
 import propertiesProxyConfig from './propertiesConfig'
 
+export type pullUpLoadOptions = Partial<pullUpLoadConfig> | boolean
+export interface pullUpLoadConfig {
+  threshold: number
+}
+
+declare module '../../Options' {
+  interface Options {
+    pullUpLoad: pullUpLoadOptions
+  }
+}
 export default class PullUp {
   public watching = false
   static pluginName = 'pullUpLoad'

@@ -1,8 +1,20 @@
 import BScroll from '../../index'
-import { Probe, Direction, ease } from '../../util'
-import { pullDownRefreshConfig, pullDownRefreshOptions } from '../../Options'
+import { Probe, Direction } from '../../util/const'
+import { ease } from '../../util/ease'
 import { propertiesProxy } from '../../util/propertiesProxy'
 import propertiesProxyConfig from './propertiesConfig'
+import { Options } from '../../Options'
+
+export type pullDownRefreshOptions = Partial<pullDownRefreshConfig> | boolean
+export interface pullDownRefreshConfig {
+  threshold: number
+  stop: number
+}
+declare module '../../Options' {
+  interface Options {
+    pullDownRefresh: pullDownRefreshOptions
+  }
+}
 
 export default class PullDown {
   static pluginName = 'pullDownRefresh'

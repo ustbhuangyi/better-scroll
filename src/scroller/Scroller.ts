@@ -5,7 +5,7 @@ import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
 import createTranslater, { Transform, Position } from '../translater'
 import createAnimater, { Animation, Transition } from '../animater'
-import BScrollOptions, { bounceConfig } from '../Options'
+import { Options as BScrollOptions, bounceConfig } from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
 
 import {

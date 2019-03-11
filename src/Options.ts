@@ -13,8 +13,6 @@ export type bounceOptions = Partial<bounceConfig> | boolean
 export type pickerOptions = Partial<pickerConfig> | boolean
 export type slideOptions = Partial<slideConfig> | boolean
 export type scrollbarOptions = Partial<scrollbarConfig> | boolean
-export type pullDownRefreshOptions = Partial<pullDownRefreshConfig> | boolean
-export type pullUpLoadOptions = Partial<pullUpLoadConfig> | boolean
 export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
 export type zoomOptions = Partial<zoomConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
@@ -55,15 +53,6 @@ interface scrollbarConfig {
   interactive: boolean
 }
 
-export interface pullDownRefreshConfig {
-  threshold: number
-  stop: number
-}
-
-export interface pullUpLoadConfig {
-  threshold: number
-}
-
 interface mouseWheelConfig {
   speed: number
   invert: boolean
@@ -86,7 +75,7 @@ interface dblclickConfig {
   delay: number
 }
 
-export default class Options {
+export class Options {
   [key: string]: any
   startX: number
   startY: number
@@ -127,8 +116,6 @@ export default class Options {
   picker: pickerOptions
   slide: slideOptions
   scrollbar: scrollbarOptions
-  pullDownRefresh: pullDownRefreshOptions
-  pullUpLoad: pullUpLoadOptions
   mouseWheel: mouseWheelOptions
   zoom: zoomOptions
   infinity: infinityOptions
@@ -225,23 +212,6 @@ export default class Options {
      * }
      */
     this.scrollbar = false
-
-    /**
-     * for pull down and refresh
-     * pullDownRefresh: {
-     *   threshold: 50,
-     *   stop: 20
-     * }
-     */
-    this.pullDownRefresh = false
-
-    /**
-     * for pull up and load
-     * pullUpLoad: {
-     *   threshold: 50
-     * }
-     */
-    this.pullUpLoad = false
 
     /**
      * for mouse wheel

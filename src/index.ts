@@ -1,5 +1,5 @@
 import EventEmitter from './base/EventEmitter'
-import Options from './Options'
+import { Options } from './Options'
 import Scroller from './scroller/Scroller'
 import { warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
@@ -40,7 +40,7 @@ export default class BScroll extends EventEmitter {
     this.pluginsCtorMap[name] = ctor
   }
 
-  constructor(el: HTMLElement | string, options?: object) {
+  constructor(el: HTMLElement | string, options?: Partial<Options>) {
     super([
       'refresh',
       'enable',
