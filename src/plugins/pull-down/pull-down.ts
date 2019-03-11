@@ -1,6 +1,5 @@
 import BScroll from '../../index'
-import { Probe, Direction } from '../../util/const'
-import { ease } from '../../util/ease'
+import { Probe, Direction, ease } from '../../util'
 import { pullDownRefreshConfig, pullDownRefreshOptions } from '../../Options'
 import { propertiesProxy } from '../../util/propertiesProxy'
 import propertiesProxyConfig from './propertiesConfig'
@@ -8,7 +7,6 @@ import propertiesProxyConfig from './propertiesConfig'
 export default class PullDown {
   static pluginName = 'pullDownRefresh'
   pulling: boolean = false
-  directionY: Direction
 
   constructor(public scroll: BScroll) {
     this._init()
@@ -25,7 +23,7 @@ export default class PullDown {
     this.scroll.options.probeType = Probe.Realtime
 
     // ? 改成 touchEnd ?
-    this.scroll.scroller.hooks.on('end', () => {
+    this.scroll.on('end', () => {
       return this.scroll.options.pullDownRefresh && this._checkPullDown()
     })
 
@@ -48,7 +46,7 @@ export default class PullDown {
       this.pulling = true
       this.scroll.trigger('pullingDown')
     }
-    this.scroll.scroller.scrollTo(
+    this.scroll.scrollTo(
       this.scroll.x,
       stop,
       this.scroll.options.bounceTime,
@@ -60,10 +58,7 @@ export default class PullDown {
 
   finish() {
     this.pulling = false
-    this.scroll.scroller.resetPosition(
-      this.scroll.options.bounceTime,
-      ease.bounce
-    )
+    this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
   open(config: pullDownRefreshOptions = true) {
@@ -75,7 +70,7 @@ export default class PullDown {
     this.scroll.options.pullDownRefresh = false
   }
 
-  autoPullDownRefresh() {
+  autoPull() {
     const { threshold = 90, stop = 40 } = this.scroll.options
       .pullDownRefresh as pullDownRefreshConfig
 
@@ -84,9 +79,9 @@ export default class PullDown {
     }
     this.pulling = true
 
-    this.scroll.scroller.scrollTo(this.scroll.x, threshold)
+    this.scroll.scrollTo(this.scroll.x, threshold)
     this.scroll.trigger('pullingDown')
-    this.scroll.scroller.scrollTo(
+    this.scroll.scrollTo(
       this.scroll.x,
       stop,
       this.scroll.options.bounceTime,

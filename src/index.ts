@@ -129,7 +129,8 @@ export default class BScroll extends EventEmitter {
       'scroll',
       'scrollEnd',
       'touchEnd',
-      'flick'
+      'flick',
+      'end'
     ])
     bubbling(this.hooks, this, ['destroy', 'enable', 'disable', 'refresh'])
   }

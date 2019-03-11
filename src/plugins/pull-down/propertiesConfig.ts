@@ -13,6 +13,6 @@ export default [
   },
   {
     key: 'autoPullDownRefresh',
-    sourceKey: 'autoPullDownRefresh'
+    sourceKey: 'autoPull'
   }
 ]

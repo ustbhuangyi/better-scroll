@@ -38,5 +38,13 @@ export const propertiesConfig = [
   {
     sourceKey: 'scroller.pending',
     key: 'pending'
+  },
+  {
+    sourceKey: 'scroller.scrollTo',
+    key: 'scrollTo'
+  },
+  {
+    sourceKey: 'scroller.resetPosition',
+    key: 'resetPosition'
   }
 ]
