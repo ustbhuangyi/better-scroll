@@ -10,6 +10,7 @@ describe('pull up tests', () => {
   let bscroll: BScroll
   const MAX_SCROLL_Y = -1000
   const THRESHOLD = 0
+  const MOVING_DIRECTION_Y = 1
 
   beforeAll(() => {
     wrapper = document.createElement('div')
@@ -20,6 +21,7 @@ describe('pull up tests', () => {
     bscroll = new BScroll(wrapper, options)
     bscroll.options = options
     bscroll.maxScrollY = MAX_SCROLL_Y
+    bscroll.movingDirectionY = MOVING_DIRECTION_Y
 
     jest.useFakeTimers()
   })
@@ -38,8 +40,7 @@ describe('pull up tests', () => {
 
   it('should trigger event pullingUp when pulling up', () => {
     let pullup: PullUp
-    bscroll.movingDirectionY = -1
-    // 这里假装订阅 scroll，10ms 后触发执行
+      // 这里假装订阅 scroll，10ms 后触发执行
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
@@ -89,8 +90,7 @@ describe('pull up tests', () => {
 
   it('should set watching when invoking api finish after scrollEnd', () => {
     let pullup: PullUp
-    bscroll.movingDirectionY = -1
-    // 这里假装bscroll订阅 scroll，10ms 后触发执行
+      // 这里假装bscroll订阅 scroll，10ms 后触发执行
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
@@ -122,8 +122,7 @@ describe('pull up tests', () => {
 
   it('should set watching after scrollEnd when invoking api finish before scrollEnd', () => {
     let pullup: PullUp
-    bscroll.movingDirectionY = -1
-    // 这里假装bscroll订阅 scroll，10ms 后触发执行
+      // 这里假装bscroll订阅 scroll，10ms 后触发执行
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
