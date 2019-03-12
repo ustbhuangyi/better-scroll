@@ -36,11 +36,17 @@ describe('EventEmitter', () => {
     expect(mockHandler.mock.calls.length).toBe(1)
   })
 
-  it('should tear down handler when invoking off', () => {
+  it('should tear down handler when invoking off()', () => {
     let mockHandler = jest.fn(x => x + 1)
     eventEmitter.once('test1', mockHandler)
     eventEmitter.off('test1', mockHandler)
 
     expect(eventEmitter.events.test1.length).toBe(0)
+  })
+
+  it('should register eventTypes when invoking registerType()', () => {
+    eventEmitter.registerType(['test2'])
+
+    expect(eventEmitter.eventTypes.test2).toBe('test2')
   })
 })
