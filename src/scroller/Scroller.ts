@@ -82,17 +82,8 @@ export default class Scroller {
       this.createBehaviorOpt('scrollY')
     )
 
-    this.translater = new Translater(this.element, {
-      translateZ: this.options.translateZ
-    })
-    this.translater.hooks.on(
-      this.translater.hooks.eventTypes.beforeTranslate,
-      (transformStyle: string[]) => {
-        if (this.options.translateZ) {
-          transformStyle.push(this.options.translateZ)
-        }
-      }
-    )
+    this.translater = new Translater(this.element)
+
     this.animater = createAnimater(this.element, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
@@ -119,6 +110,29 @@ export default class Scroller {
       }
     ])
 
+    this.init()
+
+    this.bubblingEvent()
+  }
+
+  private init() {
+    this.initTranslater()
+    this.initAnimater()
+    this.initActionsHandler()
+  }
+
+  private initTranslater() {
+    this.translater.hooks.on(
+      this.translater.hooks.eventTypes.beforeTranslate,
+      (transformStyle: string[]) => {
+        if (this.options.translateZ) {
+          transformStyle.push(this.options.translateZ)
+        }
+      }
+    )
+  }
+
+  private initAnimater() {
     // translate
     this.animater.hooks.on(
       this.animater.hooks.eventTypes.translate,
@@ -144,30 +158,15 @@ export default class Scroller {
         this.hooks.trigger(this.hooks.eventTypes.scroll, pos)
       }
     )
+  }
 
+  private initActionsHandler() {
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
       this.actionsHandler.hooks.eventTypes.start,
       (e: TouchEvent) => {
         if (!this.enabled) return true
-        let timestamp = getNow()
-        this.moved = false
-        this.directionLocked = DirectionLock.Default
-        this.startTime = timestamp
-
-        this.scrollBehaviorX.start()
-        this.scrollBehaviorY.start()
-
-        // force stopping last transition or animation
-        this.animater.stop()
-
-        this.scrollBehaviorX.updateStartPos()
-        this.scrollBehaviorX.updateAbsStartPos()
-        this.scrollBehaviorY.updateStartPos()
-        this.scrollBehaviorY.updateAbsStartPos()
-
-        this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)
-        this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart, e) // just for event api
+        this.handleStart(e)
       }
     )
     // [mouse|touch]move event
@@ -187,63 +186,7 @@ export default class Scroller {
         if (this.hooks.trigger(this.hooks.eventTypes.beforeMove, e)) {
           return
         }
-        this.scrollBehaviorX.updateDist(deltaX)
-        this.scrollBehaviorY.updateDist(deltaY)
-
-        const absDistX = Math.abs(this.scrollBehaviorX.dist)
-        const absDistY = Math.abs(this.scrollBehaviorY.dist)
-        let timestamp = getNow()
-        // We need to move at least momentumLimitDistance pixels
-        // for the scrolling to initiate
-        if (
-          timestamp - this.endTime > this.options.momentumLimitTime &&
-          (absDistY < this.options.momentumLimitDistance &&
-            absDistX < this.options.momentumLimitDistance)
-        ) {
-          return true
-        }
-
-        this.computeDirectionLock(absDistX, absDistY)
-
-        this.handleEventPassthrough(e)
-
-        deltaX = this.adjustDelta(deltaX, deltaY).deltaX
-        deltaY = this.adjustDelta(deltaX, deltaY).deltaY
-
-        const { left = true, right = true, top = true, bottom = true } = this
-          .options.bounce as bounceConfig
-
-        const newX = this.scrollBehaviorX.move(deltaX, [left, right])
-        const newY = this.scrollBehaviorY.move(deltaY, [top, bottom])
-
-        if (!this.moved) {
-          this.moved = true
-          this.hooks.trigger(this.hooks.eventTypes.scrollStart)
-        }
-
-        this.animater.translate({
-          x: newX,
-          y: newY
-        })
-
-        // dispatch scroll in interval time
-        if (timestamp - this.startTime > this.options.momentumLimitTime) {
-          // refresh time and starting position to initiate a momentum
-          this.startTime = timestamp
-          this.scrollBehaviorX.updateStartPos()
-          this.scrollBehaviorY.updateStartPos()
-          if (this.options.probeType === Probe.Throttle) {
-            this.hooks.trigger(
-              this.hooks.eventTypes.scroll,
-              this.getCurrentPos()
-            )
-          }
-        }
-
-        // dispatch scroll all the time
-        if (this.options.probeType > Probe.Throttle) {
-          this.hooks.trigger(this.hooks.eventTypes.scroll, this.getCurrentPos())
-        }
+        this.handleMove(deltaX, deltaY, e)
       }
     )
     // [mouse|touch]end event
@@ -255,119 +198,7 @@ export default class Scroller {
           return
         }
 
-        const { x, y } = this.getCurrentPos()
-
-        this.hooks.trigger(this.hooks.eventTypes.touchEnd, {
-          x,
-          y
-        })
-
-        this.animater.pending = false
-
-        // ensures that the last position is rounded
-        let newX = Math.round(x)
-        let newY = Math.round(y)
-
-        this.scrollBehaviorX.updateDirection()
-        this.scrollBehaviorY.updateDirection()
-
-        if (this.hooks.trigger(this.hooks.eventTypes.end, e)) {
-          return
-        }
-
-        // check if it is a click operation
-        if (this.checkClick(e)) {
-          this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
-          return
-        }
-
-        // reset if we are outside of the boundaries
-        if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
-          return
-        }
-        this.animater.translate({
-          x: newX,
-          y: newY
-        })
-
-        this.endTime = getNow()
-        const duration = this.endTime - this.startTime
-        const deltaX = Math.abs(newX - this.scrollBehaviorX.startPos)
-        const deltaY = Math.abs(newY - this.scrollBehaviorY.startPos)
-        // flick
-        if (
-          duration < this.options.flickLimitTime &&
-          deltaX < this.options.flickLimitDistance &&
-          deltaY < this.options.flickLimitDistance
-        ) {
-          this.hooks.trigger('flick')
-          return
-        }
-
-        const scrollMeta = {
-          time: 0,
-          easing: ease.swiper,
-          newX,
-          newY
-        }
-
-        const { left = true, right = true, top = true, bottom = true } = this
-          .options.bounce as bounceConfig
-        // start momentum animation if needed
-        const momentumX = this.scrollBehaviorX.end({
-          duration,
-          bounces: [left, right]
-        })
-        const momentumY = this.scrollBehaviorY.end({
-          duration,
-          bounces: [top, bottom]
-        })
-
-        scrollMeta.newX = isUndef(momentumX.destination)
-          ? scrollMeta.newX
-          : (momentumX.destination as number)
-        scrollMeta.newY = isUndef(momentumY.destination)
-          ? scrollMeta.newY
-          : (momentumY.destination as number)
-        scrollMeta.time = Math.max(
-          momentumX.duration as number,
-          momentumY.duration as number
-        )
-
-        this.hooks.trigger(
-          this.hooks.eventTypes.modifyScrollMeta,
-          scrollMeta,
-          this
-        )
-
-        const currentPos = this.getCurrentPos()
-        // when x or y changed, do momentum animation now!
-        if (
-          scrollMeta.newX !== currentPos.x ||
-          scrollMeta.newY !== currentPos.y
-        ) {
-          // change easing function when scroller goes out of the boundaries
-          if (
-            scrollMeta.newX > this.scrollBehaviorX.minScrollPos ||
-            scrollMeta.newX < this.scrollBehaviorX.maxScrollPos ||
-            scrollMeta.newY > this.scrollBehaviorY.minScrollPos ||
-            scrollMeta.newY < this.scrollBehaviorY.maxScrollPos
-          ) {
-            scrollMeta.easing = ease.swipeBounce
-          }
-          this.scrollTo(
-            scrollMeta.newX,
-            scrollMeta.newY,
-            scrollMeta.time,
-            scrollMeta.easing
-          )
-          return
-        }
-
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
-          x,
-          y
-        })
+        this.handleEnd(e)
       }
     )
 
@@ -377,19 +208,215 @@ export default class Scroller {
       (e: TouchEvent) => {
         // handle native click event
         if (this.enabled && !e._constructed) {
-          if (
-            !preventDefaultExceptionFn(
-              e.target,
-              this.options.preventDefaultException
-            )
-          ) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
+          this.handleClick(e)
         }
       }
     )
-    this.bubblingEvent()
+  }
+
+  private handleStart(e: TouchEvent) {
+    const timestamp = getNow()
+    this.moved = false
+    this.directionLocked = DirectionLock.Default
+    this.startTime = timestamp
+
+    this.scrollBehaviorX.start()
+    this.scrollBehaviorY.start()
+
+    // force stopping last transition or animation
+    this.animater.stop()
+
+    this.scrollBehaviorX.updateStartPos()
+    this.scrollBehaviorX.updateAbsStartPos()
+    this.scrollBehaviorY.updateStartPos()
+    this.scrollBehaviorY.updateAbsStartPos()
+
+    this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)
+    this.hooks.trigger(this.hooks.eventTypes.beforeScrollStart, e) // just for event api
+  }
+
+  private handleMove(deltaX: number, deltaY: number, e: TouchEvent) {
+    this.scrollBehaviorX.updateDist(deltaX)
+    this.scrollBehaviorY.updateDist(deltaY)
+
+    const absDistX = Math.abs(this.scrollBehaviorX.dist)
+    const absDistY = Math.abs(this.scrollBehaviorY.dist)
+    const timestamp = getNow()
+    // We need to move at least momentumLimitDistance pixels
+    // for the scrolling to initiate
+    if (
+      timestamp - this.endTime > this.options.momentumLimitTime &&
+      (absDistY < this.options.momentumLimitDistance &&
+        absDistX < this.options.momentumLimitDistance)
+    ) {
+      return true
+    }
+
+    this.computeDirectionLock(absDistX, absDistY)
+
+    this.handleEventPassthrough(e)
+
+    deltaX = this.adjustDelta(deltaX, deltaY).deltaX
+    deltaY = this.adjustDelta(deltaX, deltaY).deltaY
+
+    const { left = true, right = true, top = true, bottom = true } = this
+      .options.bounce as bounceConfig
+
+    const newX = this.scrollBehaviorX.move(deltaX, [left, right])
+    const newY = this.scrollBehaviorY.move(deltaY, [top, bottom])
+
+    if (!this.moved) {
+      this.moved = true
+      this.hooks.trigger(this.hooks.eventTypes.scrollStart)
+    }
+
+    this.animater.translate({
+      x: newX,
+      y: newY
+    })
+
+    // dispatch scroll in interval time
+    if (timestamp - this.startTime > this.options.momentumLimitTime) {
+      // refresh time and starting position to initiate a momentum
+      this.startTime = timestamp
+      this.scrollBehaviorX.updateStartPos()
+      this.scrollBehaviorY.updateStartPos()
+      if (this.options.probeType === Probe.Throttle) {
+        this.hooks.trigger(this.hooks.eventTypes.scroll, this.getCurrentPos())
+      }
+    }
+
+    // dispatch scroll all the time
+    if (this.options.probeType > Probe.Throttle) {
+      this.hooks.trigger(this.hooks.eventTypes.scroll, this.getCurrentPos())
+    }
+  }
+
+  private handleEnd(e: TouchEvent) {
+    const { x, y } = this.getCurrentPos()
+
+    this.hooks.trigger(this.hooks.eventTypes.touchEnd, {
+      x,
+      y
+    })
+
+    this.animater.pending = false
+
+    // ensures that the last position is rounded
+    let newX = Math.round(x)
+    let newY = Math.round(y)
+
+    this.scrollBehaviorX.updateDirection()
+    this.scrollBehaviorY.updateDirection()
+
+    if (this.hooks.trigger(this.hooks.eventTypes.end, e)) {
+      return
+    }
+
+    // check if it is a click operation
+    if (this.checkClick(e)) {
+      this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
+      return
+    }
+
+    // reset if we are outside of the boundaries
+    if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
+      return
+    }
+    this.animater.translate({
+      x: newX,
+      y: newY
+    })
+
+    this.endTime = getNow()
+    const duration = this.endTime - this.startTime
+    const deltaX = Math.abs(newX - this.scrollBehaviorX.startPos)
+    const deltaY = Math.abs(newY - this.scrollBehaviorY.startPos)
+    // flick
+    if (
+      duration < this.options.flickLimitTime &&
+      deltaX < this.options.flickLimitDistance &&
+      deltaY < this.options.flickLimitDistance
+    ) {
+      this.hooks.trigger('flick')
+      return
+    }
+
+    const scrollMeta = {
+      time: 0,
+      easing: ease.swiper,
+      newX,
+      newY
+    }
+
+    const { left = true, right = true, top = true, bottom = true } = this
+      .options.bounce as bounceConfig
+    // start momentum animation if needed
+    const momentumX = this.scrollBehaviorX.end({
+      duration,
+      bounces: [left, right]
+    })
+    const momentumY = this.scrollBehaviorY.end({
+      duration,
+      bounces: [top, bottom]
+    })
+
+    scrollMeta.newX = isUndef(momentumX.destination)
+      ? scrollMeta.newX
+      : (momentumX.destination as number)
+    scrollMeta.newY = isUndef(momentumY.destination)
+      ? scrollMeta.newY
+      : (momentumY.destination as number)
+    scrollMeta.time = Math.max(
+      momentumX.duration as number,
+      momentumY.duration as number
+    )
+
+    this.hooks.trigger(this.hooks.eventTypes.modifyScrollMeta, scrollMeta, this)
+
+    const currentPos = this.getCurrentPos()
+    // when x or y changed, do momentum animation now!
+    if (scrollMeta.newX !== currentPos.x || scrollMeta.newY !== currentPos.y) {
+      // change easing function when scroller goes out of the boundaries
+      if (
+        scrollMeta.newX > this.scrollBehaviorX.minScrollPos ||
+        scrollMeta.newX < this.scrollBehaviorX.maxScrollPos ||
+        scrollMeta.newY > this.scrollBehaviorY.minScrollPos ||
+        scrollMeta.newY < this.scrollBehaviorY.maxScrollPos
+      ) {
+        scrollMeta.easing = ease.swipeBounce
+      }
+      this.scrollTo(
+        scrollMeta.newX,
+        scrollMeta.newY,
+        scrollMeta.time,
+        scrollMeta.easing
+      )
+      return
+    }
+
+    this.hooks.trigger(this.hooks.eventTypes.scrollEnd, {
+      x,
+      y
+    })
+  }
+
+  private handleClick(e: TouchEvent) {
+    if (
+      !preventDefaultExceptionFn(e.target, this.options.preventDefaultException)
+    ) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
+  private bubblingEvent() {
+    bubbling(this.animater.hooks, this.hooks, [
+      {
+        source: 'forceStop',
+        target: 'scrollEnd'
+      }
+    ])
   }
 
   private computeDirectionLock(absDistX: number, absDistY: number) {
@@ -513,14 +540,6 @@ export default class Scroller {
     return false
   }
 
-  private bubblingEvent() {
-    bubbling(this.animater.hooks, this.hooks, [
-      {
-        source: 'forceStop',
-        target: 'scrollEnd'
-      }
-    ])
-  }
   createActionsHandlerOpt() {
     const options = [
       'click',

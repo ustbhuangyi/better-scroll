@@ -22,9 +22,8 @@ const translaterMetaData: TranslaterMetaData = {
 export default class Translater {
   style: CSSStyleDeclaration
   hooks: EventEmitter
-  constructor(public element: HTMLElement, public options: Options) {
+  constructor(public element: HTMLElement) {
     this.style = element.style
-    this.options = options
     this.hooks = new EventEmitter(['beforeTranslate'])
   }
 
