@@ -1,6 +1,6 @@
 import { getRect } from '../../util/dom'
 import BScroll from '../../index'
-import { slideConfig } from '../../Options'
+import { SlideConfig } from './index'
 
 interface PagePos {
   x: number
@@ -20,7 +20,7 @@ export default class PagesPos {
   private scrollerWidth: number
   private scrollerHeight: number
   private slideEl: NodeListOf<HTMLElement> | null = null
-  constructor(private scroll: BScroll, private slideOpt: Partial<slideConfig>) {
+  constructor(private scroll: BScroll, private slideOpt: Partial<SlideConfig>) {
     this.init()
   }
   init() {
@@ -47,8 +47,8 @@ export default class PagesPos {
     this.pages = this.slideEl
       ? this.computePagePosInfoByEl(this.slideEl)
       : this.computePagePosInfo(stepX, stepY)
-    this.xLen = this.pages.length
-    this.yLen = this.pages[0].length
+    this.xLen = this.pages ? this.pages.length : 0
+    this.yLen = this.pages && this.pages[0] ? this.pages[0].length : 0
   }
   hasInfo(): boolean {
     if (!this.pages || !this.pages.length) {
@@ -69,14 +69,14 @@ export default class PagesPos {
     let pageX = 0
     let pageY = 0
     let l = this.pages.length
-    for (; pageX < l; pageX++) {
+    for (; pageX < l - 1; pageX++) {
       if (x >= this.pages[pageX][0].cx) {
         break
       }
     }
 
     l = this.pages[pageX].length
-    for (; pageY < l; pageY++) {
+    for (; pageY < l - 1; pageY++) {
       if (y >= this.pages[0][pageY].cy) {
         break
       }
@@ -133,16 +133,14 @@ export default class PagesPos {
   ): Array<Array<PagePos>> {
     let pages: Array<Array<PagePos>> = []
     let x = 0
-    let y
+    let y = 0
     let cx
     let cy
     let i = 0
-    let l
+    let l = el.length
     let m = 0
-    let n
+    let n = -1
     let rect
-    l = el.length
-    n = -1
 
     const maxScrollX = this.scroll.scroller.scrollBehaviorX.maxScrollPos
     const maxScrollY = this.scroll.scroller.scrollBehaviorY.maxScrollPos
@@ -153,8 +151,8 @@ export default class PagesPos {
         n++
       }
 
-      if (!this.pages[m]) {
-        this.pages[m] = []
+      if (!pages[m]) {
+        pages[m] = []
       }
 
       x = Math.max(-rect.left, maxScrollX)
@@ -171,7 +169,7 @@ export default class PagesPos {
         cy: cy
       }
 
-      if (x > maxScrollY) {
+      if (x > maxScrollX) {
         m++
       }
     }

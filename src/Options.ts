@@ -3,10 +3,8 @@ import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<bounceConfig> | boolean
-export type slideOptions = Partial<slideConfig> | boolean
 export type scrollbarOptions = Partial<scrollbarConfig> | boolean
 export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
-export type zoomOptions = Partial<zoomConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
 export type dblclickOptions = Partial<DblclickConfig> | boolean
 
@@ -18,20 +16,6 @@ export interface bounceConfig {
   right: boolean
 }
 
-export interface slideConfig {
-  loop: boolean
-  el: HTMLElement
-  threshold: number
-  stepX: number
-  stepY: number
-  speed: number
-  easing: {
-    style: string
-    fn: (t: number) => number
-  }
-  listenFlick: boolean
-}
-
 interface scrollbarConfig {
   fade: boolean
   interactive: boolean
@@ -41,12 +25,6 @@ interface mouseWheelConfig {
   speed: number
   invert: boolean
   easeTime: number
-}
-
-export interface zoomConfig {
-  start: number
-  min: number
-  max: number
 }
 
 interface infinityConfig {
@@ -96,10 +74,8 @@ export class Options {
   autoBlur: boolean
   translateZ: string
   // plugins options
-  slide: slideOptions
   scrollbar: scrollbarOptions
   mouseWheel: mouseWheelOptions
-  zoom: zoomOptions
   infinity: infinityOptions
   dblclick: dblclickOptions
 
@@ -171,7 +147,7 @@ export class Options {
      *   listenFlick: true
      * }
      */
-    this.slide = false
+    // this.slide = false
 
     /**
      * for scrollbar
@@ -200,7 +176,7 @@ export class Options {
      *   max: 4
      * }
      */
-    this.zoom = false
+    // this.zoom = false
 
     /**
      * for infinity

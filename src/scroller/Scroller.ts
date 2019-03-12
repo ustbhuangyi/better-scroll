@@ -85,7 +85,14 @@ export default class Scroller {
     this.translater = new Translater(this.element, {
       translateZ: this.options.translateZ
     })
-
+    this.translater.hooks.on(
+      this.translater.hooks.eventTypes.beforeTranslate,
+      (transformStyle: string[]) => {
+        if (this.options.translateZ) {
+          transformStyle.push(this.options.translateZ)
+        }
+      }
+    )
     this.animater = createAnimater(this.element, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(

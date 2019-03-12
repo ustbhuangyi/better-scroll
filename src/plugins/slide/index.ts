@@ -2,21 +2,42 @@ import BScroll from '../../index'
 import { fixInboundValue } from '../../util/lang'
 import { prepend, removeChild, addClass } from '../../util/dom'
 import { ease, EaseItem } from '../../util/ease'
-import { slideConfig } from '../../Options'
 import PageInfo, { SlidePoint } from './PageInfo'
 import propertiesConfig from './propertiesConfig'
 import { staticImplements, PluginCtor } from '../type'
 
+export type slideOptions = Partial<SlideConfig> | boolean | undefined
+export interface SlideConfig {
+  loop: boolean
+  el: HTMLElement | string
+  threshold: number
+  stepX: number
+  stepY: number
+  speed: number
+  easing: {
+    style: string
+    fn: (t: number) => number
+  }
+  listenFlick: boolean
+  disableSetWidth: boolean
+}
+
+declare module '../../Options' {
+  interface Options {
+    slide?: slideOptions
+  }
+}
+
 @staticImplements<PluginCtor>()
 export default class Slide {
   private page: PageInfo
-  private slideOpt: Partial<slideConfig>
+  private slideOpt: Partial<SlideConfig>
   private thresholdX: number
   private thresholdY: number
   static pluginName = 'slide'
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
-    this.slideOpt = this.scroll.options.slide as Partial<slideConfig>
+    this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
     this.page = new PageInfo(scroll, this.slideOpt)
     this.init()
   }
@@ -186,9 +207,9 @@ export default class Slide {
     }
   }
   private setSlideWidth(slideEls: HTMLElement) {
-    // if (this.slideOpt.disableSetWidth) {
-    //   return
-    // }
+    if (this.slideOpt.disableSetWidth) {
+      return
+    }
     if (!this.scroll.options.scrollX) {
       return
     }

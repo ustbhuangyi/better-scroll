@@ -1,7 +1,7 @@
 import { fixInboundValue, extend } from '../../util/lang'
 import { warn } from '../../util/debug'
 import BScroll from '../../index'
-import { slideConfig } from '../../Options'
+import { SlideConfig } from './index'
 import PagesPos from './PagesPos'
 
 export interface SlidePoint {
@@ -27,7 +27,7 @@ export default class PageInfo {
   needLoop: boolean
   pagesPos: PagesPos
   currentPage: SlidePoint
-  constructor(public scroll: BScroll, private slideOpt: Partial<slideConfig>) {}
+  constructor(public scroll: BScroll, private slideOpt: Partial<SlideConfig>) {}
   init() {
     this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
     this.checkSlideLoop()

@@ -1,4 +1,5 @@
 import { style, extend, safeCSSStyleDeclaration } from '../util'
+import EventEmitter from '../base/EventEmitter'
 export interface TranslaterPoint {
   x: number
   y: number
@@ -11,22 +12,20 @@ interface Options {
 interface TranslaterMetaData {
   x: [string, string]
   y: [string, string]
-  scale: [string, string]
   [key: string]: any
 }
 const translaterMetaData: TranslaterMetaData = {
   x: ['translateX', 'px'],
-  y: ['translateY', 'px'],
-  scale: ['scale', '']
+  y: ['translateY', 'px']
 }
 
 export default class Translater {
   style: CSSStyleDeclaration
-  private lastPoint: TranslaterPoint
-  private remainDiff = true
+  hooks: EventEmitter
   constructor(public element: HTMLElement, public options: Options) {
     this.style = element.style
     this.options = options
+    this.hooks = new EventEmitter(['beforeTranslate'])
   }
 
   getComputedPosition() {
@@ -45,24 +44,25 @@ export default class Translater {
   }
 
   translate(point: TranslaterPoint) {
-    let _point: TranslaterPoint
-    if (this.remainDiff) {
-      _point = extend({}, this.lastPoint, point) as TranslaterPoint
-    } else {
-      _point = extend({}, point) as TranslaterPoint
-    }
-    this.lastPoint = _point as TranslaterPoint
     let transformStyle = [] as string[]
-    Object.keys(_point).forEach(key => {
-      if (translaterMetaData[key][0]) {
+    Object.keys(point).forEach(key => {
+      if (!translaterMetaData[key]) {
+        return
+      }
+      const transformFnName = translaterMetaData[key][0]
+      if (transformFnName) {
+        const transformFnArgUnit = translaterMetaData[key][1]
+        const transformFnArg = point[key]
         transformStyle.push(
-          `${translaterMetaData[key][0]}(${_point[key]}${
-            translaterMetaData[key][1]
-          })`
+          `${transformFnName}(${transformFnArg}${transformFnArgUnit})`
         )
       }
     })
-    transformStyle.push(this.options.translateZ)
+    this.hooks.trigger(
+      this.hooks.eventTypes.beforeTranslate,
+      transformStyle,
+      point
+    )
     this.style[style.transform as any] = `${transformStyle.join(' ')}`
   }
 }
