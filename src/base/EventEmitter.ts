@@ -9,21 +9,21 @@ interface TypesMap {
 }
 
 export default class EventEmitter {
-  _events: EventsMap
+  events: EventsMap
   eventTypes: TypesMap
   constructor(names: string[]) {
-    this._events = {}
+    this.events = {}
     this.eventTypes = {}
     this.registerType(names)
   }
 
   on(type: string, fn: Function, context = this) {
     this._checkInTypes(type)
-    if (!this._events[type]) {
-      this._events[type] = []
+    if (!this.events[type]) {
+      this.events[type] = []
     }
 
-    this._events[type].push([fn, context])
+    this.events[type].push([fn, context])
     return this
   }
 
@@ -42,18 +42,18 @@ export default class EventEmitter {
 
   off(type: string, fn: Function) {
     this._checkInTypes(type)
-    let _events = this._events[type]
-    if (!_events) {
+    let events = this.events[type]
+    if (!events) {
       return this
     }
 
-    let count = _events.length
+    let count = events.length
     while (count--) {
       if (
-        _events[count][0] === fn ||
-        (_events[count][0] && (_events[count][0] as any).fn === fn)
+        events[count][0] === fn ||
+        (events[count][0] && (events[count][0] as any).fn === fn)
       ) {
-        _events.splice(count, 1)
+        events.splice(count, 1)
       }
     }
 
@@ -62,7 +62,7 @@ export default class EventEmitter {
 
   trigger(type: string, ...args: any[]) {
     this._checkInTypes(type)
-    let events = this._events[type]
+    let events = this.events[type]
     if (!events) {
       return
     }
