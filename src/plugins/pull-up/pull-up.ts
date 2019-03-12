@@ -11,15 +11,18 @@ export interface pullUpLoadConfig {
 
 declare module '../../Options' {
   interface Options {
-    pullUpLoad: pullUpLoadOptions
+    pullUpLoad?: pullUpLoadOptions
   }
 }
+
 export default class PullUp {
   public watching = false
   static pluginName = 'pullUpLoad'
 
   constructor(public scroll: BScroll) {
-    this._init()
+    if (scroll.options.pullUpLoad) {
+      this._init()
+    }
 
     const prefix = `plugins.${PullUp.pluginName}.`
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
@@ -30,6 +33,7 @@ export default class PullUp {
   private _init() {
     // must watch scroll in real time
     this.scroll.options.probeType = Probe.Realtime
+
     this.scroll.registerType(['pullingUp'])
 
     this.watching = false

@@ -12,7 +12,7 @@ export interface pullDownRefreshConfig {
 }
 declare module '../../Options' {
   interface Options {
-    pullDownRefresh: pullDownRefreshOptions
+    pullDownRefresh?: pullDownRefreshOptions
   }
 }
 
@@ -21,7 +21,9 @@ export default class PullDown {
   pulling: boolean = false
 
   constructor(public scroll: BScroll) {
-    this._init()
+    if (scroll.options.pullDownRefresh) {
+      this._init()
+    }
 
     const prefix = `plugins.${PullDown.pluginName}.`
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
