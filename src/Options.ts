@@ -3,7 +3,6 @@ import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<bounceConfig> | boolean
-export type pickerOptions = Partial<pickerConfig> | boolean
 export type slideOptions = Partial<slideConfig> | boolean
 export type scrollbarOptions = Partial<scrollbarConfig> | boolean
 export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
@@ -17,14 +16,6 @@ export interface bounceConfig {
   bottom: boolean
   left: boolean
   right: boolean
-}
-
-interface pickerConfig {
-  selectedIndex: number
-  rotate: number
-  adjustTime: number
-  wheelWrapperClass: string
-  wheelItemClass: string
 }
 
 export interface slideConfig {
@@ -105,7 +96,6 @@ export class Options {
   autoBlur: boolean
   translateZ: string
   // plugins options
-  picker: pickerOptions
   slide: slideOptions
   scrollbar: scrollbarOptions
   mouseWheel: mouseWheelOptions
@@ -156,25 +146,12 @@ export class Options {
     this.HWCompositing = true
 
     this.useTransition = true
-    this.useTransform = true
     this.bindToWrapper = false
     this.disableMouse = hasTouch
     this.observeDOM = true
     this.autoBlur = true
 
     // plugins config
-
-    /**
-     * for picker
-     * wheel: {
-     *   selectedIndex: 0,
-     *   rotate: 25,
-     *   adjustTime: 400
-     *   wheelWrapperClass: 'wheel-scroll',
-     *   wheelItemClass: 'wheel-item'
-     * }
-     */
-    this.picker = false
 
     /**
      * for slide
@@ -237,14 +214,6 @@ export class Options {
      * }
      */
     this.infinity = false
-
-    /**
-     * for double click
-     * dblclick: {
-     *   delay: 300
-     * }
-     */
-    this.dblclick = false
   }
   merge(options?: { [key: string]: any }) {
     if (!options) return this
@@ -262,8 +231,12 @@ export class Options {
     this.preventDefault = !this.eventPassthrough && this.preventDefault
 
     // If you want eventPassthrough I have to lock one of the axes
-    this.scrollX = this.eventPassthrough === 'horizontal' ? false : this.scrollX
-    this.scrollY = this.eventPassthrough === 'vertical' ? false : this.scrollY
+    this.scrollX =
+      this.eventPassthrough === EventPassthrough.Horizontal
+        ? false
+        : this.scrollX
+    this.scrollY =
+      this.eventPassthrough === EventPassthrough.Vertical ? false : this.scrollY
 
     // With eventPassthrough we also need lockDirection mechanism
     this.freeScroll = this.freeScroll && !this.eventPassthrough

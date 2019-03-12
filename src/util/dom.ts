@@ -188,7 +188,7 @@ export function tap(e: any, eventName: string) {
 
 export function click(e: any, event = 'click') {
   let eventSource
-  if (e.type === 'mouseup' || e.type === 'mousecancel') {
+  if (e.type === 'mouseup') {
     eventSource = e
   } else if (e.type === 'touchend' || e.type === 'touchcancel') {
     eventSource = e.changedTouches[0]
