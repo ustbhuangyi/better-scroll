@@ -1,12 +1,11 @@
-import BScroll from '../../src/index'
-import PullDown from '../../src/plugins/pull-down/pull-down'
-import Scroller from '../../src/scroller/Scroller'
-import { Options } from '../../src/options'
-import { propertiesProxy } from '../../src/util/propertiesProxy'
-jest.mock('../../src/options')
-jest.mock('../../src/index')
-jest.mock('../../src/scroller/Scroller')
-jest.mock('../../src/util/propertiesProxy')
+import BScroll from '../../../src/index'
+import PullDown from '../../../src/plugins/pull-down/pull-down'
+import { Options } from '../../../src/options'
+import { propertiesProxy } from '../../../src/util/propertiesProxy'
+jest.mock('../../../src/options')
+jest.mock('../../../src/index')
+jest.mock('../../../src/scroller/Scroller')
+jest.mock('../../../src/util/propertiesProxy')
 
 describe('pull down tests', () => {
   let wrapper: HTMLElement

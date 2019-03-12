@@ -1,11 +1,11 @@
-import BScroll from '../../src/index'
-import PullUp, { pullUpLoadOptions } from '../../src/plugins/pull-up/pull-up'
-import { Options } from '../../src/options'
-import { propertiesProxy } from '../../src/util/propertiesProxy'
+import BScroll from '../../../src/index'
+import PullUp, { pullUpLoadOptions } from '../../../src/plugins/pull-up/pull-up'
+import { Options } from '../../../src/options'
+import { propertiesProxy } from '../../../src/util/propertiesProxy'
 import { partials } from 'handlebars'
-jest.mock('../../src/options')
-jest.mock('../../src/index')
-jest.mock('../../src/util/propertiesProxy')
+jest.mock('../../../src/options')
+jest.mock('../../../src/index')
+jest.mock('../../../src/util/propertiesProxy')
 
 describe('pull up tests', () => {
   let wrapper: HTMLElement
