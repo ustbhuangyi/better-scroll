@@ -3,16 +3,13 @@ import ActionsHandler, {
 } from '../base/ActionsHandler'
 import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
-import createTranslater, { Transform, Position } from '../translater'
+import Translater from '../translater'
 import createAnimater, { Animation, Transition } from '../animater'
 import { Options as BScrollOptions, bounceConfig } from '../Options'
 import Behavior, { Options as BehaviorOptions } from './Behavior'
+import { Direction, DirectionLock, EventPassthrough, Probe } from '../enums'
 
 import {
-  Direction,
-  DirectionLock,
-  EventPassthrough,
-  Probe,
   ease,
   offset,
   EaseFn,
@@ -32,7 +29,7 @@ export default class Scroller {
   wrapper: HTMLElement
   element: HTMLElement
   actionsHandler: ActionsHandler
-  translater: Position | Transform
+  translater: Translater
   animater: Animation | Transition
   scrollBehaviorX: Behavior
   scrollBehaviorY: Behavior
@@ -85,7 +82,9 @@ export default class Scroller {
       this.createBehaviorOpt('scrollY')
     )
 
-    this.translater = createTranslater(this.element, this.options)
+    this.translater = new Translater(this.element, {
+      translateZ: this.options.translateZ
+    })
 
     this.animater = createAnimater(this.element, this.translater, this.options)
 

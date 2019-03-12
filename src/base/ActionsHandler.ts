@@ -2,13 +2,13 @@ import EventEmitter from './EventEmitter'
 import EventRegister from './EventRegister'
 
 import {
-  EventType,
   TouchEvent,
-  MouseButton,
   // dom
   preventDefaultExceptionFn,
   eventTypeMap
 } from '../util'
+
+import { EventType, MouseButton } from '../enums'
 
 export interface Options {
   [key: string]: any

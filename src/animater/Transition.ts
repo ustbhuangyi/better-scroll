@@ -2,11 +2,11 @@ import {
   style,
   requestAnimationFrame,
   cancelAnimationFrame,
-  Probe,
   EaseFn
 } from '../util'
+import { Probe } from '../enums/probe'
 import Base from './Base'
-import { TransformPoint } from '../translater'
+import { TranslaterPoint } from '../translater'
 
 export default class Transition extends Base {
   startProbe() {
@@ -35,8 +35,8 @@ export default class Transition extends Base {
   }
 
   scrollTo(
-    startPoint: TransformPoint,
-    endPoint: TransformPoint,
+    startPoint: TranslaterPoint,
+    endPoint: TranslaterPoint,
     time: number,
     easingFn: string | EaseFn
   ) {

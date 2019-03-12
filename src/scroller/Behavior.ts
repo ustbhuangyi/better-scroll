@@ -1,4 +1,5 @@
-import { Direction, getRect } from '../util'
+import { getRect } from '../util'
+import { Direction } from '../enums/direction'
 import EventEmitter from '../base/EventEmitter'
 export interface Options {
   scrollable: boolean
@@ -118,7 +119,6 @@ export default class Behavior {
     wrapperSize: number,
     options = this.options
   ) {
-
     let distance = current - start
     let speed = Math.abs(distance) / time
 

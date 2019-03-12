@@ -1,6 +1,6 @@
 import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
-import { EventType } from './const'
+import { EventType } from '../enums/event-type'
 
 export type safeCSSStyleDeclaration = {
   [key: string]: string
@@ -113,7 +113,6 @@ export const hasPerspective =
 // fix issue #361
 export const hasTouch =
   inBrowser && ('ontouchstart' in window || isWeChatDevTools)
-export const hasTransform = transform in elementStyle
 export const hasTransition = inBrowser && transition in elementStyle
 
 export const style = {

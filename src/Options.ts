@@ -1,12 +1,5 @@
-import {
-  hasTransition,
-  hasTransform,
-  hasPerspective,
-  hasTouch,
-  Probe,
-  EventPassthrough
-} from './util'
-
+import { hasTransition, hasPerspective, hasTouch } from './util'
+import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<bounceConfig> | boolean
@@ -16,7 +9,7 @@ export type scrollbarOptions = Partial<scrollbarConfig> | boolean
 export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
 export type zoomOptions = Partial<zoomConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
-export type dblclickOptions = Partial<dblclickConfig> | boolean
+export type dblclickOptions = Partial<DblclickConfig> | boolean
 
 // interface
 export interface bounceConfig {
@@ -71,7 +64,7 @@ interface infinityConfig {
   fetch: (count: number) => void
 }
 
-interface dblclickConfig {
+interface DblclickConfig {
   delay: number
 }
 
@@ -106,7 +99,6 @@ export class Options {
   }
   HWCompositing: boolean
   useTransition: boolean
-  useTransform: boolean
   bindToWrapper: boolean
   disableMouse: boolean | ''
   observeDOM: boolean
@@ -266,7 +258,6 @@ export class Options {
       this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
 
     this.useTransition = this.useTransition && hasTransition
-    this.useTransform = this.useTransform && hasTransform
 
     this.preventDefault = !this.eventPassthrough && this.preventDefault
 

@@ -1,17 +1,17 @@
 import Base from './Base'
-import { TransformPoint } from '../translater'
+import { TranslaterPoint } from '../translater'
 import {
   getNow,
-  Probe,
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn
 } from '../util'
+import { Probe } from '../enums/probe'
 
 export default class Animation extends Base {
   scrollTo(
-    startPoint: TransformPoint,
-    endPoint: TransformPoint,
+    startPoint: TranslaterPoint,
+    endPoint: TranslaterPoint,
     time: number,
     easingFn: EaseFn | string
   ) {
@@ -29,8 +29,8 @@ export default class Animation extends Base {
   }
 
   private animate(
-    startPoint: TransformPoint,
-    endPoint: TransformPoint,
+    startPoint: TranslaterPoint,
+    endPoint: TranslaterPoint,
     duration: number,
     easingFn: EaseFn
   ) {
@@ -59,7 +59,7 @@ export default class Animation extends Base {
         const endValue = endPoint[key]
         newPoint[key] = (endValue - startValue) * easing + startValue
       })
-      this.translate(<TransformPoint>newPoint)
+      this.translate(<TranslaterPoint>newPoint)
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)

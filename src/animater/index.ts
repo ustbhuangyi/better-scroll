@@ -1,4 +1,4 @@
-import Translater from '../translater/Base'
+import Translater from '../translater'
 import { Options as BScrollOptions } from '../Options'
 
 import Transition from './Transition'
