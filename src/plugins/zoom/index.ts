@@ -3,11 +3,23 @@ import EventEmitter from '../../base/EventEmitter'
 import propertiesConfig from './propertiesConfig'
 import { getDistance, isUndef } from '../../util/lang'
 import { offsetToBody, getRect, DOMRect } from '../../util/dom'
-import { zoomConfig } from '../../Options'
 import { style } from '../../util'
 import { staticImplements, PluginCtor } from '../type'
-
+import { TranslaterPoint } from '../../translater'
 import Behavior from '../../scroller/Behavior'
+
+type zoomOptions = Partial<ZoomConfig> | boolean | undefined
+interface ZoomConfig {
+  start: number
+  min: number
+  max: number
+}
+
+declare module '../../Options' {
+  interface Options {
+    zoom?: ZoomConfig
+  }
+}
 
 interface Point {
   x: number
@@ -25,7 +37,7 @@ export default class Zoom {
   origin: Point
   scale = 1
   hooks: EventEmitter
-  private zoomOpt: Partial<zoomConfig>
+  private zoomOpt: Partial<ZoomConfig>
   private startDistance: number
   private startScale: number
   private wrapper: HTMLElement
@@ -33,11 +45,12 @@ export default class Zoom {
   private scaleElementInitSize: DOMRect
   private initScrollBoundary: ScrollBoundary
   private zooming: boolean
+  private lastTransformScale: number
   constructor(public scroll: BScroll) {
     this.hooks = new EventEmitter(['zoomStart', 'zoomEnd'])
     this.scroll.proxy(propertiesConfig)
     this.scroll.registerType(['zoomStart', 'zoomEnd'])
-    this.zoomOpt = this.scroll.options.zoom as Partial<zoomConfig>
+    this.zoomOpt = this.scroll.options.zoom as Partial<ZoomConfig>
     this.init()
   }
   init() {
@@ -71,6 +84,14 @@ export default class Zoom {
       this.zoomEnd()
       return true
     })
+    scrollerIns.translater.hooks.on(
+      'beforeTranslate',
+      (transformStyle: string[], point: TranslaterPoint) => {
+        const scale = point.scale ? point.scale : this.lastTransformScale
+        this.lastTransformScale = scale
+        transformStyle.push(`scale(${scale})`)
+      }
+    )
   }
   zoomTo(scale: number, x: number, y: number) {
     let { left, top } = offsetToBody(this.wrapper)
