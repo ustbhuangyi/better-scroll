@@ -1,5 +1,5 @@
 import BScroll from '../../index'
-import { Probe, Direction } from '../../util/const'
+import { Probe, Direction } from '../../enums'
 import { ease } from '../../util/ease'
 import { propertiesProxy } from '../../util/propertiesProxy'
 import propertiesProxyConfig from './propertiesConfig'

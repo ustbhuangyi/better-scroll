@@ -1,4 +1,4 @@
-import { Direction, Probe } from '../../util/const'
+import { Direction, Probe } from '../../enums'
 import BScroll from '../../index'
 import { Options } from '../../Options'
 import { propertiesProxy } from '../../util/propertiesProxy'
