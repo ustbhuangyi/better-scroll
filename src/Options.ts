@@ -3,7 +3,6 @@ import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<bounceConfig> | boolean
-export type scrollbarOptions = Partial<scrollbarConfig> | boolean
 export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
 export type dblclickOptions = Partial<DblclickConfig> | boolean
@@ -14,11 +13,6 @@ export interface bounceConfig {
   bottom: boolean
   left: boolean
   right: boolean
-}
-
-interface scrollbarConfig {
-  fade: boolean
-  interactive: boolean
 }
 
 interface mouseWheelConfig {
@@ -74,7 +68,6 @@ export class Options {
   autoBlur: boolean
   translateZ: string
   // plugins options
-  scrollbar: scrollbarOptions
   mouseWheel: mouseWheelOptions
   infinity: infinityOptions
   dblclick: dblclickOptions
@@ -148,15 +141,6 @@ export class Options {
      * }
      */
     // this.slide = false
-
-    /**
-     * for scrollbar
-     * scrollbar: {
-     *   fade: true,
-     *   interactive: false
-     * }
-     */
-    this.scrollbar = false
 
     /**
      * for mouse wheel

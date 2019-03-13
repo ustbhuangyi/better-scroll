@@ -22,6 +22,7 @@ export default class BScroll extends EventEmitter {
   options: Options
   hooks: EventEmitter
   plugins: { [name: string]: any }
+  wrapper: HTMLElement
   [key: string]: any
 
   static use(ctor: PluginCtor) {
@@ -80,6 +81,7 @@ export default class BScroll extends EventEmitter {
   }
 
   private init(wrapper: HTMLElement) {
+    this.wrapper = wrapper
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
     this.eventBubbling()
     if (this.options.autoBlur) {
