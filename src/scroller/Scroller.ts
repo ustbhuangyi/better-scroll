@@ -166,7 +166,7 @@ export default class Scroller {
       this.actionsHandler.hooks.eventTypes.start,
       (e: TouchEvent) => {
         if (!this.enabled) return true
-        this.handleStart(e)
+        return this.handleStart(e)
       }
     )
     // [mouse|touch]move event
@@ -186,7 +186,7 @@ export default class Scroller {
         if (this.hooks.trigger(this.hooks.eventTypes.beforeMove, e)) {
           return
         }
-        this.handleMove(deltaX, deltaY, e)
+        return this.handleMove(deltaX, deltaY, e)
       }
     )
     // [mouse|touch]end event
@@ -198,7 +198,7 @@ export default class Scroller {
           return
         }
 
-        this.handleEnd(e)
+        return this.handleEnd(e)
       }
     )
 
