@@ -6,4 +6,4 @@ node_modules/
 coverage/
 package-lock.json
 .rpt2_cache
-.vscode
+.vscode/

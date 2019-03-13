@@ -1,4 +1,4 @@
-import { style, extend, safeCSSStyleDeclaration } from '../util'
+import { style, safeCSSStyleDeclaration } from '../util'
 import EventEmitter from '../base/EventEmitter'
 export interface TranslaterPoint {
   x: number
