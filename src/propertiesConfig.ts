@@ -8,6 +8,22 @@ export const propertiesConfig = [
     key: 'y'
   },
   {
+    sourceKey: 'scroller.scrollBehaviorX.hasScroll',
+    key: 'hasHorizontalScroll'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorY.hasScroll',
+    key: 'hasVerticalScroll'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorX.elementSize',
+    key: 'scrollerWidth'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorY.elementSize',
+    key: 'scrollerHeight'
+  },
+  {
     sourceKey: 'scroller.scrollBehaviorX.maxScrollPos',
     key: 'maxScrollX'
   },
