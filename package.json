@@ -121,5 +121,10 @@
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.2.1",
     "zlib": "^1.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
