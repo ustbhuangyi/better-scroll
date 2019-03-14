@@ -16,10 +16,9 @@
     "build": "node build/build.js",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
+    "cm": "git-cz",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit": "git-cz",
-    "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once"
   },
   "lint-staged": {
