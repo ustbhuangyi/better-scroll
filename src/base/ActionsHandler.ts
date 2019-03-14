@@ -25,7 +25,7 @@ export interface Options {
 
 export default class ActionsHandler {
   hooks: EventEmitter
-  initiated: number | boolean
+  initiated: number
   pointX: number
   pointY: number
   startClickRegister: EventRegister
@@ -83,13 +83,17 @@ export default class ActionsHandler {
     }
   }
 
+  setInitiated(type: number = 0) {
+    this.initiated = type
+  }
+
   private start(e: TouchEvent) {
     const _eventType = eventTypeMap[e.type]
 
     if (this.initiated && this.initiated !== _eventType) {
       return
     }
-    this.initiated = _eventType
+    this.setInitiated(_eventType)
 
     // no mouse left button
     if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
@@ -155,7 +159,7 @@ export default class ActionsHandler {
     if (eventTypeMap[e.type] !== this.initiated) {
       return
     }
-    this.initiated = false
+    this.setInitiated()
 
     this.beforeHandler(e)
 

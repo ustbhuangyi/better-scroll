@@ -442,14 +442,14 @@ export default class Scroller {
       } else if (
         this.options.eventPassthrough === EventPassthrough.Horizontal
       ) {
-        this.actionsHandler.initiated = false
+        this.actionsHandler.setInitiated()
         return true
       }
     } else if (this.directionLocked === DirectionLock.Vertical) {
       if (this.options.eventPassthrough === EventPassthrough.Horizontal) {
         e.preventDefault()
       } else if (this.options.eventPassthrough === EventPassthrough.Vertical) {
-        this.actionsHandler.initiated = false
+        this.actionsHandler.setInitiated()
         return true
       }
     }
