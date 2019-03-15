@@ -30,18 +30,9 @@ const builds = [{
     banner
   },
   plugins: [
-    typescript()
-  ]
-}, {
-  input: resolve('src/plugins/slide/index.ts'),
-  output: {
-    file: resolve('dist/slide.js'),
-    name: 'Slide',
-    format: 'umd',
-    banner
-  },
-  plugins: [
-    typescript()
+    typescript({
+      useTsconfigDeclarationDir: true
+    })
   ]
 }, {
   input: resolve('src/index.ts'),
@@ -52,7 +43,9 @@ const builds = [{
     banner
   },
   plugins: [
-    typescript()
+    typescript({
+      useTsconfigDeclarationDir: true
+    })
   ]
 }, {
   input: resolve('src/index.ts'),
@@ -64,7 +57,22 @@ const builds = [{
   },
   plugins: [
     uglify(),
-    typescript()
+    typescript({
+      useTsconfigDeclarationDir: true
+    })
+  ]
+}, {
+  input: resolve('src/plugins/slide/index.ts'),
+  output: {
+    file: resolve('dist/slide.js'),
+    name: 'Slide',
+    format: 'umd',
+    banner
+  },
+  plugins: [
+    typescript({
+      useTsconfigDeclarationDir: true
+    })
   ]
 }]
 
@@ -86,33 +94,24 @@ function build(builds) {
 function buildEntry(config) {
   const isProd = /min\.js$/.test(config.output.file)
   return rollup.rollup(config).then((bundle) => {
-    bundle.generate(config).then(({ code }) => {
-      return write(config.output.file, code, isProd)
+    return new Promise((resolve, reject) => {
+      bundle.write(config.output).then((output) => {
+        const code = output.code
+        function report(extra) {
+          console.log(blue(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
+          resolve()
+        }
+        if (isProd) {
+          zlib.gzip(code, (err, zipped) => {
+            if (err) return reject(err)
+            report(' (gzipped: ' + getSize(zipped) + ')')
+          })
+        } else {
+          report()
+        }
+      })
     })
   }).catch(logError)
-}
-
-function write(dest, code, zip) {
-  return new Promise((resolve, reject) => {
-    function report(extra) {
-      console.log(blue(path.relative(process.cwd(), dest)) + ' ' + getSize(code) + (extra || ''))
-      resolve()
-    }
-    fs.writeFile(dest, code, (err) => {
-      if (err) {
-        return reject(err)
-      }
-      console.log('------------')
-      if (zip) {
-        zlib.gzip(code, (err, zipped) => {
-          if (err) return reject(err)
-          report(' (gzipped: ' + getSize(zipped) + ')')
-        })
-      } else {
-        report()
-      }
-    })
-  })
 }
 
 function getSize(code) {
