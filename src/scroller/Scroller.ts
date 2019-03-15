@@ -124,10 +124,12 @@ export default class Scroller {
   private initTranslater() {
     this.translater.hooks.on(
       this.translater.hooks.eventTypes.beforeTranslate,
-      (transformStyle: string[]) => {
+      (transformStyle: string[], point: { x: number; y: number }) => {
         if (this.options.translateZ) {
           transformStyle.push(this.options.translateZ)
         }
+        const { x, y } = point
+        this.updateAllPositions(x, y)
       }
     )
   }

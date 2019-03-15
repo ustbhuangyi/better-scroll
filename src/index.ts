@@ -88,8 +88,6 @@ export default class BScroll extends EventEmitter {
       this.handleAutoBlur()
     }
 
-    this.refresh()
-
     this.scroller.scrollTo(this.options.startX, this.options.startY)
 
     this.enable()
@@ -97,6 +95,8 @@ export default class BScroll extends EventEmitter {
     this.proxy(propertiesConfig)
 
     this.applyPlugins()
+
+    this.refresh()
   }
 
   private applyPlugins() {
