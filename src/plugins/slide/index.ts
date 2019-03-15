@@ -2,7 +2,7 @@ import BScroll from '../../index'
 import { fixInboundValue } from '../../util/lang'
 import { prepend, removeChild, addClass } from '../../util/dom'
 import { ease, EaseItem } from '../../util/ease'
-import PageInfo, { SlidePoint } from './PageInfo'
+import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
 import { staticImplements, PluginCtor } from '../type'
 import EventEmitter from '../../base/EventEmitter'
@@ -31,7 +31,7 @@ declare module '../../Options' {
 
 @staticImplements<PluginCtor>()
 export default class Slide {
-  private page: PageInfo
+  private page: SlidePage
   private slideOpt: Partial<SlideConfig>
   private thresholdX: number
   private thresholdY: number
@@ -40,7 +40,7 @@ export default class Slide {
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
     this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
-    this.page = new PageInfo(scroll, this.slideOpt)
+    this.page = new SlidePage(scroll, this.slideOpt)
     this.hooksFn = []
     this.init()
   }
@@ -106,10 +106,10 @@ export default class Slide {
     }
     this.goTo(pageInfo.realX, pageInfo.realY, time, easing)
   }
-  getCurrentPage(): SlidePoint {
+  getCurrentPage(): Page {
     return this.page.getRealPage()
   }
-  nearestPage(x: number, y: number): SlidePoint {
+  nearestPage(x: number, y: number): Page & Position {
     const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
     const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
     let triggerThreshold = true
@@ -218,8 +218,8 @@ export default class Slide {
       return
     }
     const scrollEasing = easing || this.slideOpt.easing || ease.bounce
-    let posX = pageInfo.x as number
-    let posY = pageInfo.y as number
+    let posX = pageInfo.x!
+    let posY = pageInfo.y!
     const deltaX = posX - this.scroll.scroller.scrollBehaviorX.currentPos
     const deltaY = posY - this.scroll.scroller.scrollBehaviorY.currentPos
     time = time === undefined ? this.getAnimateTime(deltaX, deltaY) : time

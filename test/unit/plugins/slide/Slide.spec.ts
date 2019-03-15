@@ -7,10 +7,10 @@ import {
   bscrollVertical,
   replaceBscrollProperties
 } from './__mock__/bscroll'
-import * as PageInfo from './__mock__/pageInfo'
-jest.mock('../../../../src/plugins/slide/PageInfo', () => {
+import * as SlidePage from './__mock__/SlidePage'
+jest.mock('../../../../src/plugins/slide/SlidePage', () => {
   return {
-    default: require('./__mock__/pageInfo').pageInfo
+    default: require('./__mock__/SlidePage').SlidePage
   }
 })
 jest.mock('../../../../src/index')
@@ -53,7 +53,7 @@ function createBScroll(
   }
 }
 
-describe('slide test for PageInfo class', () => {
+describe('slide test for SlidePage class', () => {
   let hooks: EventEmitter
   beforeAll(() => {
     hooks = new EventEmitter([
@@ -77,7 +77,7 @@ describe('slide test for PageInfo class', () => {
       }
     })
   })
-  it('new PageInfo/destroy', () => {
+  it('new SlidePage/destroy', () => {
     mockClientWidth.get.mockImplementation(() => {
       return 300
     })
@@ -107,7 +107,7 @@ describe('slide test for PageInfo class', () => {
     expect(hooks.events['forceStop'].length).toBe(0)
     expect(hooks.events['destroy'].length).toBe(0)
   })
-  it('new PageInfo no loop', () => {
+  it('new SlidePage no loop', () => {
     mockClientWidth.get.mockImplementation(() => {
       return 300
     })
@@ -122,7 +122,7 @@ describe('slide test for PageInfo class', () => {
     })
     const slide = new Slide(bscroll)
     // init currentPage
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: 0,
       y: 0,
       pageX: 0,
@@ -166,7 +166,7 @@ describe('slide test for PageInfo class', () => {
 
     expect(bscroll.refresh).toBeCalled()
 
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -300,
         y: 0,
@@ -174,22 +174,22 @@ describe('slide test for PageInfo class', () => {
         pageY: 0
       }
     })
-    PageInfo.loopXGetter.mockImplementation(() => {
+    SlidePage.loopXGetter.mockImplementation(() => {
       return true
     })
-    PageInfo.slideXGetter.mockImplementation(() => {
+    SlidePage.slideXGetter.mockImplementation(() => {
       return true
     })
     bscroll.scroller.scrollBehaviorX.currentPos = 0
     bscroll.scroller.scrollBehaviorY.currentPos = 0
     hooks.trigger('refresh')
-    expect(PageInfo.change2safePage).toBeCalledWith(1, 0)
+    expect(SlidePage.change2safePage).toBeCalledWith(1, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(-300)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(0)
     slide.destroy()
-    PageInfo.loopXGetter.mockReset()
-    PageInfo.slideXGetter.mockReset()
+    SlidePage.loopXGetter.mockReset()
+    SlidePage.slideXGetter.mockReset()
   })
   it('init slide state for loopY', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
@@ -205,7 +205,7 @@ describe('slide test for PageInfo class', () => {
 
     expect(bscroll.refresh).toBeCalled()
 
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: 0,
         y: -300,
@@ -213,25 +213,25 @@ describe('slide test for PageInfo class', () => {
         pageY: 1
       }
     })
-    PageInfo.loopYGetter.mockImplementation(() => {
+    SlidePage.loopYGetter.mockImplementation(() => {
       return true
     })
-    PageInfo.slideYGetter.mockImplementation(() => {
+    SlidePage.slideYGetter.mockImplementation(() => {
       return true
     })
     bscroll.scroller.scrollBehaviorX.currentPos = 0
     bscroll.scroller.scrollBehaviorY.currentPos = 0
     hooks.trigger('refresh')
-    expect(PageInfo.change2safePage).toBeCalledWith(0, 1)
+    expect(SlidePage.change2safePage).toBeCalledWith(0, 1)
     expect(mockscrollTo.mock.calls[0][0]).toBe(0)
     expect(mockscrollTo.mock.calls[0][1]).toBe(-300)
     expect(mockscrollTo.mock.calls[0][2]).toBe(0)
     slide.destroy()
-    PageInfo.loopYGetter.mockReset()
-    PageInfo.slideYGetter.mockReset()
+    SlidePage.loopYGetter.mockReset()
+    SlidePage.slideYGetter.mockReset()
   })
   it('init slide state for no loop', () => {
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: 0,
         y: -300,
@@ -239,10 +239,10 @@ describe('slide test for PageInfo class', () => {
         pageY: 1
       }
     })
-    PageInfo.loopYGetter.mockImplementation(() => {
+    SlidePage.loopYGetter.mockImplementation(() => {
       return false
     })
-    PageInfo.slideYGetter.mockImplementation(() => {
+    SlidePage.slideYGetter.mockImplementation(() => {
       return true
     })
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
@@ -258,22 +258,22 @@ describe('slide test for PageInfo class', () => {
     bscroll.scroller.scrollBehaviorY.currentPos = 0
     const slide = new Slide(bscroll)
 
-    expect(PageInfo.change2safePage).toBeCalledWith(0, 0)
+    expect(SlidePage.change2safePage).toBeCalledWith(0, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(0)
     expect(mockscrollTo.mock.calls[0][1]).toBe(-300)
     expect(mockscrollTo.mock.calls[0][2]).toBe(0)
     slide.destroy()
-    PageInfo.loopYGetter.mockReset()
-    PageInfo.slideYGetter.mockReset()
+    SlidePage.loopYGetter.mockReset()
+    SlidePage.slideYGetter.mockReset()
   })
   it('next page', () => {
-    PageInfo.nextPage.mockImplementationOnce(() => {
+    SlidePage.nextPage.mockImplementationOnce(() => {
       return {
         pageX: 2,
         pageY: 0
       }
     })
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -600,
         y: 0,
@@ -295,26 +295,26 @@ describe('slide test for PageInfo class', () => {
     bscroll.scroller.scrollBehaviorY.currentPos = 0
 
     slide.next()
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: -600,
       y: 0,
       pageX: 2,
       pageY: 0
     })
-    expect(PageInfo.change2safePage).toBeCalledWith(2, 0)
+    expect(SlidePage.change2safePage).toBeCalledWith(2, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(-600)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
     slide.destroy()
   })
   it('prev page & set speed', () => {
-    PageInfo.prevPage.mockImplementationOnce(() => {
+    SlidePage.prevPage.mockImplementationOnce(() => {
       return {
         pageX: 2,
         pageY: 0
       }
     })
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -600,
         y: 0,
@@ -337,26 +337,26 @@ describe('slide test for PageInfo class', () => {
     bscroll.scroller.scrollBehaviorY.currentPos = 0
 
     slide.prev()
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: -600,
       y: 0,
       pageX: 2,
       pageY: 0
     })
-    expect(PageInfo.change2safePage).toBeCalledWith(2, 0)
+    expect(SlidePage.change2safePage).toBeCalledWith(2, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(-600)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(100)
     slide.destroy()
   })
   it('go to page', () => {
-    PageInfo.realPage2Page.mockImplementationOnce(() => {
+    SlidePage.realPage2Page.mockImplementationOnce(() => {
       return {
         realX: 2,
         realY: 0
       }
     })
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -600,
         y: 0,
@@ -378,21 +378,21 @@ describe('slide test for PageInfo class', () => {
     bscroll.scroller.scrollBehaviorY.currentPos = 0
 
     slide.goToPage(1, 1)
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: -600,
       y: 0,
       pageX: 2,
       pageY: 0
     })
-    expect(PageInfo.realPage2Page).toBeCalledWith(1, 1)
-    expect(PageInfo.change2safePage).toBeCalledWith(2, 0)
+    expect(SlidePage.realPage2Page).toBeCalledWith(1, 1)
+    expect(SlidePage.change2safePage).toBeCalledWith(2, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(-600)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
     slide.destroy()
   })
   it('getCurrentPage', () => {
-    PageInfo.getRealPage.mockImplementationOnce(() => {
+    SlidePage.getRealPage.mockImplementationOnce(() => {
       return {
         x: 1,
         y: 1,
@@ -411,8 +411,6 @@ describe('slide test for PageInfo class', () => {
     })
     const slide = new Slide(bscroll)
     expect(slide.getCurrentPage()).toMatchObject({
-      x: 1,
-      y: 1,
       pageX: 1,
       pageY: 1
     })
@@ -440,8 +438,8 @@ describe('slide test for PageInfo class', () => {
     }
     hooks.trigger('refresh')
     hooks.trigger('modifyScrollMeta', metaData)
-    expect(PageInfo.nearestPage).not.toBeCalled()
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.nearestPage).not.toBeCalled()
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: 0,
       y: 0,
       pageX: 0,
@@ -453,10 +451,10 @@ describe('slide test for PageInfo class', () => {
       time: 300
     })
 
-    PageInfo.nearestPage.mockClear()
-    PageInfo.currentPageSetter.mockClear()
+    SlidePage.nearestPage.mockClear()
+    SlidePage.currentPageSetter.mockClear()
     // > threshold & set threshold = 50
-    PageInfo.nearestPage.mockImplementationOnce(() => {
+    SlidePage.nearestPage.mockImplementationOnce(() => {
       return {
         x: -300,
         y: 0,
@@ -480,8 +478,8 @@ describe('slide test for PageInfo class', () => {
     }
     hooks.trigger('refresh')
     hooks.trigger('modifyScrollMeta', metaData)
-    expect(PageInfo.nearestPage).toBeCalledWith(-160, 0, -1, 0)
-    expect(PageInfo.currentPageSetter).toBeCalledWith({
+    expect(SlidePage.nearestPage).toBeCalledWith(-160, 0, -1, 0)
+    expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: -300,
       y: 0,
       pageX: 1,
@@ -509,13 +507,13 @@ describe('slide test for PageInfo class', () => {
     expect(mockscrollTo).not.toBeCalled()
 
     bscroll.options.slide.loop = true
-    PageInfo.resetLoopPage.mockImplementationOnce(() => {
+    SlidePage.resetLoopPage.mockImplementationOnce(() => {
       return {
         pageX: 1,
         pageY: 0
       }
     })
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -300,
         y: 0,
@@ -524,16 +522,16 @@ describe('slide test for PageInfo class', () => {
       }
     })
     hooks.trigger('scrollEnd')
-    expect(PageInfo.currentPageSetter).toHaveBeenCalled()
+    expect(SlidePage.currentPageSetter).toHaveBeenCalled()
     expect(mockscrollTo).toHaveBeenCalled()
 
-    PageInfo.currentPageSetter.mockClear()
+    SlidePage.currentPageSetter.mockClear()
     mockscrollTo.mockClear()
-    PageInfo.resetLoopPage.mockImplementationOnce(() => {
+    SlidePage.resetLoopPage.mockImplementationOnce(() => {
       return undefined
     })
     hooks.trigger('scrollEnd')
-    expect(PageInfo.currentPageSetter).not.toBeCalled()
+    expect(SlidePage.currentPageSetter).not.toBeCalled()
     expect(mockscrollTo).not.toBeCalled()
 
     slide.destroy()
@@ -558,7 +556,7 @@ describe('slide test for PageInfo class', () => {
     scrollBehaviorY.startPos = 0
     scrollBehaviorX.direction = 1
     scrollBehaviorY.direction = 1
-    PageInfo.change2safePage.mockImplementationOnce(() => {
+    SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: -300,
         y: 0,
@@ -568,7 +566,7 @@ describe('slide test for PageInfo class', () => {
     })
 
     hooks.trigger('flick')
-    expect(PageInfo.change2safePage).toBeCalledWith(1, 1)
+    expect(SlidePage.change2safePage).toBeCalledWith(1, 1)
     expect(mockscrollTo.mock.calls[0][0]).toBe(-300)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)

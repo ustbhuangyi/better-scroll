@@ -4,12 +4,15 @@ import BScroll from '../../index'
 import { SlideConfig } from './index'
 import PagesPos from './PagesPos'
 
-export interface SlidePoint {
-  x?: number
-  y?: number
+export interface Page {
   pageX: number
   pageY: number
 }
+export interface Position {
+  x: number
+  y: number
+}
+
 enum Direction {
   Positive = 'positive',
   Negative = 'negative'
@@ -26,7 +29,7 @@ export default class PageInfo {
   slideY: boolean
   needLoop: boolean
   pagesPos: PagesPos
-  currentPage: SlidePoint
+  currentPage: Page & Position
   constructor(public scroll: BScroll, private slideOpt: Partial<SlideConfig>) {}
   init() {
     this.currentPage = {
@@ -38,7 +41,7 @@ export default class PageInfo {
     this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
     this.checkSlideLoop()
   }
-  change2safePage(pageX: number, pageY: number): SlidePoint | undefined {
+  change2safePage(pageX: number, pageY: number): Page & Position | undefined {
     if (!this.pagesPos.hasInfo()) {
       return
     }
@@ -62,15 +65,18 @@ export default class PageInfo {
       y: y
     }
   }
-  getRealPage(): SlidePoint {
-    let currentPage = extend({}, this.currentPage) as SlidePoint
+  getRealPage(): Page {
+    let currentPage = extend({}, this.currentPage) as Page
     if (this.loopX) {
       currentPage.pageX = currentPage.pageX - 1
     }
     if (this.loopY) {
       currentPage.pageY = currentPage.pageY - 1
     }
-    return currentPage
+    return {
+      pageX: currentPage.pageX,
+      pageY: currentPage.pageY
+    }
   }
   getPageSize(): { width: number; height: number } {
     return this.pagesPos.getPos(this.currentPage.pageX, this.currentPage.pageY)
@@ -114,7 +120,7 @@ export default class PageInfo {
     y: number,
     directionX: number,
     directionY: number
-  ): SlidePoint {
+  ): Page & Position {
     const pageInfo = this.pagesPos.getNearestPage(x, y)
     if (!pageInfo) {
       return {
@@ -214,7 +220,7 @@ export default class PageInfo {
     }
   }
   private checkSlideLoop() {
-    this.needLoop = this.slideOpt.loop as boolean
+    this.needLoop = this.slideOpt.loop!
     if (this.pagesPos.xLen > 1) {
       this.slideX = true
     }
