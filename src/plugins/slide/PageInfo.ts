@@ -29,6 +29,12 @@ export default class PageInfo {
   currentPage: SlidePoint
   constructor(public scroll: BScroll, private slideOpt: Partial<SlideConfig>) {}
   init() {
+    this.currentPage = {
+      x: 0,
+      y: 0,
+      pageX: 0,
+      pageY: 0
+    }
     this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
     this.checkSlideLoop()
   }
@@ -40,10 +46,6 @@ export default class PageInfo {
       pageX = this.pagesPos.xLen - 1
     } else if (pageX < 0) {
       pageX = 0
-    }
-
-    if (!this.pagesPos.pages[pageX]) {
-      return
     }
 
     if (pageY >= this.pagesPos.yLen) {
@@ -80,25 +82,22 @@ export default class PageInfo {
     if (!this.pagesPos.hasInfo()) {
       return
     }
-    let len
+    let lastX = this.pagesPos.xLen - 1
+    let lastY = this.pagesPos.yLen - 1
+    let firstX = 0
+    let firstY = 0
     if (this.loopX) {
-      len = this.pagesPos.xLen - 2
-      if (x >= len) {
-        x = len - 1
-      } else if (x < 0) {
-        x = 0
-      }
       x += 1
+      firstX = firstX + 1
+      lastX = lastX - 1
     }
     if (this.loopY) {
-      len = this.pagesPos.yLen - 2
-      if (y >= len) {
-        y = len - 1
-      } else if (y < 0) {
-        y = 0
-      }
       y += 1
+      firstY = firstY + 1
+      lastY = lastY - 1
     }
+    x = fixInboundValue(x, firstX, lastX)
+    y = fixInboundValue(y, firstY, lastY)
     return {
       realX: x,
       realY: y

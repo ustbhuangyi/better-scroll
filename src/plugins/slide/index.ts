@@ -5,6 +5,7 @@ import { ease, EaseItem } from '../../util/ease'
 import PageInfo, { SlidePoint } from './PageInfo'
 import propertiesConfig from './propertiesConfig'
 import { staticImplements, PluginCtor } from '../type'
+import EventEmitter from '../../base/EventEmitter'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {
@@ -35,10 +36,12 @@ export default class Slide {
   private thresholdX: number
   private thresholdY: number
   static pluginName = 'slide'
+  private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
     this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
     this.page = new PageInfo(scroll, this.slideOpt)
+    this.hooksFn = []
     this.init()
   }
   init() {
@@ -62,45 +65,26 @@ export default class Slide {
       pageX: 0,
       pageY: 0
     }
-    this.scroll.hooks.on('refresh', () => {
-      this.initSlideState()
-    })
-    this.scroll.scroller.hooks.on(
+    const scrollHooks = this.scroll.hooks
+    const scrollerHooks = this.scroll.scroller.hooks
+
+    this.registorHooks(scrollHooks, 'refresh', this.initSlideState)
+    this.registorHooks(scrollHooks, 'destroy', this.destroy)
+    this.registorHooks(
+      scrollerHooks,
       'modifyScrollMeta',
-      (scrollMeta: {
-        newX: number
-        newY: number
-        time: number
-        [key: string]: any
-      }) => {
-        const newPos = this.nearestPage(scrollMeta.newX, scrollMeta.newY)
-        scrollMeta.time = this.getAnimateTime(
-          scrollMeta.newX - <number>newPos.x,
-          scrollMeta.newY - <number>newPos.y
-        )
-        scrollMeta.newX = <number>newPos.x
-        scrollMeta.newY = <number>newPos.y
-        scrollMeta.easing = this.slideOpt.easing || ease.bounce
-        this.page.currentPage = {
-          x: scrollMeta.newX,
-          y: scrollMeta.newY,
-          pageX: newPos.pageX,
-          pageY: newPos.pageY
-        }
-      }
+      this.modifyScrollMetaHandler
     )
-    this.scroll.scroller.hooks.on('scrollEnd', () => {
-      this.resetLoop()
-    })
-    this.scroll.scroller.animater.hooks.on('forceStop', () => {
-      this.resetLoop()
-    })
-    this.scroll.hooks.on('destroy', () => {
-      this.destroy()
-    })
+    this.registorHooks(scrollerHooks, 'scrollEnd', this.resetLoop)
+    this.registorHooks(
+      this.scroll.scroller.animater.hooks,
+      'forceStop',
+      this.resetLoop
+    )
     if (slide.listenFlick !== false) {
-      this.enablePageChangeForFlick()
+      this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
     }
+
     if (!lazyInit2Refresh) {
       this.initSlideState()
     } else {
@@ -163,11 +147,18 @@ export default class Slide {
         removeChild(slideEls, <HTMLElement>children[0])
       }
     }
+    this.hooksFn.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksFn.length = 0
   }
   private initSlideState() {
     this.page.init()
     this.initThreshold()
-    if (this.page.loopX || this.page.loopY) {
+    if (this.page.slideX || this.page.slideY) {
       let initPageX = this.page.loopX ? 1 : 0
       let initPageY = this.page.loopY ? 1 : 0
       this.goTo(
@@ -217,7 +208,6 @@ export default class Slide {
     const slideItemWidth = children[0].clientWidth
     for (let i = 0; i < children.length; i++) {
       const slideItemDom = children[i] as HTMLElement
-      addClass(slideItemDom, 'slide-item')
       slideItemDom.style.width = slideItemWidth + 'px'
     }
     slideEls.style.width = slideItemWidth * children.length + 'px'
@@ -242,19 +232,17 @@ export default class Slide {
     }
     this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
-  private enablePageChangeForFlick() {
-    this.scroll.scroller.hooks.on('flick', () => {
-      let scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-      let scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
-      const deltaX = scrollBehaviorX.currentPos - scrollBehaviorX.startPos
-      const deltaY = scrollBehaviorY.currentPos - scrollBehaviorY.startPos
-      let time = this.getAnimateTime(deltaX, deltaY)
-      this.goTo(
-        this.page.currentPage.pageX + scrollBehaviorX.direction,
-        this.page.currentPage.pageY + scrollBehaviorY.direction,
-        time
-      )
-    })
+  private flickHandler() {
+    let scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
+    let scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+    const deltaX = scrollBehaviorX.currentPos - scrollBehaviorX.startPos
+    const deltaY = scrollBehaviorY.currentPos - scrollBehaviorY.startPos
+    let time = this.getAnimateTime(deltaX, deltaY)
+    this.goTo(
+      this.page.currentPage.pageX + scrollBehaviorX.direction,
+      this.page.currentPage.pageY + scrollBehaviorY.direction,
+      time
+    )
   }
   private getAnimateTime(deltaX: number, deltaY: number): number {
     if (this.slideOpt.speed) {
@@ -267,5 +255,30 @@ export default class Slide {
       ),
       300
     )
+  }
+  private modifyScrollMetaHandler(scrollMeta: {
+    newX: number
+    newY: number
+    time: number
+    [key: string]: any
+  }) {
+    const newPos = this.nearestPage(scrollMeta.newX, scrollMeta.newY)
+    scrollMeta.time = this.getAnimateTime(
+      scrollMeta.newX - <number>newPos.x,
+      scrollMeta.newY - <number>newPos.y
+    )
+    scrollMeta.newX = <number>newPos.x
+    scrollMeta.newY = <number>newPos.y
+    scrollMeta.easing = this.slideOpt.easing || ease.bounce
+    this.page.currentPage = {
+      x: scrollMeta.newX,
+      y: scrollMeta.newY,
+      pageX: newPos.pageX,
+      pageY: newPos.pageY
+    }
+  }
+  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
   }
 }
