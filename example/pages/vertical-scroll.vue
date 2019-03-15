@@ -68,8 +68,8 @@
   import SwitchOption from 'example/components/switch-option/switch-option.vue'
   import InputOption from 'example/components/input-option/input-option.vue'
   import SelectOption from 'example/components/select-option/select-option.vue'
-
   import { ease } from '../common/js/ease'
+  import Scroller from '../../src/scroller/Scroller';
 
   export default {
     data() {
