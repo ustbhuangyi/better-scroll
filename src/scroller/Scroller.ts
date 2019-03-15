@@ -297,11 +297,6 @@ export default class Scroller {
   private handleEnd(e: TouchEvent) {
     const { x, y } = this.getCurrentPos()
 
-    this.hooks.trigger(this.hooks.eventTypes.touchEnd, {
-      x,
-      y
-    })
-
     this.animater.pending = false
 
     // ensures that the last position is rounded
@@ -311,7 +306,7 @@ export default class Scroller {
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
 
-    if (this.hooks.trigger(this.hooks.eventTypes.end, e)) {
+    if (this.hooks.trigger(this.hooks.eventTypes.touchEnd, { x, y })) {
       return
     }
 

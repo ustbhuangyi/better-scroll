@@ -17,7 +17,7 @@ export default class EventEmitter {
     this.registerType(names)
   }
 
-  on(type: string, fn: Function, context = this) {
+  on(type: string, fn: Function, context: any = this) {
     this._checkInTypes(type)
     if (!this.events[type]) {
       this.events[type] = []
@@ -27,7 +27,7 @@ export default class EventEmitter {
     return this
   }
 
-  once(type: string, fn: Function, context = this) {
+  once(type: string, fn: Function, context: any = this) {
     this._checkInTypes(type)
     const magic = (...args: any[]) => {
       this.off(type, magic)
