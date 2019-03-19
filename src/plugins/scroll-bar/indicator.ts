@@ -1,7 +1,7 @@
 import ScrollBar from './scroll-bar'
 import BScroll from '../../index'
 import { Direction } from './const'
-import { style } from '../../util/dom'
+import { style, getRect } from '../../util/dom'
 import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
 import EventHandler from './eventHandler'
@@ -26,6 +26,12 @@ interface KeysMap {
   position: 'top' | 'left'
 }
 
+interface KeyValues {
+  maxPos: number
+  sizeRatio: number
+  initialSize: number
+}
+
 const INDICATOR_MIN_LEN = 8
 
 export default class Indicator {
@@ -33,12 +39,13 @@ export default class Indicator {
   public wrapperStyle: CSSStyleDeclaration
   public el: HTMLElement
   public elStyle: CSSStyleDeclaration
-  public initialSize: number
   public direction: Direction
   public visible: number
-  // private fadeTimeout: number
-  public sizeRatio: number = 1
-  public maxPos: number = 0
+  public keyVals: KeyValues = {
+    sizeRatio: 1,
+    maxPos: 0,
+    initialSize: 0
+  }
   public curPos: number = 0
   public keysMap: KeysMap
   public eventHandler: EventHandler
@@ -94,9 +101,9 @@ export default class Indicator {
       this.visible = 1
     }
 
-    const translater = this.bscroll.scroller.translater
-    translater.hooks.on('translate', (endPoint: TranslaterPoint) => {
-      this.updatePosition(endPoint)
+    const animater = this.bscroll.scroller.animater
+    animater.hooks.on('translate', (endPoint: TranslaterPoint) => {
+      this.updatePosAndSize(endPoint, this.keyVals)
     })
   }
 
@@ -127,19 +134,37 @@ export default class Indicator {
     }
   }
 
+  fade(visible?: boolean) {
+    // TODO 对比 1.0
+    let time = visible ? 250 : 500
+    this.wrapperStyle[style.transitionDuration as any] = time + 'ms'
+    this.wrapperStyle.opacity = visible ? '1' : '0'
+    this.visible = visible ? 1 : 0
+  }
+
   refresh() {
-    if (this._shouldShow()) {
+    let { hasScroll } = this.keysMap
+    if (this.setShowBy(this.bscroll[hasScroll])) {
+      // TODO time？
       this.setTransitionTime()
-      this._calculate()
-      this.updatePosition({
-        x: this.bscroll.x,
-        y: this.bscroll.y
-      })
+      let { wrapperSize, scrollerSize, maxScroll } = this.keysMap
+      this.keyVals = this.refreshKeyValues(
+        this.wrapper[wrapperSize],
+        this.bscroll[scrollerSize],
+        this.bscroll[maxScroll]
+      )
+      this.updatePosAndSize(
+        {
+          x: this.bscroll.x,
+          y: this.bscroll.y
+        },
+        this.keyVals
+      )
     }
   }
 
-  private _shouldShow(): boolean {
-    if (this.bscroll[this.keysMap.hasScroll]) {
+  setShowBy(hasScroll: boolean): boolean {
+    if (hasScroll) {
       this.wrapper.style.display = ''
       return true
     }
@@ -147,73 +172,75 @@ export default class Indicator {
     return false
   }
 
-  private _calculate() {
-    let { size, wrapperSize, scrollerSize, maxScroll } = this.keysMap
-    let wrapperSizeValue = this.wrapper[wrapperSize] // FIX 取 offsetHeight offsetWidth，reflow？
-    this.initialSize = Math.max(
+  refreshKeyValues(
+    wrapperSize: number,
+    scrollerSize: number,
+    maxScroll: number
+  ): KeyValues {
+    let initialSize = Math.max(
       Math.round(
-        (wrapperSizeValue * wrapperSizeValue) /
-          (this.bscroll[scrollerSize] || wrapperSizeValue || 1)
+        (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
       ),
       INDICATOR_MIN_LEN
     )
-    this.elStyle[size] = `${this.initialSize}px`
 
-    this.maxPos = wrapperSizeValue - this.initialSize
+    let maxPos = wrapperSize - initialSize
     // 这里 sizeRatio 是个负值
-    this.sizeRatio = this.maxPos / this.bscroll[maxScroll]
+    let sizeRatio = maxPos / maxScroll
+
+    return {
+      initialSize,
+      maxPos,
+      sizeRatio
+    }
   }
 
-  fade(visible?: boolean, hold?: boolean) {
-    // TODO 思考 fade 逻辑
-    // if (hold && !this.visible) {
-    //   return
-    // }
-
-    let time = visible ? 250 : 500
-    this.wrapperStyle[style.transitionDuration as any] = time + 'ms'
-
-    // clearTimeout(this.fadeTimeout)
-    // this.fadeTimeout = window.setTimeout(() => {
-    this.wrapperStyle.opacity = visible ? '1' : '0'
-    this.visible = visible ? 1 : 0
-    // }, 0)
+  updatePosAndSize(endPoint: TranslaterPoint, keyVals: KeyValues) {
+    const { pos, size } = this.refreshPosAndSizeValue(endPoint, keyVals)
+    this.curPos = pos
+    this.refreshPosAndSizeStyle(size, pos)
   }
 
   // TODO 拆分 x y, refactor to pure function
-  updatePosition(endPoint: TranslaterPoint) {
-    const { pos, size, translate, position } = this.keysMap
-    let newPos = Math.round(this.sizeRatio * endPoint[pos])
+  refreshPosAndSizeValue(
+    endPoint: TranslaterPoint,
+    keyVals: KeyValues
+  ): { pos: number; size: number } {
+    const { pos: posKey } = this.keysMap
+    const { sizeRatio, initialSize, maxPos } = keyVals
 
-    if (newPos < 0) {
-      // TODO 取消注释
+    let pos = Math.round(sizeRatio * endPoint[posKey])
+    let size
+    if (pos < 0) {
+      // TODO 搞清楚这里设置transitionTime 的逻辑
       // this.transitionTime(500)
-      const sizeValue = Math.max(
-        this.initialSize + newPos * 3,
-        INDICATOR_MIN_LEN
-      )
-      this.elStyle[size] = `${sizeValue}px`
-      newPos = 0
-    } else if (newPos > this.maxPos) {
+      size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN)
+      pos = 0
+    } else if (pos > maxPos) {
       // this.transitionTime(500)
-      const sizeValue = Math.max(
-        this.initialSize - (newPos - this.maxPos) * 3,
-        INDICATOR_MIN_LEN
-      )
-      this.elStyle[size] = `${sizeValue}px`
-      newPos = this.maxPos + this.initialSize - sizeValue
+      size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN)
+      pos = maxPos + initialSize - size
     } else {
-      this.elStyle[size] = `${this.initialSize}px`
+      size = initialSize
     }
 
-    this.curPos = newPos
+    return {
+      pos,
+      size
+    }
+  }
+
+  refreshPosAndSizeStyle(size: number, pos: number) {
+    const { position, translate, size: sizeKey } = this.keysMap
+
+    this.elStyle[sizeKey] = `${size}px`
 
     if (this.bscroll.options.useTransform) {
-      this.elStyle[style.transform as any] = `${translate}(${newPos}px)${
+      this.elStyle[style.transform as any] = `${translate}(${pos}px)${
         this.bscroll.translateZ
       }`
     } else {
-      this.elStyle[position] = `${newPos}px`
+      this.elStyle[position] = `${pos}px`
     }
   }
 
@@ -235,13 +262,13 @@ export default class Indicator {
       this.bscroll.trigger('scrollStart')
     }
 
-    const newPos = this._calDesPos(delta)
+    const newScrollPos = this._calScrollDesPos(this.curPos, delta, this.keyVals)
 
     // TODO freeScroll ？
     if (this.direction === Direction.Vertical) {
-      this.bscroll.scrollTo(this.bscroll.x, newPos)
+      this.bscroll.scrollTo(this.bscroll.x, newScrollPos)
     } else {
-      this.bscroll.scrollTo(newPos, this.bscroll.y)
+      this.bscroll.scrollTo(newScrollPos, this.bscroll.y)
     }
 
     this.bscroll.trigger('scroll', {
@@ -250,18 +277,21 @@ export default class Indicator {
     })
   }
 
-  private _calDesPos(delta: number) {
-    let newPos = this.curPos + delta
+  private _calScrollDesPos(
+    curPos: number,
+    delta: number,
+    keyVals: KeyValues
+  ): number {
+    const { maxPos, sizeRatio } = keyVals
+    let newPos = curPos + delta
 
     if (newPos < 0) {
       newPos = 0
-    } else if (newPos > this.maxPos) {
-      newPos = this.maxPos
+    } else if (newPos > maxPos) {
+      newPos = maxPos
     }
 
-    newPos = Math.round(newPos / this.sizeRatio)
-
-    return newPos
+    return Math.round(newPos / sizeRatio)
   }
 
   private _endHandler(moved: boolean) {
