@@ -24,7 +24,7 @@ export default class Translater {
   hooks: EventEmitter
   constructor(public element: HTMLElement) {
     this.style = element.style
-    this.hooks = new EventEmitter(['beforeTranslate'])
+    this.hooks = new EventEmitter(['beforeTranslate', 'translate'])
   }
 
   getComputedPosition() {
@@ -63,5 +63,6 @@ export default class Translater {
       point
     )
     this.style[style.transform as any] = `${transformStyle.join(' ')}`
+    this.hooks.trigger(this.hooks.eventTypes.translate, point)
   }
 }

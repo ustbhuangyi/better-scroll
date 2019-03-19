@@ -1,7 +1,7 @@
 import EventEmitter from './base/EventEmitter'
 import { Options } from './Options'
 import Scroller from './scroller/Scroller'
-import { warn, isUndef, propertiesProxy, bubbling } from './util'
+import { getElement, warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
 import { PluginCtor } from './plugins/type'
 
@@ -55,9 +55,7 @@ export default class BScroll extends EventEmitter {
       'refresh',
       'destroy'
     ])
-    const wrapper = (typeof el === 'string'
-      ? document.querySelector(el)
-      : el) as HTMLElement
+    const wrapper = getElement(el)
 
     if (!wrapper) {
       warn('Can not resolve the wrapper DOM.')
@@ -131,8 +129,7 @@ export default class BScroll extends EventEmitter {
       'scroll',
       'scrollEnd',
       'touchEnd',
-      'flick',
-      'end'
+      'flick'
     ])
     bubbling(this.hooks, this, ['destroy', 'enable', 'disable', 'refresh'])
   }
@@ -149,12 +146,12 @@ export default class BScroll extends EventEmitter {
   }
 
   enable() {
-    this.scroller.enabled = true
+    this.scroller.enable()
     this.hooks.trigger(this.hooks.eventTypes.enable)
   }
 
   disable() {
-    this.scroller.enabled = false
+    this.scroller.disable()
     this.hooks.trigger(this.hooks.eventTypes.disable)
   }
 

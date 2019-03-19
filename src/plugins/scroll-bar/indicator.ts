@@ -30,7 +30,7 @@ export default class Indicator implements IndicatorInterface {
   private indicatorWidth: number
   private direction: Direction
   private visible: number
-  private fadeTimeout: NodeJS.Timeout
+  private fadeTimeout: number
   private sizeRatioX: number
   private sizeRatioY: number
   private maxPosX: number

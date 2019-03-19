@@ -10,17 +10,20 @@ import {
 
 import { EventType, MouseButton } from '../enums'
 
+type Exception = {
+  tagName?: RegExp
+  className?: RegExp
+}
+
 export interface Options {
-  [key: string]: any
+  [key: string]: boolean | number | Exception
   click: boolean
   bindToWrapper: boolean
   disableMouse: boolean
   preventDefault: boolean
   stopPropagation: boolean
-  preventDefaultException: {
-    tagName?: RegExp
-    className?: RegExp
-  }
+  preventDefaultException: Exception
+  momentumLimitDistance: number
 }
 
 export default class ActionsHandler {

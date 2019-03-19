@@ -9,7 +9,7 @@ import {
 import { Probe } from '../enums/probe'
 
 export default class Animation extends Base {
-  scrollTo(
+  move(
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
@@ -42,7 +42,7 @@ export default class Animation extends Base {
 
       // js animation end
       if (now >= destTime) {
-        this.pending = false
+        this.setPending(false)
         this.translate(endPoint)
 
         this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
@@ -70,7 +70,7 @@ export default class Animation extends Base {
       }
     }
 
-    this.pending = true
+    this.setPending(true)
     cancelAnimationFrame(this.timer)
     step()
   }
@@ -78,9 +78,9 @@ export default class Animation extends Base {
   stop() {
     // still in requestFrameAnimation
     if (this.pending) {
-      this.pending = false
+      this.setPending(false)
       cancelAnimationFrame(this.timer)
-      this.forceStopped = true
+      this.setForceStopped(true)
       this.hooks.trigger(this.hooks.eventTypes.forceStop)
     }
   }

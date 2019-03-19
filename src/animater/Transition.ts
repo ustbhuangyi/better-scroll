@@ -34,13 +34,13 @@ export default class Transition extends Base {
     this.hooks.trigger(this.hooks.eventTypes.timeFunction, easing)
   }
 
-  scrollTo(
+  move(
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
     easingFn: string | EaseFn
   ) {
-    this.pending = time > 0
+    this.setPending(time > 0)
     this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
     this.translate(endPoint)
@@ -63,12 +63,12 @@ export default class Transition extends Base {
   stop() {
     // still in transition
     if (this.pending) {
-      this.pending = false
+      this.setPending(false)
       cancelAnimationFrame(this.timer)
       const { x, y } = this.translater.getComputedPosition()
       this.transitionTime()
       this.translate({ x, y })
-      this.forceStopped = true
+      this.setForceStopped(true)
       this.hooks.trigger(this.hooks.eventTypes.forceStop)
     }
   }
