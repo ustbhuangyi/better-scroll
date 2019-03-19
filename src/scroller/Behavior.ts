@@ -125,12 +125,10 @@ export default class Behavior {
 
     const { deceleration, swipeBounceTime, swipeTime } = options
     const momentumData = {
-      destination: swipeTime,
-      duration: 0,
+      destination: current + (speed / deceleration) * (distance < 0 ? -1 : 1),
+      duration: swipeTime,
       rate: 15
     }
-    momentumData.destination =
-      current + (speed / deceleration) * (distance < 0 ? -1 : 1)
 
     this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData)
 
@@ -208,7 +206,7 @@ export default class Behavior {
     return Math.round(this.currentPos)
   }
 
-  outOfBoundary() {
+  checkInBoundary() {
     const position = this.adjustPosition(this.currentPos)
     const inBoundary = position === this.getCurrentPos()
     return {
@@ -219,14 +217,14 @@ export default class Behavior {
 
   // adjust position when out of boundary
   adjustPosition(pos: number) {
-    const roundPos = Math.round(pos)
+    let roundPos = Math.round(pos)
     if (!this.hasScroll || roundPos > this.minScrollPos) {
-      pos = this.minScrollPos
+      roundPos = this.minScrollPos
     } else if (roundPos < this.maxScrollPos) {
-      pos = this.maxScrollPos
+      roundPos = this.maxScrollPos
     }
 
-    return pos
+    return roundPos
   }
 
   updateStartPos() {

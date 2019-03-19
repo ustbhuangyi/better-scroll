@@ -200,7 +200,7 @@ export default class Scroller {
         this.hooks.trigger(this.hooks.eventTypes.touchEnd, pos)
 
         // check if it is a click operation
-        if (actions.moved && this.checkClick(e)) {
+        if (!actions.moved && this.checkClick(e)) {
           this.animater.setForceStopped(false)
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
           return true
@@ -473,11 +473,11 @@ export default class Scroller {
     const {
       position: x,
       inBoundary: xInBoundary
-    } = this.scrollBehaviorX.outOfBoundary()
+    } = this.scrollBehaviorX.checkInBoundary()
     const {
       position: y,
       inBoundary: yInBoundary
-    } = this.scrollBehaviorY.outOfBoundary()
+    } = this.scrollBehaviorY.checkInBoundary()
 
     if (xInBoundary && yInBoundary) {
       return false
