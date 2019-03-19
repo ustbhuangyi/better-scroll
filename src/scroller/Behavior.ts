@@ -1,6 +1,11 @@
 import { getRect } from '../util'
 import { Direction } from '../enums/direction'
 import EventEmitter from '../base/EventEmitter'
+
+export type Bounces = [boolean, boolean]
+
+export type Rect = { size: string; position: string }
+
 export interface Options {
   scrollable: boolean
   momentum: boolean
@@ -9,7 +14,9 @@ export interface Options {
   deceleration: number
   swipeBounceTime: number
   swipeTime: number
-  [key: string]: number | boolean
+  bounces: Bounces
+  rect: Rect
+  [key: string]: number | boolean | Bounces | Rect
 }
 
 export default class Behavior {
@@ -40,7 +47,7 @@ export default class Behavior {
     this.dist = 0
   }
 
-  move(delta: number, bounces: [boolean | undefined, boolean | undefined]) {
+  move(delta: number) {
     delta = this.hasScroll ? delta : 0
     this.movingDirection =
       delta > 0
@@ -54,8 +61,8 @@ export default class Behavior {
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
       if (
-        (newPos > this.minScrollPos && bounces[0]) ||
-        (newPos < this.maxScrollPos && bounces[1])
+        (newPos > this.minScrollPos && this.options.bounces[0]) ||
+        (newPos < this.maxScrollPos && this.options.bounces[1])
       ) {
         newPos = this.currentPos + delta / 3
       } else {
@@ -66,13 +73,7 @@ export default class Behavior {
     return newPos
   }
 
-  end({
-    duration,
-    bounces
-  }: {
-    duration: number
-    bounces: [boolean | undefined, boolean | undefined]
-  }) {
+  end(duration: number) {
     let momentumInfo: {
       destination?: number
       duration?: number
@@ -88,8 +89,8 @@ export default class Behavior {
       absDist > this.options.momentumLimitDistance
     ) {
       const wrapperSize =
-        (this.direction === Direction.Negative && bounces[0]) ||
-        (this.direction === Direction.Positive && bounces[1])
+        (this.direction === Direction.Negative && this.options.bounces[0]) ||
+        (this.direction === Direction.Positive && this.options.bounces[1])
           ? this.wrapperSize
           : 0
 
@@ -111,7 +112,7 @@ export default class Behavior {
     return momentumInfo
   }
 
-  momentum(
+  private momentum(
     current: number,
     start: number,
     time: number,
@@ -120,39 +121,38 @@ export default class Behavior {
     wrapperSize: number,
     options = this.options
   ) {
-    let distance = current - start
-    let speed = Math.abs(distance) / time
+    const distance = current - start
+    const speed = Math.abs(distance) / time
 
-    let { deceleration, swipeBounceTime, swipeTime } = options
-    let ret = {
-      destination: swipeTime,
-      duration: 0,
+    const { deceleration, swipeBounceTime, swipeTime } = options
+    const momentumData = {
+      destination: current + (speed / deceleration) * (distance < 0 ? -1 : 1),
+      duration: swipeTime,
       rate: 15
     }
-    ret.destination = current + (speed / deceleration) * (distance < 0 ? -1 : 1)
 
-    this.hooks.trigger(this.hooks.eventTypes.momentum, ret)
+    this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData)
 
-    if (ret.destination < lowerMargin) {
-      ret.destination = wrapperSize
+    if (momentumData.destination < lowerMargin) {
+      momentumData.destination = wrapperSize
         ? Math.max(
             lowerMargin - wrapperSize / 4,
-            lowerMargin - (wrapperSize / ret.rate) * speed
+            lowerMargin - (wrapperSize / momentumData.rate) * speed
           )
         : lowerMargin
-      ret.duration = swipeBounceTime
-    } else if (ret.destination > upperMargin) {
-      ret.destination = wrapperSize
+      momentumData.duration = swipeBounceTime
+    } else if (momentumData.destination > upperMargin) {
+      momentumData.destination = wrapperSize
         ? Math.min(
             upperMargin + wrapperSize / 4,
-            upperMargin + (wrapperSize / ret.rate) * speed
+            upperMargin + (wrapperSize / momentumData.rate) * speed
           )
         : upperMargin
-      ret.duration = swipeBounceTime
+      momentumData.duration = swipeBounceTime
     }
-    ret.destination = Math.round(ret.destination)
+    momentumData.destination = Math.round(momentumData.destination)
 
-    return ret
+    return momentumData
   }
 
   updateDirection() {
@@ -165,7 +165,8 @@ export default class Behavior {
         : Direction.Default
   }
 
-  refresh({ size, position }: { size: string; position: string }) {
+  refresh() {
+    const { size, position } = this.options.rect
     const isWrapperStatic =
       window.getComputedStyle(this.wrapper, null).position === 'static'
     const wrapperRect = getRect(this.wrapper)
@@ -201,16 +202,29 @@ export default class Behavior {
     this.currentPos = pos
   }
 
+  getCurrentPos() {
+    return Math.round(this.currentPos)
+  }
+
+  checkInBoundary() {
+    const position = this.adjustPosition(this.currentPos)
+    const inBoundary = position === this.getCurrentPos()
+    return {
+      position,
+      inBoundary
+    }
+  }
+
   // adjust position when out of boundary
-  adjustPosition() {
-    let pos = this.currentPos
+  adjustPosition(pos: number) {
     let roundPos = Math.round(pos)
     if (!this.hasScroll || roundPos > this.minScrollPos) {
-      pos = this.minScrollPos
+      roundPos = this.minScrollPos
     } else if (roundPos < this.maxScrollPos) {
-      pos = this.maxScrollPos
+      roundPos = this.maxScrollPos
     }
-    return pos
+
+    return roundPos
   }
 
   updateStartPos() {
@@ -221,7 +235,13 @@ export default class Behavior {
     this.absStartPos = this.currentPos
   }
 
-  updateDist(delta: number) {
+  resetStartPos() {
+    this.updateStartPos()
+    this.updateAbsStartPos()
+  }
+
+  getAbsDist(delta: number) {
     this.dist += delta
+    return Math.abs(this.dist)
   }
 }

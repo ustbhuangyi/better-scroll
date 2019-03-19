@@ -70,11 +70,7 @@ export default class Slide {
 
     this.registorHooks(scrollHooks, 'refresh', this.initSlideState)
     this.registorHooks(scrollHooks, 'destroy', this.destroy)
-    this.registorHooks(
-      scrollerHooks,
-      'modifyScrollMeta',
-      this.modifyScrollMetaHandler
-    )
+    this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
     this.registorHooks(scrollerHooks, 'scrollEnd', this.resetLoop)
     this.registorHooks(
       this.scroll.scroller.animater.hooks,

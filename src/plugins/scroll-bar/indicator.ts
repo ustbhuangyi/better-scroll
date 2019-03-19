@@ -4,7 +4,8 @@ import { Direction } from './const'
 import { style } from '../../util/dom'
 import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
-import { eventNames } from 'cluster'
+import EventHandler from './eventHandler'
+import { TranslaterPoint } from '../../translater'
 
 export interface IndicatorOption {
   el: HTMLElement
@@ -13,55 +14,51 @@ export interface IndicatorOption {
   interactive: boolean
 }
 
+interface KeysMap {
+  hasScroll: 'hasVerticalScroll' | 'hasHorizontalScroll'
+  size: 'height' | 'width'
+  wrapperSize: 'clientHeight' | 'clientWidth'
+  scrollerSize: 'scrollerHeight' | 'scrollerWidth'
+  maxScroll: 'maxScrollY' | 'maxScrollX'
+  pos: 'y' | 'x'
+  pointPos: 'pageX' | 'pageY'
+  translate: 'translateY' | 'translateX'
+  position: 'top' | 'left'
+}
+
 const INDICATOR_MIN_LEN = 8
 
 export default class Indicator {
   public wrapper: HTMLElement
   public wrapperStyle: CSSStyleDeclaration
-  public indicator: HTMLElement
-  public indicatorStyle: CSSStyleDeclaration
-  public indicatorHeight: number
-  public indicatorWidth: number
+  public el: HTMLElement
+  public elStyle: CSSStyleDeclaration
+  public initialSize: number
   public direction: Direction
   public visible: number
   // private fadeTimeout: number
-  public sizeRatioX: number = 1
-  public sizeRatioY: number = 1
-  public maxPosX: number = 0
-  public maxPosY: number = 0
-  public x: number = 0
-  public y: number = 0
-  public startEventRegister: EventRegister
-  public moveEventRegister: EventRegister
-  public endEventRegister: EventRegister
-  public initiated: boolean
-  public moved: boolean
-  private lastPointX: number
-  private lastPointY: number
+  public sizeRatio: number = 1
+  public maxPos: number = 0
+  public curPos: number = 0
+  public keysMap: KeysMap
+  public eventHandler: EventHandler
 
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.el
     this.wrapperStyle = this.wrapper.style
-    this.indicator = this.wrapper.children[0] as HTMLElement
-    this.indicatorStyle = this.indicator.style
+    this.el = this.wrapper.children[0] as HTMLElement
+    this.elStyle = this.el.style
     this.bscroll = bscroll
     this.direction = options.direction
 
+    this.keysMap = this._getKeysMap()
+
     if (options.interactive) {
       const { disableMouse } = this.bscroll.options
-      this.startEventRegister = new EventRegister(this.indicator, [
-        {
-          name: disableMouse ? 'touchstart' : 'mousedown',
-          handler: this._start.bind(this)
-        }
-      ])
-
-      this.endEventRegister = new EventRegister(window, [
-        {
-          name: disableMouse ? 'touchend' : 'mouseup',
-          handler: this._end.bind(this)
-        }
-      ])
+      this.eventHandler = new EventHandler(this, { disableMouse })
+      this.eventHandler.hooks.on('touchStart', this._startHandler, this)
+      this.eventHandler.hooks.on('touchMove', this._moveHandler, this)
+      this.eventHandler.hooks.on('touchEnd', this._endHandler, this)
     }
 
     // TODO refresh 事件
@@ -79,7 +76,8 @@ export default class Indicator {
       this.visible = 0
       this.wrapperStyle.opacity = '0'
       // TODO 有时候不会触发 scrollEnd
-      ;['scrollEnd', 'scrollCancel'].forEach(eventName => {
+      // TDOO scrollCancel
+      ;['scrollEnd'].forEach(eventName => {
         this.bscroll.on(eventName, () => {
           this.fade()
         })
@@ -97,29 +95,51 @@ export default class Indicator {
     }
 
     const translater = this.bscroll.scroller.translater
-    translater.hooks.on(
-      'beforeTranslate',
-      (transformStyle: string, point: { x: number; y: number }) => {
-        this.updatePosition(transformStyle, point)
+    translater.hooks.on('translate', (endPoint: TranslaterPoint) => {
+      this.updatePosition(endPoint)
+    })
+  }
+
+  _getKeysMap(): KeysMap {
+    if (this.direction === Direction.Vertical) {
+      return {
+        hasScroll: 'hasVerticalScroll',
+        size: 'height',
+        wrapperSize: 'clientHeight',
+        scrollerSize: 'scrollerHeight',
+        maxScroll: 'maxScrollY',
+        pos: 'y',
+        pointPos: 'pageY',
+        translate: 'translateY',
+        position: 'top'
       }
-    )
+    }
+    return {
+      hasScroll: 'hasHorizontalScroll',
+      size: 'width',
+      wrapperSize: 'clientWidth',
+      scrollerSize: 'scrollerWidth',
+      maxScroll: 'maxScrollX',
+      pos: 'x',
+      pointPos: 'pageX',
+      translate: 'translateX',
+      position: 'left'
+    }
   }
 
   refresh() {
     if (this._shouldShow()) {
       this.setTransitionTime()
       this._calculate()
-      this.updatePosition()
+      this.updatePosition({
+        x: this.bscroll.x,
+        y: this.bscroll.y
+      })
     }
   }
 
   private _shouldShow(): boolean {
-    if (
-      (this.direction === Direction.Vertical &&
-        this.bscroll.hasVerticalScroll) ||
-      (this.direction === Direction.Horizontal &&
-        this.bscroll.hasHorizontalScroll)
-    ) {
+    if (this.bscroll[this.keysMap.hasScroll]) {
       this.wrapper.style.display = ''
       return true
     }
@@ -128,35 +148,20 @@ export default class Indicator {
   }
 
   private _calculate() {
-    if (this.direction === Direction.Vertical) {
-      let wrapperHeight = this.wrapper.clientHeight
-      this.indicatorHeight = Math.max(
-        Math.round(
-          (wrapperHeight * wrapperHeight) /
-            (this.bscroll.scrollerHeight || wrapperHeight || 1)
-        ),
-        INDICATOR_MIN_LEN
-      )
-      this.indicatorStyle.height = `${this.indicatorHeight}px`
+    let { size, wrapperSize, scrollerSize, maxScroll } = this.keysMap
+    let wrapperSizeValue = this.wrapper[wrapperSize] // FIX 取 offsetHeight offsetWidth，reflow？
+    this.initialSize = Math.max(
+      Math.round(
+        (wrapperSizeValue * wrapperSizeValue) /
+          (this.bscroll[scrollerSize] || wrapperSizeValue || 1)
+      ),
+      INDICATOR_MIN_LEN
+    )
+    this.elStyle[size] = `${this.initialSize}px`
 
-      this.maxPosY = wrapperHeight - this.indicatorHeight
-      // 这里 sizeRatio 是个负值
-      this.sizeRatioY = this.maxPosY / this.bscroll.maxScrollY
-    } else {
-      let wrapperWidth = this.wrapper.clientWidth
-      this.indicatorWidth = Math.max(
-        Math.round(
-          (wrapperWidth * wrapperWidth) /
-            (this.bscroll.scrollerWidth || wrapperWidth || 1)
-        ),
-        INDICATOR_MIN_LEN
-      )
-      this.indicatorStyle.width = `${this.indicatorWidth}px`
-
-      this.maxPosX = wrapperWidth - this.indicatorWidth
-      // 这里 sizeRatio 是个负值
-      this.sizeRatioX = this.maxPosX / this.bscroll.maxScrollX
-    }
+    this.maxPos = wrapperSizeValue - this.initialSize
+    // 这里 sizeRatio 是个负值
+    this.sizeRatio = this.maxPos / this.bscroll[maxScroll]
   }
 
   fade(visible?: boolean, hold?: boolean) {
@@ -176,115 +181,68 @@ export default class Indicator {
   }
 
   // TODO 拆分 x y, refactor to pure function
-  updatePosition(transformStyle?: string, point?: { x: number; y: number }) {
-    if (this.direction === Direction.Vertical) {
-      let y = Math.round(this.sizeRatioY * this.bscroll.y)
+  updatePosition(endPoint: TranslaterPoint) {
+    const { pos, size, translate, position } = this.keysMap
+    let newPos = Math.round(this.sizeRatio * endPoint[pos])
 
-      if (y < 0) {
-        // TODO 取消注释
-        // this.transitionTime(500)
-        const height = Math.max(this.indicatorHeight + y * 3, INDICATOR_MIN_LEN)
-        this.indicatorStyle.height = `${height}px`
-        y = 0
-      } else if (y > this.maxPosY) {
-        // this.transitionTime(500)
-        const height = Math.max(
-          this.indicatorHeight - (y - this.maxPosY) * 3,
-          INDICATOR_MIN_LEN
-        )
-        this.indicatorStyle.height = `${height}px`
-        y = this.maxPosY + this.indicatorHeight - height
-      } else {
-        this.indicatorStyle.height = `${this.indicatorHeight}px`
-      }
-      this.y = y
-
-      if (this.bscroll.options.useTransform) {
-        this.indicatorStyle[style.transform as any] = `translateY(${y}px)${
-          this.bscroll.translateZ
-        }`
-      } else {
-        this.indicatorStyle.top = `${y}px`
-      }
+    if (newPos < 0) {
+      // TODO 取消注释
+      // this.transitionTime(500)
+      const sizeValue = Math.max(
+        this.initialSize + newPos * 3,
+        INDICATOR_MIN_LEN
+      )
+      this.elStyle[size] = `${sizeValue}px`
+      newPos = 0
+    } else if (newPos > this.maxPos) {
+      // this.transitionTime(500)
+      const sizeValue = Math.max(
+        this.initialSize - (newPos - this.maxPos) * 3,
+        INDICATOR_MIN_LEN
+      )
+      this.elStyle[size] = `${sizeValue}px`
+      newPos = this.maxPos + this.initialSize - sizeValue
     } else {
-      let x = Math.round(this.sizeRatioX * this.bscroll.x)
+      this.elStyle[size] = `${this.initialSize}px`
+    }
 
-      if (x < 0) {
-        this.setTransitionTime(500)
-        const width = Math.max(this.indicatorWidth + x * 3, INDICATOR_MIN_LEN)
-        this.indicatorStyle.width = `${width}px`
-        x = 0
-      } else if (x > this.maxPosX) {
-        this.setTransitionTime(500)
-        const width = Math.max(
-          this.indicatorWidth - (x - this.maxPosX) * 3,
-          INDICATOR_MIN_LEN
-        )
-        this.indicatorStyle.width = `${width}px`
-        x = this.maxPosX + this.indicatorWidth - width
-      } else {
-        this.indicatorStyle.width = `${this.indicatorWidth}px`
-      }
+    this.curPos = newPos
 
-      this.x = x
-
-      if (this.bscroll.options.useTransform) {
-        this.indicatorStyle[style.transform as any] = `translateX(${x}px)${
-          this.bscroll.translateZ
-        }`
-      } else {
-        this.indicatorStyle.left = `${x}px`
-      }
+    if (this.bscroll.options.useTransform) {
+      this.elStyle[style.transform as any] = `${translate}(${newPos}px)${
+        this.bscroll.translateZ
+      }`
+    } else {
+      this.elStyle[position] = `${newPos}px`
     }
   }
 
   setTransitionTime(time: number = 0) {
-    this.indicatorStyle[style.transitionDuration as any] = time + 'ms'
+    this.elStyle[style.transitionDuration as any] = time + 'ms'
   }
 
   setTransitionTimingFunction(easing: string) {
-    this.indicatorStyle[style.transitionTimingFunction as any] = easing
+    this.elStyle[style.transitionTimingFunction as any] = easing
   }
 
-  private _start(e: TouchEvent) {
-    let point = (e.touches ? e.touches[0] : e) as Touch
-
-    e.preventDefault()
-    e.stopPropagation()
-
+  private _startHandler() {
     this.setTransitionTime()
-
-    this.initiated = true
-    this.moved = false
-    this.lastPointX = point.pageX
-    this.lastPointY = point.pageY
-
-    const { disableMouse } = this.bscroll.options
-    this.moveEventRegister = new EventRegister(window, [
-      {
-        name: disableMouse ? 'touchmove' : 'mousemove',
-        handler: this._move.bind(this)
-      }
-    ])
-
     this.bscroll.trigger('beforeScrollStart')
   }
 
-  private _move(e: TouchEvent) {
-    let point = (e.touches ? e.touches[0] : e) as Touch
-
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (!this.moved) {
+  private _moveHandler(moved: boolean, delta: number) {
+    if (!moved) {
       this.bscroll.trigger('scrollStart')
     }
 
-    this.moved = true
+    const newPos = this._calDesPos(delta)
 
-    const { x, y } = this._calDesPos(point)
-
-    this.bscroll.scrollTo(x, y)
+    // TODO freeScroll ？
+    if (this.direction === Direction.Vertical) {
+      this.bscroll.scrollTo(this.bscroll.x, newPos)
+    } else {
+      this.bscroll.scrollTo(newPos, this.bscroll.y)
+    }
 
     this.bscroll.trigger('scroll', {
       x: this.bscroll.x,
@@ -292,79 +250,33 @@ export default class Indicator {
     })
   }
 
-  private _calDesPos(point: Touch) {
-    let deltaX = point.pageX - this.lastPointX
-    this.lastPointX = point.pageX
+  private _calDesPos(delta: number) {
+    let newPos = this.curPos + delta
 
-    let deltaY = point.pageY - this.lastPointY
-    this.lastPointY = point.pageY
-
-    let x = this.x + deltaX
-    let y = this.y + deltaY
-
-    if (x < 0) {
-      x = 0
-    } else if (x > this.maxPosX) {
-      x = this.maxPosX
+    if (newPos < 0) {
+      newPos = 0
+    } else if (newPos > this.maxPos) {
+      newPos = this.maxPos
     }
 
-    if (y < 0) {
-      y = 0
-    } else if (y > this.maxPosY) {
-      y = this.maxPosY
-    }
+    newPos = Math.round(newPos / this.sizeRatio)
 
-    x = Math.round(x / this.sizeRatioX)
-    y = Math.round(y / this.sizeRatioY)
-
-    return {
-      x,
-      y
-    }
+    return newPos
   }
 
-  private _end(e: TouchEvent) {
-    if (!this.initiated) {
-      return
-    }
-    this.initiated = false
-
-    e.preventDefault()
-    e.stopPropagation()
-
-    this.moveEventRegister.destroy()
-
-    // TODO 处理 snap 相关逻辑
-    // const snapOption = this.scroller.options.snap
-    // if (snapOption) {
-    //   let {speed, easing = ease.bounce} = snapOption
-    //   let snap = this.scroller._nearestSnap(this.scroller.x, this.scroller.y)
-
-    //   let time = speed || Math.max(
-    //       Math.max(
-    //         Math.min(Math.abs(this.scroller.x - snap.x), 1000),
-    //         Math.min(Math.abs(this.scroller.y - snap.y), 1000)
-    //       ), 300)
-
-    //   if (this.scroller.x !== snap.x || this.scroller.y !== snap.y) {
-    //     this.scroller.directionX = 0
-    //     this.scroller.directionY = 0
-    //     this.scroller.currentPage = snap
-    //     this.scroller.scrollTo(snap.x, snap.y, time, easing)
-    //   }
-    // }
-
-    if (this.moved) {
+  private _endHandler(moved: boolean) {
+    if (moved) {
       this.bscroll.trigger('scrollEnd', {
         x: this.bscroll.x,
         y: this.bscroll.y
       })
     }
   }
+
   destroy() {
-    this.startEventRegister.destroy()
-    this.moveEventRegister && this.moveEventRegister.destroy()
-    this.endEventRegister.destroy()
+    if (this.options.interactive) {
+      this.eventHandler.destroy()
+    }
     this.wrapper.parentNode!.removeChild(this.wrapper)
   }
 }

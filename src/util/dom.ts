@@ -54,6 +54,12 @@ function prefixStyle(style: string): string {
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
 
+export function getElement(el: HTMLElement | string) {
+  return (typeof el === 'string'
+    ? document.querySelector(el)
+    : el) as HTMLElement
+}
+
 export function addEvent(
   el: HTMLElement,
   type: string,

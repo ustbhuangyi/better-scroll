@@ -23,7 +23,6 @@ export default abstract class Base {
       'move',
       'end',
       'forceStop',
-      'translate',
       'time',
       'timeFunction'
     ])
@@ -32,10 +31,17 @@ export default abstract class Base {
 
   translate(endPoint: TranslaterPoint) {
     this.translater.translate(endPoint)
-    this.hooks.trigger(this.hooks.eventTypes.translate, endPoint)
   }
 
-  abstract scrollTo(
+  setPending(pending: boolean) {
+    this.pending = pending
+  }
+
+  setForceStopped(forceStopped: boolean) {
+    this.forceStopped = forceStopped
+  }
+
+  abstract move(
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
