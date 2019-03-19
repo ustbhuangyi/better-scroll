@@ -38,7 +38,9 @@ export default class DirectionLockAction {
     public directionLockThreshold: number,
     public freeScroll: boolean,
     public eventPassthrough: string
-  ) {}
+  ) {
+    this.reset()
+  }
 
   reset() {
     this.directionLocked = DirectionLock.Default
