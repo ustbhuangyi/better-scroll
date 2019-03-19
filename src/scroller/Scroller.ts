@@ -128,8 +128,6 @@ export default class Scroller {
         if (this.options.translateZ) {
           transformStyle.push(this.options.translateZ)
         }
-        const { x, y } = point
-        this.updateAllPositions(x, y)
       }
     )
   }

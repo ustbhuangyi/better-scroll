@@ -4,6 +4,8 @@ import { Direction } from './const'
 import { style } from '../../util/dom'
 import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
+import EventHandler from './eventHandler'
+import { TranslaterPoint } from '../../translater'
 
 export interface IndicatorOption {
   el: HTMLElement
@@ -38,13 +40,8 @@ export default class Indicator {
   public sizeRatio: number = 1
   public maxPos: number = 0
   public curPos: number = 0
-  public startEventRegister: EventRegister
-  public moveEventRegister: EventRegister
-  public endEventRegister: EventRegister
-  public initiated: boolean
-  public moved: boolean
-  private lastPoint: number
-  private keysMap: KeysMap
+  public keysMap: KeysMap
+  public eventHandler: EventHandler
 
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.el
@@ -58,19 +55,10 @@ export default class Indicator {
 
     if (options.interactive) {
       const { disableMouse } = this.bscroll.options
-      this.startEventRegister = new EventRegister(this.el, [
-        {
-          name: disableMouse ? 'touchstart' : 'mousedown',
-          handler: this._start.bind(this)
-        }
-      ])
-
-      this.endEventRegister = new EventRegister(window, [
-        {
-          name: disableMouse ? 'touchend' : 'mouseup',
-          handler: this._end.bind(this)
-        }
-      ])
+      this.eventHandler = new EventHandler(this, { disableMouse })
+      this.eventHandler.hooks.on('touchStart', this._startHandler, this)
+      this.eventHandler.hooks.on('touchMove', this._moveHandler, this)
+      this.eventHandler.hooks.on('touchEnd', this._endHandler, this)
     }
 
     // TODO refresh 事件
@@ -106,13 +94,10 @@ export default class Indicator {
       this.visible = 1
     }
 
-    const translater = this.bscroll.scroller.translater
-    translater.hooks.on(
-      'beforeTranslate',
-      (transformStyle: string, point: { x: number; y: number }) => {
-        this.updatePosition(transformStyle, point)
-      }
-    )
+    const animater = this.bscroll.scroller.animater
+    animater.hooks.on('translate', (endPoint: TranslaterPoint) => {
+      this.updatePosition(endPoint)
+    })
   }
 
   _getKeysMap(): KeysMap {
@@ -146,7 +131,10 @@ export default class Indicator {
     if (this._shouldShow()) {
       this.setTransitionTime()
       this._calculate()
-      this.updatePosition()
+      this.updatePosition({
+        x: this.bscroll.x,
+        y: this.bscroll.y
+      })
     }
   }
 
@@ -193,9 +181,9 @@ export default class Indicator {
   }
 
   // TODO 拆分 x y, refactor to pure function
-  updatePosition(transformStyle?: string, point?: { x: number; y: number }) {
+  updatePosition(endPoint: TranslaterPoint) {
     const { pos, size, translate, position } = this.keysMap
-    let newPos = Math.round(this.sizeRatio * this.bscroll[pos])
+    let newPos = Math.round(this.sizeRatio * endPoint[pos])
 
     if (newPos < 0) {
       // TODO 取消注释
@@ -237,43 +225,17 @@ export default class Indicator {
     this.elStyle[style.transitionTimingFunction as any] = easing
   }
 
-  private _start(e: TouchEvent) {
-    let point = (e.touches ? e.touches[0] : e) as Touch
-
-    e.preventDefault()
-    e.stopPropagation()
-
+  private _startHandler() {
     this.setTransitionTime()
-
-    this.initiated = true
-    this.moved = false
-    this.lastPoint = point[this.keysMap.pointPos]
-
-    const { disableMouse } = this.bscroll.options
-    this.moveEventRegister = new EventRegister(window, [
-      {
-        name: disableMouse ? 'touchmove' : 'mousemove',
-        handler: this._move.bind(this)
-      }
-    ])
-
     this.bscroll.trigger('beforeScrollStart')
   }
 
-  private _move(e: TouchEvent) {
-    let point = (e.touches ? e.touches[0] : e) as Touch
-    const pointPos = point[this.keysMap.pointPos]
-
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (!this.moved) {
+  private _moveHandler(moved: boolean, delta: number) {
+    if (!moved) {
       this.bscroll.trigger('scrollStart')
     }
 
-    this.moved = true
-
-    const newPos = this._calDesPos(pointPos)
+    const newPos = this._calDesPos(delta)
 
     // TODO freeScroll ？
     if (this.direction === Direction.Vertical) {
@@ -288,10 +250,7 @@ export default class Indicator {
     })
   }
 
-  private _calDesPos(pointPos: number) {
-    let delta = pointPos - this.lastPoint
-    this.lastPoint = pointPos
-
+  private _calDesPos(delta: number) {
     let newPos = this.curPos + delta
 
     if (newPos < 0) {
@@ -305,49 +264,18 @@ export default class Indicator {
     return newPos
   }
 
-  private _end(e: TouchEvent) {
-    if (!this.initiated) {
-      return
-    }
-    this.initiated = false
-
-    e.preventDefault()
-    e.stopPropagation()
-
-    this.moveEventRegister.destroy()
-
-    // TODO 处理 snap 相关逻辑
-    // const snapOption = this.scroller.options.snap
-    // if (snapOption) {
-    //   let {speed, easing = ease.bounce} = snapOption
-    //   let snap = this.scroller._nearestSnap(this.scroller.x, this.scroller.y)
-
-    //   let time = speed || Math.max(
-    //       Math.max(
-    //         Math.min(Math.abs(this.scroller.x - snap.x), 1000),
-    //         Math.min(Math.abs(this.scroller.y - snap.y), 1000)
-    //       ), 300)
-
-    //   if (this.scroller.x !== snap.x || this.scroller.y !== snap.y) {
-    //     this.scroller.directionX = 0
-    //     this.scroller.directionY = 0
-    //     this.scroller.currentPage = snap
-    //     this.scroller.scrollTo(snap.x, snap.y, time, easing)
-    //   }
-    // }
-
-    if (this.moved) {
+  private _endHandler(moved: boolean) {
+    if (moved) {
       this.bscroll.trigger('scrollEnd', {
         x: this.bscroll.x,
         y: this.bscroll.y
       })
     }
   }
+
   destroy() {
     if (this.options.interactive) {
-      this.startEventRegister.destroy()
-      this.moveEventRegister && this.moveEventRegister.destroy()
-      this.endEventRegister.destroy()
+      this.eventHandler.destroy()
     }
     this.wrapper.parentNode!.removeChild(this.wrapper)
   }
