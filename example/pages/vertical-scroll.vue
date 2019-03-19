@@ -140,7 +140,7 @@
     },
     computed: {
       scrollbarObj: function () {
-        return this.scrollbar ? {fade: this.scrollbarFade} : false
+        return this.scrollbar ? {fade: this.scrollbarFade, interactive: true} : false
       },
       pullDownRefreshObj: function () {
         return this.pullDownRefresh ? {
