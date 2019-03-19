@@ -94,8 +94,8 @@ export default class Indicator {
       this.visible = 1
     }
 
-    const animater = this.bscroll.scroller.animater
-    animater.hooks.on('translate', (endPoint: TranslaterPoint) => {
+    const translater = this.bscroll.scroller.translater
+    translater.hooks.on('translate', (endPoint: TranslaterPoint) => {
       this.updatePosition(endPoint)
     })
   }
