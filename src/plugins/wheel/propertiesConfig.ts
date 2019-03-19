@@ -3,6 +3,10 @@ const propertiesMap = [
   {
     key: 'wheelTo',
     name: 'wheelTo'
+  },
+  {
+    key: 'getSelectedIndex',
+    name: 'getSelectedIndex'
   }
 ]
 export default propertiesMap.map(item => {

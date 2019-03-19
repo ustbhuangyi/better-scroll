@@ -105,6 +105,7 @@ export default class Behavior {
           )
         : { destination: this.currentPos, duration: 0 }
     } else {
+      debugger
       this.hooks.trigger(this.hooks.eventTypes.end, momentumInfo)
     }
     return momentumInfo
@@ -188,7 +189,6 @@ export default class Behavior {
 
     this.hasScroll =
       this.options.scrollable && this.maxScrollPos < this.minScrollPos
-
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos
       this.elementSize = this.wrapperSize

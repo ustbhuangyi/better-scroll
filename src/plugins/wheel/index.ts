@@ -1,6 +1,7 @@
 import BScroll from '../../index'
 import { style } from '../../util'
 import { Options } from '../../Options'
+import propertiesConfig from './propertiesConfig'
 
 export type wheelOptions = Partial<WheelConfig>
 export interface WheelConfig {
@@ -31,11 +32,12 @@ export default class Wheel {
   selectedIndex: number
   target: EventTarget | null
   constructor(public scroll: BScroll) {
+    this.scroll.proxy(propertiesConfig)
     this.options = this.scroll.options.wheel
     if (this.options) {
       this.init()
       this.refresh()
-      this.scroll.scroller.scrollTo(0, this.selectedIndex * this.itemHeight)
+      this.scroll.scrollTo(0, this.selectedIndex * this.itemHeight)
       this._tapIntoHooks()
     }
   }
@@ -82,6 +84,7 @@ export default class Wheel {
     this.scroll.scroller.scrollBehaviorY.hooks.on(
       this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end,
       (momentumInfo: { destination: number; duration: number }) => {
+        debugger
         let validWheel = this.findNearestValidWheel(
           this.scroll.scroller.scrollBehaviorY.currentPos
         )
@@ -126,7 +129,7 @@ export default class Wheel {
       }
     )
 
-    this.scroll.scroller.animater.hooks.trigger(
+    this.scroll.scroller.animater.hooks.on(
       this.scroll.scroller.animater.hooks.eventTypes.scrollToElement,
       (el: HTMLElement, pos: { top: number; left: number }) => {
         if (!el.classList.contains(this.options.wheelItemClass as string)) {
@@ -139,11 +142,12 @@ export default class Wheel {
   }
 
   refresh() {
-    this._checkWheelAllDisabled()
     this.items = this.scroll.scroller.element.children
+    this._checkWheelAllDisabled()
     this.itemHeight = this.items.length
       ? this.scroll.scroller.scrollBehaviorY.elementSize / this.items.length
       : 0
+
     if (this.selectedIndex === undefined) {
       this.selectedIndex = this.options.selectedIndex || 0
     }

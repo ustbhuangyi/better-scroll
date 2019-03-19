@@ -94,9 +94,9 @@ export default class BScroll extends EventEmitter {
 
     this.proxy(propertiesConfig)
 
-    this.applyPlugins()
-
     this.refresh()
+
+    this.applyPlugins()
   }
 
   private applyPlugins() {
