@@ -51,9 +51,11 @@
   import Loading from '../loading/loading.vue'
   import Bubble from '../bubble/bubble.vue'
   import { getRect } from '../../common/js/dom'
+  import ScrollBar from '../../../src/plugins/scroll-bar/scroll-bar'
 
   BScroll.use(PullDown)
   BScroll.use(PullUp)
+  BScroll.use(ScrollBar)
 
   const COMPONENT_NAME = 'scroll'
   const DIRECTION_H = 'horizontal'

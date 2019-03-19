@@ -16,10 +16,9 @@
     "build": "node build/build.js",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
+    "cm": "git-cz",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit": "git-cz",
-    "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once"
   },
   "lint-staged": {
@@ -122,5 +121,10 @@
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.2.1",
     "zlib": "^1.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }

@@ -45,7 +45,7 @@ export default class PullUp {
       return
     }
     this.watching = true
-    this.scroll.on('scroll', this._checkToEnd.bind(this))
+    this.scroll.on('scroll', this._checkToEnd, this)
   }
 
   private _checkToEnd(pos: { y: number }) {
@@ -65,7 +65,7 @@ export default class PullUp {
 
   finish() {
     if (this.watching) {
-      this.scroll.once('scrollEnd', this._watch.bind(this))
+      this.scroll.once('scrollEnd', this._watch, this)
     } else {
       this._watch()
     }

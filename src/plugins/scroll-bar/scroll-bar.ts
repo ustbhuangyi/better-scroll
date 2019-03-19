@@ -44,54 +44,53 @@ function createScrollbar(direction: Direction) {
 }
 
 export default class ScrollBar {
-  private indicators: Array<Indicator> = []
+  static pluginName = 'scrollbar'
+  public indicators: Array<Indicator> = []
 
-  constructor(public bscroll: BScroll) {
+  constructor(bscroll: BScroll) {
     if (bscroll.options.scrollbar) {
-      this._init()
+      this._init(bscroll)
     }
   }
 
-  private _init(): void {
-    const { fade = true, interactive = false } = this.bscroll.options
+  private _init(bscroll: BScroll): void {
+    const { fade = true, interactive = false } = bscroll.options
       .scrollbar as scrollbarConfig
     let indicatorOption: IndicatorOption
 
-    if (this.bscroll.options.scrollX) {
-      indicatorOption = {
-        el: createScrollbar(Direction.Horizontal),
-        direction: Direction.Horizontal,
-        fade,
-        interactive
-      }
-      this._insert(indicatorOption.el)
-
-      this.bscroll.indicators.push(new Indicator(this.bscroll, indicatorOption))
+    let scrolls = {
+      scrollX: Direction.Horizontal,
+      scrollY: Direction.Vertical
     }
 
-    if (this.bscroll.options.scrollY) {
-      indicatorOption = {
-        el: createScrollbar(Direction.Vertical),
-        direction: Direction.Vertical,
-        fade,
-        interactive
+    for (let [scroll, direction] of Object.entries(scrolls)) {
+      if (bscroll.options[scroll]) {
+        indicatorOption = {
+          el: createScrollbar(direction),
+          direction: direction,
+          fade,
+          interactive
+        }
+        this.indicators.push(new Indicator(bscroll, indicatorOption))
       }
-      this._insert(indicatorOption.el)
-      this.bscroll.indicators.push(new Indicator(this.bscroll, indicatorOption))
     }
 
-    this.bscroll.on('destroy', () => {
-      this._remove()
+    this._insertToWrapper(bscroll.wrapper)
+
+    bscroll.on('destroy', () => {
+      this.destroy()
     })
   }
 
-  private _insert(el: HTMLElement): void {
-    this.bscroll.wrapper.appendChild(el)
+  private _insertToWrapper(wrapper: HTMLElement): void {
+    for (let indicator of this.indicators) {
+      wrapper.appendChild(indicator.wrapper)
+    }
   }
 
-  private _remove(): void {
-    for (let i = 0; i < this.indicators.length; i++) {
-      this.indicators[i].destroy()
+  destroy(): void {
+    for (let indicator of this.indicators) {
+      indicator.destroy()
     }
   }
 }

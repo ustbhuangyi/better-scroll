@@ -37,7 +37,7 @@ export default class PullDown {
     this.scroll.options.probeType = Probe.Realtime
 
     // ? 改成 touchEnd ?
-    this.scroll.on('end', () => {
+    this.scroll.on('touchEnd', () => {
       return this.scroll.options.pullDownRefresh && this._checkPullDown()
     })
 

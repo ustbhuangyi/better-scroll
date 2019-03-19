@@ -13,13 +13,21 @@ export default function createAnimater(
   options: BScrollOptions
 ) {
   const useTransition = options.useTransition
+  let animaterOptions = {}
+  Object.defineProperty(animaterOptions, 'probeType', {
+    enumerable: true,
+    configurable: false,
+    get() {
+      return options.probeType
+    }
+  })
   if (useTransition) {
-    return new Transition(element, translater, {
-      probeType: options.probeType
+    return new Transition(element, translater, animaterOptions as {
+      probeType: number
     })
   } else {
-    return new Animation(element, translater, {
-      probeType: options.probeType
+    return new Animation(element, translater, animaterOptions as {
+      probeType: number
     })
   }
 }

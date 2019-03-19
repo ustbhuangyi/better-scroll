@@ -1,4 +1,4 @@
-import { Context } from 'vm'
+import EventEmitter from '../base/EventEmitter'
 
 interface BubblingEventMap {
   source: string
@@ -6,8 +6,8 @@ interface BubblingEventMap {
 }
 type BubblingEventConfig = BubblingEventMap | string
 export function bubbling(
-  source: Context,
-  context: Context,
+  source: EventEmitter,
+  target: EventEmitter,
   events: BubblingEventConfig[]
 ) {
   events.forEach(event => {
@@ -20,7 +20,7 @@ export function bubbling(
       targetEvent = event.target
     }
     source.on(sourceEvent, function(...args: any[]) {
-      context.trigger(targetEvent, ...args)
+      target.trigger(targetEvent, ...args)
     })
   })
 }
