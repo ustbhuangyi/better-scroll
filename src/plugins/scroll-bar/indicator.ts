@@ -8,7 +8,7 @@ import EventHandler from './eventHandler'
 import { TranslaterPoint } from '../../translater'
 
 export interface IndicatorOption {
-  el: HTMLElement
+  wrapper: HTMLElement
   direction: Direction
   fade: boolean
   interactive: boolean
@@ -51,7 +51,7 @@ export default class Indicator {
   public eventHandler: EventHandler
 
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
-    this.wrapper = options.el
+    this.wrapper = options.wrapper
     this.wrapperStyle = this.wrapper.style
     this.el = this.wrapper.children[0] as HTMLElement
     this.elStyle = this.el.style

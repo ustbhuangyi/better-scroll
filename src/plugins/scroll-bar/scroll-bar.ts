@@ -4,43 +4,17 @@ import Indicator, { IndicatorOption } from './indicator'
 import { Direction } from './const'
 
 // augmentation for Options
-export interface scrollbarConfig {
+export type scrollbarOptions = Partial<ScrollbarConfig> | boolean
+
+export interface ScrollbarConfig {
   fade: boolean
   interactive: boolean
 }
-
-export type scrollbarOptions = Partial<scrollbarConfig> | boolean
 
 declare module '../../Options' {
   interface Options {
     scrollbar?: scrollbarOptions
   }
-}
-
-function createScrollbar(direction: Direction) {
-  let scrollbar: HTMLDivElement = document.createElement('div')
-  let indicator: HTMLDivElement = document.createElement('div')
-
-  scrollbar.style.cssText = 'position:absolute;z-index:9999;pointerEvents:none'
-  indicator.style.cssText =
-    'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;'
-
-  indicator.className = 'this.bscroll-indicator'
-
-  if (direction === 'horizontal') {
-    scrollbar.style.cssText += ';height:7px;left:2px;right:2px;bottom:0'
-    indicator.style.height = '100%'
-    scrollbar.className = 'this.bscroll-horizontal-scrollbar'
-  } else {
-    scrollbar.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px'
-    indicator.style.width = '100%'
-    scrollbar.className = 'this.bscroll-vertical-scrollbar'
-  }
-
-  scrollbar.style.cssText += ';overflow:hidden'
-  scrollbar.appendChild(indicator)
-
-  return scrollbar
 }
 
 export default class ScrollBar {
@@ -54,37 +28,69 @@ export default class ScrollBar {
   }
 
   private _init(bscroll: BScroll): void {
+    this.indicators = this._initIndicators(bscroll)
+
+    this._insertIndicatorsTo(bscroll)
+
+    bscroll.on('destroy', this.destroy, this)
+  }
+
+  private _initIndicators(bscroll: BScroll) {
     const { fade = true, interactive = false } = bscroll.options
-      .scrollbar as scrollbarConfig
+      .scrollbar as ScrollbarConfig
     let indicatorOption: IndicatorOption
 
     let scrolls = {
       scrollX: Direction.Horizontal,
       scrollY: Direction.Vertical
     }
+    const indicators = []
 
     for (let [scroll, direction] of Object.entries(scrolls)) {
       if (bscroll.options[scroll]) {
         indicatorOption = {
-          el: createScrollbar(direction),
+          wrapper: this._createIndicatorElement(direction),
           direction: direction,
           fade,
           interactive
         }
-        this.indicators.push(new Indicator(bscroll, indicatorOption))
+        indicators.push(new Indicator(bscroll, indicatorOption))
       }
     }
 
-    this._insertToWrapper(bscroll.wrapper)
-
-    bscroll.on('destroy', () => {
-      this.destroy()
-    })
+    return indicators
   }
 
-  private _insertToWrapper(wrapper: HTMLElement): void {
+  private _createIndicatorElement(direction: Direction) {
+    let scrollbarEl: HTMLDivElement = document.createElement('div')
+    let indicatorEl: HTMLDivElement = document.createElement('div')
+
+    scrollbarEl.style.cssText =
+      'position:absolute;z-index:9999;pointerEvents:none'
+    indicatorEl.style.cssText =
+      'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;'
+
+    indicatorEl.className = 'this.bscroll-indicator'
+
+    if (direction === 'horizontal') {
+      scrollbarEl.style.cssText += ';height:7px;left:2px;right:2px;bottom:0'
+      indicatorEl.style.height = '100%'
+      scrollbarEl.className = 'this.bscroll-horizontal-scrollbar'
+    } else {
+      scrollbarEl.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px'
+      indicatorEl.style.width = '100%'
+      scrollbarEl.className = 'this.bscroll-vertical-scrollbar'
+    }
+
+    scrollbarEl.style.cssText += ';overflow:hidden'
+    scrollbarEl.appendChild(indicatorEl)
+
+    return scrollbarEl
+  }
+
+  private _insertIndicatorsTo(bscroll: BScroll): void {
     for (let indicator of this.indicators) {
-      wrapper.appendChild(indicator.wrapper)
+      bscroll.wrapper.appendChild(indicator.wrapper)
     }
   }
 
