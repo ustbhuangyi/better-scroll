@@ -56,7 +56,7 @@ export default class Zoom {
   init() {
     const scrollerIns = this.scroll.scroller
     this.wrapper = this.scroll.scroller.wrapper
-    this.scaleElement = this.scroll.scroller.element
+    this.scaleElement = this.scroll.scroller.content
     this.scaleElement.style[style.transformOrigin as any] = '0 0'
     this.scaleElementInitSize = getRect(this.scaleElement)
     const scrollBehaviorX = scrollerIns.scrollBehaviorX

@@ -142,10 +142,10 @@ export default class Wheel {
   }
 
   refresh() {
-    this.items = this.scroll.scroller.element.children
+    this.items = this.scroll.scroller.content.children
     this._checkWheelAllDisabled()
     this.itemHeight = this.items.length
-      ? this.scroll.scroller.scrollBehaviorY.elementSize / this.items.length
+      ? this.scroll.scroller.scrollBehaviorY.contentSize / this.items.length
       : 0
 
     if (this.selectedIndex === undefined) {
