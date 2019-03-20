@@ -64,7 +64,7 @@ describe('wheel plugin tests', () => {
     expect(options.wheelWrapperClass).toBe('wheel-scroll')
     expect(options.wheelItemClass).toBe('wheel-item')
     expect(options.wheelDisabledItemClass).toBe('wheel-disabled-item')
-    expect(wheel.plugins.wheel.selectedIndex).toBe(0)
+    expect(wheel.plugins.wheel.selectedIndex).toBe(1)
   })
 
   test('wheelTo', () => {
@@ -72,5 +72,14 @@ describe('wheel plugin tests', () => {
 
     wheel.wheelTo(4)
     expect(wheel.getSelectedIndex()).toBe(4)
+  })
+
+  test('getSelectedIndex', () => {
+    const [firstWheel, secondWheel, thirdWheel] = [...wheels]
+
+    // because first item is disabled, so we need to locate to index 1 when init bs
+    expect(firstWheel.getSelectedIndex()).toBe(1)
+    expect(secondWheel.getSelectedIndex()).toBe(1)
+    expect(thirdWheel.getSelectedIndex()).toBe(1)
   })
 })
