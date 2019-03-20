@@ -1,11 +1,10 @@
 import BScroll from '../../../src/index'
-import PullUp, { pullUpLoadOptions } from '../../../src/plugins/pull-up/pull-up'
 import { Options } from '../../../src/options'
 import { propertiesProxy } from '../../../src/util/propertiesProxy'
-import { partials } from 'handlebars'
 jest.mock('../../../src/options')
 jest.mock('../../../src/index')
 jest.mock('../../../src/util/propertiesProxy')
+import PullUp, { pullUpLoadOptions } from '../../../src/plugins/pull-up/pull-up'
 
 describe('pull up tests', () => {
   let wrapper: HTMLElement
@@ -22,13 +21,12 @@ describe('pull up tests', () => {
     bscroll.options = options as Options
     bscroll.maxScrollY = MAX_SCROLL_Y
     bscroll.movingDirectionY = MOVING_DIRECTION_Y
-
-    jest.useFakeTimers()
   })
 
   beforeEach(() => {
     options.pullUpLoad = undefined
-    jest.clearAllMocks()
+    jest.resetAllMocks()
+    jest.useFakeTimers()
   })
 
   it('should proxy properties to BScroll instance', () => {
@@ -57,7 +55,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -76,7 +74,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -96,7 +94,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         timer = setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -118,7 +116,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -138,7 +136,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -156,7 +154,7 @@ describe('pull up tests', () => {
     expect(bscroll.trigger).toBeCalledWith('pullingUp')
     expect((<jest.Mock>bscroll.off).mock.calls[0][0]).toBe('scroll')
 
-    jest.advanceTimersByTime(20) // 触发 scrollEnd, 上拉结束
+    jest.advanceTimersByTime(21) // 触发 scrollEnd, 上拉结束
     expect(pullup.watching).toBe(false)
 
     pullup.finish()
@@ -171,7 +169,7 @@ describe('pull up tests', () => {
     ;(<jest.Mock>bscroll.on).mockImplementationOnce(
       (eventName: string, pullUpCheckToEnd: (pos: { y: number }) => void) => {
         setTimeout(() => {
-          pullUpCheckToEnd({ y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
+          pullUpCheckToEnd.call(pullup, { y: MAX_SCROLL_Y + THRESHOLD - 1 }) // 触发上拉
         }, 10)
       }
     )
@@ -184,7 +182,7 @@ describe('pull up tests', () => {
         }
       )
       .mockImplementationOnce((eventName: string, setWatching: () => void) => {
-        setTimeout(setWatching, 20)
+        setTimeout(setWatching.bind(pullup), 20)
       })
 
     pullup = new PullUp(bscroll)
