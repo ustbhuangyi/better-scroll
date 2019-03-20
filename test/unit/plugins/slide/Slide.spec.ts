@@ -45,7 +45,7 @@ function createBScroll(
     hooks: hooks
   }
   bscroll.scroller.scrollTo = mockscrollTo
-  const originSlideLen = bscroll.scroller.element.children.length
+  const originSlideLen = bscroll.scroller.content.children.length
   return {
     bscroll,
     mockscrollTo,
@@ -92,14 +92,14 @@ describe('slide test for SlidePage class', () => {
     })
     const slide = new Slide(bscroll)
     expect(bscroll.proxy).toBeCalledTimes(1)
-    expect(bscroll.scroller.element.children.length).toBe(originSlideLen + 2)
+    expect(bscroll.scroller.content.children.length).toBe(originSlideLen + 2)
     // setWidth
-    expect(bscroll.scroller.element.style.width).toBe('1200px')
+    expect(bscroll.scroller.content.style.width).toBe('1200px')
     // lazyInit
     expect(bscroll.refresh).toBeCalled()
     slide.destroy()
     // destroy
-    expect(bscroll.scroller.element.children.length).toBe(originSlideLen)
+    expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
     expect(hooks.events['refresh'].length).toBe(0)
     expect(hooks.events['modifyScrollMeta'].length).toBe(0)
     expect(hooks.events['scrollEnd'].length).toBe(0)
@@ -128,10 +128,10 @@ describe('slide test for SlidePage class', () => {
       pageX: 0,
       pageY: 0
     })
-    expect(bscroll.scroller.element.children.length).toBe(originSlideLen)
+    expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
     expect(bscroll.refresh).not.toBeCalled()
     // setWidth
-    expect(bscroll.scroller.element.style.width).toBe('600px')
+    expect(bscroll.scroller.content.style.width).toBe('600px')
     slide.destroy()
   })
   it('reset loop for one child', () => {
@@ -146,10 +146,10 @@ describe('slide test for SlidePage class', () => {
     })
     const slide = new Slide(bscroll)
     expect(bscroll.options.slide.loop).toBe(false)
-    expect(bscroll.scroller.element.children.length).toBe(originSlideLen)
+    expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
     expect(bscroll.refresh).not.toBeCalled()
     // setWidth
-    expect(bscroll.scroller.element.style.width).toBe('300px')
+    expect(bscroll.scroller.content.style.width).toBe('300px')
     slide.destroy()
   })
   it('init slide state for loopX', () => {

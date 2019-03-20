@@ -159,7 +159,7 @@ describe('slide test for pagePos class', () => {
   })
   it('no page info', () => {
     const bscroll = bscrollHorizon()
-    const sliderDom = bscroll.scroller.element
+    const sliderDom = bscroll.scroller.content
     sliderDom.setAttribute('data-height', '0')
     sliderDom.setAttribute('data-width', '0')
     const wrapperDom = bscroll.scroller.wrapper
