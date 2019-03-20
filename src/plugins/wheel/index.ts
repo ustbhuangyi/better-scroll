@@ -37,8 +37,9 @@ export default class Wheel {
     if (this.options) {
       this.init()
       this.refresh()
-      this.scroll.scrollTo(0, this.selectedIndex * this.itemHeight)
+
       this._tapIntoHooks()
+      this.scroll.scrollTo(0, this.selectedIndex * this.itemHeight)
     }
   }
   init() {
@@ -84,7 +85,6 @@ export default class Wheel {
     this.scroll.scroller.scrollBehaviorY.hooks.on(
       this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end,
       (momentumInfo: { destination: number; duration: number }) => {
-        debugger
         let validWheel = this.findNearestValidWheel(
           this.scroll.scroller.scrollBehaviorY.currentPos
         )
@@ -116,8 +116,8 @@ export default class Wheel {
       }
     )
     // translate
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.translate,
+    this.scroll.scroller.animater.translater.hooks.on(
+      this.scroll.scroller.animater.translater.hooks.eventTypes.translate,
       (endPoint: { x: number; y: number }) => {
         const { rotate = 25 } = this.options
         for (let i = 0; i < this.items.length; i++) {
@@ -126,6 +126,7 @@ export default class Wheel {
             style.transform as any
           ] = `rotateX(${deg}deg)`
         }
+        this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
       }
     )
 
@@ -143,7 +144,7 @@ export default class Wheel {
 
   refresh() {
     this.items = this.scroll.scroller.content.children
-    this._checkWheelAllDisabled()
+    this.checkWheelAllDisabled()
     this.itemHeight = this.items.length
       ? this.scroll.scroller.scrollBehaviorY.contentSize / this.items.length
       : 0
@@ -208,7 +209,7 @@ export default class Wheel {
     }
   }
 
-  private _checkWheelAllDisabled() {
+  private checkWheelAllDisabled() {
     const wheelDisabledItemClassName = this.options
       .wheelDisabledItemClass as string
     const items = this.items

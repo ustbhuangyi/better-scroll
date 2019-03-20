@@ -385,20 +385,18 @@ export default class Scroller {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, currentPos)
-    // when x or y has changed
-    if (x !== currentPos.x || y !== currentPos.y || forceScroll) {
-      const startPoint = {
-        x: currentPos.x,
-        y: currentPos.y,
-        ...extraTransform.start
-      }
-      const endPoint = {
-        x,
-        y,
-        ...extraTransform.end
-      }
-      this.animater.move(startPoint, endPoint, time, easingFn)
+
+    const startPoint = {
+      x: currentPos.x,
+      y: currentPos.y,
+      ...extraTransform.start
     }
+    const endPoint = {
+      x,
+      y,
+      ...extraTransform.end
+    }
+    this.animater.move(startPoint, endPoint, time, easingFn)
   }
 
   scrollToElement(
