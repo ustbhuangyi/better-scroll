@@ -61,8 +61,8 @@ export default class BScroll extends EventEmitter {
       warn('Can not resolve the wrapper DOM.')
       return
     }
-    const scrollElement = wrapper.children[0]
-    if (!scrollElement) {
+    const content = wrapper.children[0]
+    if (!content) {
       warn('The wrapper need at least one child element to be scroller.')
       return
     }
@@ -81,10 +81,9 @@ export default class BScroll extends EventEmitter {
   private init(wrapper: HTMLElement) {
     this.wrapper = wrapper
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
+
     this.eventBubbling()
-    if (this.options.autoBlur) {
-      this.handleAutoBlur()
-    }
+    this.handleAutoBlur()
 
     this.scroller.scrollTo(this.options.startX, this.options.startY)
 
@@ -110,16 +109,18 @@ export default class BScroll extends EventEmitter {
   }
 
   private handleAutoBlur() {
-    this.on(this.eventTypes.scrollStart, () => {
-      let activeElement = document.activeElement as HTMLElement
-      if (
-        activeElement &&
-        (activeElement.tagName === 'INPUT' ||
-          activeElement.tagName === 'TEXTAREA')
-      ) {
-        activeElement.blur()
-      }
-    })
+    if (this.options.autoBlur) {
+      this.on(this.eventTypes.scrollStart, () => {
+        let activeElement = document.activeElement as HTMLElement
+        if (
+          activeElement &&
+          (activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA')
+        ) {
+          activeElement.blur()
+        }
+      })
+    }
   }
 
   private eventBubbling() {

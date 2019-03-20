@@ -20,7 +20,7 @@ export interface Options {
 }
 
 export default class Behavior {
-  element: HTMLElement
+  content: HTMLElement
   currentPos: number
   startPos: number
   absStartPos: number
@@ -32,11 +32,11 @@ export default class Behavior {
   movingDirection: number
   relativeOffset: number
   wrapperSize: number
-  elementSize: number
+  contentSize: number
   hooks: EventEmitter
   constructor(public wrapper: HTMLElement, public options: Options) {
     this.hooks = new EventEmitter(['momentum', 'end'])
-    this.element = this.wrapper.children[0] as HTMLElement
+    this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
   }
@@ -172,16 +172,16 @@ export default class Behavior {
     const wrapperRect = getRect(this.wrapper)
     this.wrapperSize = wrapperRect[size]
 
-    const elementRect = getRect(this.element)
-    this.elementSize = elementRect[size]
+    const contentRect = getRect(this.content)
+    this.contentSize = contentRect[size]
 
-    this.relativeOffset = elementRect[position]
+    this.relativeOffset = contentRect[position]
     if (isWrapperStatic) {
       this.relativeOffset -= wrapperRect[position]
     }
 
     this.minScrollPos = 0
-    this.maxScrollPos = this.wrapperSize - this.elementSize
+    this.maxScrollPos = this.wrapperSize - this.contentSize
 
     if (this.maxScrollPos < 0) {
       this.maxScrollPos -= this.relativeOffset
@@ -192,7 +192,7 @@ export default class Behavior {
       this.options.scrollable && this.maxScrollPos < this.minScrollPos
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos
-      this.elementSize = this.wrapperSize
+      this.contentSize = this.wrapperSize
     }
 
     this.direction = 0

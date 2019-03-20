@@ -24,11 +24,10 @@ import {
   getNow,
   bubbling
 } from '../util'
-import { debug } from 'util'
 
 export default class Scroller {
   wrapper: HTMLElement
-  element: HTMLElement
+  content: HTMLElement
   actionsHandler: ActionsHandler
   translater: Translater
   animater: Animater
@@ -63,7 +62,7 @@ export default class Scroller {
       'scrollToElement'
     ])
     this.wrapper = wrapper
-    this.element = wrapper.children[0] as HTMLElement
+    this.content = wrapper.children[0] as HTMLElement
     this.options = options
 
     const { left = true, right = true, top = true, bottom = true } = this
@@ -85,9 +84,9 @@ export default class Scroller {
       })
     )
 
-    this.translater = new Translater(this.element)
+    this.translater = new Translater(this.content)
 
-    this.animater = createAnimater(this.element, this.translater, this.options)
+    this.animater = createAnimater(this.content, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
       wrapper,
@@ -114,7 +113,7 @@ export default class Scroller {
       }
     ])
 
-    this.transitionEndRegister = new EventRegister(this.element, [
+    this.transitionEndRegister = new EventRegister(this.content, [
       {
         name: style.transitionEnd,
         handler: this.transitionEnd.bind(this)
@@ -337,7 +336,7 @@ export default class Scroller {
   }
 
   private transitionEnd(e: TouchEvent) {
-    if (e.target !== this.element || !this.animater.pending) {
+    if (e.target !== this.content || !this.animater.pending) {
       return
     }
 

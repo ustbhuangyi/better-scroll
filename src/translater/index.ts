@@ -22,14 +22,14 @@ const translaterMetaData: TranslaterMetaData = {
 export default class Translater {
   style: CSSStyleDeclaration
   hooks: EventEmitter
-  constructor(public element: HTMLElement) {
-    this.style = element.style
+  constructor(public content: HTMLElement) {
+    this.style = content.style
     this.hooks = new EventEmitter(['beforeTranslate', 'translate'])
   }
 
   getComputedPosition() {
     let cssStyle = window.getComputedStyle(
-      this.element,
+      this.content,
       null
     ) as safeCSSStyleDeclaration
     let matrix = cssStyle[style.transform].split(')')[0].split(', ')
