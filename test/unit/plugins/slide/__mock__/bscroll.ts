@@ -13,7 +13,7 @@ export const bscrollHorizon = jest
       },
       scroller: {
         wrapper: horizonSlide.dom,
-        element: horizonSlide.slider,
+        content: horizonSlide.slider,
         scrollBehaviorX: {
           hasScroll: true,
           maxScrollPos:
@@ -36,7 +36,7 @@ export const bscrollVertical = jest
       },
       scroller: {
         wrapper: verticalSlide.dom,
-        element: verticalSlide.slider,
+        content: verticalSlide.slider,
         scrollBehaviorX: {
           hasScroll: false,
           maxScrollPos: 0
@@ -57,7 +57,7 @@ export const bscrollHorizonVertical = jest.fn().mockImplementation(() => {
     },
     scroller: {
       wrapper: hvSlide.dom,
-      element: hvSlide.slider,
+      content: hvSlide.slider,
       scrollBehaviorX: {
         hasScroll: true,
         maxScrollPos: 300

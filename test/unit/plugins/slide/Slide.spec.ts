@@ -58,7 +58,7 @@ describe('slide test for SlidePage class', () => {
   beforeAll(() => {
     hooks = new EventEmitter([
       'refresh',
-      'modifyScrollMeta',
+      'momentum',
       'scrollEnd',
       'forceStop',
       'flick',
@@ -101,7 +101,7 @@ describe('slide test for SlidePage class', () => {
     // destroy
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
     expect(hooks.events['refresh'].length).toBe(0)
-    expect(hooks.events['modifyScrollMeta'].length).toBe(0)
+    expect(hooks.events['momentum'].length).toBe(0)
     expect(hooks.events['scrollEnd'].length).toBe(0)
     expect(hooks.events['flick'].length).toBe(0)
     expect(hooks.events['forceStop'].length).toBe(0)
@@ -437,7 +437,7 @@ describe('slide test for SlidePage class', () => {
       time: 600
     }
     hooks.trigger('refresh')
-    hooks.trigger('modifyScrollMeta', metaData)
+    hooks.trigger('momentum', metaData)
     expect(SlidePage.nearestPage).not.toBeCalled()
     expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: 0,
@@ -477,7 +477,7 @@ describe('slide test for SlidePage class', () => {
       time: 800
     }
     hooks.trigger('refresh')
-    hooks.trigger('modifyScrollMeta', metaData)
+    hooks.trigger('momentum', metaData)
     expect(SlidePage.nearestPage).toBeCalledWith(-160, 0, -1, 0)
     expect(SlidePage.currentPageSetter).toBeCalledWith({
       x: -300,

@@ -1,7 +1,5 @@
-type CustomHTMLDivElement = HTMLDivElement & {
-  _jsdomMockClientWidth?: number
-  _jsdomMockClientHeight?: number
-}
+import { CustomHTMLDivElement } from '../../../utils/layout'
+
 export function createHorizonSlide(childNum: number = 2) {
   const dom = document.createElement('div')
   dom.setAttribute('data-width', '300')
