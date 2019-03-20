@@ -9,7 +9,6 @@ export default abstract class Base {
   timer: number
   pending: boolean
   forceStopped: boolean
-  _reflow: number
   [key: string]: any
 
   constructor(

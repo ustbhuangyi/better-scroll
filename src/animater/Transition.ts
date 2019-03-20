@@ -53,8 +53,6 @@ export default class Transition extends Base {
     // when time is 0
     if (!time) {
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
-      // force reflow to put everything in position
-      this._reflow = document.body.offsetHeight
       // maybe need reset position
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
     }
