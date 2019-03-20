@@ -48,7 +48,7 @@ export default class ObserveDOM {
         immediateRefresh = true
         break
       } else {
-        if (mutation.target !== this.scroll.scroller.element) {
+        if (mutation.target !== this.scroll.scroller.content) {
           deferredRefresh = true
           break
         }
@@ -72,7 +72,7 @@ export default class ObserveDOM {
       childList: true,
       subtree: true
     }
-    observer.observe(this.scroll.scroller.element, config)
+    observer.observe(this.scroll.scroller.content, config)
   }
   private shouldNotRefresh() {
     const scrollIns = this.scroll
@@ -87,7 +87,7 @@ export default class ObserveDOM {
   private checkDOMUpdate() {
     const me = this
     const scrollIns = this.scroll
-    const scrollerEl = scrollIns.scroller.element
+    const scrollerEl = scrollIns.scroller.content
     let scrollerRect = getRect(scrollerEl)
     let oldWidth = scrollerRect.width
     let oldHeight = scrollerRect.height

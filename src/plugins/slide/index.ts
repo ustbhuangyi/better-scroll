@@ -46,7 +46,7 @@ export default class Slide {
   }
   init() {
     const slide = this.slideOpt
-    const slideEls = this.scroll.scroller.element
+    const slideEls = this.scroll.scroller.content
     let lazyInit2Refresh = false
     if (slide.loop) {
       let children = slideEls.children
@@ -135,7 +135,7 @@ export default class Slide {
     )
   }
   destroy() {
-    const slideEls = this.scroll.scroller.element
+    const slideEls = this.scroll.scroller.content
     if (this.slideOpt.loop) {
       let children = slideEls.children
       if (children.length > 2) {
