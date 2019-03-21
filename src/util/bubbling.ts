@@ -20,7 +20,7 @@ export function bubbling(
       targetEvent = event.target
     }
     source.on(sourceEvent, function(...args: any[]) {
-      target.trigger(targetEvent, ...args)
+      return target.trigger(targetEvent, ...args)
     })
   })
 }
