@@ -5,13 +5,24 @@ const version = require('../package.json').version
 const zlib = require('zlib')
 const typescript = require('rollup-plugin-typescript2')
 const uglify = require('rollup-plugin-uglify').uglify
+const program = require('commander')
 
-if (!fs.existsSync('dist')) {
-  fs.mkdirSync('dist')
+function clearFs() {
+  if (!fs.existsSync('dist')) {
+    fs.mkdirSync('dist')
+  }
 }
 
 function resolve(p) {
   return path.resolve(__dirname, '../', p)
+}
+
+function trans2CamelCase(str){
+  const re=/-(\w)/g;
+  const newStr = str.replace(re, function ($0,$1){
+      return $1.toUpperCase();
+  })
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
 }
 
 const banner =
@@ -20,61 +31,91 @@ const banner =
   ' * (c) 2016-' + new Date().getFullYear() + ' ustbhuangyi\n' +
   ' * Released under the MIT License.\n' +
   ' */'
-
-const builds = [{
-  input: resolve('src/index.ts'),
-  output: {
-    file: resolve('dist/bscroll.js'),
-    name: 'BScroll',
+const bsConfig = {
+  output: 'dist',
+  entry: 'src/index.ts',
+  libName: 'BScroll',
+  fileName: 'bscroll'
+}
+const bsPluginsConfig = {
+  rootPath: 'src/plugins',
+  output: 'dist/lib',
+  plugins: {
+    'observe-dom': 'observe-dom/index.ts',
+    'pull-down': 'pull-down/pull-down.ts',
+    'pull-up': 'pull-up/pull-up.ts',
+    'scroll-bar': 'scroll-bar/scroll-bar.ts',
+    'slide': 'slide/index.ts',
+    'wheel': 'wheel/index.ts',
+    'zoom': 'zoom/index.ts'
+  }
+}
+const buildType = [
+  {
     format: 'umd',
-    banner
+    extend: 'js'
   },
-  plugins: [
-    typescript({
-      useTsconfigDeclarationDir: true
-    })
-  ]
-}, {
-  input: resolve('src/index.ts'),
-  output: {
-    file: resolve('dist/bscroll.esm.js'),
-    name: 'BScroll',
+  {
     format: 'es',
-    banner
+    extend: 'esm.js'
   },
-  plugins: [
-    typescript({
-      useTsconfigDeclarationDir: true
-    })
-  ]
-}, {
-  input: resolve('src/index.ts'),
-  output: {
-    file: resolve('dist/bscroll.min.js'),
-    name: 'BScroll',
+  {
     format: 'umd',
-    banner
-  },
-  plugins: [
-    uglify(),
-    typescript({
-      useTsconfigDeclarationDir: true
+    extend: 'min.js'
+  }
+]
+
+function genRollupPlugins(isMin) {
+  const tsConfig = {
+    useTsconfigDeclarationDir: true
+  }
+  const plugins = []
+    if (isMin) {
+      plugins.push(uglify())
+    }
+  plugins.push(typescript(tsConfig))
+  return plugins
+}
+function genBSBuildConfig(bsConfig, buildType) {
+  const result = []
+  buildType.forEach(type => {
+    result.push({
+      input: resolve(bsConfig.entry),
+      output: {
+        file: resolve(`${bsConfig.output}/${bsConfig.fileName.replace('.ts', '')}.${type.extend}`),
+        name: bsConfig.libName,
+        format: type.format,
+        banner
+      },
+      plugins: genRollupPlugins(type.extend.indexOf('min')>-1)
     })
-  ]
-}, {
-  input: resolve('src/plugins/slide/index.ts'),
-  output: {
-    file: resolve('dist/slide.js'),
-    name: 'Slide',
-    format: 'umd',
-    banner
-  },
-  plugins: [
-    typescript({
-      useTsconfigDeclarationDir: true
+  })
+  return result
+}
+function genPluginsBuildConfig(bsPluginsConfig, buildType, specialName) {
+  const result = []
+  buildType.forEach(type => {
+    bsPluginsName = Object.keys(bsPluginsConfig.plugins)
+    bsPluginsName.forEach(pluginName => {
+      if (specialName && specialName == pluginName) {
+        return
+      }
+      const entryPath = `${bsPluginsConfig.rootPath}/${bsPluginsConfig.plugins[pluginName]}`
+      const camelcaseName = trans2CamelCase(pluginName)
+      result.push({
+        input: resolve(entryPath),
+        output: {
+          file: resolve(`${bsPluginsConfig.output}/${pluginName.replace('.ts', '')}.${type.extend}`),
+          name: camelcaseName,
+          format: type.format,
+          banner
+        },
+        plugins: genRollupPlugins(type.extend.indexOf('min')>-1)
+      })
     })
-  ]
-}]
+  })
+  return result
+}
 
 function build(builds) {
   let built = 0
@@ -126,4 +167,24 @@ function logError(e) {
   console.log(e)
 }
 
-build(builds)
+const buildHandler = {
+  all: function () {
+    const builds = genBSBuildConfig(bsConfig, buildType).concat(genPluginsBuildConfig(bsPluginsConfig, buildType))
+    build(builds)
+  },
+  plugins: function () {
+    const builds = genPluginsBuildConfig(bsPluginsConfig, buildType)
+    build(builds)
+  },
+  specialName: function (name) {
+    const builds = genPluginsBuildConfig(bsPluginsConfig, buildType, name)
+    build(builds)
+  }
+}
+program
+.option('-SN, --special [value]', 'build options')
+.parse(process.argv)
+
+const buildHandlerType = program.special || 'all'
+clearFs()
+buildHandler[buildHandlerType]()

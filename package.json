@@ -14,6 +14,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
     "build": "node build/build.js",
+    "build:plugin": "node build/build.js --special plugins",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "cm": "git-cz",
