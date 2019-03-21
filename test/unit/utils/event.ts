@@ -10,7 +10,7 @@ interface CustomTouch {
 }
 type CustomTouches = CustomTouch[] | CustomTouch
 
-interface CustomTouchEvent extends Event {
+export interface CustomTouchEvent extends Event {
   touches: CustomTouches
   targetTouches: CustomTouches
   changedTouches: CustomTouches
