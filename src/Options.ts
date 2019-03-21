@@ -62,6 +62,7 @@ export class Options {
   }
   HWCompositing: boolean
   useTransition: boolean
+  useTransform: boolean
   bindToWrapper: boolean
   disableMouse: boolean | ''
   observeDOM: boolean
@@ -115,6 +116,7 @@ export class Options {
     this.HWCompositing = true
 
     this.useTransition = true
+    this.useTransform = true
     this.bindToWrapper = false
     this.disableMouse = hasTouch
     this.observeDOM = true
