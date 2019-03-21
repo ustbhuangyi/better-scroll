@@ -2,6 +2,7 @@
 
 exports[`scroll-bar unit tests should create indicators when instantiate scroll-bar 1`] = `
 <div>
+  <div />
   <div
     class="this.bscroll-horizontal-scrollbar"
     style="position: absolute; z-index: 9999; left: 2px; right: 2px; bottom: 0px;"

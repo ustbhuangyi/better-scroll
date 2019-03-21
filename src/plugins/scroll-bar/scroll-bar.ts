@@ -23,16 +23,12 @@ export default class ScrollBar {
 
   constructor(bscroll: BScroll) {
     if (bscroll.options.scrollbar) {
-      this._init(bscroll)
+      this.indicators = this._initIndicators(bscroll)
+
+      this._insertIndicatorsTo(bscroll)
+
+      bscroll.on('destroy', this.destroy, this)
     }
-  }
-
-  private _init(bscroll: BScroll): void {
-    this.indicators = this._initIndicators(bscroll)
-
-    this._insertIndicatorsTo(bscroll)
-
-    bscroll.on('destroy', this.destroy, this)
   }
 
   private _initIndicators(bscroll: BScroll) {
