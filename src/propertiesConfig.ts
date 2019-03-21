@@ -52,7 +52,7 @@ export const propertiesConfig = [
     key: 'enabled'
   },
   {
-    sourceKey: 'scroller.pending',
+    sourceKey: 'scroller.animater.pending',
     key: 'pending'
   },
   {
