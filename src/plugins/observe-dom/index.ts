@@ -1,4 +1,5 @@
 import BScroll from '../../index'
+import EventEmitter from '../../base/EventEmitter'
 import { getRect } from '../../util/dom'
 import { staticImplements, PluginCtor } from '../type'
 
@@ -7,15 +8,20 @@ export default class ObserveDOM {
   static pluginName = 'observeDOM'
   private observer: MutationObserver
   private stopObserver: boolean
+  private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     this.stopObserver = false
+    this.hooksFn = []
     this.init()
-    this.scroll.hooks.on('enable', () => {
+    this.registorHooks(this.scroll.hooks, 'enable', () => {
       if (this.stopObserver) {
         this.init()
       }
     })
-    this.scroll.hooks.on('disable', () => {
+    this.registorHooks(this.scroll.hooks, 'disable', () => {
+      this.stopObserve()
+    })
+    this.registorHooks(this.scroll.hooks, 'destroy', () => {
       this.destroy()
     })
   }
@@ -23,7 +29,7 @@ export default class ObserveDOM {
     if (typeof MutationObserver !== 'undefined') {
       let timer = 0
       this.observer = new MutationObserver(mutations => {
-        this.handler(mutations, timer)
+        this.mutationObserverHandler(mutations, timer)
       })
       this.startObserve(this.observer)
     } else {
@@ -31,12 +37,16 @@ export default class ObserveDOM {
     }
   }
   destroy() {
-    this.stopObserver = true
-    if (this.observer) {
-      this.observer.disconnect()
-    }
+    this.stopObserve()
+    this.hooksFn.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksFn.length = 0
   }
-  private handler(mutations: MutationRecord[], timer: number) {
+  private mutationObserverHandler(mutations: MutationRecord[], timer: number) {
     if (this.shouldNotRefresh()) {
       return
     }
@@ -75,14 +85,16 @@ export default class ObserveDOM {
     observer.observe(this.scroll.scroller.content, config)
   }
   private shouldNotRefresh() {
-    const scrollIns = this.scroll
+    const scroller = this.scroll.scroller
+    const scrollBehaviorX = scroller.scrollBehaviorX
+    const scrollBehaviorY = scroller.scrollBehaviorY
     let outsideBoundaries =
-      scrollIns.x > scrollIns.minScrollX ||
-      scrollIns.x < scrollIns.maxScrollX ||
-      scrollIns.y > scrollIns.minScrollY ||
-      scrollIns.y < scrollIns.maxScrollY
+      scrollBehaviorX.currentPos > scrollBehaviorX.minScrollPos ||
+      scrollBehaviorX.currentPos < scrollBehaviorX.maxScrollPos ||
+      scrollBehaviorY.currentPos > scrollBehaviorY.minScrollPos ||
+      scrollBehaviorY.currentPos < scrollBehaviorY.maxScrollPos
 
-    return scrollIns.pending || outsideBoundaries
+    return scroller.animater.pending || outsideBoundaries
   }
   private checkDOMUpdate() {
     const me = this
@@ -116,5 +128,15 @@ export default class ObserveDOM {
     }
 
     next()
+  }
+  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
+  }
+  private stopObserve() {
+    this.stopObserver = true
+    if (this.observer) {
+      this.observer.disconnect()
+    }
   }
 }
