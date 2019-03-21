@@ -1,7 +1,7 @@
 import BScroll from '../../index'
 import EventEmitter from '../../base/EventEmitter'
 import propertiesConfig from './propertiesConfig'
-import { getDistance, isUndef } from '../../util/lang'
+import { getDistance, isUndef, fixInboundValue } from '../../util/lang'
 import { offsetToBody, getRect, DOMRect } from '../../util/dom'
 import { style } from '../../util'
 import { staticImplements, PluginCtor } from '../type'
@@ -147,14 +147,21 @@ export default class Zoom {
     const y = this.getNewPos(this.origin.y, lastScale, scrollBehaviorY)
     this.resetBoundaries(this.scale, scrollBehaviorX, 'x', x)
     this.resetBoundaries(this.scale, scrollBehaviorY, 'y', y)
-    scrollerIns.scrollTo(x, y, 0, undefined, {
-      start: {
-        scale: this.lastTransformScale
+    scrollerIns.scrollTo(
+      x,
+      y,
+      0,
+      undefined,
+      {
+        start: {
+          scale: this.lastTransformScale
+        },
+        end: {
+          scale: this.scale
+        }
       },
-      end: {
-        scale: this.scale
-      }
-    })
+      true
+    )
   }
   private getFingerDistance(e: TouchEvent): number {
     const firstFinger = e.touches[0]
@@ -234,8 +241,8 @@ export default class Zoom {
       hasScroll = !!(min || max)
     }
 
-    scrollBehavior.minScrollPos = min
-    scrollBehavior.maxScrollPos = max
+    scrollBehavior.minScrollPos = Math.floor(min)
+    scrollBehavior.maxScrollPos = Math.floor(max)
     scrollBehavior.hasScroll = hasScroll
   }
   private getNewPos(
@@ -245,13 +252,8 @@ export default class Zoom {
     fixInBound?: boolean
   ) {
     let newPos = origin - origin * lastScale + scrollBehavior.startPos
-    if (!fixInBound) {
-      return newPos
-    }
-    if (newPos > 0) {
-      newPos = 0
-    } else if (newPos < scrollBehavior.maxScrollPos) {
-      newPos = scrollBehavior.maxScrollPos
+    if (fixInBound) {
+      newPos = fixInboundValue(newPos, scrollBehavior.maxScrollPos, 0)
     }
     return Math.floor(newPos)
   }
