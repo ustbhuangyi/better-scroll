@@ -61,17 +61,16 @@ export default class Indicator {
     this.keysMap = this._getKeysMap()
 
     if (options.interactive) {
-      const { disableMouse } = this.bscroll.options
-      this.eventHandler = new EventHandler(this, { disableMouse })
-      this.eventHandler.hooks.on('touchStart', this._startHandler, this)
-      this.eventHandler.hooks.on('touchMove', this._moveHandler, this)
-      this.eventHandler.hooks.on('touchEnd', this._endHandler, this)
+      // const { disableMouse } = this.bscroll.options
+      // this.eventHandler = new EventHandler(this, { disableMouse })
+      // this.eventHandler.hooks.on('touchStart', this._startHandler, this)
+      // this.eventHandler.hooks.on('touchMove', this._moveHandler, this)
+      // this.eventHandler.hooks.on('touchEnd', this._endHandler, this)
     }
 
     // TODO refresh 事件
-    this.bscroll.hooks.on('refresh', () => {
-      this.refresh()
-    })
+    this.bscroll.hooks.on('refresh', this.refresh, this)
+
     this.bscroll.scroller.animater.hooks.on('time', (time: number) => {
       this.setTransitionTime(time)
     })
@@ -102,9 +101,7 @@ export default class Indicator {
     }
 
     const animater = this.bscroll.scroller.animater
-    animater.hooks.on('translate', (endPoint: TranslaterPoint) => {
-      this.updatePosAndSize(endPoint, this.keyVals)
-    })
+    animater.hooks.on('translate', this.updatePosAndSize, this)
   }
 
   _getKeysMap(): KeysMap {
@@ -144,26 +141,25 @@ export default class Indicator {
 
   refresh() {
     let { hasScroll } = this.keysMap
-    if (this.setShowBy(this.bscroll[hasScroll])) {
+    if (this._setShowBy(this.bscroll[hasScroll])) {
       // TODO time？
       this.setTransitionTime()
       let { wrapperSize, scrollerSize, maxScroll } = this.keysMap
-      this.keyVals = this.refreshKeyValues(
+
+      this.keyVals = this._refreshKeyValues(
         this.wrapper[wrapperSize],
         this.bscroll[scrollerSize],
         this.bscroll[maxScroll]
       )
-      this.updatePosAndSize(
-        {
-          x: this.bscroll.x,
-          y: this.bscroll.y
-        },
-        this.keyVals
-      )
+
+      this.updatePosAndSize({
+        x: this.bscroll.x,
+        y: this.bscroll.y
+      })
     }
   }
 
-  setShowBy(hasScroll: boolean): boolean {
+  private _setShowBy(hasScroll: boolean): boolean {
     if (hasScroll) {
       this.wrapper.style.display = ''
       return true
@@ -172,7 +168,7 @@ export default class Indicator {
     return false
   }
 
-  refreshKeyValues(
+  private _refreshKeyValues(
     wrapperSize: number,
     scrollerSize: number,
     maxScroll: number
@@ -195,14 +191,13 @@ export default class Indicator {
     }
   }
 
-  updatePosAndSize(endPoint: TranslaterPoint, keyVals: KeyValues) {
-    const { pos, size } = this.refreshPosAndSizeValue(endPoint, keyVals)
+  updatePosAndSize(endPoint: TranslaterPoint) {
+    const { pos, size } = this._refreshPosAndSizeValue(endPoint, this.keyVals)
     this.curPos = pos
-    this.refreshPosAndSizeStyle(size, pos)
+    this._refreshPosAndSizeStyle(size, pos)
   }
 
-  // TODO 拆分 x y, refactor to pure function
-  refreshPosAndSizeValue(
+  private _refreshPosAndSizeValue(
     endPoint: TranslaterPoint,
     keyVals: KeyValues
   ): { pos: number; size: number } {
@@ -230,11 +225,12 @@ export default class Indicator {
     }
   }
 
-  refreshPosAndSizeStyle(size: number, pos: number) {
+  private _refreshPosAndSizeStyle(size: number, pos: number) {
     const { position, translate, size: sizeKey } = this.keysMap
 
     this.elStyle[sizeKey] = `${size}px`
 
+    // TODO translateZ ？
     if (this.bscroll.options.useTransform) {
       this.elStyle[style.transform as any] = `${translate}(${pos}px)${
         this.bscroll.translateZ
