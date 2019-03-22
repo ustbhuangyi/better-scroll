@@ -29,6 +29,8 @@ export default class PullDown {
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
       propertiesProxy(this.scroll, prefix + sourceKey, key)
     })
+
+    this.tapIntohooks()
   }
 
   private _init() {
@@ -42,6 +44,18 @@ export default class PullDown {
     })
 
     this.scroll.registerType(['pullingDown'])
+  }
+
+  private tapIntohooks() {
+    const scroller = this.scroll.scroller
+    scroller.hooks.on(
+      scroller.hooks.eventTypes.transitionEnd,
+      (reset: { needReset: boolean }) => {
+        if (this.pulling) {
+          reset.needReset = false
+        }
+      }
+    )
   }
 
   private _checkPullDown() {

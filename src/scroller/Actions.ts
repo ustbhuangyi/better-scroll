@@ -198,9 +198,8 @@ export default class ScrollerActions {
 
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
-
     if (this.hooks.trigger(this.hooks.eventTypes.end, e, currentPos)) {
-      return
+      return true
     }
 
     this.animater.translate(currentPos)

@@ -59,7 +59,8 @@ export default class Scroller {
       'scrollCancel',
       'momentum',
       'scrollTo',
-      'scrollToElement'
+      'scrollToElement',
+      'transitionEnd'
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -197,7 +198,9 @@ export default class Scroller {
     actions.hooks.on(
       actions.hooks.eventTypes.end,
       (e: TouchEvent, pos: TranslaterPoint) => {
-        this.hooks.trigger(this.hooks.eventTypes.touchEnd, pos)
+        if (this.hooks.trigger(this.hooks.eventTypes.touchEnd, pos)) {
+          return true
+        }
 
         // check if it is a click operation
         if (!actions.moved && this.checkClick(e)) {
@@ -341,10 +344,13 @@ export default class Scroller {
     }
 
     const animater = this.animater as Transition
+    const reset = { needReset: true }
     animater.transitionTime()
-    // TODO when pullingDown, do not reset position
-    // const needReset = this.movingDirectionY === Direction.Up
-    if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
+    this.hooks.trigger(this.hooks.eventTypes.transitionEnd, reset)
+    if (
+      reset.needReset &&
+      !this.resetPosition(this.options.bounceTime, ease.bounce)
+    ) {
       this.animater.setPending(false)
       if (this.options.probeType !== Probe.Realtime) {
         this.hooks.trigger(

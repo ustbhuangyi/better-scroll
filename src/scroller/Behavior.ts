@@ -106,7 +106,6 @@ export default class Behavior {
           )
         : { destination: this.currentPos, duration: 0 }
     } else {
-      debugger
       this.hooks.trigger(this.hooks.eventTypes.end, momentumInfo)
     }
     return momentumInfo
