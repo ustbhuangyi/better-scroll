@@ -97,7 +97,7 @@ function genPluginsBuildConfig(bsPluginsConfig, buildType, specialName) {
   buildType.forEach(type => {
     bsPluginsName = Object.keys(bsPluginsConfig.plugins)
     bsPluginsName.forEach(pluginName => {
-      if (specialName && specialName == pluginName) {
+      if (specialName && specialName !== pluginName) {
         return
       }
       const entryPath = `${bsPluginsConfig.rootPath}/${bsPluginsConfig.plugins[pluginName]}`
@@ -187,4 +187,8 @@ program
 
 const buildHandlerType = program.special || 'all'
 clearFs()
-buildHandler[buildHandlerType]()
+const handlerFn = 
+  buildHandler[buildHandlerType] ? 
+    buildHandler[buildHandlerType] :
+    buildHandler['specialName']
+handlerFn(buildHandlerType)
