@@ -2,9 +2,7 @@ import SlidePage from '../../../../src/plugins/slide/SlidePage'
 import BScroll from '../../../../src'
 import { warn } from '../../../../src/util/debug'
 jest.mock('../../../../src/util/debug')
-jest.mock('../../../../src/util/dom', () => ({
-  getRect: require('./__mock__/dom').mockGetRect
-}))
+
 import {
   bscrollHorizon,
   bscrollVertical,

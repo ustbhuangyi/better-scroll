@@ -1,21 +1,12 @@
 import BScroll from '../../../../src/index'
 import ObserveDom from '../../../../src/plugins/observe-dom'
 import EventEmitter from '../../../../src/base/EventEmitter'
-import {
-  mockOffsetWidth,
-  mockOffsetHeight,
-  CustomHTMLDivElement
-} from '../../utils/layout'
+import { createDiv } from '../../utils/layout'
 
 jest.mock('../../../../src/index')
 
 function createBS(hooks: EventEmitter) {
-  const dom = document.createElement('div') as CustomHTMLDivElement
-  dom.style.width = '300px'
-  dom.style.height = '300px'
-  dom._jsdomMockOffsetHeight = 300
-  dom._jsdomMockOffsetWidth = 300
-
+  const dom = createDiv(300, 300)
   const bs = new BScroll('test') as any
   bs.hooks = hooks
   bs.scroller = {
@@ -23,12 +14,6 @@ function createBS(hooks: EventEmitter) {
   }
   return bs
 }
-mockOffsetHeight.get.mockImplementation(dom => {
-  return dom._jsdomMockOffsetHeight || 0
-})
-mockOffsetWidth.get.mockImplementation(dom => {
-  return dom._jsdomMockOffsetWidth || 0
-})
 
 describe('observe dom', () => {
   let hooks = new EventEmitter(['enable', 'disable', 'destroy'])

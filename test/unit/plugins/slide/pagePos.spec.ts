@@ -1,8 +1,5 @@
 import PagesPos from '../../../../src/plugins/slide/PagesPos'
 import BScroll from '../../../../src'
-jest.mock('../../../../src/util/dom', () => ({
-  getRect: require('./__mock__/dom').mockGetRect
-}))
 import { bscrollHorizon, bscrollVertical } from './__mock__/bscroll'
 
 describe('slide test for pagePos class', () => {
@@ -160,11 +157,11 @@ describe('slide test for pagePos class', () => {
   it('no page info', () => {
     const bscroll = bscrollHorizon()
     const sliderDom = bscroll.scroller.content
-    sliderDom.setAttribute('data-height', '0')
-    sliderDom.setAttribute('data-width', '0')
+    sliderDom._jsdomMockOffsetWidth = 0
+    sliderDom._jsdomMockOffsetHeight = 0
     const wrapperDom = bscroll.scroller.wrapper
-    wrapperDom.setAttribute('data-height', '0')
-    wrapperDom.setAttribute('data-width', '0')
+    wrapperDom._jsdomMockOffsetWidth = 0
+    wrapperDom._jsdomMockOffsetHeight = 0
     pagesPos = new PagesPos(bscroll as BScroll, {})
     expect(pagesPos.xLen).toBe(0)
     expect(pagesPos.yLen).toBe(0)
