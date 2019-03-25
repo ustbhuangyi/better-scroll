@@ -1,6 +1,7 @@
 import PagesPos from '../../../../src/plugins/slide/PagesPos'
 import BScroll from '../../../../src'
 import { bscrollHorizon, bscrollVertical } from './__mock__/bscroll'
+import { mockDomOffset } from '../../utils/layout'
 
 describe('slide test for pagePos class', () => {
   let pagesPos: PagesPos
@@ -10,7 +11,7 @@ describe('slide test for pagePos class', () => {
     jest.clearAllMocks()
   })
 
-  it('should get right page pos', () => {
+  it('should get right page pos for horizon slide', () => {
     pagesPos = new PagesPos(bscrollHorizon(), {})
     expect(pagesPos.xLen).toBe(2)
     expect(pagesPos.yLen).toBe(1)
@@ -43,7 +44,7 @@ describe('slide test for pagePos class', () => {
       y: 0
     })
   })
-  it('nearest page function for horizon', () => {
+  it('should get right nearest page number for horizon slide', () => {
     expect(pagesPos.getNearestPage(0, 0)).toMatchObject({
       pageX: 0,
       pageY: 0
@@ -65,7 +66,7 @@ describe('slide test for pagePos class', () => {
       pageY: 0
     })
   })
-  it('page pos of el', () => {
+  it('should get right page pos for horizon slide with el config', () => {
     pagesPos = new PagesPos(bscrollHorizon(), {
       el: '.test-slide-item'
     })
@@ -101,7 +102,7 @@ describe('slide test for pagePos class', () => {
     })
   })
 
-  it('vertical slide', () => {
+  it('should get right page pos for vertical slide', () => {
     pagesPos = new PagesPos(bscrollVertical(), {})
     expect(pagesPos.xLen).toBe(1)
     expect(pagesPos.yLen).toBe(2)
@@ -132,7 +133,7 @@ describe('slide test for pagePos class', () => {
       y: -300
     })
   })
-  it('nearest page function for vertical', () => {
+  it('should get right nearest page number for vertical slide', () => {
     expect(pagesPos.getNearestPage(0, 0)).toMatchObject({
       pageX: 0,
       pageY: 0
@@ -154,14 +155,17 @@ describe('slide test for pagePos class', () => {
       pageY: 1
     })
   })
-  it('no page info', () => {
+  it('should have right info for no page info', () => {
     const bscroll = bscrollHorizon()
     const sliderDom = bscroll.scroller.content
+
     sliderDom._jsdomMockOffsetWidth = 0
     sliderDom._jsdomMockOffsetHeight = 0
     const wrapperDom = bscroll.scroller.wrapper
-    wrapperDom._jsdomMockOffsetWidth = 0
-    wrapperDom._jsdomMockOffsetHeight = 0
+    mockDomOffset(wrapperDom, {
+      width: 0,
+      height: 0
+    })
     pagesPos = new PagesPos(bscroll as BScroll, {})
     expect(pagesPos.xLen).toBe(0)
     expect(pagesPos.yLen).toBe(0)

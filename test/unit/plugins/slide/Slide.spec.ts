@@ -77,10 +77,7 @@ describe('slide test for SlidePage class', () => {
       }
     })
   })
-  it('new SlidePage/destroy', () => {
-    mockClientWidth.get.mockImplementation(() => {
-      return 300
-    })
+  it('should hava right initial value & should off all events when destroy', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -107,10 +104,7 @@ describe('slide test for SlidePage class', () => {
     expect(hooks.events['forceStop'].length).toBe(0)
     expect(hooks.events['destroy'].length).toBe(0)
   })
-  it('new SlidePage no loop', () => {
-    mockClientWidth.get.mockImplementation(() => {
-      return 300
-    })
+  it('should hava right initial value in SlidePage no loop', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -134,7 +128,7 @@ describe('slide test for SlidePage class', () => {
     expect(bscroll.scroller.content.style.width).toBe('600px')
     slide.destroy()
   })
-  it('reset loop for one child', () => {
+  it('should hava right initial value with slide has one child', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
       slideNum: 1,
       slideOpt: {
@@ -152,7 +146,7 @@ describe('slide test for SlidePage class', () => {
     expect(bscroll.scroller.content.style.width).toBe('300px')
     slide.destroy()
   })
-  it('init slide state for loopX', () => {
+  it('should have right init slide state for loopX', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -191,7 +185,7 @@ describe('slide test for SlidePage class', () => {
     SlidePage.loopXGetter.mockReset()
     SlidePage.slideXGetter.mockReset()
   })
-  it('init slide state for loopY', () => {
+  it('should have right init slide state for loopY', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -230,7 +224,7 @@ describe('slide test for SlidePage class', () => {
     SlidePage.loopYGetter.mockReset()
     SlidePage.slideYGetter.mockReset()
   })
-  it('init slide state for no loop', () => {
+  it('should have right init slide state for no loop', () => {
     SlidePage.change2safePage.mockImplementationOnce(() => {
       return {
         x: 0,
@@ -266,7 +260,7 @@ describe('slide test for SlidePage class', () => {
     SlidePage.loopYGetter.mockReset()
     SlidePage.slideYGetter.mockReset()
   })
-  it('next page', () => {
+  it('should have correct behavior for next function', () => {
     SlidePage.nextPage.mockImplementationOnce(() => {
       return {
         pageX: 2,
@@ -307,7 +301,7 @@ describe('slide test for SlidePage class', () => {
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
     slide.destroy()
   })
-  it('prev page & set speed', () => {
+  it('should have correct behavior for prev page & set speed', () => {
     SlidePage.prevPage.mockImplementationOnce(() => {
       return {
         pageX: 2,
@@ -349,7 +343,7 @@ describe('slide test for SlidePage class', () => {
     expect(mockscrollTo.mock.calls[0][2]).toBe(100)
     slide.destroy()
   })
-  it('go to page', () => {
+  it('should have correct behavior for goTopage', () => {
     SlidePage.realPage2Page.mockImplementationOnce(() => {
       return {
         realX: 2,
@@ -391,7 +385,7 @@ describe('slide test for SlidePage class', () => {
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
     slide.destroy()
   })
-  it('getCurrentPage', () => {
+  it('should have correct behavior for getCurrentPage', () => {
     SlidePage.getRealPage.mockImplementationOnce(() => {
       return {
         x: 1,
@@ -416,7 +410,7 @@ describe('slide test for SlidePage class', () => {
     })
     slide.destroy()
   })
-  it('modifyScrollMeta', () => {
+  it('should modify scroll data when momentum event be trigged', () => {
     const { bscroll } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -492,7 +486,7 @@ describe('slide test for SlidePage class', () => {
     })
     slide.destroy()
   })
-  it('scrollEnd', () => {
+  it('should scroll to right page when scrollEnd', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -536,7 +530,7 @@ describe('slide test for SlidePage class', () => {
 
     slide.destroy()
   })
-  it('flick', () => {
+  it('should scroll to right page when flick', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {

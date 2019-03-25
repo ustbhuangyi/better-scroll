@@ -1,4 +1,10 @@
 export interface CustomHTMLDivElement extends HTMLDivElement {
+  clientWidth: number
+  clientHeight: number
+  offsetWidth: number
+  offsetHeight: number
+  offsetTop: number
+  offsetLeft: number
   _jsdomMockClientWidth?: number
   _jsdomMockClientHeight?: number
   _jsdomMockOffsetWidth?: number
@@ -8,12 +14,15 @@ export interface CustomHTMLDivElement extends HTMLDivElement {
   [key: string]: any
 }
 
+function firstUpper(key: string) {
+  return key.charAt(0).toUpperCase() + key.slice(1)
+}
+
 function genMockPrototype(mockName: string) {
   return {
     get: jest.fn().mockImplementation(dom => {
-      return dom[mockName] || 0
-    }),
-    set: jest.fn()
+      return Number(dom.getAttribute(mockName))
+    })
   }
 }
 
@@ -26,7 +35,7 @@ function mockHTMLPrototype(propName: string, mockGetter: jest.Mock) {
   })
 }
 
-export function setOffset(
+export function mockDomOffset(
   dom: CustomHTMLDivElement,
   offsetObj: {
     width?: number
@@ -37,13 +46,12 @@ export function setOffset(
   }
 ) {
   Object.keys(offsetObj).forEach(key => {
-    const fistUpperKey = key.charAt(0).toUpperCase() + key.slice(1)
-    const mockName = `_jsdomMockOffset${fistUpperKey}`
-    dom[mockName] = offsetObj[key]
+    const mockName = `_jsdomMockOffset${firstUpper(key)}`
+    dom.setAttribute(mockName, offsetObj[key])
   })
 }
 
-export function setClient(
+export function mockDomClient(
   dom: CustomHTMLDivElement,
   clientObj: {
     width?: number
@@ -52,9 +60,8 @@ export function setClient(
   }
 ) {
   Object.keys(clientObj).forEach(key => {
-    const fistUpperKey = key.charAt(0).toUpperCase() + key.slice(1)
-    const mockName = `_jsdomMockOffset${fistUpperKey}`
-    dom[mockName] = clientObj[key]
+    const mockName = `_jsdomMockClient${firstUpper(key)}`
+    dom.setAttribute(mockName, clientObj[key])
   })
 }
 
@@ -65,13 +72,13 @@ export function createDiv(
   left: number = 0
 ) {
   const dom = document.createElement('div') as CustomHTMLDivElement
-  setOffset(dom, {
+  mockDomOffset(dom, {
     width,
     height,
     top,
     left
   })
-  setClient(dom, {
+  mockDomClient(dom, {
     width,
     height
   })

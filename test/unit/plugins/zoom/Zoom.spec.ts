@@ -53,7 +53,7 @@ describe('zoom plugin', () => {
   })
 
   afterAll(() => {})
-  it('new Zoom', () => {
+  it('should right be inited when new Zoom', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       start: 1,
       min: 1,
@@ -66,7 +66,7 @@ describe('zoom plugin', () => {
       '0 0'
     )
   })
-  it('destroy', () => {
+  it('should destroy all events', () => {
     hooks.trigger('destroy')
     expect(hooks.events['start'].length).toBe(0)
     expect(hooks.events['beforeMove'].length).toBe(0)
@@ -74,7 +74,7 @@ describe('zoom plugin', () => {
     expect(hooks.events['beforeTranslate'].length).toBe(0)
     expect(hooks.events['destroy'].length).toBe(0)
   })
-  it('zoom for one finger', () => {
+  it('should not react when zooming with one finger', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       start: 1,
       min: 1,
@@ -103,7 +103,7 @@ describe('zoom plugin', () => {
     zoomSpy.mockRestore()
     zoomEndSpy.mockRestore()
   })
-  it('zoom out', () => {
+  it('should have correct behavior when zooming out', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       start: 1,
       min: 1,
@@ -239,7 +239,7 @@ describe('zoom plugin', () => {
 
     hooks.trigger('destroy')
   })
-  it('zoom in', () => {
+  it('should have correct behavior when zooming in', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       start: 1,
       min: 0.5,
@@ -348,7 +348,7 @@ describe('zoom plugin', () => {
     hooks.trigger('destroy')
   })
 
-  it('zoomTo', () => {
+  it('should have correct behavior for zoomTo', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       start: 1,
       min: 0.5,
