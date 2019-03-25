@@ -147,21 +147,14 @@ export default class Zoom {
     const y = this.getNewPos(this.origin.y, lastScale, scrollBehaviorY)
     this.resetBoundaries(this.scale, scrollBehaviorX, 'x', x)
     this.resetBoundaries(this.scale, scrollBehaviorY, 'y', y)
-    scrollerIns.scrollTo(
-      x,
-      y,
-      0,
-      undefined,
-      {
-        start: {
-          scale: this.lastTransformScale
-        },
-        end: {
-          scale: this.scale
-        }
+    scrollerIns.scrollTo(x, y, 0, undefined, {
+      start: {
+        scale: this.lastTransformScale
       },
-      true
-    )
+      end: {
+        scale: this.scale
+      }
+    })
   }
   private getFingerDistance(e: TouchEvent): number {
     const firstFinger = e.touches[0]
@@ -214,8 +207,7 @@ export default class Zoom {
           end: {
             scale: this.scale
           }
-        },
-        true
+        }
       )
     }
   }

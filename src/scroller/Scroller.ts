@@ -385,8 +385,7 @@ export default class Scroller {
     extraTransform = {
       start: {},
       end: {}
-    },
-    forceScroll?: boolean
+    }
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
