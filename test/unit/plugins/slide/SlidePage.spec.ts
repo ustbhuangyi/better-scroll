@@ -14,8 +14,8 @@ describe('slide test for SlidePage class', () => {
   let bscrollH: BScroll
   let bscrollV: BScroll
   beforeAll(() => {
-    bscrollH = bscrollHorizon()
-    bscrollV = bscrollVertical()
+    bscrollH = bscrollHorizon().partOfbscroll
+    bscrollV = bscrollVertical().partOfbscroll
   })
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('slide test for SlidePage class', () => {
     slidePage.init()
     expect(slidePage.loopY).toBe(true)
     expect(slidePage.loopX).toBeUndefined
-    slidePage = new SlidePage(bscrollHorizonVertical(), {
+    slidePage = new SlidePage(bscrollHorizonVertical().partOfbscroll, {
       loop: true
     })
     slidePage.init()
@@ -173,7 +173,7 @@ describe('slide test for SlidePage class', () => {
     expect(slidePage.getLoopStage()).toBe('middle')
     slidePage.currentPage.pageY = 3
     expect(slidePage.getLoopStage()).toBe('tail')
-    slidePage = new SlidePage(bscrollHorizon(), {
+    slidePage = new SlidePage(bscrollHorizon().partOfbscroll, {
       loop: false
     })
     slidePage.init()

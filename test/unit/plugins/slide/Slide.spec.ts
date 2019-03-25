@@ -27,14 +27,15 @@ function createBScroll(
   }
 ) {
   const mockscrollTo = jest.fn()
-  let partOfbscroll
+  let mockData
   if (options.direction === 'horizon') {
-    partOfbscroll = bscrollHorizon(options.slideNum)
+    mockData = bscrollHorizon(options.slideNum)
   }
   if (options.direction === 'vertical') {
-    partOfbscroll = bscrollVertical(options.slideNum)
+    mockData = bscrollVertical(options.slideNum)
   }
-  const bscroll = new BScroll('test') as any
+  let { partOfbscroll, dom } = mockData
+  const bscroll = new BScroll(dom) as any
   partOfbscroll.options.scrollX = options.scrollX
   partOfbscroll.options.scrollY = options.scrollY
   partOfbscroll.options.slide = options.slideOpt

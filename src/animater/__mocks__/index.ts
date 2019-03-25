@@ -10,4 +10,4 @@ const createAnimater = jest
     }
   })
 
-export { createAnimater }
+export default createAnimater

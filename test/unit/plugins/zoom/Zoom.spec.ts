@@ -15,8 +15,8 @@ function createBScroll(
   }
 ) {
   const mockscrollTo = jest.fn()
-  let partOfbscroll = bscrollZoom(zoomOptions)
-  const bscroll = new BScroll('test') as any
+  const { partOfbscroll, dom } = bscrollZoom(zoomOptions)
+  const bscroll = new BScroll(dom) as any
   replaceBscrollProperties(bscroll, partOfbscroll)
   bscroll.hooks = hooks
   bscroll.scroller.hooks = hooks
@@ -54,12 +54,12 @@ describe('zoom plugin', () => {
 
   afterAll(() => {})
   it('should right be inited when new Zoom', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
+    const { bscroll } = createBScroll(hooks, {
       start: 1,
       min: 1,
       max: 2
     })
-    const zoom = new Zoom(bscroll)
+    new Zoom(bscroll)
     expect(bscroll.proxy).toBeCalled()
     expect(bscroll.registerType).toBeCalledWith(['zoomStart', 'zoomEnd'])
     expect(bscroll.scroller.content.style['webkit-transform-origin']).toBe(
@@ -126,21 +126,14 @@ describe('zoom plugin', () => {
       { pageX: 150, pageY: 150 }
     )
     hooks.trigger('beforeMove', e2)
-    expect(mockscrollTo).toBeCalledWith(
-      -16,
-      -16,
-      0,
-      undefined,
-      {
-        start: {
-          scale: 1
-        },
-        end: {
-          scale: 1.2
-        }
+    expect(mockscrollTo).toBeCalledWith(-16, -16, 0, undefined, {
+      start: {
+        scale: 1
       },
-      true
-    )
+      end: {
+        scale: 1.2
+      }
+    })
     const transformString: string[] = []
     const transformPoint = {
       scale: 1.2
@@ -163,21 +156,14 @@ describe('zoom plugin', () => {
     transformPoint.scale = 1.4
     hooks.trigger('beforeTranslate', transformString, transformPoint)
 
-    expect(mockscrollTo).toHaveBeenLastCalledWith(
-      -32,
-      -32,
-      0,
-      undefined,
-      {
-        start: {
-          scale: 1.2
-        },
-        end: {
-          scale: 1.4
-        }
+    expect(mockscrollTo).toHaveBeenLastCalledWith(-32, -32, 0, undefined, {
+      start: {
+        scale: 1.2
       },
-      true
-    )
+      end: {
+        scale: 1.4
+      }
+    })
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(-120)
     expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
@@ -190,21 +176,14 @@ describe('zoom plugin', () => {
     )
     hooks.trigger('beforeMove', e4)
 
-    expect(mockscrollTo).lastCalledWith(
-      -86,
-      -86,
-      0,
-      undefined,
-      {
-        start: {
-          scale: 1.4
-        },
-        end: {
-          scale: 2 * 2 * Math.pow(0.5, 2 / 2.1)
-        }
+    expect(mockscrollTo).lastCalledWith(-86, -86, 0, undefined, {
+      start: {
+        scale: 1.4
       },
-      true
-    )
+      end: {
+        scale: 2 * 2 * Math.pow(0.5, 2 / 2.1)
+      }
+    })
     expect(zoom.scale).toBeCloseTo(2.067)
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(-321)
@@ -217,21 +196,14 @@ describe('zoom plugin', () => {
     // zoom end
     hooks.trigger('beforeEnd', e4)
     expect(zoom.scale).toBe(2)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(
-      -80,
-      -80,
-      800,
-      undefined,
-      {
-        start: {
-          scale: 2.1
-        },
-        end: {
-          scale: 2
-        }
+    expect(mockscrollTo).toHaveBeenLastCalledWith(-80, -80, 800, undefined, {
+      start: {
+        scale: 2.1
       },
-      true
-    )
+      end: {
+        scale: 2
+      }
+    })
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(-300)
     expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
@@ -262,21 +234,14 @@ describe('zoom plugin', () => {
       { pageX: 110, pageY: 110 }
     )
     hooks.trigger('beforeMove', e2)
-    expect(mockscrollTo).toBeCalledWith(
-      16,
-      16,
-      0,
-      undefined,
-      {
-        start: {
-          scale: 1
-        },
-        end: {
-          scale: 0.8
-        }
+    expect(mockscrollTo).toBeCalledWith(16, 16, 0, undefined, {
+      start: {
+        scale: 1
       },
-      true
-    )
+      end: {
+        scale: 0.8
+      }
+    })
     const transformString: string[] = []
     const transformPoint = {
       scale: 0.8
@@ -296,21 +261,14 @@ describe('zoom plugin', () => {
     )
     hooks.trigger('beforeMove', e3)
 
-    expect(mockscrollTo).lastCalledWith(
-      45,
-      45,
-      0,
-      undefined,
-      {
-        start: {
-          scale: 0.8
-        },
-        end: {
-          scale: 0.5 * 0.5 * Math.pow(2.0, 0.4 / 0.5)
-        }
+    expect(mockscrollTo).lastCalledWith(45, 45, 0, undefined, {
+      start: {
+        scale: 0.8
       },
-      true
-    )
+      end: {
+        scale: 0.5 * 0.5 * Math.pow(2.0, 0.4 / 0.5)
+      }
+    })
     expect(zoom.scale).toBeCloseTo(0.435)
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(45)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(0)
@@ -323,21 +281,14 @@ describe('zoom plugin', () => {
     // zoom end
     hooks.trigger('beforeEnd', e3)
     expect(zoom.scale).toBe(0.5)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(
-      0,
-      0,
-      800,
-      undefined,
-      {
-        start: {
-          scale: 0.4
-        },
-        end: {
-          scale: 0.5
-        }
+    expect(mockscrollTo).toHaveBeenLastCalledWith(0, 0, 800, undefined, {
+      start: {
+        scale: 0.4
       },
-      true
-    )
+      end: {
+        scale: 0.5
+      }
+    })
     expect(bscroll.scroller.scrollBehaviorX.hasScroll).toBe(false)
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(0)
@@ -363,21 +314,14 @@ describe('zoom plugin', () => {
     zoom.zoomTo(1.5, 10, 20)
 
     expect(zoom.scale).toBe(1.5)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(
-      -5,
-      -10,
-      800,
-      undefined,
-      {
-        start: {
-          scale: 1
-        },
-        end: {
-          scale: 1.5
-        }
+    expect(mockscrollTo).toHaveBeenLastCalledWith(-5, -10, 800, undefined, {
+      start: {
+        scale: 1
       },
-      true
-    )
+      end: {
+        scale: 1.5
+      }
+    })
     expect(bscroll.scroller.scrollBehaviorX.hasScroll).toBe(true)
     expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
     expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(-150)
@@ -399,38 +343,24 @@ describe('zoom plugin', () => {
 
     // change origin
     zoom.zoomTo(2, 0, 0)
-    expect(mockscrollTo).lastCalledWith(
-      0,
-      0,
-      800,
-      undefined,
-      {
-        start: {
-          scale: 2
-        },
-        end: {
-          scale: 2
-        }
+    expect(mockscrollTo).lastCalledWith(0, 0, 800, undefined, {
+      start: {
+        scale: 2
       },
-      true
-    )
+      end: {
+        scale: 2
+      }
+    })
 
     // zoomTo zoomIn
     zoom.zoomTo(0.8, 0, 0)
-    expect(mockscrollTo).lastCalledWith(
-      0,
-      0,
-      800,
-      undefined,
-      {
-        start: {
-          scale: 2
-        },
-        end: {
-          scale: 0.8
-        }
+    expect(mockscrollTo).lastCalledWith(0, 0, 800, undefined, {
+      start: {
+        scale: 2
       },
-      true
-    )
+      end: {
+        scale: 0.8
+      }
+    })
   })
 })

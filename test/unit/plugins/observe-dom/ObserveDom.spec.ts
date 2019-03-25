@@ -3,15 +3,14 @@ import ObserveDom from '../../../../src/plugins/observe-dom'
 import EventEmitter from '../../../../src/base/EventEmitter'
 import { createDiv, mockDomOffset } from '../../utils/layout'
 
-jest.mock('../../../../src/index')
+jest.mock('@/index')
 
 function createBS(hooks: EventEmitter) {
   const dom = createDiv(300, 300)
-  const bs = new BScroll('test') as any
+  const contentDom = createDiv(300, 300)
+  dom.appendChild(contentDom)
+  const bs = new BScroll(dom) as any
   bs.hooks = hooks
-  bs.scroller = {
-    content: dom
-  }
   return bs
 }
 
@@ -39,6 +38,9 @@ describe('observe dom', () => {
   }
   beforeAll(() => {
     jest.useFakeTimers()
+  })
+  afterAll(() => {
+    jest.resetAllMocks()
   })
   it('observe without MutationObserver', () => {
     const bs = createBS(hooks)
