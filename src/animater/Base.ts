@@ -12,7 +12,7 @@ export default abstract class Base {
   [key: string]: any
 
   constructor(
-    public element: HTMLElement,
+    public content: HTMLElement,
     public translater: Translater,
     public options: {
       probeType: number
@@ -23,9 +23,36 @@ export default abstract class Base {
       'end',
       'forceStop',
       'time',
-      'timeFunction'
+      'timeFunction',
+      'pointerEvents'
     ])
-    this.style = element.style as safeCSSStyleDeclaration
+    this.style = content.style as safeCSSStyleDeclaration
+    this.watchPointerEvents()
+  }
+
+  watchPointerEvents() {
+    let me = this
+    let isPending = false
+    Object.defineProperty(this, 'pending', {
+      get() {
+        return isPending
+      },
+      set(newVal) {
+        isPending = newVal
+        const enablePointerEvents = { enabled: false }
+        this.hooks.trigger(
+          this.hooks.eventTypes.pointerEvents,
+          enablePointerEvents
+        )
+        // fix issue #359
+        let el = me.content.children.length ? me.content.children : [me.content]
+        let pointerEvents =
+          isPending && !enablePointerEvents.enabled ? 'none' : 'auto'
+        for (let i = 0; i < el.length; i++) {
+          ;(el[i] as HTMLElement).style.pointerEvents = pointerEvents
+        }
+      }
+    })
   }
 
   translate(endPoint: TranslaterPoint) {

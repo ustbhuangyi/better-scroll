@@ -56,6 +56,15 @@ export default class PullDown {
         }
       }
     )
+
+    scroller.animater.hooks.on(
+      scroller.hooks.eventTypes.pointerEvents,
+      (enabledPointerEvents: { enabled: boolean }) => {
+        if (this.pulling) {
+          enabledPointerEvents.enabled = true
+        }
+      }
+    )
   }
 
   private _checkPullDown() {
