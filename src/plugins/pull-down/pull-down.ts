@@ -22,8 +22,10 @@ export default class PullDown {
 
   constructor(public scroll: BScroll) {
     if (scroll.options.pullDownRefresh) {
-      this._init()
+      this._watch()
     }
+
+    this.scroll.registerType(['pullingDown'])
 
     const prefix = `plugins.${PullDown.pluginName}.`
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
@@ -33,17 +35,12 @@ export default class PullDown {
     this.tapIntohooks()
   }
 
-  private _init() {
+  private _watch() {
     // 需要设置 probe = 3 吗？
     // must watch scroll in real time
     this.scroll.options.probeType = Probe.Realtime
 
-    // ? 改成 touchEnd ?
-    this.scroll.on('touchEnd', () => {
-      return this.scroll.options.pullDownRefresh && this._checkPullDown()
-    })
-
-    this.scroll.registerType(['pullingDown'])
+    this.scroll.on('touchEnd', this._checkPullDown, this)
   }
 
   private tapIntohooks() {
@@ -59,6 +56,10 @@ export default class PullDown {
   }
 
   private _checkPullDown() {
+    if (!this.scroll.options.pullDownRefresh) {
+      return
+    }
+
     const { threshold = 90, stop = 40 } = this.scroll.options
       .pullDownRefresh as pullDownRefreshConfig
 
@@ -91,7 +92,7 @@ export default class PullDown {
 
   open(config: pullDownRefreshOptions = true) {
     this.scroll.options.pullDownRefresh = config
-    this._init()
+    this._watch()
   }
 
   close() {
