@@ -7,6 +7,7 @@ jest.mock('@/util/dom')
 
 import Indicator, { IndicatorOption } from '@/plugins/scroll-bar/indicator'
 import { Direction } from '@/plugins/scroll-bar/const'
+import { mockDomClient } from '@/../test/unit/utils/layout'
 
 describe('indicator unit tests', () => {
   let options: Options
@@ -34,23 +35,13 @@ describe('indicator unit tests', () => {
 
   beforeEach(() => {
     bscroll.options.useTransform = false
-    // MOCK for indicator
+    // create Dom indicator
     const indicatorWrapper = document.createElement('div')
     const indicatorEl = document.createElement('div')
     indicatorWrapper.appendChild(indicatorEl)
+    // mock clientHeight and clientWidth
+    mockDomClient(indicatorWrapper, { height: 100, width: 100 })
 
-    Object.defineProperties(indicatorWrapper, {
-      clientHeight: {
-        get: function() {
-          return 100
-        }
-      },
-      clientWidth: {
-        get: function() {
-          return 100
-        }
-      }
-    })
     indicatorOptions = {
       wrapper: indicatorWrapper,
       direction: 'vertical' as Direction,
@@ -59,18 +50,14 @@ describe('indicator unit tests', () => {
     }
 
     jest.clearAllMocks()
+    bscroll.hooks.off()
   })
+
   describe('should update position and size when bscroll refresh', () => {
     it('direction is vertical', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
 
-      expect(bscroll.hooks.on).toBeCalledWith(
-        'refresh',
-        indicator.refresh,
-        indicator
-      )
-
-      indicator.refresh()
+      bscroll.hooks.trigger('refresh')
 
       expect(indicator.el.style.height).toBe('50px')
       expect(indicator.el.style.top).toBe('5px')
@@ -80,13 +67,7 @@ describe('indicator unit tests', () => {
       indicatorOptions.direction = 'horizontal' as Direction
       const indicator = new Indicator(bscroll, indicatorOptions)
 
-      expect(bscroll.hooks.on).toBeCalledWith(
-        'refresh',
-        indicator.refresh,
-        indicator
-      )
-
-      indicator.refresh()
+      bscroll.hooks.trigger('refresh')
 
       expect(indicator.el.style.width).toBe('50px')
       expect(indicator.el.style.left).toBe('5px')
@@ -97,13 +78,7 @@ describe('indicator unit tests', () => {
       bscroll.options.useTransform = true
       const indicator = new Indicator(bscroll, indicatorOptions)
 
-      expect(bscroll.hooks.on).toBeCalledWith(
-        'refresh',
-        indicator.refresh,
-        indicator
-      )
-
-      indicator.refresh()
+      bscroll.hooks.trigger('refresh')
 
       expect(indicator.el.style.width).toBe('50px')
       expect(indicator.el.style.transform).toBe('translateX(5px)')
@@ -115,13 +90,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      expect(bscroll.scroller.animater.hooks.on).toBeCalledWith(
-        'translate',
-        indicator.updatePosAndSize,
-        indicator
-      )
-
-      indicator.updatePosAndSize({ x: 0, y: 10 })
+      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: 10 })
 
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('0px')
@@ -131,13 +100,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      expect(bscroll.scroller.animater.hooks.on).toBeCalledWith(
-        'translate',
-        indicator.updatePosAndSize,
-        indicator
-      )
-
-      indicator.updatePosAndSize({ x: 0, y: 30 })
+      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: 30 })
 
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('0px')
@@ -147,13 +110,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      expect(bscroll.scroller.animater.hooks.on).toBeCalledWith(
-        'translate',
-        indicator.updatePosAndSize,
-        indicator
-      )
-
-      indicator.updatePosAndSize({ x: 0, y: -110 })
+      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: -110 })
 
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('65px')
@@ -163,13 +120,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      expect(bscroll.scroller.animater.hooks.on).toBeCalledWith(
-        'translate',
-        indicator.updatePosAndSize,
-        indicator
-      )
-
-      indicator.updatePosAndSize({ x: 0, y: -130 })
+      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: -130 })
 
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('92px')
