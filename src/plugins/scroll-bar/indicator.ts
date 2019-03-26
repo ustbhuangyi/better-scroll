@@ -6,6 +6,7 @@ import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
 import EventHandler from './eventHandler'
 import { TranslaterPoint } from '../../translater'
+import EventEmitter from '@/base/EventEmitter'
 
 export interface IndicatorOption {
   wrapper: HTMLElement
@@ -137,7 +138,6 @@ export default class Indicator {
   }
 
   fade(visible?: boolean) {
-    // TODO 对比 1.0
     let time = visible ? 250 : 500
     this.wrapperStyle[style.transitionDuration as any] = time + 'ms'
     this.wrapperStyle.opacity = visible ? '1' : '0'
@@ -147,8 +147,6 @@ export default class Indicator {
   refresh() {
     let { hasScroll } = this.keysMap
     if (this._setShowBy(this.bscroll[hasScroll])) {
-      // TODO time？
-      this.setTransitionTime()
       let { wrapperSize, scrollerSize, maxScroll } = this.keysMap
 
       this.keyVals = this._refreshKeyValues(
@@ -212,12 +210,9 @@ export default class Indicator {
     let pos = Math.round(sizeRatio * endPoint[posKey])
     let size
     if (pos < 0) {
-      // TODO 搞清楚这里设置transitionTime 的逻辑
-      // this.transitionTime(500)
       size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN)
       pos = 0
     } else if (pos > maxPos) {
-      // this.transitionTime(500)
       size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN)
       pos = maxPos + initialSize - size
     } else {
@@ -238,7 +233,7 @@ export default class Indicator {
     // TODO translateZ ？
     if (this.bscroll.options.useTransform) {
       this.elStyle[style.transform as any] = `${translate}(${pos}px)${
-        this.bscroll.translateZ
+        this.bscroll.options.translateZ
       }`
     } else {
       this.elStyle[position] = `${pos}px`
