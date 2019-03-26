@@ -10,7 +10,11 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     options: options,
     hooks: new EventEmitter([]),
     scroller: new Scroller(wrapper, options),
-    on: jest.fn()
+    on: jest.fn(),
+    trigger: jest.fn(),
+    proxy: jest.fn(),
+    registerType: jest.fn(),
+    refresh: jest.fn()
   }
 })
 

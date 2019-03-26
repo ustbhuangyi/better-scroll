@@ -1,17 +1,16 @@
 import BScroll from '../../../../src/index'
 import ObserveDom from '../../../../src/plugins/observe-dom'
 import EventEmitter from '../../../../src/base/EventEmitter'
-import { createDiv } from '../../utils/layout'
+import { createDiv, mockDomOffset } from '../../utils/layout'
 
-jest.mock('../../../../src/index')
+jest.mock('@/index')
 
 function createBS(hooks: EventEmitter) {
   const dom = createDiv(300, 300)
-  const bs = new BScroll('test') as any
+  const contentDom = createDiv(300, 300)
+  dom.appendChild(contentDom)
+  const bs = new BScroll(dom) as any
   bs.hooks = hooks
-  bs.scroller = {
-    content: dom
-  }
   return bs
 }
 
@@ -40,6 +39,9 @@ describe('observe dom', () => {
   beforeAll(() => {
     jest.useFakeTimers()
   })
+  afterAll(() => {
+    jest.resetAllMocks()
+  })
   it('observe without MutationObserver', () => {
     const bs = createBS(hooks)
     const obDom = new ObserveDom(bs)
@@ -47,12 +49,16 @@ describe('observe dom', () => {
     jest.advanceTimersByTime(1000)
     expect(bs.refresh).not.toBeCalled()
 
-    bs.scroller.content._jsdomMockOffsetWidth = 400
+    mockDomOffset(bs.scroller.content, {
+      width: 400
+    })
     jest.advanceTimersByTime(1000)
     expect(bs.refresh).toBeCalledTimes(1)
     // destroy
     hooks.trigger('destroy')
-    bs.scroller.content._jsdomMockOffsetWidth = 500
+    mockDomOffset(bs.scroller.content, {
+      width: 500
+    })
     jest.advanceTimersByTime(1000)
     expect(bs.refresh).toBeCalledTimes(1)
   })

@@ -14,15 +14,15 @@ describe('slide test for SlidePage class', () => {
   let bscrollH: BScroll
   let bscrollV: BScroll
   beforeAll(() => {
-    bscrollH = bscrollHorizon()
-    bscrollV = bscrollVertical()
+    bscrollH = bscrollHorizon().partOfbscroll
+    bscrollV = bscrollVertical().partOfbscroll
   })
 
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('new SlidePage', () => {
+  it('should set loopX and loopY when new SlidePage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -33,13 +33,13 @@ describe('slide test for SlidePage class', () => {
     slidePage.init()
     expect(slidePage.loopY).toBe(true)
     expect(slidePage.loopX).toBeUndefined
-    slidePage = new SlidePage(bscrollHorizonVertical(), {
+    slidePage = new SlidePage(bscrollHorizonVertical().partOfbscroll, {
       loop: true
     })
     slidePage.init()
     expect(warn).toHaveBeenCalledTimes(1)
   })
-  it('change2safePage', () => {
+  it('should get right return value for change2safePage function', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -75,7 +75,7 @@ describe('slide test for SlidePage class', () => {
       y: 0
     })
   })
-  it('getRealPage', () => {
+  it('should get right return value for getRealPage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: false
     })
@@ -110,7 +110,7 @@ describe('slide test for SlidePage class', () => {
     }
     expect(slidePage.getRealPage().pageY).toBe(1)
   })
-  it('nearestPage', () => {
+  it('should get right return value for nearestPage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -152,7 +152,7 @@ describe('slide test for SlidePage class', () => {
       y: 0
     })
   })
-  it('getLoopStage', () => {
+  it('should get right return value for getLoopStage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -173,13 +173,13 @@ describe('slide test for SlidePage class', () => {
     expect(slidePage.getLoopStage()).toBe('middle')
     slidePage.currentPage.pageY = 3
     expect(slidePage.getLoopStage()).toBe('tail')
-    slidePage = new SlidePage(bscrollHorizon(), {
+    slidePage = new SlidePage(bscrollHorizon().partOfbscroll, {
       loop: false
     })
     slidePage.init()
     expect(slidePage.getLoopStage()).toBe('middle')
   })
-  it('resetLoopPage', () => {
+  it('should get right return value resetLoopPage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -212,7 +212,7 @@ describe('slide test for SlidePage class', () => {
     slidePage.loopY = false
     expect(slidePage.resetLoopPage()).toBeUndefined()
   })
-  it('realPage2Page', () => {
+  it('should get right return value realPage2Page', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -261,7 +261,7 @@ describe('slide test for SlidePage class', () => {
     slidePage.pagesPos.pages = []
     expect(slidePage.realPage2Page(0, 0)).toBeUndefined
   })
-  it('getPageSize', () => {
+  it('should get right return value getPageSize', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
@@ -271,7 +271,7 @@ describe('slide test for SlidePage class', () => {
       height: 300
     })
   })
-  it('nextPage', () => {
+  it('should get right return value nextPage', () => {
     slidePage = new SlidePage(bscrollH, {
       loop: true
     })
