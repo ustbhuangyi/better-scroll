@@ -12,15 +12,15 @@ describe('indicator unit tests', () => {
   let options: Options
   let bscroll: BScroll
   let indicatorOptions: IndicatorOption
-  // MOCK for BScroll
-  const wrapper = document.createElement('div')
-  const content = document.createElement('div')
-  wrapper.appendChild(content)
 
   beforeAll(() => {
+    // MOCK for BScroll
+    const wrapper = document.createElement('div')
+    const content = document.createElement('div')
+    wrapper.appendChild(content)
+    // mock bscroll
     options = new Options()
     options.scrollY = true
-
     bscroll = new BScroll(wrapper, options)
     bscroll.translateZ = ''
     bscroll.hasVerticalScroll = true
