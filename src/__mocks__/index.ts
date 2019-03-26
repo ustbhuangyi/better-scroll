@@ -24,10 +24,15 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   const res = {
     wrapper: wrapper,
     options: options,
-    hooks: new EventEmitter([]),
+    hooks: new EventEmitter([
+      'init',
+      'refresh',
+      'enable',
+      'disable',
+      'destroy'
+    ]),
     scroller: new Scroller(wrapper, options),
     proxy: jest.fn(),
-    registerType: jest.fn(),
     refresh: jest.fn(),
     // 代理的方法
     scrollTo: jest.fn(),
