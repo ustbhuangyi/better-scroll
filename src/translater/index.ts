@@ -65,4 +65,8 @@ export default class Translater {
     this.style[style.transform as any] = `${transformStyle.join(' ')}`
     this.hooks.trigger(this.hooks.eventTypes.translate, point)
   }
+
+  destroy() {
+    this.hooks.destroy()
+  }
 }

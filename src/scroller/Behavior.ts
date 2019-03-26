@@ -243,4 +243,8 @@ export default class Behavior {
     this.dist += delta
     return Math.abs(this.dist)
   }
+
+  destroy() {
+    this.hooks.destroy()
+  }
 }

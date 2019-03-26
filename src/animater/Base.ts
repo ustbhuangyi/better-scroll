@@ -1,5 +1,5 @@
 import EventEmitter from '../base/EventEmitter'
-import { EaseFn, safeCSSStyleDeclaration } from '../util'
+import { EaseFn, safeCSSStyleDeclaration, cancelAnimationFrame } from '../util'
 import Translater, { TranslaterPoint } from '../translater'
 
 export type Displacement = [number, number]
@@ -74,4 +74,9 @@ export default abstract class Base {
     easing: string | EaseFn
   ): void
   abstract stop(): void
+
+  destroy() {
+    this.hooks.destroy()
+    cancelAnimationFrame(this.timer)
+  }
 }

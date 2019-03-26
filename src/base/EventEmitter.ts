@@ -85,6 +85,11 @@ export default class EventEmitter {
       this.eventTypes[type] = type
     })
   }
+
+  destroy() {
+    this.events = {}
+  }
+
   private _checkInTypes(type: string) {
     const types = this.eventTypes
     const inTypes = types[type] === type

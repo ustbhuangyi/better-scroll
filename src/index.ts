@@ -159,6 +159,7 @@ export default class BScroll extends EventEmitter {
   destroy() {
     this.hooks.trigger(this.hooks.eventTypes.destroy)
     // TODO destroy
+    this.scroller.destroy()
   }
   eventRegister(names: string[]) {
     this.registerType(names)

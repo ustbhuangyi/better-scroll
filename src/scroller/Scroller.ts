@@ -44,6 +44,7 @@ export default class Scroller {
   }
   resizeTimeout: number
   lastClickTime: number | null
+  [key: string]: any
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
     this.hooks = new EventEmitter([
       'beforeStart',
@@ -507,5 +508,19 @@ export default class Scroller {
 
   disable() {
     this.actions.enabled = false
+  }
+
+  destroy(this: Scroller) {
+    const keys = [
+      'resizeRegister',
+      'transitionEndRegister',
+      'actionsHandler',
+      'hooks',
+      'animater',
+      'translater',
+      'scrollBehaviorX',
+      'scrollBehaviorY'
+    ]
+    keys.forEach(key => this[key].destroy())
   }
 }
