@@ -100,8 +100,8 @@ export default class Indicator {
       this.visible = 1
     }
 
-    const animater = this.bscroll.scroller.animater
-    animater.hooks.on('translate', this.updatePosAndSize, this)
+    const translater = this.bscroll.scroller.translater
+    translater.hooks.on('translate', this.updatePosAndSize, this)
   }
 
   _getKeysMap(): KeysMap {

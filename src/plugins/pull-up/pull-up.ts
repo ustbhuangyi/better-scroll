@@ -21,8 +21,10 @@ export default class PullUp {
 
   constructor(public scroll: BScroll) {
     if (scroll.options.pullUpLoad) {
-      this._init()
+      this._watch()
     }
+
+    this.scroll.registerType(['pullingUp'])
 
     const prefix = `plugins.${PullUp.pluginName}.`
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
@@ -30,20 +32,12 @@ export default class PullUp {
     })
   }
 
-  private _init() {
-    // must watch scroll in real time
-    this.scroll.options.probeType = Probe.Realtime
-
-    this.scroll.registerType(['pullingUp'])
-
-    this.watching = false
-    this._watch()
-  }
-
   private _watch() {
     if (this.watching) {
       return
     }
+    // must watch scroll in real time
+    this.scroll.options.probeType = Probe.Realtime
     this.watching = true
     this.scroll.on('scroll', this._checkToEnd, this)
   }
@@ -74,7 +68,7 @@ export default class PullUp {
   open(config: pullUpLoadOptions = true) {
     this.scroll.options.pullUpLoad = config
 
-    this._init()
+    this._watch()
   }
 
   close() {

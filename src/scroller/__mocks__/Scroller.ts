@@ -3,6 +3,8 @@ import Translater from '@/translater'
 
 jest.mock('@/animater/index')
 
+import EventEmitter from '@/base/EventEmitter'
+
 const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
   const content = wrapper.children[0]
   const translater = new Translater(content)
@@ -12,7 +14,24 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
     content,
     options: bscrollOptions,
     translater,
-    animater
+    animater,
+    hooks: new EventEmitter([
+      'beforeStart',
+      'beforeMove',
+      'beforeScrollStart',
+      'scrollStart',
+      'scroll',
+      'beforeEnd',
+      'scrollEnd',
+      'refresh',
+      'touchEnd',
+      'flick',
+      'scrollCancel',
+      'momentum',
+      'scrollTo',
+      'scrollToElement',
+      'transitionEnd'
+    ])
   }
 })
 

@@ -40,24 +40,38 @@ export default class EventEmitter {
     return this
   }
 
-  off(type: string, fn: Function) {
-    this._checkInTypes(type)
-    let events = this.events[type]
-    if (!events) {
+  off(type?: string, fn?: Function) {
+    if (!type && !fn) {
+      for (let type of Object.keys(this.events)) {
+        this.events[type] = []
+      }
       return this
     }
 
-    let count = events.length
-    while (count--) {
-      if (
-        events[count][0] === fn ||
-        (events[count][0] && (events[count][0] as any).fn === fn)
-      ) {
-        events.splice(count, 1)
+    if (type) {
+      this._checkInTypes(type)
+      if (!fn) {
+        this.events[type] = []
+        return this
       }
-    }
 
-    return this
+      let events = this.events[type]
+      if (!events) {
+        return this
+      }
+
+      let count = events.length
+      while (count--) {
+        if (
+          events[count][0] === fn ||
+          (events[count][0] && (events[count][0] as any).fn === fn)
+        ) {
+          events.splice(count, 1)
+        }
+      }
+
+      return this
+    }
   }
 
   trigger(type: string, ...args: any[]) {
