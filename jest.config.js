@@ -3,7 +3,7 @@ const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
   "verbose": true,
-  "roots": ["<rootDir>/test/unit"],
+  "roots": ["<rootDir>"],
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
   "transform": {
     ".ts": "ts-jest"
