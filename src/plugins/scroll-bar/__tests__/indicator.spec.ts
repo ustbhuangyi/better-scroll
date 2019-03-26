@@ -90,7 +90,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: 10 })
+      bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 10 })
 
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('0px')
@@ -100,7 +100,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: 30 })
+      bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 30 })
 
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('0px')
@@ -110,7 +110,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: -110 })
+      bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -110 })
 
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('65px')
@@ -120,7 +120,7 @@ describe('indicator unit tests', () => {
       const indicator = new Indicator(bscroll, indicatorOptions)
       indicator.refresh() // manual refresh for updating keyValues
 
-      bscroll.scroller.animater.hooks.trigger('translate', { x: 0, y: -130 })
+      bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -130 })
 
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('92px')
