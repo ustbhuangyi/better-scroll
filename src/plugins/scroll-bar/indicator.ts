@@ -4,7 +4,7 @@ import { Direction } from './const'
 import { style, getRect } from '../../util/dom'
 import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
-import EventHandler from './eventHandler'
+import EventHandler from './event-handler'
 import { TranslaterPoint } from '../../translater'
 import EventEmitter from '@/base/EventEmitter'
 
@@ -80,9 +80,14 @@ export default class Indicator {
     const translaterHooks = bscroll.scroller.translater.hooks
     const animaterHooks = bscroll.scroller.animater.hooks
 
-    this._listen(translaterHooks, 'translate', this.updatePosAndSize)
-
     this._listen(bscrollHooks, 'refresh', this.refresh)
+    this._listen(translaterHooks, 'translate', this.updatePosAndSize)
+    this._listen(animaterHooks, 'time', (time: number) => {
+      this.setTransitionTime(time)
+    })
+    this._listen(animaterHooks, 'timeFunction', (ease: string) => {
+      this.setTransitionTimingFunction(ease)
+    })
 
     if (fade) {
       this._listen(bscrollHooks, 'scrollEnd', () => {
@@ -94,20 +99,13 @@ export default class Indicator {
     }
 
     if (interactive) {
-      // const { disableMouse } = this.bscroll.options
-      // this.eventHandler = new EventHandler(this, { disableMouse })
-      // const eventHandlerHooks = this.eventHandler.hooks
-      // this._listen(eventHandlerHooks, 'touchStart', this._startHandler)
-      // this._listen(eventHandlerHooks, 'touchMove', this._moveHandler)
-      // this._listen(eventHandlerHooks, 'touchEnd', this._endHandler)
+      const { disableMouse } = this.bscroll.options
+      this.eventHandler = new EventHandler(this, { disableMouse })
+      const eventHandlerHooks = this.eventHandler.hooks
+      this._listen(eventHandlerHooks, 'touchStart', this.startHandler)
+      this._listen(eventHandlerHooks, 'touchMove', this.moveHandler)
+      this._listen(eventHandlerHooks, 'touchEnd', this.endHandler)
     }
-
-    this._listen(animaterHooks, 'time', (time: number) => {
-      this.setTransitionTime(time)
-    })
-    this._listen(animaterHooks, 'timeFunction', (ease: string) => {
-      this.setTransitionTimingFunction(ease)
-    })
   }
 
   _getKeysMap(): KeysMap {
@@ -248,12 +246,12 @@ export default class Indicator {
     this.elStyle[style.transitionTimingFunction as any] = easing
   }
 
-  private _startHandler() {
+  startHandler() {
     this.setTransitionTime()
     this.bscroll.trigger('beforeScrollStart')
   }
 
-  private _moveHandler(moved: boolean, delta: number) {
+  moveHandler(moved: boolean, delta: number) {
     if (!moved) {
       this.bscroll.trigger('scrollStart')
     }
@@ -290,7 +288,7 @@ export default class Indicator {
     return Math.round(newPos / sizeRatio)
   }
 
-  private _endHandler(moved: boolean) {
+  endHandler(moved: boolean) {
     if (moved) {
       this.bscroll.trigger('scrollEnd', {
         x: this.bscroll.x,

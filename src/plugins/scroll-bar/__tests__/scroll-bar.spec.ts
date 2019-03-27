@@ -16,16 +16,15 @@ describe('scroll-bar unit tests', () => {
   }
 
   beforeAll(() => {
+    // create Dom
     const wrapper = document.createElement('div')
     const content = document.createElement('div')
     wrapper.appendChild(content)
-
-    const options = new Options()
-    options.scrollbar = CONFIG_SCROLL_BAR
-    options.scrollX = true
-    options.scrollY = true
-
-    bscroll = new BScroll(wrapper, options)
+    // mock bscroll
+    bscroll = new BScroll(wrapper, {})
+    bscroll.options.scrollbar = CONFIG_SCROLL_BAR
+    bscroll.options.scrollX = true
+    bscroll.options.scrollY = true
   })
 
   beforeEach(() => {
