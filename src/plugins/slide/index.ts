@@ -1,11 +1,12 @@
 import BScroll from '../../index'
 import { fixInboundValue } from '../../util/lang'
-import { prepend, removeChild, addClass } from '../../util/dom'
+import { prepend, removeChild } from '../../util/dom'
 import { ease, EaseItem } from '../../util/ease'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
 import { staticImplements, PluginCtor } from '../type'
 import EventEmitter from '../../base/EventEmitter'
+import { Direction } from '@/enums'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {
@@ -72,6 +73,28 @@ export default class Slide {
     this.registorHooks(scrollHooks, 'destroy', this.destroy)
     this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
     this.registorHooks(scrollerHooks, 'scrollEnd', this.resetLoop)
+    this.registorHooks(this.scroll, 'mousewheelMove', () => {
+      // prevent default action of mousewheelMove
+      return true
+    })
+    this.registorHooks(
+      this.scroll,
+      'mousewheelEnd',
+      (delta: { directionX: number; direciontY: number }) => {
+        if (
+          delta.directionX === Direction.Positive ||
+          delta.direciontY === Direction.Positive
+        ) {
+          this.next()
+        }
+        if (
+          delta.directionX === Direction.Negative ||
+          delta.direciontY === Direction.Negative
+        ) {
+          this.prev()
+        }
+      }
+    )
     this.registorHooks(
       this.scroll.scroller.animater.hooks,
       'forceStop',
@@ -208,23 +231,30 @@ export default class Slide {
     }
     slideEls.style.width = slideItemWidth * children.length + 'px'
   }
-  private goTo(x: number, y: number = 0, time?: number, easing?: EaseItem) {
-    const pageInfo = this.page.change2safePage(x, y)
-    if (!pageInfo) {
+  private goTo(
+    pageX: number,
+    pageY: number = 0,
+    time?: number,
+    easing?: EaseItem
+  ) {
+    const newPageInfo = this.page.change2safePage(pageX, pageY)
+    if (!newPageInfo) {
       return
     }
     const scrollEasing = easing || this.slideOpt.easing || ease.bounce
-    let posX = pageInfo.x!
-    let posY = pageInfo.y!
+    let posX = newPageInfo.x!
+    let posY = newPageInfo.y!
     const deltaX = posX - this.scroll.scroller.scrollBehaviorX.currentPos
     const deltaY = posY - this.scroll.scroller.scrollBehaviorY.currentPos
+    if (!deltaX && !deltaY) {
+      return
+    }
     time = time === undefined ? this.getAnimateTime(deltaX, deltaY) : time
-
     this.page.currentPage = {
       x: posX,
       y: posY,
-      pageX: pageInfo.pageX,
-      pageY: pageInfo.pageY
+      pageX: newPageInfo.pageX,
+      pageY: newPageInfo.pageY
     }
     this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
