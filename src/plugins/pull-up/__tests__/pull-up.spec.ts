@@ -12,29 +12,18 @@ describe('pull up tests', () => {
   const MAX_SCROLL_Y = -1000
   const THRESHOLD = 0
   const MOVING_DIRECTION_Y = 1
-  let pullup
-  let hasTriggerTimes = 0
-
-  function hasTriggerTimesIncreaceOne() {
-    hasTriggerTimes++
-  }
+  let pullup: PullUp
+  const pullingUpHandler = jest.fn()
 
   beforeAll(() => {
-    let options: Options
     // create DOM
     const wrapper = document.createElement('div')
     const content = document.createElement('div')
     wrapper.appendChild(content)
-    // instanciate mocked bscroll
-    options = new Options()
-    bscroll = new BScroll(wrapper, options)
-    bscroll.options = options as Options
+    // mock bscroll
+    bscroll = new BScroll(wrapper, {})
     bscroll.maxScrollY = MAX_SCROLL_Y
     bscroll.movingDirectionY = MOVING_DIRECTION_Y
-  })
-
-  beforeEach(() => {
-    bscroll.options.pullUpLoad = undefined
   })
 
   afterEach(() => {
@@ -63,97 +52,98 @@ describe('pull up tests', () => {
     )
   })
 
-  it('should not trigger event pullingUp when not set pullUpLoad', () => {
-    // given
-    pullup = new PullUp(bscroll)
-    bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-    hasTriggerTimes = 0
-    // when
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    // then
-    expect(hasTriggerTimes).toBe(0)
-  })
-
-  it('should trigger event pullingUp when set pullUpLoad', () => {
-    // given
-    bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-    pullup = new PullUp(bscroll)
-    bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-    hasTriggerTimes = 0
-    // when
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    // then
-    expect(hasTriggerTimes).toBe(1)
-  })
-
-  it('should trigger event pullingUp once', () => {
-    // given
-    bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-    pullup = new PullUp(bscroll)
-    bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-    hasTriggerTimes = 0
-    // when
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    // then
-    expect(hasTriggerTimes).toBe(1)
-  })
-
-  it('should reset watching when invoking api close', () => {
-    // given
-    bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-    pullup = new PullUp(bscroll)
-    bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-    hasTriggerTimes = 0
-    // when
-    pullup.close()
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    // then
-    expect(hasTriggerTimes).toBe(0)
-  })
-
-  it('should set watching when invoking api open', () => {
-    // given
-    bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-    pullup = new PullUp(bscroll)
-    bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-    hasTriggerTimes = 0
-    // when
-    const pullUpConfig: pullUpLoadOptions = { threshold: THRESHOLD }
-    pullup.open(pullUpConfig)
-    bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-    // then
-    expect(hasTriggerTimes).toBe(1)
-  })
-
-  describe('finish api', () => {
-    it('should trigger pullingUp once when invoking api finish before scrollEnd', () => {
+  describe('trigger pullingUp', () => {
+    beforeEach(() => {
       // given
       bscroll.options.pullUpLoad = { threshold: THRESHOLD }
       pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingUp', pullingUpHandler)
+    })
+
+    it('should not trigger event pullingUp when not set pullUpLoad', () => {
+      // given
+      bscroll.options.pullUpLoad = false
+      // when
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      // then
+      expect(pullingUpHandler).toHaveBeenCalledTimes(0)
+    })
+
+    it('should trigger event pullingUp when set pullUpLoad', () => {
+      // when
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      // then
+      expect(pullingUpHandler).toHaveBeenCalledTimes(1)
+    })
+
+    it('should trigger event pullingUp once', () => {
+      // when
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      // then
+      expect(pullingUpHandler).toBeCalledTimes(1)
+    })
+  })
+
+  describe('api close', () => {
+    beforeEach(() => {
+      // given
+      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
+      pullup = new PullUp(bscroll)
+      bscroll.on('pullingUp', pullingUpHandler)
+    })
+
+    it('should not trigger pullingUp when invoking api close', () => {
+      // when
+      pullup.close()
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      // then
+      expect(pullingUpHandler).toBeCalledTimes(0)
+    })
+  })
+
+  describe('api open', () => {
+    beforeEach(() => {
+      // given
+      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
+      pullup = new PullUp(bscroll)
+      bscroll.on('pullingUp', pullingUpHandler)
+    })
+
+    it('should trigger pullingUp when invoking api open', () => {
+      // when
+      pullup.open({ threshold: THRESHOLD })
+      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
+      // then
+      expect(pullingUpHandler).toBeCalledTimes(1)
+    })
+  })
+
+  describe('finish api', () => {
+    beforeEach(() => {
+      // given
+      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
+      pullup = new PullUp(bscroll)
+      bscroll.on('pullingUp', pullingUpHandler)
+    })
+
+    it('should trigger pullingUp once when invoking api finish before scrollEnd', () => {
       // when
       bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
       pullup.finish()
       bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullingUpHandler).toBeCalledTimes(1)
     })
 
     it('should trigger pullingUp twice when invoking api finish after scrollEnd', () => {
-      // given
-      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-      pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
       // when
       bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
       bscroll.trigger('scrollEnd')
       pullup.finish()
       bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
       // then
-      expect(hasTriggerTimes).toBe(2)
+      expect(pullingUpHandler).toBeCalledTimes(2)
     })
   })
 })
