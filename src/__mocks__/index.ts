@@ -1,8 +1,10 @@
 import Scroller from '@/scroller/Scroller'
 import EventEmitter from '@/base/EventEmitter'
+import { Options } from '@/Options'
 
 jest.mock('@/scroller/Scroller')
-// 使用真实的 发布订阅逻辑
+jest.mock('@/Options')
+// mock 发布订阅逻辑
 // jest.mock('@/base/EventEmitter')
 
 const BScroll = jest.fn().mockImplementation((wrapper, options) => {
@@ -23,7 +25,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   ])
   const res = {
     wrapper: wrapper,
-    options: options,
+    options: new Options(),
     hooks: new EventEmitter([
       'init',
       'refresh',
