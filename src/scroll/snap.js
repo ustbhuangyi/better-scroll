@@ -108,7 +108,7 @@ export function snapMixin(BScroll) {
 
       let initPageX = snap._loopX ? 1 : 0
       let initPageY = snap._loopY ? 1 : 0
-      this._goToPage(this.currentPage.pageX || initPageX, this.currentPage.pageY || initPageY, 0)
+      this._goToPage(this.currentPage.pageX || initPageX, this.currentPage.pageY || initPageY, 0, undefined, true)
 
       // Update snap threshold if needed.
       const snapThreshold = snap.threshold
@@ -125,17 +125,17 @@ export function snapMixin(BScroll) {
       if (snap.loop) {
         if (snap._loopX) {
           if (this.currentPage.pageX === 0) {
-            this._goToPage(this.pages.length - 2, this.currentPage.pageY, 0)
+            this._goToPage(this.pages.length - 2, this.currentPage.pageY, 0, undefined, true)
           }
           if (this.currentPage.pageX === this.pages.length - 1) {
-            this._goToPage(1, this.currentPage.pageY, 0)
+            this._goToPage(1, this.currentPage.pageY, 0, undefined, true)
           }
         } else {
           if (this.currentPage.pageY === 0) {
-            this._goToPage(this.currentPage.pageX, this.pages[0].length - 2, 0)
+            this._goToPage(this.currentPage.pageX, this.pages[0].length - 2, 0, undefined, true)
           }
           if (this.currentPage.pageY === this.pages[0].length - 1) {
-            this._goToPage(this.currentPage.pageX, 1, 0)
+            this._goToPage(this.currentPage.pageX, 1, 0, undefined, true)
           }
         }
       }
@@ -260,7 +260,7 @@ export function snapMixin(BScroll) {
     }
   }
 
-  BScroll.prototype._goToPage = function (x, y = 0, time, easing) {
+  BScroll.prototype._goToPage = function (x, y = 0, time, easing, isSilent) {
     const snap = this.options.snap
 
     if (!snap || !this.pages || !this.pages.length) {
@@ -300,7 +300,7 @@ export function snapMixin(BScroll) {
       pageX: x,
       pageY: y
     }
-    this.scrollTo(posX, posY, time, easing)
+    this.scrollTo(posX, posY, time, easing, isSilent)
   }
 
   BScroll.prototype.goToPage = function (x, y, time, easing) {
