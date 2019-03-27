@@ -559,7 +559,7 @@ export function coreMixin(BScroll) {
     this.scrollTo(x, y, time, easing)
   }
 
-  BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce) {
+  BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce, isSilent) {
     if (this.options.wheel) {
       y = this._findNearestValidWheel(y).y
     }
@@ -573,7 +573,7 @@ export function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe()
       }
-      if (!time) {
+      if (!time && !isSilent) {
         // don't trigger resetPosition when zoom feature is open, fix #748
         if (this.options.zoom) return
         this.trigger('scroll', {
