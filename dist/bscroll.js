@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.15.0
+ * better-normal-scroll v1.15.1
  * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1548,6 +1548,7 @@ function coreMixin(BScroll) {
   BScroll.prototype.scrollTo = function (x, y) {
     var time = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     var easing = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ease.bounce;
+    var isSilent = arguments[4];
 
     if (this.options.wheel) {
       y = this._findNearestValidWheel(y).y;
@@ -1562,7 +1563,7 @@ function coreMixin(BScroll) {
       if (time && this.options.probeType === PROBE_REALTIME) {
         this._startProbe();
       }
-      if (!time) {
+      if (!time && !isSilent) {
         // don't trigger resetPosition when zoom feature is open, fix #748
         if (this.options.zoom) return;
         this.trigger('scroll', {
@@ -1817,7 +1818,7 @@ function snapMixin(BScroll) {
 
       var initPageX = snap._loopX ? 1 : 0;
       var initPageY = snap._loopY ? 1 : 0;
-      _this._goToPage(_this.currentPage.pageX || initPageX, _this.currentPage.pageY || initPageY, 0);
+      _this._goToPage(_this.currentPage.pageX || initPageX, _this.currentPage.pageY || initPageY, 0, undefined, true);
 
       // Update snap threshold if needed.
       var snapThreshold = snap.threshold;
@@ -1834,17 +1835,17 @@ function snapMixin(BScroll) {
       if (snap.loop) {
         if (snap._loopX) {
           if (_this.currentPage.pageX === 0) {
-            _this._goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0);
+            _this._goToPage(_this.pages.length - 2, _this.currentPage.pageY, 0, undefined, true);
           }
           if (_this.currentPage.pageX === _this.pages.length - 1) {
-            _this._goToPage(1, _this.currentPage.pageY, 0);
+            _this._goToPage(1, _this.currentPage.pageY, 0, undefined, true);
           }
         } else {
           if (_this.currentPage.pageY === 0) {
-            _this._goToPage(_this.currentPage.pageX, _this.pages[0].length - 2, 0);
+            _this._goToPage(_this.currentPage.pageX, _this.pages[0].length - 2, 0, undefined, true);
           }
           if (_this.currentPage.pageY === _this.pages[0].length - 1) {
-            _this._goToPage(_this.currentPage.pageX, 1, 0);
+            _this._goToPage(_this.currentPage.pageX, 1, 0, undefined, true);
           }
         }
       }
@@ -1964,6 +1965,7 @@ function snapMixin(BScroll) {
     var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var time = arguments[2];
     var easing = arguments[3];
+    var isSilent = arguments[4];
 
     var snap = this.options.snap;
 
@@ -2000,7 +2002,7 @@ function snapMixin(BScroll) {
       pageX: x,
       pageY: y
     };
-    this.scrollTo(posX, posY, time, easing);
+    this.scrollTo(posX, posY, time, easing, isSilent);
   };
 
   BScroll.prototype.goToPage = function (x, y, time, easing) {
@@ -3460,7 +3462,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.15.0';
+BScroll.Version = '1.15.1';
 
 return BScroll;
 
