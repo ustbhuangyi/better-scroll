@@ -6,6 +6,7 @@ import EventRegister from '../../base/EventRegister'
 import { TouchEvent } from '../../util/Touch'
 import EventHandler from './eventHandler'
 import { TranslaterPoint } from '../../translater'
+import EventEmitter from '@/base/EventEmitter'
 
 export interface IndicatorOption {
   wrapper: HTMLElement
@@ -49,6 +50,7 @@ export default class Indicator {
   public curPos: number = 0
   public keysMap: KeysMap
   public eventHandler: EventHandler
+  private hooksHandlers: Array<[EventEmitter, string, Function]> = []
 
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.wrapper
@@ -60,48 +62,52 @@ export default class Indicator {
 
     this.keysMap = this._getKeysMap()
 
-    if (options.interactive) {
-      // const { disableMouse } = this.bscroll.options
-      // this.eventHandler = new EventHandler(this, { disableMouse })
-      // this.eventHandler.hooks.on('touchStart', this._startHandler, this)
-      // this.eventHandler.hooks.on('touchMove', this._moveHandler, this)
-      // this.eventHandler.hooks.on('touchEnd', this._endHandler, this)
-    }
-
-    // TODO refresh 事件
-    this.bscroll.hooks.on('refresh', this.refresh, this)
-
-    this.bscroll.scroller.animater.hooks.on('time', (time: number) => {
-      this.setTransitionTime(time)
-    })
-    this.bscroll.scroller.animater.hooks.on('timeFunction', (ease: string) => {
-      this.setTransitionTimingFunction(ease)
-    })
-
     if (options.fade) {
       this.visible = 0
       this.wrapperStyle.opacity = '0'
-      // TODO 有时候不会触发 scrollEnd
-      // TDOO scrollCancel
-      ;['scrollEnd'].forEach(eventName => {
-        this.bscroll.on(eventName, () => {
-          this.fade()
-        })
-      })
-
-      this.bscroll.on('scrollStart', () => {
-        this.fade(true)
-      })
-      // TODO 考虑是否有用
-      // this.scroller.on('beforeScrollStart', () => {
-      //   this.fade(true, true)
-      // })
     } else {
       this.visible = 1
     }
 
-    const translater = this.bscroll.scroller.translater
-    translater.hooks.on('translate', this.updatePosAndSize, this)
+    this._listenHooks(options.fade, options.interactive)
+
+    this.refresh()
+  }
+
+  private _listenHooks(fade: boolean, interactive: boolean) {
+    const bscroll = this.bscroll
+    const bscrollHooks = bscroll
+    const translaterHooks = bscroll.scroller.translater.hooks
+    const animaterHooks = bscroll.scroller.animater.hooks
+
+    this._listen(translaterHooks, 'translate', this.updatePosAndSize)
+
+    this._listen(bscrollHooks, 'refresh', this.refresh)
+
+    if (fade) {
+      this._listen(bscrollHooks, 'scrollEnd', () => {
+        this.fade()
+      })
+      this._listen(bscrollHooks, 'scrollStart', () => {
+        this.fade(true)
+      })
+    }
+
+    if (interactive) {
+      // const { disableMouse } = this.bscroll.options
+      // this.eventHandler = new EventHandler(this, { disableMouse })
+      // const eventHandlerHooks = this.eventHandler.hooks
+      // this._listen(eventHandlerHooks, 'touchStart', this._startHandler)
+      // this._listen(eventHandlerHooks, 'touchMove', this._moveHandler)
+      // this._listen(eventHandlerHooks, 'touchEnd', this._endHandler)
+    }
+
+    this._listen(animaterHooks, 'time', (time: number) => {
+      this.setTransitionTime(time)
+    })
+    this._listen(animaterHooks, 'timeFunction', (ease: string) => {
+      this.setTransitionTimingFunction(ease)
+    })
   }
 
   _getKeysMap(): KeysMap {
@@ -132,7 +138,6 @@ export default class Indicator {
   }
 
   fade(visible?: boolean) {
-    // TODO 对比 1.0
     let time = visible ? 250 : 500
     this.wrapperStyle[style.transitionDuration as any] = time + 'ms'
     this.wrapperStyle.opacity = visible ? '1' : '0'
@@ -142,8 +147,6 @@ export default class Indicator {
   refresh() {
     let { hasScroll } = this.keysMap
     if (this._setShowBy(this.bscroll[hasScroll])) {
-      // TODO time？
-      this.setTransitionTime()
       let { wrapperSize, scrollerSize, maxScroll } = this.keysMap
 
       this.keyVals = this._refreshKeyValues(
@@ -207,12 +210,9 @@ export default class Indicator {
     let pos = Math.round(sizeRatio * endPoint[posKey])
     let size
     if (pos < 0) {
-      // TODO 搞清楚这里设置transitionTime 的逻辑
-      // this.transitionTime(500)
       size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN)
       pos = 0
     } else if (pos > maxPos) {
-      // this.transitionTime(500)
       size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN)
       pos = maxPos + initialSize - size
     } else {
@@ -233,7 +233,7 @@ export default class Indicator {
     // TODO translateZ ？
     if (this.bscroll.options.useTransform) {
       this.elStyle[style.transform as any] = `${translate}(${pos}px)${
-        this.bscroll.translateZ
+        this.bscroll.options.translateZ
       }`
     } else {
       this.elStyle[position] = `${pos}px`
@@ -304,5 +304,18 @@ export default class Indicator {
       this.eventHandler.destroy()
     }
     this.wrapper.parentNode!.removeChild(this.wrapper)
+
+    this.hooksHandlers.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksHandlers.length = 0
+  }
+
+  private _listen(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksHandlers.push([hooks, name, handler])
   }
 }

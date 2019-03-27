@@ -16,11 +16,11 @@ export const propertiesConfig = [
     key: 'hasVerticalScroll'
   },
   {
-    sourceKey: 'scroller.scrollBehaviorX.elementSize',
+    sourceKey: 'scroller.scrollBehaviorX.contentSize',
     key: 'scrollerWidth'
   },
   {
-    sourceKey: 'scroller.scrollBehaviorY.elementSize',
+    sourceKey: 'scroller.scrollBehaviorY.contentSize',
     key: 'scrollerHeight'
   },
   {

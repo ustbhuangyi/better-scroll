@@ -25,8 +25,6 @@ export default class ScrollBar {
     if (bscroll.options.scrollbar) {
       this.indicators = this._initIndicators(bscroll)
 
-      this._insertIndicatorsTo(bscroll)
-
       bscroll.on('destroy', this.destroy, this)
     }
   }
@@ -50,6 +48,7 @@ export default class ScrollBar {
           fade,
           interactive
         }
+        bscroll.wrapper.appendChild(indicatorOption.wrapper)
         indicators.push(new Indicator(bscroll, indicatorOption))
       }
     }

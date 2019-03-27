@@ -13,6 +13,7 @@ describe('indicator unit tests', () => {
   let options: Options
   let bscroll: BScroll
   let indicatorOptions: IndicatorOption
+  let indicator: Indicator
 
   beforeAll(() => {
     // MOCK for BScroll
@@ -22,8 +23,8 @@ describe('indicator unit tests', () => {
     // mock bscroll
     options = new Options()
     options.scrollY = true
+    options.translateZ = ''
     bscroll = new BScroll(wrapper, options)
-    bscroll.translateZ = ''
     bscroll.hasVerticalScroll = true
     bscroll.hasHorizontalScroll = true
     bscroll.scrollerHeight = 200
@@ -50,7 +51,12 @@ describe('indicator unit tests', () => {
     }
 
     jest.clearAllMocks()
+  })
+
+  afterEach(() => {
     bscroll.hooks.off()
+    bscroll.scroller.translater.hooks.off()
+    bscroll.scroller.animater.hooks.off()
   })
 
   describe('should update position and size when bscroll refresh', () => {
@@ -86,44 +92,72 @@ describe('indicator unit tests', () => {
   })
 
   describe('updatePosAndSize unit test', () => {
+    beforeEach(() => {
+      // given
+      indicator = new Indicator(bscroll, indicatorOptions)
+    })
     it('should calculate correctlly when content scroll down out of bounds', () => {
-      const indicator = new Indicator(bscroll, indicatorOptions)
-      indicator.refresh() // manual refresh for updating keyValues
-
+      // when
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 10 })
-
+      // then
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('0px')
     })
 
     it('should reach minimum size when content scroll down out of bounds too much', () => {
-      const indicator = new Indicator(bscroll, indicatorOptions)
-      indicator.refresh() // manual refresh for updating keyValues
-
+      // when
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 30 })
-
+      // then
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('0px')
     })
 
     it('should calculate correctlly when content scroll up out of bounds', () => {
-      const indicator = new Indicator(bscroll, indicatorOptions)
-      indicator.refresh() // manual refresh for updating keyValues
-
+      // when
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -110 })
-
+      // then
       expect(indicator.el.style.height).toBe('35px')
       expect(indicator.el.style.top).toBe('65px')
     })
 
     it('should reach minimum size when content scroll up out of bounds too much', () => {
-      const indicator = new Indicator(bscroll, indicatorOptions)
-      indicator.refresh() // manual refresh for updating keyValues
-
+      // when
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -130 })
-
+      // then
       expect(indicator.el.style.height).toBe('8px')
       expect(indicator.el.style.top).toBe('92px')
+    })
+  })
+
+  describe('indicator fade', () => {
+    it('indicator visible forever when fade false', () => {
+      // given
+      indicatorOptions.fade = false
+      indicator = new Indicator(bscroll, indicatorOptions)
+      // when
+      bscroll.trigger('scrollEnd')
+      // then
+      expect(indicator.wrapperStyle.opacity).toBe('')
+    })
+
+    it('indicator fade visible when trigger scrollEnd', () => {
+      // given
+      indicator = new Indicator(bscroll, indicatorOptions)
+      // when
+      bscroll.trigger('scrollStart')
+      // then
+      expect(indicator.wrapperStyle.opacity).toBe('1')
+      expect(indicator.wrapperStyle.transitionDuration).toBe('250ms')
+    })
+
+    it('indicator fade invisible when trigger scrollEnd', () => {
+      // given
+      indicator = new Indicator(bscroll, indicatorOptions)
+      // when
+      bscroll.trigger('scrollEnd')
+      // then
+      expect(indicator.wrapperStyle.opacity).toBe('0')
+      expect(indicator.wrapperStyle.transitionDuration).toBe('500ms')
     })
   })
 })

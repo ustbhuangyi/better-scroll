@@ -42,9 +42,7 @@ export default class EventEmitter {
 
   off(type?: string, fn?: Function) {
     if (!type && !fn) {
-      for (let type of Object.keys(this.events)) {
-        this.events[type] = []
-      }
+      this.events = {}
       return this
     }
 
