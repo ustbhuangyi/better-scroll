@@ -3,7 +3,6 @@ import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<bounceConfig> | boolean
-export type mouseWheelOptions = Partial<mouseWheelConfig> | boolean
 export type infinityOptions = Partial<infinityConfig> | boolean
 export type dblclickOptions = Partial<DblclickConfig> | boolean
 
@@ -13,12 +12,6 @@ export interface bounceConfig {
   bottom: boolean
   left: boolean
   right: boolean
-}
-
-interface mouseWheelConfig {
-  speed: number
-  invert: boolean
-  easeTime: number
 }
 
 interface infinityConfig {
@@ -69,7 +62,6 @@ export class Options {
   autoBlur: boolean
   translateZ: string
   // plugins options
-  mouseWheel: mouseWheelOptions
   infinity: infinityOptions
   dblclick: dblclickOptions
 
@@ -152,7 +144,7 @@ export class Options {
      *   easeTime: 300
      * }
      */
-    this.mouseWheel = false
+    // this.mouseWheel = false
 
     /**
      * for zoom
