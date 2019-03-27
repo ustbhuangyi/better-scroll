@@ -14,11 +14,7 @@ describe('pull down tests', () => {
   const THRESHOLD = 90
   const STOP = 50
   const DIRECTION_Y = -1
-  let hasTriggerTimes = 0
-
-  function hasTriggerTimesIncreaceOne() {
-    hasTriggerTimes++
-  }
+  let pullDownHandler = jest.fn()
 
   beforeAll(() => {
     // create DOM
@@ -26,9 +22,7 @@ describe('pull down tests', () => {
     const content = document.createElement('div')
     wrapper.appendChild(content)
     // mock bscroll
-    const options = new Options()
-    bscroll = new BScroll(wrapper, options)
-    bscroll.options = options
+    bscroll = new BScroll(wrapper, {})
     bscroll.directionY = DIRECTION_Y
   })
 
@@ -71,8 +65,7 @@ describe('pull down tests', () => {
         stop: STOP
       }
       new PullDown(bscroll)
-      bscroll.on('pullingDown', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingDown', pullDownHandler)
     })
 
     it('should not trigger pullingDown event when no pullDownRefresh', () => {
@@ -81,7 +74,7 @@ describe('pull down tests', () => {
       bscroll.y = THRESHOLD + 1
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(0)
+      expect(pullDownHandler).toBeCalledTimes(0)
     })
 
     it('should trigger pullingDown event', () => {
@@ -89,7 +82,7 @@ describe('pull down tests', () => {
       bscroll.y = THRESHOLD + 1
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullDownHandler).toBeCalledTimes(1)
     })
 
     it('should trigger pullingDown once', () => {
@@ -98,7 +91,7 @@ describe('pull down tests', () => {
       bscroll.trigger('touchEnd')
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullDownHandler).toBeCalledTimes(1)
     })
 
     it('should stop at correct position', () => {
@@ -125,8 +118,7 @@ describe('pull down tests', () => {
         stop: STOP
       }
       pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingDown', pullDownHandler)
     })
 
     it('should restore to trigger pullingDown', () => {
@@ -136,7 +128,7 @@ describe('pull down tests', () => {
       pullDown.finish()
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(2)
+      expect(pullDownHandler).toBeCalledTimes(2)
     })
 
     it('should resetPosition', () => {
@@ -159,8 +151,7 @@ describe('pull down tests', () => {
         stop: STOP
       }
       pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingDown', pullDownHandler)
     })
 
     it('should close feature pullDown', () => {
@@ -169,7 +160,7 @@ describe('pull down tests', () => {
       bscroll.y = THRESHOLD + 1
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(0)
+      expect(pullDownHandler).toBeCalledTimes(0)
     })
   })
 
@@ -180,8 +171,7 @@ describe('pull down tests', () => {
       bscroll.x = 0
       bscroll.options.pullDownRefresh = undefined
       pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingDown', pullDownHandler)
     })
 
     it('should open feature pullDown', () => {
@@ -190,7 +180,7 @@ describe('pull down tests', () => {
       bscroll.y = THRESHOLD + 1
       bscroll.trigger('touchEnd')
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullDownHandler).toBeCalledTimes(1)
     })
   })
 
@@ -201,22 +191,21 @@ describe('pull down tests', () => {
       bscroll.x = 0
       bscroll.options.pullDownRefresh = { threshold: THRESHOLD, stop: STOP }
       pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', hasTriggerTimesIncreaceOne)
-      hasTriggerTimes = 0
+      bscroll.on('pullingDown', pullDownHandler)
     })
 
     it('should auto trigger pullingDown', () => {
       // when
       pullDown.autoPull()
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullDownHandler).toBeCalledTimes(1)
     })
 
     it('should scrollTo correct position', () => {
       // when
       pullDown.autoPull()
       // then
-      expect(hasTriggerTimes).toBe(1)
+      expect(pullDownHandler).toBeCalledTimes(1)
     })
   })
 })
