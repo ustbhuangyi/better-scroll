@@ -32,44 +32,42 @@ export default class Wheel {
   selectedIndex: number
   target: EventTarget | null
   constructor(public scroll: BScroll) {
-    this.scroll.proxy(propertiesConfig)
     this.options = this.scroll.options.wheel
-    if (this.options) {
-      this.init()
-      this.refresh()
-
-      this._tapIntoHooks()
-      this.scroll.scrollTo(0, this.selectedIndex * this.itemHeight)
-    }
+    this.init()
   }
+
   init() {
-    const wheel = this.options || {}
-    if (!wheel.wheelWrapperClass) {
-      wheel.wheelWrapperClass = 'wheel-scroll'
-    }
-    if (!wheel.wheelItemClass) {
-      wheel.wheelItemClass = 'wheel-item'
-    }
-    if (!wheel.wheelDisabledItemClass) {
-      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
+    if (this.options) {
+      this.normalizeOptions()
+      this.refresh()
+      this.tapIntoHooks()
+      this.wheelTo(this.selectedIndex)
+      this.scroll.proxy(propertiesConfig)
     }
   }
 
-  private _tapIntoHooks() {
-    // refresh
+  private tapIntoHooks() {
+    const scroller = this.scroll.scroller
+    const actionsHandler = scroller.actionsHandler
+    const scrollBehaviorY = scroller.scrollBehaviorY
+    const animater = scroller.animater
+
+    // BScroll
     this.scroll.on(this.scroll.eventTypes.refresh, () => {
       this.refresh()
     })
-    // touchstart
-    this.scroll.scroller.actionsHandler.hooks.on(
-      this.scroll.scroller.actionsHandler.hooks.eventTypes.start,
+
+    // ActionsHandler
+    actionsHandler.hooks.on(
+      actionsHandler.hooks.eventTypes.start,
       (e: TouchEvent) => {
         this.target = e.target
       }
     )
-    // momentum
-    this.scroll.scroller.scrollBehaviorY.hooks.on(
-      this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.momentum,
+
+    // ScrollBehaviorY
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.momentum,
       (momentumInfo: {
         destination: number
         duration: number
@@ -81,9 +79,8 @@ export default class Wheel {
         ).y
       }
     )
-    // touchend
-    this.scroll.scroller.scrollBehaviorY.hooks.on(
-      this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end,
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.end,
       (momentumInfo: { destination: number; duration: number }) => {
         let validWheel = this.findNearestValidWheel(
           this.scroll.scroller.scrollBehaviorY.currentPos
@@ -93,20 +90,16 @@ export default class Wheel {
         this.selectedIndex = validWheel.index
       }
     )
-    // transition time
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.time,
-      (time: number) => {
-        for (let i = 0; i < this.items.length; i++) {
-          ;(this.items[i] as HTMLElement).style[
-            style.transitionDuration as any
-          ] = time + 'ms'
-        }
+
+    // Animater
+    animater.hooks.on(animater.hooks.eventTypes.time, (time: number) => {
+      for (let i = 0; i < this.items.length; i++) {
+        ;(this.items[i] as HTMLElement).style[style.transitionDuration as any] =
+          time + 'ms'
       }
-    )
-    // transition time function
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.timeFunction,
+    })
+    animater.hooks.on(
+      animater.hooks.eventTypes.timeFunction,
       (easing: string) => {
         for (let i = 0; i < this.items.length; i++) {
           ;(this.items[i] as HTMLElement).style[
@@ -115,9 +108,20 @@ export default class Wheel {
         }
       }
     )
-    // translate
-    this.scroll.scroller.animater.translater.hooks.on(
-      this.scroll.scroller.animater.translater.hooks.eventTypes.translate,
+    animater.hooks.on(
+      animater.hooks.eventTypes.scrollToElement,
+      (el: HTMLElement, pos: { top: number; left: number }) => {
+        if (!el.classList.contains(this.options.wheelItemClass as string)) {
+          return true
+        } else {
+          pos.top = this.findNearestValidWheel(pos.top).y
+        }
+      }
+    )
+
+    // Translater
+    animater.translater.hooks.on(
+      animater.translater.hooks.eventTypes.translate,
       (endPoint: { x: number; y: number }) => {
         const { rotate = 25 } = this.options
         for (let i = 0; i < this.items.length; i++) {
@@ -127,17 +131,6 @@ export default class Wheel {
           ] = `rotateX(${deg}deg)`
         }
         this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
-      }
-    )
-
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.scrollToElement,
-      (el: HTMLElement, pos: { top: number; left: number }) => {
-        if (!el.classList.contains(this.options.wheelItemClass as string)) {
-          return true
-        } else {
-          pos.top = this.findNearestValidWheel(pos.top).y
-        }
       }
     )
   }
@@ -154,6 +147,8 @@ export default class Wheel {
     }
     this.scroll.maxScrollX = 0
     this.scroll.maxScrollY = -this.itemHeight * (this.items.length - 1)
+    this.scroll.minScrollX = 0
+    this.scroll.minScrollY = 0
   }
 
   getSelectedIndex() {
@@ -206,6 +201,19 @@ export default class Wheel {
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
       y: -currentIndex * this.itemHeight
+    }
+  }
+
+  private normalizeOptions() {
+    const wheel = this.options || {}
+    if (!wheel.wheelWrapperClass) {
+      wheel.wheelWrapperClass = 'wheel-scroll'
+    }
+    if (!wheel.wheelItemClass) {
+      wheel.wheelItemClass = 'wheel-item'
+    }
+    if (!wheel.wheelDisabledItemClass) {
+      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
     }
   }
 

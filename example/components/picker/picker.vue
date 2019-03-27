@@ -28,6 +28,9 @@
 
 <script type="text/ecmascript-6">
   import BScroll from '../../../src/index'
+  import Wheel from '../../../src/plugins/wheel'
+
+  BScroll.use(Wheel)
 
   const STATE_HIDE = 0
   const STATE_SHOW = 1
@@ -218,7 +221,6 @@
             },
             probeType: 3
           })
-
           this.wheels[i].on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
           })

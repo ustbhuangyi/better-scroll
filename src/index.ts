@@ -88,7 +88,6 @@ export default class BScroll extends EventEmitter {
     this.refresh()
 
     this.scroller.scrollTo(this.options.startX, this.options.startY)
-
     this.enable()
 
     this.proxy(propertiesConfig)

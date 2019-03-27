@@ -32,6 +32,14 @@ export const propertiesConfig = [
     key: 'maxScrollY'
   },
   {
+    sourceKey: 'scroller.scrollBehaviorX.minScrollPos',
+    key: 'minScrollX'
+  },
+  {
+    sourceKey: 'scroller.scrollBehaviorY.minScrollPos',
+    key: 'minScrollY'
+  },
+  {
     sourceKey: 'scroller.scrollBehaviorX.movingDirection',
     key: 'movingDirectionX'
   },
