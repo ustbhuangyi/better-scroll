@@ -1,4 +1,3 @@
-import { Options } from '@/Options'
 import BScroll from '@/index'
 import EventHandler from '@/plugins/scroll-bar/event-handler'
 
@@ -23,8 +22,12 @@ describe('indicator unit tests', () => {
     wrapper.appendChild(content)
     // mock bscroll
     bscroll = new BScroll(wrapper, {})
-    bscroll.options.scrollY = true
     bscroll.options.translateZ = ''
+    // given for vertical
+    bscroll.hasVerticalScroll = true
+    bscroll.scrollerHeight = 200
+    bscroll.maxScrollY = -100
+    bscroll.x = bscroll.y = -10
   })
 
   beforeEach(() => {
@@ -42,10 +45,11 @@ describe('indicator unit tests', () => {
       interactive: true
     }
 
-    jest.clearAllMocks()
+    bscroll.options.useTransform = false
   })
 
   afterEach(() => {
+    jest.clearAllMocks()
     bscroll.off()
   })
 
@@ -53,14 +57,10 @@ describe('indicator unit tests', () => {
     beforeEach(() => {
       // given
       bscroll.options.useTransform = true
-      // mock bscroll
+      // given for horizontal
       bscroll.hasHorizontalScroll = true
-      bscroll.hasVerticalScroll = true
       bscroll.scrollerWidth = 200
-      bscroll.scrollerHeight = 200
       bscroll.maxScrollX = -100
-      bscroll.maxScrollY = -100
-      bscroll.x = bscroll.y = -10
     })
 
     it('should update position and size correctly when direction is horizontal', () => {
