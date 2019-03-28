@@ -4,5 +4,6 @@ export function staticImplements<T>() {
 }
 export interface PluginCtor {
   pluginName: string
+  initOrder?: number
   new (scroll: BScroll): any
 }

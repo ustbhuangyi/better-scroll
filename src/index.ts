@@ -5,8 +5,10 @@ import { getElement, warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
 import { PluginCtor } from './plugins/type'
 
-interface PluginsCtorMap {
-  [name: string]: PluginCtor
+interface PluginItem {
+  name: string
+  index: number
+  ctor: PluginCtor
 }
 
 interface PropertyConfig {
@@ -16,8 +18,8 @@ interface PropertyConfig {
 
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static pluginsCtorMap: PluginsCtorMap = {}
-
+  static usePluginArray: PluginItem[] = []
+  static usePluginSet: Set<string> = new Set()
   scroller: Scroller
   options: Options
   hooks: EventEmitter
@@ -33,12 +35,17 @@ export default class BScroll extends EventEmitter {
         `Plugin Class must specify plugin's name in static property by 'name' field.`
       )
     }
-    if (this.pluginsCtorMap[name]) {
+    if (BScroll.usePluginSet.has(name)) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
     }
-    this.pluginsCtorMap[name] = ctor
+    BScroll.usePluginSet.add(name)
+    BScroll.usePluginArray.push({
+      name,
+      index: ctor.initOrder || 0,
+      ctor: ctor
+    })
   }
 
   constructor(el: HTMLElement | string, options?: Partial<Options>) {
@@ -98,14 +105,22 @@ export default class BScroll extends EventEmitter {
 
   private applyPlugins() {
     const options = this.options
-    const pluginsCtorMap = (<typeof BScroll>this.constructor).pluginsCtorMap
-    let ctor
-    for (let pluginName in pluginsCtorMap) {
-      ctor = pluginsCtorMap[pluginName]
-      if (options[pluginName] && typeof ctor === 'function') {
-        this.plugins[pluginName] = new ctor(this)
-      }
-    }
+    BScroll.usePluginArray
+      .sort((a: PluginItem, b: PluginItem) => {
+        if (a.index > b.index) {
+          return 1
+        }
+        if (a.index < b.index) {
+          return -1
+        }
+        return 0
+      })
+      .forEach((item: PluginItem) => {
+        let ctor = item.ctor
+        if (options[item.name] && typeof ctor === 'function') {
+          this.plugins[item.name] = new ctor(this)
+        }
+      })
   }
 
   private handleAutoBlur() {

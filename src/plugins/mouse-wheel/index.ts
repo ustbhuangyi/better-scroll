@@ -41,6 +41,7 @@ interface CompatibleWheelEvent extends WheelEvent {
 @staticImplements<PluginCtor>()
 export default class MouseWheel {
   static pluginName = 'mouseWheel'
+  static initOrder = -1
   hooks: EventEmitter
   private mouseWheelOpt: Partial<MouseWheelConfig>
   private eventRegistor: EventRegister
