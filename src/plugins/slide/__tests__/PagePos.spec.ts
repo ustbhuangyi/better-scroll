@@ -1,7 +1,7 @@
-import PagesPos from '../../../../src/plugins/slide/PagesPos'
-import BScroll from '../../../../src'
-import { bscrollHorizon, bscrollVertical } from './__mock__/bscroll'
-import { mockDomOffset } from '../../utils/layout'
+import PagesPos from '@/plugins/slide/PagesPos'
+import BScroll from '@/index'
+import { bscrollHorizon, bscrollVertical } from './__utils__/bscroll'
+import { mockDomOffset } from '@/__tests__/__utils__/layout'
 
 describe('slide test for pagePos class', () => {
   let pagesPos: PagesPos
@@ -12,7 +12,7 @@ describe('slide test for pagePos class', () => {
   })
 
   it('should get right page pos for horizon slide', () => {
-    pagesPos = new PagesPos(bscrollHorizon(), {})
+    pagesPos = new PagesPos(bscrollHorizon().partOfbscroll, {})
     expect(pagesPos.xLen).toBe(2)
     expect(pagesPos.yLen).toBe(1)
     expect(pagesPos.pages[0]).toMatchObject([
@@ -67,7 +67,7 @@ describe('slide test for pagePos class', () => {
     })
   })
   it('should get right page pos for horizon slide with el config', () => {
-    pagesPos = new PagesPos(bscrollHorizon(), {
+    pagesPos = new PagesPos(bscrollHorizon().partOfbscroll, {
       el: '.test-slide-item'
     })
     expect(pagesPos.xLen).toBe(2)
@@ -103,7 +103,7 @@ describe('slide test for pagePos class', () => {
   })
 
   it('should get right page pos for vertical slide', () => {
-    pagesPos = new PagesPos(bscrollVertical(), {})
+    pagesPos = new PagesPos(bscrollVertical().partOfbscroll, {})
     expect(pagesPos.xLen).toBe(1)
     expect(pagesPos.yLen).toBe(2)
     expect(pagesPos.pages[0]).toMatchObject([
@@ -156,12 +156,13 @@ describe('slide test for pagePos class', () => {
     })
   })
   it('should have right info for no page info', () => {
-    const bscroll = bscrollHorizon()
+    const bscroll = bscrollHorizon().partOfbscroll
     const sliderDom = bscroll.scroller.content
-
-    sliderDom._jsdomMockOffsetWidth = 0
-    sliderDom._jsdomMockOffsetHeight = 0
     const wrapperDom = bscroll.scroller.wrapper
+    mockDomOffset(sliderDom, {
+      width: 0,
+      height: 0
+    })
     mockDomOffset(wrapperDom, {
       width: 0,
       height: 0
