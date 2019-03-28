@@ -73,28 +73,35 @@ export default class Slide {
     this.registorHooks(scrollHooks, 'destroy', this.destroy)
     this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
     this.registorHooks(scrollerHooks, 'scrollEnd', this.resetLoop)
-    this.registorHooks(this.scroll, 'mousewheelMove', () => {
-      // prevent default action of mousewheelMove
-      return true
-    })
-    this.registorHooks(
-      this.scroll,
-      'mousewheelEnd',
-      (delta: { directionX: number; direciontY: number }) => {
-        if (
-          delta.directionX === Direction.Positive ||
-          delta.direciontY === Direction.Positive
-        ) {
-          this.next()
+
+    // for mousewheel event
+    if (
+      this.scroll.eventTypes.mousewheelMove &&
+      this.scroll.eventTypes.mousewheelEnd
+    ) {
+      this.registorHooks(this.scroll, 'mousewheelMove', () => {
+        // prevent default action of mousewheelMove
+        return true
+      })
+      this.registorHooks(
+        this.scroll,
+        'mousewheelEnd',
+        (delta: { directionX: number; direciontY: number }) => {
+          if (
+            delta.directionX === Direction.Positive ||
+            delta.direciontY === Direction.Positive
+          ) {
+            this.next()
+          }
+          if (
+            delta.directionX === Direction.Negative ||
+            delta.direciontY === Direction.Negative
+          ) {
+            this.prev()
+          }
         }
-        if (
-          delta.directionX === Direction.Negative ||
-          delta.direciontY === Direction.Negative
-        ) {
-          this.prev()
-        }
-      }
-    )
+      )
+    }
     this.registorHooks(
       this.scroll.scroller.animater.hooks,
       'forceStop',
