@@ -1,20 +1,19 @@
-import { mockClientWidth } from '../../utils/layout'
-import BScroll from '../../../../src/index'
-import Slide from '../../../../src/plugins/slide'
-import EventEmitter from '../../../../src/base/EventEmitter'
+import BScroll from '@/index'
+import Slide from '@/plugins/slide'
+import EventEmitter from '@/base/EventEmitter'
 import {
   bscrollHorizon,
   bscrollVertical,
   replaceBscrollProperties
-} from './__mock__/bscroll'
-import * as SlidePage from './__mock__/SlidePage'
-jest.mock('../../../../src/plugins/slide/SlidePage', () => {
+} from './__utils__/bscroll'
+import * as SlidePage from './__utils__/SlidePage'
+jest.mock('@/plugins/slide/SlidePage', () => {
   return {
-    default: require('./__mock__/SlidePage').SlidePage
+    default: require('./__utils__/SlidePage').SlidePage
   }
 })
-jest.mock('../../../../src/index')
-jest.mock('../../../../src/animater/index')
+jest.mock('@/index')
+jest.mock('@/animater/index')
 
 function createBScroll(
   hooks: EventEmitter,
@@ -386,6 +385,38 @@ describe('slide test for SlidePage class', () => {
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
     slide.destroy()
   })
+  it('should not scroll with newPos = oldPos when goTo', () => {
+    SlidePage.realPage2Page.mockImplementationOnce(() => {
+      return {
+        realX: 2,
+        realY: 0
+      }
+    })
+    SlidePage.change2safePage.mockImplementationOnce(() => {
+      return {
+        x: -600,
+        y: 0,
+        pageX: 2,
+        pageY: 0
+      }
+    })
+    const { bscroll, mockscrollTo } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+    bscroll.scroller.scrollBehaviorX.currentPos = -600
+    bscroll.scroller.scrollBehaviorY.currentPos = 0
+
+    slide.goToPage(1, 1)
+    expect(mockscrollTo).not.toHaveBeenCalled()
+    slide.destroy()
+  })
   it('should have correct behavior for getCurrentPage', () => {
     SlidePage.getRealPage.mockImplementationOnce(() => {
       return {
@@ -487,7 +518,7 @@ describe('slide test for SlidePage class', () => {
     })
     slide.destroy()
   })
-  it('should scroll to right page when scrollEnd', () => {
+  it('should not scroll with loop is false when scrollEnd', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -500,8 +531,22 @@ describe('slide test for SlidePage class', () => {
     const slide = new Slide(bscroll)
     hooks.trigger('scrollEnd')
     expect(mockscrollTo).not.toBeCalled()
+    slide.destroy()
+  })
 
-    bscroll.options.slide.loop = true
+  it('should resetLoop with loop=true when scrollEnd', () => {
+    const { bscroll, mockscrollTo } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+
+    // loop: true and newPos != oldPos
     SlidePage.resetLoopPage.mockImplementationOnce(() => {
       return {
         pageX: 1,
@@ -516,12 +561,14 @@ describe('slide test for SlidePage class', () => {
         pageY: 0
       }
     })
+    bscroll.scroller.scrollBehaviorX.currentPos = 0
+    bscroll.scroller.scrollBehaviorY.currentPage = 0
     hooks.trigger('scrollEnd')
     expect(SlidePage.currentPageSetter).toHaveBeenCalled()
     expect(mockscrollTo).toHaveBeenCalled()
-
     SlidePage.currentPageSetter.mockClear()
     mockscrollTo.mockClear()
+
     SlidePage.resetLoopPage.mockImplementationOnce(() => {
       return undefined
     })

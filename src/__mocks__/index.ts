@@ -38,7 +38,8 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     refresh: jest.fn(),
     // 代理的方法
     scrollTo: jest.fn(),
-    resetPosition: jest.fn()
+    resetPosition: jest.fn(),
+    registerType: jest.fn()
   }
 
   Object.setPrototypeOf(res, eventEmitter)

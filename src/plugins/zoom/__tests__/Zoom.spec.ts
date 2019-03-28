@@ -1,10 +1,10 @@
-import BScroll from '../../../../src/index'
-import Zoom from '../../../../src/plugins/zoom'
-import EventEmitter from '../../../../src/base/EventEmitter'
-import { createTouchEvent } from './__mock__/util'
-import { bscrollZoom, replaceBscrollProperties } from './__mock__/bscroll'
-jest.mock('../../../../src/index')
-jest.mock('../../../../src/animater/index')
+import BScroll from '@/index'
+import Zoom from '@/plugins/zoom'
+import EventEmitter from '@/base/EventEmitter'
+import { createTouchEvent } from './__utils__/util'
+import { bscrollZoom, replaceBscrollProperties } from './__utils__/bscroll'
+jest.mock('@/index')
+jest.mock('@/animater/index')
 
 function createBScroll(
   hooks: EventEmitter,
