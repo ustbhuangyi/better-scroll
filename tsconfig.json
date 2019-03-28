@@ -16,7 +16,7 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
     "typeRoots": [
@@ -26,5 +26,10 @@
   "include": [
     "src",
     "test"
+  ],
+  "exclude": [
+    "**/test/**/*",
+    "**/__tests__/*",
+    "**/__mocks__/*"
   ]
 }
