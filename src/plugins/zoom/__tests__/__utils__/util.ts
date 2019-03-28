@@ -1,5 +1,5 @@
-import { createEvent, CustomTouchEvent } from '../../../utils/event'
-import { createDiv } from '../../../utils/layout'
+import { createEvent, CustomTouchEvent } from '@/__tests__/__utils__/event'
+import { createDiv } from '@/__tests__/__utils__/layout'
 
 export function createZoom() {
   const dom = createDiv(300, 300)

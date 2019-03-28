@@ -1,21 +1,18 @@
 import BScroll from '../../../../src/index'
 import ObserveDom from '../../../../src/plugins/observe-dom'
-import EventEmitter from '../../../../src/base/EventEmitter'
-import { createDiv, mockDomOffset } from '../../utils/layout'
+import { createDiv, mockDomOffset } from '@/__tests__/__utils__/layout'
 
 jest.mock('@/index')
 
-function createBS(hooks: EventEmitter) {
+function createBS() {
   const dom = createDiv(300, 300)
   const contentDom = createDiv(300, 300)
   dom.appendChild(contentDom)
   const bs = new BScroll(dom) as any
-  bs.hooks = hooks
   return bs
 }
 
 describe('observe dom', () => {
-  let hooks = new EventEmitter(['enable', 'disable', 'destroy'])
   let mockMutationObserver: jest.Mock
   let mockObserve = jest.fn()
   let mockDisconnect = jest.fn()
@@ -43,7 +40,7 @@ describe('observe dom', () => {
     jest.resetAllMocks()
   })
   it('observe without MutationObserver', () => {
-    const bs = createBS(hooks)
+    const bs = createBS()
     const obDom = new ObserveDom(bs)
 
     jest.advanceTimersByTime(1000)
@@ -55,7 +52,7 @@ describe('observe dom', () => {
     jest.advanceTimersByTime(1000)
     expect(bs.refresh).toBeCalledTimes(1)
     // destroy
-    hooks.trigger('destroy')
+    bs.hooks.trigger('destroy')
     mockDomOffset(bs.scroller.content, {
       width: 500
     })
@@ -65,11 +62,11 @@ describe('observe dom', () => {
 
   it('observe with MutationObserver', () => {
     mockMutation()
-    const bs = createBS(hooks)
+    const bs = createBS()
     const obDom = new ObserveDom(bs)
-    expect(hooks.events.enable.length).toBe(1)
-    expect(hooks.events.disable.length).toBe(1)
-    expect(hooks.events.destroy.length).toBe(1)
+    expect(bs.hooks.events.enable.length).toBe(1)
+    expect(bs.hooks.events.disable.length).toBe(1)
+    expect(bs.hooks.events.destroy.length).toBe(1)
     expect(mockObserve).toHaveBeenCalledWith(bs.scroller.content, {
       attributes: true,
       childList: true,
@@ -78,7 +75,7 @@ describe('observe dom', () => {
 
     // init can't be call again when it has been inited
     const init = jest.spyOn(obDom, 'init')
-    hooks.trigger('enable')
+    bs.hooks.trigger('enable')
     expect(init).not.toHaveBeenCalled()
     init.mockReset()
 
@@ -163,22 +160,22 @@ describe('observe dom', () => {
     expect(bs.refresh).toBeCalledTimes(2)
 
     // destroy
-    hooks.trigger('destroy')
+    bs.hooks.trigger('destroy')
     expect(mockDisconnect).toBeCalled()
-    expect(hooks.events.enable.length).toBe(0)
-    expect(hooks.events.disable.length).toBe(0)
-    expect(hooks.events.destroy.length).toBe(0)
+    expect(bs.hooks.events.enable.length).toBe(0)
+    expect(bs.hooks.events.disable.length).toBe(0)
+    expect(bs.hooks.events.destroy.length).toBe(0)
   })
   it('enable/disable', () => {
-    const bs = createBS(hooks)
+    const bs = createBS()
     const obDom = new ObserveDom(bs)
     const initSpy = jest.spyOn(obDom, 'init')
-    hooks.trigger('disable')
+    bs.hooks.trigger('disable')
     expect(mockDisconnect).toBeCalled()
 
-    hooks.trigger('enable')
+    bs.hooks.trigger('enable')
     expect(initSpy).toBeCalled()
 
-    hooks.trigger('destroy')
+    bs.hooks.trigger('destroy')
   })
 })

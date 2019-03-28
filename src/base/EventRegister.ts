@@ -7,7 +7,7 @@ import {
 
 interface EventMap {
   name: string
-  handler(e: TouchEvent): void
+  handler(e: UIEvent): void
   capture?: boolean
 }
 
@@ -37,7 +37,7 @@ export default class EventRegister {
     })
   }
 
-  private handleEvent(e: TouchEvent) {
+  private handleEvent(e: UIEvent) {
     const eventType = e.type
     this.events.some((event: EventMap) => {
       if (event.name === eventType) {

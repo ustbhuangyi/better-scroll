@@ -10,21 +10,23 @@ import ScrollBar from '@/plugins/scroll-bar/scroll-bar'
 
 describe('scroll-bar unit tests', () => {
   let bscroll: BScroll
+  let options: Partial<Options>
   const CONFIG_SCROLL_BAR = {
     fade: true,
     interactive: true
   }
 
   beforeAll(() => {
+    // create Dom
     const wrapper = document.createElement('div')
     const content = document.createElement('div')
     wrapper.appendChild(content)
-
-    const options = new Options()
-    options.scrollbar = CONFIG_SCROLL_BAR
-    options.scrollX = true
-    options.scrollY = true
-
+    // mock bscroll
+    options = {
+      scrollbar: CONFIG_SCROLL_BAR,
+      scrollX: true,
+      scrollY: true
+    }
     bscroll = new BScroll(wrapper, options)
   })
 

@@ -1,5 +1,5 @@
-import { bubbling } from '../../src/util/bubbling'
-import EventEmitter from '../../src/base/EventEmitter'
+import { bubbling } from '@/util/bubbling'
+import EventEmitter from '@/base/EventEmitter'
 
 describe('bubbling', () => {
   it('bubbling', () => {

@@ -1,13 +1,13 @@
-import SlidePage from '../../../../src/plugins/slide/SlidePage'
-import BScroll from '../../../../src'
-import { warn } from '../../../../src/util/debug'
-jest.mock('../../../../src/util/debug')
+import SlidePage from '@/plugins/slide/SlidePage'
+import BScroll from '@/index'
+import { warn } from '@/util/debug'
+jest.mock('@/util/debug')
 
 import {
   bscrollHorizon,
   bscrollVertical,
   bscrollHorizonVertical
-} from './__mock__/bscroll'
+} from './__utils__/bscroll'
 
 describe('slide test for SlidePage class', () => {
   let slidePage: SlidePage

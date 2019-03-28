@@ -5,6 +5,9 @@ module.exports = {
   "verbose": true,
   "roots": ["<rootDir>"],
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
+  "testPathIgnorePatterns": [
+    '/__tests__/__utils__'
+  ],
   "transform": {
     ".ts": "ts-jest"
   },
