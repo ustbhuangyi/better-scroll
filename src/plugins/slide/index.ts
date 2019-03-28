@@ -86,16 +86,16 @@ export default class Slide {
       this.registorHooks(
         this.scroll,
         'mousewheelEnd',
-        (delta: { directionX: number; direciontY: number }) => {
+        (delta: { directionX: number; directionY: number }) => {
           if (
             delta.directionX === Direction.Positive ||
-            delta.direciontY === Direction.Positive
+            delta.directionY === Direction.Positive
           ) {
             this.next()
           }
           if (
             delta.directionX === Direction.Negative ||
-            delta.direciontY === Direction.Negative
+            delta.directionY === Direction.Negative
           ) {
             this.prev()
           }

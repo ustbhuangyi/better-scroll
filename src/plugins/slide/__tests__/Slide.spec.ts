@@ -104,6 +104,44 @@ describe('slide test for SlidePage class', () => {
     expect(hooks.events['forceStop'].length).toBe(0)
     expect(hooks.events['destroy'].length).toBe(0)
   })
+  it('should support mousewheel event', () => {
+    const { bscroll, originSlideLen } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    bscroll.eventTypes['mousewheelMove'] = 'mousewheelMove'
+    bscroll.eventTypes['mousewheelEnd'] = 'mousewheelEnd'
+    const slide = new Slide(bscroll)
+    const nextSpy = jest.spyOn(slide, 'next').mockImplementation(() => {
+      return true
+    })
+    const prevSpy = jest.spyOn(slide, 'prev').mockImplementation(() => {
+      return true
+    })
+    // should prevent default action of mousewheelMove
+    expect(bscroll.trigger('mousewheelMove')).toBe(true)
+
+    bscroll.trigger('mousewheelEnd', { directionX: -1, directionY: 0 })
+    expect(prevSpy).toHaveBeenCalled()
+    bscroll.trigger('mousewheelEnd', { directionX: 1, directionY: 0 })
+    expect(nextSpy).toHaveBeenCalled()
+
+    nextSpy.mockClear()
+    prevSpy.mockClear()
+
+    bscroll.trigger('mousewheelEnd', { directionX: 0, directionY: -1 })
+    expect(prevSpy).toHaveBeenCalled()
+    bscroll.trigger('mousewheelEnd', { directionX: 0, directionY: 1 })
+    expect(nextSpy).toHaveBeenCalled()
+
+    nextSpy.mockReset()
+    prevSpy.mockReset()
+  })
   it('should hava right initial value in SlidePage no loop', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
       slideNum: 2,
