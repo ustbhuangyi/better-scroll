@@ -1,5 +1,5 @@
 import BScroll from '../../index'
-import { style } from '../../util'
+import { style, hasClass, getRect, ease } from '../../util'
 import { Options } from '../../Options'
 import propertiesConfig from './propertiesConfig'
 
@@ -53,13 +53,32 @@ export default class Wheel {
     const animater = scroller.animater
 
     // BScroll
-    this.scroll.on(this.scroll.eventTypes.refresh, () => {
+    this.scroll.on(this.scroll.hooks.eventTypes.refresh, () => {
       this.refresh()
     })
 
+    // Scroller
+    scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
+      const index = Array.from(this.items).indexOf(this.target as Element)
+      if (index === -1) return true
+      this.scroll.scrollTo(
+        0,
+        -index * this.itemHeight,
+        this.options.adjustTime || 400,
+        ease.swipe
+      )
+      return true
+    })
+    scroller.hooks.on(
+      scroller.hooks.eventTypes.scrollTo,
+      (endPoint: { x: number; y: number }) => {
+        endPoint.y = this.findNearestValidWheel(endPoint.y).y
+      }
+    )
+
     // ActionsHandler
     actionsHandler.hooks.on(
-      actionsHandler.hooks.eventTypes.start,
+      actionsHandler.hooks.eventTypes.beforeStart,
       (e: TouchEvent) => {
         this.target = e.target
       }
@@ -82,9 +101,7 @@ export default class Wheel {
     scrollBehaviorY.hooks.on(
       scrollBehaviorY.hooks.eventTypes.end,
       (momentumInfo: { destination: number; duration: number }) => {
-        let validWheel = this.findNearestValidWheel(
-          this.scroll.scroller.scrollBehaviorY.currentPos
-        )
+        let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
         momentumInfo.duration = this.options.adjustTime || CONSTANTS.time
         this.selectedIndex = validWheel.index
@@ -111,11 +128,18 @@ export default class Wheel {
     animater.hooks.on(
       animater.hooks.eventTypes.scrollToElement,
       (el: HTMLElement, pos: { top: number; left: number }) => {
-        if (!el.classList.contains(this.options.wheelItemClass as string)) {
+        if (hasClass(el, this.options.wheelItemClass!)) {
           return true
         } else {
           pos.top = this.findNearestValidWheel(pos.top).y
         }
+      }
+    )
+    animater.hooks.on(
+      animater.hooks.eventTypes.forceStop,
+      ({ x, y }: { x: number; y: number }) => {
+        this.target = this.items[this.findNearestValidWheel(y).index]
+        console.log(this.target)
       }
     )
 
@@ -130,25 +154,38 @@ export default class Wheel {
             style.transform as any
           ] = `rotateX(${deg}deg)`
         }
+
         this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
       }
     )
   }
 
   refresh() {
-    this.items = this.scroll.scroller.content.children
+    const scroller = this.scroll.scroller
+    const scrollBehaviorY = scroller.scrollBehaviorY
+
+    const contentRect = getRect(scroller.content)
+
+    // ajust contentSize
+    scrollBehaviorY.contentSize = contentRect.height
+    this.items = scroller.content.children
     this.checkWheelAllDisabled()
+
     this.itemHeight = this.items.length
-      ? this.scroll.scroller.scrollBehaviorY.contentSize / this.items.length
+      ? scrollBehaviorY.contentSize / this.items.length
       : 0
 
     if (this.selectedIndex === undefined) {
       this.selectedIndex = this.options.selectedIndex || 0
     }
+
     this.scroll.maxScrollX = 0
     this.scroll.maxScrollY = -this.itemHeight * (this.items.length - 1)
     this.scroll.minScrollX = 0
     this.scroll.minScrollY = 0
+
+    scrollBehaviorY.hasScroll =
+      scrollBehaviorY.options && this.scroll.maxScrollY < this.scroll.minScrollY
   }
 
   getSelectedIndex() {
@@ -173,7 +210,10 @@ export default class Wheel {
     // otherwise, there are all disabled items, just keep currentIndex unchange
     while (currentIndex >= 0) {
       if (
-        items[currentIndex].className.indexOf(wheelDisabledItemClassName) === -1
+        !hasClass(
+          items[currentIndex] as HTMLElement,
+          wheelDisabledItemClassName
+        )
       ) {
         break
       }
@@ -184,8 +224,10 @@ export default class Wheel {
       currentIndex = cacheIndex
       while (currentIndex <= items.length - 1) {
         if (
-          items[currentIndex].className.indexOf(wheelDisabledItemClassName) ===
-          -1
+          !hasClass(
+            items[currentIndex] as HTMLElement,
+            wheelDisabledItemClassName
+          )
         ) {
           break
         }
@@ -223,7 +265,7 @@ export default class Wheel {
     const items = this.items
     this.wheelItemsAllDisabled = true
     for (let i = 0; i < items.length; i++) {
-      if (items[i].className.indexOf(wheelDisabledItemClassName) === -1) {
+      if (!hasClass(items[i] as HTMLElement, wheelDisabledItemClassName)) {
         this.wheelItemsAllDisabled = false
         break
       }

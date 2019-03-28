@@ -240,6 +240,7 @@ export default class Scroller {
   private checkFlick(duration: number, deltaX: number, deltaY: number) {
     // flick
     if (
+      this.hooks.events.flick.length > 1 &&
       duration < this.options.flickLimitTime &&
       deltaX < this.options.flickLimitDistance &&
       deltaY < this.options.flickLimitDistance
@@ -255,7 +256,6 @@ export default class Scroller {
       newX: pos.x,
       newY: pos.y
     }
-
     // start momentum animation if needed
     const momentumX = this.scrollBehaviorX.end(duration)
     const momentumY = this.scrollBehaviorY.end(duration)
@@ -390,7 +390,6 @@ export default class Scroller {
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
-    this.hooks.trigger(this.hooks.eventTypes.scrollTo, currentPos)
 
     const startPoint = {
       x: currentPos.x,
@@ -402,6 +401,8 @@ export default class Scroller {
       y,
       ...extraTransform.end
     }
+
+    this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
     this.animater.move(startPoint, endPoint, time, easingFn)
   }
 

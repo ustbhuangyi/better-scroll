@@ -194,8 +194,6 @@ export default class ScrollerActions {
     }
     const currentPos = this.getCurrentPos()
 
-    this.animater.setPending(false)
-
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
     if (this.hooks.trigger(this.hooks.eventTypes.end, e, currentPos)) {

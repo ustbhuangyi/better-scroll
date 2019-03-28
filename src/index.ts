@@ -52,7 +52,6 @@ export default class BScroll extends EventEmitter {
       'scrollEnd',
       'touchEnd',
       'flick',
-      'refresh',
       'destroy'
     ])
     const wrapper = getElement(el)
@@ -85,7 +84,7 @@ export default class BScroll extends EventEmitter {
     this.eventBubbling()
     this.handleAutoBlur()
 
-    this.refresh()
+    this.innerRefresh()
 
     this.scroller.scrollTo(this.options.startX, this.options.startY)
     this.enable()
@@ -131,7 +130,12 @@ export default class BScroll extends EventEmitter {
       'touchEnd',
       'flick'
     ])
-    bubbling(this.hooks, this, ['destroy', 'enable', 'disable', 'refresh'])
+  }
+
+  private innerRefresh() {
+    this.scroller.refresh()
+    this.hooks.trigger(this.hooks.eventTypes.refresh)
+    this.trigger(this.eventTypes.refresh)
   }
 
   proxy(propertiesConfig: PropertyConfig[]) {
@@ -140,25 +144,26 @@ export default class BScroll extends EventEmitter {
     })
   }
   refresh() {
-    this.scroller.refresh()
-    this.hooks.trigger(this.eventTypes.refresh)
+    this.innerRefresh()
     this.scroller.resetPosition()
   }
 
   enable() {
     this.scroller.enable()
     this.hooks.trigger(this.hooks.eventTypes.enable)
+    this.trigger(this.eventTypes.enable)
   }
 
   disable() {
     this.scroller.disable()
     this.hooks.trigger(this.hooks.eventTypes.disable)
+    this.trigger(this.eventTypes.disable)
   }
 
   destroy() {
-    this.hooks.trigger(this.hooks.eventTypes.destroy)
-    // TODO destroy
     this.scroller.destroy()
+    this.hooks.trigger(this.hooks.eventTypes.destroy)
+    this.trigger(this.eventTypes.destroy)
   }
   eventRegister(names: string[]) {
     this.registerType(names)
