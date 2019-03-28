@@ -29,10 +29,12 @@
   let data1 = [
     {
       text: '剧毒',
-      value: 1
+      value: 1,
+      disabled: 'wheel-disabled-item'
     }, {
       text: '蚂蚁',
-      value: 2
+      value: 2,
+      disabled: 'wheel-disabled-item'
     },
     {
       text: '幽鬼',
