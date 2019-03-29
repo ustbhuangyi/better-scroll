@@ -13,13 +13,16 @@ export default class Animation extends Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easingFn: EaseFn | string
+    easingFn: EaseFn | string,
+    isSlient?: boolean
   ) {
     // time is 0
     if (!time) {
       this.translate(endPoint)
+      // no need to dispatch move and end when slient
+      if (isSlient) return
+
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
-      // maybe need reset position
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       return
     }

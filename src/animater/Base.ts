@@ -23,36 +23,9 @@ export default abstract class Base {
       'end',
       'forceStop',
       'time',
-      'timeFunction',
-      'pointerEvents'
+      'timeFunction'
     ])
     this.style = content.style as safeCSSStyleDeclaration
-    this.watchPointerEvents()
-  }
-
-  watchPointerEvents() {
-    let me = this
-    let isPending = false
-    Object.defineProperty(this, 'pending', {
-      get() {
-        return isPending
-      },
-      set(newVal) {
-        isPending = newVal
-        const enablePointerEvents = { enabled: false }
-        this.hooks.trigger(
-          this.hooks.eventTypes.pointerEvents,
-          enablePointerEvents
-        )
-        // fix issue #359
-        let el = me.content.children.length ? me.content.children : [me.content]
-        let pointerEvents =
-          isPending && !enablePointerEvents.enabled ? 'none' : 'auto'
-        for (let i = 0; i < el.length; i++) {
-          ;(el[i] as HTMLElement).style.pointerEvents = pointerEvents
-        }
-      }
-    })
   }
 
   translate(endPoint: TranslaterPoint) {
@@ -71,7 +44,8 @@ export default abstract class Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easing: string | EaseFn
+    easing: string | EaseFn,
+    isSilent?: boolean
   ): void
   abstract stop(): void
 

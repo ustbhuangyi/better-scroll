@@ -26,7 +26,8 @@ module.exports = {
     alias: {
       'scroll': resolve('src'),
       'example': resolve('example'),
-      'common': resolve('example/common')
+      'common': resolve('example/common'),
+      '@': resolve('src')
     }
   },
   module: {

@@ -38,7 +38,8 @@ export default class Transition extends Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easingFn: string | EaseFn
+    easingFn: string | EaseFn,
+    isSlient?: boolean
   ) {
     this.setPending(
       time > 0 && (startPoint.x !== endPoint.x || startPoint.y !== endPoint.y)
@@ -53,9 +54,10 @@ export default class Transition extends Base {
     }
 
     // when time is 0
-    if (!time) {
+    // no need to dispatch move and end when slient
+    if (!time && !isSlient) {
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
-      // maybe need reset position
+
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
     }
   }

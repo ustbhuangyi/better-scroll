@@ -186,5 +186,6 @@ export default class ActionsHandler {
   destroy() {
     this.startClickRegister.destroy()
     this.moveEndRegister.destroy()
+    this.hooks.destroy()
   }
 }

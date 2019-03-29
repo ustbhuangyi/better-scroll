@@ -24,6 +24,7 @@ import {
   getNow,
   bubbling
 } from '../util'
+import { truncate } from 'fs'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -60,8 +61,7 @@ export default class Scroller {
       'scrollCancel',
       'momentum',
       'scrollTo',
-      'scrollToElement',
-      'transitionEnd'
+      'scrollToElement'
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -129,6 +129,10 @@ export default class Scroller {
     this.bindTranslater()
     this.bindAnimater()
     this.bindActions()
+    // enable pointer events when scrolling ends
+    this.hooks.on(this.hooks.eventTypes.scrollEnd, () => {
+      this.togglePointerEvents(true)
+    })
   }
 
   private bindTranslater() {
@@ -138,8 +142,10 @@ export default class Scroller {
         transformStyle.push(this.options.translateZ)
       }
     })
+    // disable pointer events when scrolling
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
       this.updatePositions(pos)
+      this.togglePointerEvents(false)
     })
   }
 
@@ -345,13 +351,9 @@ export default class Scroller {
     }
 
     const animater = this.animater as Transition
-    const reset = { needReset: true }
     animater.transitionTime()
-    this.hooks.trigger(this.hooks.eventTypes.transitionEnd, reset)
-    if (
-      reset.needReset &&
-      !this.resetPosition(this.options.bounceTime, ease.bounce)
-    ) {
+
+    if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
       this.animater.setPending(false)
       if (this.options.probeType !== Probe.Realtime) {
         this.hooks.trigger(
@@ -359,6 +361,16 @@ export default class Scroller {
           this.getCurrentPos()
         )
       }
+    }
+  }
+
+  private togglePointerEvents(enabled = true) {
+    let el = this.content.children.length
+      ? this.content.children
+      : [this.content]
+    let pointerEvents = enabled ? 'auto' : 'none'
+    for (let i = 0; i < el.length; i++) {
+      ;(el[i] as HTMLElement).style.pointerEvents = pointerEvents
     }
   }
 
@@ -386,7 +398,8 @@ export default class Scroller {
     extraTransform = {
       start: {},
       end: {}
-    }
+    },
+    isSilent?: boolean
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
@@ -403,7 +416,7 @@ export default class Scroller {
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
-    this.animater.move(startPoint, endPoint, time, easingFn)
+    this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
   }
 
   scrollToElement(
