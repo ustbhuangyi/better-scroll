@@ -1,5 +1,5 @@
 import BScroll from '../../index'
-import { style } from '../../util'
+import { style, hasClass, getRect, ease } from '../../util'
 import { Options } from '../../Options'
 import propertiesConfig from './propertiesConfig'
 
@@ -32,44 +32,61 @@ export default class Wheel {
   selectedIndex: number
   target: EventTarget | null
   constructor(public scroll: BScroll) {
-    this.scroll.proxy(propertiesConfig)
     this.options = this.scroll.options.wheel
-    if (this.options) {
-      this.init()
-      this.refresh()
-
-      this._tapIntoHooks()
-      this.scroll.scrollTo(0, this.selectedIndex * this.itemHeight)
-    }
+    this.init()
   }
+
   init() {
-    const wheel = this.options || {}
-    if (!wheel.wheelWrapperClass) {
-      wheel.wheelWrapperClass = 'wheel-scroll'
-    }
-    if (!wheel.wheelItemClass) {
-      wheel.wheelItemClass = 'wheel-item'
-    }
-    if (!wheel.wheelDisabledItemClass) {
-      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
+    if (this.options) {
+      this.normalizeOptions()
+      this.refresh()
+      this.tapIntoHooks()
+      this.wheelTo(this.selectedIndex)
+      this.scroll.proxy(propertiesConfig)
     }
   }
 
-  private _tapIntoHooks() {
-    // refresh
-    this.scroll.on(this.scroll.eventTypes.refresh, () => {
+  private tapIntoHooks() {
+    const scroller = this.scroll.scroller
+    const actionsHandler = scroller.actionsHandler
+    const scrollBehaviorY = scroller.scrollBehaviorY
+    const animater = scroller.animater
+
+    // BScroll
+    this.scroll.on(this.scroll.hooks.eventTypes.refresh, () => {
       this.refresh()
     })
-    // touchstart
-    this.scroll.scroller.actionsHandler.hooks.on(
-      this.scroll.scroller.actionsHandler.hooks.eventTypes.start,
+
+    // Scroller
+    scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
+      const index = Array.from(this.items).indexOf(this.target as Element)
+      if (index === -1) return true
+      this.scroll.scrollTo(
+        0,
+        -index * this.itemHeight,
+        this.options.adjustTime || 400,
+        ease.swipe
+      )
+      return true
+    })
+    scroller.hooks.on(
+      scroller.hooks.eventTypes.scrollTo,
+      (endPoint: { x: number; y: number }) => {
+        endPoint.y = this.findNearestValidWheel(endPoint.y).y
+      }
+    )
+
+    // ActionsHandler
+    actionsHandler.hooks.on(
+      actionsHandler.hooks.eventTypes.beforeStart,
       (e: TouchEvent) => {
         this.target = e.target
       }
     )
-    // momentum
-    this.scroll.scroller.scrollBehaviorY.hooks.on(
-      this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.momentum,
+
+    // ScrollBehaviorY
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.momentum,
       (momentumInfo: {
         destination: number
         duration: number
@@ -81,32 +98,25 @@ export default class Wheel {
         ).y
       }
     )
-    // touchend
-    this.scroll.scroller.scrollBehaviorY.hooks.on(
-      this.scroll.scroller.scrollBehaviorY.hooks.eventTypes.end,
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.end,
       (momentumInfo: { destination: number; duration: number }) => {
-        let validWheel = this.findNearestValidWheel(
-          this.scroll.scroller.scrollBehaviorY.currentPos
-        )
+        let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
         momentumInfo.duration = this.options.adjustTime || CONSTANTS.time
         this.selectedIndex = validWheel.index
       }
     )
-    // transition time
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.time,
-      (time: number) => {
-        for (let i = 0; i < this.items.length; i++) {
-          ;(this.items[i] as HTMLElement).style[
-            style.transitionDuration as any
-          ] = time + 'ms'
-        }
+
+    // Animater
+    animater.hooks.on(animater.hooks.eventTypes.time, (time: number) => {
+      for (let i = 0; i < this.items.length; i++) {
+        ;(this.items[i] as HTMLElement).style[style.transitionDuration as any] =
+          time + 'ms'
       }
-    )
-    // transition time function
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.timeFunction,
+    })
+    animater.hooks.on(
+      animater.hooks.eventTypes.timeFunction,
       (easing: string) => {
         for (let i = 0; i < this.items.length; i++) {
           ;(this.items[i] as HTMLElement).style[
@@ -115,9 +125,27 @@ export default class Wheel {
         }
       }
     )
-    // translate
-    this.scroll.scroller.animater.translater.hooks.on(
-      this.scroll.scroller.animater.translater.hooks.eventTypes.translate,
+    animater.hooks.on(
+      animater.hooks.eventTypes.scrollToElement,
+      (el: HTMLElement, pos: { top: number; left: number }) => {
+        if (hasClass(el, this.options.wheelItemClass!)) {
+          return true
+        } else {
+          pos.top = this.findNearestValidWheel(pos.top).y
+        }
+      }
+    )
+    animater.hooks.on(
+      animater.hooks.eventTypes.forceStop,
+      ({ x, y }: { x: number; y: number }) => {
+        this.target = this.items[this.findNearestValidWheel(y).index]
+        console.log(this.target)
+      }
+    )
+
+    // Translater
+    animater.translater.hooks.on(
+      animater.translater.hooks.eventTypes.translate,
       (endPoint: { x: number; y: number }) => {
         const { rotate = 25 } = this.options
         for (let i = 0; i < this.items.length; i++) {
@@ -126,34 +154,38 @@ export default class Wheel {
             style.transform as any
           ] = `rotateX(${deg}deg)`
         }
-        this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
-      }
-    )
 
-    this.scroll.scroller.animater.hooks.on(
-      this.scroll.scroller.animater.hooks.eventTypes.scrollToElement,
-      (el: HTMLElement, pos: { top: number; left: number }) => {
-        if (!el.classList.contains(this.options.wheelItemClass as string)) {
-          return true
-        } else {
-          pos.top = this.findNearestValidWheel(pos.top).y
-        }
+        this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
       }
     )
   }
 
   refresh() {
-    this.items = this.scroll.scroller.content.children
+    const scroller = this.scroll.scroller
+    const scrollBehaviorY = scroller.scrollBehaviorY
+
+    const contentRect = getRect(scroller.content)
+
+    // ajust contentSize
+    scrollBehaviorY.contentSize = contentRect.height
+    this.items = scroller.content.children
     this.checkWheelAllDisabled()
+
     this.itemHeight = this.items.length
-      ? this.scroll.scroller.scrollBehaviorY.contentSize / this.items.length
+      ? scrollBehaviorY.contentSize / this.items.length
       : 0
 
     if (this.selectedIndex === undefined) {
       this.selectedIndex = this.options.selectedIndex || 0
     }
+
     this.scroll.maxScrollX = 0
     this.scroll.maxScrollY = -this.itemHeight * (this.items.length - 1)
+    this.scroll.minScrollX = 0
+    this.scroll.minScrollY = 0
+
+    scrollBehaviorY.hasScroll =
+      scrollBehaviorY.options && this.scroll.maxScrollY < this.scroll.minScrollY
   }
 
   getSelectedIndex() {
@@ -178,7 +210,10 @@ export default class Wheel {
     // otherwise, there are all disabled items, just keep currentIndex unchange
     while (currentIndex >= 0) {
       if (
-        items[currentIndex].className.indexOf(wheelDisabledItemClassName) === -1
+        !hasClass(
+          items[currentIndex] as HTMLElement,
+          wheelDisabledItemClassName
+        )
       ) {
         break
       }
@@ -189,8 +224,10 @@ export default class Wheel {
       currentIndex = cacheIndex
       while (currentIndex <= items.length - 1) {
         if (
-          items[currentIndex].className.indexOf(wheelDisabledItemClassName) ===
-          -1
+          !hasClass(
+            items[currentIndex] as HTMLElement,
+            wheelDisabledItemClassName
+          )
         ) {
           break
         }
@@ -209,13 +246,26 @@ export default class Wheel {
     }
   }
 
+  private normalizeOptions() {
+    const wheel = this.options || {}
+    if (!wheel.wheelWrapperClass) {
+      wheel.wheelWrapperClass = 'wheel-scroll'
+    }
+    if (!wheel.wheelItemClass) {
+      wheel.wheelItemClass = 'wheel-item'
+    }
+    if (!wheel.wheelDisabledItemClass) {
+      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
+    }
+  }
+
   private checkWheelAllDisabled() {
     const wheelDisabledItemClassName = this.options
       .wheelDisabledItemClass as string
     const items = this.items
     this.wheelItemsAllDisabled = true
     for (let i = 0; i < items.length; i++) {
-      if (items[i].className.indexOf(wheelDisabledItemClassName) === -1) {
+      if (!hasClass(items[i] as HTMLElement, wheelDisabledItemClassName)) {
         this.wheelItemsAllDisabled = false
         break
       }

@@ -40,7 +40,9 @@ export default class Transition extends Base {
     time: number,
     easingFn: string | EaseFn
   ) {
-    this.setPending(time > 0)
+    this.setPending(
+      time > 0 && (startPoint.x !== endPoint.x || startPoint.y !== endPoint.y)
+    )
     this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
     this.translate(endPoint)
@@ -67,7 +69,7 @@ export default class Transition extends Base {
       this.transitionTime()
       this.translate({ x, y })
       this.setForceStopped(true)
-      this.hooks.trigger(this.hooks.eventTypes.forceStop)
+      this.hooks.trigger(this.hooks.eventTypes.forceStop, { x, y })
     }
   }
 }

@@ -181,7 +181,6 @@ export default class Behavior {
 
     this.minScrollPos = 0
     this.maxScrollPos = this.wrapperSize - this.contentSize
-
     if (this.maxScrollPos < 0) {
       this.maxScrollPos -= this.relativeOffset
       this.minScrollPos = -this.relativeOffset

@@ -14,7 +14,7 @@
             <div class="wheel-wrapper" ref="wheelWrapper">
               <div class="wheel" v-for="data in pickerData">
                 <ul class="wheel-scroll">
-                  <li v-for="item in data" class="wheel-item">{{item.text}}</li>
+                  <li v-for="item in data" class="wheel-item" :class="item.disabled">{{item.text}}</li>
                 </ul>
               </div>
             </div>
@@ -28,6 +28,9 @@
 
 <script type="text/ecmascript-6">
   import BScroll from '../../../src/index'
+  import Wheel from '../../../src/plugins/wheel'
+
+  BScroll.use(Wheel)
 
   const STATE_HIDE = 0
   const STATE_SHOW = 1
@@ -218,7 +221,6 @@
             },
             probeType: 3
           })
-
           this.wheels[i].on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
           })
@@ -334,6 +336,9 @@
               overflow: hidden
               white-space: nowrap
               color: $color-dark-grey
+            .wheel-disabled-item
+              color: $color-light-grey
+              opacity: .2
     .picker-footer
       height: 20px
 </style>

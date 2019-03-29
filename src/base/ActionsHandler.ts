@@ -34,7 +34,13 @@ export default class ActionsHandler {
   startClickRegister: EventRegister
   moveEndRegister: EventRegister
   constructor(public wrapper: HTMLElement, public options: Options) {
-    this.hooks = new EventEmitter(['start', 'move', 'end', 'click'])
+    this.hooks = new EventEmitter([
+      'beforeStart',
+      'start',
+      'move',
+      'end',
+      'click'
+    ])
     this.handleDOMEvents()
   }
 
@@ -100,6 +106,10 @@ export default class ActionsHandler {
 
     // no mouse left button
     if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
+
+    if (this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)) {
+      return
+    }
 
     this.beforeHandler(e)
 
