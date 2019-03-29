@@ -43,11 +43,9 @@ export default class Animation extends Base {
 
       // js animation end
       if (now >= destTime) {
-        this.setPending(false)
         this.translate(endPoint)
 
         this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
-
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
         return
       }

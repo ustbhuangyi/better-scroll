@@ -155,6 +155,7 @@ export default class Scroller {
       this.animater.hooks.eventTypes.end,
       (pos: TranslaterPoint) => {
         if (!this.resetPosition(this.options.bounceTime)) {
+          this.animater.setPending(false)
           this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
         }
       }
@@ -349,7 +350,6 @@ export default class Scroller {
     if (e.target !== this.content || !this.animater.pending) {
       return
     }
-
     const animater = this.animater as Transition
     animater.transitionTime()
 

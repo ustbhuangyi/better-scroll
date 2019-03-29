@@ -19,6 +19,7 @@ declare module '../../Options' {
 export default class PullDown {
   static pluginName = 'pullDownRefresh'
   pulling: boolean = false
+  originalMinScrollY: number
 
   constructor(public scroll: BScroll) {
     if (scroll.options.pullDownRefresh) {
@@ -31,8 +32,6 @@ export default class PullDown {
     propertiesProxyConfig.forEach(({ key, sourceKey }) => {
       propertiesProxy(this.scroll, prefix + sourceKey, key)
     })
-
-    this.tapIntohooks()
   }
 
   private _watch() {
@@ -41,27 +40,6 @@ export default class PullDown {
     this.scroll.options.probeType = Probe.Realtime
 
     this.scroll.on('touchEnd', this._checkPullDown, this)
-  }
-
-  private tapIntohooks() {
-    const scroller = this.scroll.scroller
-    scroller.hooks.on(
-      scroller.hooks.eventTypes.transitionEnd,
-      (reset: { needReset: boolean }) => {
-        if (this.pulling) {
-          reset.needReset = false
-        }
-      }
-    )
-
-    scroller.animater.hooks.on(
-      scroller.hooks.eventTypes.pointerEvents,
-      (enabledPointerEvents: { enabled: boolean }) => {
-        if (this.pulling) {
-          enabledPointerEvents.enabled = true
-        }
-      }
-    )
   }
 
   private _checkPullDown() {
@@ -83,6 +61,9 @@ export default class PullDown {
     if (!this.pulling) {
       this.pulling = true
       this.scroll.trigger('pullingDown')
+
+      this.originalMinScrollY = this.scroll.minScrollY
+      this.scroll.minScrollY = stop
     }
     this.scroll.scrollTo(
       this.scroll.x,
@@ -96,6 +77,7 @@ export default class PullDown {
 
   finish() {
     this.pulling = false
+    this.scroll.minScrollY = this.originalMinScrollY
     this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
