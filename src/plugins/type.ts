@@ -1,9 +1,11 @@
 import BScroll from '../index'
+import { EnforceOrder } from '@/enums/enforce-order'
+
 export function staticImplements<T>() {
   return (constructor: T) => {}
 }
 export interface PluginCtor {
   pluginName: string
-  initOrder?: number
+  enforce?: EnforceOrder
   new (scroll: BScroll): any
 }

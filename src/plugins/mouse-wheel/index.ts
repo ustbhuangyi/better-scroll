@@ -5,6 +5,8 @@ import { preventDefaultExceptionFn } from '../../util/dom'
 import { fixInboundValue } from '../../util/lang'
 import EventEmitter from '../../base/EventEmitter'
 import { Direction } from '../../enums/direction'
+import { EnforceOrder } from '@/enums/enforce-order'
+
 export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined
 export interface MouseWheelConfig {
   speed?: number
@@ -41,26 +43,34 @@ interface CompatibleWheelEvent extends WheelEvent {
 @staticImplements<PluginCtor>()
 export default class MouseWheel {
   static pluginName = 'mouseWheel'
-  static initOrder = -1
-  hooks: EventEmitter
-  private mouseWheelOpt: Partial<MouseWheelConfig>
+  static enforce = EnforceOrder.Pre
+  public mouseWheelOpt: Partial<MouseWheelConfig>
   private eventRegistor: EventRegister
   private wheelEndTimer: number
   private wheelMoveTimer: number
   private wheelStart = false
   private deltaCache: { x: number; y: number }[]
+  private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     scroll.registerType(['mousewheelMove', 'mousewheelStart', 'mousewheelEnd'])
     this.mouseWheelOpt = scroll.options.mouseWheel as Partial<MouseWheelConfig>
     this.deltaCache = []
     this.registorEvent()
+    this.hooksFn = []
+    this.registorHooks(scroll.hooks, 'destroy', this.destroy)
   }
   destroy() {
     this.eventRegistor.destroy()
     window.clearTimeout(this.wheelEndTimer)
     window.clearTimeout(this.wheelMoveTimer)
+    this.hooksFn.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
   }
-  private registorEvent() {
+  registorEvent() {
     this.eventRegistor = new EventRegister(this.scroll.scroller.wrapper, [
       {
         name: 'wheel',
@@ -76,8 +86,7 @@ export default class MouseWheel {
       }
     ])
   }
-  private wheelHandler(e: CompatibleWheelEvent) {
-    e.preventDefault()
+  wheelHandler(e: CompatibleWheelEvent) {
     // start
     if (!this.wheelStart) {
       this.wheelStartHandler(e)
@@ -223,5 +232,9 @@ export default class MouseWheel {
         }, this.mouseWheelOpt.debounce)
       }
     }
+  }
+  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
   }
 }

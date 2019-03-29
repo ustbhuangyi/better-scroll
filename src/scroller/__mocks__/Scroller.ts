@@ -1,7 +1,9 @@
 import createAnimater from '@/animater/index'
 import Translater from '@/translater'
+import Behavior from '@/scroller/Behavior'
 
 jest.mock('@/animater/index')
+jest.mock('@/scroller/Behavior')
 
 import EventEmitter from '@/base/EventEmitter'
 
@@ -31,7 +33,9 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scrollTo',
       'scrollToElement',
       'transitionEnd'
-    ])
+    ]),
+    scrollBehaviorX: {},
+    scrollBehaviorY: {}
   }
 })
 
