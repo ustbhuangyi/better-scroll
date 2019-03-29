@@ -11,7 +11,9 @@ interface PluginItem {
   enforce?: EnforceOrder.Pre | EnforceOrder.Post
   ctor: PluginCtor
 }
-
+interface PluginSet {
+  [key: string]: boolean
+}
 interface PropertyConfig {
   key: string
   sourceKey: string
@@ -20,7 +22,7 @@ interface PropertyConfig {
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
   static usePluginArray: PluginItem[] = []
-  static usePluginSet: Set<string> = new Set()
+  static usePluginSet: PluginSet = {}
   scroller: Scroller
   options: Options
   hooks: EventEmitter
@@ -36,12 +38,12 @@ export default class BScroll extends EventEmitter {
         `Plugin Class must specify plugin's name in static property by 'name' field.`
       )
     }
-    if (BScroll.usePluginSet.has(name)) {
+    if (BScroll.usePluginSet[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
     }
-    BScroll.usePluginSet.add(name)
+    BScroll.usePluginSet[name] = true
     BScroll.usePluginArray.push({
       name,
       enforce: ctor.enforce,
