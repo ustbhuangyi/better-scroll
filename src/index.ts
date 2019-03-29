@@ -4,13 +4,16 @@ import Scroller from './scroller/Scroller'
 import { getElement, warn, isUndef, propertiesProxy, bubbling } from './util'
 import { propertiesConfig } from './propertiesConfig'
 import { PluginCtor } from './plugins/type'
+import { EnforceOrder } from './enums/enforce-order'
 
 interface PluginItem {
   name: string
-  index: number
+  enforce?: EnforceOrder.Pre | EnforceOrder.Post
   ctor: PluginCtor
 }
-
+interface PluginSet {
+  [key: string]: boolean
+}
 interface PropertyConfig {
   key: string
   sourceKey: string
@@ -19,7 +22,7 @@ interface PropertyConfig {
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
   static usePluginArray: PluginItem[] = []
-  static usePluginSet: Set<string> = new Set()
+  static usePluginSet: PluginSet = {}
   scroller: Scroller
   options: Options
   hooks: EventEmitter
@@ -35,15 +38,15 @@ export default class BScroll extends EventEmitter {
         `Plugin Class must specify plugin's name in static property by 'name' field.`
       )
     }
-    if (BScroll.usePluginSet.has(name)) {
+    if (BScroll.usePluginSet[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
     }
-    BScroll.usePluginSet.add(name)
+    BScroll.usePluginSet[name] = true
     BScroll.usePluginArray.push({
       name,
-      index: ctor.initOrder || 0,
+      enforce: ctor.enforce,
       ctor: ctor
     })
   }
@@ -104,14 +107,14 @@ export default class BScroll extends EventEmitter {
   private applyPlugins() {
     const options = this.options
     BScroll.usePluginArray
-      .sort((a: PluginItem, b: PluginItem) => {
-        if (a.index > b.index) {
-          return 1
+      .sort((a, b) => {
+        const enforeOrderMap = {
+          [EnforceOrder.Pre]: -1,
+          [EnforceOrder.Post]: 1
         }
-        if (a.index < b.index) {
-          return -1
-        }
-        return 0
+        const aOrder = a.enforce ? enforeOrderMap[a.enforce] : 0
+        const bOrder = b.enforce ? enforeOrderMap[b.enforce] : 0
+        return aOrder - bOrder
       })
       .forEach((item: PluginItem) => {
         let ctor = item.ctor
