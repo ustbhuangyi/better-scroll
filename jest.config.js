@@ -21,7 +21,8 @@ module.exports = {
   "coverageDirectory": "<rootDir>/test/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
-    "/test/"
+    "/test/",
+    "/__tests__/"
   ],
   "coverageReporters": ["text-summary", "lcov"],
   "coverageThreshold": {
