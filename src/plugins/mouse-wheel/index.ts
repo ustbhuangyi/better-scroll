@@ -6,6 +6,7 @@ import { fixInboundValue } from '../../util/lang'
 import EventEmitter from '../../base/EventEmitter'
 import { Direction } from '../../enums/direction'
 import { EnforceOrder } from '@/enums/enforce-order'
+import { warn } from '@/util'
 
 export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined
 export interface MouseWheelConfig {
@@ -87,6 +88,7 @@ export default class MouseWheel {
     ])
   }
   wheelHandler(e: CompatibleWheelEvent) {
+    this.beforeHandler(e)
     // start
     if (!this.wheelStart) {
       this.wheelStartHandler(e)
@@ -99,7 +101,6 @@ export default class MouseWheel {
     this.wheelStopDetactor(e, delta)
   }
   private wheelStartHandler(e: CompatibleWheelEvent) {
-    this.beforeHandler(e)
     this.deltaCache = []
     this.scroll.trigger(this.scroll.eventTypes.mousewheelStart)
   }
@@ -117,18 +118,18 @@ export default class MouseWheel {
     }, delayTime)
   }
   private getWheelDelta(e: CompatibleWheelEvent) {
-    const { speed = 20, invert = false, easeTime = 300 } = this.mouseWheelOpt
+    const { speed = 20, invert = false } = this.mouseWheelOpt
     let wheelDeltaX = 0
     let wheelDeltaY = 0
     let direction = invert ? Direction.Negative : Direction.Positive
     switch (true) {
       case 'deltaX' in e:
         if (e.deltaMode === 1) {
-          wheelDeltaX = -e.deltaX
-          wheelDeltaY = -e.deltaY
-        } else {
           wheelDeltaX = -e.deltaX * speed
           wheelDeltaY = -e.deltaY * speed
+        } else {
+          wheelDeltaX = -e.deltaX
+          wheelDeltaY = -e.deltaY
         }
         break
       case 'wheelDeltaX' in e:
@@ -223,8 +224,10 @@ export default class MouseWheel {
           y: newY
         })
       ) {
-        const easeTime = this.mouseWheelOpt.easeTime || 0
-        this.scroll.scrollTo(newX, newY, easeTime)
+        const easeTime = this.getEaseTime()
+        if (newX !== this.scroll.x || newY !== this.scroll.y) {
+          this.scroll.scrollTo(newX, newY, easeTime)
+        }
       }
       if (this.mouseWheelOpt.debounce) {
         this.wheelMoveTimer = window.setTimeout(() => {
@@ -236,5 +239,17 @@ export default class MouseWheel {
   private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
+  }
+  private getEaseTime() {
+    const DEFAULT_EASETIME = 300
+    const SAFE_EASETIME = 100
+    const easeTime = this.mouseWheelOpt.easeTime || DEFAULT_EASETIME
+    // scrollEnd event will be triggered in every calling of scrollTo when easeTime is too small
+    // easeTime needs to be greater than 100
+    if (easeTime < SAFE_EASETIME) {
+      warn(`easeTime should be greater than 100. 
+      If mouseWheel easeTime is too small, scrollEnd will be triggered many times.`)
+    }
+    return easeTime
   }
 }
