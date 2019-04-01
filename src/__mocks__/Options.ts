@@ -102,7 +102,6 @@ const mockOptions = jest.fn().mockImplementation(() => {
      */
     infinity: false,
 
-    // 方法mock
     merge: jest.fn(),
     process: jest.fn()
   }
