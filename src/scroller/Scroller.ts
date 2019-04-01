@@ -24,7 +24,6 @@ import {
   getNow,
   bubbling
 } from '../util'
-import { truncate } from 'fs'
 
 export default class Scroller {
   wrapper: HTMLElement
