@@ -41,7 +41,13 @@ export default class Wheel {
       this.normalizeOptions()
       this.refresh()
       this.tapIntoHooks()
-      this.wheelTo(this.selectedIndex)
+
+      // fix a bug in ios.
+      // the reason is that when you set transitionTime(> 0) to translate
+      // immediately, you set transitionTime(= 0) to stop
+      // in ios, the scene still keep last frame
+      // so set tiny time to refresh it.
+      this.wheelTo(this.selectedIndex, 0.0001)
       this.scroll.proxy(propertiesConfig)
     }
   }
@@ -139,7 +145,6 @@ export default class Wheel {
       animater.hooks.eventTypes.forceStop,
       ({ x, y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
-        console.log(this.target)
       }
     )
 
@@ -192,9 +197,9 @@ export default class Wheel {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0) {
+  wheelTo(index = 0, time = 0) {
     const y = -index * this.itemHeight
-    this.scroll.scrollTo(0, y)
+    this.scroll.scrollTo(0, y, time)
   }
 
   private findNearestValidWheel(y: number) {

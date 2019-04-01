@@ -4,8 +4,6 @@ import { Options } from '@/Options'
 
 jest.mock('@/scroller/Scroller')
 jest.mock('@/Options')
-// mock 发布订阅逻辑
-// jest.mock('@/base/EventEmitter')
 
 const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   options = Object.assign(new Options(), options)
@@ -35,10 +33,10 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
       'destroy'
     ]),
     scroller: new Scroller(wrapper, options),
-    // 自身方法
+    // own methods
     proxy: jest.fn(),
     refresh: jest.fn(),
-    // 代理的方法
+    // proxy methods
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
     registerType: jest.fn()

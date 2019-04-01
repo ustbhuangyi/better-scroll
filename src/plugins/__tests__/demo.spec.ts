@@ -24,9 +24,9 @@ describe('demo unit test', () => {
       }
     }
     bscroll = new BScroll(wrapper, options)
-    // mock 特殊的 options
+    // mock special options property
     bscroll.options.scrollX = true
-    // mock 你测试中需要的 bscroll 属性值
+    // mock the property of scroll that you need for test
     bscroll.hasVerticalScroll = true
     bscroll.scrollerHeight = 200
     bscroll.maxScrollY = -100
@@ -36,7 +36,7 @@ describe('demo unit test', () => {
     jest.clearAllMocks()
   })
 
-  it('should instanciate demo', () => {})
+  it('should instantiate demo', () => {})
 
   describe('api xxx', () => {
     beforeEach(() => {})
