@@ -195,10 +195,10 @@
           return dist
         }
       },
-      scrollTo(index, dist) {
+      scrollTo(index, dist, time = 0) {
         const wheel = this.wheels[index]
         this.pickerSelectedIndex[index] = dist
-        wheel.wheelTo(dist)
+        wheel.scrollTo(0, -dist * wheel.itemHeight, time)
       },
       refresh() {
         this.$nextTick(() => {

@@ -64,7 +64,8 @@
         if (newIndex !== this.tempIndex[i]) {
           for (let j = 2; j > i; j--) {
             this.tempIndex.splice(j, 1, 0)
-            this.$refs.picker.scrollTo(j, 0)
+            // set time(0.1) to forbid triggering scrollEnd
+            this.$refs.picker.scrollTo(j, 0, 0.1)
           }
 
           this.tempIndex.splice(i, 1, newIndex)
