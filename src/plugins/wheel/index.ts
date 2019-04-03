@@ -1,5 +1,5 @@
 import BScroll from '../../index'
-import { style, hasClass, getRect, ease } from '../../util'
+import { style, hasClass, getRect, ease, EaseItem } from '../../util'
 import { Options } from '../../Options'
 import propertiesConfig from './propertiesConfig'
 
@@ -67,18 +67,23 @@ export default class Wheel {
     scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
       const index = Array.from(this.items).indexOf(this.target as Element)
       if (index === -1) return true
-      this.scroll.scrollTo(
-        0,
-        -index * this.itemHeight,
-        this.options.adjustTime || 400,
-        ease.swipe
-      )
+      this.wheelTo(index, this.options.adjustTime || 400, ease.swipe)
       return true
     })
     scroller.hooks.on(
       scroller.hooks.eventTypes.scrollTo,
       (endPoint: { x: number; y: number }) => {
         endPoint.y = this.findNearestValidWheel(endPoint.y).y
+      }
+    )
+    scroller.hooks.on(
+      scroller.hooks.eventTypes.scrollToElement,
+      (el: HTMLElement, pos: { top: number; left: number }) => {
+        if (!hasClass(el, this.options.wheelItemClass!)) {
+          return true
+        } else {
+          pos.top = this.findNearestValidWheel(pos.top).y
+        }
       }
     )
 
@@ -116,31 +121,15 @@ export default class Wheel {
 
     // Animater
     animater.hooks.on(animater.hooks.eventTypes.time, (time: number) => {
-      for (let i = 0; i < this.items.length; i++) {
-        ;(this.items[i] as HTMLElement).style[style.transitionDuration as any] =
-          time + 'ms'
-      }
+      this.transitionDuration(time)
     })
     animater.hooks.on(
       animater.hooks.eventTypes.timeFunction,
       (easing: string) => {
-        for (let i = 0; i < this.items.length; i++) {
-          ;(this.items[i] as HTMLElement).style[
-            style.transitionTimingFunction as any
-          ] = easing
-        }
+        this.timeFunction(easing)
       }
     )
-    animater.hooks.on(
-      animater.hooks.eventTypes.scrollToElement,
-      (el: HTMLElement, pos: { top: number; left: number }) => {
-        if (hasClass(el, this.options.wheelItemClass!)) {
-          return true
-        } else {
-          pos.top = this.findNearestValidWheel(pos.top).y
-        }
-      }
-    )
+
     animater.hooks.on(
       animater.hooks.eventTypes.forceStop,
       ({ x, y }: { x: number; y: number }) => {
@@ -152,14 +141,7 @@ export default class Wheel {
     animater.translater.hooks.on(
       animater.translater.hooks.eventTypes.translate,
       (endPoint: { x: number; y: number }) => {
-        const { rotate = 25 } = this.options
-        for (let i = 0; i < this.items.length; i++) {
-          let deg = rotate * (endPoint.y / this.itemHeight + i)
-          ;(this.items[i] as HTMLElement).style[
-            style.transform as any
-          ] = `rotateX(${deg}deg)`
-        }
-
+        this.rotateX(endPoint.y)
         this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
       }
     )
@@ -169,10 +151,10 @@ export default class Wheel {
     const scroller = this.scroll.scroller
     const scrollBehaviorY = scroller.scrollBehaviorY
 
-    const contentRect = getRect(scroller.content)
-
     // ajust contentSize
+    const contentRect = getRect(scroller.content)
     scrollBehaviorY.contentSize = contentRect.height
+
     this.items = scroller.content.children
     this.checkWheelAllDisabled()
 
@@ -197,9 +179,34 @@ export default class Wheel {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0, time = 0) {
+  wheelTo(index = 0, time = 0, ease?: EaseItem, isSlient?: boolean) {
     const y = -index * this.itemHeight
-    this.scroll.scrollTo(0, y, time)
+    this.scroll.scrollTo(0, y, time, ease, isSlient)
+  }
+
+  private transitionDuration(time: number) {
+    for (let i = 0; i < this.items.length; i++) {
+      ;(this.items[i] as HTMLElement).style[style.transitionDuration as any] =
+        time + 'ms'
+    }
+  }
+
+  private timeFunction(easing: string) {
+    for (let i = 0; i < this.items.length; i++) {
+      ;(this.items[i] as HTMLElement).style[
+        style.transitionTimingFunction as any
+      ] = easing
+    }
+  }
+
+  private rotateX(y: number) {
+    const { rotate = 25 } = this.options
+    for (let i = 0; i < this.items.length; i++) {
+      let deg = rotate * (y / this.itemHeight + i)
+      ;(this.items[i] as HTMLElement).style[
+        style.transform as any
+      ] = `rotateX(${deg}deg)`
+    }
   }
 
   private findNearestValidWheel(y: number) {
