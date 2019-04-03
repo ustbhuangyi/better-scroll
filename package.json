@@ -13,7 +13,7 @@
     "dev": "webpack-dev-server --config ./build/example/webpack.dev.conf.js",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "node build/build.js",
+    "build": "node --max-old-space-size=4096 build/build.js",
     "build:plugin": "node build/build.js --special plugins",
     "build:demo": "node build/build-demo.js",
     "test": "jest --coverage",
