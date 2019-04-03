@@ -1,13 +1,12 @@
 var path = require('path')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+var config = require('./config')
+var VueLoaderPlugin = require('vue-loader/lib/plugin')
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 var utils = require('./utils')
 
 function resolve(dir) {
-  return path.join(__dirname, '..', dir)
+  return path.join(__dirname, '../..', dir)
 }
-
-var packFiles = [resolve('src'), resolve('example'), resolve('test')]
 
 module.exports = {
   entry: {
@@ -34,16 +33,14 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        loader: 'vue-loader'
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('example'), resolve('test')],
         query: {
-          presets: ['es2015', 'stage-2'],
-          plugins: ['transform-runtime', 'add-module-exports']
+          presets: ["@babel/preset-env"]
         }
       },
       {
@@ -56,8 +53,37 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader'
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          process.env.NODE_ENV !== 'production'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
+      {
+        test: /.styl(us)?$/,
+        use: [
+          process.env.NODE_ENV !== 'production'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'stylus-loader'
+        ]
       }
     ]
-  }
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash].css'
+    })
+  ]
 }
