@@ -1,5 +1,4 @@
 import BScroll from '@/index'
-import ActionsHandler from '@/base/ActionsHandler'
 import Wheel from '@/plugins/wheel'
 jest.mock('@/index')
 

@@ -1,9 +1,7 @@
 import BScroll from '@/index'
-import { Options } from '@/options'
 import { propertiesProxy } from '@/util/propertiesProxy'
 import { ease } from '@/util/ease'
 jest.mock('@/index')
-jest.mock('@/options')
 jest.mock('@/util/propertiesProxy')
 jest.mock('@/util/ease')
 
