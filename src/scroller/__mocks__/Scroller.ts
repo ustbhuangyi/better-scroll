@@ -2,7 +2,7 @@ import createAnimater from '@/animater/index'
 import Translater from '@/translater'
 import Behavior from '@/scroller/Behavior'
 import ActionsHandler from '@/base/ActionsHandler'
-import Actions from '@/Scroller/Actions'
+import Actions from '@/scroller/Actions'
 
 jest.mock('@/animater/index')
 jest.mock('@/translater')
@@ -26,7 +26,13 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
     wrapper,
     Object.assign(bscrollOptions, { scrollable: bscrollOptions.scrollY })
   )
-  const actions = new Actions(wrapper, bscrollOptions)
+  const actions = new Actions(
+    scrollBehaviorX,
+    scrollBehaviorY,
+    actionsHandler,
+    animater,
+    bscrollOptions
+  )
   return {
     wrapper,
     content,
@@ -50,7 +56,8 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'momentum',
       'scrollTo',
       'scrollToElement',
-      'transitionEnd'
+      'transitionEnd',
+      'checkClick'
     ]),
     scrollBehaviorX,
     scrollBehaviorY,
