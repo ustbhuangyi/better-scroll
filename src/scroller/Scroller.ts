@@ -528,6 +528,7 @@ export default class Scroller {
       'resizeRegister',
       'transitionEndRegister',
       'actionsHandler',
+      'actions',
       'hooks',
       'animater',
       'translater',

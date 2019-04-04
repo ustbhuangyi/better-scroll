@@ -100,6 +100,7 @@ export default class EventEmitter {
 
   destroy() {
     this.events = {}
+    this.eventTypes = {}
   }
 
   private _checkInTypes(type: string) {

@@ -54,10 +54,6 @@ export default class ScrollerActions {
     this.bindActionsHandler()
   }
 
-  refresh() {
-    this.endTime = 0
-  }
-
   private bindActionsHandler() {
     // [mouse|touch]start event
     this.actionsHandler.hooks.on(
@@ -223,5 +219,13 @@ export default class ScrollerActions {
       x: this.scrollBehaviorX.getCurrentPos(),
       y: this.scrollBehaviorY.getCurrentPos()
     }
+  }
+
+  refresh() {
+    this.endTime = 0
+  }
+
+  destroy() {
+    this.hooks.destroy()
   }
 }
