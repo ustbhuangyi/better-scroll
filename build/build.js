@@ -121,36 +121,34 @@ function build(builds) {
   let built = 0
   const total = builds.length
   const next = () => {
-    buildEntry(builds[built]).then(() => {
+    buildEntry(builds[built], () => {
+      builds[built-1] = null
       built++
       if (built < total) {
         next()
       }
-    }).catch(logError)
+    })
   }
-
   next()
 }
 
-function buildEntry(config) {
+function buildEntry(config, next) {
   const isProd = /min\.js$/.test(config.output.file)
-  return rollup.rollup(config).then((bundle) => {
-    return new Promise((resolve, reject) => {
-      bundle.write(config.output).then((output) => {
-        const code = output.code
-        function report(extra) {
-          console.log(blue(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
-          resolve()
-        }
-        if (isProd) {
-          zlib.gzip(code, (err, zipped) => {
-            if (err) return reject(err)
-            report(' (gzipped: ' + getSize(zipped) + ')')
-          })
-        } else {
-          report()
-        }
-      })
+  rollup.rollup(config).then((bundle) => {
+    bundle.write(config.output).then((output) => {
+      const code = output.code
+      function report(extra) {
+        console.log(blue(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
+        next()
+      }
+      if (isProd) {
+        zlib.gzip(code, (err, zipped) => {
+          if (err) return reject(err)
+          report(' (gzipped: ' + getSize(zipped) + ')')
+        })
+      } else {
+        report()
+      }
     })
   }).catch(logError)
 }
