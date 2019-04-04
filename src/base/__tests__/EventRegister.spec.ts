@@ -1,4 +1,4 @@
-import EventRegister from '../../../src/base/EventRegister'
+import EventRegister from '@/base/EventRegister'
 
 describe('EventRegister', () => {
   let eventRegister: EventRegister

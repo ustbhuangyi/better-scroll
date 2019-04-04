@@ -1,4 +1,4 @@
-import EventEmitter from '../../../src/base/EventEmitter'
+import EventEmitter from '@/base/EventEmitter'
 
 describe('EventEmitter', () => {
   let eventEmitter: EventEmitter
