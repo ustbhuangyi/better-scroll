@@ -15,7 +15,7 @@ import Actions from '@/scroller/Actions'
 describe('Actions Class tests', () => {
   let actions: Actions
   beforeEach(() => {
-    // refine window.performance
+    // redefine window.performance
     // because we will use window.performance.timing.navigationStart
     // in our file('src/util/lang.ts')
     Object.defineProperty(window, 'performance', {
