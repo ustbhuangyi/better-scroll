@@ -6,7 +6,7 @@ const Translater = jest.fn().mockImplementation(content => {
     hooks: new EventEmitter(['beforeTranslate', 'translate']),
     getComputedPosition: jest.fn(),
     translate: jest.fn(),
-    sss: 111
+    destroy: jest.fn()
   }
 })
 

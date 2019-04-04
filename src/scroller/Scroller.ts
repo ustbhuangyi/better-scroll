@@ -423,7 +423,7 @@ export default class Scroller {
     time: number,
     offsetX: number | boolean,
     offsetY: number | boolean,
-    easing: {
+    easing?: {
       style: string
       fn: EaseFn
     }

@@ -1,17 +1,8 @@
-import Behavior from '@/scroller/Behavior'
-import ActionsHandler from '@/base/ActionsHandler'
-import createAnimater from '@/animater/index'
-import Translater from '@/translater'
 import DirectionLock from '@/scroller/DirectionLock'
 
-jest.mock('@/scroller/Behavior')
-jest.mock('@/base/ActionsHandler')
-jest.mock('@/animater/index')
-jest.mock('@/translater')
 jest.mock('@/scroller/DirectionLock')
 
 import EventEmitter from '@/base/EventEmitter'
-import EventRegister from '@/base/EventRegister'
 
 const ScrollerActions = jest
   .fn()
@@ -36,6 +27,9 @@ const ScrollerActions = jest
         enabled: true,
         startTime: 0,
         endTime: 0,
+        getCurrentPos: jest.fn(),
+        refresh: jest.fn(),
+        destroy: jest.fn(),
         hooks: new EventEmitter([
           'start',
           'beforeMove',

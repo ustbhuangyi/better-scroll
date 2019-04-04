@@ -21,7 +21,9 @@ const Animation = jest
       translate: jest.fn(),
       stop: jest.fn(),
       move: jest.fn(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
+      setPending: jest.fn(),
+      setForceStopped: jest.fn()
     }
   })
 

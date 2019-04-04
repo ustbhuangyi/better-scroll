@@ -9,6 +9,7 @@ const mockOptions = jest.fn().mockImplementation(() => {
     eventPassthrough: '',
     click: false,
     tap: '',
+    translateZ: ' translateZ(0)',
 
     bounce: {
       top: true,

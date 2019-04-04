@@ -12,7 +12,8 @@ const ActionsHandler = jest
       pointY: 0,
       startClickRegister: new EventRegister(wrapper, []),
       moveEndRegister: new EventRegister(wrapper, []),
-      hooks: new EventEmitter(['beforeStart', 'start', 'move', 'end', 'click'])
+      hooks: new EventEmitter(['beforeStart', 'start', 'move', 'end', 'click']),
+      destroy: jest.fn()
     }
   })
 

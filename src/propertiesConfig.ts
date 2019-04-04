@@ -56,7 +56,7 @@ export const propertiesConfig = [
     key: 'directionY'
   },
   {
-    sourceKey: 'scroller.enabled',
+    sourceKey: 'scroller.actions.enabled',
     key: 'enabled'
   },
   {

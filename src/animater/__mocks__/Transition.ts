@@ -24,7 +24,9 @@ const Transition = jest
       startProbe: jest.fn(),
       transitionTime: jest.fn(),
       transitionTimingFunction: jest.fn(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
+      setPending: jest.fn(),
+      setForceStopped: jest.fn()
     }
   })
 
