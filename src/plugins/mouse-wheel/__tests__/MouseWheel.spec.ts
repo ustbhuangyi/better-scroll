@@ -173,7 +173,7 @@ describe('mouse-wheel plugin', () => {
     jest.clearAllTimers()
     mouseWheel.destroy()
   })
-  it('should get right postion when move with deltaMode = 1', () => {
+  it('should get right postion when move with deltaMode = 0', () => {
     const bscroll = createBScroll()
     const mouseWheel = new MouseWheel(bscroll)
     initForMouseWheel(bscroll)
@@ -186,9 +186,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 1
+      deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-10, 0, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-10, 0, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: -10,
@@ -203,9 +203,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 30,
-      deltaMode: 1
+      deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, 0, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, 0, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: -30,
@@ -221,9 +221,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 1
+      deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(0, -10, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(0, -10, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: 0,
@@ -237,9 +237,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 30,
-      deltaMode: 1
+      deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(0, -20, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(0, -20, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: 0,
@@ -251,12 +251,13 @@ describe('mouse-wheel plugin', () => {
     // x&y hasScroll = false
     bscroll.scroller.scrollBehaviorX.hasScroll = false
     bscroll.scroller.scrollBehaviorY.hasScroll = false
+    bscroll.scrollTo.mockClear()
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 40,
       deltaY: 30,
-      deltaMode: 1
+      deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(0, 0, 0)
+    expect(bscroll.scrollTo).not.toHaveBeenCalled()
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: 0,
@@ -269,7 +270,7 @@ describe('mouse-wheel plugin', () => {
     mouseWheel.destroy()
   })
 
-  it('should get right postion when move with deltaMode != 1', () => {
+  it('should get right postion when move with deltaMode = 1', () => {
     const bscroll = createBScroll()
     const mouseWheel = new MouseWheel(bscroll)
     initForMouseWheel(bscroll)
@@ -284,9 +285,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 1,
       deltaY: 2,
-      deltaMode: 0
+      deltaMode: 1
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
     jest.advanceTimersByTime(410)
 
     jest.clearAllTimers()
@@ -310,7 +311,7 @@ describe('mouse-wheel plugin', () => {
       wheelDeltaY: -240,
       deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
     jest.advanceTimersByTime(410)
 
     jest.clearAllTimers()
@@ -333,7 +334,7 @@ describe('mouse-wheel plugin', () => {
       wheelDelta: -120,
       deltaMode: 0
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 300)
     jest.advanceTimersByTime(410)
 
     jest.clearAllTimers()
@@ -355,7 +356,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       detail: 3
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 300)
     jest.advanceTimersByTime(410)
 
     jest.clearAllTimers()
@@ -376,9 +377,9 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: -1,
       deltaY: -2,
-      deltaMode: 0
+      deltaMode: 1
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 0)
+    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
     jest.advanceTimersByTime(410)
 
     jest.clearAllTimers()
@@ -405,14 +406,14 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 1
+      deltaMode: 0
     })
     expect(onMove).toBeCalledWith({ x: 0, y: -10 })
 
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 1
+      deltaMode: 0
     })
     expect(onMove).toBeCalledTimes(1)
 
@@ -420,7 +421,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(bscroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 1
+      deltaMode: 0
     })
     expect(onMove).toBeCalledTimes(2)
     expect(onMove).toBeCalledWith({
