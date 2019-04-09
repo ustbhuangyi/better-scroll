@@ -303,7 +303,7 @@ export function snapMixin(BScroll) {
     this.scrollTo(posX, posY, time, easing, isSilent)
   }
 
-  BScroll.prototype.goToPage = function (x, y, time, easing) {
+  BScroll.prototype.goToPage = function (x, y, time, easing, isSilent) {
     const snap = this.options.snap
     if (!snap || !this.pages || !this.pages.length) {
       return
@@ -329,7 +329,7 @@ export function snapMixin(BScroll) {
         y += 1
       }
     }
-    this._goToPage(x, y, time, easing)
+    this._goToPage(x, y, time, easing, isSilent)
   }
 
   BScroll.prototype.next = function (time, easing) {
