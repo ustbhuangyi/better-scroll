@@ -7,52 +7,32 @@ module.exports = {
   description: 'Just playing around',
   locales: {
     '/': {
-      lang: 'english',
+      lang: 'en-US',
       title: 'BetterScroll'
     },
     '/zh/': {
-      lang: '简体中文',
+      lang: 'zh-CN',
       title: 'BetterScroll'
     }
   },
   themeConfig: {
     locales: {
       '/zh/': {
-        nav: [
-          { text: '指南', link: '/zh/guide/' },
-          { text: '插件开发', link: '/zh/plugins/' }, 
-          { text: '常见问题', link: '' },
-          { text: 'github', link: 'https://github.com/ustbhuangyi/better-scroll'},
-          { text: '讨论', link: ''}
-        ],
+        label: '简体中文',
+        selectText: '选择语言',
+        nav: require('./nav/zh.js'),
         sidebar: {
-          '/guide/': [
-            '',
-            'zoom'
-          ],
-          '/plugins/': [
-            '',
-            'zoom'
-          ]
+          '/zh/guide/': require('./sidebar/guide.js')('zh'),
+          '/zh/plugins/': require('./sidebar/plugins.js')('zh')
         }
       },
       '/': {
-        nav: [
-          { text: 'Guide', link: '/guide/' },
-          { text: 'Writing Plugin', link: '/plugins/' }, 
-          { text: 'QA', link: '' },
-          { text: 'github', link: 'https://github.com/ustbhuangyi/better-scroll'},
-          { text: 'discuss', link: ''}
-        ],
+        label: 'English',
+        selectText: 'Languages',
+        nav: require('./nav/en.js'),
         sidebar: {
-          '/guide/': [
-            '',
-            'zoom'
-          ],
-          '/plugins/': [
-            '',
-            'zoom'
-          ]
+          '/guide/': require('./sidebar/guide.js')('en'),
+          '/plugins/': require('./sidebar/plugins.js')('en')
         }
       }
     }
