@@ -6,7 +6,7 @@
         <template v-for="(item, index) in items">
           <li ref="listItem" @click="clickItem(index)">
             <input :id="'input'+index" type="checkbox" :value="index" v-model="checkedItems">
-            <label @click.stop
+            <label @click.stop.prevent
                    :for="'input'+index">{{ $t('formListPage.previousTxt') + index + $t('formListPage.followingTxt')
               }}</label>
             <input class="text-input" @click.stop="clickInpunt(index)" type="text" @focus="focusHandle(index)"
