@@ -1,5 +1,5 @@
 /*!
- * better-normal-scroll v1.15.1
+ * better-normal-scroll v1.15.2
  * (c) 2016-2019 ustbhuangyi
  * Released under the MIT License.
  */
@@ -1552,6 +1552,9 @@ function coreMixin(BScroll) {
 
     if (this.options.wheel) {
       y = this._findNearestValidWheel(y).y;
+    }
+    if (x === this.x && y === this.y) {
+      return;
     }
     this.isInTransition = this.options.useTransition && time > 0 && (this.x !== x || this.y !== y);
 
@@ -3462,7 +3465,7 @@ mouseWheelMixin(BScroll);
 zoomMixin(BScroll);
 infiniteMixin(BScroll);
 
-BScroll.Version = '1.15.1';
+BScroll.Version = '1.15.2';
 
 return BScroll;
 
