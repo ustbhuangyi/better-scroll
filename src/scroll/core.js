@@ -284,9 +284,9 @@ export function coreMixin(BScroll) {
       const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
       const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
       let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options, this)
-        : {destination: newX, duration: 0}
+        : { destination: newX, duration: 0 }
       let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options, this)
-        : {destination: newY, duration: 0}
+        : { destination: newY, duration: 0 }
       newX = momentumX.destination
       newY = momentumY.destination
       time = Math.max(momentumX.duration, momentumY.duration)
@@ -362,7 +362,7 @@ export function coreMixin(BScroll) {
           const _dblclick = this.options.dblclick
           let dblclickTrigged = false
           if (_dblclick && this.lastClickTime) {
-            const {delay = 300} = _dblclick
+            const { delay = 300 } = _dblclick
             if (getNow() - this.lastClickTime < delay) {
               dblclickTrigged = true
               dblclick(e)
@@ -480,7 +480,7 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      const {rotate = 25} = this.options.wheel
+      const { rotate = 25 } = this.options.wheel
       for (let i = 0; i < this.items.length; i++) {
         let deg = rotate * (y / this.itemHeight + i)
         this.items[i].style[style.transform] = `rotateX(${deg}deg)`
@@ -562,6 +562,9 @@ export function coreMixin(BScroll) {
   BScroll.prototype.scrollTo = function (x, y, time = 0, easing = ease.bounce, isSilent) {
     if (this.options.wheel) {
       y = this._findNearestValidWheel(y).y
+    }
+    if (x === this.x && y === this.y) {
+      return
     }
     this.isInTransition = this.options.useTransition && time > 0 && (this.x !== x || this.y !== y)
 

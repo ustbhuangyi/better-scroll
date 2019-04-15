@@ -218,7 +218,7 @@
   export default {
     mounted() {
       this.$refs.picker0.setData([data0])
-      this.$refs.picker0.setSelectedIndex([1])
+      // this.$refs.picker0.setSelectedIndex([1])
     },
     data() {
       return {
