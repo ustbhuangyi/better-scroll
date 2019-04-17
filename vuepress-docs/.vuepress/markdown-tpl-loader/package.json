@@ -1,0 +1,25 @@
+{
+  "author": {
+    "name": ""
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@vuepress/markdown": "^1.0.0-alpha.46",
+    "loader-utils": "^1.1.0",
+    "lru-cache": "^5.1.1"
+  },
+  "deprecated": false,
+  "description": "markdown-loader for vue template",
+  "keywords": [
+    "documentation",
+    "vue",
+    "generator"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "markdown-tpl-loader",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.0.0"
+}

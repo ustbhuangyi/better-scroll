@@ -38,7 +38,26 @@ module.exports = {
     }
   },
   configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true
+          }
+        },
+        {
+          test: /\.code$/,
+          loader: require.resolve(path.resolve(__dirname, './markdown-tpl-loader')),
+          options: {
+            sourceDir: path.resolve(__dirname, '../../')
+          }
+        }
+      ]
+    },
     resolve: {
+      extensions: ['.js', '.vue', '.json', '.ts'],
       alias: {
         'scroll': resolve('src'),
         'example': resolve('example'),
@@ -51,8 +70,8 @@ module.exports = {
     ['@vuepress/register-components', {
       components: [
         {
-          name: 'ZoomView',
-          path: resolve('example/pages/zoom.vue')
+          name: 'Zoom',
+          path: resolve('example/components/zoom/zoom.vue')
         }
       ]
     }]
