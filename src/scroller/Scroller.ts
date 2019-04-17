@@ -24,6 +24,7 @@ import {
   getNow,
   bubbling
 } from '../util'
+import { start } from 'repl'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -415,6 +416,10 @@ export default class Scroller {
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
+    // it is an unuseless move
+    if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
+      return
+    }
     this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
   }
 
