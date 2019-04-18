@@ -2,8 +2,6 @@ import 'common/stylus/base.styl'
 import VueQRCodeComponent from 'vue-qrcode-component'
 
 export default ({Vue, options, router}) => {
-  Vue.use(VueI18n)
-
   // redirect to /zh-CN/ by default
   router.addRoutes([{
     path: '/',
