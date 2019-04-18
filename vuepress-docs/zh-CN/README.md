@@ -3,7 +3,7 @@ home: true
 heroText: Hero 标题
 tagline: Hero 副标题
 actionText: 快速上手 →
-actionLink: /zh/guide/
+actionLink: /zh-CN/guide/
 features:
 - title: 优雅的滚动
   details: 为移动端（已支持 PC）各种滚动场景提供丝滑的滚动效果。

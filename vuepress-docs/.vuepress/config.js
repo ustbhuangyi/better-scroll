@@ -6,33 +6,35 @@ module.exports = {
   title: 'Better Scroll 2.0',
   description: 'Just playing around',
   locales: {
-    '/': {
+    '/en-US/': {
       lang: 'en-US',
       title: 'BetterScroll'
     },
-    '/zh/': {
+    '/zh-CN/': {
       lang: 'zh-CN',
       title: 'BetterScroll'
     }
   },
   themeConfig: {
     locales: {
-      '/zh/': {
+      '/zh-CN/': {
         label: '简体中文',
         selectText: '选择语言',
-        nav: require('./nav/zh.js'),
+        nav: require('./nav/zh-CN.js'),
         sidebar: {
-          '/zh/guide/': require('./sidebar/guide.js')('zh'),
-          '/zh/plugins/': require('./sidebar/plugins.js')('zh')
+          '/zh-CN/guide/': require('./sidebar/guide.js')('zh-CN'),
+          '/zh-CN/plugins/': require('./sidebar/plugins.js')('zh-CN'),
+          '/zh-CN/FAQ/':  require('./sidebar/FAQ.js')('zh-CN')
         }
       },
-      '/': {
+      '/en-US/': {
         label: 'English',
         selectText: 'Languages',
-        nav: require('./nav/en.js'),
+        nav: require('./nav/en-US.js'),
         sidebar: {
-          '/guide/': require('./sidebar/guide.js')('en'),
-          '/plugins/': require('./sidebar/plugins.js')('en')
+          '/en-US/guide/': require('./sidebar/guide.js')('en-US'),
+          '/en-US/plugins/': require('./sidebar/plugins.js')('en-US'),
+          '/en-US/FAQ/':  require('./sidebar/FAQ.js')('en-US')
         }
       }
     }

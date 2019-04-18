@@ -3,7 +3,7 @@ home: true
 heroText: Title
 tagline: subTitle
 actionText: Getting Started →
-actionLink: /guide/
+actionLink: /en-US/guide/
 features:
 - title: Smooth scrolling effect
   details:  Aimed at solving scrolling circumstances on the mobile side (PC supported already).

@@ -1,10 +1,10 @@
 const introContent = {
-  'zh': '插件介绍',
-  'en': 'Plugins Guide'
+  'zh-US': '插件介绍',
+  'en-US': 'Plugins Guide'
 }
 const pluginContent = {
-  'zh': '插件',
-  'en': 'Plugins'
+  'zh-US': '插件',
+  'en-US': 'Plugins'
 }
 const getPluginsSideBar = function (lang) {
   return [

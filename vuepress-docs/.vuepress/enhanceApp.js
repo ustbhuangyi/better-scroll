@@ -1,18 +1,14 @@
 import 'common/stylus/base.styl'
 import VueQRCodeComponent from 'vue-qrcode-component'
-import VueI18n from 'vue-i18n'
-import Chinese from 'example/language/chinese'
-import English from 'example/language/english'
 
-export default ({Vue, options}) => {
+export default ({Vue, options, router}) => {
   Vue.use(VueI18n)
+
+  // redirect to /zh-CN/ by default
+  router.addRoutes([{
+    path: '/',
+    redirect: '/zh-CN/'
+  }])
+
   Vue.component('qr-code', VueQRCodeComponent)
-  options.i18n = new VueI18n({
-    locale: 'en',
-    fallbackLocale: 'zh',
-    messages: {
-      zh: Chinese,
-      en: English
-    }
-  })
 }

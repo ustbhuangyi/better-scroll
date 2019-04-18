@@ -1,10 +1,10 @@
 const guideContent = {
-  'zh': '指南',
-  'en': 'Guide'
+  'zh-CN': '指南',
+  'en-US': 'Guide'
 }
 const baseScrollContent = {
-  'zh': '核心滚动',
-  'en': 'Base Scroll'
+  'zh-CN': '核心滚动',
+  'en-US': 'Base Scroll'
 }
 const getGuideSideBar = function (lang) {
   return [
