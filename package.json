@@ -114,6 +114,7 @@
     "typescript": "^3.0.3",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "url-loader": "^1.1.2",
+    "v-tooltip": "^2.0.1",
     "vue": "^2.6.10",
     "vue-i18n": "^7.8.1",
     "vue-loader": "^15.7.0",

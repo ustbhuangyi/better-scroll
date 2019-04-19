@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2019 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="qrcode" unicode="&#xe800;" d="M214 207v-71h-71v71h71z m0 429v-72h-71v72h71z m429 0v-72h-72v72h72z m-572-571h215v214h-215v-214z m0 428h215v214h-215v-214z m429 0h214v214h-214v-214z m-143-143v-357h-357v357h357z m286-286v-71h-72v71h72z m143 0v-71h-72v71h72z m0 286v-214h-215v71h-71v-214h-71v357h214v-71h71v71h72z m-429 429v-358h-357v358h357z m429 0v-358h-357v358h357z" horiz-adv-x="785.7" />
+
+<glyph glyph-name="code" unicode="&#xe801;" d="M380 636q16-14 16-32t-16-30l-246-224 246-226q16-12 16-30t-16-32q-30-30-60 0l-320 288 320 286q30 30 60 0z m302 0l318-286-318-288q-32-30-62 0-32 32 0 62l248 226-248 224q-32 30 0 62 30 30 62 0z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

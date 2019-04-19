@@ -1,7 +1,19 @@
 <template>
   <div class="demo-wrap">
     <div class="demo-nav">
-      <button class="demo-nav-btn" @click='codeBtnHandler'>code</button>
+      <i class="demo-nav-btn icon-code" @click='codeBtnHandler'></i>
+      <v-popover placement='right' :offset ='10' trigger='hover'>
+        <i class="demo-nav-btn icon-qrcode"></i>
+        <template slot="popover">
+          <qr-code
+            text="https://www.baidu.com/"
+            :size="60"
+            error-level="L">
+          </qr-code>
+        </template>
+      </v-popover>
+
+
     </div>
     <div class="demo-code" v-show="showCode">
         <div class="demo-code-nav">
@@ -41,14 +53,14 @@ export default {
     display flex
     flex-direction row
     flex-wrap nowrap
-    justify-content flex-end
     align-items center
     height 48px
     background-color #f5f5f5
     color rgba(0,0,0,0.87)
     .demo-nav-btn
-      margin 6px
-      font-size 14px
+      margin-left 6px
+      font-size 22px
+      font-weight bold
       align-items center
       outline 0
       border 0
