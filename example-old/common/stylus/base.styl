@@ -1,0 +1,82 @@
+@import "./variable.styl"
+
+body, html
+  line-height: 1
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif, 'Droid Sans Fallback'
+  -webkit-tap-highlight-color: transparent
+
+.border-top-1px, .border-right-1px, .border-bottom-1px, .border-left-1px
+  position: relative
+  &:before, &:after
+    content: ""
+    display: block
+    position: absolute
+    transform-origin: 0 0
+
+.border-top-1px
+  &:before
+    border-top: 1px solid $color-row-line
+    left: 0
+    top: 0
+    width: 100%
+    transform-origin: 0 top
+
+.border-right-1px
+  &:after
+    border-right: 1px solid $color-col-line
+    top: 0
+    right: 0
+    height: 100%
+    transform-origin: right 0
+
+.border-bottom-1px
+  &:after
+    border-bottom: 1px solid $color-row-line
+    left: 0
+    bottom: 0
+    width: 100%
+    transform-origin: 0 bottom
+
+.border-left-1px
+  &:before
+    border-left: 1px solid $color-col-line
+    top: 0
+    left: 0
+    height: 100%
+    transform-origin: left 0
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+  .border-top-1px
+    &:before
+      width: 200%
+      transform: scale(.5) translateZ(0)
+  .border-right-1px
+    &:after
+      height: 200%
+      transform: scale(.5) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 200%
+      transform: scale(.5) translateZ(0)
+  .border-left-1px
+    &:before
+      height: 200%
+      transform: scale(.5) translateZ(0)
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+  .border-top-1px
+    &:before
+      width: 300%
+      transform: scale(.333) translateZ(0)
+  .border-right-1px
+    &:after
+      height: 300%
+      transform: scale(.333) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 300%
+      transform: scale(.333) translateZ(0)
+  .border-left-1px
+    &:before
+      height: 300%
+      transform: scale(.333) translateZ(0)

@@ -10,7 +10,7 @@ function resolve(dir) {
 
 module.exports = {
   entry: {
-    app: './example/main.js'
+    app: './example/vue/main.js'
   },
   output: {
     path: config.dev.path,
