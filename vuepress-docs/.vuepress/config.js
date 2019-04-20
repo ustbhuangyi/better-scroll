@@ -48,13 +48,6 @@ module.exports = {
           options: {
             transpileOnly: true
           }
-        },
-        {
-          test: /\.code$/,
-          loader: require.resolve(path.resolve(__dirname, './markdown-tpl-loader')),
-          options: {
-            sourceDir: path.resolve(__dirname, '../../')
-          }
         }
       ]
     },
@@ -76,6 +69,7 @@ module.exports = {
           path: resolve('example/components/zoom/zoom.vue')
         }
       ]
-    }]
+    }],
+    require('./plugins/enhance-snippet.js')
   ]
 }
