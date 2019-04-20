@@ -1,7 +1,8 @@
 # zoom
+
 <demo>
   <template slot="code">
-    <test></test>
+    <<< @/example/vue/demo/zoom.vue
   </template>
-  <template slot="demo"><zoom></zoom></template>
+  <zoom slot="demo"></zoom>
 </demo>
