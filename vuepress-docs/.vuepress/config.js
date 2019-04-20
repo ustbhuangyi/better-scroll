@@ -63,12 +63,7 @@ module.exports = {
   },
   plugins: [
     ['@vuepress/register-components', {
-      components: [
-        {
-          name: 'Zoom',
-          path: resolve('example/components/zoom/zoom.vue')
-        }
-      ]
+      componentsDir: 'example/vue/demo'
     }],
     require('./plugins/enhance-snippet.js')
   ]
