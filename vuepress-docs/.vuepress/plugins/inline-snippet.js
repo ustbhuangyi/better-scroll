@@ -28,14 +28,17 @@ module.exports = function inline_snippet (md, options = {}) {
       return false
     }
 
-    function getHandledTokens(htmlToken) {
-      const tokens = []
+    function getHandledTokens(htmlToken, toks) {
+      const tokens = toks || []
       let CH = '<'.charCodeAt(0)
       let content = htmlToken.content
 
-      let reg = /<<<(.*)\b/
+      let reg = /<<<(.*)(\?.*)?\b/
       let matched = content.match(reg)
-      if (!matched) return tokens
+      if (!matched) {
+        return tokens
+      }
+      tokens.length && tokens.pop()
 
       const contentBefore = content.substr(0, matched.index)
       const contentAfter = content.substr(matched.index + matched[0].length)
@@ -47,12 +50,19 @@ module.exports = function inline_snippet (md, options = {}) {
       token = createToken('fence', 'code', 0)
       const len = matched[0].length
       const rawPath = matched[1].trim().replace(/^@/, root)
-      const filename = rawPath.split(/[{:\s]/).shift()
-      const meta = rawPath.replace(filename, '')
-      token.info = filename.split('.').pop() + meta
+      const filename = rawPath.split(/\?/).shift()
+      const partName = rawPath.replace(filename, '').substr(1)
+      token.info = filename.split('.').pop()
       content = fs.existsSync(filename) ? fs.readFileSync(filename).toString() : 'Not found: ' + filename
+      if (partName) {
+        const partReg = new RegExp(`<${partName}[\\s\\S]*</${partName}>`)
+        const matched = content.match(partReg)
+        if (matched) {
+          content = matched[0]
+        }
+      }
       token.content = content
-      token.src = filename
+      // token.src = filename
       token.markup = '```'
       tokens.push(token)
 
@@ -60,7 +70,7 @@ module.exports = function inline_snippet (md, options = {}) {
       token.content = contentAfter
       tokens.push(token)
 
-      return tokens
+      return getHandledTokens(token, tokens)
     }
 
     function createToken(type, tag, nesting) {

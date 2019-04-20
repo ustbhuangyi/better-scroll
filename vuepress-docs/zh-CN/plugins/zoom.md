@@ -2,7 +2,7 @@
 
 <demo>
   <template slot="code">
-    <<< @/example/vue/demo/zoom.vue
+    <<< @/example/vue/demo/zoom.vue?script
   </template>
   <zoom slot="demo"></zoom>
 </demo>
