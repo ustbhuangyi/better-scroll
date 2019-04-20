@@ -1,26 +1,36 @@
 <template>
   <div class="demo-wrap">
     <div class="demo-nav">
-      <i class="demo-nav-btn icon-code" @click='codeBtnHandler'></i>
+      <i class="demo-nav-btn icon-code" @click='toggleCode'></i>
       <v-popover placement='right' :offset ='10' trigger='hover'>
         <i class="demo-nav-btn icon-qrcode"></i>
         <template slot="popover">
           <qr-code
-            text="https://www.baidu.com/"
+            :text="qrcodeUrl"
             :size="60"
             error-level="L">
           </qr-code>
         </template>
       </v-popover>
-
-
     </div>
     <div class="demo-code" v-show="showCode">
         <div class="demo-code-nav">
-          <button class="demo-code-btn active">VUE</button>
+          <button
+            v-for="(config, index) in codeNavConfigs"
+            :class="['demo-code-btn', codeNavIndex === index ? 'active' : '']"
+            @click="codeNavBtnHandler(index)">{{config.title}}</button>
         </div>
         <div class="demo-code-content">
-          <slot name="code"></slot>
+          <div
+            class="demo-code-item"
+            v-for="(config, index) in codeNavConfigs"
+            v-show="codeNavIndex === index">
+            <slot :name="config.slotName"></slot>
+          </div>
+          <i class="demo-code-content-copy icon-copy" @click='copyCode'></i>
+          <transition name="slide-fade">
+            <span class="demo-code-content-copied" v-if="copied">Copied</span>
+          </transition>
         </div>
     </div>
     <div class="demo-main">
@@ -31,16 +41,59 @@
   </div>
 </template>
 <script>
+//TODO replate url when publich 2.0
+const FALLBACK_URL = 'https://ustbhuangyi.github.io/better-scroll/#/'
 export default {
   name: 'demo',
-  data() {
-    return {
-      showCode: false
+  props: {
+    qrcodeUrl: {
+      type: String,
+      default: FALLBACK_URL
     }
   },
+  data() {
+    return {
+      showCode: false,
+      copied: false,
+      codeNavIndex: 0,
+      codeNavConfigs: []
+    }
+  },
+  created () {
+    // dynamic generating demo code configs
+    this.makeCodeNavConfigs()
+  },
   methods: {
-    codeBtnHandler() {
+    toggleCode() {
       this.showCode = !this.showCode
+    },
+    copyCode () {
+      const pre = this.$el.querySelectorAll('pre')[this.codeNavIndex]
+      pre.setAttribute('contenteditable', 'true')
+      pre.focus()
+      document.execCommand('selectAll', false, null)
+      this.copied = document.execCommand('copy')
+      pre.removeAttribute('contenteditable')
+      setTimeout(() => { this.copied = false }, 1000)
+    },
+    codeNavBtnHandler (i) {
+      this.codeNavIndex = i
+    },
+    makeCodeNavConfigs () {
+      const slots = this.$slots
+      const keys = ['code-template', 'code-script', 'code-style']
+      const configs = []
+      let title
+      keys.forEach(key => {
+        if (slots[key]) {
+          title = key.replace('code-', '').replace(/^\S/, s => s.toUpperCase())
+          configs.push({
+            title,
+            slotName: key
+          })
+        }
+      })
+      this.codeNavConfigs = configs
     }
   }
 }
@@ -68,10 +121,7 @@ export default {
     background-color rgb(45, 45, 45)
     border-color rgb(45, 45, 45)
     color #fff
-    height 400px
-    overflow scroll
     .demo-code-nav
-      padding 0 16px
       display flex
       flex-direction row
       flex-wrap nowrap
@@ -82,13 +132,34 @@ export default {
       .demo-code-btn
         display block
         padding 0 16px
-        height 30px
-        line-height 30px
+        margin 0 8px
+        height 32px
+        line-height 32px
         font-size 16px
-        font-weight bold
+        border-radius 28px
+        outline none
+        cursor pointer
+        background-color transparent
+        color white
+        border none
         &.active
           background #f5f5f5
-          border-radius 28px
+          color black
+          transition all .3s ease
+    .demo-code-content
+      max-height 350px
+      overflow-y auto
+      position relative
+      .demo-code-content-copy
+        position absolute
+        top 30px
+        right 10px
+        z-index 100
+      .demo-code-content-copied
+          position absolute
+          top 30px
+          right 50px
+          z-index 100
   .demo-main
     padding 16px
     background #fff
@@ -98,6 +169,17 @@ export default {
       height 400px
       background #f1f2f3
       overflow hidden
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
 </style>
 
 
