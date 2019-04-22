@@ -37,11 +37,13 @@ export default class BScroll extends EventEmitter {
       warn(
         `Plugin Class must specify plugin's name in static property by 'pluginName' field.`
       )
+      return
     }
     if (BScroll.usePluginSet[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
+      return
     }
     BScroll.usePluginSet[name] = true
     BScroll.usePluginArray.push({
