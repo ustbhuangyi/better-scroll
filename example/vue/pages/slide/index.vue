@@ -1,11 +1,14 @@
 <template>
   <div class="slide">
     <ul class="example-list">
-      <li class="example-item" @click="goPage('/slide/normal')">
-          <span>normal slider</span>
+      <li class="example-item" @click="goPage('/slide/banner')">
+          <span>banner slider</span>
       </li>
-      <li class="example-item">
+      <li class="example-item" @click="goPage('/slide/fullpage')">
           <span>page slider</span>
+      </li>
+      <li class="example-item" @click="goPage('/slide/vertical')">
+          <span>vertical slider</span>
       </li>
       <li class="example-item placeholder">
       </li>
