@@ -61,6 +61,7 @@ export default class Scroller {
       'scrollCancel',
       'momentum',
       'scrollTo',
+      'ignoreDisMoveForSamePos',
       'scrollToElement'
     ])
     this.wrapper = wrapper
@@ -416,9 +417,11 @@ export default class Scroller {
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
-    // it is an unuseless move
-    if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
-      return
+    if (!this.hooks.trigger(this.hooks.eventTypes.ignoreDisMoveForSamePos)) {
+      // it is an unuseless move
+      if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
+        return
+      }
     }
     this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
   }

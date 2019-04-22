@@ -103,7 +103,10 @@ export default class Zoom {
         transformStyle.push(`scale(${scale})`)
       }
     )
-    this.registorHooks(scrollerIns.hooks, 'destroy', this.destroy)
+    this.registorHooks(scrollerIns.hooks, 'ignoreDisMoveForSamePos', () => {
+      return true
+    })
+    this.registorHooks(this.scroll.hooks, 'destroy', this.destroy)
   }
   zoomTo(scale: number, x: number, y: number) {
     let { left, top } = offsetToBody(this.wrapper)
