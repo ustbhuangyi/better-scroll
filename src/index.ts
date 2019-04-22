@@ -35,7 +35,7 @@ export default class BScroll extends EventEmitter {
 
     if (isUndef(name)) {
       warn(
-        `Plugin Class must specify plugin's name in static property by 'name' field.`
+        `Plugin Class must specify plugin's name in static property by 'pluginName' field.`
       )
     }
     if (BScroll.usePluginSet[name]) {

@@ -280,7 +280,6 @@ describe('Scroller Class tests', () => {
       'scrollBehaviorY'
     ]
     keys.forEach(key => {
-      debugger
       expect(scroller[key].destroy).toBeCalled()
     })
   })
