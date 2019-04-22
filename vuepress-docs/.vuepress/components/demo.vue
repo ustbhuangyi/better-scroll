@@ -7,7 +7,7 @@
         <template slot="popover">
           <qr-code
             :text="qrcodeUrl"
-            :size="60"
+            :size="100"
             error-level="L">
           </qr-code>
         </template>
@@ -100,6 +100,7 @@ export default {
 </script>
 <style lang="stylus">
 .demo-wrap
+  margin: 20px 0
   box-shadow 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)
   text-decoration: none
   .demo-nav
@@ -121,6 +122,8 @@ export default {
     background-color rgb(45, 45, 45)
     border-color rgb(45, 45, 45)
     color #fff
+    pre
+      margin 0!important
     .demo-code-nav
       display flex
       flex-direction row
