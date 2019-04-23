@@ -55,6 +55,7 @@
             loop: true,
             threshold: 100
           },
+          useTransition: true,
           momentum: false,
           bounce: false,
           stopPropagation: true

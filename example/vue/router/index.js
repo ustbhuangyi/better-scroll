@@ -5,6 +5,7 @@ import Slide from 'example/vue/pages/slide/index'
 import bannerSlide from 'example/vue/pages/slide/banner'
 import PageSlide from 'example/vue/pages/slide/fullpage'
 import VerticalSlide from 'example/vue/pages/slide/vertical'
+import PcSlide from 'example/vue/pages/slide/pc'
 
 Vue.use(Router)
 
@@ -29,6 +30,10 @@ export default new Router({
         {
           path: 'vertical',
           component: VerticalSlide
+        },
+        {
+          path: 'pc',
+          component: PcSlide
         }
       ]
     }

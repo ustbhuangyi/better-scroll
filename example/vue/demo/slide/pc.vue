@@ -1,8 +1,8 @@
 <template>
-  <div class="slide-vertical">
-    <div class="vertical-wrapper">
-      <div class="slide-vertical-scroll" ref="slide">
-        <div class="slide-group" ref="slideGroup">
+  <div class="slide-banner">
+    <div class="banner-wrapper">
+      <div class="slide-banner-scroll" ref="slide">
+        <div class="slide-banner-wrapper">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
@@ -17,25 +17,28 @@
           :class="{'active': currentPageIndex === index}"></span>
       </div>
     </div>
+    <div class="btn-wrap">
+      <button @click="nextPage">nextPage</button>
+      <button @click="prePage">prePage</button>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from '../../../../src/index.ts'
   import SlidePlugin from '../../../../src/plugins/slide'
-
+  import MouseWheel from '../../../../src/plugins/mouse-wheel'
   BScroll.use(SlidePlugin)
+  BScroll.use(MouseWheel)
 
   export default {
     data() {
       return {
         slide: null,
-        playTimer: 0,
         currentPageIndex: 0
       }
     },
     mounted() {
-      this._setSlideHeight()
       this.init()
     },
     beforeDestroy() {
@@ -43,64 +46,58 @@
     },
     methods: {
       init() {
-        clearTimeout(this.playTimer)
         this.slide = new BScroll(this.$refs.slide, {
-          scrollX: false,
-          scrollY: true,
+          scrollX: true,
+          scrollY: false,
           slide: {
             loop: true,
             threshold: 100
           },
-          useTransition: true,
+          useTransition: false,
           momentum: false,
           bounce: false,
-          stopPropagation: true
+          stopPropagation: true,
+          mouseWheel: {
+            speed: 2,
+            invert: false,
+            easeTime: 300
+          }
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
       },
-      _onScrollEnd() {
-        let pageIndex = this.slide.getCurrentPage().pageY
-        this.currentPageIndex = pageIndex
+      nextPage() {
+        this.slide.next()
       },
-      _setSlideHeight() {
-        const children = this.$refs.slideGroup.children
-        let height = 0
-        let slideHeight = this.$refs.slide.clientHeight
-        for (let i = 0; i < children.length; i++) {
-          let child = children[i]
-          child.style.height = slideHeight + 'px'
-          height += slideHeight
-        }
-        height += 2 * slideHeight
-        this.$refs.slideGroup.style.height = height + 'px'
+      prePage() {
+        this.slide.prev()
+      },
+      _onScrollEnd() {
+        let pageIndex = this.slide.getCurrentPage().pageX
+        this.currentPageIndex = pageIndex
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-.slide-vertical
-  height 100%
-  &.view
-    padding 0
-    height 100%
-  .vertical-wrapper
+.slide-banner
+  .banner-wrapper
     position relative
-    height 100%
-    font-size 0
-  .slide-vertical-scroll
-    height 100%
+  .slide-banner-scroll
+    min-height 1px
     overflow hidden
+  .slide-banner-wrapper
+    height 200px
+    white-space nowrap
+    font-size 0
     .slide-item
       display inline-block
-      height 100%
+      height 200px
       width 100%
       line-height 200px
       text-align center
       font-size 26px
-      transform translate3d(0,0,0)
-      backface-visibility hidden
       &.page1
-        background-color #D6EADF
+        background-color #95B8D1
       &.page2
         background-color #DDA789
       &.page3
@@ -109,18 +106,28 @@
         background-color #F2D4A7
   .docs-wrapper
     position absolute
-    right 4px
-    top 50%
-    transform translateY(-50%)
+    bottom 4px
+    left 50%
+    transform translateX(-50%)
     .doc
-      display block
-      margin 4px 0
+      display inline-block
+      margin 0 4px
       width 8px
       height 8px
       border-radius 50%
       background #eee
       &.active
-        height  20px
+        width 20px
         border-radius 5px
+  .btn-wrap
+    margin-top 20px
+    display flex
+    justify-content center
+    button
+      margin 0 10px
+      padding 10px
+      color #fff
+      border-radius 4px
+      background-color #666
 
 </style>
