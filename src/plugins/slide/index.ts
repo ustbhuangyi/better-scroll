@@ -177,7 +177,9 @@ export default class Slide {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]
-      hooks.off(hooksName, handlerFn)
+      if (hooks.eventTypes[hooksName]) {
+        hooks.off(hooksName, handlerFn)
+      }
     })
     this.hooksFn.length = 0
   }
