@@ -2,7 +2,7 @@
 
 Add zoom functionality for better scroll.
 
-# 使用
+# Usage
 
 It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
 
@@ -57,7 +57,8 @@ The following are the configuration related to the zoom:
   <zoom-default slot="demo"></zoom-default>
 </demo>
 
-# zoom options
+# options
+
 |name|type|description|default|example|
 |----------|:-----:|:-----------|:--------:|:-------|
 |start|number|the benchmark ratio of scalling begin to zoom|-|start:1|
@@ -70,7 +71,7 @@ The following are the configuration related to the zoom:
 
 zoom the scroller to the specified size.
 
-**参数**
+**Arguments**:
 
 |name|type|description|
 |----------|:-----:|:-----------|
@@ -78,5 +79,5 @@ zoom the scroller to the specified size.
 |x|number|X coordinate of the zoom origin, relative to the left edge of the entire document|
 |y|number|Y coordinate of the zoom origin, relative to the top edge of the entire document|
 
-**返回值**: void
+**Return**: void
 
