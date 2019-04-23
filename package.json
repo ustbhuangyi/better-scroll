@@ -10,7 +10,7 @@
   "module": "dist/bscroll.esm.js",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "dev": "webpack-dev-server --config ./build/example/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --config ./build/example/webpack.dev.conf.js --host 0.0.0.0 --port 8932",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
     "build": "node build/build.js",
