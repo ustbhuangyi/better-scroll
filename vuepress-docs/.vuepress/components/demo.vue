@@ -6,7 +6,7 @@
         <i class="demo-nav-btn icon-qrcode"></i>
         <template slot="popover">
           <qr-code
-            :text="qrcodeUrl"
+            :text="fullQrcodeUrl"
             :size="100"
             error-level="L">
           </qr-code>
@@ -43,12 +43,21 @@
 <script>
 //TODO replate url when publich 2.0
 const FALLBACK_URL = 'https://ustbhuangyi.github.io/better-scroll/#/'
+const BASE_URL = process.env.NODE_ENV === 'production' ? 
+  'https://ustbhuangyi.github.io/better-scroll/#/' :
+   `http://${LOCAL_IP}:8932/#/`
+
 export default {
   name: 'demo',
   props: {
     qrcodeUrl: {
       type: String,
-      default: FALLBACK_URL
+      default: ''
+    }
+  },
+  computed: {
+    fullQrcodeUrl() {
+      return `${BASE_URL}${this.qrcodeUrl}`
     }
   },
   data() {

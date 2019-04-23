@@ -48,7 +48,7 @@ new BScroll('.bs-wrap', {
 
   如果希望当放大之后，当前区域在 y 轴方向可以滚动时，必须设置为 `true`。
 
-<demo>
+<demo qrcode-url="zoom/">
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
   </template>

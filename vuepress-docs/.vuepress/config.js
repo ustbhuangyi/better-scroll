@@ -1,4 +1,5 @@
 const path = require('path')
+const os = require('os')
 function resolve(p) {
   return path.resolve(__dirname, '../../', p)
 }
@@ -61,10 +62,29 @@ module.exports = {
       }
     }
   },
+  define: {
+    LOCAL_IP: getIp(),
+  },
   plugins: [
     ['@vuepress/register-components', {
       componentsDir: 'example/vue/demo'
     }],
     require('./plugins/enhance-snippet.js')
   ]
+}
+
+function getIp () {
+  var networks = os.networkInterfaces()
+  var found = '127.0.0.1'
+
+  Object.keys(networks).forEach(function (k) {
+    var n = networks[k]
+    n.forEach(function (addr) {
+      if (addr.family === 'IPv4' && !addr.internal) {
+        found = addr.address
+      }
+    })
+  })
+
+  return found
 }
