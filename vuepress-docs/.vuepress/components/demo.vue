@@ -2,7 +2,7 @@
   <div class="demo-wrap">
     <div class="demo-nav">
       <i class="demo-nav-btn icon-code" @click='toggleCode'></i>
-      <v-popover placement='right' :offset ='10' trigger='hover'>
+      <v-popover v-if="!hideQrcode" placement='right' :offset ='10' trigger='hover'>
         <i class="demo-nav-btn icon-qrcode"></i>
         <template slot="popover">
           <qr-code
@@ -53,6 +53,10 @@ export default {
     qrcodeUrl: {
       type: String,
       default: ''
+    },
+    hideQrcode: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

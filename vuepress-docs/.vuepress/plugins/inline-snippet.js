@@ -18,10 +18,9 @@ module.exports = function inline_snippet (md, options = {}) {
         }
       }
     }
-
     function isDemoBlock(token) {
       let content = token.content
-      let regex = /^<demo>/
+      let regex = /<\/demo>$/
       if (regex.test(content.trim())) {
         return true
       }
