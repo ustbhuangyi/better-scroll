@@ -2,7 +2,7 @@
 
 Add zoom functionality for better scroll.
 
-# Usage
+## Usage
 
 It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
 
@@ -62,7 +62,7 @@ The interactive operation on pc is not supported at this time. Please scan the q
   <zoom-default slot="demo"></zoom-default>
 </demo>
 
-# options
+## Options
 
 |name|type|description|default|example|
 |----------|:-----:|:-----------|:--------:|:-------|
@@ -70,9 +70,9 @@ The interactive operation on pc is not supported at this time. Please scan the q
 |min|number|the smallest scaling|-|min:0.5|
 |max|number|the maximum scaling|-|max:2|
 
-# api
+## API
 
-## zoomTo(scale, x, y)
+### zoomTo(scale, x, y)
 
 zoom the scroller to the specified size.
 
@@ -85,4 +85,12 @@ zoom the scroller to the specified size.
 |y|number|Y coordinate of the zoom origin, relative to the top edge of the scroll wrapper|
 
 **Return**: void
+
+## Hooks
+
+### zoomStart
+- trigger: Before starting zoom action.
+
+### zoomEnd
+- trigger: After zoom action completing(the animation may not be over yet).
 

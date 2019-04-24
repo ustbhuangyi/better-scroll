@@ -158,7 +158,7 @@ slider 切换时过度动画。
 - 类型：boolean
 - 默认值：false
 
-## api
+## 方法
 
 ### next(time, easing)
 滚动到下一个页面

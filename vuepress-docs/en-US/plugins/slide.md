@@ -48,7 +48,7 @@ The following are the configuration related to the slide:
 - bounce
   Setting this to false if you have enabled the loop feature with `slide.loop = true`. Bounce feature will cause flicker when the slider switch from the last page to the fist page or from the first page to the last page.
 
-## 示例
+## Demo
 
 - horizontal slider
   
@@ -104,7 +104,7 @@ backface-visibility: hidden
 ```
 :::
 
-## options
+## Options
 
 ### loop
 set to true to support slide loop. 
@@ -163,7 +163,7 @@ In default, slide plugin will give the slider wrapper element a width value whic
 - Type: boolean
 - Default: false
 
-## api
+## API
 
 ### next(time, easing)
 switch to next page
