@@ -69,7 +69,7 @@ module.exports = {
     ['@vuepress/register-components', {
       componentsDir: 'example/vue/demo'
     }],
-    require('./plugins/enhance-snippet.js')
+    require('./plugins/extract-code.js')
   ]
 }
 
