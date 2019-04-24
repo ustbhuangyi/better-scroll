@@ -48,6 +48,10 @@ new BScroll('.bs-wrap', {
 
   如果希望当放大之后，当前区域在 y 轴方向可以滚动时，必须设置为 `true`。
 
+## 示例
+:::warning
+zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
+:::
 <demo qrcode-url="zoom/">
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
@@ -61,14 +65,14 @@ new BScroll('.bs-wrap', {
   <zoom-default slot="demo"></zoom-default>
 </demo>
 
-## zoom 配置
+## 配置
 |名称|类型|描述|默认值|例子|
 |----------|:-----:|:-----------|:--------:|:-------|
 |start|number|开始的缩放时的基础比例|-|start:1 // 开始缩放时当前尺寸为1|
 |min|number|最小缩放比例|-|min:0.5|
 |max|number|最大缩放比例|-|max:2|
 
-## api
+## 方法
 
 ### zoomTo(scale, x, y)
 
@@ -79,8 +83,8 @@ new BScroll('.bs-wrap', {
 |名称|类型|描述|
 |----------|:-----:|:-----------|
 |scale|number|缩放大小|
-|x|number|缩放原点的横坐标, 相对于整个文档的左边距|
-|y|number|缩放原点的纵坐标, 相对于整个文档的上边距|
+|x|number|缩放原点的横坐标, 相对于 scroll wrapper 的左边距|
+|y|number|缩放原点的纵坐标, 相对于 scroll wrapper 的上边距|
 
 **返回值**：无
 
@@ -92,4 +96,4 @@ new BScroll('.bs-wrap', {
 
 ### zoomEnd
 - 参数：无
-- 触发时机：缩放结束后
+- 触发时机：缩放行为结束后（这时缩放的动画可能并未执行结束）

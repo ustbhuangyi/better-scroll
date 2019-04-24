@@ -6,7 +6,7 @@ interface DelayedHandler {
 }
 
 const DEFAULT_INTERVAL = 100 / 60
-const windowCompat = window as any
+const windowCompat = inBrowser && (window as any)
 function noop() {}
 
 export const requestAnimationFrame = (() => {

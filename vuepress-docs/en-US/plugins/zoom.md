@@ -2,7 +2,7 @@
 
 Add zoom functionality for better scroll.
 
-# Usage
+## Usage
 
 It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
 
@@ -44,6 +44,11 @@ The following are the configuration related to the zoom:
 - scrollY
   `true` is be required if you want to scroll in y axies after zooming in.
 
+## Demo
+:::warning
+The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
+:::
+
 <demo>
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
@@ -57,7 +62,7 @@ The following are the configuration related to the zoom:
   <zoom-default slot="demo"></zoom-default>
 </demo>
 
-# options
+## Options
 
 |name|type|description|default|example|
 |----------|:-----:|:-----------|:--------:|:-------|
@@ -65,9 +70,9 @@ The following are the configuration related to the zoom:
 |min|number|the smallest scaling|-|min:0.5|
 |max|number|the maximum scaling|-|max:2|
 
-# api
+## API
 
-## zoomTo(scale, x, y)
+### zoomTo(scale, x, y)
 
 zoom the scroller to the specified size.
 
@@ -76,8 +81,16 @@ zoom the scroller to the specified size.
 |name|type|description|
 |----------|:-----:|:-----------|
 |scale|number|zoom size|
-|x|number|X coordinate of the zoom origin, relative to the left edge of the entire document|
-|y|number|Y coordinate of the zoom origin, relative to the top edge of the entire document|
+|x|number|X coordinate of the zoom origin, relative to the left edge of the scroll wrapper|
+|y|number|Y coordinate of the zoom origin, relative to the top edge of the scroll wrapper|
 
 **Return**: void
+
+## Hooks
+
+### zoomStart
+- trigger: Before starting zoom action.
+
+### zoomEnd
+- trigger: After zoom action completing(the animation may not be over yet).
 

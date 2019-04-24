@@ -48,7 +48,7 @@ new BScroll('.bs-wrap', {
 
 - 水平方向下的轮播图
   
-<demo>
+<demo qrcode-url="slide/banner">
   <template slot="code-template">
     <<< @/example/vue/demo/slide/banner.vue?template
   </template>
@@ -63,7 +63,7 @@ new BScroll('.bs-wrap', {
 
 - 全屏的轮播
 
-<demo>
+<demo qrcode-url="slide/fullpage">
   <template slot="code-template">
     <<< @/example/vue/demo/slide/fullpage.vue?template
   </template>
@@ -78,7 +78,7 @@ new BScroll('.bs-wrap', {
 
 - 垂直方向 swipe
   
-<demo>
+<demo qrcode-url="slide/vertical">
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/vertical.vue?template
   </template>
@@ -158,7 +158,7 @@ slider 切换时过度动画。
 - 类型：boolean
 - 默认值：false
 
-## api
+## 方法
 
 ### next(time, easing)
 滚动到下一个页面
