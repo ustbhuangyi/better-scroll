@@ -44,6 +44,11 @@ The following are the configuration related to the zoom:
 - scrollY
   `true` is be required if you want to scroll in y axies after zooming in.
 
+## Demo
+:::warning
+The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
+:::
+
 <demo>
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
@@ -76,8 +81,8 @@ zoom the scroller to the specified size.
 |name|type|description|
 |----------|:-----:|:-----------|
 |scale|number|zoom size|
-|x|number|X coordinate of the zoom origin, relative to the left edge of the entire document|
-|y|number|Y coordinate of the zoom origin, relative to the top edge of the entire document|
+|x|number|X coordinate of the zoom origin, relative to the left edge of the scroll wrapper|
+|y|number|Y coordinate of the zoom origin, relative to the top edge of the scroll wrapper|
 
 **Return**: void
 

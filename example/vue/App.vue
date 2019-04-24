@@ -28,12 +28,20 @@
 <script type="text/ecmascript-6">
   const examples = [
     {
-      name: 'zoom',
-      path: '/zoom/'
+      name: 'core scroll',
+      path: '/core/'
     },
     {
       name: 'slide',
       path: '/slide/'
+    },
+    {
+      name: 'wheel',
+      path: '/wheel/'
+    },
+    {
+      name: 'zoom',
+      path: '/zoom/'
     }
   ]
   export default {

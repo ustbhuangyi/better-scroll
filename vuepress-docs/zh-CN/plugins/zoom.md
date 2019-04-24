@@ -48,6 +48,10 @@ new BScroll('.bs-wrap', {
 
   如果希望当放大之后，当前区域在 y 轴方向可以滚动时，必须设置为 `true`。
 
+## 示例
+:::warning
+zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
+:::
 <demo qrcode-url="zoom/">
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
@@ -79,8 +83,8 @@ new BScroll('.bs-wrap', {
 |名称|类型|描述|
 |----------|:-----:|:-----------|
 |scale|number|缩放大小|
-|x|number|缩放原点的横坐标, 相对于整个文档的左边距|
-|y|number|缩放原点的纵坐标, 相对于整个文档的上边距|
+|x|number|缩放原点的横坐标, 相对于 scroll wrapper 的左边距|
+|y|number|缩放原点的纵坐标, 相对于 scroll wrapper 的上边距|
 
 **返回值**：无
 
