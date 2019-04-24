@@ -28,11 +28,6 @@
   BScroll.use(MouseWheel)
 
   export default {
-    data() {
-      return {
-        
-      }
-    },
     mounted() {
       this.init()
     },

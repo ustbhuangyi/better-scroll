@@ -6,7 +6,7 @@
         <i class="demo-nav-btn icon-qrcode"></i>
         <template slot="popover">
           <qr-code
-            :text="fullQrcodeUrl"
+            :url="fullQrcodeUrl"
             :size="100"
             error-level="L">
           </qr-code>
@@ -41,14 +41,16 @@
   </div>
 </template>
 <script>
+import QrCode from './qrcode.vue'
 //TODO replate url when publich 2.0
 const FALLBACK_URL = 'https://ustbhuangyi.github.io/better-scroll/#/'
-const BASE_URL = process.env.NODE_ENV === 'production' ? 
+const BASE_URL = process.env.NODE_ENV === 'production' ?
   'https://ustbhuangyi.github.io/better-scroll/#/' :
    `http://${LOCAL_IP}:8932/#/`
 
 export default {
   name: 'demo',
+  components: { QrCode },
   props: {
     qrcodeUrl: {
       type: String,
