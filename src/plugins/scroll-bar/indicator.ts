@@ -1,9 +1,6 @@
-import ScrollBar from './scroll-bar'
 import BScroll from '../../index'
 import { Direction } from './const'
-import { style, getRect } from '../../util/dom'
-import EventRegister from '../../base/EventRegister'
-import { TouchEvent } from '../../util/Touch'
+import { style } from '../../util/dom'
 import EventHandler from './event-handler'
 import { TranslaterPoint } from '../../translater'
 import EventEmitter from '@/base/EventEmitter'
@@ -24,7 +21,6 @@ interface KeysMap {
   pos: 'y' | 'x'
   pointPos: 'pageX' | 'pageY'
   translate: 'translateY' | 'translateX'
-  position: 'top' | 'left'
 }
 
 interface KeyValues {
@@ -118,8 +114,7 @@ export default class Indicator {
         maxScroll: 'maxScrollY',
         pos: 'y',
         pointPos: 'pageY',
-        translate: 'translateY',
-        position: 'top'
+        translate: 'translateY'
       }
     }
     return {
@@ -130,8 +125,7 @@ export default class Indicator {
       maxScroll: 'maxScrollX',
       pos: 'x',
       pointPos: 'pageX',
-      translate: 'translateX',
-      position: 'left'
+      translate: 'translateX'
     }
   }
 
@@ -224,7 +218,7 @@ export default class Indicator {
   }
 
   private _refreshPosAndSizeStyle(size: number, pos: number) {
-    const { position, translate, size: sizeKey } = this.keysMap
+    const { translate, size: sizeKey } = this.keysMap
 
     this.elStyle[sizeKey] = `${size}px`
 

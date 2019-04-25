@@ -24,7 +24,6 @@ import {
   getNow,
   bubbling
 } from '../util'
-import { start } from 'repl'
 
 export default class Scroller {
   wrapper: HTMLElement
