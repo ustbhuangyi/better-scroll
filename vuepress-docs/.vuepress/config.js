@@ -4,6 +4,7 @@ function resolve(p) {
   return path.resolve(__dirname, '../../', p)
 }
 module.exports = {
+  base: '/docs/',
   title: 'Better Scroll 2.0',
   description: 'Just playing around',
   locales: {

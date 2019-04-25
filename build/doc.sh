@@ -1,19 +1,25 @@
-# !/bin/bash
+#!/usr/bin/env sh
 
-echo "Enter the git dir of better-scroll.github.io:"
-read ioDir
-echo "better-scroll.github.io is in $ioDir"
-echo "start build docs.."
-# npm run docs:build
-echo "build docs done"
-echo "publish docs?[y/n]"
-read answer
-if echo "$answer" | grep -iq "^y";then
-  cp -r ./vuepress-docs/.vuepress/dist/* $ioDir
-  cd $ioDir
-  git add .
-  git commit -m "update docs"
-  git push
-fi
+# 确保脚本抛出遇到的错误
+set -e
 
-exit 0
+# 生成静态文件
+npm run docs:build
+
+# 进入生成的文件夹
+cd vuepress-docs/.vuepress/dist
+
+# 如果是发布到自定义域名
+# echo 'www.example.com' > CNAME
+
+git init
+git add -A
+git commit -m 'update docs'
+
+# 如果发布到 https://<USERNAME>.github.io
+# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
+
+# 如果发布到 https://<USERNAME>.github.io/<REPO>
+git push -f git@github.com:better-scroll/docs.git master:gh-pages
+
+cd -
