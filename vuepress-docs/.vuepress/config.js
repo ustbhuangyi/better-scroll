@@ -67,7 +67,7 @@ module.exports = {
   },
   plugins: [
     ['@vuepress/register-components', {
-      componentsDir: 'example/vue/demo'
+      componentsDir: 'example/vue/components'
     }],
     require('./plugins/extract-code.js')
   ]

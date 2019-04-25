@@ -32,7 +32,10 @@ export default class BScroll extends EventEmitter {
 
   static use(ctor: PluginCtor) {
     const name = ctor.pluginName
-
+    const installed = BScroll.usePluginArray.some(
+      plugin => ctor === plugin.ctor
+    )
+    if (installed) return
     if (isUndef(name)) {
       warn(
         `Plugin Class must specify plugin's name in static property by 'pluginName' field.`

@@ -15,20 +15,21 @@ import Wheel from 'BScroll/wheel'
 BScroll.use(Wheel)
 ```
 
-上面步骤完成后，就给 BetterScroll 注入了 Wheel 的能力，接着只要传入以下的配置，就能得到一个具备竖向滚动能力的 bs 实例。
+只要传入以下的配置，就能实例化 BetterScroll。
 
 ```js
-new BScroll('.bs-wrap', {
-  wheel: true
+let bs = new BScroll('.bs-wrap', {
+  wheel: true // wheel options 为 true
 })
+
+let wheel = bs.plugins.wheel // wheel 实例
 ```
 
-以下是相关配置：
-- wheel
+:::tip
+wheel options 是一个真值（Truthy）或者对象，否则插件功能失效。具体请参考[ wheel options 配置](./wheel.html#wheel-options-配置)。
+:::
 
-  若没有这只该项，则插件不会生效。可以配置一个真值，比如 true，插件内部的实例化使用默认的配置对象，具体请参考[ wheel 配置](./wheel.html#wheel-配置)。
-
-<demo qrcode-url="zoom/">
+<demo qrcode-url="wheel/">
   <template slot="code-template">
     <<< @/example/vue/demo/zoom/default.vue?template
   </template>
@@ -41,7 +42,7 @@ new BScroll('.bs-wrap', {
   <zoom-default slot="demo"></zoom-default>
 </demo>
 
-## wheel 配置
+## wheel options 配置
 |名称|类型|描述|默认值|例子|
 |----------|:-----:|:-----------|:--------:|:-------|
 |start|number|开始的缩放时的基础比例|-|start:1 // 开始缩放时当前尺寸为1|

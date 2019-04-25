@@ -7,7 +7,12 @@ var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
   // eval-source-map is faster for development
-  devtool: '#cheap-module-eval-source-map',
+  devtool: 'source-map',
+  devServer: {
+    open: true,
+    hot: true,
+    compress: true
+  },
   plugins: [
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
