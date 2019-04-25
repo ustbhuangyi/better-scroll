@@ -18,7 +18,6 @@ describe('demo unit test', () => {
     wrapper.appendChild(content)
 
     options = {
-      useTransform: false,
       pullUpLoad: {
         threshold: 1
       }

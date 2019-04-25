@@ -228,14 +228,9 @@ export default class Indicator {
 
     this.elStyle[sizeKey] = `${size}px`
 
-    // TODO translateZ ？
-    if (this.bscroll.options.useTransform) {
-      this.elStyle[style.transform as any] = `${translate}(${pos}px)${
-        this.bscroll.options.translateZ
-      }`
-    } else {
-      this.elStyle[position] = `${pos}px`
-    }
+    this.elStyle[style.transform as any] = `${translate}(${pos}px)${
+      this.bscroll.options.translateZ
+    }`
   }
 
   setTransitionTime(time: number = 0) {

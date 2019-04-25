@@ -44,8 +44,6 @@ describe('indicator unit tests', () => {
       fade: true,
       interactive: true
     }
-
-    bscroll.options.useTransform = false
   })
 
   afterEach(() => {
@@ -55,8 +53,6 @@ describe('indicator unit tests', () => {
 
   describe('refresh', () => {
     beforeEach(() => {
-      // given
-      bscroll.options.useTransform = true
       // given for horizontal
       bscroll.hasHorizontalScroll = true
       bscroll.scrollerWidth = 200
@@ -84,18 +80,6 @@ describe('indicator unit tests', () => {
       // then
       expect(indicator.el.style.height).toBe('50px')
       expect(indicator.el.style.transform).toBe('translateY(5px)')
-    })
-
-    it('should update position and size correctly when not use transform', () => {
-      // given
-      bscroll.options.useTransform = false
-      indicatorOptions.direction = 'vertical' as Direction
-      indicator = new Indicator(bscroll, indicatorOptions)
-      // when
-      bscroll.trigger('refresh')
-      // then
-      expect(indicator.el.style.height).toBe('50px')
-      expect(indicator.el.style.top).toBe('5px')
     })
   })
 
