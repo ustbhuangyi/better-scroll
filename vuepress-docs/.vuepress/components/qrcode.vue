@@ -45,7 +45,8 @@ export default {
       }
   },
   mounted() {
-    import('qrcode-js-package/qrcode.js').then(qrcode => {
+    import('qrcode-js-package/qrcode.js').then(res => {
+      const QRCode = res.default
       this.qrCode = new QRCode(this.$refs.qrcode, {
         text: this.url,
         width: this.size,

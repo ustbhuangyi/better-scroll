@@ -112,6 +112,8 @@
       line-height 200px
       text-align center
       font-size 26px
+      transform translate3d(0,0,0)
+      backface-visibility hidden
       &.page1
         background-color #95B8D1
       &.page2
