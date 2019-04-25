@@ -102,11 +102,11 @@ export default class Slide {
         }
       )
     }
-    this.registorHooks(
-      this.scroll.scroller.animater.hooks,
-      'forceStop',
-      this.resetLoop
-    )
+    // this.registorHooks(
+    //   this.scroll.scroller.animater.hooks,
+    //   'forceStop',
+    //   this.resetLoop
+    // )
     if (slide.listenFlick !== false) {
       this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
     }
@@ -220,6 +220,39 @@ export default class Slide {
     if (!this.slideOpt.loop) {
       return
     }
+
+    // fix bug: scroll two page or even more page at once and fetch the boundary.
+    // In this case, momentum won't be trigger, so the pageIndex will be wrong and won't be trigger reset.
+    let isScrollToBoundary = false
+    if (
+      this.page.loopX &&
+      (this.scroll.x === this.scroll.scroller.scrollBehaviorX.minScrollPos ||
+        this.scroll.x === this.scroll.scroller.scrollBehaviorX.maxScrollPos)
+    ) {
+      isScrollToBoundary = true
+    }
+    if (
+      this.page.loopY &&
+      (this.scroll.y === this.scroll.scroller.scrollBehaviorY.minScrollPos ||
+        this.scroll.y === this.scroll.scroller.scrollBehaviorY.maxScrollPos)
+    ) {
+      isScrollToBoundary = true
+    }
+    if (isScrollToBoundary) {
+      const newPos = this.nearestPage(this.scroll.x, this.scroll.y)
+      const newPage = {
+        x: newPos.x,
+        y: newPos.y,
+        pageX: newPos.pageX,
+        pageY: newPos.pageY
+      }
+      if (
+        newPage.pageX !== this.page.currentPage.pageX ||
+        newPage.pageY !== this.page.currentPage.pageY
+      ) {
+        this.page.currentPage = newPage
+      }
+    }
     const changePage = this.page.resetLoopPage()
     if (changePage) {
       this.goTo(changePage.pageX, changePage.pageY, 0)
@@ -265,7 +298,15 @@ export default class Slide {
       pageX: newPageInfo.pageX,
       pageY: newPageInfo.pageY
     }
-    this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
+    const isSlient = !(time > 0)
+    this.scroll.scroller.scrollTo(
+      posX,
+      posY,
+      time,
+      scrollEasing,
+      undefined,
+      isSlient
+    )
   }
   private flickHandler() {
     let scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
