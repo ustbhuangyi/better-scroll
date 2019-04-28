@@ -8,80 +8,80 @@
 
 - 为核心滚动增加鼠标滚轮的支持
 
-```js
-import BScroll from 'BScroll'
-import MouseWheel from 'MouseWheelPlugin'
-BScroll.use(MouseWheel)
+  ```js
+  import BScroll from 'BScroll'
+  import MouseWheel from 'MouseWheelPlugin'
+  BScroll.use(MouseWheel)
 
-new BScroll('.bs-wrap', {
-  //...
-  mouseWheel: {
-    speed: 20,
-    invert: false,
-    easeTime: 300
-  }
-})
-```
+  new BScroll('.bs-wrap', {
+    //...
+    mouseWheel: {
+      speed: 20,
+      invert: false,
+      easeTime: 300
+    }
+  })
+  ```
 
 - 为其他插件增加鼠标滚轮行为时，你需要同时使用对应的插件和 mouse-wheel 插件
 
-```js
-import BScroll from 'BScroll'
-import MouseWheel from 'MouseWheelPlugin'
-import Slide from 'SlidePlugin'
+  ```js
+  import BScroll from 'BScroll'
+  import MouseWheel from 'MouseWheelPlugin'
+  import Slide from 'SlidePlugin'
 
-BScroll.use(MouseWheel)
-BScroll.use(Slide)
+  BScroll.use(MouseWheel)
+  BScroll.use(Slide)
 
-new BScroll('.bs-wrap', {
-  scrollX: true,
-  scrollY: false,
-  slide: {
-    loop: true,
-    threshold: 100
-  },
-  momentum: false,
-  bounce: false,
-  stopPropagation: true,
-  mouseWheel: {
-    speed: 20,
-    invert: false,
-    easeTime: 300
-  }
-})
-```
+  new BScroll('.bs-wrap', {
+    scrollX: true,
+    scrollY: false,
+    slide: {
+      loop: true,
+      threshold: 100
+    },
+    momentum: false,
+    bounce: false,
+    stopPropagation: true,
+    mouseWheel: {
+      speed: 20,
+      invert: false,
+      easeTime: 300
+    }
+  })
+  ```
 
 ## 示例
 
 - 核心滚动的鼠标滚轮
-<demo :hide-qrcode="true">
-  <template slot="code-template">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?style
-  </template>
-  <core-mouse-wheel slot="demo"></core-mouse-wheel>
-</demo>
+  <demo :hide-qrcode="true">
+    <template slot="code-template">
+      <<< @/example/vue/demo/core/mouse-wheel.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/example/vue/demo/core/mouse-wheel.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/example/vue/demo/core/mouse-wheel.vue?style
+    </template>
+    <core-mouse-wheel slot="demo"></core-mouse-wheel>
+  </demo>
 
 - wheel 的鼠标滚轮
 
 - slide 的鼠标滚轮
-<demo :hide-qrcode="true">
-  <template slot="code-template">
-    <<< @/example/vue/demo/slide/pc.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/example/vue/demo/slide/pc.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/example/vue/demo/slide/pc.vue?style
-  </template>
-  <slide-pc slot="demo"></slide-pc>
-</demo>
+  <demo :hide-qrcode="true">
+    <template slot="code-template">
+      <<< @/example/vue/demo/slide/pc.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/example/vue/demo/slide/pc.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/example/vue/demo/slide/pc.vue?style
+    </template>
+    <slide-pc slot="demo"></slide-pc>
+  </demo>
 
 ## 配置
 
