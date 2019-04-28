@@ -42,6 +42,10 @@
     {
       name: 'zoom',
       path: '/zoom/'
+    },
+    {
+      name: 'picker',
+      path: '/picker/'
     }
   ]
   export default {
@@ -72,7 +76,7 @@
       text-align: center
       @media screen and (max-width: 42rem)
         margin-top: -1rem
-  
+
   .example-list
     display: flex
     justify-content: space-between

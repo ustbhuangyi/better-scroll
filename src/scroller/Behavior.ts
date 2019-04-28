@@ -130,7 +130,7 @@ export default class Behavior {
       rate: 15
     }
 
-    this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData)
+    this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData, distance)
 
     if (momentumData.destination < lowerMargin) {
       momentumData.destination = wrapperSize

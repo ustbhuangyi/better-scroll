@@ -21,6 +21,7 @@ export default abstract class Base {
     this.hooks = new EventEmitter([
       'move',
       'end',
+      'beforeForceStop',
       'forceStop',
       'time',
       'timeFunction'

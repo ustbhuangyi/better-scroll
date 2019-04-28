@@ -81,6 +81,7 @@ export default class Animation extends Base {
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
+      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) return
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
     }
   }

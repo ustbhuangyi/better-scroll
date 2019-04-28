@@ -71,6 +71,8 @@ export default class Transition extends Base {
       this.transitionTime()
       this.translate({ x, y })
       this.setForceStopped(true)
+      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, { x, y }))
+        return
       this.hooks.trigger(this.hooks.eventTypes.forceStop, { x, y })
     }
   }

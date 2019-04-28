@@ -22,7 +22,8 @@ import {
   tap,
   isUndef,
   getNow,
-  bubbling
+  bubbling,
+  cancelAnimationFrame
 } from '../util'
 
 export default class Scroller {
@@ -527,6 +528,7 @@ export default class Scroller {
   }
 
   disable() {
+    cancelAnimationFrame(this.animater.timer)
     this.actions.enabled = false
   }
 

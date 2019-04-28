@@ -1,7 +1,6 @@
 var path = require('path')
 var config = require('./config')
 var utils = require('./utils')
-var webpack = require('webpack')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')

@@ -1,5 +1,12 @@
 import BScroll from '../../index'
-import { style, hasClass, getRect, ease, EaseItem } from '../../util'
+import {
+  style,
+  hasClass,
+  getRect,
+  ease,
+  EaseItem,
+  isPlainObject
+} from '../../util'
 import { Options } from '../../Options'
 import propertiesConfig from './propertiesConfig'
 
@@ -20,8 +27,7 @@ declare module '../../Options' {
 }
 
 const CONSTANTS = {
-  rate: 4,
-  time: 400
+  rate: 4
 }
 export default class Wheel {
   static pluginName = 'wheel'
@@ -41,13 +47,7 @@ export default class Wheel {
       this.normalizeOptions()
       this.refresh()
       this.tapIntoHooks()
-
-      // fix a bug in ios.
-      // the reason is that when you set transitionTime(> 0) to translate
-      // immediately, you set transitionTime(= 0) to stop
-      // in ios, the scene still keep last frame
-      // so set tiny time to refresh it.
-      this.wheelTo(this.selectedIndex, 0.0001)
+      this.wheelTo(this.selectedIndex)
       this.scroll.proxy(propertiesConfig)
     }
   }
@@ -67,7 +67,7 @@ export default class Wheel {
     scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
       const index = Array.from(this.items).indexOf(this.target as Element)
       if (index === -1) return true
-      this.wheelTo(index, this.options.adjustTime || 400, ease.swipe)
+      this.wheelTo(index, this.options.adjustTime, ease.swipe)
       return true
     })
     scroller.hooks.on(
@@ -98,15 +98,26 @@ export default class Wheel {
     // ScrollBehaviorY
     scrollBehaviorY.hooks.on(
       scrollBehaviorY.hooks.eventTypes.momentum,
-      (momentumInfo: {
-        destination: number
-        duration: number
-        rate: number
-      }) => {
+      (
+        momentumInfo: {
+          destination: number
+          duration: number
+          rate: number
+        },
+        distance: number
+      ) => {
         momentumInfo.rate = CONSTANTS.rate
         momentumInfo.destination = this.findNearestValidWheel(
           momentumInfo.destination
         ).y
+        const maxDistance = 1000
+        const minDuration = this.options.adjustTime as number
+        if (distance < 1000) {
+          momentumInfo.duration = Math.max(
+            minDuration,
+            (distance / maxDistance) * this.scroll.options.swipeTime
+          )
+        }
       }
     )
     scrollBehaviorY.hooks.on(
@@ -114,7 +125,7 @@ export default class Wheel {
       (momentumInfo: { destination: number; duration: number }) => {
         let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
-        momentumInfo.duration = this.options.adjustTime || CONSTANTS.time
+        momentumInfo.duration = this.options.adjustTime
         this.selectedIndex = validWheel.index
       }
     )
@@ -131,9 +142,11 @@ export default class Wheel {
     )
 
     animater.hooks.on(
-      animater.hooks.eventTypes.forceStop,
+      animater.hooks.eventTypes.beforeForceStop,
       ({ x, y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
+        // don't dispatch scrollEnd when it is a click operation
+        return true
       }
     )
 
@@ -151,7 +164,7 @@ export default class Wheel {
     const scroller = this.scroll.scroller
     const scrollBehaviorY = scroller.scrollBehaviorY
 
-    // ajust contentSize
+    // adjust contentSize
     const contentRect = getRect(scroller.content)
     scrollBehaviorY.contentSize = contentRect.height
 
@@ -259,15 +272,20 @@ export default class Wheel {
   }
 
   private normalizeOptions() {
-    const wheel = this.options || {}
-    if (!wheel.wheelWrapperClass) {
-      wheel.wheelWrapperClass = 'wheel-scroll'
+    const options = (this.options = isPlainObject(this.options)
+      ? this.options
+      : {})
+    if (!options.wheelWrapperClass) {
+      options.wheelWrapperClass = 'wheel-scroll'
     }
-    if (!wheel.wheelItemClass) {
-      wheel.wheelItemClass = 'wheel-item'
+    if (!options.wheelItemClass) {
+      options.wheelItemClass = 'wheel-item'
     }
-    if (!wheel.wheelDisabledItemClass) {
-      wheel.wheelDisabledItemClass = 'wheel-disabled-item'
+    if (!options.adjustTime) {
+      options.adjustTime = 400
+    }
+    if (!options.wheelDisabledItemClass) {
+      options.wheelDisabledItemClass = 'wheel-disabled-item'
     }
   }
 

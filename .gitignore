@@ -4,6 +4,5 @@ node_modules/
 .DS_Store
 .npm-debug.log
 coverage/
-package-lock.json
 .rpt2_cache
 .vscode/

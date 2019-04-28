@@ -4,12 +4,16 @@ import Router from 'vue-router'
 import Core from 'example/vue/pages/core-entry'
 import Zoom from 'example/vue/pages/zoom-entry'
 import Slide from 'example/vue/pages/slide-entry'
+import Picker from 'example/vue/pages/picker-entry'
 
 import BannerSlide from 'example/vue/components/slide/banner'
 import PageSlide from 'example/vue/components/slide/fullpage'
 import VerticalSlide from 'example/vue/components/slide/vertical'
 import PcSlide from 'example/vue/components/slide/pc'
 import MouseWheelCore from 'example/vue/components/core/mouse-wheel'
+import oneColumnPicker from 'example/vue/components/picker/one-column'
+import doubleColumnPicker from 'example/vue/components/picker/double-column'
+import linkageColumnPicker from 'example/vue/components/picker/linkage-column'
 
 Vue.use(Router)
 
@@ -48,6 +52,24 @@ export default new Router({
         {
           path: 'mouse-wheel',
           component: MouseWheelCore
+        }
+      ]
+    },
+    {
+      path: '/picker',
+      component: Picker,
+      children: [
+        {
+          path: 'one-column',
+          component: oneColumnPicker
+        },
+        {
+          path: 'double-column',
+          component: doubleColumnPicker
+        },
+        {
+          path: 'linkage-column',
+          component: linkageColumnPicker
         }
       ]
     }

@@ -105,6 +105,7 @@ export class Options {
     }
 
     this.HWCompositing = true
+    this.useTransition = true
 
     this.bindToWrapper = false
     this.disableMouse = hasTouch

@@ -140,13 +140,13 @@ describe('wheel plugin tests', () => {
     })
   })
 
-  it('should change target when bscroll.scroller.animater trigger forceStop hook', () => {
+  it('should change target when bscroll.scroller.animater trigger beforeForceStop hook', () => {
     let div = document.createElement('div')
     wheel.items = [div] as any
     wheel.itemHeight = 40
 
     wheel.wheelItemsAllDisabled = false
-    bscroll.scroller.animater.hooks.trigger('forceStop', { x: 0, y: -20 })
+    bscroll.scroller.animater.hooks.trigger('beforeForceStop', { x: 0, y: -20 })
     expect(wheel.target).toEqual(div)
   })
 
