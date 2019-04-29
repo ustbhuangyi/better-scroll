@@ -57,13 +57,13 @@
 
   <demo :hide-qrcode="true">
     <template slot="code-template">
-      <<< @/example/vue/demo/core/mouse-wheel.vue?template
+      <<< @/example/vue/components/core/mouse-wheel.vue?template
     </template>
     <template slot="code-script">
-      <<< @/example/vue/demo/core/mouse-wheel.vue?script
+      <<< @/example/vue/components/core/mouse-wheel.vue?script
     </template>
     <template slot="code-style">
-      <<< @/example/vue/demo/core/mouse-wheel.vue?style
+      <<< @/example/vue/components/core/mouse-wheel.vue?style
     </template>
     <core-mouse-wheel slot="demo"></core-mouse-wheel>
   </demo>
@@ -74,13 +74,13 @@
 
   <demo :hide-qrcode="true">
     <template slot="code-template">
-      <<< @/example/vue/demo/slide/pc.vue?template
+      <<< @/example/vue/components/slide/pc.vue?template
     </template>
     <template slot="code-script">
-      <<< @/example/vue/demo/slide/pc.vue?script
+      <<< @/example/vue/components/slide/pc.vue?script
     </template>
     <template slot="code-style">
-      <<< @/example/vue/demo/slide/pc.vue?style
+      <<< @/example/vue/components/slide/pc.vue?style
     </template>
     <slide-pc slot="demo"></slide-pc>
   </demo>
