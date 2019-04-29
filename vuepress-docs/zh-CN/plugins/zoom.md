@@ -54,13 +54,13 @@ zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
 :::
 <demo qrcode-url="zoom/">
   <template slot="code-template">
-    <<< @/example/vue/demo/zoom/default.vue?template
+    <<< @/example/vue/components/zoom/default.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/zoom/default.vue?script
+    <<< @/example/vue/components/zoom/default.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/zoom/default.vue?style
+    <<< @/example/vue/components/zoom/default.vue?style
   </template>
   <zoom-default slot="demo"></zoom-default>
 </demo>

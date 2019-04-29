@@ -31,13 +31,13 @@ wheel options 是一个真值（Truthy）或者对象，否则插件功能失效
 
 <demo qrcode-url="wheel/">
   <template slot="code-template">
-    <<< @/example/vue/demo/zoom/default.vue?template
+    <<< @/example/vue/components/zoom/default.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/zoom/default.vue?script
+    <<< @/example/vue/components/zoom/default.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/zoom/default.vue?style
+    <<< @/example/vue/components/zoom/default.vue?style
   </template>
   <zoom-default slot="demo"></zoom-default>
 </demo>

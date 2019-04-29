@@ -40,7 +40,6 @@ function extractCodeFromVueSFC (md, options = {}) {
 
       const contentBefore = content.substr(0, matched.index)
       const contentAfter = content.substr(matched.index + matched[0].length)
-
       let token = createToken('html_block', '', 0)
       token.content = contentBefore
       tokens.push(token)

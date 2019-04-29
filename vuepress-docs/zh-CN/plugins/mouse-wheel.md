@@ -1,5 +1,5 @@
 # mouse-wheel
-这个插件可以为核心滚动和一些插件增加对 pc 场景下的鼠标滚轮操作的支持。
+这个插件可以为核心滚动和一些插件增加对 PC 场景下的鼠标滚轮操作的支持。
 :::tip
 目前支持鼠标滚轮有：核心滚动、slide、wheel
 :::
@@ -9,7 +9,7 @@
 - 为核心滚动增加鼠标滚轮的支持
 
 ```js
-import BScroll from 'BScroll'
+import BScroll from 'better-scroll'
 import MouseWheel from 'MouseWheelPlugin'
 BScroll.use(MouseWheel)
 
@@ -56,13 +56,13 @@ new BScroll('.bs-wrap', {
 - 核心滚动的鼠标滚轮
 <demo :hide-qrcode="true">
   <template slot="code-template">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?template
+    <<< @/example/vue/components/core/mouse-wheel.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?script
+    <<< @/example/vue/components/core/mouse-wheel.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/core/mouse-wheel.vue?style
+    <<< @/example/vue/components/core/mouse-wheel.vue?style
   </template>
   <core-mouse-wheel slot="demo"></core-mouse-wheel>
 </demo>
@@ -72,13 +72,13 @@ new BScroll('.bs-wrap', {
 - slide 的鼠标滚轮
 <demo :hide-qrcode="true">
   <template slot="code-template">
-    <<< @/example/vue/demo/slide/pc.vue?template
+    <<< @/example/vue/components/slide/pc.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/slide/pc.vue?script
+    <<< @/example/vue/components/slide/pc.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/slide/pc.vue?style
+    <<< @/example/vue/components/slide/pc.vue?style
   </template>
   <slide-pc slot="demo"></slide-pc>
 </demo>

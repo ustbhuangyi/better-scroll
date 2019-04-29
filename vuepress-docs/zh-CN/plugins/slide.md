@@ -47,16 +47,16 @@ new BScroll('.bs-wrap', {
 ## 示例
 
 - 水平方向下的轮播图
-  
+
 <demo qrcode-url="slide/banner">
   <template slot="code-template">
-    <<< @/example/vue/demo/slide/banner.vue?template
+    <<< @/example/vue/components/slide/banner.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/slide/banner.vue?script
+    <<< @/example/vue/components/slide/banner.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/slide/banner.vue?style
+    <<< @/example/vue/components/slide/banner.vue?style
   </template>
   <slide-banner slot="demo"></slide-banner>
 </demo>
@@ -65,28 +65,28 @@ new BScroll('.bs-wrap', {
 
 <demo qrcode-url="slide/fullpage">
   <template slot="code-template">
-    <<< @/example/vue/demo/slide/fullpage.vue?template
+    <<< @/example/vue/components/slide/fullpage.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/slide/fullpage.vue?script
+    <<< @/example/vue/components/slide/fullpage.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/slide/fullpage.vue?style
+    <<< @/example/vue/components/slide/fullpage.vue?style
   </template>
   <slide-fullpage slot="demo"></slide-fullpage>
 </demo>
 
 - 垂直方向 swipe
-  
+
 <demo qrcode-url="slide/vertical">
   <template slot="code-template">
-    <<< @/example/vue/demo/zoom/vertical.vue?template
+    <<< @/example/vue/components/zoom/vertical.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/zoom/vertical.vue?script
+    <<< @/example/vue/components/zoom/vertical.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/zoom/vertical.vue?style
+    <<< @/example/vue/components/zoom/vertical.vue?style
   </template>
   <slide-vertical slot="demo"></slide-vertical>
 </demo>
@@ -113,7 +113,7 @@ slider 切换时过度动画。
 - 默认值
 ```js
 {
-  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)', 
+  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
   fn: function(t: number) {
     return 1 - --t * t * t * t
   }
@@ -147,7 +147,7 @@ slider 切换时过度动画。
 
 
 ### stepY
- 
+
 切换到下一个/上一个期间滚动过的像素距离。适用于 slider 方向为 Y 轴，一般情况下你不需要设置该值，也不要轻易改变它的默认值。
 - 类型：number
 - 默认值：slideItemHeight

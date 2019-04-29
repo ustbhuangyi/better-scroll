@@ -51,16 +51,16 @@ The following are the configuration related to the slide:
 ## Demo
 
 - horizontal slider
-  
+
 <demo>
   <template slot="code-template">
-    <<< @/example/vue/demo/slide/banner.vue?template
+    <<< @/example/vue/components/slide/banner.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/slide/banner.vue?script
+    <<< @/example/vue/components/slide/banner.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/slide/banner.vue?style
+    <<< @/example/vue/components/slide/banner.vue?style
   </template>
   <slide-banner slot="demo"></slide-banner>
 </demo>
@@ -69,28 +69,28 @@ The following are the configuration related to the slide:
 
 <demo>
   <template slot="code-template">
-    <<< @/example/vue/demo/slide/fullpage.vue?template
+    <<< @/example/vue/components/slide/fullpage.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/slide/fullpage.vue?script
+    <<< @/example/vue/components/slide/fullpage.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/slide/fullpage.vue?style
+    <<< @/example/vue/components/slide/fullpage.vue?style
   </template>
   <slide-fullpage slot="demo"></slide-fullpage>
 </demo>
 
 - vertical slider
-  
+
 <demo>
   <template slot="code-template">
-    <<< @/example/vue/demo/zoom/vertical.vue?template
+    <<< @/example/vue/components/zoom/vertical.vue?template
   </template>
   <template slot="code-script">
-    <<< @/example/vue/demo/zoom/vertical.vue?script
+    <<< @/example/vue/components/zoom/vertical.vue?script
   </template>
   <template slot="code-style">
-    <<< @/example/vue/demo/zoom/vertical.vue?style
+    <<< @/example/vue/components/zoom/vertical.vue?style
   </template>
   <slide-vertical slot="demo"></slide-vertical>
 </demo>
@@ -107,7 +107,7 @@ backface-visibility: hidden
 ## Options
 
 ### loop
-set to true to support slide loop. 
+set to true to support slide loop.
 :::tip
 It won't work when there is only one slide item.
 :::
@@ -120,7 +120,7 @@ The scroll easing function for switching.
 - Default
 ```js
 {
-  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)', 
+  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
   fn: function(t: number) {
     return 1 - --t * t * t * t
   }
@@ -139,7 +139,7 @@ The slider will switch from one page to another when a user flickes it. This can
 
 The threshold of going to the next page.
 :::tip
-When the scrolling distance is less than the threshold, the switching action won't be triggered. 
+When the scrolling distance is less than the threshold, the switching action won't be triggered.
 当滑动的范围小于该阈值时，不会触发切换到下一个或上一个。可以设置为小数，如0.1，或者整数，如 100。
 
 It's value can be a decimal, such as 0.1, or an integer such as 100. The difference between decimal and integer is that decimal is treated as a percentage of widh or height of slide item and integer is a threshold value.

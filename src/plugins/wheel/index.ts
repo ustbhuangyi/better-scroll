@@ -86,6 +86,9 @@ export default class Wheel {
         }
       }
     )
+    scroller.hooks.on(scroller.hooks.eventTypes.ignoreDisMoveForSamePos, () => {
+      return true
+    })
 
     // ActionsHandler
     actionsHandler.hooks.on(
@@ -111,8 +114,8 @@ export default class Wheel {
           momentumInfo.destination
         ).y
         const maxDistance = 1000
-        const minDuration = this.options.adjustTime as number
-        if (distance < 1000) {
+        const minDuration = 800
+        if (distance < maxDistance) {
           momentumInfo.duration = Math.max(
             minDuration,
             (distance / maxDistance) * this.scroll.options.swipeTime
@@ -125,7 +128,7 @@ export default class Wheel {
       (momentumInfo: { destination: number; duration: number }) => {
         let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
-        momentumInfo.duration = this.options.adjustTime
+        momentumInfo.duration = this.options.adjustTime as number
         this.selectedIndex = validWheel.index
       }
     )
@@ -143,7 +146,7 @@ export default class Wheel {
 
     animater.hooks.on(
       animater.hooks.eventTypes.beforeForceStop,
-      ({ x, y }: { x: number; y: number }) => {
+      ({ y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
         // don't dispatch scrollEnd when it is a click operation
         return true
