@@ -1,0 +1,30 @@
+{
+  "name": "@better-scroll/observe-dom",
+  "version": "2.0.0",
+  "description": "Dynamic recalculating container's size for BetterScroll",
+  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "main": "dist/observe-dom.min.js",
+  "module": "dist/observe-dom.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
+    "directory": "packages/observe-dom"
+  },
+  "dependencies": {
+    "@better-scroll/shared-utils": "^2.0.0"
+  }
+}

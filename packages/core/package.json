@@ -1,0 +1,33 @@
+{
+  "name": "@better-scroll/core",
+  "version": "2.0.0",
+  "description": "Minimalistic core scrolling for BetterScroll, it is pure and tiny",
+  "author": {
+    "name": "huangyi",
+    "email": "ustbhuangyi@gmail.com"
+  },
+  "main": "dist/core.js",
+  "module": "dist/core.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ustbhuangyi/better-scroll.git",
+    "directory": "packages/core"
+  },
+  "dependencies": {
+    "@better-scroll/shared-utils": "^2.0.0"
+  }
+}

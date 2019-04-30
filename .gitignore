@@ -6,3 +6,6 @@ node_modules/
 coverage/
 .rpt2_cache
 .vscode/
+
+yarn-debug.log*
+yarn-error.log*
