@@ -1,0 +1,29 @@
+{
+  "name": "@better-scroll/pull-up",
+  "version": "2.0.0",
+  "description": "pull up to load more data",
+  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "main": "dist/pull-up.min.js",
+  "module": "dist/pull-up.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios",
+    "pull-up"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
+    "directory": "packages/pull-up"
+  }
+}
