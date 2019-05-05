@@ -1,13 +1,14 @@
-import BScroll from '../../index'
-import { staticImplements, PluginCtor } from '../type'
-import EventRegister from '../../base/EventRegister'
-import { preventDefaultExceptionFn } from '../../util/dom'
-import { fixInboundValue } from '../../util/lang'
-import EventEmitter from '../../base/EventEmitter'
-import { Direction } from '../../enums/direction'
-import { EnforceOrder } from '@/enums/enforce-order'
-import { warn } from '@/util'
-
+import BScroll from '@better-scroll/core'
+import EventRegister from '@better-scroll/core/src/base/EventRegister'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { Direction } from '@better-scroll/core/src/enums/direction'
+import { EnforceOrder } from '@better-scroll/core/src/enums/enforce-order'
+import {
+  warn,
+  preventDefaultExceptionFn,
+  fixInboundValue
+} from '@better-scroll/shared-utils'
+import { Options } from '@better-scroll/core/src/Options'
 export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined
 export interface MouseWheelConfig {
   speed?: number
@@ -17,7 +18,7 @@ export interface MouseWheelConfig {
   debounce?: number
 }
 
-declare module '../../Options' {
+declare module '@better-scroll/core/src/Options' {
   interface Options {
     /**
      * for mouse wheel
@@ -40,8 +41,6 @@ interface CompatibleWheelEvent extends WheelEvent {
   readonly wheelDeltaY: number
   readonly wheelDelta: number
 }
-
-@staticImplements<PluginCtor>()
 export default class MouseWheel {
   static pluginName = 'mouseWheel'
   static enforce = EnforceOrder.Pre
@@ -247,7 +246,7 @@ export default class MouseWheel {
     // scrollEnd event will be triggered in every calling of scrollTo when easeTime is too small
     // easeTime needs to be greater than 100
     if (easeTime < SAFE_EASETIME) {
-      warn(`easeTime should be greater than 100. 
+      warn(`easeTime should be greater than 100.
       If mouseWheel easeTime is too small, scrollEnd will be triggered many times.`)
     }
     return easeTime

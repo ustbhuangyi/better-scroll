@@ -3,7 +3,7 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn
-} from '../util'
+} from '@better-scroll/shared-utils'
 import { Probe } from '../enums/probe'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
@@ -71,8 +71,11 @@ export default class Transition extends Base {
       this.transitionTime()
       this.translate({ x, y })
       this.setForceStopped(true)
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, { x, y }))
+
+      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, { x, y })) {
         return
+      }
+
       this.hooks.trigger(this.hooks.eventTypes.forceStop, { x, y })
     }
   }

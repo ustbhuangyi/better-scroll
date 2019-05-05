@@ -1,9 +1,9 @@
-import BScroll from '../../index'
+import BScroll from '@better-scroll/core'
 import { Direction } from './const'
-import { style } from '../../util/dom'
+import { style } from '@better-scroll/shared-utils/src/dom'
 import EventHandler from './event-handler'
-import { TranslaterPoint } from '../../translater'
-import EventEmitter from '@/base/EventEmitter'
+import { TranslaterPoint } from '@better-scroll/core/src/translater'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 export interface IndicatorOption {
   wrapper: HTMLElement
@@ -176,7 +176,7 @@ export default class Indicator {
     )
 
     let maxPos = wrapperSize - initialSize
-    // 这里 sizeRatio 是个负值
+    // sizeRatio is negative
     let sizeRatio = maxPos / maxScroll
 
     return {

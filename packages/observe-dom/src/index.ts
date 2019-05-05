@@ -1,9 +1,13 @@
-import BScroll from '../../index'
-import EventEmitter from '../../base/EventEmitter'
-import { getRect } from '../../util/dom'
-import { staticImplements, PluginCtor } from '../type'
+import BScroll from '@better-scroll/core'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { getRect } from '@better-scroll/shared-utils/src/dom'
+import { Options } from '@better-scroll/core/src/Options'
 
-@staticImplements<PluginCtor>()
+declare module '@better-scroll/core/src/Options' {
+  interface Options {
+    observeDOM?: boolean
+  }
+}
 export default class ObserveDOM {
   static pluginName = 'observeDOM'
   private observer: MutationObserver

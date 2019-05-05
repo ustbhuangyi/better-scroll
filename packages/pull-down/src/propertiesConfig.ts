@@ -1,18 +1,27 @@
-export default [
+const sourcePrefix = 'plugins.pullDownRefresh'
+
+const propertiesMap = [
   {
     key: 'finishPullDown',
-    sourceKey: 'finish'
+    name: 'finish'
   },
   {
     key: 'openPullDown',
-    sourceKey: 'open'
+    name: 'open'
   },
   {
     key: 'closePullDown',
-    sourceKey: 'close'
+    name: 'close'
   },
   {
     key: 'autoPullDownRefresh',
-    sourceKey: 'autoPull'
+    name: 'autoPull'
   }
 ]
+
+export default propertiesMap.map(item => {
+  return {
+    key: item.key,
+    sourceKey: `${sourcePrefix}.${item.name}`
+  }
+})

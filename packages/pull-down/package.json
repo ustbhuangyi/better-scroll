@@ -6,7 +6,9 @@
   "main": "dist/pull-down.min.js",
   "module": "dist/pull-down.esm.js",
   "typings": "dist/types/index.d.ts",
-  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
   },
@@ -24,8 +26,5 @@
     "type": "git",
     "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
     "directory": "packages/pull-down"
-  },
-  "dependencies": {
-    "@better-scroll/shared-utils": "^2.0.0"
   }
 }

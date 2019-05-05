@@ -1,12 +1,16 @@
-import BScroll from '../../index'
-import { fixInboundValue } from '../../util/lang'
-import { prepend, removeChild } from '../../util/dom'
-import { ease, EaseItem } from '../../util/ease'
+import BScroll from '@better-scroll/core'
+import {
+  fixInboundValue,
+  prepend,
+  removeChild,
+  ease,
+  EaseItem
+} from '@better-scroll/shared-utils'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
-import { staticImplements, PluginCtor } from '../type'
-import EventEmitter from '../../base/EventEmitter'
-import { Direction } from '@/enums'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { Direction } from '@better-scroll/core/src/enums/direction'
+import { Options } from '@better-scroll/core/src/Options'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {
@@ -24,13 +28,12 @@ export interface SlideConfig {
   disableSetWidth: boolean
 }
 
-declare module '../../Options' {
+declare module '@better-scroll/core/src/Options' {
   interface Options {
     slide?: slideOptions
   }
 }
 
-@staticImplements<PluginCtor>()
 export default class Slide {
   private page: SlidePage
   private slideOpt: Partial<SlideConfig>

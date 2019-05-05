@@ -5,19 +5,24 @@ import {
   getElement,
   warn,
   isUndef,
-  propertiesProxy,
-  bubbling
+  propertiesProxy
 } from '@better-scroll/shared-utils'
+import { bubbling } from './utils/bubbling'
 import { propertiesConfig } from './propertiesConfig'
-import { PluginCtor } from './plugins/type'
 import { EnforceOrder } from './enums/enforce-order'
+
+interface PluginCtor {
+  pluginName: string
+  enforce?: EnforceOrder
+  new (scroll: BScroll): any
+}
 
 interface PluginItem {
   name: string
   enforce?: EnforceOrder.Pre | EnforceOrder.Post
   ctor: PluginCtor
 }
-interface PluginSet {
+interface PluginsMap {
   [key: string]: boolean
 }
 interface PropertyConfig {
@@ -27,8 +32,8 @@ interface PropertyConfig {
 
 export default class BScroll extends EventEmitter {
   static readonly version: string = '2.0.0'
-  static usePluginArray: PluginItem[] = []
-  static usePluginSet: PluginSet = {}
+  static plugins: PluginItem[] = []
+  static pluginsMap: PluginsMap = {}
   scroller: Scroller
   options: Options
   hooks: EventEmitter
@@ -38,28 +43,27 @@ export default class BScroll extends EventEmitter {
 
   static use(ctor: PluginCtor) {
     const name = ctor.pluginName
-    const installed = BScroll.usePluginArray.some(
-      plugin => ctor === plugin.ctor
-    )
-    if (installed) return
+    const installed = this.plugins.some(plugin => ctor === plugin.ctor)
+    if (installed) return this
     if (isUndef(name)) {
       warn(
         `Plugin Class must specify plugin's name in static property by 'pluginName' field.`
       )
-      return
+      return this
     }
-    if (BScroll.usePluginSet[name]) {
+    if (this.pluginsMap[name]) {
       warn(
         `This plugin has been registered, maybe you need change plugin's name`
       )
-      return
+      return this
     }
-    BScroll.usePluginSet[name] = true
-    BScroll.usePluginArray.push({
+    this.pluginsMap[name] = true
+    this.plugins.push({
       name,
       enforce: ctor.enforce,
       ctor: ctor
     })
+    return this
   }
 
   constructor(el: HTMLElement | string, options?: Partial<Options>) {
@@ -118,7 +122,7 @@ export default class BScroll extends EventEmitter {
 
   private applyPlugins() {
     const options = this.options
-    BScroll.usePluginArray
+    ;(this.constructor as typeof BScroll).plugins
       .sort((a, b) => {
         const enforeOrderMap = {
           [EnforceOrder.Pre]: -1,

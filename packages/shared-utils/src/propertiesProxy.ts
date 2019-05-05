@@ -1,6 +1,6 @@
 const noop = function(val?: any) {}
 
-interface traversedObject {
+interface TraversedObject {
   [key: string]: any
 }
 const sharedPropertyDefinition: PropertyDescriptor = {
@@ -10,7 +10,7 @@ const sharedPropertyDefinition: PropertyDescriptor = {
   set: noop
 }
 
-const getProperty = (obj: traversedObject, key: string) => {
+const getProperty = (obj: TraversedObject, key: string) => {
   const keys = key.split('.')
   for (let i = 0; i < keys.length - 1; i++) {
     obj = obj[keys[i]]
@@ -26,7 +26,7 @@ const getProperty = (obj: traversedObject, key: string) => {
   }
 }
 
-const setProperty = (obj: traversedObject, key: string, value: any) => {
+const setProperty = (obj: TraversedObject, key: string, value: any) => {
   const keys = key.split('.')
   let temp
   for (let i = 0; i < keys.length - 1; i++) {

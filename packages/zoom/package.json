@@ -1,7 +1,7 @@
 {
   "name": "@better-scroll/zoom",
   "version": "2.0.0",
-  "description": "a BetterScroll plugin to implement image preview",
+  "description": "a BetterScroll plugin to implement image previewer",
   "author": {
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
@@ -9,6 +9,9 @@
   "main": "dist/zoom.min.js",
   "module": "dist/zoom.esm.js",
   "typings": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
   },
@@ -26,8 +29,5 @@
     "type": "git",
     "url": "git@github.com:ustbhuangyi/better-scroll.git",
     "directory": "packages/zoom"
-  },
-  "dependencies": {
-    "@better-scroll/shared-utils": "^2.0.0"
   }
 }

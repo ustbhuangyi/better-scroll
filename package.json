@@ -1,78 +1,84 @@
 {
-  "name": "better-scroll",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "dev": "webpack-dev-server --config ./build/example/webpack.dev.conf.js --host 0.0.0.0 --port 8932",
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "build": "node build/build.js",
-    "build:plugin": "node build/build.js --special plugins",
-    "build:demo": "node build/build-demo.js",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "cm": "git-cz",
-    "test:prod": "npm run lint && npm run test -- --no-cache"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "homepage": "https://github.com/ustbhuangyi/better-scroll",
-  "keywords": [
-    "scroll",
-    "iscroll",
-    "javascript",
-    "typescript",
-    "ios"
-  ],
-  "devDependencies": {
-    "@commitlint/cli": "^7.1.2",
-    "@commitlint/config-conventional": "^7.1.2",
-    "commitizen": "^3.0.0",
-    "cz-conventional-changelog": "^2.1.0",
-    "husky": "^1.0.1",
-    "lerna": "^3.13.4",
-    "lint-staged": "^8.0.0",
-    "prettier": "^1.14.3",
-    "@types/jest": "^23.3.2",
-    "@types/node": "^10.12.18",
-    "coveralls": "^3.0.2",
-    "jest": "^24.5.0",
-    "jest-config": "^23.6.0",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.67.0",
-    "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.18.0",
-    "rollup-plugin-uglify": "^6.0.1",
-    "ts-jest": "^23.10.2",
-    "ts-loader": "^5.3.3",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.0.3",
-    "zlib": "^1.0.5"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
+    "name": "better-scroll",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "bootstrap": "lerna bootstrap",
+        "docs:dev": "lerna run --stream --scope vuepress-docs docs:dev",
+        "docs:build": "lerna run --stream --scope vuepress-docs docs:build",
+        "docs:release": "lerna run --stream --scope vuepress-docs docs:release",
+        "vue:dev": "lerna run --stream --scope examples vue:dev",
+        "vue:build": "lerna run --stream --scope examples vue:build",
+        "dev": "webpack-dev-server --config ./build/example/webpack.dev.conf.js --host 0.0.0.0 --port 8932",
+        "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+        "build": "node scripts/build.js",
+        "build:demo": "node build/build-demo.js",
+        "test": "jest --coverage",
+        "test:watch": "jest --coverage --watch",
+        "cm": "git-cz",
+        "test:prod": "npm run lint && npm run test -- --no-cache"
+    },
+    "lint-staged": {
+        "*.ts": [
+            "prettier --write",
+            "git add"
+        ]
+    },
+    "prettier": {
+        "semi": false,
+        "singleQuote": true
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    },
+    "homepage": "https://github.com/ustbhuangyi/better-scroll",
+    "keywords": [
+        "scroll",
+        "iscroll",
+        "javascript",
+        "typescript",
+        "ios"
+    ],
+    "devDependencies": {
+        "@commitlint/cli": "^7.1.2",
+        "@commitlint/config-conventional": "^7.1.2",
+        "@types/jest": "^23.3.2",
+        "@types/node": "^10.12.18",
+        "commitizen": "^3.0.0",
+        "coveralls": "^3.0.2",
+        "cz-conventional-changelog": "^2.1.0",
+        "execa": "^1.0.0",
+        "husky": "^1.0.1",
+        "inquirer": "^6.3.1",
+        "jest": "^24.5.0",
+        "jest-config": "^23.6.0",
+        "lerna": "^3.13.4",
+        "lint-staged": "^8.0.0",
+        "prettier": "^1.14.3",
+        "rimraf": "^2.6.2",
+        "rollup": "^1.10.1",
+        "rollup-plugin-commonjs": "^9.1.8",
+        "rollup-plugin-json": "^3.1.0",
+        "rollup-plugin-node-resolve": "^3.4.0",
+        "rollup-plugin-sourcemaps": "^0.4.2",
+        "rollup-plugin-typescript2": "0.21.0",
+        "rollup-plugin-uglify": "^6.0.1",
+        "ts-jest": "^23.10.2",
+        "ts-loader": "^5.3.3",
+        "ts-node": "^7.0.1",
+        "tslint": "^5.11.0",
+        "tslint-config-prettier": "^1.15.0",
+        "tslint-config-standard": "^8.0.1",
+        "typescript": "^3.0.3",
+        "zlib": "^1.0.5"
+    },
+    "config": {
+        "commitizen": {
+            "path": "cz-conventional-changelog"
+        }
     }
-  }
 }

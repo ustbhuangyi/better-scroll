@@ -1,5 +1,5 @@
-import { getRect } from '../../util/dom'
-import BScroll from '../../index'
+import { getRect } from '@better-scroll/shared-utils'
+import BScroll from '@better-scroll/core'
 import { SlideConfig } from './index'
 
 interface PagePos {

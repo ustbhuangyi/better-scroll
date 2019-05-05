@@ -138,7 +138,7 @@ function buildEntry(config, next) {
     bundle.write(config.output).then((output) => {
       const code = output.code
       function report(extra) {
-        console.log(blue(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
+        console.log(chalk.blue(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
         next()
       }
       if (isProd) {
@@ -155,10 +155,6 @@ function buildEntry(config, next) {
 
 function getSize(code) {
   return (code.length / 1024).toFixed(2) + 'kb'
-}
-
-function blue(str) {
-  return '\x1b[1m\x1b[34m' + str + '\x1b[39m\x1b[22m'
 }
 
 function logError(e) {
@@ -185,8 +181,8 @@ program
 
 const buildHandlerType = program.special || 'all'
 clearFs()
-const handlerFn = 
-  buildHandler[buildHandlerType] ? 
+const handlerFn =
+  buildHandler[buildHandlerType] ?
     buildHandler[buildHandlerType] :
     buildHandler['specialName']
 handlerFn(buildHandlerType)

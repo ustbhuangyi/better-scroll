@@ -6,7 +6,9 @@
   "main": "dist/observe-dom.min.js",
   "module": "dist/observe-dom.esm.js",
   "typings": "dist/types/index.d.ts",
-  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
   },
@@ -23,8 +25,5 @@
     "type": "git",
     "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
     "directory": "packages/observe-dom"
-  },
-  "dependencies": {
-    "@better-scroll/shared-utils": "^2.0.0"
   }
 }

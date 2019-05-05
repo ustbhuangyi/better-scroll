@@ -1,9 +1,8 @@
-import EventRegister from '../../base/EventRegister'
-import BScroll from '../../index'
-import { TouchEvent } from '../../util/Touch'
+import EventRegister from '@better-scroll/core/src/base/EventRegister'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import BScroll from '@better-scroll/core'
+import { TouchEvent } from '@better-scroll/shared-utils/src/Touch'
 import Indicator from './indicator'
-import { Direction } from './const'
-import EventEmitter from '../../base/EventEmitter'
 
 interface EventHandlerOptions {
   disableMouse: boolean | ''

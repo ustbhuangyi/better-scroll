@@ -1,4 +1,4 @@
-import { style, safeCSSStyleDeclaration } from '../util'
+import { style, safeCSSStyleDeclaration } from '@better-scroll/shared-utils'
 import EventEmitter from '../base/EventEmitter'
 export interface TranslaterPoint {
   x: number

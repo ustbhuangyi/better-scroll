@@ -1,6 +1,5 @@
-import { fixInboundValue, extend } from '../../util/lang'
-import { warn } from '../../util/debug'
-import BScroll from '../../index'
+import { fixInboundValue, extend, warn } from '@better-scroll/shared-utils'
+import BScroll from '@better-scroll/core'
 import { SlideConfig } from './index'
 import PagesPos from './PagesPos'
 

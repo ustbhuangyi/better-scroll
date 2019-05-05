@@ -6,6 +6,9 @@
 	"main": "dist/shared-utils.min.js",
 	"module": "dist/shared-utils.esm.js",
 	"typings": "dist/types/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
 	"bugs": {
 		"url": "https://github.com/ustbhuangyi/better-scroll/issues"
 	},
@@ -19,7 +22,7 @@
 	],
 	"repository": {
 		"type": "git",
-    "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
-    "directory": "packages/shared-utils"
+		"url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
+		"directory": "packages/shared-utils"
 	}
 }

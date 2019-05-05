@@ -1,12 +1,18 @@
-import BScroll from '../../index'
-import EventEmitter from '../../base/EventEmitter'
+import BScroll from '@better-scroll/core'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import propertiesConfig from './propertiesConfig'
-import { getDistance, isUndef, fixInboundValue } from '../../util/lang'
-import { offsetToBody, getRect, DOMRect } from '../../util/dom'
-import { style } from '../../util'
-import { staticImplements, PluginCtor } from '../type'
-import { TranslaterPoint } from '../../translater'
-import Behavior from '../../scroller/Behavior'
+import {
+  getDistance,
+  isUndef,
+  fixInboundValue,
+  offsetToBody,
+  getRect,
+  DOMRect,
+  style
+} from '@better-scroll/shared-utils'
+import { TranslaterPoint } from '@better-scroll/core/src/translater'
+import Behavior from '@better-scroll/core/src/scroller/Behavior'
+import { Options } from '@better-scroll/core/src/Options'
 
 interface ZoomConfig {
   start: number
@@ -14,7 +20,7 @@ interface ZoomConfig {
   max: number
 }
 
-declare module '../../Options' {
+declare module '@better-scroll/core/src/Options' {
   interface Options {
     zoom?: ZoomConfig
   }
@@ -30,7 +36,6 @@ interface ScrollBoundary {
   y: [number, number]
 }
 
-@staticImplements<PluginCtor>()
 export default class Zoom {
   static pluginName = 'zoom'
   origin: Point

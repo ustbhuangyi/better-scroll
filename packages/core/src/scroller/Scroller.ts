@@ -3,10 +3,13 @@ import EventEmitter from '../base/EventEmitter'
 import EventRegister from '../base/EventRegister'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
-import { Options as BScrollOptions, bounceConfig } from '../Options'
+import { Options as BScrollOptions, BounceConfig } from '../Options'
 import Behavior from './Behavior'
 import ScrollerActions from './Actions'
-import { createActionsHandlerOptions, createBehaviorOptions } from './options'
+import {
+  createActionsHandlerOptions,
+  createBehaviorOptions
+} from './createOptions'
 import { Probe } from '../enums'
 import {
   getElement,
@@ -22,9 +25,9 @@ import {
   tap,
   isUndef,
   getNow,
-  bubbling,
   cancelAnimationFrame
-} from '../util'
+} from '@better-scroll/shared-utils'
+import { bubbling } from '../utils/bubbling'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -69,7 +72,7 @@ export default class Scroller {
     this.options = options
 
     const { left = true, right = true, top = true, bottom = true } = this
-      .options.bounce as bounceConfig
+      .options.bounce as BounceConfig
     // direction X
     this.scrollBehaviorX = new Behavior(
       wrapper,

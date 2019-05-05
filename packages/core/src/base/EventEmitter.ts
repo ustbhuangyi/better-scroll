@@ -1,4 +1,4 @@
-import { warn } from '../util/debug'
+import { warn } from '@better-scroll/shared-utils'
 
 interface EventsMap {
   [name: string]: [Function, Object][]
@@ -108,7 +108,9 @@ export default class EventEmitter {
     const inTypes = types[type] === type
     if (!inTypes) {
       warn(
-        `EventEmitter has used unknown event type: "${type}", should be oneof ${types}`
+        `EventEmitter has used unknown event type: "${type}", should be oneof [${Object.keys(
+          types
+        )}]`
       )
     }
   }

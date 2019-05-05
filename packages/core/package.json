@@ -6,6 +6,9 @@
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/core.js",
   "module": "dist/core.esm.js",
   "typings": "dist/types/index.d.ts",
@@ -26,8 +29,5 @@
     "type": "git",
     "url": "git@github.com:ustbhuangyi/better-scroll.git",
     "directory": "packages/core"
-  },
-  "dependencies": {
-    "@better-scroll/shared-utils": "^2.0.0"
   }
 }

@@ -7,5 +7,6 @@ coverage/
 .rpt2_cache
 .vscode/
 
+dist/
 yarn-debug.log*
 yarn-error.log*

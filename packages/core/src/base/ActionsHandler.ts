@@ -6,7 +6,7 @@ import {
   // dom
   preventDefaultExceptionFn,
   eventTypeMap
-} from '../util'
+} from '@better-scroll/shared-utils'
 
 import { EventType, MouseButton } from '../enums'
 
@@ -139,8 +139,9 @@ export default class ActionsHandler {
         deltaY,
         e
       })
-    )
+    ) {
       return
+    }
 
     // auto end when out of wrapper
     let scrollLeft =

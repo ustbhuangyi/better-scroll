@@ -6,7 +6,11 @@ import EventEmitter from '../base/EventEmitter'
 import { Options as BScrollOptions } from '../Options'
 import { Probe } from '../enums'
 import { TranslaterPoint } from '../translater'
-import { preventDefaultExceptionFn, TouchEvent, getNow } from '../util'
+import {
+  preventDefaultExceptionFn,
+  TouchEvent,
+  getNow
+} from '@better-scroll/shared-utils'
 
 export default class ScrollerActions {
   hooks: EventEmitter

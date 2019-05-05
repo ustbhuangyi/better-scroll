@@ -1,5 +1,9 @@
 import EventEmitter from '../base/EventEmitter'
-import { EaseFn, safeCSSStyleDeclaration, cancelAnimationFrame } from '../util'
+import {
+  EaseFn,
+  safeCSSStyleDeclaration,
+  cancelAnimationFrame
+} from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 
 export type Displacement = [number, number]

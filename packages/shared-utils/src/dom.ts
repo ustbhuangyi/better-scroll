@@ -1,6 +1,5 @@
 import { inBrowser, isWeChatDevTools } from './env'
 import { extend } from './lang'
-import { EventType } from '../enums/event-type'
 
 export type safeCSSStyleDeclaration = {
   [key: string]: string
@@ -140,13 +139,13 @@ export const eventTypeMap: {
   mousemove: number
   mouseup: number
 } = {
-  touchstart: EventType.Touch,
-  touchmove: EventType.Touch,
-  touchend: EventType.Touch,
+  touchstart: 1,
+  touchmove: 1,
+  touchend: 1,
 
-  mousedown: EventType.Mouse,
-  mousemove: EventType.Mouse,
-  mouseup: EventType.Mouse
+  mousedown: 2,
+  mousemove: 2,
+  mouseup: 2
 }
 
 export function getRect(el: HTMLElement): DOMRect {

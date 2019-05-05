@@ -1,9 +1,4 @@
-import {
-  TouchEvent,
-  // dom
-  addEvent,
-  removeEvent
-} from '../util'
+import { addEvent, removeEvent } from '@better-scroll/shared-utils'
 
 interface EventMap {
   name: string

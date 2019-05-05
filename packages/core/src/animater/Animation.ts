@@ -5,7 +5,7 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn
-} from '../util'
+} from '@better-scroll/shared-utils'
 import { Probe } from '../enums/probe'
 
 export default class Animation extends Base {
@@ -81,7 +81,11 @@ export default class Animation extends Base {
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) return
+
+      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
+        return
+      }
+
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
     }
   }
