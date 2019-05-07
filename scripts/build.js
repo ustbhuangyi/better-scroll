@@ -8,6 +8,10 @@ const rimraf = require('rimraf')
 const typescript = require('rollup-plugin-typescript2')
 const uglify = require('rollup-plugin-uglify').uglify
 const execa = require('execa')
+const ora = require('ora')
+const spinner = ora({
+  prefixText: `${chalk.green('\n[building tasks]')}`
+})
 
 function getPackagesName () {
   let ret
@@ -82,8 +86,8 @@ const buildType = [
 
 function generateBuildConfigs(packagesName) {
   const result = []
-  buildType.forEach(type => {
-    packagesName.forEach((name) => {
+  packagesName.forEach(name => {
+    buildType.forEach((type) => {
       let config = {
         input: resolve(`packages/${name}/src/index.ts`),
         output: {
@@ -96,8 +100,13 @@ function generateBuildConfigs(packagesName) {
       }
       // rollup will valiate config properties of config own and output a warning
       // put packageName in prototype to ignore warning
-      Object.defineProperty(config, 'packageName', {
-        value: name
+      Object.defineProperties(config, {
+        'packageName': {
+          value: name
+        },
+        'ext': {
+          value: type.ext
+        }
       })
       result.push(config)
     })
@@ -134,14 +143,15 @@ function build(builds) {
 
 function buildEntry(config, curIndex, next) {
   const isProd = /min\.js$/.test(config.output.file)
+
+  spinner.start(`${config.packageName}${config.ext} is buiding now. \n`)
+
   rollup.rollup(config).then((bundle) => {
     bundle.write(config.output).then(({ output }) => {
       const code = output[0].code
-      // since we need bundle code for three types
-      // just generate .d.ts only once
-      if (curIndex % 3 === 0) {
-        copyDTSFiles(config.packageName)
-      }
+
+      spinner.succeed(`${config.packageName}${config.ext} building has ended.`)
+
       function report(extra) {
         console.log(chalk.magenta(path.relative(process.cwd(), config.output.file)) + ' ' + getSize(code) + (extra || ''))
         next()
@@ -149,10 +159,17 @@ function buildEntry(config, curIndex, next) {
       if (isProd) {
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)
-          report(' (gzipped: ' + getSize(zipped) + ')')
+          let words =  `(gzipped: ${chalk.magenta(getSize(zipped))})`
+          report(words)
         })
       } else {
         report()
+      }
+
+      // since we need bundle code for three types
+      // just generate .d.ts only once
+      if (curIndex % 3 === 0) {
+        copyDTSFiles(config.packageName)
       }
     })
   }).catch((e) => {
