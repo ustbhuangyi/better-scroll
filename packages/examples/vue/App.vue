@@ -46,6 +46,10 @@
     {
       name: 'picker',
       path: '/picker/'
+    },
+    {
+      name: 'pullup',
+      path: '/pullup/'
     }
   ]
   export default {
