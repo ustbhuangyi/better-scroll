@@ -54,6 +54,10 @@
     {
       name: 'pulldown',
       path: '/pulldown/'
+    },
+    {
+      name: 'scrollbar',
+      path: '/scrollbar/'
     }
   ]
   export default {
