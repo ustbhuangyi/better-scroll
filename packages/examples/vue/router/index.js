@@ -6,6 +6,7 @@ import Zoom from 'vue-example/pages/zoom-entry'
 import Slide from 'vue-example/pages/slide-entry'
 import Picker from 'vue-example/pages/picker-entry'
 import Pullup from 'vue-example/pages/pullup-entry'
+import PullDown from 'vue-example/pages/pulldown-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -77,6 +78,10 @@ export default new Router({
     {
       path: '/pullup',
       component: Pullup
+    },
+    {
+      path: '/pulldown',
+      component: PullDown
     }
   ]
 })
