@@ -45,8 +45,11 @@
   padding: 0 10px
   border: 1px solid #ccc
   overflow: hidden
+.pullup-list
+  padding: 0
 .scrollbar-list-item
   padding: 10px 0
+  list-style: none
   border-bottom: 1px solid #ccc
 .scrollbar-wrapper
   padding: 20px

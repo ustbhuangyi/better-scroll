@@ -4,13 +4,13 @@
       <div class="pulldown-scroller">
         <div class="pulldown-wrapper">
           <div v-show="beforePullDown">
-            <span>继续下拉更新数据</span>
+            <span>Pull Down and refresh</span>
           </div>
           <div v-show="!beforePullDown">
             <div v-show="isPullingDown">
-              <span>努力加载中...</span>
+              <span>Loading...</span>
             </div>
-            <div v-show="!isPullingDown"><span>加载成功</span></div>
+            <div v-show="!isPullingDown"><span>Refresh success</span></div>
           </div>
         </div>
         <ul class="pulldown-list">
@@ -122,14 +122,18 @@
   padding: 0 10px
   border: 1px solid #ccc
   overflow: hidden
+.pulldown-list
+  padding: 0
 .pulldown-list-item
   padding: 10px 0
+  list-style: none
   border-bottom: 1px solid #ccc
 .pulldown-wrapper
   position: absolute
   width: 100%
-  transform: translateY(-100%) translateZ(0)
   padding: 20px
+  box-sizing: border-box
+  transform: translateY(-100%) translateZ(0)
   text-align: center
   color: #999
 </style>

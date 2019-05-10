@@ -9,10 +9,10 @@
         </ul>
         <div class="pullup-wrapper">
           <div v-if="!isPullUpLoad" class="before-trigger">
-            <span class="pullup-txt">上滑加载更多</span>
+            <span class="pullup-txt">Pull up and load more</span>
           </div>
           <div v-else class="after-trigger">
-            <span class="pullup-txt">努力加载中...</span>
+            <span class="pullup-txt">Loading...</span>
           </div>
         </div>
       </div>
@@ -85,8 +85,11 @@
   padding: 0 10px
   border: 1px solid #ccc
   overflow: hidden
+.pullup-list
+  padding: 0
 .pullup-list-item
   padding: 10px 0
+  list-style: none
   border-bottom: 1px solid #ccc
 .pullup-wrapper
   padding: 20px
