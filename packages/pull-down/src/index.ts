@@ -54,7 +54,7 @@ export default class PullDown {
     ) {
       return false
     }
-    // TODO preventClick ? 处理 click 事件相关的逻辑
+
     if (!this.pulling) {
       this.pulling = true
       this.scroll.trigger('pullingDown')
@@ -62,6 +62,7 @@ export default class PullDown {
       this.originalMinScrollY = this.scroll.minScrollY
       this.scroll.minScrollY = stop
     }
+
     this.scroll.scrollTo(
       this.scroll.x,
       stop,
