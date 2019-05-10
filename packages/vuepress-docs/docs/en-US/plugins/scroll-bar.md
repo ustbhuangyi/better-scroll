@@ -23,6 +23,7 @@ new BScroll('.bs-wrap', {
   scrollbar: true
 })
 ```
+
 ## Demo
 
 <demo qrcode-url="scrollbar/">
@@ -49,8 +50,8 @@ The default is false. When set to true or an Object, pull-up loading can be turn
 
 ## API
 
-无
+None
 
 ## Hooks
 
-无
+None

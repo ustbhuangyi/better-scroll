@@ -58,7 +58,7 @@ The default is false. When set to true or an Object, pull-up loading can be turn
 
 ::: warning
 
-Note: **The `finishPullDown()` method should be called at the end of the callback function each time a `pullingDown` event is triggered. The next `pullingDown` event will not fire until the `finishPullDown()` method is called. **
+Note: **The `finishPullDown()` method should be called at the end of the callback function each time a `pullingDown` event is triggered. The next `pullingDown` event will not fire until the `finishPullDown()` method is called.**
 
 :::
 
@@ -79,4 +79,4 @@ Note: **The `finishPullDown()` method should be called at the end of the callbac
 ### `pullingDown`
 
 - **Parameters**: None
-- **触发时机**：A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
+- **Trigger**：A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
