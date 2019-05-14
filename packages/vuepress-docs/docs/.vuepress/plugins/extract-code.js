@@ -4,17 +4,17 @@ function extractCodeFromVueSFC(md, options = {}) {
     const root = options.root || path.join(process.cwd(), '../')
 
     md.core.ruler.after('block', 'extract-code', function parser(state) {
-        var tokens = state.tokens,
-            tok, i, l;
+        let tokens = state.tokens,
+            tok, i;
 
         // modify html_block
-        for (i = 0, l = tokens.length; i < l; i++) {
+        for (i = 0; i < tokens.length; i++) {
             tok = tokens[i];
             if (tok.type === 'html_block' && isDemoBlock(tok)) {
                 const handledTokens = getHandledTokens(tok)
                 if (handledTokens.length) {
                     tokens.splice(i, 1, ...handledTokens)
-                    return true
+                    i += handledTokens.length - 1
                 }
             }
         }
@@ -22,10 +22,7 @@ function extractCodeFromVueSFC(md, options = {}) {
         function isDemoBlock(token) {
             let content = token.content
             let regex = /<\/demo>$/
-            if (regex.test(content.trim())) {
-                return true
-            }
-            return false
+            return regex.test(content.trim())
         }
 
         function getHandledTokens(htmlToken, toks) {
