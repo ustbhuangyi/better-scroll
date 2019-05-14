@@ -1,6 +1,6 @@
 ---
 home: true
-heroText: Hero 标题
+heroText: BetterScroll docs
 tagline: Hero 副标题
 actionText: 快速上手 →
 actionLink: /zh-CN/guide/

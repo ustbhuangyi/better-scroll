@@ -51,22 +51,22 @@ new BScroll('.bs-wrap', {
 
 ## 示例
 
-:::warning
-zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
-:::
+  :::warning
+  zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
+  :::
 
-<demo qrcode-url="zoom/">
-  <template slot="code-template">
-    <<< @/examples/vue/components/zoom/default.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/zoom/default.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/zoom/default.vue?style
-  </template>
-  <zoom-default slot="demo"></zoom-default>
-</demo>
+  <demo qrcode-url="zoom/">
+    <template slot="code-template">
+      <<< @/examples/vue/components/zoom/default.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/zoom/default.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/zoom/default.vue?style
+    </template>
+    <zoom-default slot="demo"></zoom-default>
+  </demo>
 
 ## 配置
 

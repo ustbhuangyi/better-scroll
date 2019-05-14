@@ -2,7 +2,7 @@
 
 ## 介绍
 
-  pullup 插件为 BetterScroll 提供了监测上拉动作的能力。当成功监测到一次上拉动作时，会触发 'pullingUp' 事件。通常用于实现列表/页面滚动到底部时，上拉加载更多数据。
+  pullup 插件为 BetterScroll 提供了监测上拉动作的能力。当成功监测到一次上拉动作时，会触发 `pullingUp` 事件。通常用于实现列表/页面滚动到底部时，上拉加载更多数据。
 
 ## 使用
 
@@ -65,7 +65,7 @@ new BScroll('.bs-wrap', {
   - **介绍**：开启上拉加载功能。如果实例化 BetterScroll 时 `pullUpLoad` 配置项不为 `false`，则不需要调用该方法。
   - **参数**：`config: boolean | { threshold: number }` ，参数为 pullUpLoad 配置项。默认值为 false。
   - **返回值**：无
-  
+
 ### `closePullUp()`
 
   - **介绍**：关闭上拉加载功能。

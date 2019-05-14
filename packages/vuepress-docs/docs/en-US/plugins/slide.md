@@ -8,28 +8,28 @@ This plugin is used for slide or swipe.
 
 To hava slide or swipe effect, you need to import the slide plugin and use it with `BScroll.use()`.
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import Slide from '@better-scroll/slide'
+```js
+  import BScroll from '@better-scroll/core'
+  import Slide from '@better-scroll/slide'
 
-    BScroll.use(Slide)
-  ```
+  BScroll.use(Slide)
+```
 
 You can get the slide effect after setting some configurations which are required by slide plugin.
 
-  ```js
-    new BScroll('.bs-wrap', {
-      scrollX: true,
-      scrollY: false,
-      slide: {
-        loop: true,
-        threshold: 100
-      },
-      momentum: false,
-      bounce: false,
-      stopPropagation: true
-    })
-  ```
+```js
+  new BScroll('.bs-wrap', {
+    scrollX: true,
+    scrollY: false,
+    slide: {
+      loop: true,
+      threshold: 100
+    },
+    momentum: false,
+    bounce: false,
+    stopPropagation: true
+  })
+```
 
 The following are the configuration related to the slide:
 
@@ -52,57 +52,57 @@ The following are the configuration related to the slide:
 
 - horizontal slide
 
-<demo>
-  <template slot="code-template">
-    <<< @/examples/vue/components/slide/banner.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/slide/banner.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/slide/banner.vue?style
-  </template>
-  <slide-banner slot="demo"></slide-banner>
-</demo>
+  <demo>
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/banner.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/banner.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/banner.vue?style
+    </template>
+    <slide-banner slot="demo"></slide-banner>
+  </demo>
 
 - full page slide
 
-<demo>
-  <template slot="code-template">
-    <<< @/examples/vue/components/slide/fullpage.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/slide/fullpage.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/slide/fullpage.vue?style
-  </template>
-  <slide-fullpage slot="demo"></slide-fullpage>
-</demo>
+  <demo>
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/fullpage.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/fullpage.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/fullpage.vue?style
+    </template>
+    <slide-fullpage slot="demo"></slide-fullpage>
+  </demo>
 
 - vertical slide
 
-<demo>
-  <template slot="code-template">
-    <<< @/examples/vue/components/zoom/vertical.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/zoom/vertical.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/zoom/vertical.vue?style
-  </template>
-  <slide-vertical slot="demo"></slide-vertical>
-</demo>
+  <demo>
+    <template slot="code-template">
+      <<< @/examples/vue/components/zoom/vertical.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/zoom/vertical.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/zoom/vertical.vue?style
+    </template>
+    <slide-vertical slot="demo"></slide-vertical>
+  </demo>
 
-::: tip
-Note: The screen will be flicker when the slider switches from one page to another in the case of `useTransition = true`. To fix this, you should add two style for every slider item like the code showed in vertical slider demo.
+  ::: tip
+  Note: The screen will be flicker when the slider switches from one page to another in the case of `useTransition = true`. To fix this, you should add two style for every slider item like the code showed in vertical slider demo.
 
-```css
-transform: translate3d(0,0,0)
-backface-visibility: hidden
-```
-:::
+  ```css
+  transform: translate3d(0,0,0)
+  backface-visibility: hidden
+  ```
+  :::
 
 ## Options
 

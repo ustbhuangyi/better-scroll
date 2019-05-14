@@ -2,7 +2,7 @@
 
 ## 介绍
 
-  pulldown 插件为 BetterScroll 提供了监测下拉动作的能力。当成功监测到一次下拉动作时，会触发 'pullingDown' 事件。通常用于实现列表/页面顶部下拉后加载更多数据的交互。
+  pulldown 插件为 BetterScroll 提供了监测下拉动作的能力。当成功监测到一次下拉动作时，会触发 `pullingDown` 钩子。通常用于实现列表/页面顶部下拉后加载更多数据的交互。
 
 ## 使用
 
@@ -15,7 +15,7 @@ import PullDown from '@better-scroll/pulldown'
 BScroll.use(PullDown)
 ```
 
-然后，实例化 BetterScroll 时需要传入 pulldown 相关配置项 pullUpLoad：
+然后，实例化 BetterScroll 时需要传入 pulldown 相关配置项 pullDownRefresh：
 
 ```js
 new BScroll('.bs-wrap', {
@@ -67,16 +67,16 @@ new BScroll('.bs-wrap', {
   - **介绍**：开启下拉刷新功能。如果实例化 BetterScroll 时 `pullDownRefresh` 配置项不为 `false`，则不需要调用该方法。
   - **参数**：`config: boolean | { threshold: number, stop: number }` ，参数为 pullDownRefresh 配置项。默认值为 false。
   - **返回值**：无
-  
+
 ### `closePullDown()`
 
   - **介绍**：关闭下拉刷新功能。
   - **参数**：无
   - **返回值**：无
 
-## 事件
+## 钩子
 
 ### `pullingDown`
 
 - **参数**：无
-- **触发时机**：当顶部下拉的距离大于 `threshold` 值时，触发一次 `pullingDown` 事件。
+- **触发时机**：当顶部下拉的距离大于 `threshold` 值时，触发一次 `pullingDown` 钩子。

@@ -14,58 +14,58 @@ Existing plugins:
 - [mouse-wheel](./mouse-wheel.html)
 - [observe-dom](./observe-dom.html)
 
-You can write a plugin by yourself to add new feature to bs. If you want do this, please refer to [How to write a plugin](./how-to-write.html).
+You can write a plugin by yourself to add new feature to `bs`. If you want do this, please refer to [How to write a plugin](./how-to-write.html).
 
 ## Use a plugin
 
 Use plugins by calling the `BScroll.use()` global method. This has to be done before you call `new BScroll()`:
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import Plugin from 'somewhere'
+```js
+  import BScroll from '@better-scroll/core'
+  import Plugin from 'somewhere'
 
-    BScroll.use(Plugin)
-    new BScroll(/*arguments*/)
-  ```
+  BScroll.use(Plugin)
+  new BScroll(/*arguments*/)
+```
 
 ## Use a function or property of plugins
 
-Some methods or properties may be exposed in the plugin. These methods or properties are proxied to bs via `Object.defineProperty` method. For example, the `zoomTo` method is provided in the zoom plugin, which you can use in the following ways:
+Some methods or properties may be exposed in the plugin. These methods or properties are proxied to `bs` via `Object.defineProperty` method. For example, the `zoomTo` method is provided in the zoom plugin, which you can use in the following ways:
 
-  ```js
-    const bs = new BScroll('#scroll-wrapper', {
-      freeScroll: true,
-      scrollX: true,
-      scrollY: true,
-      disableMouse: true,
-      useTransition: true,
-      zoom: {
-        start: 1,
-        min: 0.5,
-        max: 2
-      }
-    })
+```js
+  const bs = new BScroll('#scroll-wrapper', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    disableMouse: true,
+    useTransition: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
 
-    bs.zoomTo(1.5, 0, 0) // use zoomTo
-  ```
+  bs.zoomTo(1.5, 0, 0) // use zoomTo
+```
 
 ## Use a hook of plugins
 
-The hooks exposed in the plugin will be delegated to bs. For example, you can listen to the `zoomStart` hook, which is exposed in zoom plugin, in the following way:
+The hooks exposed in the plugin will be delegated to `bs`. For example, you can listen to the `zoomStart` hook, which is exposed in zoom plugin, in the following way:
 
-  ```js
-    const bs = new BScroll('#scroll-wrapper', {
-      freeScroll: true,
-      scrollX: true,
-      scrollY: true,
-      disableMouse: true,
-      useTransition: true,
-      zoom: {
-        start: 1,
-        min: 0.5,
-        max: 2
-      }
-    })
+```js
+  const bs = new BScroll('#scroll-wrapper', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    disableMouse: true,
+    useTransition: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
 
-    bs.on('zoomStart', zoomStartHandler)
-  ```
+  bs.on('zoomStart', zoomStartHandler)
+```

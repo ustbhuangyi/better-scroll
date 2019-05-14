@@ -6,29 +6,29 @@ Add zoom functionality for BetterScroll.
 
 It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import Zoom from '@better-scroll/zoom'
+```js
+  import BScroll from '@better-scroll/core'
+  import Zoom from '@better-scroll/zoom'
 
-    BScroll.use(Zoom)
-  ```
+  BScroll.use(Zoom)
+```
 
 The zoom functionality has been added into BetterScroll after the above steps are completed. But if you want the zoom functionality to take effect, you need to pass in the correct configuration in `options`, for example:
 
-  ```js
-    new BScroll('.bs-wrap', {
-      freeScroll: true,
-      scrollX: true,
-      scrollY: true,
-      disableMouse: true,
-      useTransition: true,
-      zoom: {
-        start: 1,
-        min: 0.5,
-        max: 2
-      }
-    })
-  ```
+```js
+  new BScroll('.bs-wrap', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    disableMouse: true,
+    useTransition: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
+```
 
 The following are the configuration related to the zoom:
 
@@ -50,22 +50,22 @@ The following are the configuration related to the zoom:
 
 ## Demo
 
-:::warning
-The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
-:::
+  :::warning
+  The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
+  :::
 
-<demo>
-  <template slot="code-template">
-    <<< @/examples/vue/components/zoom/default.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/zoom/default.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/zoom/default.vue?style
-  </template>
-  <zoom-default slot="demo"></zoom-default>
-</demo>
+  <demo>
+    <template slot="code-template">
+      <<< @/examples/vue/components/zoom/default.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/zoom/default.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/zoom/default.vue?style
+    </template>
+    <zoom-default slot="demo"></zoom-default>
+  </demo>
 
 ## Options
 

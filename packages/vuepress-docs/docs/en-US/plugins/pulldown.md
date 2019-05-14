@@ -41,11 +41,11 @@ new BScroll('.bs-wrap', {
 
 ## Options pullDownRefresh
 
-The default is false. When set to true or an Object, pull-up loading can be turned on. When the configuration item is an Object, it has the following properties:
+The default is false. When set to true or an Object, pull-down refresh can be turned on. When the configuration item is an Object, it has the following properties:
 
 |Name|Type|Description|Default|
 |----------|:-----:|:-----------|:--------:|
-| threshold | number | Configure the distance from the top to determine if avialable trigger 'pullingDown' | 90 |
+| threshold | number | Configure the distance from the top to determine if available trigger 'pullingDown' | 90 |
 | stop | number | Rebound distance | 40 |
 
 ## API
@@ -67,7 +67,7 @@ Note: **The `finishPullDown()` method should be called at the end of the callbac
   - **Introduction**：Turn on the pull-down refresh function. This method does not need to be called if the `pullDownRefresh` configuration is not `false` when BetterScroll is instantiated.
   - **Parameters**：`config: boolean | { threshold: number, stop: number }`, The parameter is the pullDownRefresh configuration. The default is false.
   - **Returen value**: None
-  
+
 ### `closePullDown()`
 
   - **Introduction**：Turn off pulldown.

@@ -58,49 +58,55 @@ Plugins supported for mouse wheel action are **slide** and **wheel**.
 
 - core scroll
 
-<demo :hide-qrcode="true">
-  <template slot="code-template">
-    <<< @/examples/vue/components/core/mouse-wheel.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/core/mouse-wheel.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/core/mouse-wheel.vue?style
-  </template>
-  <core-mouse-wheel slot="demo"></core-mouse-wheel>
-</demo>
+  <demo :hide-qrcode="true">
+    <template slot="code-template">
+      <<< @/examples/vue/components/core/mouse-wheel.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/core/mouse-wheel.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/core/mouse-wheel.vue?style
+    </template>
+    <core-mouse-wheel slot="demo"></core-mouse-wheel>
+  </demo>
 
 - wheel
 
 - slide
 
-<demo :hide-qrcode="true">
-  <template slot="code-template">
-    <<< @/examples/vue/components/slide/pc.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/slide/pc.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/slide/pc.vue?style
-  </template>
-  <slide-pc slot="demo"></slide-pc>
-</demo>
+  <demo :hide-qrcode="true">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/pc.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/pc.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/pc.vue?style
+    </template>
+    <slide-pc slot="demo"></slide-pc>
+  </demo>
 
 ## Options
 
 ### speed
-The speed of mouse wheel
+
+The speed of mouse wheel.
+
 - Type:number
 - Default: 20
 
 ### invert
+
 The `true` value means that the direction of mouse wheel and the direction of real scroll are opposite.
+
 - Type: boolean
 - Default: false
 
 ### easeTime
+
 The ease time of the rolling animation. The unit is milliseconds.
+
 - Type: number
 - Default: 300

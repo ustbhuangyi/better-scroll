@@ -41,17 +41,9 @@ new BScroll('.bs-wrap', {
 
 ## Options scrollbar
 
-The default is false. When set to true or an Object, pull-up loading can be turned on. When the configuration item is an Object, it has the following properties:
+The default is false. When set to true or an Object, scrollbar can be turned on. When the configuration item is an Object, it has the following properties:
 
 |Name|Type|Description|Default|
 |----------|:-----:|:-----------|:--------:|
 | fade | boolean | When the scroll stops, the scroll bar fades out | true |
 | interactive | boolean | Whether scroll bars can interact | false |
-
-## API
-
-None
-
-## Hooks
-
-None

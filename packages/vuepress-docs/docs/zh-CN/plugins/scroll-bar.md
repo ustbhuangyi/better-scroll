@@ -40,17 +40,9 @@ new BScroll('.bs-wrap', {
 
 ## 配置项 scrollbar
 
-默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启上拉加载。当配置项为一个 Object 时，有如下属性
+默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启滚动条。当配置项为一个 Object 时，有如下属性
 
 |名称|类型|描述|默认值|
 |----------|:-----:|:-----------|:--------:|
 | fade | boolean | 当滚动停止的时候，滚动条渐隐 | true |
 | interactive | boolean | 滚动条是否可以交互 | false |
-
-## 方法
-
-无
-
-## 事件
-
-无

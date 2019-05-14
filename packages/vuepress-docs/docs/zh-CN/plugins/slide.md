@@ -8,28 +8,28 @@
 
 你需要首先引入 slide 插件，并通过全局方法 `BScroll.use()` 使用
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import Slide from '@better-scroll/slide'
+```js
+  import BScroll from '@better-scroll/core'
+  import Slide from '@better-scroll/slide'
 
-    BScroll.use(Slide)
-  ```
+  BScroll.use(Slide)
+```
 
 上面步骤完成后，BScroll 的 `options` 中传入 slide 相关的配置后便可使用 slide。
 
-  ```js
-    new BScroll('.bs-wrap', {
-      scrollX: true,
-      scrollY: false,
-      slide: {
-        loop: true,
-        threshold: 100
-      },
-      momentum: false,
-      bounce: false,
-      stopPropagation: true
-    })
-  ```
+```js
+  new BScroll('.bs-wrap', {
+    scrollX: true,
+    scrollY: false,
+    slide: {
+      loop: true,
+      threshold: 100
+    },
+    momentum: false,
+    bounce: false,
+    stopPropagation: true
+  })
+```
 
 和 slide 相关的配置
 
@@ -57,57 +57,57 @@
 
 - 水平方向下的轮播图
 
-<demo qrcode-url="slide/banner">
-  <template slot="code-template">
-    <<< @/examples/vue/components/slide/banner.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/slide/banner.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/slide/banner.vue?style
-  </template>
-  <slide-banner slot="demo"></slide-banner>
-</demo>
+  <demo qrcode-url="slide/banner">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/banner.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/banner.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/banner.vue?style
+    </template>
+    <slide-banner slot="demo"></slide-banner>
+  </demo>
 
 - 全屏的轮播
 
-<demo qrcode-url="slide/fullpage">
-  <template slot="code-template">
-    <<< @/examples/vue/components/slide/fullpage.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/slide/fullpage.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/slide/fullpage.vue?style
-  </template>
-  <slide-fullpage slot="demo"></slide-fullpage>
-</demo>
+  <demo qrcode-url="slide/fullpage">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/fullpage.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/fullpage.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/fullpage.vue?style
+    </template>
+    <slide-fullpage slot="demo"></slide-fullpage>
+  </demo>
 
 - 垂直方向 swipe
 
-<demo qrcode-url="slide/vertical">
-  <template slot="code-template">
-    <<< @/examples/vue/components/zoom/vertical.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/zoom/vertical.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/zoom/vertical.vue?style
-  </template>
-  <slide-vertical slot="demo"></slide-vertical>
-</demo>
+  <demo qrcode-url="slide/vertical">
+    <template slot="code-template">
+      <<< @/examples/vue/components/zoom/vertical.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/zoom/vertical.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/zoom/vertical.vue?style
+    </template>
+    <slide-vertical slot="demo"></slide-vertical>
+  </demo>
 
-::: tip
-注意：当设置 `useTransition = true`时，在 iphone 手上会出现闪烁。你需要像上面 demo 中的代码一样，给 swipe 的每一个元素额外增加下面两个样式：
+  ::: tip
+  注意：当设置 `useTransition = true`时，在 iphone 手上会出现闪烁。你需要像上面 demo 中的代码一样，给 swipe 的每一个元素额外增加下面两个样式：
 
-```css
-transform: translate3d(0,0,0)
-backface-visibility: hidden
-```
-:::
+  ```css
+  transform: translate3d(0,0,0)
+  backface-visibility: hidden
+  ```
+  :::
 
 ## 配置
 
