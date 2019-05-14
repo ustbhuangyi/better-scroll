@@ -89,25 +89,6 @@ export default class EventHandler {
 
     this.moveEventRegister.destroy()
 
-    // TODO 处理 snap 相关逻辑
-    // const snapOption = this.scroller.options.snap
-    // if (snapOption) {
-    //   let {speed, easing = ease.bounce} = snapOption
-    //   let snap = this.scroller._nearestSnap(this.scroller.x, this.scroller.y)
-
-    //   let time = speed || Math.max(
-    //       Math.max(
-    //         Math.min(Math.abs(this.scroller.x - snap.x), 1000),
-    //         Math.min(Math.abs(this.scroller.y - snap.y), 1000)
-    //       ), 300)
-
-    //   if (this.scroller.x !== snap.x || this.scroller.y !== snap.y) {
-    //     this.scroller.directionX = 0
-    //     this.scroller.directionY = 0
-    //     this.scroller.currentPage = snap
-    //     this.scroller.scrollTo(snap.x, snap.y, time, easing)
-    //   }
-    // }
     this.hooks.trigger('touchEnd', this.moved)
   }
 

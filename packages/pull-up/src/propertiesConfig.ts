@@ -1,14 +1,23 @@
-export default [
+const sourcePrefix = 'plugins.pullUpLoad'
+
+const propertiesMap = [
   {
     key: 'finishPullUp',
-    sourceKey: 'finish'
+    name: 'finish'
   },
   {
     key: 'openPullUp',
-    sourceKey: 'open'
+    name: 'open'
   },
   {
     key: 'closePullUp',
-    sourceKey: 'close'
+    name: 'close'
   }
 ]
+
+export default propertiesMap.map(item => {
+  return {
+    key: item.key,
+    sourceKey: `${sourcePrefix}.${item.name}`
+  }
+})

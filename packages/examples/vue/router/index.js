@@ -5,6 +5,9 @@ import Core from 'vue-example/pages/core-entry'
 import Zoom from 'vue-example/pages/zoom-entry'
 import Slide from 'vue-example/pages/slide-entry'
 import Picker from 'vue-example/pages/picker-entry'
+import Pullup from 'vue-example/pages/pullup-entry'
+import PullDown from 'vue-example/pages/pulldown-entry'
+import ScrollBar from 'vue-example/pages/scrollbar-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -72,6 +75,18 @@ export default new Router({
           component: linkageColumnPicker
         }
       ]
+    },
+    {
+      path: '/pullup',
+      component: Pullup
+    },
+    {
+      path: '/pulldown',
+      component: PullDown
+    },
+    {
+      path: '/scrollbar',
+      component: ScrollBar
     }
   ]
 })

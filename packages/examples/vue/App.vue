@@ -46,6 +46,18 @@
     {
       name: 'picker',
       path: '/picker/'
+    },
+    {
+      name: 'pullup',
+      path: '/pullup/'
+    },
+    {
+      name: 'pulldown',
+      path: '/pulldown/'
+    },
+    {
+      name: 'scrollbar',
+      path: '/scrollbar/'
     }
   ]
   export default {
