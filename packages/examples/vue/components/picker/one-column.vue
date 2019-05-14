@@ -171,8 +171,30 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 
-  @import "~common/stylus/mixin.styl"
-  @import "~common/stylus/variable.styl"
+  /* reset */
+  ul
+    list-style none
+    padding 0
+
+  .example-list
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    margin: 2rem
+
+    .example-item
+      background-color white
+      padding: 0.8rem
+      border: 1px solid rgba(0, 0, 0, .1)
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
+      text-align: center
+      margin-bottom: 1rem
+      flex: 1
+      &.placeholder
+        visibility: hidden
+        height: 0
+        margin: 0
+        padding: 0
 
   .picker
     position: fixed
@@ -183,8 +205,8 @@
     height: 100%
     overflow: hidden
     text-align: center
-    font-size: $fontsize-medium
-    background-color: $color-mask-bgc
+    font-size: 14px
+    background-color: rgba(37, 38, 45, .4)
     &.picker-fade-enter, &.picker-fade-leave-active
       opacity: 0
     &.picker-fade-enter-active, &.picker-fade-leave-active
@@ -196,7 +218,7 @@
       bottom: 0
       width: 100%
       height: 273px
-      background: $color-white
+      background: white
       &.picker-move-enter, &.picker-move-leave-active
         transform: translate3d(0, 273px, 0)
       &.picker-move-enter-active, &.picker-move-leave-active
@@ -204,28 +226,28 @@
       .picker-choose
         position: relative
         height: 60px
-        color: $color-light-grey
+        color: #999
         .picker-title
           margin: 0
           line-height: 60px
           font-weight: normal
           text-align: center
-          font-size: $fontsize-large-x
-          color: $color-dark-grey
+          font-size: 18px
+          color: #333
         .confirm, .cancel
           position: absolute
           top: 6px
           padding: 16px
-          font-size: $fontsize-medium
+          font-size: 14px
         .confirm
           right: 0
-          color: $color-main
+          color: #007bff
           &:active
-            color: $color-main-ll
+            color: #5aaaff
         .cancel
           left: 0
           &:active
-            color: $color-active-light-gray-fe
+            color: #c2c2c2
       .picker-content
         position: relative
         top: 20px
@@ -247,10 +269,16 @@
         display: flex
         padding: 0 16px
         .wheel
-          flex-fix()
+          -ms-flex: 1 1 0.000000001px
+          -webkit-box-flex: 1
+          -webkit-flex: 1
+          flex: 1
+          -webkit-flex-basis: 0.000000001px
+          flex-basis: 0.000000001px
+          width: 1%
           height: 173px
           overflow: hidden
-          font-size: $fontsize-large-xx
+          font-size: 18px
           .wheel-scroll
             padding: 0
             margin-top: 68px
@@ -261,7 +289,7 @@
               height: 36px
               overflow: hidden
               white-space: nowrap
-              color: $color-dark-grey
+              color: #333
               &.wheel-disabled-item
                 opacity: .2;
     .picker-footer

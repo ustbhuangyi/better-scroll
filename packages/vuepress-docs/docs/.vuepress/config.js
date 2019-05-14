@@ -8,11 +8,9 @@ function resolve(p) {
 
 module.exports = {
     base: '/docs/',
-    title: 'Better Scroll 2.0',
-    shouldClearScreen: false,
-    description: 'Just playing around',
+    title: 'BetterScroll 2.0',
+    description: 'docs for BetterScroll',
     publicPath: '/docs/',
-    cache: false,
     locales: {
         '/en-US/': {
             lang: 'en-US',
@@ -62,6 +60,9 @@ module.exports = {
             alias: {
                 'common': resolve('examples/common')
             }
+        },
+        devServer: {
+            open: true
         }
     },
     define: {

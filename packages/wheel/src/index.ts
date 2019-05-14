@@ -284,6 +284,9 @@ export default class Wheel {
     if (!options.wheelItemClass) {
       options.wheelItemClass = 'wheel-item'
     }
+    if (!options.rotate) {
+      options.rotate = 25
+    }
     if (!options.adjustTime) {
       options.adjustTime = 400
     }
