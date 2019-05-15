@@ -23,6 +23,9 @@
 ```js
   import BScroll from '@better-scroll/core'
   import Plugin from 'somewhere'
+
+  BScroll.use(Plugin)
+  new BScroll(/*arguments*/)
 ```
 
 ## 使用插件的方法和属性

@@ -53,7 +53,7 @@
     "execa": "^1.0.0",
     "husky": "^1.0.1",
     "inquirer": "^6.3.1",
-    "jest": "^24.5.0",
+    "jest": "23.6.0",
     "jest-config": "^23.6.0",
     "lerna": "^3.13.4",
     "lint-staged": "^8.0.0",
