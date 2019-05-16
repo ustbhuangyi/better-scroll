@@ -185,6 +185,7 @@ function copyDTSFiles (packageName) {
   console.log(chalk.cyan('> copy job is done.'))
 
   rimraf.sync(resolve(`packages/${packageName}/dist/packages`))
+  rimraf.sync(resolve(`packages/${packageName}/dist/node_modules`))
 }
 
 function getSize(code) {
