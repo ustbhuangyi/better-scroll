@@ -30,10 +30,12 @@ module.exports = {
     "/test/",
     "/__tests__/"
   ],
-  "coverageReporters": ["text-summary", "lcov"],
+  "coverageReporters": ['json', 'text', 'lcov', 'clover'],
   "coverageThreshold": {
   },
   "collectCoverageFrom": [
-    "packages/**/*.{ts}"
+    "packages/**/*.{ts}",
+    "!packages/**/dist/**",
+    "!packages/better-scroll/**"
   ]
 }
