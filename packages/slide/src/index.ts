@@ -105,11 +105,7 @@ export default class Slide {
         }
       )
     }
-    // this.registorHooks(
-    //   this.scroll.scroller.animater.hooks,
-    //   'forceStop',
-    //   this.resetLoop
-    // )
+
     if (slide.listenFlick !== false) {
       this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
     }

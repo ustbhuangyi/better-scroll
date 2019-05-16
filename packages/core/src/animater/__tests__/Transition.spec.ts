@@ -1,16 +1,16 @@
-import Translater from '@/translater/index'
-jest.mock('@/translater/index')
+import Translater from '@better-scroll/core/src/translater/index'
+jest.mock('@better-scroll/core/src/translater/index')
 
 let mockRequestAnimationFrame = jest.fn()
 let mockCancelAnimationFrame = jest.fn()
-jest.mock('@/util/raf', () => {
+jest.mock('@better-scroll/shared-utils/src/raf', () => {
   return {
-    requestAnimationFrame: mockRequestAnimationFrame,
-    cancelAnimationFrame: mockCancelAnimationFrame
+    requestAnimationFrame: (cb: any) => mockRequestAnimationFrame(cb),
+    cancelAnimationFrame: () => mockCancelAnimationFrame()
   }
 })
 
-import Transition from '@/animater/Transition'
+import Transition from '@better-scroll/core/src/animater/Transition'
 
 function createTransition(probeType: number) {
   const dom = document.createElement('div')

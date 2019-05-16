@@ -1,4 +1,4 @@
-import EventEmitter from '@/base/EventEmitter'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 const Transition = jest
   .fn()
@@ -16,7 +16,8 @@ const Transition = jest
         'end',
         'forceStop',
         'time',
-        'timeFunction'
+        'timeFunction',
+        'beforeForceStop'
       ]),
       translate: jest.fn(),
       stop: jest.fn(),

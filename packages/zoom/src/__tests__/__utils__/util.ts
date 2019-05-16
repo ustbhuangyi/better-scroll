@@ -1,5 +1,8 @@
-import { createEvent, CustomTouchEvent } from '@/__tests__/__utils__/event'
-import { createDiv } from '@/__tests__/__utils__/layout'
+import {
+  createEvent,
+  CustomTouchEvent
+} from '@better-scroll/core/src/__tests__/__utils__/event'
+import { createDiv } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 export function createZoom() {
   const dom = createDiv(300, 300)

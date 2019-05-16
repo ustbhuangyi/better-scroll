@@ -1,8 +1,11 @@
-import BScroll from '../../../../src/index'
-import ObserveDom from '../../../../src/plugins/observe-dom'
-import { createDiv, mockDomOffset } from '@/__tests__/__utils__/layout'
+import BScroll from '@better-scroll/core'
+import ObserveDom from '@better-scroll/observe-dom'
+import {
+  createDiv,
+  mockDomOffset
+} from '@better-scroll/core/src/__tests__/__utils__/layout'
 
-jest.mock('@/index')
+jest.mock('@better-scroll/core')
 
 function createBS() {
   const dom = createDiv(300, 300)

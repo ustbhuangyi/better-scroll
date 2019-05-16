@@ -1,5 +1,5 @@
-import EventEmitter from '@/base/EventEmitter'
-import EventRegister from '@/base/EventRegister'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import EventRegister from '@better-scroll/core/src/base/EventRegister'
 
 const ActionsHandler = jest
   .fn()

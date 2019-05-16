@@ -1,4 +1,4 @@
-import DirectionLock from '@/scroller/DirectionLock'
+import DirectionLock from '@better-scroll/core/src/scroller/DirectionLock'
 
 describe('DirectionLock Class tests', () => {
   let directionLock: DirectionLock

@@ -1,17 +1,17 @@
-import createAnimater from '@/animater/index'
-import Translater from '@/translater'
-import Behavior from '@/scroller/Behavior'
-import ActionsHandler from '@/base/ActionsHandler'
-import Actions from '@/scroller/Actions'
+import createAnimater from '@better-scroll/core/src/animater/index'
+import Translater from '@better-scroll/core/src/translater'
+import Behavior from '@better-scroll/core/src/scroller/Behavior'
+import ActionsHandler from '@better-scroll/core/src/base/ActionsHandler'
+import Actions from '@better-scroll/core/src/scroller/Actions'
 
-jest.mock('@/animater/index')
-jest.mock('@/translater')
-jest.mock('@/scroller/Behavior')
-jest.mock('@/base/ActionsHandler')
-jest.mock('@/scroller/Actions')
+jest.mock('@better-scroll/core/src/animater/index')
+jest.mock('@better-scroll/core/src/translater')
+jest.mock('@better-scroll/core/src/scroller/Behavior')
+jest.mock('@better-scroll/core/src/base/ActionsHandler')
+jest.mock('@better-scroll/core/src/scroller/Actions')
 
-import EventEmitter from '@/base/EventEmitter'
-import EventRegister from '@/base/EventRegister'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import EventRegister from '@better-scroll/core/src/base/EventRegister'
 
 const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
   const content = wrapper.children[0]
@@ -57,7 +57,8 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scrollTo',
       'scrollToElement',
       'transitionEnd',
-      'checkClick'
+      'checkClick',
+      'ignoreDisMoveForSamePos'
     ]),
     scrollBehaviorX,
     scrollBehaviorY,

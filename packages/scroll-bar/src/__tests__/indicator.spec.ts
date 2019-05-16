@@ -1,14 +1,16 @@
-import BScroll from '@/index'
-import EventHandler from '@/plugins/scroll-bar/event-handler'
+import BScroll from '@better-scroll/core'
+import EventHandler from '@better-scroll/scroll-bar/src/event-handler'
 
-jest.mock('@/index')
-jest.mock('@/Options')
-jest.mock('@/util/dom')
-jest.mock('@/plugins/scroll-bar/event-handler')
+jest.mock('@better-scroll/core')
+jest.mock('@better-scroll/core/src/Options')
+jest.mock('@better-scroll/shared-utils/src/dom')
+jest.mock('@better-scroll/scroll-bar/src/event-handler')
 
-import Indicator, { IndicatorOption } from '@/plugins/scroll-bar/indicator'
-import { Direction } from '@/plugins/scroll-bar/const'
-import { mockDomClient } from '@/../test/unit/utils/layout'
+import Indicator, {
+  IndicatorOption
+} from '@better-scroll/scroll-bar/src/indicator'
+import { Direction } from '@better-scroll/scroll-bar/src/const'
+import { mockDomClient } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 describe('indicator unit tests', () => {
   let bscroll: BScroll
@@ -94,7 +96,6 @@ describe('indicator unit tests', () => {
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 10 })
       // then
       expect(indicator.el.style.height).toBe('35px')
-      expect(indicator.el.style.top).toBe('0px')
     })
 
     it('should reach minimum size when content scroll down out of bounds too much', () => {
@@ -102,7 +103,6 @@ describe('indicator unit tests', () => {
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: 30 })
       // then
       expect(indicator.el.style.height).toBe('8px')
-      expect(indicator.el.style.top).toBe('0px')
     })
 
     it('should calculate correctlly when content scroll up out of bounds', () => {
@@ -110,7 +110,6 @@ describe('indicator unit tests', () => {
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -110 })
       // then
       expect(indicator.el.style.height).toBe('35px')
-      expect(indicator.el.style.top).toBe('65px')
     })
 
     it('should reach minimum size when content scroll up out of bounds too much', () => {
@@ -118,7 +117,6 @@ describe('indicator unit tests', () => {
       bscroll.scroller.translater.hooks.trigger('translate', { x: 0, y: -130 })
       // then
       expect(indicator.el.style.height).toBe('8px')
-      expect(indicator.el.style.top).toBe('92px')
     })
   })
 

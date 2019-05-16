@@ -1,9 +1,9 @@
-import Scroller from '@/scroller/Scroller'
-import EventEmitter from '@/base/EventEmitter'
-import { Options } from '@/Options'
+import Scroller from '@better-scroll/core/src/scroller/Scroller'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { Options } from '@better-scroll/core/src/Options'
 
-jest.mock('@/scroller/Scroller')
-jest.mock('@/Options')
+jest.mock('@better-scroll/core/src/scroller/Scroller')
+jest.mock('@better-scroll/core/src/Options')
 
 const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   options = Object.assign(new Options(), options)
@@ -39,7 +39,12 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     // proxy methods
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
-    registerType: jest.fn()
+    registerType: jest.fn().mockImplementation((names: string[]) => {
+      names.forEach(name => {
+        const eventTypes = eventEmitter.eventTypes
+        eventTypes[name] = name
+      })
+    })
   }
 
   Object.setPrototypeOf(res, eventEmitter)

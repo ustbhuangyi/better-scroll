@@ -1,19 +1,17 @@
-import BScroll from '@/index'
-import Slide from '@/plugins/slide'
-import EventEmitter from '@/base/EventEmitter'
+import BScroll from '@better-scroll/core'
+import Slide from '@better-scroll/slide'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import {
   bscrollHorizon,
   bscrollVertical,
   replaceBscrollProperties
 } from './__utils__/bscroll'
 import * as SlidePage from './__utils__/SlidePage'
-jest.mock('@/plugins/slide/SlidePage', () => {
-  return {
-    default: require('./__utils__/SlidePage').SlidePage
-  }
+jest.mock('@better-scroll/slide/src/SlidePage', () => {
+  return require('./__utils__/SlidePage').SlidePage
 })
-jest.mock('@/index')
-jest.mock('@/animater/index')
+jest.mock('@better-scroll/core')
+jest.mock('@better-scroll/core/src/animater/index')
 
 function createBScroll(
   hooks: EventEmitter,
@@ -101,7 +99,6 @@ describe('slide test for SlidePage class', () => {
     expect(hooks.events['momentum'].length).toBe(0)
     expect(hooks.events['scrollEnd'].length).toBe(0)
     expect(hooks.events['flick'].length).toBe(0)
-    expect(hooks.events['forceStop'].length).toBe(0)
     expect(hooks.events['destroy'].length).toBe(0)
   })
   it('should support mousewheel event', () => {

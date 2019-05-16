@@ -1,6 +1,6 @@
-import BScroll from '@/index'
-import Wheel from '@/plugins/wheel'
-jest.mock('@/index')
+import BScroll from '@better-scroll/core'
+import Wheel from '@better-scroll/wheel'
+jest.mock('@better-scroll/core')
 
 describe('wheel plugin tests', () => {
   let bscroll: BScroll
@@ -144,7 +144,6 @@ describe('wheel plugin tests', () => {
     let div = document.createElement('div')
     wheel.items = [div] as any
     wheel.itemHeight = 40
-
     wheel.wheelItemsAllDisabled = false
     bscroll.scroller.animater.hooks.trigger('beforeForceStop', { x: 0, y: -20 })
     expect(wheel.target).toEqual(div)

@@ -1,11 +1,9 @@
-import BScroll from '@/index'
-import { propertiesProxy } from '@/util/propertiesProxy'
-import { ease } from '@/util/ease'
-jest.mock('@/index')
-jest.mock('@/util/propertiesProxy')
-jest.mock('@/util/ease')
+import BScroll from '@better-scroll/core'
+import { ease } from '@better-scroll/shared-utils/src/ease'
+jest.mock('@better-scroll/core')
+jest.mock('@better-scroll/shared-utils/src/ease')
 
-import PullDown from '@/plugins/pull-down/pull-down'
+import PullDown from '@better-scroll/pull-down'
 
 describe('pull down tests', () => {
   let bscroll: BScroll
@@ -32,26 +30,24 @@ describe('pull down tests', () => {
   it('should proxy properties to BScroll instance', () => {
     new PullDown(bscroll)
 
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullDownRefresh.finish',
-      'finishPullDown'
-    )
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullDownRefresh.open',
-      'openPullDown'
-    )
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullDownRefresh.close',
-      'closePullDown'
-    )
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullDownRefresh.autoPull',
-      'autoPullDownRefresh'
-    )
+    expect(bscroll.proxy).toBeCalledWith([
+      {
+        key: 'finishPullDown',
+        sourceKey: 'plugins.pullDownRefresh.finish'
+      },
+      {
+        key: 'openPullDown',
+        sourceKey: 'plugins.pullDownRefresh.open'
+      },
+      {
+        key: 'closePullDown',
+        sourceKey: 'plugins.pullDownRefresh.close'
+      },
+      {
+        key: 'autoPullDownRefresh',
+        sourceKey: 'plugins.pullDownRefresh.autoPull'
+      }
+    ])
   })
 
   describe('trigger pullingDown event', () => {

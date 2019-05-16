@@ -1,5 +1,5 @@
-import { bubbling } from '@/util/bubbling'
-import EventEmitter from '@/base/EventEmitter'
+import { bubbling } from '@better-scroll/core/src/utils/bubbling'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 describe('bubbling', () => {
   it('bubbling', () => {

@@ -1,10 +1,10 @@
-import BScroll from '@/index'
-import * as domUtil from '@/util/dom'
-jest.mock('@/index')
+import BScroll from '@better-scroll/core'
+import * as domUtil from '@better-scroll/shared-utils/src/dom'
+jest.mock('@better-scroll/core')
 const mockDomUtil = jest.spyOn(domUtil, 'preventDefaultExceptionFn')
 
-import MouseWheel from '@/plugins/mouse-wheel/index'
-import { createEvent } from '@/__tests__/__utils__/event'
+import MouseWheel from '@better-scroll/mouse-wheel/src/index'
+import { createEvent } from '@better-scroll/core/src/__tests__/__utils__/event'
 
 interface CustomMouseWheel extends Event {
   deltaX: number
@@ -140,6 +140,9 @@ describe('mouse-wheel plugin', () => {
     // preventDefaultException work
     bscroll.options.preventDefault = true
     bscroll.options.stopProgation = true
+    bscroll.options.preventDefaultException = {
+      tagName: /^(DIV)$/
+    }
     mockDomUtil.mockImplementation(() => {
       return true
     })

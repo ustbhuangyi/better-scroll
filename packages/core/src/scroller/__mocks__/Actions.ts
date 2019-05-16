@@ -1,8 +1,8 @@
-import DirectionLock from '@/scroller/DirectionLock'
+import DirectionLock from '@better-scroll/core/src/scroller/DirectionLock'
 
-jest.mock('@/scroller/DirectionLock')
+jest.mock('@better-scroll/core/src/scroller/DirectionLock')
 
-import EventEmitter from '@/base/EventEmitter'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 const ScrollerActions = jest
   .fn()

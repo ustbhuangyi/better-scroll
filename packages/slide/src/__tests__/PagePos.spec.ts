@@ -1,7 +1,7 @@
-import PagesPos from '@/plugins/slide/PagesPos'
-import BScroll from '@/index'
+import PagesPos from '@better-scroll/slide/src/PagesPos'
+import BScroll from '@better-scroll/core'
 import { bscrollHorizon, bscrollVertical } from './__utils__/bscroll'
-import { mockDomOffset } from '@/__tests__/__utils__/layout'
+import { mockDomOffset } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 describe('slide test for pagePos class', () => {
   let pagesPos: PagesPos

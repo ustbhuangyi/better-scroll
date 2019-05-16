@@ -1,9 +1,7 @@
-import BScroll from '@/index'
-import { propertiesProxy } from '@/util/propertiesProxy'
-jest.mock('@/index')
-jest.mock('@/util/propertiesProxy')
+import BScroll from '@better-scroll/core'
+jest.mock('@better-scroll/core')
 
-import PullUp, { pullUpLoadOptions } from '../pull-up'
+import PullUp, { pullUpLoadOptions } from '@better-scroll/pull-up'
 
 describe('pull up tests', () => {
   let bscroll: BScroll
@@ -33,21 +31,20 @@ describe('pull up tests', () => {
     // given when
     pullup = new PullUp(bscroll)
     // then
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullUpLoad.finish',
-      'finishPullUp'
-    )
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullUpLoad.open',
-      'openPullUp'
-    )
-    expect(propertiesProxy).toBeCalledWith(
-      bscroll,
-      'plugins.pullUpLoad.close',
-      'closePullUp'
-    )
+    expect(bscroll.proxy).toBeCalledWith([
+      {
+        key: 'finishPullUp',
+        sourceKey: 'plugins.pullUpLoad.finish'
+      },
+      {
+        key: 'openPullUp',
+        sourceKey: 'plugins.pullUpLoad.open'
+      },
+      {
+        key: 'closePullUp',
+        sourceKey: 'plugins.pullUpLoad.close'
+      }
+    ])
   })
 
   describe('trigger pullingUp', () => {

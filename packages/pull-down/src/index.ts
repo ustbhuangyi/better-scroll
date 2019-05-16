@@ -97,6 +97,9 @@ export default class PullDown {
     }
     this.pulling = true
 
+    this.originalMinScrollY = this.scroll.minScrollY
+    this.scroll.minScrollY = threshold
+
     this.scroll.scrollTo(this.scroll.x, threshold)
     this.scroll.trigger('pullingDown')
     this.scroll.scrollTo(

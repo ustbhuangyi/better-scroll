@@ -1,10 +1,10 @@
-import BScroll from '@/index'
-import Zoom from '@/plugins/zoom'
-import EventEmitter from '@/base/EventEmitter'
+import BScroll from '@better-scroll/core/src/index'
+import Zoom from '@better-scroll/zoom'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import { createTouchEvent } from './__utils__/util'
 import { bscrollZoom, replaceBscrollProperties } from './__utils__/bscroll'
-jest.mock('@/index')
-jest.mock('@/animater/index')
+jest.mock('@better-scroll/core/src/index')
+jest.mock('@better-scroll/core/src/animater/index')
 
 function createBScroll(
   hooks: EventEmitter,
@@ -44,7 +44,8 @@ describe('zoom plugin', () => {
       'beforeTranslate',
       'destroy',
       'zoomStart',
-      'zoomEnd'
+      'zoomEnd',
+      'ignoreDisMoveForSamePos'
     ])
   })
 

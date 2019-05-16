@@ -1,4 +1,4 @@
-import EventRegister from '@/base/EventRegister'
+import EventRegister from '@better-scroll/core/src/base/EventRegister'
 
 describe('EventRegister', () => {
   let eventRegister: EventRegister

@@ -56,6 +56,7 @@ export default abstract class Base {
 
   destroy() {
     this.hooks.destroy()
+
     cancelAnimationFrame(this.timer)
   }
 }

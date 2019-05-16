@@ -1,23 +1,23 @@
-import Translater from '@/translater/index'
-jest.mock('@/translater/index')
+import Translater from '@better-scroll/core/src/translater/index'
+jest.mock('@better-scroll/core/src/translater/index')
 
 let mockRequestAnimationFrame = jest.fn()
 let mockCancelAnimationFrame = jest.fn()
-jest.mock('@/util/raf', () => {
+jest.mock('@better-scroll/shared-utils/src/raf', () => {
   return {
-    requestAnimationFrame: mockRequestAnimationFrame,
-    cancelAnimationFrame: mockCancelAnimationFrame
+    requestAnimationFrame: (cb: any) => mockRequestAnimationFrame(cb),
+    cancelAnimationFrame: () => mockCancelAnimationFrame()
   }
 })
 
 let mockGetNow = jest.fn()
-jest.mock('@/util/lang', () => {
+jest.mock('@better-scroll/shared-utils/src/lang', () => {
   return {
-    getNow: mockGetNow
+    getNow: () => mockGetNow()
   }
 })
 
-import Animation from '@/animater/Animation'
+import Animation from '@better-scroll/core/src/animater/Animation'
 
 function createTransition(probeType: number) {
   const dom = document.createElement('div')
@@ -38,6 +38,7 @@ describe('Animation Class test suit', () => {
     jest.clearAllTimers()
     jest.clearAllMocks()
   })
+
   it('should off hooks and cancelAnimationFrame when destroy', () => {
     const { animation, translater, dom } = createTransition(0)
     const hooksDestroySpy = jest.spyOn(animation.hooks, 'destroy')
@@ -90,7 +91,7 @@ describe('Animation Class test suit', () => {
     expect(onEnd).not.toBeCalled()
   })
 
-  it('should move to endPoint for serval steps with time', () => {
+  it('should move to endPoint for serveral steps with time', () => {
     const { animation, translater, dom } = createTransition(3)
     const onMove = jest.fn()
     const onEnd = jest.fn()

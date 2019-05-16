@@ -1,8 +1,8 @@
-import Transition from '@/animater/Transition'
-import Animation from '@/animater/Animation'
+import Transition from '@better-scroll/core/src/animater/Transition'
+import Animation from '@better-scroll/core/src/animater/Animation'
 
-jest.mock('@/animater/Transition')
-jest.mock('@/animater/Animation')
+jest.mock('@better-scroll/core/src/animater/Transition')
+jest.mock('@better-scroll/core/src/animater/Animation')
 
 const createAnimater = jest
   .fn()

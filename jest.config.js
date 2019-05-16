@@ -1,9 +1,12 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
-const { compilerOptions } = require('./tsconfig');
-
 module.exports = {
   "verbose": true,
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
+  },
   "roots": ["<rootDir>"],
+  "cache": false,
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
   "testPathIgnorePatterns": [
     '/__tests__/__utils__'
@@ -16,8 +19,11 @@ module.exports = {
     "ts",
     "js"
   ],
-  // replace with the path from your tsconfig.json file
-  "moduleNameMapper": pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  "moduleNameMapper": {
+    '^@better-scroll/(.*)/(.*)$': '<rootDir>/packages/$1/$2',
+    '^@better-scroll/(.*)$': '<rootDir>/packages/$1/src/index',
+    '^@/(.*)$': '<rootDir>/$1'
+  },
   "coverageDirectory": "<rootDir>/test/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
@@ -28,6 +34,6 @@ module.exports = {
   "coverageThreshold": {
   },
   "collectCoverageFrom": [
-    "src/**/*.{js,ts}"
+    "packages/**/*.{ts}"
   ]
 }

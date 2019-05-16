@@ -1,4 +1,4 @@
-import { createDiv } from '@/__tests__/__utils__/layout'
+import { createDiv } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 export function createHorizonSlide(childNum: number = 2) {
   const dom = createDiv(300, 300)

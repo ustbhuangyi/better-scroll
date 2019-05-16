@@ -1,19 +1,19 @@
-import Behavior from '@/scroller/Behavior'
-import createAnimater from '@/animater'
-import Translater from '@/translater'
-import { Options } from '@/Options'
-import ActionsHandler from '@/base/ActionsHandler'
-import Actions from '@/scroller/Actions'
+import Behavior from '@better-scroll/core/src/scroller/Behavior'
+import createAnimater from '@better-scroll/core/src/animater'
+import Translater from '@better-scroll/core/src/translater'
+import { Options } from '@better-scroll/core/src/Options'
+import ActionsHandler from '@better-scroll/core/src/base/ActionsHandler'
+import Actions from '@better-scroll/core/src/scroller/Actions'
 
-jest.mock('@/scroller/Behavior')
-jest.mock('@/animater')
-jest.mock('@/translater')
-jest.mock('@/Options')
-jest.mock('@/base/ActionsHandler')
-jest.mock('@/scroller/Actions')
+jest.mock('@better-scroll/core/src/scroller/Behavior')
+jest.mock('@better-scroll/core/src/animater')
+jest.mock('@better-scroll/core/src/translater')
+jest.mock('@better-scroll/core/src/Options')
+jest.mock('@better-scroll/core/src/base/ActionsHandler')
+jest.mock('@better-scroll/core/src/scroller/Actions')
 
-import Scroller from '@/scroller/Scroller'
-import { createDiv } from '@/__tests__/__utils__/layout'
+import Scroller from '@better-scroll/core/src/scroller/Scroller'
+import { createDiv } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 describe('Scroller Class tests', () => {
   let scroller: Scroller

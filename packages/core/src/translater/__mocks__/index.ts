@@ -1,4 +1,4 @@
-import EventEmitter from '@/base/EventEmitter'
+import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 const Translater = jest.fn().mockImplementation(content => {
   return {

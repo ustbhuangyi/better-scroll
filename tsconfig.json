@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
     "strict": true,
+    "preserveSymlinks": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
