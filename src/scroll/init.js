@@ -178,7 +178,7 @@ export function initMixin (BScroll) {
 
     this.refresh()
 
-    if (!this.options.snap) {
+    if (!this.options.snap && this.scrollerHeight !== 0) {
       this.scrollTo(this.options.startX, this.options.startY)
     }
 
