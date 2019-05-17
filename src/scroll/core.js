@@ -583,10 +583,12 @@ export function coreMixin(BScroll) {
         // force reflow to put everything in position
         this._reflow = document.body.offsetHeight
         if (!this.resetPosition(this.options.bounceTime, ease.bounce)) {
-          this.trigger('scrollEnd', {
-            x,
-            y
-          })
+          setTimeout(() => {
+            this.trigger('scrollEnd', {
+              x,
+              y
+            })
+          }, 0)
         }
       }
 
