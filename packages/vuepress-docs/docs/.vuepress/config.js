@@ -11,7 +11,6 @@ module.exports = {
   title: 'BetterScroll 2.0',
   description: 'docs for BetterScroll',
   publicPath: '/docs/',
-  cache: false,
   locales: {
     '/en-US/': {
       lang: 'en-US',
@@ -63,9 +62,6 @@ module.exports = {
       alias: {
         common: resolve('examples/common')
       }
-    },
-    devServer: {
-      open: true
     }
   },
   define: {

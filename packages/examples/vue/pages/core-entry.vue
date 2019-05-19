@@ -2,7 +2,7 @@
   <div class="core">
     <ul class="example-list">
       <li class="example-item" @click="goPage('/core/mouse-wheel')">
-          <span>mouse wheel</span>
+          <span>drivened by Mouse wheel</span>
       </li>
       <li class="example-item placeholder">
       </li>

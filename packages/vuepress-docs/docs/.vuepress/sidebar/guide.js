@@ -21,7 +21,9 @@ const getGuideSideBar = function (lang) {
       title: baseScrollContent[lang],
       collapsable: false,
       children: [
-        'base-scroll'
+        'base-scroll',
+        'base-scroll-options',
+        'base-scroll-api'
       ]
     }
   ]

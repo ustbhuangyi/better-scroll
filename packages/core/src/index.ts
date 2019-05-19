@@ -75,6 +75,7 @@ export default class BScroll extends EventEmitter {
       'scrollStart',
       'scroll',
       'scrollEnd',
+      'scrollCancel',
       'touchEnd',
       'flick',
       'destroy'
@@ -161,6 +162,7 @@ export default class BScroll extends EventEmitter {
       'scrollStart',
       'scroll',
       'scrollEnd',
+      'scrollCancel',
       'touchEnd',
       'flick'
     ])

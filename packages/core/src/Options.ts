@@ -67,6 +67,7 @@ export class Options {
     this.directionLockThreshold = 5
     this.eventPassthrough = EventPassthrough.None
     this.click = false
+    this.dblclick = false
     this.tap = ''
 
     this.bounce = {

@@ -8,7 +8,7 @@
     },
     "private": true,
     "scripts": {
-        "docs:dev": "vuepress dev docs",
+        "docs:dev": "vuepress dev docs --open",
         "docs:build": "vuepress build docs",
         "docs:release": "sh docs-release.sh"
     },

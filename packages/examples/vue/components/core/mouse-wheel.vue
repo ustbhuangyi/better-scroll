@@ -2,21 +2,7 @@
   <div class="core-mouse-wheel">
     <div class="scroll-wrapper" ref="scroll">
       <div class="wheel-scroll">
-        <div class="wheel-item">1</div>
-        <div class="wheel-item">2</div>
-        <div class="wheel-item">3</div>
-        <div class="wheel-item">4</div>
-        <div class="wheel-item">5</div>
-        <div class="wheel-item">6</div>
-        <div class="wheel-item">7</div>
-        <div class="wheel-item">8</div>
-        <div class="wheel-item">9</div>
-        <div class="wheel-item">10</div>
-        <div class="wheel-item">11</div>
-        <div class="wheel-item">12</div>
-        <div class="wheel-item">13</div>
-        <div class="wheel-item">14</div>
-        <div class="wheel-item">15</div>
+        <div class="wheel-item" v-for="n in 15" :key="n">{{n}}</div>
       </div>
     </div>
   </div>
@@ -49,7 +35,7 @@
     }
   }
 </script>
-<style lang="stylus" rel="stylesheet/stylus" scope>
+<style lang="stylus" rel="stylesheet/stylus" scoped>
 
 .core-mouse-wheel
   .scroll-wrapper
