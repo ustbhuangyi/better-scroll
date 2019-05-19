@@ -73,7 +73,7 @@ BetterScroll has a variety of scroll modes.
     <core-freescroll slot="demo"></core-freescroll>
   </demo>
 
-## 温馨提示
+## Warm Tips
 
   :::tip
   **If there is any situation where scrolling is not possible, you should first check if the height/width of the content element is greater than the height/width of the wrapper**. This is a prerequisite for content to scroll.
