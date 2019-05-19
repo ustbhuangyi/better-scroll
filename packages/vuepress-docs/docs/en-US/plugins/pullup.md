@@ -20,7 +20,7 @@ Then, To instantiate BetterScroll, you need to pass the pullup related configura
 ```js
 new BScroll('.bs-wrap', {
   scrollY: true,
-  pullupLoad: true
+  pullUpLoad: true
 })
 ```
 
@@ -66,7 +66,7 @@ Note: **The `finishPullUp()` method should be called at the end of the callback 
   - **Introduction**：Turn on the pull-up loading function. This method does not need to be called if the `pullUpLoad` configuration item is not `false` when BetterScroll is instantiated.
   - **Parameters**：`config: boolean | { threshold: number }` ，The parameter is the pullUpLoad configuration. The default is false.
   - **Return value**：None
-  
+
 ### `closePullUp()`
 
   - **Introduction**：Turn off pullup.

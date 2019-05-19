@@ -4,7 +4,7 @@
 
 BetterScroll 托管在 NPM 上，执行如下命令安装：
 
-```js
+```bash
 npm install @better-scroll/core --save
 
 // or

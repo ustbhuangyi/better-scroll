@@ -4,7 +4,7 @@
 
 BetterScroll is hosted on NPM and executed with the following command:
 
-```js
+```bash
 npm install @better-scroll/core --save
 
 // or

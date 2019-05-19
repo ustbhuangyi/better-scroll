@@ -32,41 +32,67 @@
 
 插件中可能会暴露一些方法和属性，这些方法和属性在你执行完 `new BScroll()` 之后，会通过 `Object.defineProperty` 的方式代理至 `bs`。例如，zoom 插件中提供了 `zoomTo` 方法，你可以通过下面的方式来使用：
 
-  ```js
-    const bs = new BScroll('#scroll-wrapper', {
-      freeScroll: true,
-      scrollX: true,
-      scrollY: true,
-      disableMouse: true,
-      useTransition: true,
-      zoom: {
-        start: 1,
-        min: 0.5,
-        max: 2
-      }
-    })
+```js
+  import BScroll from '@better-scroll/core'
+  import Zoom from '@better-scroll/zoom'
 
-    bs.zoomTo(1.5, 0, 0) // 使用 zoomTo
-  ```
+  BScroll.use(Zoom)
+
+  const bs = new BScroll('#scroll-wrapper', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    disableMouse: true,
+    useTransition: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
+
+  bs.zoomTo(1.5, 0, 0) // 使用 zoomTo
+```
 
 ## 使用插件的钩子
 
 和方法、属性类似，插件中暴露的钩子最终也会被代理至 `bs`。例如，zoom 插件中提供了 `zoomStart` 钩子，你可以通过下面的方式来监听：
 
-  ```js
-    const bs = new BScroll('#scroll-wrapper', {
-      freeScroll: true,
-      scrollX: true,
-      scrollY: true,
-      disableMouse: true,
-      useTransition: true,
-      zoom: {
-        start: 1,
-        min: 0.5,
-        max: 2
-      }
-    })
+```js
+  import BScroll from '@better-scroll/core'
+  import Zoom from '@better-scroll/zoom'
 
-    bs.on('zoomStart', zoomStartHandler)
-    // so, you can do anything in zoomStartHandler
-  ```
+  BScroll.use(Zoom)
+
+  const bs = new BScroll('#scroll-wrapper', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    disableMouse: true,
+    useTransition: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
+
+  bs.on('zoomStart', zoomStartHandler)
+  // so, you can do anything in zoomStartHandler
+```
+
+## 具备所有插件能力的 BetterScroll
+
+考虑到一个个注册插件比较麻烦，如果你的项目用到 BetterScroll 的全部插件能力，我们提供了一劳永逸的方案。
+
+
+```js
+  import BScroll from 'better-scroll'
+
+  const bs = new BScroll('#scroll-wrapper', {
+    pullUpLoad: true,
+    pullDownRefresh: true,
+    scrollbar: true,
+    // 等等
+  })
+```

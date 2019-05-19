@@ -33,6 +33,11 @@ Use plugins by calling the `BScroll.use()` global method. This has to be done be
 Some methods or properties may be exposed in the plugin. These methods or properties are proxied to `bs` via `Object.defineProperty` method. For example, the `zoomTo` method is provided in the zoom plugin, which you can use in the following ways:
 
 ```js
+  import BScroll from '@better-scroll/core'
+  import Zoom from '@better-scroll/zoom'
+
+  BScroll.use(Zoom)
+
   const bs = new BScroll('#scroll-wrapper', {
     freeScroll: true,
     scrollX: true,
@@ -54,6 +59,10 @@ Some methods or properties may be exposed in the plugin. These methods or proper
 The hooks exposed in the plugin will be delegated to `bs`. For example, you can listen to the `zoomStart` hook, which is exposed in zoom plugin, in the following way:
 
 ```js
+  import BScroll from '@better-scroll/core'
+  import Zoom from '@better-scroll/zoom'
+
+  BScroll.use(Zoom)
   const bs = new BScroll('#scroll-wrapper', {
     freeScroll: true,
     scrollX: true,
@@ -68,4 +77,20 @@ The hooks exposed in the plugin will be delegated to `bs`. For example, you can 
   })
 
   bs.on('zoomStart', zoomStartHandler)
+```
+
+## BetterScroll with all plugin capabilities
+
+Considering the trouble of registering plugins one by one, if your project uses the full plugin capabilities of BetterScroll, we offer a once-in-a-lifetime solution.
+
+
+```js
+  import BScroll from 'better-scroll'
+
+  const bs = new BScroll('#scroll-wrapper', {
+    pullUpLoad: true,
+    pullDownRefresh: true,
+    scrollbar: true,
+    // and so on
+  })
 ```

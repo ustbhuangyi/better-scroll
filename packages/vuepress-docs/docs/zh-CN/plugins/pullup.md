@@ -20,7 +20,7 @@ BScroll.use(Pullup)
 ```js
 new BScroll('.bs-wrap', {
   scrollY: true,
-  pullupLoad: true
+  pullUpLoad: true
 })
 ```
 ## 示例
