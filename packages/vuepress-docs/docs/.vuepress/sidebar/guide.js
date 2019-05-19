@@ -13,7 +13,7 @@ const getGuideSideBar = function (lang) {
       collapsable: false,
       children: [
         '',
-        'get-start',
+        'how-to-install',
         'use'
       ]
     },
