@@ -10,7 +10,8 @@
   "module": "dist/wheel.esm.js",
   "typings": "dist/types/index.d.ts",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "http://localhost:4873/"
   },
   "bugs": {
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"

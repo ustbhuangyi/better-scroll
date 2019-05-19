@@ -7,7 +7,8 @@
     "email": "ustbhuangyi@gmail.com"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "http://localhost:4873/"
   },
   "main": "dist/core.js",
   "module": "dist/core.esm.js",
