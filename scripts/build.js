@@ -98,8 +98,12 @@ function generateBuildConfigs(packagesName) {
         },
         plugins: generateBuildPluginsConfigs(type.ext.indexOf('min')>-1, name)
       }
-      // rollup will valiate config properties of config own and output a warning
-      // put packageName in prototype to ignore warning
+      // rename
+      if (name === 'core') {
+        config.output.name = 'BScroll'
+      }
+      // rollup will valiate config properties of config own and output a warning.
+      // put packageName in prototype to ignore warning.
       Object.defineProperties(config, {
         'packageName': {
           value: name
