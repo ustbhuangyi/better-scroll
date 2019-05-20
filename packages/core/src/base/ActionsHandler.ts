@@ -56,7 +56,8 @@ export default class ActionsHandler {
       },
       {
         name: 'click',
-        handler: this.click.bind(this)
+        handler: this.click.bind(this),
+        capture: true
       }
     ])
     this.moveEndRegister = new EventRegister(target, [
@@ -181,6 +182,7 @@ export default class ActionsHandler {
   }
 
   private click(e: TouchEvent) {
+    console.log(e)
     this.hooks.trigger(this.hooks.eventTypes.click, e)
   }
 

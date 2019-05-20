@@ -58,7 +58,7 @@
 
 .horizontal-container
   .scroll-wrapper
-    width 300px
+    width 90%
     margin 80px auto
     white-space nowrap
     border 3px solid #42b983

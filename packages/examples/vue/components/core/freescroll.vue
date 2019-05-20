@@ -24,7 +24,6 @@
     },
     methods: {
       init () {
-        debugger
         this.bs = new BScroll(this.$refs.wrapper, {
           freeScroll: true,
           bounce: {
