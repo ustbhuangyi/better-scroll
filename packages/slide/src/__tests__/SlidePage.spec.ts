@@ -97,18 +97,21 @@ describe('slide test for SlidePage class', () => {
       pageX: 2,
       pageY: 0
     }
-    // expect(slidePage.getRealPage().pageX).toBe(1)
+    slidePage.pagesPos.xLen = 4
+    expect(slidePage.getRealPage().pageX).toBe(1)
     slidePage = new SlidePage(bscrollV, {
       loop: true
     })
     slidePage.init()
+    slidePage
     slidePage.currentPage = {
       x: 0,
       y: -300,
       pageX: 0,
       pageY: 2
     }
-    // expect(slidePage.getRealPage().pageY).toBe(1)
+    slidePage.pagesPos.yLen = 4
+    expect(slidePage.getRealPage().pageY).toBe(1)
   })
   it('should get right return value for nearestPage', () => {
     slidePage = new SlidePage(bscrollH, {
