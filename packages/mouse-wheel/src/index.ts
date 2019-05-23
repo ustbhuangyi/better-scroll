@@ -8,7 +8,7 @@ import {
   preventDefaultExceptionFn,
   fixInboundValue
 } from '@better-scroll/shared-utils'
-import { Options } from '@better-scroll/core/src/Options'
+
 export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined
 export interface MouseWheelConfig {
   speed?: number
@@ -18,7 +18,7 @@ export interface MouseWheelConfig {
   debounce?: number
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     /**
      * for mouse wheel

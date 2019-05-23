@@ -10,7 +10,6 @@ import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
 import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import { Direction } from '@better-scroll/core/src/enums/direction'
-import { Options } from '@better-scroll/core/src/Options'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {
@@ -28,7 +27,7 @@ export interface SlideConfig {
   disableSetWidth: boolean
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     slide?: slideOptions
   }

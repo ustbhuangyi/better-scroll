@@ -1,9 +1,8 @@
 import BScroll from '@better-scroll/core'
 import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import { getRect } from '@better-scroll/shared-utils/src/dom'
-import { Options } from '@better-scroll/core/src/Options'
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     observeDOM?: boolean
   }

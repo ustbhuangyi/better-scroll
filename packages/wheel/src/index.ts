@@ -7,7 +7,6 @@ import {
   EaseItem,
   isPlainObject
 } from '@better-scroll/shared-utils'
-import { Options } from '@better-scroll/core/src/Options'
 import propertiesConfig from './propertiesConfig'
 
 export type wheelOptions = Partial<WheelConfig>
@@ -20,7 +19,7 @@ export interface WheelConfig {
   wheelDisabledItemClass: string
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     wheel: wheelOptions
   }

@@ -2,14 +2,13 @@ import BScroll from '@better-scroll/core'
 import { Direction } from '@better-scroll/core/src/enums/direction'
 import { Probe } from '@better-scroll/core/src/enums/probe'
 import propertiesProxyConfig from './propertiesConfig'
-import { Options } from '@better-scroll/core/src/Options'
 
 export type pullUpLoadOptions = Partial<PullUpLoadConfig> | boolean
 export interface PullUpLoadConfig {
   threshold: number
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     pullUpLoad?: pullUpLoadOptions
   }

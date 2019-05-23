@@ -101,6 +101,8 @@ function generateBuildConfigs(packagesName) {
       // rename
       if (name === 'core') {
         config.output.name = 'BScroll'
+        // it seems the umd bundle can not satisfies our demand
+        config.output.footer = 'window.BScroll = window.BScroll.default;\n'
       }
       // rollup will valiate config properties of config own and output a warning.
       // put packageName in prototype to ignore warning.
@@ -177,6 +179,7 @@ function buildEntry(config, curIndex, next) {
       }
     })
   }).catch((e) => {
+    spinner.fail('buiding is failed')
     console.log(e)
   })
 }

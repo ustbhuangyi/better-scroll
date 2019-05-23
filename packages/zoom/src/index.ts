@@ -12,7 +12,6 @@ import {
 } from '@better-scroll/shared-utils'
 import { TranslaterPoint } from '@better-scroll/core/src/translater'
 import Behavior from '@better-scroll/core/src/scroller/Behavior'
-import { Options } from '@better-scroll/core/src/Options'
 
 interface ZoomConfig {
   start: number
@@ -20,7 +19,7 @@ interface ZoomConfig {
   max: number
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     zoom?: ZoomConfig
   }
