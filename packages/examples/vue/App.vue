@@ -14,10 +14,6 @@
           </li>
         </ul>
       </div>
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/ustbhuangyi/better-scroll">BetterScroll</a> is maintained by <a
-        href="https://github.com/ustbhuangyi">ustbhuangyi</a>.</span>
-      </footer>
     </section>
     <transition name="move">
       <router-view class="view"></router-view>
@@ -34,10 +30,6 @@
     {
       name: 'slide',
       path: '/slide/'
-    },
-    {
-      name: 'wheel',
-      path: '/wheel/'
     },
     {
       name: 'zoom',
