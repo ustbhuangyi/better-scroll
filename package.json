@@ -17,7 +17,7 @@
     "test:watch": "jest --coverage --watch",
     "cm": "git-cz",
     "test:prod": "npm run lint && npm run test -- --no-cache",
-    "release": "lerna publish --force-publish *"
+    "release": "lerna publish"
   },
   "lint-staged": {
     "*.ts": [

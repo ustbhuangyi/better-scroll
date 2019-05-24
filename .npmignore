@@ -15,4 +15,6 @@ postcss.config.js
 .editorconfig
 .eslintrc.js
 .tsconfig.json
+package-lock.json
+
 

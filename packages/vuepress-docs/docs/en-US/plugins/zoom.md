@@ -54,7 +54,7 @@ The following are the configuration related to the zoom:
   The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
   :::
 
-  <demo>
+  <demo qrcode-url="zoom/default">
     <template slot="code-template">
       <<< @/examples/vue/components/zoom/default.vue?template
     </template>

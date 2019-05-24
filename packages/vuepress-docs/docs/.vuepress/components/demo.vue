@@ -45,7 +45,7 @@ import QrCode from './qrcode.vue'
 //TODO replate url when publich 2.0
 const FALLBACK_URL = 'https://ustbhuangyi.github.io/better-scroll/#/'
 const BASE_URL = process.env.NODE_ENV === 'production' ?
-  'https://ustbhuangyi.github.io/better-scroll/#/' :
+  'https://better-scroll.github.io/examples/#/' :
    `http://${LOCAL_IP}:8932/#/`
 
 export default {

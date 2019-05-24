@@ -25,7 +25,7 @@ new BScroll('.bs-wrap', {
 ```
 ## 示例
 
-<demo qrcode-url="scrollbar/">
+<demo qrcode-url="scrollbar/default">
   <template slot="code-template">
     <<< @/examples/vue/components/scrollbar/default.vue?template
   </template>

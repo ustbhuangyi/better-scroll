@@ -55,7 +55,7 @@ new BScroll('.bs-wrap', {
   zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
   :::
 
-  <demo qrcode-url="zoom/">
+  <demo qrcode-url="zoom/default">
     <template slot="code-template">
       <<< @/examples/vue/components/zoom/default.vue?template
     </template>

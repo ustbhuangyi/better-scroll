@@ -52,7 +52,7 @@ The following are the configuration related to the slide:
 
 - horizontal slide
 
-  <demo>
+  <demo qrcode-url="slide/banner">
     <template slot="code-template">
       <<< @/examples/vue/components/slide/banner.vue?template
     </template>
@@ -67,7 +67,7 @@ The following are the configuration related to the slide:
 
 - full page slide
 
-  <demo>
+  <demo qrcode-url="slide/fullpage">
     <template slot="code-template">
       <<< @/examples/vue/components/slide/fullpage.vue?template
     </template>
@@ -82,7 +82,7 @@ The following are the configuration related to the slide:
 
 - vertical slide
 
-  <demo>
+  <demo qrcode-url="slide/vertical">
     <template slot="code-template">
       <<< @/examples/vue/components/zoom/vertical.vue?template
     </template>

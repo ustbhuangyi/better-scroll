@@ -8,17 +8,17 @@ function resolve(p) {
 
 module.exports = {
   base: '/docs/',
-  title: 'BetterScroll 2.0',
-  description: 'docs for BetterScroll',
   publicPath: '/docs/',
   locales: {
     '/en-US/': {
       lang: 'en-US',
-      title: 'BetterScroll'
+      title: 'BetterScroll 2.x',
+      description: 'Make Scroll Perfect'
     },
     '/zh-CN/': {
       lang: 'zh-CN',
-      title: 'BetterScroll'
+      title: 'BetterScroll 2.x',
+      description: 'Make Scroll Perfect'
     }
   },
   themeConfig: {
