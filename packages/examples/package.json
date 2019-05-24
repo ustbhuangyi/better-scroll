@@ -41,5 +41,8 @@
         "webpack-cli": "^3.3.0",
         "webpack-dev-middleware": "^3.6.0",
         "webpack-dev-server": "^3.2.1"
+    },
+    "dependencies": {
+        "@better-scroll/core": "^2.0.1-alpha.1"
     }
 }

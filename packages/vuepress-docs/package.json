@@ -35,6 +35,8 @@
         "vuepress": "^1.0.0-alpha.47"
     },
     "dependencies": {
+        "@better-scroll/core": "^2.0.1-alpha.1",
+        "@better-scroll/shared-utils": "^2.0.0",
         "qrcode-js-package": "^1.0.4",
         "v-tooltip": "^2.0.2"
     }

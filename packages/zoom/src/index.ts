@@ -39,7 +39,6 @@ export default class Zoom {
   static pluginName = 'zoom'
   origin: Point
   scale = 1
-  hooks: EventEmitter
   private zoomOpt: Partial<ZoomConfig>
   private startDistance: number
   private startScale: number
@@ -51,7 +50,6 @@ export default class Zoom {
   private lastTransformScale: number
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
-    this.hooks = new EventEmitter(['zoomStart', 'zoomEnd'])
     this.scroll.proxy(propertiesConfig)
     this.scroll.registerType(['zoomStart', 'zoomEnd'])
     this.zoomOpt = this.scroll.options.zoom as Partial<ZoomConfig>

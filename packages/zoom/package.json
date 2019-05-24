@@ -1,7 +1,7 @@
 {
   "name": "@better-scroll/zoom",
   "version": "2.0.1-alpha.1",
-  "description": "a BetterScroll plugin to implement image previewer",
+  "description": "a BetterScroll plugin to enlarge or narrow",
   "author": {
     "name": "huangyi",
     "email": "ustbhuangyi@gmail.com"
@@ -23,12 +23,16 @@
     "javascript",
     "typescript",
     "ios",
-    "image-preview"
+    "image-preview",
+    "zoom"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:ustbhuangyi/better-scroll.git",
     "directory": "packages/zoom"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.0.0-alpha.1"
   }
 }

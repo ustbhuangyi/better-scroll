@@ -26,5 +26,8 @@
     "type": "git",
     "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
     "directory": "packages/scroll-bar"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.0.0-alpha.1"
   }
 }

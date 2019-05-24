@@ -28,5 +28,8 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:ustbhuangyi/better-scroll.git"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.0.0-alpha.1"
   }
 }
