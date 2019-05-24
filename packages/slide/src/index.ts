@@ -75,7 +75,8 @@ export default class Slide {
     this.registorHooks(scrollHooks, 'refresh', this.initSlideState)
     this.registorHooks(scrollHooks, 'destroy', this.destroy)
     this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
-    this.registorHooks(scrollerHooks, 'scrollEnd', this.resetLoop)
+    // scrollEnd handler should be called before customized handlers
+    this.registorHooks(this.scroll, 'scrollEnd', this.resetLoop)
 
     // for mousewheel event
     if (
@@ -238,7 +239,22 @@ export default class Slide {
       isScrollToBoundary = true
     }
     if (isScrollToBoundary) {
-      const newPos = this.nearestPage(this.scroll.x, this.scroll.y)
+      const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
+      const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+      const newPos = this.page.nearestPage(
+        fixInboundValue(
+          this.scroll.x,
+          scrollBehaviorX.maxScrollPos,
+          scrollBehaviorX.minScrollPos
+        ),
+        fixInboundValue(
+          this.scroll.y,
+          scrollBehaviorY.maxScrollPos,
+          scrollBehaviorY.minScrollPos
+        ),
+        0,
+        0
+      )
       const newPage = {
         x: newPos.x,
         y: newPos.y,
