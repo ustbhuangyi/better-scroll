@@ -6,9 +6,9 @@
 
 [1.x Docs](https://ustbhuangyi.github.io/better-scroll/#/)
 
-> **Note**: The following code is the syntax of `2.x`
-
 [2.x Docs](https://better-scroll.github.io/docs/en-US/)
+
+> **Note**: The following code is the syntax of `2.x`.
 
 ## What is BetterScroll ?
 
@@ -70,7 +70,7 @@ let bs = new BScroll('.wrapper', {
 })
 ```
 
-Please see for details[Plugins](https://better-scroll.github.io/docs/en-US/plugins/)
+Please see for details, [Plugins](https://better-scroll.github.io/docs/en-US/plugins/).
 
 ## Using BetterScroll with MVVM frameworks
 

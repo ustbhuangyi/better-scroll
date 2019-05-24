@@ -7,8 +7,7 @@
     "email": "ustbhuangyi@gmail.com"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "http://localhost:4873/"
+    "access": "public"
   },
   "main": "dist/better-scroll.js",
   "module": "dist/better-scroll.esm.js",

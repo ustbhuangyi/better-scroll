@@ -4,9 +4,9 @@
 
 [1.x Docs](https://ustbhuangyi.github.io/better-scroll/#/)
 
-> **注意**：以下代码都是 `2.x` 的语法
-
 [2.x Docs](https://better-scroll.github.io/docs/zh-CN/)
+
+> **注意**：以下代码都是 `2.x` 的语法。
 
 # BetterScroll 是什么
 
