@@ -32,7 +32,14 @@
     "directory": "packages/better-scroll"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.1-alpha.1",
-    "@better-scroll/shared-utils": "^2.0.0"
+    "@better-scroll/core": "^2.0.0-alpha.1",
+    "@better-scroll/mouse-wheel": "^2.0.0-alpha.1",
+    "@better-scroll/observe-dom": "^2.0.0-alpha.1",
+    "@better-scroll/pull-down": "^2.0.0-alpha.1",
+    "@better-scroll/pull-up": "^2.0.0-alpha.1",
+    "@better-scroll/scroll-bar": "^2.0.0-alpha.1",
+    "@better-scroll/slide": "^2.0.0-alpha.1",
+    "@better-scroll/wheel": "^2.0.0-alpha.1",
+    "@better-scroll/zoom": "^2.0.0-alpha.1"
   }
 }
