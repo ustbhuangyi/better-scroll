@@ -29,8 +29,6 @@
           scrollY: true,
           scrollbar: true
         })
-
-        this.bscroll.on('pullingUp', this.pullingUpHandler)
       }
     }
   }

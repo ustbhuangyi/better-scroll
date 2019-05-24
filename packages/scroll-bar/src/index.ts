@@ -1,7 +1,6 @@
 import BScroll from '@better-scroll/core'
 import Indicator, { IndicatorOption } from './indicator'
 import { Direction } from './const'
-import { Options } from '@better-scroll/core/src/Options'
 
 // augmentation for Options
 export type scrollbarOptions = Partial<ScrollbarConfig> | boolean
@@ -11,7 +10,7 @@ export interface ScrollbarConfig {
   interactive: boolean
 }
 
-declare module '@better-scroll/core/src/Options' {
+declare module '@better-scroll/core' {
   interface Options {
     scrollbar?: scrollbarOptions
   }

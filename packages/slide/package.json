@@ -1,6 +1,6 @@
 {
 	"name": "@better-scroll/slide",
-	"version": "2.0.0",
+	"version": "2.0.0-alpha.1",
 	"description": "a carousel effect triggered by BetterScroll",
 	"author": "huangyi <ustbhuangyi@gmail.com>",
 	"main": "dist/slide.min.js",
@@ -26,5 +26,8 @@
 		"type": "git",
 		"url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
 		"directory": "packages/slide"
+	},
+	"dependencies": {
+		"@better-scroll/core": "^2.0.0-alpha.1"
 	}
 }

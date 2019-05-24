@@ -205,3 +205,5 @@ export default class BScroll extends EventEmitter {
     this.registerType(names)
   }
 }
+
+export { Options }
