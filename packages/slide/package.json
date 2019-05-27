@@ -1,6 +1,6 @@
 {
 	"name": "@better-scroll/slide",
-	"version": "2.0.0-alpha.1",
+	"version": "2.0.0-alpha.2",
 	"description": "a carousel effect triggered by BetterScroll",
 	"author": "huangyi <ustbhuangyi@gmail.com>",
 	"main": "dist/slide.min.js",
@@ -28,5 +28,6 @@
 	},
 	"dependencies": {
 		"@better-scroll/core": "^2.0.0-apla.2"
-	}
+	},
+	"gitHead": "56ccbc21886caf9172cfc1196282e64ffff1c42e"
 }
