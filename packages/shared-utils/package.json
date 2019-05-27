@@ -25,5 +25,5 @@
 		"url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
 		"directory": "packages/shared-utils"
 	},
-	"gitHead": "56ccbc21886caf9172cfc1196282e64ffff1c42e"
+	"gitHead": "fc469ce977bc9f8f107d154089ea8a70e36e8a64"
 }
