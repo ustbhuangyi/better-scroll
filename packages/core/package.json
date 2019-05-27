@@ -31,7 +31,7 @@
     "directory": "packages/core"
   },
   "dependencies": {
-    "@better-scroll/shared-utils": "^2.0.0-apla.2"
+    "@better-scroll/shared-utils": "^2.0.0-alpha.0"
   },
   "gitHead": "9b4b6a0e4d525cf326844992b976a04651863555"
 }
