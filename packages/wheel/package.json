@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/wheel",
-  "version": "2.0.0-apla.2",
+  "version": "2.0.0-alpha.0",
   "description": "a BetterScroll plugin to imitate IOS Picker",
   "author": {
     "name": "huangyi",
