@@ -8,7 +8,6 @@ const rimraf = require('rimraf')
 const typescript = require('rollup-plugin-typescript2')
 const uglify = require('rollup-plugin-uglify').uglify
 const execa = require('execa')
-const semver = require('semver')
 const ora = require('ora')
 const spinner = ora({
   prefixText: `${chalk.green('\n[building tasks]')}`
@@ -58,11 +57,9 @@ function PascalCase(str){
 }
 
 const generateBanner = (packageName) => {
-  let { version }= require(resolve(`packages/${packageName}/package.json`))
-  version = semver.inc(version, 'prerelease')
   let ret =
   '/*!\n' +
-  ' * better-scroll / ' + packageName + ' v' + version + '\n' +
+  ' * better-scroll / ' + packageName + '\n' +
   ' * (c) 2016-' + new Date().getFullYear() + ' ustbhuangyi\n' +
   ' * Released under the MIT License.\n' +
   ' */'
