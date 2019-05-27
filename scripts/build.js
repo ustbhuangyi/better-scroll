@@ -101,6 +101,8 @@ function generateBuildConfigs(packagesName) {
       // rename
       if (name === 'core') {
         config.output.name = 'BScroll'
+        /** Disable warning for default imports */
+        config.output.exports = 'named'
         // it seems the umd bundle can not satisfies our demand
         config.output.footer = 'window.BScroll = window.BScroll.default;\n'
       }
