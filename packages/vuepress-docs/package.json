@@ -1,0 +1,41 @@
+{
+    "name": "vuepress-docs",
+    "version": "2.0.0-alpha.4",
+    "description": "Docs of BetterScroll",
+    "author": {
+        "name": "huangyi",
+        "email": "ustbhuangyi@gmail.com"
+    },
+    "private": true,
+    "scripts": {
+        "docs:dev": "vuepress dev docs --open",
+        "docs:build": "vuepress build docs",
+        "docs:release": "sh docs-release.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+    },
+    "homepage": "https://github.com/ustbhuangyi/better-scroll",
+    "keywords": [
+        "scroll",
+        "iscroll",
+        "javascript",
+        "typescript",
+        "ios",
+        "vuepress-docs"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:ustbhuangyi/better-scroll.git",
+        "directory": "packages/vuepress-docs"
+    },
+    "devDependencies": {
+        "ts-loader": "^5.4.5",
+        "vuepress": "^1.0.0-alpha.47"
+    },
+    "dependencies": {
+        "qrcode-js-package": "^1.0.4",
+        "v-tooltip": "^2.0.2"
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "composite": true,
+    "moduleResolution": "node",
+    "paths": {
+      "@better-scroll/*": ["./*/src"]
+    },
+    "target": "es5",
+    "module":"es2015",
+    "lib": ["es2015", "es2016", "es2017", "dom"],
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "preserveSymlinks": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  }
+}

@@ -1,5 +1,0 @@
-build/*.js
-node_modules/*.js
-demo/*.js
-webpack.*.js
-test/*.js

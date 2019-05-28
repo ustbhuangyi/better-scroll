@@ -1,0 +1,45 @@
+{
+    "name": "examples",
+    "version": "2.0.0-alpha.4",
+    "description": "Examples of BetterScroll",
+    "author": {
+        "name": "huangyi",
+        "email": "ustbhuangyi@gmail.com"
+    },
+    "private": true,
+    "scripts": {
+        "vue:dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/vue-webpack.conf.js --host 0.0.0.0 --port 8932 --colors",
+        "vue:build": "cross-env NODE_ENV=production node build/vue-example-build.js",
+        "vue:release": "sh vue-release.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+    },
+    "homepage": "https://github.com/ustbhuangyi/better-scroll",
+    "keywords": [
+        "scroll",
+        "iscroll",
+        "javascript",
+        "typescript",
+        "ios",
+        "better-scroll examples"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:ustbhuangyi/better-scroll.git",
+        "directory": "packages/examples"
+    },
+    "devDependencies": {
+        "@babel/polyfill": "^7.4.4",
+        "friendly-errors-webpack-plugin": "^1.7.0",
+        "html-webpack-plugin": "^3.2.0",
+        "mini-css-extract-plugin": "^0.5.0",
+        "ora": "^3.4.0",
+        "uglifyjs-webpack-plugin": "^2.1.2",
+        "webpack": "~4.28.4",
+        "webpack-cli": "^3.3.0",
+        "webpack-dev-middleware": "^3.6.0",
+        "webpack-dev-server": "^3.2.1"
+    }
+}

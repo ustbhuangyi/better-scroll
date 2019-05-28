@@ -1,0 +1,33 @@
+{
+  "name": "@better-scroll/scroll-bar",
+  "version": "2.0.0-alpha.4",
+  "description": "scrollbar is used to BetterScroll, which behaves like browser scrollbar",
+  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "main": "dist/scroll-bar.min.js",
+  "module": "dist/scroll-bar.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios",
+    "scrollbar"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
+    "directory": "packages/scroll-bar"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.0.0-alpha.4"
+  },
+  "gitHead": "9b4b6a0e4d525cf326844992b976a04651863555"
+}
