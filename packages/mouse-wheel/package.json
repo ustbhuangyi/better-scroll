@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/mouse-wheel",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "support for MouseWheel in PC",
   "author": "huangyi <ustbhuangyi@gmail.com>",
   "main": "dist/mouse-wheel.min.js",
@@ -27,7 +27,7 @@
     "directory": "packages/mouse-wheel"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.0-alpha.4"
+    "@better-scroll/core": "^2.0.0-alpha.5"
   },
   "gitHead": "9b4b6a0e4d525cf326844992b976a04651863555"
 }
