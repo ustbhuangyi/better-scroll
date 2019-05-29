@@ -5,11 +5,11 @@
 BetterScroll is hosted on NPM and executed with the following command:
 
 ```bash
-npm install @better-scroll/core --save
+npm install @better-scroll/core@next --save
 
 // or
 
-yarn add @better-scroll/core
+yarn add @better-scroll/core@next
 ```
 
 The next step is to use it in the code. [webpack](https://webpack.js.org/) and other build tools support the introduction of code from `node_modules` :

@@ -5,11 +5,11 @@
 BetterScroll 托管在 NPM 上，执行如下命令安装：
 
 ```bash
-npm install @better-scroll/core --save
+npm install @better-scroll/core@next --save
 
 // or
 
-yarn add @better-scroll/core
+yarn add @better-scroll/core@next
 ```
 
 接下来就可以在代码中引入了，[webpack](https://webpack.js.org/) 等构建工具都支持从 node_modules 里引入代码：
