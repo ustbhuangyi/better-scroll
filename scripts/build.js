@@ -98,12 +98,13 @@ function generateBuildConfigs(packagesName) {
         plugins: generateBuildPluginsConfigs(type.ext.indexOf('min')>-1, name)
       }
       // rename
-      if (name === 'core') {
+      if (name === 'core' && config.output.format !== 'es') {
         config.output.name = 'BScroll'
         /** Disable warning for default imports */
         config.output.exports = 'named'
         // it seems the umd bundle can not satisfies our demand
-        config.output.footer = 'window.BScroll = window.BScroll.default;\n'
+        config.output.footer = 'if(typeof window !== "undefined" && window.BScroll) { \n' +
+                              '  window.BScroll = window.BScroll.default;\n}'
       }
       // rollup will valiate config properties of config own and output a warning.
       // put packageName in prototype to ignore warning.
