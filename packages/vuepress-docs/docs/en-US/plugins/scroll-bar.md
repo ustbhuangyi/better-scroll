@@ -20,7 +20,7 @@ First, install the plugin via the static method `BScroll.use()`
 
 ```js
 import BScroll from '@better-scroll/core'
-import ScrollBar from '@better-scroll/scrollbar'
+import ScrollBar from '@better-scroll/scroll-bar'
 
 BScroll.use(ScrollBar)
 ```

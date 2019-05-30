@@ -20,7 +20,7 @@ First, install the plugin via the static method `BScroll.use()`
 
 ```js
 import BScroll from '@better-scroll/core'
-import PullDown from '@better-scroll/pulldown'
+import PullDown from '@better-scroll/pull-down'
 
 BScroll.use(PullDown)
 ```
