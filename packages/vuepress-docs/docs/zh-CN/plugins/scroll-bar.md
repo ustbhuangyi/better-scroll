@@ -4,13 +4,23 @@
 
   scrollbar 插件为 BetterScroll 提供了样式美观的滚动条。
 
+## 安装
+
+```shell
+npm install @better-scroll/scroll-bar@next --save
+
+// or
+
+yarn add @better-scroll/scroll-bar@next
+```
+
 ## 使用
 
 首先引入 scrollbar 插件，并通过静态方法 `BScroll.use()` 初始化插件
 
 ```js
 import BScroll from '@better-scroll/core'
-import ScrollBar from '@better-scroll/scrollbar'
+import ScrollBar from '@better-scroll/scroll-bar'
 
 BScroll.use(ScrollBar)
 ```

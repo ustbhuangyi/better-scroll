@@ -4,6 +4,16 @@
 
 用于轮播和 swipe 效果。
 
+## 安装
+
+```shell
+npm install @better-scroll/slide@next --save
+
+// or
+
+yarn add @better-scroll/slide@next
+```
+
 ## 使用
 
 你需要首先引入 slide 插件，并通过全局方法 `BScroll.use()` 使用

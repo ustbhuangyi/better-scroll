@@ -4,6 +4,16 @@ Enable the ability to watch for changes of scroll DOM. With this plugin, the ref
 - Debounce feature for css attributions which change frequently
 - If the scroll elements change occurs during the scroll animation, refresh will not be triggered.
 
+## Install
+
+```shell
+npm install @better-scroll/observe-dom@next --save
+
+// or
+
+yarn add @better-scroll/observe-dom@next
+```
+
 # Usage
 
   ```js

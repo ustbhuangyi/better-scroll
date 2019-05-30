@@ -2,6 +2,16 @@
 
 这个插件可以为核心滚动和一些插件增加对 PC 场景下的鼠标滚轮操作。
 
+# 安装
+
+```shell
+npm install @better-scroll/mouse-wheel@next --save
+
+// or
+
+yarn add @better-scroll/mouse-wheel@next
+```
+
 :::tip
 目前支持鼠标滚轮有：核心滚动、slide、wheel
 :::

@@ -4,6 +4,16 @@
 
   The pullup plugin provides BetterScroll with the ability to monitor pullups. The 'pullingUp' event is triggered when a pull up is successfully detected. Usually used to implement list/page scrolling to the bottom, pull up to load more data.
 
+## Install
+
+```shell
+npm install @better-scroll/pull-up@next --save
+
+// or
+
+yarn add @better-scroll/pull-up@next
+```
+
 ## Usage
 
 First, install the plugin via the static method `BScroll.use()`
@@ -71,6 +81,12 @@ Note: **The `finishPullUp()` method should be called at the end of the callback 
 
   - **Introduction**：Turn off pullup.
   - **Parameters**: None
+  - **Return value**：None
+
+### `autoPullDownRefresh()`
+
+  - **Introduction**：Auto pulldown-refresh。
+  - **Parameters**：None
   - **Return value**：None
 
 ## Hooks

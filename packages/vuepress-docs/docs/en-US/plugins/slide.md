@@ -4,6 +4,16 @@
 
 This plugin is used for slide or swipe.
 
+## Install
+
+```shell
+npm install @better-scroll/slide@next --save
+
+// or
+
+yarn add @better-scroll/slide@next
+```
+
 ## Usage
 
 To hava slide or swipe effect, you need to import the slide plugin and use it with `BScroll.use()`.

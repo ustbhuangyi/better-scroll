@@ -2,6 +2,10 @@
 
 在 BetterScroll 2.0 的设计当中，我们抽象了核心滚动部分，它作为 BetterScroll 的最小使用单元，压缩体积比 `1.0` 小了将近三分之一，往往你可能只需要完成一个纯粹的滚动需求，那么你只需要引入这一个库，方式如下：
 
+```shell
+  npm install @better-scroll/core@next --save
+```
+
 ```js
   import BScroll from '@better-scroll/core'
   const bs = new BScroll('.div')

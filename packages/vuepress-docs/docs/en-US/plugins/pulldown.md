@@ -4,6 +4,16 @@
 
   The pulldown plugin provides BetterScroll with the ability to monitor pulldowns. The 'pullingDown' event is fired when a pulldown is successfully detected. Usually used to implement the interaction of loading more data after the list/page is pulled down.
 
+## Install
+
+```shell
+npm install @better-scroll/pull-down@next --save
+
+// or
+
+yarn add @better-scroll/pull-down@next
+```
+
 ## Usage
 
 First, install the plugin via the static method `BScroll.use()`

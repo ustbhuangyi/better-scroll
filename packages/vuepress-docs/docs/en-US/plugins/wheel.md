@@ -4,6 +4,16 @@
 
 The wheel plugin is the cornerstone for implementing similar IOS Picker components.
 
+## Install
+
+```shell
+npm install @better-scroll/wheel@next --save
+
+// or
+
+yarn add @better-scroll/wheel@next
+```
+
 ## Use
 
 First import the wheel plugin and extend the capabilities of BetterScroll via the global method `BScroll.use()`.

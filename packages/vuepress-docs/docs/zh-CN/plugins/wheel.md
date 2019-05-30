@@ -4,6 +4,16 @@
 
 wheel 插件，是实现类似 IOS Picker 组件的基石。
 
+## 安装
+
+```shell
+npm install @better-scroll/wheel@next --save
+
+// or
+
+yarn add @better-scroll/wheel@next
+```
+
 ## 使用
 
 首先引入 wheel 插件，并通过全局方法 `BScroll.use()` 扩展 BetterScroll 的能力。

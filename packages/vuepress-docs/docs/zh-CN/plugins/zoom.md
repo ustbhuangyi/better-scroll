@@ -4,6 +4,16 @@
 
 zoom 插件为 BetterScroll 增加缩放的功能。
 
+## 安装
+
+```shell
+npm install @better-scroll/zoom@next --save
+
+// or
+
+yarn add @better-scroll/zoom@next
+```
+
 ## 使用
 
 为了开启缩放功能，你需要首先引入 zoom 插件，并通过全局方法 `BScroll.use()` 使用

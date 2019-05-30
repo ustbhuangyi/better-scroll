@@ -2,6 +2,16 @@
 
 This plugin supports for mouse wheel for core scrolling and some plugins in PC.
 
+## Install
+
+```shell
+npm install @better-scroll/mouse-wheel@next --save
+
+// or
+
+yarn add @better-scroll/mouse-wheel@next
+```
+
 :::tip
 Currently, the core scrolling has supported mouse wheel.
 Plugins supported for mouse wheel action are **slide** and **wheel**.

@@ -4,6 +4,16 @@
 
   The scrollbar plugin provides a nice scrollbar for BetterScroll.
 
+## Install
+
+```shell
+npm install @better-scroll/scroll-bar@next --save
+
+// or
+
+yarn add @better-scroll/scroll-bar@next
+```
+
 ## Usage
 
 First, install the plugin via the static method `BScroll.use()`

@@ -2,6 +2,10 @@
 
 In the design of BetterScroll 2.0, we abstracted the core scrolling part, which is the smallest unit of use of BetterScroll. The compression volume is nearly one-third smaller than `1.0`. You may only need to complete a pure scrolling, then just import this library as follows:
 
+```shell
+  npm install @better-scroll/core@next --save
+```
+
 ```js
   import BScroll from '@better-scroll/core'
   const bs = new BScroll('.div')

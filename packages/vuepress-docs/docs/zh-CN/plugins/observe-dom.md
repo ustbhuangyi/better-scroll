@@ -5,6 +5,16 @@
 - 针对改变频繁的 css 属性，增加 debounce
 - 如果改变发生在 scroll 动画过程中，则不会触发 refresh
 
+## 安装
+
+```shell
+npm install @better-scroll/observe-dom@next --save
+
+// or
+
+yarn add @better-scroll/observe-dom@next
+```
+
 ## 使用
 
   ```js

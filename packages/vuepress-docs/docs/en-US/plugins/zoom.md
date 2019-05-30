@@ -2,6 +2,16 @@
 
 Add zoom functionality for BetterScroll.
 
+## Install
+
+```shell
+npm install @better-scroll/zoom@next --save
+
+// or
+
+yarn add @better-scroll/zoom@next
+```
+
 ## Usage
 
 It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
