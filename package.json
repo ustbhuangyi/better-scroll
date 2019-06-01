@@ -17,7 +17,7 @@
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "cm": "git-cz",
-    "test:prod": "npm run lint && npm run test -- --no-cache"
+    "test:prod": "yarn run lint && yarn run test -- --no-cache"
   },
   "lint-staged": {
     "*.ts": [
