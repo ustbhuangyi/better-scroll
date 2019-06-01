@@ -1,12 +1,19 @@
 # better-scroll
 
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll)
+[![npm version](https://img.shields.io/npm/v/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![npm next Version](https://badgen.net/npm/v/better-scroll/next)](https://www.npmjs.com/package/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll)
 
 [1.x Docs](https://ustbhuangyi.github.io/better-scroll/#/)
 
 [2.x Docs](https://better-scroll.github.io/docs/zh-CN/)
 
 > **注意**：以下代码都是 `2.x` 的语法。
+
+# 安装
+
+```bash
+npm install better-scroll -D # install 1.x
+npm install better-scroll@next -D # install 2.x，该版本带有所有插件的能力。
+```
 
 # BetterScroll 是什么
 
