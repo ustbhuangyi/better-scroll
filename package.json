@@ -14,7 +14,7 @@
     "vue:build": "lerna run --stream --scope examples vue:build",
     "vue:release": "lerna run --stream --scope examples vue:release",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "jest --coverage --updateSnapshot",
+    "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "cm": "git-cz",
     "test:prod": "yarn run lint && yarn run test -- --no-cache"
