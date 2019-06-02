@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/zoom",
-  "version": "2.0.0-alpha.10",
+  "version": "2.0.0-alpha.11",
   "description": "a BetterScroll plugin to enlarge or narrow",
   "author": {
     "name": "huangyi",
@@ -32,7 +32,7 @@
     "directory": "packages/zoom"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.0-alpha.10"
+    "@better-scroll/core": "^2.0.0-alpha.11"
   },
-  "gitHead": "6e5b42eb89302efe8d1bd76d50dcf4e7dc896be8"
+  "gitHead": "b2a97c386341f14f8c3487c60e8a49cd8c2db6b4"
 }
