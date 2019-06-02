@@ -15,7 +15,6 @@ import {
   getElement,
   ease,
   offset,
-  EaseFn,
   style,
   preventDefaultExceptionFn,
   TouchEvent,
@@ -25,7 +24,8 @@ import {
   tap,
   isUndef,
   getNow,
-  cancelAnimationFrame
+  cancelAnimationFrame,
+  EaseItem
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
 
@@ -386,8 +386,9 @@ export default class Scroller {
     this.wrapperOffset = offset(this.wrapper)
   }
 
-  scrollBy(deltaX: number, deltaY: number, time = 0, easing = ease.bounce) {
+  scrollBy(deltaX: number, deltaY: number, time = 0, easing?: EaseItem) {
     const { x, y } = this.getCurrentPos()
+    easing = !easing ? ease.bounce : easing
     deltaX += x
     deltaY += y
 
@@ -398,13 +399,14 @@ export default class Scroller {
     x: number,
     y: number,
     time = 0,
-    easing = ease.bounce,
+    easing?: EaseItem,
     extraTransform = {
       start: {},
       end: {}
     },
     isSilent?: boolean
   ) {
+    easing = !easing ? ease.bounce : easing
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
 
@@ -434,10 +436,7 @@ export default class Scroller {
     time: number,
     offsetX: number | boolean,
     offsetY: number | boolean,
-    easing?: {
-      style: string
-      fn: EaseFn
-    }
+    easing?: EaseItem
   ) {
     const targetEle = getElement(el)
     const pos = offset(targetEle)
@@ -497,7 +496,8 @@ export default class Scroller {
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
-  resetPosition(time = 0, easing = ease.bounce) {
+  resetPosition(time = 0, easing?: EaseItem) {
+    easing = !easing ? ease.bounce : easing
     const {
       position: x,
       inBoundary: xInBoundary
