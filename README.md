@@ -13,8 +13,8 @@
 # Install
 
 ```bash
-npm install better-scroll -D # install 1.x
-npm install better-scroll@next -D # install 2.x，with full-featured plugin.
+npm install better-scroll -S # install 1.x
+npm install better-scroll@next -S # install 2.x，with full-featured plugin.
 ```
 
 ## What is BetterScroll ?

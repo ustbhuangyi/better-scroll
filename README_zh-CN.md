@@ -11,8 +11,8 @@
 # 安装
 
 ```bash
-npm install better-scroll -D # install 1.x
-npm install better-scroll@next -D # install 2.x，该版本带有所有插件的能力。
+npm install better-scroll -S # install 1.x
+npm install better-scroll@next -S # install 2.x，该版本带有所有插件的能力。
 ```
 
 # BetterScroll 是什么
