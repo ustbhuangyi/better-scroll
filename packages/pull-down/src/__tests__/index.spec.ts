@@ -24,6 +24,7 @@ describe('pull down tests', () => {
 
   afterEach(() => {
     bscroll.off()
+    bscroll.scroller.hooks.off()
     jest.clearAllMocks()
   })
 
@@ -66,7 +67,7 @@ describe('pull down tests', () => {
       bscroll.options.pullDownRefresh = undefined
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(0)
     })
@@ -74,7 +75,7 @@ describe('pull down tests', () => {
     it('should trigger pullingDown event', () => {
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(1)
     })
@@ -82,8 +83,8 @@ describe('pull down tests', () => {
     it('should trigger pullingDown once', () => {
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(1)
     })
@@ -91,7 +92,7 @@ describe('pull down tests', () => {
     it('should stop at correct position', () => {
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(bscroll.scrollTo).toHaveBeenCalledWith(
         0,
@@ -118,9 +119,9 @@ describe('pull down tests', () => {
     it('should restore to trigger pullingDown', () => {
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       pullDown.finish()
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(2)
     })
@@ -128,7 +129,7 @@ describe('pull down tests', () => {
     it('should resetPosition', () => {
       // when
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       pullDown.finish()
       // then
       expect(bscroll.resetPosition).toBeCalledTimes(1)
@@ -152,7 +153,7 @@ describe('pull down tests', () => {
       // when
       pullDown.close()
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(0)
     })
@@ -172,7 +173,7 @@ describe('pull down tests', () => {
       // when
       pullDown.open({ threshold: THRESHOLD, stop: STOP })
       bscroll.y = THRESHOLD + 1
-      bscroll.trigger('touchEnd')
+      bscroll.scroller.hooks.trigger('end')
       // then
       expect(pullDownHandler).toBeCalledTimes(1)
     })

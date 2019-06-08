@@ -51,6 +51,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scrollEnd',
       'refresh',
       'touchEnd',
+      'end',
       'flick',
       'scrollCancel',
       'momentum',
