@@ -34,8 +34,7 @@ export default class PullDown {
     // 需要设置 probe = 3 吗？
     // must watch scroll in real time
     this.scroll.options.probeType = Probe.Realtime
-
-    this.scroll.on('touchEnd', this._checkPullDown, this)
+    this.scroll.scroller.hooks.on('end', this._checkPullDown, this)
   }
 
   private _checkPullDown() {

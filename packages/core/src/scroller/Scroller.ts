@@ -60,6 +60,7 @@ export default class Scroller {
       'scrollEnd',
       'refresh',
       'touchEnd',
+      'end',
       'flick',
       'scrollCancel',
       'momentum',
@@ -210,7 +211,9 @@ export default class Scroller {
     actions.hooks.on(
       actions.hooks.eventTypes.end,
       (e: TouchEvent, pos: TranslaterPoint) => {
-        if (this.hooks.trigger(this.hooks.eventTypes.touchEnd, pos)) {
+        this.hooks.trigger(this.hooks.eventTypes.touchEnd, pos)
+
+        if (this.hooks.trigger(this.hooks.eventTypes.end, pos)) {
           return true
         }
 
