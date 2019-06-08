@@ -2,7 +2,7 @@
   <div class="core-container">
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
-        <div class="scroll-item" v-for="(item, index) in emojis" :key="index" @click="clickHandler(item)">{{item}}</div>
+        <div class="scroll-item" @touchmove="tm" v-for="(item, index) in emojis" :key="index" @click="clickHandler(item)">{{item}}</div>
       </div>
     </div>
   </div>
@@ -45,6 +45,9 @@
       this.bs.destroy()
     },
     methods: {
+      tm () {
+        console.log('tm')
+      },
       init() {
         this.bs = new BScroll(this.$refs.scroll, {
           scrollY: true,

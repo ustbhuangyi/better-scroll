@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import devices from 'puppeteer/DeviceDescriptors'
+import extendTouch from '../util/extendTouch'
 
 // await ((global as any).jestPuppeteer).debug()
 
@@ -8,10 +8,9 @@ jest.setTimeout(1000000)
 
 describe('CoreScroll', () => {
   let page = (global as any).page as Page
+  extendTouch(page)
   beforeAll(async () => {
-    const iPhone = devices['iPhone 6']
-    await page.emulate(iPhone)
-    await page.goto('http://0.0.0.0:8932//#/core/')
+    await page.goto('http://0.0.0.0:8932/#/core/')
   })
 
   it('should display 4 items at least', async () => {
@@ -47,7 +46,7 @@ describe('CoreScroll', () => {
 
   describe('CoreScroll/vertical', () => {
     beforeAll(async () => {
-      await page.goto('http://0.0.0.0:8932//#/core/default')
+      await page.goto('http://0.0.0.0:8932/#/core/default')
     })
 
     it('should render corrent DOM', async () => {
@@ -60,16 +59,110 @@ describe('CoreScroll', () => {
 
     it('should trigger eventListener when click wrapper DOM', async () => {
       let mockHandler = jest.fn()
-      page.on('dialog', async dialog => {
+      page.once('dialog', async dialog => {
         mockHandler()
         await dialog.dismiss()
       })
 
-      // wait for transition ends
+      // wait for router transition ends
       await page.waitFor(1000)
       await page.touchscreen.tap(100, 100)
 
       await expect(mockHandler).toHaveBeenCalled()
+    })
+
+    it('should scroll when dispatch touch', async () => {
+      await page.waitFor(1000)
+      const SwiperHandler = jest.fn()
+      await page.dispatchSwipe(
+        [
+          [
+            {
+              x: 100,
+              y: 150
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 140
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 130
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 110
+            }
+          ]
+        ],
+        () => {
+          SwiperHandler()
+        },
+        30
+      )
+
+      const content = await page.$('.scroll-content')
+      await page.waitFor(1000)
+      const boundingBox = await content!.boundingBox()
+      await expect(SwiperHandler).toHaveBeenCalled()
+      await expect(boundingBox!.y).toBeLessThan(0)
+    })
+
+    it.only('should dispatch scroll event', async () => {
+      let mockHandler = jest.fn()
+      page.once('console', async message => {
+        mockHandler()
+      })
+      await page.waitFor(1000)
+      await page.dispatchSwipe(
+        [
+          [
+            {
+              x: 100,
+              y: 150
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 140
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 130
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 100,
+              y: 110
+            }
+          ]
+        ],
+        () => {},
+        30
+      )
+      await expect(mockHandler).toBeCalled()
     })
   })
 })
