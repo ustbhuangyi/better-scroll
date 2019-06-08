@@ -15,9 +15,8 @@
     "vue:release": "lerna run --stream --scope examples vue:release",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "cm": "git-cz",
-    "test:prod": "yarn run lint && yarn run test -- --no-cache"
+    "test:e2e": "jest --config=jest-e2e.config.js --runInBand",
+    "cm": "git-cz"
   },
   "lint-staged": {
     "*.ts": [
@@ -47,6 +46,7 @@
     "@commitlint/config-conventional": "^7.1.2",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.12.18",
+    "@types/puppeteer": "^1.12.4",
     "commitizen": "^3.0.0",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
@@ -56,10 +56,12 @@
     "inquirer": "^6.3.1",
     "jest": "23.6.0",
     "jest-config": "^23.6.0",
+    "jest-puppeteer": "3.9.0",
     "lerna": "^3.14.1",
     "lint-staged": "^8.0.0",
     "ora": "^3.4.0",
     "prettier": "^1.14.3",
+    "puppeteer": "^1.17.0",
     "rimraf": "^2.6.2",
     "rollup": "^1.10.1",
     "rollup-plugin-commonjs": "^9.1.8",

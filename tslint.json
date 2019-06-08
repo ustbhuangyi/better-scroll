@@ -18,6 +18,7 @@
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": false,
-    "no-console": false
+    "no-console": false,
+    "await-promise": false
   }
 }
