@@ -1,7 +1,5 @@
 import { Page } from 'puppeteer'
-import extendTouch from '../util/extendTouch'
-
-// await ((global as any).jestPuppeteer).debug()
+import extendTouch from '../../util/extendTouch'
 
 // set default timeout
 jest.setTimeout(1000000)
@@ -120,7 +118,7 @@ describe('CoreScroll', () => {
       await expect(boundingBox!.y).toBeLessThan(0)
     })
 
-    it.only('should dispatch scroll event', async () => {
+    it('should dispatch scroll event', async () => {
       let mockHandler = jest.fn()
       page.once('console', async message => {
         mockHandler()
@@ -162,7 +160,152 @@ describe('CoreScroll', () => {
         () => {},
         30
       )
+      await page.waitFor(1000)
       await expect(mockHandler).toBeCalled()
+    })
+  })
+
+  describe('CoreScroll/horizontal', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/horizontal')
+    })
+
+    it('should render corrent DOM', async () => {
+      const wrapper = await page.$('.scroll-wrapper')
+      const container = await page.$('.horizontal-container')
+
+      expect(wrapper).toBeTruthy()
+      await expect(container).toBeTruthy()
+    })
+
+    it('should scroll to right when finger moves from right to left', async () => {
+      await page.waitFor(1000)
+      await page.dispatchSwipe(
+        [
+          [
+            {
+              x: 100,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 90,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 80,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 75,
+              y: 120
+            }
+          ],
+          [
+            {
+              x: 70,
+              y: 120
+            }
+          ]
+        ],
+        () => {},
+        30
+      )
+
+      const content = await page.$('.scroll-content')
+      await page.waitFor(1000)
+      const boundingBox = await content!.boundingBox()
+      await expect(boundingBox!.x).toBeLessThan(0)
+    })
+  })
+
+  describe('CoreScroll/freescroll', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/freescroll')
+    })
+
+    it('should scroll correctly when oblique scrolling occurred', async () => {
+      await page.waitFor(1000)
+      await page.dispatchSwipe(
+        [
+          [
+            {
+              x: 100,
+              y: 100
+            }
+          ],
+          [
+            {
+              x: 90,
+              y: 90
+            }
+          ],
+          [
+            {
+              x: 80,
+              y: 80
+            }
+          ],
+          [
+            {
+              x: 75,
+              y: 75
+            }
+          ],
+          [
+            {
+              x: 70,
+              y: 70
+            }
+          ]
+        ],
+        () => {},
+        30
+      )
+
+      const content = await page.$('.scroll-content')
+      await page.waitFor(1000)
+      const boundingBox = await content!.boundingBox()
+      await expect(boundingBox!.x).toBeLessThan(0)
+      await expect(boundingBox!.y).toBeLessThan(0)
+    })
+  })
+
+  describe('CoreScroll/driven by MouseWheel', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/mouse-wheel')
+    })
+
+    it('should scroll correctly when using MouseWheel to scroll', async () => {
+      await page.waitFor(1000)
+      // emulate pc scene
+      await page.emulate({
+        viewport: {
+          isMobile: false,
+          width: 375,
+          height: 667
+        },
+        // tslint:disable-next-line: max-line-length
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'
+      })
+
+      await page.mouse.move(50, 200)
+      await page.mouse.down()
+      await page.mouse.move(50, 100, {
+        steps: 10
+      })
+      await page.mouse.up()
+
+      const content = await page.$('.wheel-scroll')
+      await page.waitFor(1000)
+      const boundingBox = await content!.boundingBox()
+      await expect(boundingBox!.y).toBeLessThan(0)
     })
   })
 })

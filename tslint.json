@@ -6,7 +6,7 @@
   ],
   "rules": {
     "max-line-length": {
-        "options": [120]
+        "options": [140]
     },
     "no-empty": false,
     "deprecation": false,

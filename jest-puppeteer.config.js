@@ -3,7 +3,7 @@ module.exports = {
     headless: false,
     defaultViewport: {
       width: 375,
-      height: 666,
+      height: 667,
       deviceScaleFactor: 2,
       isMobile: true,
       hasTouch: true

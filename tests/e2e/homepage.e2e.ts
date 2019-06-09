@@ -1,5 +1,4 @@
 import { Page } from 'puppeteer'
-import { async } from 'q'
 
 jest.setTimeout(10000000)
 
