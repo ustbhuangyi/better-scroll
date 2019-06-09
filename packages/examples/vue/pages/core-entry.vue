@@ -11,7 +11,7 @@
         <span>freescroll</span>
       </li>
       <li class="example-item" @click="goPage('/core/mouse-wheel')">
-        <span>drivened by Mouse wheel</span>
+        <span>driven by Mouse wheel</span>
       </li>
     </ul>
     <transition name="move">

@@ -182,7 +182,6 @@ export default class ActionsHandler {
   }
 
   private click(e: TouchEvent) {
-    console.log(e)
     this.hooks.trigger(this.hooks.eventTypes.click, e)
   }
 

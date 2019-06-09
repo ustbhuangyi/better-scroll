@@ -6,7 +6,7 @@
   ],
   "rules": {
     "max-line-length": {
-        "options": [120]
+        "options": [140]
     },
     "no-empty": false,
     "deprecation": false,
@@ -18,6 +18,7 @@
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": false,
-    "no-console": false
+    "no-console": false,
+    "await-promise": false
   }
 }
