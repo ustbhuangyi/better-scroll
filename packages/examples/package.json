@@ -8,7 +8,7 @@
     },
     "private": true,
     "scripts": {
-        "vue:dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/vue-webpack.conf.js --host 0.0.0.0 --port 8932 --colors",
+        "vue:dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/vue-webpack.conf.js --host localhost --port 8932 --colors",
         "vue:build": "cross-env NODE_ENV=production node build/vue-example-build.js",
         "vue:release": "sh vue-release.sh"
     },
