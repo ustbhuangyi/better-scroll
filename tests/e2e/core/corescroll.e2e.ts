@@ -1,5 +1,6 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import extendMouseWheel from '../../util/extendMouseWheel'
 
 // set default timeout
 jest.setTimeout(1000000)
@@ -278,11 +279,7 @@ describe('CoreScroll', () => {
 
   describe('CoreScroll/driven by MouseWheel', () => {
     beforeAll(async () => {
-      await page.goto('http://0.0.0.0:8932/#/core/mouse-wheel')
-    })
-
-    it('should scroll correctly when using MouseWheel to scroll', async () => {
-      await page.waitFor(1000)
+      extendMouseWheel(page)
       // emulate pc scene
       await page.emulate({
         viewport: {
@@ -294,13 +291,19 @@ describe('CoreScroll', () => {
         userAgent:
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'
       })
+      await page.goto('http://0.0.0.0:8932/#/core/mouse-wheel')
+    })
 
-      await page.mouse.move(50, 200)
-      await page.mouse.down()
-      await page.mouse.move(50, 100, {
-        steps: 10
+    it.only('should scroll correctly when using MouseWheel to scroll', async () => {
+      await page.waitFor(1000)
+
+      await page.dispatchMouseWheel({
+        type: 'mouseWheel',
+        x: 100,
+        y: 100,
+        deltaX: 0,
+        deltaY: 50
       })
-      await page.mouse.up()
 
       const content = await page.$('.wheel-scroll')
       await page.waitFor(1000)
