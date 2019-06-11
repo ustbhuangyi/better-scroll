@@ -68,6 +68,14 @@ export const propertiesConfig = [
     key: 'scrollTo'
   },
   {
+    sourceKey: 'scroller.scrollBy',
+    key: 'scrollBy'
+  },
+  {
+    sourceKey: 'scroller.scrollToElement',
+    key: 'scrollToElement'
+  },
+  {
     sourceKey: 'scroller.resetPosition',
     key: 'resetPosition'
   }
