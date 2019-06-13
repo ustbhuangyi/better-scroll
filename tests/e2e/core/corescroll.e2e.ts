@@ -294,7 +294,7 @@ describe('CoreScroll', () => {
       await page.goto('http://0.0.0.0:8932/#/core/mouse-wheel')
     })
 
-    it.only('should scroll correctly when using MouseWheel to scroll', async () => {
+    it('should scroll correctly when using MouseWheel to scroll', async () => {
       await page.waitFor(1000)
 
       await page.dispatchMouseWheel({
