@@ -82,10 +82,16 @@ const release = async () => {
 
   await execa(require.resolve('lerna/cli'), releaseArguments, { stdio: 'inherit' })
 
-
-  await execa('git', ['add', '-A'], { stdio: 'inherit' })
-  await execa('git', ['commit', '-m', `chore: ${version} published`], { stdio: 'inherit' })
-  await execa('git', ['push', 'origin', `master`], { stdio: 'inherit' })
+  // it seems that sometimes 'gitHead' property in packages/**/package.json will change
+  // but sometimes it won't, at this condition. work tree is clean, 'git commit ' will cause en error
+  // so put it in try/catch, because we want to sync dev from master
+  try {
+    await execa('git', ['add', '-A'], { stdio: 'inherit' })
+    await execa('git', ['commit', '-m', `chore: ${version} published`], { stdio: 'inherit' })
+    await execa('git', ['push', 'origin', `master`], { stdio: 'inherit' })
+  } catch (error) {
+    console.log(error)
+  }
 
   // sync dev from master
   await execa('git', ['checkout', 'dev'], { stdio: 'inherit' })
