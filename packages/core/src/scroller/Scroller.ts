@@ -462,8 +462,8 @@ export default class Scroller {
     )
     offsetY = getOffset(
       offsetY,
-      targetEle.offsetWidth,
-      this.wrapper.offsetWidth
+      targetEle.offsetHeight,
+      this.wrapper.offsetHeight
     )
 
     const getPos = (

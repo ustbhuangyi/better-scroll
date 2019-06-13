@@ -48,12 +48,18 @@ export default class Transition extends Base {
     this.transitionTime(time)
     this.translate(endPoint)
 
-    // TODO when probeType is not Realtime, need to dispatch scroll ?
     if (time && this.options.probeType === Probe.Realtime) {
       this.startProbe()
     }
 
-    // when time is 0
+    // if we change content's transformY in a tick
+    // such as: 0 -> 50px -> 0
+    // transitionend will not be triggered
+    // so we forceupdate by reflow
+    if (!time) {
+      this._reflow = this.content.offsetHeight
+    }
+
     // no need to dispatch move and end when slient
     if (!time && !isSlient) {
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)

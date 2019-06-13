@@ -19,6 +19,11 @@ export default class Animation extends Base {
     // time is 0
     if (!time) {
       this.translate(endPoint)
+      // if we change content's transformY in a tick
+      // such as: 0 -> 50px -> 0
+      // transitionend will not be triggered
+      // so we forceupdate by reflow
+      this._reflow = this.content.offsetHeight
       // no need to dispatch move and end when slient
       if (isSlient) return
 
