@@ -81,6 +81,17 @@ const release = async () => {
   console.log(chalk.grey(`lerna ${releaseArguments.join(' ')}`))
 
   await execa(require.resolve('lerna/cli'), releaseArguments, { stdio: 'inherit' })
+
+
+  await execa('git', ['add', '-A'], { stdio: 'inherit' })
+  await execa('git', ['commit', '-m', `chore: ${version} published`], { stdio: 'inherit' })
+  await execa('git', ['push', 'origin', `master`], { stdio: 'inherit' })
+
+  // sync dev from master
+  await execa('git', ['checkout', 'dev'], { stdio: 'inherit' })
+  await execa('git', ['rebase', 'master'], { stdio: 'inherit' })
+  await execa('git', ['push', 'origin', 'dev'], { stdio: 'inherit' })
+  await execa('git', ['checkout', 'master'], { stdio: 'inherit' })
 }
 
 release().catch(err => {
