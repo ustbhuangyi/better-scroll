@@ -9,7 +9,8 @@ const getFAQSideBar = function (lang) {
       title: FAQContent[lang],
       collapsable: false,
       children: [
-        ''
+        '',
+        'diagnosis'
       ]
     }
   ]
