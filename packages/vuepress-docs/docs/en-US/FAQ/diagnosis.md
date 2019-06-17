@@ -62,6 +62,10 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
     })
   ```
 
+  :::warning
+  Modifying the event's `preventDefault` behavior may cause some side effects, such as the touch event may bubble up to the document, causing the document to be dragged.
+  :::
+
 ### [Question 4] Why are the listeners for all click events inside BetterScroll content not triggered?
 
 - **Reason**
@@ -74,7 +78,7 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
 
   ```js
     Let bs = new BScroll('.wrapper', {
-      Click: true
+      click: true
     })
   ```
 
@@ -110,13 +114,15 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
 
 - **Solution**
 
-  Since you know the reason, there are corresponding solutions. For example, when you scroll the **inner** `bs`, listen for the `scroll` event and call the **outer** `bs.disable()` to disable the **outer** `bs`. When the **inner** `bs` scrolls to the bottom, it means that you need to scroll the **outer** `bs` at this time. At this time, call the **outer** `bs.enable()` to activate the outer layer and call the **inner** `bs.disable(). ` to forbid inner scrolling. In fact, think about it, this interaction is consistent with the nested scrolling behavior of the `Web browser`, except that the browser handles the various scrolling nesting logic for you, and the BetterScroll requires your own dispatched events and exposed APIs. to fulfill.
+  Since you know the reason, there are corresponding solutions. For example, when you scroll the **inner** `bs`, listen for the `scroll` event and call the **outer** `bs.disable()` to disable the **outer** `bs`. When the **inner** `bs` scrolls to the bottom, it means that you need to scroll the **outer** `bs` at this time. At this time, call the **outer** `bs.enable()` to activate the outer layer and call the **inner** `bs.disable(). ` to forbid inner scrolling. In fact, think about it, this interaction is consistent with the nested scrolling behavior of the `Web browser`, except that the browser handles the various scrolling nesting logic for you, and the BetterScroll requires your own dispatched events and exposed APIs to fulfill.
+
+  > The [scroll](https://didi.github.io/cube-ui/example/#/scroll/v-scrolls) component of `cube-ui` gives a solution to this scenario. [Code is here](https://github.com/didi/cube-ui/blob/dev/src/components/scroll/scroll.vue)
 
 ### [Question 8] In the vertical bs nesting horizontal bs scene, why does the vertical movement of the horizontal bs area do not cause vertical scrolling of the outer vertical bs?
 
 - **Reason**
 
-  The reason is similar to **2, or because `e.preventDefault()` affects the default scrolling behavior, causing the outer bs to not trigger the touch event.
+  The reason is similar to **Question 2**, because `e.preventDefault()` affects the default scrolling behavior, causing the outer bs to not trigger the touch event.
 
 - **Solution**
 
