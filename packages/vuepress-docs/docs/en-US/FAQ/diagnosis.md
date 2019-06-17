@@ -46,24 +46,38 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
     })
   ```
 
-### [Question 3] Why can't I pop up a pop-up window after using BetterScroll, and why can't I use the `:active` CSS class to achieve the pressed state?
+### [Question 3] Why can't I pop up a pop-up window after using BetterScroll.
 
 - **Reason**
 
-  **question 2** has been mentioned, it is caused by `e.preventDefault()`.
+  **question 2** has been mentioned, it is caused by `e.preventDefault()` in touchstart.
 
 - **Solution**
 
-  Configure the `preventDefault` property.
+  Option 1: Configure the `preventDefaultException` property.
 
   ```js
-    Let bs = new BScroll('.wrapper', {
-      preventDefault: false
-    })
+  let bs = new BScroll('.wrapper', {
+    preventDefaultException: {
+      className: /(^|\s)test(\s|$)/
+    }
+  })
   ```
 
+  `eventDefaultException` can be used to control the `e.preventDefault()` of the `touchstart` and `touchmove` events. If the above regular expression is used to check if the class name of the currently touched target element contains `test`, if passed, Then `e.preventDefault()` will not be called.
+
+  Option 2: Configure the `preventDefault` property.
+
+  ```js
+  let bs = new BScroll('.wrapper', {
+    preventDefault: false
+  })
+  ```
+
+  `preventDefault` is set to `false`, there are some side effects, it is generally recommended to use **Option one**.
+
   :::warning
-  Modifying the event's `preventDefault` behavior may cause some side effects, such as the touch event may bubble up to the document, causing the document to be dragged.
+  The side effect is that the touch event may bubble up to the document, causing the document to be dragged. At this point you need to listen for the parent or ancestor element of the `wrapper` element, bind them to the touchmove event, and call `e.preventDefault()`.
   :::
 
 ### [Question 4] Why are the listeners for all click events inside BetterScroll content not triggered?
@@ -90,7 +104,18 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
 
 - **Solution**
 
-  You can manage the bubbling of events by instantiating BetterScroll's `stopPropagation` configuration item, or by instantiating BetterScroll's `click` configuration item to prevent multiple triggers of clicks.
+  You can manage the bubbling of events by instantiating inner BetterScroll's `stopPropagation` configuration item, or by instantiating inner BetterScroll's `click` configuration item to prevent multiple triggers of clicks.
+
+  ```js
+  let innerBS = new BScroll('.wrapper', {
+    stopPropagation: true
+  })
+
+  // or
+  let innerBS = new BScroll('.wrapper', {
+    click: false
+  })
+  ```
 
 ### [Question 6] Why do I listen to the scroll event of bs, why not execute the callback?
 
@@ -133,3 +158,19 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
       eventPassthrough: 'vertical' // keep vertical native scrolling
     })
   ```
+
+### [Question 9] Why BetterScroll nests textarea form tags, and textarea content cannot be scrolled.
+
+- **Reason**
+
+  The reason is similar to the **Questionn 2**, the `e.preventDefault()` of the `touchmove` event of BetterScroll affects the default scrolling behavior.
+
+- **Solution**
+
+  ```js
+  let innerBS = new BScroll('.wrapper', {
+    preventDefault: false
+  })
+  ```
+
+  Side effects have been mentioned in **Question 3**.
