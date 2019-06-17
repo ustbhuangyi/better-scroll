@@ -70,7 +70,7 @@ BetterScroll 提供了 `slide` 的 feature。如果实现了一个横向滚动�
   })
   ```
 
-  通过 `preventDefaultException` 可以控制 `touchstart` 和 `touchmove` 事件的 `e.preventDefault()`，如果上述的正则是用来校验当前触摸的目标元素的 class 名称是否含有 `test`，如果通过了，则不会调用 `e.preventDefault()`。
+  通过 `preventDefaultException` 可以控制 `touchstart` 和 `touchmove` 事件的 `e.preventDefault()`。上述的正则是用来校验当前触摸的目标元素 class 名称是否含有 `test`，如果通过了，则不会调用 `e.preventDefault()`。
 
   方案二：配置 `preventDefault` 属性。
 
@@ -90,7 +90,7 @@ BetterScroll 提供了 `slide` 的 feature。如果实现了一个横向滚动�
 
 - **原因**
 
-  依然是 `e.preventDefault()` 造成的。在移动端，如果你在 `touchstart/touchmove/touchend` 的逻辑里面调用 `e.preventDefault()`，会阻止它以及它子元素的 click 事件的执行。因此，BetterScroll 内部会管理 `click` 事件的派发，你只需要`click` 配置项即可。
+  依然是 `touch` 事件的 `e.preventDefault()` 的原因。在移动端，如果你在 `touchstart/touchmove/touchend` 的逻辑里面调用 `e.preventDefault()`，会阻止它以及它子元素的 click 事件的执行。因此，BetterScroll 内部会管理 `click` 事件的派发，你只需要 `click` 配置项即可。
 
 - **解决**
 
