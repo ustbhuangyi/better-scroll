@@ -2,7 +2,7 @@
 
 ### [Question 1] Why can't my BetterScroll work?
 
-The problem basically lies in the **Height Calculation Error**. First of all, you must have a clear understanding of the scrolling principle of `BetterScroll`. For vertical scrolling, simply the height of the `wrapper` container is greater than the height of the `content` content, and the `transformY` is modified to achieve the purpose of scrolling. The principle of horizontal scrolling is similar. Then the calculation **Scrollable Height** is the logic necessary for `BetterScroll`. The general logic  is:
+The problem basically lies in the **Height Calculation Error**. First of all, you must have a clear understanding of the scrolling principle of `BetterScroll`. For vertical scrolling, simply the height of the `wrapper` container is greater than the height of the `content` content, and the `translateY` is modified to achieve the purpose of scrolling. The principle of horizontal scrolling is similar. Then the calculation **Scrollable Height** is the logic necessary for `BetterScroll`. The general logic  is:
 
   1. **Pictures with uncertain sizes**
 
