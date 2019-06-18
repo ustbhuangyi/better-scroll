@@ -76,18 +76,34 @@ export default class ActionsHandler {
     ])
   }
 
-  private beforeHandler(e: TouchEvent) {
+  private beforeHandler(e: TouchEvent, type: 'start' | 'move' | 'end') {
     const {
       preventDefault,
       stopPropagation,
       preventDefaultException
     } = this.options
-    if (
-      preventDefault &&
-      !preventDefaultExceptionFn(e.target, preventDefaultException)
-    ) {
+
+    const preventDefaultConditions = {
+      start: () => {
+        return (
+          preventDefault &&
+          !preventDefaultExceptionFn(e.target, preventDefaultException)
+        )
+      },
+      end: () => {
+        return (
+          preventDefault &&
+          !preventDefaultExceptionFn(e.target, preventDefaultException)
+        )
+      },
+      move: () => {
+        return preventDefault
+      }
+    }
+    if (preventDefaultConditions[type]()) {
       e.preventDefault()
     }
+
     if (stopPropagation) {
       e.stopPropagation()
     }
@@ -112,7 +128,7 @@ export default class ActionsHandler {
       return
     }
 
-    this.beforeHandler(e)
+    this.beforeHandler(e, 'start')
 
     let point = (e.touches ? e.touches[0] : e) as Touch
     this.pointX = point.pageX
@@ -126,7 +142,7 @@ export default class ActionsHandler {
       return
     }
 
-    this.beforeHandler(e)
+    this.beforeHandler(e, 'move')
 
     let point = (e.touches ? e.touches[0] : e) as Touch
     let deltaX = point.pageX - this.pointX
@@ -176,7 +192,7 @@ export default class ActionsHandler {
     }
     this.setInitiated()
 
-    this.beforeHandler(e)
+    this.beforeHandler(e, 'end')
 
     this.hooks.trigger(this.hooks.eventTypes.end, e)
   }
