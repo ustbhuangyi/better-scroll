@@ -92,6 +92,18 @@ export default class Indicator {
       this._listen(bscrollHooks, 'scrollStart', () => {
         this.fade(true)
       })
+      // for mousewheel event
+      if (
+        bscroll.eventTypes.mousewheelStart &&
+        bscroll.eventTypes.mousewheelEnd
+      ) {
+        this._listen(bscrollHooks, 'mousewheelStart', () => {
+          this.fade(true)
+        })
+        this._listen(bscrollHooks, 'mousewheelEnd', () => {
+          this.fade()
+        })
+      }
     }
 
     if (interactive) {

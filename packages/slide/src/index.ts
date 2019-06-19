@@ -61,7 +61,7 @@ export default class Slide {
         slide.loop = false
       }
     }
-    this.setSlideWidth(slideEls)
+    const needRefresh = this.setSlideWidth(slideEls)
     this.page.currentPage = {
       x: 0,
       y: 0,
@@ -110,7 +110,7 @@ export default class Slide {
       this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
     }
 
-    if (!lazyInit2Refresh) {
+    if (!lazyInit2Refresh && !needRefresh) {
       this.initSlideState()
     } else {
       this.scroll.refresh()
@@ -272,12 +272,12 @@ export default class Slide {
       this.goTo(changePage.pageX, changePage.pageY, 0)
     }
   }
-  private setSlideWidth(slideEls: HTMLElement) {
+  private setSlideWidth(slideEls: HTMLElement): Boolean {
     if (this.slideOpt.disableSetWidth) {
-      return
+      return false
     }
     if (!this.scroll.options.scrollX) {
-      return
+      return false
     }
     const children = slideEls.children
     const slideItemWidth = children[0].clientWidth
@@ -286,6 +286,7 @@ export default class Slide {
       slideItemDom.style.width = slideItemWidth + 'px'
     }
     slideEls.style.width = slideItemWidth * children.length + 'px'
+    return true
   }
   private goTo(
     pageX: number,

@@ -158,7 +158,7 @@ describe('slide test for SlidePage class', () => {
       pageY: 0
     })
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).not.toBeCalled()
+    expect(bscroll.refresh).toBeCalled()
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('600px')
     slide.destroy()
@@ -176,7 +176,7 @@ describe('slide test for SlidePage class', () => {
     const slide = new Slide(bscroll)
     expect(bscroll.options.slide.loop).toBe(false)
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).not.toBeCalled()
+    expect(bscroll.refresh).toBeCalled()
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('300px')
     slide.destroy()
