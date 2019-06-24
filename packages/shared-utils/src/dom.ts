@@ -183,6 +183,8 @@ export function preventDefaultExceptionFn(
   return false
 }
 
+export const tagExceptionFn = preventDefaultExceptionFn
+
 export function tap(e: any, eventName: string) {
   let ev = document.createEvent('Event') as any
   ev.initEvent(eventName, true, true)
