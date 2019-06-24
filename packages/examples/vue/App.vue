@@ -50,6 +50,10 @@
     {
       name: 'scrollbar',
       path: '/scrollbar/'
+    },
+    {
+      name: 'infinity',
+      path: '/infinity/'
     }
   ]
   export default {
