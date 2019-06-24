@@ -143,7 +143,8 @@ export default class BScroll extends EventEmitter {
 
   private handleAutoBlur() {
     if (this.options.autoBlur) {
-      this.on(this.eventTypes.scrollStart, () => {
+      this.on(this.eventTypes.beforeScrollStart, () => {
+        console.log('autoblur')
         let activeElement = document.activeElement as HTMLElement
         if (
           activeElement &&
