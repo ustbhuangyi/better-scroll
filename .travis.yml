@@ -10,3 +10,4 @@ branches:
     - master
 script:
   - npm test
+  - ./node_modules/.bin/codecov
