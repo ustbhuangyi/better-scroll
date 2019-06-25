@@ -55,7 +55,7 @@ describe('BetterScroll in Form-Textarea', () => {
     await expect(boundingBox!.y).toBeLessThan(0)
   })
 
-  it.only('should not scroll when manipulating texatea tag', async () => {
+  it('should not scroll when manipulating texatea tag', async () => {
     await page.waitFor(1000)
     const SwiperHandler = jest.fn()
     await page.dispatchSwipe(
