@@ -5,6 +5,7 @@ import {
   TouchEvent,
   // dom
   preventDefaultExceptionFn,
+  tagExceptionFn,
   eventTypeMap
 } from '@better-scroll/shared-utils'
 
@@ -23,6 +24,7 @@ export interface Options {
   preventDefault: boolean
   stopPropagation: boolean
   preventDefaultException: Exception
+  tagException: Exception
   momentumLimitDistance: number
 }
 
@@ -120,6 +122,13 @@ export default class ActionsHandler {
       return
     }
     this.setInitiated(_eventType)
+
+    // if textarea or other html tags in options.tagException is manipulated
+    // do not make bs scroll
+    if (tagExceptionFn(e.target, this.options.tagException)) {
+      this.setInitiated()
+      return
+    }
 
     // no mouse left button
     if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return

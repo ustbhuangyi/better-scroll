@@ -50,6 +50,10 @@ export class Options {
     tagName?: RegExp
     className?: RegExp
   }
+  tagException: {
+    tagName?: RegExp
+    className?: RegExp
+  }
   HWCompositing: boolean
   useTransition: boolean
   bindToWrapper: boolean
@@ -97,6 +101,9 @@ export class Options {
     this.preventDefault = true
     this.preventDefaultException = {
       tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+    }
+    this.tagException = {
+      tagName: /^TEXTAREA$/
     }
 
     this.HWCompositing = true

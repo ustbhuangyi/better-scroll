@@ -50,6 +50,10 @@
     {
       name: 'scrollbar',
       path: '/scrollbar/'
+    },
+    {
+      name: 'form',
+      path: '/form/'
     }
   ]
   export default {

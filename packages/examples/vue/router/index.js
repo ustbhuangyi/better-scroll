@@ -8,18 +8,23 @@ import Picker from 'vue-example/pages/picker-entry'
 import Pullup from 'vue-example/pages/pullup-entry'
 import PullDown from 'vue-example/pages/pulldown-entry'
 import ScrollBar from 'vue-example/pages/scrollbar-entry'
+import FormEntry from 'vue-example/pages/form-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
 import VerticalSlide from 'vue-example/components/slide/vertical'
 import PcSlide from 'vue-example/components/slide/pc'
+
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
 import Freescroll from 'vue-example/components/core/freescroll'
 import MouseWheelCore from 'vue-example/components/core/mouse-wheel'
+
 import oneColumnPicker from 'vue-example/components/picker/one-column'
 import doubleColumnPicker from 'vue-example/components/picker/double-column'
 import linkageColumnPicker from 'vue-example/components/picker/linkage-column'
+
+import formTextarea from 'vue-example/components/form/textarea'
 
 Vue.use(Router)
 
@@ -102,6 +107,16 @@ export default new Router({
     {
       path: '/scrollbar',
       component: ScrollBar
+    },
+    {
+      path: '/form',
+      component: FormEntry,
+      children: [
+        {
+          path: 'textarea',
+          component: formTextarea
+        }
+      ]
     }
   ]
 })

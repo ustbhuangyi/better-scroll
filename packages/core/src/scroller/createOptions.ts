@@ -9,6 +9,7 @@ export function createActionsHandlerOptions(bsOptions: BScrollOptions) {
     'disableMouse',
     'preventDefault',
     'stopPropagation',
+    'tagException',
     'preventDefaultException'
   ].reduce<ActionsHandlerOptions>(
     (prev, cur) => {

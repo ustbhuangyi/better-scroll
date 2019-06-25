@@ -38,6 +38,9 @@ describe('BetterScroll Options', () => {
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
       },
+      tagException: {
+        tagName: /^TEXTAREA$/
+      },
       probeType: 0,
       resizePolling: 60,
       scrollX: false,
@@ -80,6 +83,9 @@ describe('BetterScroll Options', () => {
       preventDefault: true,
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      },
+      tagException: {
+        tagName: /^TEXTAREA$/
       },
       probeType: 0,
       resizePolling: 60,
@@ -124,6 +130,9 @@ describe('BetterScroll Options', () => {
       preventDefault: true,
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      },
+      tagException: {
+        tagName: /^TEXTAREA$/
       },
       probeType: 0,
       resizePolling: 60,

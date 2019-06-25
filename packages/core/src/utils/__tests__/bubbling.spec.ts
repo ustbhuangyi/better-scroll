@@ -6,11 +6,9 @@ describe('bubbling', () => {
     const parentHooks = new EventEmitter(['test'])
     const childHooks = new EventEmitter(['test'])
     bubbling(childHooks, parentHooks, ['test'])
-    const handler = jest.fn(() => {
-      return 'return value'
-    })
+    const handler = jest.fn(() => {})
     parentHooks.on('test', handler)
-    const t = childHooks.trigger('test')
-    expect(t).toBe('return value')
+    childHooks.trigger('test', 'dummy test')
+    expect(handler).toBeCalledWith('dummy test')
   })
 })
