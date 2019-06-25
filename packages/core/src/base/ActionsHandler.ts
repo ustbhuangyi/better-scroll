@@ -127,6 +127,7 @@ export default class ActionsHandler {
     // do not make bs scroll
     if (tagExceptionFn(e.target, this.options.tagException)) {
       this.setInitiated()
+      return
     }
 
     // no mouse left button
