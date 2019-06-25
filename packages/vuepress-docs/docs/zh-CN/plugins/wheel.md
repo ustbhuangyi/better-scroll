@@ -6,7 +6,7 @@ wheel 插件，是实现类似 IOS Picker 组件的基石。
 
 ## 安装
 
-```shell
+```bash
 npm install @better-scroll/wheel@next --save
 
 // or

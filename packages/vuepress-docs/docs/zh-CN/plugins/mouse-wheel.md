@@ -4,7 +4,7 @@
 
 # 安装
 
-```shell
+```bash
 npm install @better-scroll/mouse-wheel@next --save
 
 // or

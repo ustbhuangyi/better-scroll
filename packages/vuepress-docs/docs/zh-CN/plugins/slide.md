@@ -6,7 +6,7 @@
 
 ## 安装
 
-```shell
+```bash
 npm install @better-scroll/slide@next --save
 
 // or

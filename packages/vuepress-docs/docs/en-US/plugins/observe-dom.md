@@ -6,7 +6,7 @@ Enable the ability to watch for changes of scroll DOM. With this plugin, the ref
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/observe-dom@next --save
 
 // or

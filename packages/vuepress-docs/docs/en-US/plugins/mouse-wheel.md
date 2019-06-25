@@ -4,7 +4,7 @@ This plugin supports for mouse wheel for core scrolling and some plugins in PC.
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/mouse-wheel@next --save
 
 // or

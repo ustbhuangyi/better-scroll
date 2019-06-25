@@ -6,7 +6,7 @@
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/pull-up@next --save
 
 // or

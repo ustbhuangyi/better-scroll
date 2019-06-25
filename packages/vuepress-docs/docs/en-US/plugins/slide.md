@@ -6,7 +6,7 @@ This plugin is used for slide or swipe.
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/slide@next --save
 
 // or

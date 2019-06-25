@@ -6,7 +6,7 @@
 
 ## 安装
 
-```shell
+```bash
 npm install @better-scroll/scroll-bar@next --save
 
 // or
