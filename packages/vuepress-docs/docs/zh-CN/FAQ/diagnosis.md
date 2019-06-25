@@ -164,19 +164,3 @@ BetterScroll 提供了 `slide` 的 feature。如果实现了一个横向滚动�
     eventPassthrough: 'vertical' // 保持纵向的原生浏览器滚动
   })
   ```
-
-### 【问题九】为什么 BetterScroll 嵌套 textarea 表单标签，textarea 内容不能滚动。
-
-- **原因**
-
-  原因与**问题二**类似，BetterScroll 的 `touchmove` 事件的 `e.preventDefault()` 影响默认的滚动行为。
-
-- **解决**
-
-  ```js
-  let innerBS = new BScroll('.wrapper', {
-    preventDefault: false
-  })
-  ```
-
-  副作用在**问题三**已经提及。
