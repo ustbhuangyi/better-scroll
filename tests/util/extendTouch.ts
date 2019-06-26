@@ -10,14 +10,22 @@ interface EventParams {
   touchPoints: TouchPoint[]
 }
 
+interface PinchParams {
+  x: number
+  y: number
+  scaleFactor: number
+  gestureSourceType: 'touch'
+}
+
 type EventTypes = 'touchStart' | 'touchMove' | 'touchEnd'
 
 const DEFAULT_CHROMIUM_TOUCH_NAME = 'Input.dispatchTouchEvent'
+const PINCH_NAME = 'Input.synthesizePinchGesture'
 
 declare module 'puppeteer' {
   interface Touchscreen {
     _client: {
-      send: (name: string, eventParams: EventParams) => Promise<void>
+      send: (name: string, params: EventParams | PinchParams) => Promise<void>
     }
   }
   interface Page {
@@ -30,6 +38,7 @@ declare module 'puppeteer' {
       cb: Function,
       interval?: number
     ) => Promise<void>
+    dispatchPinch: (pinchParams: PinchParams) => Promise<void>
     touchsceen: Touchscreen
   }
 }
@@ -75,5 +84,8 @@ export default (page: Page) => {
       }
       nextMove(1)
     })
+  }
+  page.dispatchPinch = async pinchParams => {
+    await page.touchscreen._client.send(PINCH_NAME, pinchParams)
   }
 }
