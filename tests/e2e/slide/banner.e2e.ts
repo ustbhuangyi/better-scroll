@@ -6,7 +6,7 @@ jest.setTimeout(10000000)
 describe('Slider for banner', () => {
   let page = (global as any).page as Page
   extendTouch(page)
-  beforeAll(async () => {
+  beforeEach(async () => {
     await page.goto('http://0.0.0.0:8932/#/slide/banner')
   })
 

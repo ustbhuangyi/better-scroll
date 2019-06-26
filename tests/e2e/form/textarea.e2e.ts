@@ -5,8 +5,11 @@ jest.setTimeout(10000000)
 
 describe('BetterScroll in Form-Textarea', () => {
   let page = (global as any).page as Page
+
+  // disable cache
+  page.setCacheEnabled(false)
   extendTouch(page)
-  beforeAll(async () => {
+  beforeEach(async () => {
     await page.goto('http://0.0.0.0:8932/#/form/textarea')
   })
 
@@ -56,33 +59,32 @@ describe('BetterScroll in Form-Textarea', () => {
   })
 
   it('should not scroll when manipulating texatea tag', async () => {
+    await page.reload()
     await page.waitFor(1000)
-    const SwiperHandler = jest.fn()
     await page.dispatchSwipe(
       [
         [
           {
-            x: 100,
-            y: 450
+            x: 200,
+            y: 570
           }
         ],
         [
           {
-            x: 100,
-            y: 440
+            x: 200,
+            y: 560
           }
         ],
         [
           {
-            x: 100,
-            y: 430
+            x: 200,
+            y: 530
           }
         ]
       ],
       () => {},
       30
     )
-
     const content = await page.$('.textarea-scroller')
     await page.waitFor(1000)
     const boundingBox = await content!.boundingBox()
