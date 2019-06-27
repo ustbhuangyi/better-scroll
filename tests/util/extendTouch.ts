@@ -10,22 +10,42 @@ interface EventParams {
   touchPoints: TouchPoint[]
 }
 
+// https://chromedevtools.github.io/devtools-protocol/tot/Input#method-synthesizePinchGesture
 interface PinchParams {
   x: number
   y: number
   scaleFactor: number
-  gestureSourceType: 'touch'
+  gestureSourceType: 'touch' | 'default' | 'mouse'
+}
+
+// https://chromedevtools.github.io/devtools-protocol/tot/Input#method-synthesizeScrollGesture
+interface ScrollParams {
+  x: number // X coordinate of the start of the gesture in CSS pixels.
+  y: number // Y coordinate of the start of the gesture in CSS pixels.
+  xDistance: number // positive to scroll left
+  yDistance: number // positive to scroll up
+  gestureSourceType: 'touch' | 'default' | 'mouse'
+  speed?: number // Swipe speed in pixels per second
+  xOverscroll?: number
+  yOverscroll?: number
+  preventFling?: boolean
+  repeatCount?: number
+  repeatDelayMs?: number
 }
 
 type EventTypes = 'touchStart' | 'touchMove' | 'touchEnd'
 
 const DEFAULT_CHROMIUM_TOUCH_NAME = 'Input.dispatchTouchEvent'
 const PINCH_NAME = 'Input.synthesizePinchGesture'
+const SCROLL_NAME = 'Input.synthesizeScrollGesture'
 
 declare module 'puppeteer' {
   interface Touchscreen {
     _client: {
-      send: (name: string, params: EventParams | PinchParams) => Promise<void>
+      send: (
+        name: string,
+        params: EventParams | PinchParams | ScrollParams
+      ) => Promise<void>
     }
   }
   interface Page {
@@ -39,6 +59,7 @@ declare module 'puppeteer' {
       interval?: number
     ) => Promise<void>
     dispatchPinch: (pinchParams: PinchParams) => Promise<void>
+    dispatchScroll: (scrollParams: ScrollParams) => Promise<void>
     touchsceen: Touchscreen
   }
 }
@@ -87,5 +108,8 @@ export default (page: Page) => {
   }
   page.dispatchPinch = async pinchParams => {
     await page.touchscreen._client.send(PINCH_NAME, pinchParams)
+  }
+  page.dispatchScroll = async scrollParams => {
+    await page.touchscreen._client.send(SCROLL_NAME, scrollParams)
   }
 }
