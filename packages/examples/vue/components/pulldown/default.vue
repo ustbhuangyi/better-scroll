@@ -29,8 +29,8 @@
 
   BScroll.use(PullDown)
 
-  function getOneRandomList() {
-    const arr = Array.apply(null, {length: 30}).map((...args) => args[1])
+  function getOneRandomList(step = 0) {
+    const arr = Array.apply(null, {length: (30 + step)}).map((...args) => args[1])
     return arr.sort(() => Math.random() - 0.5)
   }
 
@@ -38,6 +38,7 @@
   const TIME_STOP = 600
   const THRESHOLD = 70
   const STOP = 56
+  let STEP = 0
 
   export default {
     data() {
@@ -73,6 +74,7 @@
       async pullingDownHandler() {
         this.beforePullDown = false
         this.isPullingDown = true
+        STEP += 10
 
         await this.requestData()
 
@@ -104,7 +106,7 @@
       ajaxGet(/* url */) {
         return new Promise(resolve => {
           setTimeout(() => {
-            const dataList = getOneRandomList()
+            const dataList = getOneRandomList(STEP)
             resolve(dataList)
           }, 1000)
         })

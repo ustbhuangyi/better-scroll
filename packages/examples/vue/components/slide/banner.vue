@@ -18,8 +18,8 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button @click="nextPage">nextPage</button>
-      <button @click="prePage">prePage</button>
+      <button class="next" @click="nextPage">nextPage</button>
+      <button class="prev" @click="prePage">prePage</button>
     </div>
   </div>
 </template>
@@ -70,7 +70,6 @@
         this.slide.on('scrollEnd', () => {
           this.autoGoNext()
         })
-        window.bs = this.slide
         this.autoGoNext()
       },
       nextPage() {

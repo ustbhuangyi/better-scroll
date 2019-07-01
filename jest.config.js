@@ -24,7 +24,7 @@ module.exports = {
     '^@better-scroll/(.*)$': '<rootDir>/packages/$1/src/index',
     '^@/(.*)$': '<rootDir>/$1'
   },
-  "coverageDirectory": "<rootDir>/test/coverage",
+  "coverageDirectory": "<rootDir>/tests/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/test/",
