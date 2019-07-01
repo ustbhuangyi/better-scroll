@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
 
-jest.setTimeout(5000)
+jest.setTimeout(50000)
 
 describe('Infinity', () => {
   let page = (global as any).page as Page
@@ -11,31 +11,32 @@ describe('Infinity', () => {
   })
 
   it('should not render all elements when fetch data too mouch', async () => {
-    await page.waitFor('infinity-item')
+    await page.waitForSelector('.infinity-timeline .infinity-item')
     // when
     await page.dispatchSwipe(
       [
         [
           {
             x: 100,
-            y: 150
+            y: 555 // 15 * 37
           }
         ],
         [
           {
             x: 100,
-            y: 140
+            y: 0
           }
         ]
       ],
       () => {}
     )
-    await page.waitFor(500)
+    await page.waitFor(1001) // wait fetch data
     // then
-    let itemNum = 0
-    await page.$$eval('infinity-item', items => {
-      itemNum = items.length
-    })
-    expect(itemNum).toBeLessThan(100)
+    const itemNum = await page.$$eval(
+      '.infinity-timeline .infinity-item',
+      items => items.length
+    )
+
+    expect(itemNum).toBe(46)
   })
 })

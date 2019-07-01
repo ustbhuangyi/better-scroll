@@ -59,18 +59,16 @@ export default (page: Page) => {
     interval: number = 30
   ) => {
     await page.dispatchTouchStart(touches[0])
-    const nextMove = function(i: number) {
-      setTimeout(async () => {
-        await page.dispatchTouchMove(touches[i])
-        if (i === touches.length - 1) {
-          // last one
-          await page.dispatchTouchEnd()
-          cb && cb()
-        } else {
-          nextMove(++i)
-        }
-      }, interval)
+    const nextMove = async function nextMove(i: number) {
+      await page.waitFor(interval)
+      await page.dispatchTouchMove(touches[i])
+      if (i === touches.length - 1) {
+        await page.dispatchTouchEnd()
+        cb && cb()
+      } else {
+        await nextMove(++i)
+      }
     }
-    nextMove(1)
+    return nextMove(1)
   }
 }
