@@ -4,7 +4,7 @@
       <li ref="message" class="infinity-item">
         <div class="infinity-content"></div>
       </li>
-      <li ref="tombstone" class="infinity-item infinity-tombstone">
+      <li ref="tombstone" class="infinity-item tombstone">
         <div class="infinity-content">tombstone</div>
       </li>
     </div>
