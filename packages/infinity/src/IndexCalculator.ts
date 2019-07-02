@@ -1,6 +1,5 @@
 export const PRE_NUM = 10
 export const POST_NUM = 30
-const DEFAULT_HEIGHT = 37
 
 enum DIRECTION {
   UP,
@@ -12,7 +11,7 @@ export default class IndexCalculator {
   private lastTopVisibleOffset = 0
   private lastDirection = DIRECTION.DOWN
 
-  constructor(public wrapperHeight: number) {}
+  constructor(public wrapperHeight: number, private tombstoneHeight: number) {}
 
   calculate(pos: number, list: Array<any>): { start: number; end: number } {
     // TODO offset 是否可以去掉？
@@ -64,7 +63,7 @@ export default class IndexCalculator {
   private getLastPos(list: Array<any>): number {
     let pos = 0
     for (let i = 0; i < this.lastTopVisibleIndex; i++) {
-      pos += (list[i] && list[i].height) || DEFAULT_HEIGHT
+      pos += (list[i] && list[i].height) || this.tombstoneHeight
     }
     return pos
   }
@@ -109,7 +108,10 @@ export default class IndexCalculator {
         offset += list[i - 1].height
         i--
       }
-      tombstones = Math.max(-i, Math.ceil(Math.min(offset, 0) / DEFAULT_HEIGHT))
+      tombstones = Math.max(
+        -i,
+        Math.ceil(Math.min(offset, 0) / this.tombstoneHeight)
+      )
     } else if (offset > 0) {
       while (
         offset > 0 &&
@@ -121,12 +123,12 @@ export default class IndexCalculator {
         i++
       }
       if (i >= list.length || !list[i].height) {
-        tombstones = Math.floor(Math.max(offset, 0) / DEFAULT_HEIGHT)
+        tombstones = Math.floor(Math.max(offset, 0) / this.tombstoneHeight)
       }
     }
 
     i += tombstones
-    offset -= tombstones * DEFAULT_HEIGHT
+    offset -= tombstones * this.tombstoneHeight
 
     return {
       index: i,

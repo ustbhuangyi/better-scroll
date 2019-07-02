@@ -1,7 +1,8 @@
 import DataManager from './DataManager'
-import { style } from '@better-scroll/shared-utils'
+import Tombstone from './Tombstone'
+import { style, cssVendor } from '@better-scroll/shared-utils'
 
-const DEFAULT_HEIGHT = 37
+const ANIMATION_DURATION_MS = 200
 
 export default class DomManager {
   private lastStart = -1
@@ -10,7 +11,8 @@ export default class DomManager {
 
   constructor(
     private content: HTMLElement,
-    private renderFn: (data: any, div?: HTMLElement) => HTMLElement
+    private renderFn: (data: any, div?: HTMLElement) => HTMLElement,
+    private tombstone: Tombstone
   ) {}
 
   update(
@@ -30,9 +32,12 @@ export default class DomManager {
       start = this.lastStart
       end = this.lastEnd
     }
+
     this.collectUnusedDom(list, start, end)
     this.createDom(list, start, end)
+
     const { startPos, endPos } = this.positionDom(list, start, end)
+
     return {
       start,
       startPos,
@@ -53,8 +58,11 @@ export default class DomManager {
         continue
       }
       if (list[i].dom) {
-        console.log('unused dom', i)
-        this.unusedDom.push(list[i].dom)
+        if (this.tombstone.isTombstone(list[i].dom)) {
+          this.tombstone.cached.push(list[i].dom)
+        } else {
+          this.unusedDom.push(list[i].dom)
+        }
         list[i].dom = null
       }
     }
@@ -62,21 +70,28 @@ export default class DomManager {
     return list
   }
 
-  private createDom(list: Array<any>, start: number, end: number): Array<any> {
+  private createDom(list: Array<any>, start: number, end: number): void {
     for (let i = start; i < end; i++) {
-      const dom = list[i].dom
+      let dom = list[i].dom
       const data = list[i].data
-      if (!dom && data) {
-        const dom = this.renderFn(data, this.unusedDom.pop())
-        dom.style.position = 'absolute'
-        list[i].dom = dom
-        list[i].pos = -1
-        this.content.appendChild(dom)
-        list[i].height = dom.offsetHeight
+      if (dom) {
+        if (this.tombstone.isTombstone(dom) && data) {
+          list[i].tombstone = dom
+          list[i].dom = null
+        } else {
+          continue
+        }
       }
+      dom = data
+        ? this.renderFn(data, this.unusedDom.pop())
+        : this.tombstone.getOne()
+      dom.style.position = 'absolute'
+      list[i].dom = dom
+      list[i].pos = -1
+      this.content.appendChild(dom)
+      // TODO tombstone 2. 回流？
+      list[i].height = dom.offsetHeight
     }
-
-    return list
   }
 
   private positionDom(
@@ -84,15 +99,31 @@ export default class DomManager {
     start: number,
     end: number
   ): { startPos: number; endPos: number } {
+    const tombstoneEles: Array<HTMLElement> = []
     const startPos = this.getStartPos(list, start)
     let pos = startPos
+
     for (let i = start; i < end; i++) {
+      const tombstone = list[i].tombstone
+      if (tombstone) {
+        ;(<any>tombstone.style)[
+          style.transition
+        ] = `${cssVendor}transform ${ANIMATION_DURATION_MS}ms, opacity ${ANIMATION_DURATION_MS}ms`
+        ;(<any>tombstone.style)[style.transform] = `translateY(${pos}px)`
+        tombstone.style.opacity = '0'
+
+        list[i].tombstone = null
+        tombstoneEles.push(tombstone)
+      }
+
       if (list[i].dom && list[i].pos !== pos) {
         list[i].dom.style[style.transform] = `translateY(${pos}px)`
         list[i].pos = pos
       }
-      pos += list[i].height || DEFAULT_HEIGHT
+      pos += list[i].height || this.tombstone.height
     }
+
+    this.tombstone.waitForRecycle(tombstoneEles, ANIMATION_DURATION_MS)
 
     return {
       startPos,
@@ -107,7 +138,7 @@ export default class DomManager {
     // TODO 只能从头计算吗？ lastStart?
     let pos = 0
     for (let i = 0; i < start; i++) {
-      pos += list[i].height || DEFAULT_HEIGHT
+      pos += list[i].height || this.tombstone.height
     }
 
     return pos

@@ -4,6 +4,7 @@ import IndexCalculator from './IndexCalculator'
 import DataManager from './DataManager'
 import Fetcher from './Fetcher'
 import DomManager from './DomManager'
+import Tombstone from './Tombstone'
 export interface InfinityOptions {
   fetch: (count: number) => Promise<Array<any>>
   render: (item: any, div?: HTMLElement) => HTMLElement
@@ -41,11 +42,17 @@ export default class InfinityScroll {
 
   async init(currentPos: number, options: InfinityOptions): Promise<void> {
     // 计算要展示的数据
+    const { fetch, render, createTombstone } = options
+    const tombstone = new Tombstone(createTombstone)
     const indexCalculator = new IndexCalculator(
-      this.bscroll.scroller.scrollBehaviorY.wrapperSize
+      this.bscroll.scroller.scrollBehaviorY.wrapperSize,
+      tombstone.height
     )
-    const { fetch, render } = options
-    const domManager = new DomManager(this.bscroll.scroller.content, render)
+    const domManager = new DomManager(
+      this.bscroll.scroller.content,
+      render,
+      tombstone
+    )
     const dataManager = new DataManager([], fetch, domManager)
     const { start, end } = indexCalculator.calculate(0, dataManager.getList())
     // tslint:disable-next-line: no-floating-promises

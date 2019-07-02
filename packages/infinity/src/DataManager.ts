@@ -29,11 +29,14 @@ export default class DataManager {
       }
     } else if (data instanceof Array) {
       for (let i = 0; i < data.length; i++) {
-        this.list[this.loadedNum++] = {
-          data: data[i]
+        if (!this.list[this.loadedNum]) {
+          this.list[this.loadedNum] = { data: data[i] }
+        } else {
+          Object.assign(this.list[this.loadedNum], { data: data[i] })
         }
+        this.loadedNum++
       }
-      console.log('loadedNum', this.loadedNum)
+      // console.log('loadedNum', this.loadedNum)
     }
     return this.list
   }
@@ -49,7 +52,7 @@ export default class DataManager {
   }
 
   private async checkToFetch(end: number): Promise<void> {
-    console.log('checkToFetch', end, this.loadedNum)
+    // console.log('checkToFetch', end, this.loadedNum)
     if (end > this.loadedNum) {
       const min = end - this.loadedNum
       const newData = await this.fetch(min)
@@ -63,7 +66,7 @@ export default class DataManager {
   }
 
   private updateDom(list: Array<any>, start?: number, end?: number) {
-    console.log('update dom', start, end)
+    // console.log('update dom', start, end)
     const res = this.domManager.update(this.list, start, end)
     const { endPos } = res
     this.endPos = endPos
