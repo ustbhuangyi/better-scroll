@@ -101,7 +101,7 @@ export default class DomManager {
   }
 
   private getStartPos(list: Array<any>, start: number): number {
-    if (list[start] && list[start].pos) {
+    if (list[start] && list[start].pos !== -1) {
       return list[start].pos
     }
     // TODO 只能从头计算吗？ lastStart?

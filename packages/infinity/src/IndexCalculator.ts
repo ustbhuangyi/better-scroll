@@ -15,10 +15,10 @@ export default class IndexCalculator {
   constructor(public wrapperHeight: number) {}
 
   calculate(pos: number, list: Array<any>): { start: number; end: number } {
-    // TODO offset
-    const lastTosVisiblePos = this.getLastPos(list) + this.lastTopVisibleOffset
+    // TODO offset 是否可以去掉？
+    const lastPos = this.getLastPos(list) + this.lastTopVisibleOffset
 
-    let offset = pos - lastTosVisiblePos
+    let offset = pos - lastPos
 
     const direction = this.getDirection(offset)
 
@@ -41,8 +41,6 @@ export default class IndexCalculator {
     if (start < 0) {
       start = 0
     }
-
-    // console.log('IndexCalculator', start, end, pos)
 
     return {
       start,
