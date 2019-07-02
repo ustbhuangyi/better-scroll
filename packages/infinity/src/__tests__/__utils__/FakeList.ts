@@ -30,7 +30,7 @@ export default class FakeList {
     for (let i = start; i < end; i++) {
       const dom = document.createElement('div')
       mockDomOffset(dom, { height: DEFAULT_HEIGHT })
-      Object.assign(this.list[i], { dom, height: DEFAULT_HEIGHT })
+      Object.assign(this.list[i], { dom, height: DEFAULT_HEIGHT, pos: -1 })
     }
 
     return this
