@@ -40,6 +40,7 @@ export default class Slide {
   private thresholdY: number
   static pluginName = 'slide'
   private hooksFn: Array<[EventEmitter, string, Function]>
+  private resetLooping = false
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
     this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
@@ -219,7 +220,11 @@ export default class Slide {
     if (!this.slideOpt.loop) {
       return
     }
-
+    // triggered by resetLoop
+    if (this.resetLooping) {
+      this.resetLooping = false
+      return
+    }
     // fix bug: scroll two page or even more page at once and fetch the boundary.
     // In this case, momentum won't be trigger, so the pageIndex will be wrong and won't be trigger reset.
     let isScrollToBoundary = false
@@ -269,7 +274,9 @@ export default class Slide {
     }
     const changePage = this.page.resetLoopPage()
     if (changePage) {
+      this.resetLooping = true
       this.goTo(changePage.pageX, changePage.pageY, 0)
+      return true // stop trigger chain
     }
   }
   private setSlideWidth(slideEls: HTMLElement): Boolean {
@@ -313,15 +320,7 @@ export default class Slide {
       pageX: newPageInfo.pageX,
       pageY: newPageInfo.pageY
     }
-    const isSlient = !(time > 0)
-    this.scroll.scroller.scrollTo(
-      posX,
-      posY,
-      time,
-      scrollEasing,
-      undefined,
-      isSlient
-    )
+    this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
   private flickHandler() {
     let scrollBehaviorX = this.scroll.scroller.scrollBehaviorX

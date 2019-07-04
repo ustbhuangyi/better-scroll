@@ -155,6 +155,12 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - Usage: BetterScroll will inhibit the native scrolling and meanwhile inhibit some native components' default behaviours. In this situation, we can't 'preventDefault' on these elements, so we can configure 'preventDefaultException'. Default `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/}` represents that default behaviours of elements with tagnames like 'input', 'textarea', 'button', 'select', 'audio' will not be inhibited
    - Note: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is 'test', then the configuration is `{className:/(^|\s)test(\s|$)/}`.
 
+## tagException
+   - Type: Object
+   - Default`{ tagName: /^TEXTAREA$/ }`
+   - Usage: If BetterScroll nests form elements such as `textarea`, the user's expectation should be that sliding textarea should not cause bs scrolling. If the manipulated DOM (eg:textarea tag) hits the configured rule, `bs` won't scroll.
+   - Note: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is 'test', then the configuration is `{className:/(^|\s)test(\s|$)/}`.
+
 ## HWCompositing
    - Type: `Boolean`
    - Default: `true` (modification is not recommended)
