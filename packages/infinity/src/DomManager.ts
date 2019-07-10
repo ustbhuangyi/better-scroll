@@ -89,8 +89,12 @@ export default class DomManager {
       list[i].dom = dom
       list[i].pos = -1
       this.content.appendChild(dom)
-      // TODO tombstone 2. 回流？
-      list[i].height = dom.offsetHeight
+    }
+
+    for (let i = start; i < end; i++) {
+      if (list[i].data && !list[i].height) {
+        list[i].height = list[i].dom.offsetHeight
+      }
     }
   }
 
@@ -100,7 +104,7 @@ export default class DomManager {
     end: number
   ): { startPos: number; endPos: number } {
     const tombstoneEles: Array<HTMLElement> = []
-    const startPos = this.getStartPos(list, start)
+    const startPos = this.getStartPos(list, start, end)
     let pos = startPos
 
     for (let i = start; i < end; i++) {
@@ -131,7 +135,7 @@ export default class DomManager {
     }
   }
 
-  private getStartPos(list: Array<any>, start: number): number {
+  private getStartPos(list: Array<any>, start: number, end: number): number {
     if (list[start] && list[start].pos !== -1) {
       return list[start].pos
     }
@@ -140,6 +144,23 @@ export default class DomManager {
     for (let i = 0; i < start; i++) {
       pos += list[i].height || this.tombstone.height
     }
+    let pos2 = pos
+
+    let i
+    for (i = start; i < end; i++) {
+      if (!this.tombstone.isTombstone(list[i].dom) && list[i].pos !== -1) {
+        pos = list[i].pos
+        break
+      }
+    }
+    let x = i
+    if (x < end) {
+      while (x > start) {
+        pos -= list[i - 1].height
+        x--
+      }
+    }
+    console.log('修正前', pos2, '修正后', pos, 'i', i, 'x', x)
 
     return pos
   }
