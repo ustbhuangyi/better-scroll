@@ -48,11 +48,7 @@ export default class InfinityScroll {
       this.bscroll.scroller.scrollBehaviorY.wrapperSize,
       tombstone.height
     )
-    const domManager = new DomManager(
-      this.bscroll.scroller.content,
-      render,
-      tombstone
-    )
+    const domManager = new DomManager(this.bscroll, render, tombstone)
     const dataManager = new DataManager([], fetch, domManager)
     const { start, end } = indexCalculator.calculate(0, dataManager.getList())
     // tslint:disable-next-line: no-floating-promises
@@ -63,8 +59,10 @@ export default class InfinityScroll {
       EXTRA_SCROLL_Y
 
     this.bscroll.on('scroll', async (pos: any) => {
+      // console.log('scroll, ', -pos.y)
+      const position = Math.round(-pos.y)
       const { start, end } = indexCalculator.calculate(
-        -pos.y,
+        position,
         dataManager.getList()
       )
       // tslint:disable-next-line: no-floating-promises

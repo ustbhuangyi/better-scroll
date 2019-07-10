@@ -7,27 +7,20 @@ enum DIRECTION {
 }
 
 export default class IndexCalculator {
-  private lastTopVisibleIndex = 0
-  private lastTopVisibleOffset = 0
   private lastDirection = DIRECTION.DOWN
+  private lastPos = 0
 
   constructor(public wrapperHeight: number, private tombstoneHeight: number) {}
 
   calculate(pos: number, list: Array<any>): { start: number; end: number } {
-    // TODO offset 是否可以去掉？
-    const lastPos = this.getLastPos(list) + this.lastTopVisibleOffset
-
-    let offset = pos - lastPos
+    let offset = pos - this.lastPos
+    this.lastPos = pos
 
     const direction = this.getDirection(offset)
 
-    offset += this.lastTopVisibleOffset
+    let start = this.calculateIndex(0, pos, list)
 
-    let { index: start, offset: startOffset } = this.getStart(offset, list)
-    this.lastTopVisibleIndex = start
-    this.lastTopVisibleOffset = startOffset
-
-    let { index: end } = this.getEnd(start, list)
+    let end = this.calculateIndex(start, pos + this.wrapperHeight, list)
 
     if (direction === DIRECTION.DOWN) {
       start -= PRE_NUM
@@ -40,6 +33,19 @@ export default class IndexCalculator {
     if (start < 0) {
       start = 0
     }
+
+    console.log(
+      'pos',
+      pos,
+      'direction',
+      direction,
+      'start',
+      start,
+      'end',
+      end,
+      'lastOffset',
+      this.lastTopVisibleOffset
+    )
 
     return {
       start,
@@ -60,79 +66,30 @@ export default class IndexCalculator {
     return direction
   }
 
-  private getLastPos(list: Array<any>): number {
-    let pos = 0
-    for (let i = 0; i < this.lastTopVisibleIndex; i++) {
-      pos += (list[i] && list[i].height) || this.tombstoneHeight
-    }
-    return pos
-  }
-
-  private getStart(
-    offset: number,
-    list: Array<any>
-  ): { index: number; offset: number } {
-    if (offset === 0) {
-      return {
-        index: this.lastTopVisibleIndex,
-        offset: this.lastTopVisibleOffset
-      }
-    }
-    return this.calculateIndex(this.lastTopVisibleIndex, offset, list)
-  }
-
-  private getEnd(
-    start: number,
-    list: Array<any>
-  ): { index: number; offset: number } {
-    return this.calculateIndex(start, this.wrapperHeight, list)
-  }
-
   private calculateIndex(
     start: number,
     offset: number,
     list: Array<any>
-  ): { index: number; offset: number } {
-    if (start < 0) {
-      return {
-        index: 0,
-        offset: 0
-      }
+  ): number {
+    if (offset <= 0) {
+      return start
     }
 
     let i = start
-    let tombstones = 0
-
-    if (offset < 0) {
-      while (offset < 0 && i > 0 && list[i - 1].height) {
-        offset += list[i - 1].height
-        i--
-      }
-      tombstones = Math.max(
-        -i,
-        Math.ceil(Math.min(offset, 0) / this.tombstoneHeight)
-      )
-    } else if (offset > 0) {
-      while (
-        offset > 0 &&
-        i < list.length &&
-        list[i].height &&
-        list[i].height <= offset
-      ) {
-        offset -= list[i].height
-        i++
-      }
-      if (i >= list.length || !list[i].height) {
-        tombstones = Math.floor(Math.max(offset, 0) / this.tombstoneHeight)
-      }
+    let startPos = list[i] && list[i].pos !== -1 ? list[i].pos : 0
+    let lastPos = startPos
+    let tombstone = 0
+    while (i < list.length && list[i].pos < offset) {
+      lastPos = list[i].pos
+      i++
     }
 
-    i += tombstones
-    offset -= tombstones * this.tombstoneHeight
-
-    return {
-      index: i,
-      offset: offset
+    if (i === list.length) {
+      tombstone = Math.floor((offset - lastPos) / this.tombstoneHeight)
     }
+
+    i += tombstone
+
+    return i
   }
 }
