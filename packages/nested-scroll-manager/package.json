@@ -1,0 +1,36 @@
+{
+  "name": "nested-scroll-manager",
+  "version": "2.0.0-alpha.18",
+  "description": "make your nested scrolls reconciliation",
+  "author": {
+    "name": "huangyi",
+    "email": "ustbhuangyi@gmail.com"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/nested-scroll-manager.js",
+  "module": "dist/nested-scroll-manager.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ustbhuangyi/better-scroll.git",
+    "directory": "packages/better-scroll"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.0.0-alpha.18"
+  }
+}
