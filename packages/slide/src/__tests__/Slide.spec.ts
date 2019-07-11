@@ -55,6 +55,8 @@ describe('slide test for SlidePage class', () => {
   let hooks: EventEmitter
   beforeAll(() => {
     hooks = new EventEmitter([
+      'beforeStart',
+      'scroll',
       'refresh',
       'momentum',
       'scrollEnd',
@@ -647,6 +649,91 @@ describe('slide test for SlidePage class', () => {
     expect(mockscrollTo.mock.calls[0][0]).toBe(-300)
     expect(mockscrollTo.mock.calls[0][1]).toBe(0)
     expect(mockscrollTo.mock.calls[0][2]).toBe(600)
+    slide.destroy()
+  })
+  it('should trigger slideWillChange event when slide > threshold', () => {
+    const { bscroll, mockscrollTo } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+    hooks.trigger('refresh')
+
+    let pageIndex = { pageX: 0, pageY: 0 }
+    bscroll.on('slideWillChange', (page: { pageX: number; pageY: number }) => {
+      pageIndex = page
+    })
+    SlidePage.getRealPage.mockImplementationOnce(() => {
+      return {
+        pageX: 1,
+        pageY: 0
+      }
+    })
+    SlidePage.nearestPage.mockImplementationOnce(() => {
+      return {
+        pageX: 1,
+        pageY: 0
+      }
+    })
+    bscroll.scroller.scrollBehaviorX.absStartPos = -200
+    bscroll.scroller.scrollBehaviorY.absStartPos = 0
+
+    hooks.trigger('beforeStart')
+    hooks.trigger('scroll', {
+      x: -50,
+      y: 0
+    })
+    expect(pageIndex.pageX).toBe(1)
+    slide.destroy()
+  })
+  it('should trigger slideWillChange event when pre/next be called', () => {
+    const { bscroll, mockscrollTo } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+    hooks.trigger('refresh')
+
+    let pageIndex = { pageX: 0, pageY: 0 }
+    bscroll.on('slideWillChange', (page: { pageX: number; pageY: number }) => {
+      pageIndex = page
+    })
+    bscroll.scroller.scrollBehaviorX.currentPos = 0
+    bscroll.scroller.scrollBehaviorY.currentPos = 0
+
+    SlidePage.nextPage.mockImplementationOnce(() => {
+      return {
+        pageX: 2,
+        pageY: 0
+      }
+    })
+    SlidePage.change2safePage.mockImplementationOnce(() => {
+      return {
+        x: -600,
+        y: 0,
+        pageX: 2,
+        pageY: 0
+      }
+    })
+    SlidePage.getRealPage.mockImplementationOnce(() => {
+      return {
+        pageX: 2,
+        pageY: 0
+      }
+    })
+    slide.next()
+
+    expect(pageIndex.pageX).toBe(2)
     slide.destroy()
   })
 })

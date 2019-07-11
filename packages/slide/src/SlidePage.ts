@@ -64,7 +64,7 @@ export default class PageInfo {
       y: y
     }
   }
-  getRealPage(): Page {
+  getRealPage(page?: Page): Page {
     const fixedPage = (page: number, realPageLen: number) => {
       const pageIndex = []
       for (let i = 0; i < realPageLen; i++) {
@@ -74,7 +74,9 @@ export default class PageInfo {
       pageIndex.push(0)
       return pageIndex[page]
     }
-    let currentPage = extend({}, this.currentPage) as Page
+    let currentPage = page
+      ? (extend({}, page) as Page)
+      : (extend({}, this.currentPage) as Page)
     if (this.loopX) {
       currentPage.pageX = fixedPage(currentPage.pageX, this.pagesPos.xLen - 2)
     }
