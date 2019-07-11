@@ -41,8 +41,11 @@ export default class Slide {
   static pluginName = 'slide'
   private hooksFn: Array<[EventEmitter, string, Function]>
   private resetLooping = false
+  private isTouching = false
+  private willChangeToPage: Page
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
+    this.scroll.registerType(['slideWillChange'])
     this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
     this.page = new SlidePage(scroll, this.slideOpt)
     this.hooksFn = []
@@ -69,6 +72,10 @@ export default class Slide {
       pageX: 0,
       pageY: 0
     }
+    this.willChangeToPage = {
+      pageX: 0,
+      pageY: 0
+    }
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
 
@@ -76,7 +83,9 @@ export default class Slide {
     this.registorHooks(scrollHooks, 'destroy', this.destroy)
     this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
     // scrollEnd handler should be called before customized handlers
-    this.registorHooks(this.scroll, 'scrollEnd', this.resetLoop)
+    this.registorHooks(this.scroll, 'scrollEnd', this.amendCurrentPage)
+    this.registorHooks(scrollerHooks, 'beforeStart', this.setTouchFlag)
+    this.registorHooks(scrollerHooks, 'scroll', this.scrollMoving)
 
     // for mousewheel event
     if (
@@ -216,7 +225,8 @@ export default class Slide {
     )
     slideEls.appendChild(children[1].cloneNode(true))
   }
-  private resetLoop() {
+  private amendCurrentPage() {
+    this.isTouching = false
     if (!this.slideOpt.loop) {
       return
     }
@@ -278,6 +288,8 @@ export default class Slide {
       this.goTo(changePage.pageX, changePage.pageY, 0)
       return true // stop trigger chain
     }
+    // amend willChangeToPage, because willChangeToPage maybe wrong when sliding quickly
+    this.pageWillChangeTo(this.page.currentPage)
   }
   private setSlideWidth(slideEls: HTMLElement): Boolean {
     if (this.slideOpt.disableSetWidth) {
@@ -320,6 +332,7 @@ export default class Slide {
       pageX: newPageInfo.pageX,
       pageY: newPageInfo.pageY
     }
+    this.pageWillChangeTo(this.page.currentPage)
     this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
   private flickHandler() {
@@ -366,6 +379,27 @@ export default class Slide {
       pageX: newPos.pageX,
       pageY: newPos.pageY
     }
+    this.pageWillChangeTo(this.page.currentPage)
+  }
+  private scrollMoving(point: Position) {
+    if (this.isTouching) {
+      const newPos = this.nearestPage(point.x, point.y)
+      this.pageWillChangeTo(newPos)
+    }
+  }
+  private pageWillChangeTo(newPage: Page) {
+    const changeToPage = this.page.getRealPage(newPage)
+    if (
+      changeToPage.pageX === this.willChangeToPage.pageX &&
+      changeToPage.pageY === this.willChangeToPage.pageY
+    ) {
+      return
+    }
+    this.willChangeToPage = changeToPage
+    this.scroll.trigger('slideWillChange', this.willChangeToPage)
+  }
+  private setTouchFlag() {
+    this.isTouching = true
   }
   private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)

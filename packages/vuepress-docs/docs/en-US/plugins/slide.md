@@ -58,6 +58,10 @@ The following are the configuration related to the slide:
 - bounce
   Setting this to false if you have enabled the loop feature with `slide.loop = true`. Bounce feature will cause flicker when the slide switch from the last page to the fist page or from the first page to the last page.
 
+- probeType
+  
+  This value needs to be set to 2 or 3, if you want to get the index of page which will be showed by listening to  `slideWillChange` event, when user drags the slide.
+
 ## Demo
 
 - horizontal slide
@@ -244,4 +248,45 @@ Get information of current page
 |x|number|coordinate of current page on horizontal axis|
 |y|number|coordinate of current page on vertical axis|
 |pageX|number| page index on horizontal axis(starting from 0)|
-|pageY|number| page index on horizontal axis(starting from 0)|
+|pageY|number| page index on vertical axis(starting from 0)|
+
+## Events
+
+### slideWillChange
+
+- Arguments: Object
+
+|Name|Type|Description|
+|----------|:-----:|:-----------|
+|pageX|number| index of the page to be displayed on horizontal axis|
+|pageY|number| index of the page to be displayed on vertical axis|
+
+- trigger: the value of currentPage will change
+
+- Usage
+
+In the banner demo, a dot legend is used to indicate that the index of current page. When the user drags the banner to the next one, we want the dot legend to change synchronously. As shown below
+
+<img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner demo">
+
+This effect can be achieved by listening to the `slideWillChange` event, as follows:
+
+```js
+  let currentPageIndex // used to show current page index
+  const slide = new BScroll(this.$refs.slide, {
+    scrollX: true,
+    scrollY: false,
+    slide: {
+      loop: true,
+      threshold: 100
+    },
+    useTransition: true,
+    momentum: false,
+    bounce: false,
+    stopPropagation: true,
+    probeType: 2
+  })
+  slide.on('slideWillChange', (page) => {
+    currentPageIndex = page.pageX
+  })
+```

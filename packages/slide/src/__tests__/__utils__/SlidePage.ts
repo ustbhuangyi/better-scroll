@@ -6,7 +6,12 @@ export const slideYGetter = jest.fn()
 export const nextPage = jest.fn()
 export const prevPage = jest.fn()
 export const realPage2Page = jest.fn()
-export const getRealPage = jest.fn()
+export const getRealPage = jest.fn().mockImplementation(page => {
+  return {
+    pageX: page.pageX,
+    pageY: page.pageY
+  }
+})
 export const nearestPage = jest.fn()
 export const resetLoopPage = jest.fn()
 export const currentPageSetter = jest.fn(v => v)
