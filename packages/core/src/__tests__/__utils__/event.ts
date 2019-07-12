@@ -16,6 +16,10 @@ export interface CustomTouchEvent extends Event {
   changedTouches: CustomTouches
 }
 
+interface CustomMouseEvent extends Event {
+  button: 0
+}
+
 export function dispatchTouch(
   target: EventTarget,
   name = 'touchstart',
@@ -23,6 +27,12 @@ export function dispatchTouch(
 ): void {
   const event = <CustomTouchEvent>createEvent('', name)
   event.touches = event.targetTouches = event.changedTouches = touches
+  target.dispatchEvent(event)
+}
+
+export function dispatchMouse(target: EventTarget, name = 'mousedown'): void {
+  const event = <CustomMouseEvent>createEvent('', name)
+  event.button = 0
   target.dispatchEvent(event)
 }
 

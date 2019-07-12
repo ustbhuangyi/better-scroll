@@ -1,7 +1,10 @@
 import ActionsHandler, {
   Options
 } from '@better-scroll/core/src/base/ActionsHandler'
-import { dispatchTouch } from '@better-scroll/core/src/__tests__/__utils__/event'
+import {
+  dispatchTouch,
+  dispatchMouse
+} from '@better-scroll/core/src/__tests__/__utils__/event'
 
 describe('ActionsHandler', () => {
   let actionsHandler: ActionsHandler
@@ -13,7 +16,8 @@ describe('ActionsHandler', () => {
     options = {
       click: false,
       bindToWrapper: false,
-      disableMouse: true,
+      disableMouse: false,
+      disableTouch: false,
       preventDefault: true,
       stopPropagation: true,
       preventDefaultException: {
@@ -30,14 +34,19 @@ describe('ActionsHandler', () => {
   it('should bind click handler when options.disableMouse is true', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
 
-    const eventsName = actionsHandler.moveEndRegister.events.map(
+    const wrapperEventsName = actionsHandler.wrapperEventRegister.events.map(
       event => event.name
     )
 
-    expect(eventsName).toMatchObject(['touchmove', 'touchend', 'touchcancel'])
+    const targetEventsName = actionsHandler.targetEventRegister.events.map(
+      event => event.name
+    )
+
+    expect(wrapperEventsName).toMatchObject(['mousedown'])
+    expect(targetEventsName).toMatchObject(['mousemove', 'mouseup'])
   })
 
-  it('should invoice start method when dispatch touchstart', () => {
+  it('should invoice start method when dispatch mousedown', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
     const beforeStartMockHandler = jest.fn().mockImplementation(() => {
       return 'dummy test'
@@ -49,12 +58,7 @@ describe('ActionsHandler', () => {
     actionsHandler.hooks.on('beforeStart', beforeStartMockHandler)
     actionsHandler.hooks.on('start', startMockHandler)
 
-    dispatchTouch(wrapper, 'touchstart', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(wrapper, 'mousedown')
 
     expect(beforeStartMockHandler).toBeCalled()
     expect(startMockHandler).toBeCalled()
@@ -68,19 +72,9 @@ describe('ActionsHandler', () => {
 
     actionsHandler.hooks.on('move', moveMockHandler)
 
-    dispatchTouch(wrapper, 'touchstart', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(wrapper, 'mousedown')
 
-    dispatchTouch(window, 'touchmove', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(window, 'mousemove')
 
     expect(moveMockHandler).toBeCalled()
   })
@@ -93,19 +87,9 @@ describe('ActionsHandler', () => {
 
     actionsHandler.hooks.on('end', endMockHandler)
 
-    dispatchTouch(wrapper, 'touchstart', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(wrapper, 'mousedown')
 
-    dispatchTouch(window, 'touchend', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(window, 'mouseup')
 
     expect(endMockHandler).toBeCalled()
   })
@@ -136,12 +120,7 @@ describe('ActionsHandler', () => {
     wrapper.appendChild(content)
     actionsHandler = new ActionsHandler(wrapper, options)
 
-    dispatchTouch(textarea, 'touchstart', [
-      {
-        pageX: 10,
-        pageY: 10
-      }
-    ])
+    dispatchMouse(textarea, 'mousedown')
 
     expect(actionsHandler.initiated).toBeFalsy()
   })
