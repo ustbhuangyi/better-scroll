@@ -1,12 +1,12 @@
 import EventEmitter from './EventEmitter'
 import EventRegister from './EventRegister'
-
 import {
   TouchEvent,
   // dom
   preventDefaultExceptionFn,
   tagExceptionFn,
-  eventTypeMap
+  eventTypeMap,
+  hasTouch
 } from '@better-scroll/shared-utils'
 
 import { EventType, MouseButton } from '../enums'
@@ -21,6 +21,7 @@ export interface Options {
   click: boolean
   bindToWrapper: boolean
   disableMouse: boolean
+  disableTouch: boolean
   preventDefault: boolean
   stopPropagation: boolean
   preventDefaultException: Exception
@@ -33,8 +34,8 @@ export default class ActionsHandler {
   initiated: number
   pointX: number
   pointY: number
-  startClickRegister: EventRegister
-  moveEndRegister: EventRegister
+  wrapperEventRegister: EventRegister
+  targetEventRegister: EventRegister
   constructor(public wrapper: HTMLElement, public options: Options) {
     this.hooks = new EventEmitter([
       'beforeStart',
@@ -47,35 +48,63 @@ export default class ActionsHandler {
   }
 
   private handleDOMEvents() {
-    const { bindToWrapper, disableMouse } = this.options
+    const { bindToWrapper, disableMouse, disableTouch, click } = this.options
     const wrapper = this.wrapper
     const target = bindToWrapper ? wrapper : window
+    const wrapperEvents = []
+    const targetEvents = []
+    const shouldRegiserTouch = hasTouch && !disableTouch
+    const sholdRegisterMouse = !disableMouse
 
-    this.startClickRegister = new EventRegister(wrapper, [
-      {
-        name: disableMouse ? 'touchstart' : 'mousedown',
-        handler: this.start.bind(this)
-      },
-      {
+    if (click) {
+      wrapperEvents.push({
         name: 'click',
         handler: this.click.bind(this),
         capture: true
-      }
-    ])
-    this.moveEndRegister = new EventRegister(target, [
-      {
-        name: disableMouse ? 'touchmove' : 'mousemove',
-        handler: this.move.bind(this)
-      },
-      {
-        name: disableMouse ? 'touchend' : 'mouseup',
-        handler: this.end.bind(this)
-      },
-      {
-        name: disableMouse ? 'touchcancel' : 'mouseup',
-        handler: this.end.bind(this)
-      }
-    ])
+      })
+    }
+
+    if (shouldRegiserTouch) {
+      wrapperEvents.push({
+        name: 'touchstart',
+        handler: this.start.bind(this)
+      })
+
+      targetEvents.push(
+        {
+          name: 'touchmove',
+          handler: this.move.bind(this)
+        },
+        {
+          name: 'touchend',
+          handler: this.end.bind(this)
+        },
+        {
+          name: 'touchcancel',
+          handler: this.end.bind(this)
+        }
+      )
+    }
+
+    if (sholdRegisterMouse) {
+      wrapperEvents.push({
+        name: 'mousedown',
+        handler: this.start.bind(this)
+      })
+
+      targetEvents.push(
+        {
+          name: 'mousemove',
+          handler: this.move.bind(this)
+        },
+        {
+          name: 'mouseup',
+          handler: this.end.bind(this)
+        }
+      )
+    }
+    this.wrapperEventRegister = new EventRegister(wrapper, wrapperEvents)
+    this.targetEventRegister = new EventRegister(target, targetEvents)
   }
 
   private beforeHandler(e: TouchEvent, type: 'start' | 'move' | 'end') {
@@ -211,8 +240,8 @@ export default class ActionsHandler {
   }
 
   destroy() {
-    this.startClickRegister.destroy()
-    this.moveEndRegister.destroy()
+    this.wrapperEventRegister.destroy()
+    this.targetEventRegister.destroy()
     this.hooks.destroy()
   }
 }

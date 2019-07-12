@@ -138,7 +138,6 @@ export default class ScrollerActions {
     if (this.checkMomentum(absDistX, absDistY, timestamp)) {
       return true
     }
-
     if (this.directionLockAction.checkMovingDirection(absDistX, absDistY, e)) {
       this.actionsHandler.setInitiated()
       return true

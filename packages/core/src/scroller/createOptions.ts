@@ -7,6 +7,7 @@ export function createActionsHandlerOptions(bsOptions: BScrollOptions) {
     'click',
     'bindToWrapper',
     'disableMouse',
+    'disableTouch',
     'preventDefault',
     'stopPropagation',
     'tagException',
