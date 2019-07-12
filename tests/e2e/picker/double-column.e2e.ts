@@ -5,10 +5,11 @@ jest.setTimeout(10000000)
 
 describe('Double column picker', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
+
   extendTouch(page)
   beforeEach(async () => {
+    // disable cache
+    await page.setCacheEnabled(false)
     await page.goto('http://0.0.0.0:8932/#/picker/double-column')
   })
 
@@ -56,80 +57,22 @@ describe('Double column picker', () => {
     await page.waitFor(1000)
 
     // first column
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 100,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 100,
+      y: 610,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // second column
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 270,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 270,
+      y: 610,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // wait for transition ends
     await page.waitFor(1000)
