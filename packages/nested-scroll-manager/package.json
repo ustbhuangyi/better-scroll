@@ -1,5 +1,5 @@
 {
-  "name": "nested-scroll-manager",
+  "name": "@better-scroll/nested-scroll-manager",
   "version": "2.0.0-alpha.18",
   "description": "make your nested scrolls reconciliation",
   "author": {

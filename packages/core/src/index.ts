@@ -106,6 +106,9 @@ export default class BScroll extends EventEmitter {
 
   private init(wrapper: HTMLElement) {
     this.wrapper = wrapper
+
+    // mark wrapper to recognize bs instance by DOM attribute
+    wrapper.setAttribute('data-bs', 'yes')
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
     this.eventBubbling()
