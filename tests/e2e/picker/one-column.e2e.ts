@@ -5,10 +5,11 @@ jest.setTimeout(10000000)
 
 describe('One column picker', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
+
   extendTouch(page)
   beforeEach(async () => {
+    // disable cache
+    await page.setCacheEnabled(false)
     await page.goto('http://0.0.0.0:8932/#/picker/one-column')
   })
 
@@ -92,42 +93,13 @@ describe('One column picker', () => {
 
     await page.waitFor(1000)
 
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 200,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 200,
+      y: 630,
+      xDistance: 0,
+      yDistance: -40,
+      gestureSourceType: 'touch'
+    })
 
     // wait for transition ends
     await page.waitFor(1000)

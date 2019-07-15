@@ -58,6 +58,7 @@ export class Options {
   useTransition: boolean
   bindToWrapper: boolean
   disableMouse: boolean | ''
+  disableTouch: boolean
   autoBlur: boolean
   translateZ: string
   dblclick: dblclickOptions
@@ -111,6 +112,7 @@ export class Options {
 
     this.bindToWrapper = false
     this.disableMouse = hasTouch
+    this.disableTouch = !hasTouch
     this.autoBlur = true
   }
   merge(options?: { [key: string]: any }) {
