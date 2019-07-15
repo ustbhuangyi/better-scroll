@@ -12,6 +12,7 @@ export default class DataManager {
   ) {}
 
   async update(start: number, end: number): Promise<void> {
+    // console.log('start', start, 'end', end)
     if (end > this.list.length) {
       const len = end - this.list.length
       this.add(len)

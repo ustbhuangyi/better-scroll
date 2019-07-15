@@ -34,18 +34,16 @@ export default class IndexCalculator {
       start = 0
     }
 
-    console.log(
-      'pos',
-      pos,
-      'direction',
-      direction,
-      'start',
-      start,
-      'end',
-      end,
-      'lastOffset',
-      this.lastTopVisibleOffset
-    )
+    // console.log(
+    //   'pos',
+    //   pos,
+    //   'direction',
+    //   direction,
+    //   'start',
+    //   start,
+    //   'end',
+    //   end
+    // )
 
     return {
       start,

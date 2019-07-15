@@ -45,12 +45,12 @@ export default class DomManager {
     if (startDelta) {
       const originMinScrollY = this.bscroll.minScrollY
       this.bscroll.minScrollY = startDelta
-      console.log(
-        'minScrollY change:',
-        startDelta,
-        'current minScrollY',
-        this.bscroll.minScrollY
-      )
+      // console.log(
+      //   'minScrollY change:',
+      //   startDelta,
+      //   'current minScrollY',
+      //   this.bscroll.minScrollY
+      // )
     }
 
     return {
@@ -193,18 +193,18 @@ export default class DomManager {
       }
     }
     const delta = originPos - pos
-    console.log(
-      '修正前',
-      originPos,
-      '修正后',
-      pos,
-      '差值',
-      delta,
-      'i',
-      i,
-      'x',
-      x
-    )
+    // console.log(
+    //   '修正前',
+    //   originPos,
+    //   '修正后',
+    //   pos,
+    //   '差值',
+    //   delta,
+    //   'i',
+    //   i,
+    //   'x',
+    //   x
+    // )
 
     return {
       start: pos,
