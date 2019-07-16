@@ -1,7 +1,6 @@
-import DataManager from './DataManager'
+import DataManager, { pListItem } from './DataManager'
 import Tombstone from './Tombstone'
 import { style, cssVendor } from '@better-scroll/shared-utils'
-import BScroll from '@better-scroll/core'
 
 const ANIMATION_DURATION_MS = 200
 
@@ -9,18 +8,15 @@ export default class DomManager {
   private lastStart = -1
   private lastEnd = -1
   private unusedDom: HTMLElement[] = []
-  private content: HTMLElement
 
   constructor(
-    private bscroll: BScroll,
+    private content: HTMLElement,
     private renderFn: (data: any, div?: HTMLElement) => HTMLElement,
     private tombstone: Tombstone
-  ) {
-    this.content = this.bscroll.scroller.content
-  }
+  ) {}
 
   update(
-    list: Array<any>,
+    list: Array<pListItem>,
     start?: number,
     end?: number
   ): {
@@ -38,20 +34,21 @@ export default class DomManager {
       end = this.lastEnd
     }
 
+    if (start >= list.length) {
+      start = list.length - 1
+      end = list.length
+    }
+
+    if (end > list.length) {
+      end = list.length
+    }
+
+    // console.log('noMore', 'start', start, 'end', end)
+
     this.collectUnusedDom(list, start, end)
     this.createDom(list, start, end)
 
     const { startPos, startDelta, endPos } = this.positionDom(list, start, end)
-    if (startDelta) {
-      const originMinScrollY = this.bscroll.minScrollY
-      this.bscroll.minScrollY = startDelta
-      // console.log(
-      //   'minScrollY change:',
-      //   startDelta,
-      //   'current minScrollY',
-      //   this.bscroll.minScrollY
-      // )
-    }
 
     return {
       start,
@@ -63,7 +60,7 @@ export default class DomManager {
   }
 
   private collectUnusedDom(
-    list: Array<any>,
+    list: Array<pListItem>,
     start: number,
     end: number
   ): Array<any> {
@@ -75,13 +72,14 @@ export default class DomManager {
         i = end - 1
         continue
       }
-      if (list[i].dom) {
+      const dom = list[i].dom
+      if (dom) {
         const dom = list[i].dom
-        if (this.tombstone.isTombstone(dom)) {
-          this.tombstone.cached.push(dom)
-          dom.style.display = 'none'
+        if (this.tombstone.isTombstone(dom!)) {
+          this.tombstone.cached.push(dom!)
+          dom!.style.display = 'none'
         } else {
-          this.unusedDom.push(list[i].dom)
+          this.unusedDom.push(dom!)
         }
         list[i].dom = null
       }
@@ -90,7 +88,7 @@ export default class DomManager {
     return list
   }
 
-  private createDom(list: Array<any>, start: number, end: number): void {
+  private createDom(list: Array<pListItem>, start: number, end: number): void {
     for (let i = start; i < end; i++) {
       let dom = list[i].dom
       const data = list[i].data
@@ -113,13 +111,13 @@ export default class DomManager {
 
     for (let i = start; i < end; i++) {
       if (list[i].data && !list[i].height) {
-        list[i].height = list[i].dom.offsetHeight
+        list[i].height = list[i].dom!.offsetHeight
       }
     }
   }
 
   private positionDom(
-    list: Array<any>,
+    list: Array<pListItem>,
     start: number,
     end: number
   ): { startPos: number; startDelta: number; endPos: number } {
@@ -145,7 +143,7 @@ export default class DomManager {
       }
 
       if (list[i].dom && list[i].pos !== pos) {
-        list[i].dom.style[style.transform] = `translateY(${pos}px)`
+        ;(<any>list[i].dom!.style)[style.transform] = `translateY(${pos}px)`
         list[i].pos = pos
       }
       pos += list[i].height || this.tombstone.height
@@ -193,22 +191,20 @@ export default class DomManager {
       }
     }
     const delta = originPos - pos
-    // console.log(
-    //   '修正前',
-    //   originPos,
-    //   '修正后',
-    //   pos,
-    //   '差值',
-    //   delta,
-    //   'i',
-    //   i,
-    //   'x',
-    //   x
-    // )
 
     return {
       start: pos,
       delta: delta
+    }
+  }
+
+  removeTombstone(list: Array<any>, end: number) {
+    for (let i = list.length - 1; i >= end; i--) {
+      const dom = list[i].dom
+      const data = list[i].data
+      if (!data && this.tombstone.isTombstone(dom)) {
+        this.content.removeChild(dom)
+      }
     }
   }
 }
