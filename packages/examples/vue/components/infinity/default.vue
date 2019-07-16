@@ -124,16 +124,17 @@
               return new Promise((resolve, reject) => {
                 // Assume 50 ms per item.
                 setTimeout(() => {
-                  if (this.pageNum++ > 20) {
+                  if (++this.pageNum > 20) {
                     resolve(false)
                   } else {
+                    console.log('pageNum', this.pageNum)
                     let items = []
                     for (let i = 0; i < Math.abs(count); i++) {
                       items[i] = getItem(this.nextItem++)
                     }
                     resolve(Promise.all(items))
                   }
-                }, 2000)
+                }, 200)
               })
             }
           }
@@ -159,6 +160,7 @@
     background-color: #efeff5
 
   .infinity-timeline > ul
+    position: relative
     -webkit-backface-visibility: hidden
     -webkit-transform-style: flat
 
