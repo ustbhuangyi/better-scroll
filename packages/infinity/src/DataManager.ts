@@ -108,7 +108,6 @@ export default class DataManager {
     this.updateDom()
 
     // bscroll 的处理放在 dataManager 总觉得很奇怪，
-    // console.log('resetPosition')
     this.bscroll.scroller.animater.stop()
     this.bscroll.resetPosition()
   }
@@ -117,6 +116,7 @@ export default class DataManager {
     const res = this.domManager.update(this.list, start, end)
 
     // bscroll 的处理放在 dataManager 总觉得很奇怪，但是 bscroll 的处理又和 hasMore 变量纠缠
+    // important!
     const { endPos, startDelta } = res
     if (startDelta) {
       this.bscroll.minScrollY = startDelta

@@ -18,6 +18,7 @@ export default class IndexCalculator {
 
     const direction = this.getDirection(offset)
 
+    // important! start index is much more important than end index.
     let start = this.calculateIndex(0, pos, list)
 
     let end = this.calculateIndex(start, pos + this.wrapperHeight, list)

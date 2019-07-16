@@ -43,11 +43,10 @@ export default class DomManager {
       end = list.length
     }
 
-    // console.log('noMore', 'start', start, 'end', end)
-
     this.collectUnusedDom(list, start, end)
     this.createDom(list, start, end)
 
+    // important! position dom
     const { startPos, startDelta, endPos } = this.positionDom(list, start, end)
 
     return {

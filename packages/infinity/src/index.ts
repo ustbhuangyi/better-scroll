@@ -17,15 +17,9 @@ declare module '@better-scroll/core' {
 }
 
 const EXTRA_SCROLL_Y = -2000
-// rendered els 需要渲染的元素
-// visible els 可见的元素
 
 export default class InfinityScroll {
   static pluginName = 'infinity'
-  public wrapper: HTMLElement
-  public list: Array<any> = []
-  public tombstoneHeight = 37
-  public lastPos = 0
   private tombstone: Tombstone
   private domManager: DomManager
   private dataManager: DataManager
@@ -42,7 +36,6 @@ export default class InfinityScroll {
   }
 
   init(options: InfinityOptions): void {
-    // 计算要展示的数据
     const {
       fetch: fetchFn,
       render: renderFn,
@@ -70,8 +63,9 @@ export default class InfinityScroll {
     this.bscroll.on('scroll', this.update.bind(this))
   }
 
-  update(pos: { y: number }) {
+  update(pos: { y: number }): void {
     const position = Math.round(-pos.y)
+    // important! calculate start/end index to render
     const { start, end } = this.indexCalculator.calculate(
       position,
       this.dataManager.getList()
