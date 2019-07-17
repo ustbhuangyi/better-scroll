@@ -6,7 +6,7 @@
         class="scroll-outer-wrapper">
         <div class="scroll-outer-content">
           <ul>
-          <li class="row"
+          <li class="outer-row"
             v-for="(item, index) in items1"
             :key="index">{{item}}</li>
           </ul>
@@ -20,7 +20,7 @@
             </ul>
           </div>
           <ul>
-            <li
+            <li class="outer-row"
               v-for="(item, index) in items1"
               :key="index">{{item}}</li>
           </ul>
@@ -38,32 +38,37 @@ BScroll.use(NestedScrollManager)
 
 const _data1 = [
   '😀 😁 😂 🤣 😃 🙃 ',
-  '👆🏻 outer 👇🏻 ',
+  '👆🏻 outer scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
-  '👆🏻 outer 👇🏻 ',
+  '👆🏻 outer scroll 👇🏻 ',
+  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '🙂 🤔 😄 🤨  😐 🙃 ',
+  '👆🏻 outer scroll 👇🏻 ',
   '😔 😕 🙃 🤑 😲 ☹️ '
 ]
 
 const _data2 = [
+  'The Mountain top of Inner',
   '😀 😁 😂 🤣 😃 🙃 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '😔 😕 🙃 🤑 😲 ☹️ ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🐣 🐣 🐣 🐣 🐣 🐣 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🐥 🐥 🐥 🐥 🐥 🐥 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🤓 🤓 🤓 🤓 🤓 🤓 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🦔 🦔 🦔 🦔 🦔 🦔 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🙈 🙈 🙈 🙈 🙈 🙈 ',
-  '👆🏻 inner 👇🏻 ',
+  '👆🏻 inner scroll 👇🏻 ',
   '🚖 🚖 🚖 🚖 🚖 🚖 ',
-  '👆🏻 inner 👇🏻 ',
-  '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 '
+  '👆🏻 inner scroll 👇🏻 ',
+  '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ',
+  'The Mountain foot of Inner',
 ]
 
 export default {
@@ -85,7 +90,11 @@ export default {
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
         nestedScrollManager: true,
-        probeType: 3
+        // close bounce effects
+        bounce: {
+          top: false,
+          bottom: false
+        }
       })
     }
   }
@@ -95,16 +104,24 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus">
 .scroll-outer-wrapper
 .scroll-inner-wrapper
-  border: 1px solid rgba(0, 0, 0, 0.1)
+  border: 3px solid #a64942
   border-radius: 5px
   transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
   position: relative
   overflow: hidden
 .scroll-outer-wrapper
   height: 500px
+  border: 2px solid #17223b
 .scroll-inner-wrapper
-  height: 300px
+  height: 260px
+
 .row
-  height: 100px
-  line-height: 100px
+  height: 50px
+  line-height: 50px
+  text-align: center
+
+.outer-row
+  height: 40px
+  line-height: 40px
+  text-align: center
 </style>
