@@ -1,12 +1,11 @@
 import { style, cssVendor } from '@better-scroll/shared-utils'
 
 export default class Tombstone {
-  public cached: Array<HTMLElement> = []
+  private cached: Array<HTMLElement> = []
   public width = 0
   public height = 0
 
   private initialed = false
-  private timers: Array<number> = []
 
   constructor(private create: () => HTMLElement) {
     this.getSize()
@@ -47,15 +46,17 @@ export default class Tombstone {
     return false
   }
 
-  waitForRecycle(tombstones: Array<HTMLElement>, delay = 200): void {
-    const timerId = window.setTimeout(() => {
+  recycle(tombstones: Array<HTMLElement> | HTMLElement): Array<HTMLElement> {
+    if (Array.isArray(tombstones)) {
       for (let tombstone of tombstones) {
         tombstone.style.display = 'none'
         // Tombstone can be recycled now.
         this.cached.push(tombstone)
       }
-    }, delay)
+    } else {
+      this.cached.push(tombstones)
+    }
 
-    this.timers.push(timerId)
+    return this.cached
   }
 }

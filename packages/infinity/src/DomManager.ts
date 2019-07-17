@@ -5,9 +5,8 @@ import { style, cssVendor } from '@better-scroll/shared-utils'
 const ANIMATION_DURATION_MS = 200
 
 export default class DomManager {
-  private lastStart = -1
-  private lastEnd = -1
   private unusedDom: HTMLElement[] = []
+  private timers: Array<number> = []
 
   constructor(
     private content: HTMLElement,
@@ -17,8 +16,8 @@ export default class DomManager {
 
   update(
     list: Array<pListItem>,
-    start?: number,
-    end?: number
+    start: number,
+    end: number
   ): {
     start: number
     end: number
@@ -26,17 +25,8 @@ export default class DomManager {
     startDelta: number
     endPos: number
   } {
-    if (start !== undefined && end !== undefined) {
-      this.lastStart = start
-      this.lastEnd = end
-    } else {
-      start = this.lastStart
-      end = this.lastEnd
-    }
-
     if (start >= list.length) {
       start = list.length - 1
-      end = list.length
     }
 
     if (end > list.length) {
@@ -46,7 +36,6 @@ export default class DomManager {
     this.collectUnusedDom(list, start, end)
     this.createDom(list, start, end)
 
-    // important! position dom
     const { startPos, startDelta, endPos } = this.positionDom(list, start, end)
 
     return {
@@ -63,22 +52,20 @@ export default class DomManager {
     start: number,
     end: number
   ): Array<any> {
-    // TODO 优化 istart
-    // let istart = Math.min(start, this.lastStart)
-    // let iend = Math.max(end, this.lastEnd)
+    // TODO optimise
     for (let i = 0; i < list.length; i++) {
       if (i === start) {
         i = end - 1
         continue
       }
-      const dom = list[i].dom
-      if (dom) {
-        const dom = list[i].dom
-        if (this.tombstone.isTombstone(dom!)) {
-          this.tombstone.cached.push(dom!)
-          dom!.style.display = 'none'
+
+      if (list[i].dom) {
+        const dom = list[i].dom as HTMLElement
+        if (this.tombstone.isTombstone(dom)) {
+          this.tombstone.recycle(dom)
+          dom.style.display = 'none'
         } else {
-          this.unusedDom.push(dom!)
+          this.unusedDom.push(dom)
         }
         list[i].dom = null
       }
@@ -128,6 +115,7 @@ export default class DomManager {
     )
     let pos = startPos
 
+    // TODO transition
     for (let i = start; i < end; i++) {
       const tombstone = list[i].tombstone
       if (tombstone) {
@@ -148,7 +136,10 @@ export default class DomManager {
       pos += list[i].height || this.tombstone.height
     }
 
-    this.tombstone.waitForRecycle(tombstoneEles, ANIMATION_DURATION_MS)
+    const timerId = window.setTimeout(() => {
+      this.tombstone.recycle(tombstoneEles)
+    }, ANIMATION_DURATION_MS)
+    this.timers.push(timerId)
 
     return {
       startPos,
@@ -168,7 +159,7 @@ export default class DomManager {
         delta: 0
       }
     }
-    // TODO 只能从头计算吗？ lastStart?
+    // TODO optimise
     let pos = list[0].pos === -1 ? 0 : list[0].pos
     for (let i = 0; i < start; i++) {
       pos += list[i].height || this.tombstone.height
@@ -197,13 +188,16 @@ export default class DomManager {
     }
   }
 
-  removeTombstone(list: Array<any>, end: number) {
-    for (let i = list.length - 1; i >= end; i--) {
-      const dom = list[i].dom
-      const data = list[i].data
-      if (!data && this.tombstone.isTombstone(dom)) {
-        this.content.removeChild(dom)
-      }
+  removeTombstone(): void {
+    const tombstones = this.content.querySelectorAll('.tombstone')
+    for (let i = tombstones.length - 1; i >= 0; i--) {
+      this.content.removeChild(tombstones[i])
     }
+  }
+
+  destroy() {
+    this.timers.forEach(id => {
+      clearTimeout(id)
+    })
   }
 }

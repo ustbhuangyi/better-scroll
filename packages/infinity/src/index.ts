@@ -20,6 +20,8 @@ const EXTRA_SCROLL_Y = -2000
 
 export default class InfinityScroll {
   static pluginName = 'infinity'
+  public start: number = 0
+  public end: number = 0
   private tombstone: Tombstone
   private domManager: DomManager
   private dataManager: DataManager
@@ -52,15 +54,15 @@ export default class InfinityScroll {
       this.tombstone
     )
     this.dataManager = new DataManager(
-      this.bscroll,
       [],
       fetchFn,
-      this.domManager
+      this.onFetchFinish.bind(this)
     )
 
-    this.update({ y: 0 })
+    this.bscroll.on('destroy', this.destroy, this)
+    this.bscroll.on('scroll', this.update, this)
 
-    this.bscroll.on('scroll', this.update.bind(this))
+    this.update({ y: 0 })
   }
 
   update(pos: { y: number }): void {
@@ -70,7 +72,57 @@ export default class InfinityScroll {
       position,
       this.dataManager.getList()
     )
+    this.start = start
+    this.end = end
     // tslint:disable-next-line: no-floating-promises
-    this.dataManager.update(start, end)
+    this.dataManager.update(end)
+    this.updateDom(this.dataManager.getList())
+  }
+
+  private onFetchFinish(list: Array<any>, hasMore: boolean) {
+    const { end } = this.updateDom(list)
+    if (!hasMore) {
+      this.domManager.removeTombstone()
+      this.bscroll.scroller.animater.stop()
+      this.bscroll.resetPosition()
+    }
+    // tslint:disable-next-line: no-floating-promises
+    return end
+  }
+
+  private updateDom(
+    list: Array<any>
+  ): { end: number; startPos: number; endPos: number } {
+    const { end, startPos, endPos, startDelta } = this.domManager.update(
+      list,
+      this.start,
+      this.end
+    )
+
+    // important!
+    if (startDelta) {
+      this.bscroll.minScrollY = startDelta
+    }
+
+    if (endPos > this.bscroll.maxScrollY) {
+      this.bscroll.maxScrollY = -(
+        endPos - this.bscroll.scroller.scrollBehaviorY.wrapperSize
+      )
+    }
+
+    return {
+      end,
+      startPos,
+      endPos
+    }
+  }
+
+  destroy() {
+    const content: HTMLElement = this.bscroll.scroller.content
+    while (content.firstChild) {
+      content.removeChild(content.firstChild)
+    }
+    this.domManager.destroy()
+    this.bscroll.off('scroll', this.update)
   }
 }
