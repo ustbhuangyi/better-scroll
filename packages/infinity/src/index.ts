@@ -124,5 +124,6 @@ export default class InfinityScroll {
     }
     this.domManager.destroy()
     this.bscroll.off('scroll', this.update)
+    this.bscroll.off('destroy', this.destroy)
   }
 }

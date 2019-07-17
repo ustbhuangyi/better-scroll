@@ -195,7 +195,8 @@ export default class DomManager {
     }
   }
 
-  destroy() {
+  destroy(): void {
+    this.removeTombstone()
     this.timers.forEach(id => {
       clearTimeout(id)
     })
