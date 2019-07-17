@@ -6,25 +6,43 @@ declare module '@better-scroll/core' {
   }
 }
 type BScrollPairs = [BScroll, BScroll]
-const conflicts: {
+
+const compatibleFeatures: {
   [index: string]: Function
-  duplateClick: (pairs: BScrollPairs) => void
+  duplicateClick: (pairs: BScrollPairs) => void
   nestedScroll: (pairs: BScrollPairs) => void
 } = {
-  duplateClick([parentScroll, childScroll]) {
+  duplicateClick([parentScroll, childScroll]) {
     // no need to make childScroll's click true
     if (parentScroll.options.click && childScroll.options.click) {
       childScroll.options.click = false
     }
   },
-  nestedScroll([parentScroll, childScroll]) {
-    childScroll
-      .on('scroll', () => {
-        parentScroll.disable()
+  nestedScroll(scrollsPair: BScrollPairs) {
+    const [parentScroll, childScroll] = scrollsPair
+    scrollsPair.forEach((scroll, index, arr) => {
+      const oppositeScroll = arr[(index + 1) % 2]
+
+      scroll.on('beforeScrollStart', () => {
+        if (oppositeScroll.pending) {
+          oppositeScroll.stop()
+          oppositeScroll.resetPosition()
+        }
+        setupData(oppositeScroll)
+        oppositeScroll.disable()
       })
-      .on('scrollEnd', () => {
+
+      scroll.on('touchEnd', () => {
+        oppositeScroll.enable()
+      })
+    })
+
+    childScroll.on('scrollStart', () => {
+      if (checkBeyondBoundary(childScroll)) {
+        childScroll.disable()
         parentScroll.enable()
-      })
+      }
+    })
   }
 }
 export default class NestedScrollManager {
@@ -54,7 +72,7 @@ export default class NestedScrollManager {
   appendBScroll(scroll: BScroll): void {
     this.stores.push(scroll)
     this.handleContainRelationship()
-    this.handleConflicts()
+    this.handleCompatible()
   }
 
   private handleContainRelationship(): void {
@@ -106,19 +124,18 @@ export default class NestedScrollManager {
     }
   }
 
-  private handleConflicts() {
-    const pairs = this.filterBScrolls()
-    const conflictsType = ['duplateClick', 'nestedScroll']
+  private handleCompatible() {
+    const pairs = this.availableBScrolls()
+    const keys = ['duplicateClick', 'nestedScroll']
 
     pairs.forEach(pair => {
-      console.log(pair[0].__parentInfo, pair[1].__parentInfo)
-      conflictsType.forEach(type => {
-        conflicts[type](pair)
+      keys.forEach(key => {
+        compatibleFeatures[key](pair)
       })
     })
   }
 
-  private filterBScrolls(): BScrollPairs[] {
+  private availableBScrolls(): BScrollPairs[] {
     let ret: BScrollPairs[] = []
     ret = this.stores
       .filter(bs => !!bs.__parentInfo)
@@ -138,4 +155,44 @@ function calculateDepths(
     parent = parent.parentNode
   }
   return depth
+}
+
+function checkBeyondBoundary(scroll: BScroll): Boolean {
+  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
+  const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+
+  const hasReachLeft =
+    scroll.x >= scroll.minScrollX && scrollBehaviorX.movingDirection === -1
+  const hasReachRight =
+    scroll.x <= scroll.maxScrollX && scrollBehaviorX.movingDirection === 1
+  const hasReachTop =
+    scroll.y >= scroll.minScrollY && scrollBehaviorY.movingDirection === -1
+  const hasReachBottom =
+    scroll.y <= scroll.maxScrollY && scrollBehaviorY.movingDirection === 1
+
+  if (hasVerticalScroll) {
+    return hasReachTop || hasReachBottom
+  } else if (hasHorizontalScroll) {
+    return hasReachLeft || hasReachRight
+  }
+  return false
+}
+
+function setupData(scroll: BScroll): void {
+  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
+  const { actions, scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+  actions.startTime = +new Date()
+
+  if (hasVerticalScroll) {
+    scrollBehaviorY.startPos = scrollBehaviorY.currentPos
+  } else if (hasHorizontalScroll) {
+    scrollBehaviorX.startPos = scrollBehaviorX.currentPos
+  }
+}
+
+function hasScroll(scroll: BScroll) {
+  return {
+    hasHorizontalScroll: scroll.scroller.scrollBehaviorX.hasScroll,
+    hasVerticalScroll: scroll.scroller.scrollBehaviorY.hasScroll
+  }
 }
