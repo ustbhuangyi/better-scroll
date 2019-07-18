@@ -1,7 +1,7 @@
 <template>
   <div class="core">
     <ul class="example-list">
-      <li class="example-item" @click="goPage('/nested-scroll-manager/nested-vertical-scroll')">
+      <li class="example-item" @click="goPage('/nested-scroll/nested-vertical-scroll')">
         <span>nested-vertical-scroll</span>
       </li>
     </ul>

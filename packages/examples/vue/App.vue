@@ -56,8 +56,8 @@
       path: '/form/'
     },
     {
-      name: 'nestedScrollManager',
-      path: '/nested-scroll-manager/'
+      name: 'nestedScroll',
+      path: '/nested-scroll/'
     }
   ]
   export default {

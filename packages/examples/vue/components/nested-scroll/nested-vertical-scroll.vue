@@ -33,8 +33,8 @@
 
 <script type="text/ecmascript-6">
 import BScroll from '@better-scroll/core'
-import NestedScrollManager from '@better-scroll/nested-scroll-manager'
-BScroll.use(NestedScrollManager)
+import NestedScroll from '@better-scroll/nested-scroll'
+BScroll.use(NestedScroll)
 
 const _data1 = [
   '😀 😁 😂 🤣 😃 🙃 ',
@@ -85,11 +85,11 @@ export default {
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScrollManager: true
+        nestedScroll: true
       })
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
-        nestedScrollManager: true,
+        nestedScroll: true,
         // close bounce effects
         bounce: {
           top: false,
@@ -106,7 +106,7 @@ export default {
 .scroll-inner-wrapper
   border: 3px solid #a64942
   border-radius: 5px
-  transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
+  transform: rotate(0deg)
   position: relative
   overflow: hidden
 .scroll-outer-wrapper

@@ -226,5 +226,4 @@ function getPackagesName() {
 getPackagesName().forEach(name => {
   webpackConfig.resolve.alias.set(`${name}$`, `${name}/src/index.ts`)
 })
-console.log(webpackConfig.resolve.alias)
 module.exports = webpackConfig.toConfig()

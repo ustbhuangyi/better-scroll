@@ -9,7 +9,7 @@ import Pullup from 'vue-example/pages/pullup-entry'
 import PullDown from 'vue-example/pages/pulldown-entry'
 import ScrollBar from 'vue-example/pages/scrollbar-entry'
 import FormEntry from 'vue-example/pages/form-entry'
-import NestedScrollManagerEntry from 'vue-example/pages/nested-scroll-manager-entry'
+import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -27,7 +27,7 @@ import linkageColumnPicker from 'vue-example/components/picker/linkage-column'
 
 import formTextarea from 'vue-example/components/form/textarea'
 
-import nestedVerticalScroll from 'vue-example/components/nested-scroll-manager/nested-vertical-scroll'
+import nestedVerticalScroll from 'vue-example/components/nested-scroll/nested-vertical-scroll'
 
 Vue.use(Router)
 
@@ -122,8 +122,8 @@ export default new Router({
       ]
     },
     {
-      path: '/nested-scroll-manager',
-      component: NestedScrollManagerEntry,
+      path: '/nested-scroll',
+      component: NestedScrollEntry,
       children: [
         {
           path: 'nested-vertical-scroll',

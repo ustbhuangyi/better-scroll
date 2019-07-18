@@ -2,7 +2,7 @@ import BScroll from '@better-scroll/core'
 
 declare module '@better-scroll/core' {
   interface Options {
-    nestedScrollManager: true
+    nestedScroll: true
   }
 }
 type BScrollPairs = [BScroll, BScroll]
@@ -45,18 +45,18 @@ const compatibleFeatures: {
     })
   }
 }
-export default class NestedScrollManager {
-  static pluginName = 'nestedScrollManager'
-  static nestedScrollManager?: NestedScrollManager
+export default class NestedScroll {
+  static pluginName = 'nestedScroll'
+  static nestedScroll?: NestedScroll
   stores: BScroll[]
   constructor(scroll: BScroll) {
-    const baseCtor = this.constructor as typeof NestedScrollManager
+    const baseCtor = this.constructor as typeof NestedScroll
 
-    // only need an unique NestedScrollManager instance
-    let singleton = baseCtor.nestedScrollManager
+    // only need an unique NestedScroll instance
+    let singleton = baseCtor.nestedScroll
     if (!singleton) {
-      baseCtor.nestedScrollManager = this
-      singleton = baseCtor.nestedScrollManager
+      baseCtor.nestedScroll = this
+      singleton = baseCtor.nestedScroll
       singleton.initStores()
     }
 

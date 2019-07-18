@@ -1,5 +1,5 @@
 {
-  "name": "@better-scroll/nested-scroll-manager",
+  "name": "@better-scroll/nested-scroll",
   "version": "2.0.0-alpha.18",
   "description": "make your nested scrolls reconciliation",
   "author": {
@@ -9,8 +9,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/nested-scroll-manager.js",
-  "module": "dist/nested-scroll-manager.esm.js",
+  "main": "dist/nested-scroll.js",
+  "module": "dist/nested-scroll.esm.js",
   "typings": "dist/types/index.d.ts",
   "scripts": {},
   "bugs": {
