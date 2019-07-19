@@ -104,14 +104,14 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus">
 .scroll-outer-wrapper
 .scroll-inner-wrapper
-  border: 3px solid #a64942
+  border: 2px solid #62B791
   border-radius: 5px
   transform: rotate(0deg)
   position: relative
   overflow: hidden
 .scroll-outer-wrapper
   height: 500px
-  border: 2px solid #17223b
+  border: 1px solid rgba(0, 0, 0, .1)
 .scroll-inner-wrapper
   height: 260px
 

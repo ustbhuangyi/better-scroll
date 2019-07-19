@@ -20,8 +20,8 @@ const compatibleFeatures: {
   },
   nestedScroll(scrollsPair: BScrollPairs) {
     const [parentScroll, childScroll] = scrollsPair
-    scrollsPair.forEach((scroll, index, arr) => {
-      const oppositeScroll = arr[(index + 1) % 2]
+    scrollsPair.forEach((scroll, index) => {
+      const oppositeScroll = scrollsPair[(index + 1) % 2]
 
       scroll.on('beforeScrollStart', () => {
         if (oppositeScroll.pending) {

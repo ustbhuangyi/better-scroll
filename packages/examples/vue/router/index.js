@@ -21,14 +21,14 @@ import HorizontalScroll from 'vue-example/components/core/horizontal'
 import Freescroll from 'vue-example/components/core/freescroll'
 import MouseWheelCore from 'vue-example/components/core/mouse-wheel'
 
-import oneColumnPicker from 'vue-example/components/picker/one-column'
-import doubleColumnPicker from 'vue-example/components/picker/double-column'
-import linkageColumnPicker from 'vue-example/components/picker/linkage-column'
+import OneColumnPicker from 'vue-example/components/picker/one-column'
+import DoubleColumnPicker from 'vue-example/components/picker/double-column'
+import LinkageColumnPicker from 'vue-example/components/picker/linkage-column'
 
-import formTextarea from 'vue-example/components/form/textarea'
+import FormTextarea from 'vue-example/components/form/textarea'
 
-import nestedVerticalScroll from 'vue-example/components/nested-scroll/nested-vertical-scroll'
-
+import NestedVerticalScroll from 'vue-example/components/nested-scroll/nested-vertical-scroll'
+import NestedHorizontalScroll from 'vue-example/components/nested-scroll/nested-horizontal-scroll'
 Vue.use(Router)
 
 export default new Router({
@@ -87,15 +87,15 @@ export default new Router({
       children: [
         {
           path: 'one-column',
-          component: oneColumnPicker
+          component: OneColumnPicker
         },
         {
           path: 'double-column',
-          component: doubleColumnPicker
+          component: DoubleColumnPicker
         },
         {
           path: 'linkage-column',
-          component: linkageColumnPicker
+          component: LinkageColumnPicker
         }
       ]
     },
@@ -117,7 +117,7 @@ export default new Router({
       children: [
         {
           path: 'textarea',
-          component: formTextarea
+          component: FormTextarea
         }
       ]
     },
@@ -127,7 +127,11 @@ export default new Router({
       children: [
         {
           path: 'nested-vertical-scroll',
-          component: nestedVerticalScroll
+          component: NestedVerticalScroll
+        },
+        {
+          path: 'nested-horizontal-scroll',
+          component: NestedHorizontalScroll
         }
       ]
     }
