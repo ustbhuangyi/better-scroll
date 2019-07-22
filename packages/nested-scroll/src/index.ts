@@ -20,29 +20,38 @@ const compatibleFeatures: {
   },
   nestedScroll(scrollsPair: BScrollPairs) {
     const [parentScroll, childScroll] = scrollsPair
-    scrollsPair.forEach((scroll, index) => {
-      const oppositeScroll = scrollsPair[(index + 1) % 2]
 
-      scroll.on('beforeScrollStart', () => {
-        if (oppositeScroll.pending) {
-          oppositeScroll.stop()
-          oppositeScroll.resetPosition()
+    const parentScrollX = parentScroll.options.scrollX
+    const parentScrollY = parentScroll.options.scrollY
+    const childScrollX = childScroll.options.scrollX
+    const childScrollY = childScroll.options.scrollY
+    // vertical nested in vertical scroll and horizontal nested in horizontal
+    // otherwise, no need to handle.
+    if (parentScrollX === childScrollX || parentScrollY === childScrollY) {
+      scrollsPair.forEach((scroll, index) => {
+        const oppositeScroll = scrollsPair[(index + 1) % 2]
+
+        scroll.on('beforeScrollStart', () => {
+          if (oppositeScroll.pending) {
+            oppositeScroll.stop()
+            oppositeScroll.resetPosition()
+          }
+          setupData(oppositeScroll)
+          oppositeScroll.disable()
+        })
+
+        scroll.on('touchEnd', () => {
+          oppositeScroll.enable()
+        })
+      })
+
+      childScroll.on('scrollStart', () => {
+        if (checkBeyondBoundary(childScroll)) {
+          childScroll.disable()
+          parentScroll.enable()
         }
-        setupData(oppositeScroll)
-        oppositeScroll.disable()
       })
-
-      scroll.on('touchEnd', () => {
-        oppositeScroll.enable()
-      })
-    })
-
-    childScroll.on('scrollStart', () => {
-      if (checkBeyondBoundary(childScroll)) {
-        childScroll.disable()
-        parentScroll.enable()
-      }
-    })
+    }
   }
 }
 export default class NestedScroll {
