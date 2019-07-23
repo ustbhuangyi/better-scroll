@@ -13,7 +13,7 @@
           <div
             ref="innerScroll"
             class="scroll-inner-wrapper">
-            <ul>
+            <ul class="scroll-inner-content">
               <li class="row"
                 v-for="(item, index) in items2"
                 :key="index">{{item}}</li>
