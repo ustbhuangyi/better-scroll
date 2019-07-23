@@ -64,8 +64,7 @@ export default class NestedScroll {
     // only need an unique NestedScroll instance
     let singleton = baseCtor.nestedScroll
     if (!singleton) {
-      baseCtor.nestedScroll = this
-      singleton = baseCtor.nestedScroll
+      singleton = baseCtor.nestedScroll = this
       singleton.initStores()
     }
 
