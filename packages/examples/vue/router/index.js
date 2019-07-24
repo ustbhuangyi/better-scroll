@@ -27,9 +27,9 @@ import LinkageColumnPicker from 'vue-example/components/picker/linkage-column'
 
 import FormTextarea from 'vue-example/components/form/textarea'
 
-import NestedVerticalScroll from 'vue-example/components/nested-scroll/nested-vertical-scroll'
-import NestedHorizontalScroll from 'vue-example/components/nested-scroll/nested-horizontal-scroll'
-import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/nested-horizontal-in-vertical'
+import NestedVerticalScroll from 'vue-example/components/nested-scroll/vertical'
+import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizontal'
+import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 Vue.use(Router)
 
 export default new Router({
@@ -127,15 +127,15 @@ export default new Router({
       component: NestedScrollEntry,
       children: [
         {
-          path: 'nested-vertical-scroll',
+          path: 'vertical',
           component: NestedVerticalScroll
         },
         {
-          path: 'nested-horizontal-scroll',
+          path: 'horizontal',
           component: NestedHorizontalScroll
         },
         {
-          path: 'nested-horizontal-in-vertical',
+          path: 'horizontal-in-vertical',
           component: NestedHorizontalInVertical
         }
       ]

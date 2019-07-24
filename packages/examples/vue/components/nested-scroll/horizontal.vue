@@ -1,6 +1,5 @@
 <template>
-  <div class="horizontal-scroll-container">
-    <div class="demo">
+  <div class="container">
       <div
         ref="outerScroll"
         class="outer-wrapper">
@@ -18,7 +17,6 @@
           <li v-for="item in items1" class="list-item">{{ item }}</li>
         </ul>
       </div>
-    </div>
   </div>
 </template>
 
@@ -77,12 +75,12 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-.horizontal-scroll-container
+<style lang="stylus" rel="stylesheet/stylus" scoped>
   .outer-wrapper
     border: 1px solid rgba(0, 0, 0, 0.1)
     border-radius: 5px
-    transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
+    transform: rotate(0deg)
+    margin-top: 50px
     position: relative
     overflow: hidden
     .outer-content
@@ -93,7 +91,7 @@ export default {
   .inner-wrapper
     border: 2px solid #62B791
     border-radius: 5px
-    transform: rotate(0deg) // fix 子元素超出边框圆角部分不隐藏的问题
+    transform: rotate(0deg)
     position: relative
     width: 200px
     overflow: hidden

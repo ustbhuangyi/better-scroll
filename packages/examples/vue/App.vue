@@ -56,7 +56,7 @@
       path: '/form/'
     },
     {
-      name: 'nestedScroll',
+      name: 'nested-scroll',
       path: '/nested-scroll/'
     }
   ]

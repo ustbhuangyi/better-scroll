@@ -1,32 +1,30 @@
 <template>
-  <div class="scroll-wrapper">
-    <div class="demo">
-      <div
-        ref="outerScroll"
-        class="scroll-outer-wrapper">
-        <div class="scroll-outer-content">
-          <ul>
-          <li class="outer-row"
-            v-for="(item, index) in items1"
-            :key="index">{{item}}</li>
-          </ul>
-          <div
-            ref="innerScroll"
-            class="scroll-inner-wrapper">
-            <ul class="scroll-inner-content">
-              <li class="row"
-                v-for="(item, index) in items2"
-                :key="index">{{item}}</li>
-            </ul>
-          </div>
-          <ul>
-            <li class="outer-row"
-              v-for="(item, index) in items1"
+  <div class="container">
+    <div
+      ref="outerScroll"
+      class="outer-wrapper">
+      <div class="outer-content">
+        <ul>
+        <li class="outer-list-item"
+          v-for="(item, index) in items1"
+          :key="index">{{item}}</li>
+        </ul>
+        <div
+          ref="innerScroll"
+          class="inner-wrapper">
+          <ul class="inner-content">
+            <li class="inner-list-item"
+              v-for="(item, index) in items2"
               :key="index">{{item}}</li>
           </ul>
         </div>
-
+        <ul>
+          <li class="outer-list-item"
+            v-for="(item, index) in items1"
+            :key="index">{{item}}</li>
+        </ul>
       </div>
+
     </div>
   </div>
 </template>
@@ -101,27 +99,31 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-.scroll-outer-wrapper
-.scroll-inner-wrapper
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+.container
+  height: 100%
+.outer-wrapper
+.inner-wrapper
   border: 2px solid #62B791
   border-radius: 5px
   transform: rotate(0deg)
   position: relative
   overflow: hidden
-.scroll-outer-wrapper
-  height: 500px
+.outer-wrapper
+  height: 100%
   border: 1px solid rgba(0, 0, 0, .1)
-.scroll-inner-wrapper
-  height: 260px
+.inner-wrapper
+  height: 240px
 
-.row
+.inner-list-item
   height: 50px
   line-height: 50px
   text-align: center
+  list-style: none
 
-.outer-row
+.outer-list-item
   height: 40px
   line-height: 40px
   text-align: center
+  list-style: none
 </style>

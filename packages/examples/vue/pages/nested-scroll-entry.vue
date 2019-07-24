@@ -20,16 +20,16 @@ export default {
     return {
       routes: [
         {
-          path: '/nested-scroll/nested-vertical-scroll',
-          name: 'vertical-scroll'
+          path: '/nested-scroll/vertical',
+          name: 'vertical'
         },
         {
-          path: '/nested-scroll/nested-horizontal-scroll',
-          name: 'horizontal-scroll'
+          path: '/nested-scroll/horizontal',
+          name: 'horizontal'
         },
         {
-          path: '/nested-scroll/nested-horizontal-in-vertical',
-          name: 'nested-horizontal-in-vertical-scroll'
+          path: '/nested-scroll/horizontal-in-vertical',
+          name: 'horizontal-in-vertical'
         }
       ]
     }
