@@ -58,7 +58,7 @@ describe('Nested vertical scroll', () => {
       gestureSourceType: 'touch'
     })
 
-    await page.waitFor(2500)
+    await page.waitFor(1000)
 
     const outerTransformText = await page.$eval(
       '.scroll-outer-content',
@@ -88,12 +88,12 @@ describe('Nested vertical scroll', () => {
       x: 160,
       y: 430,
       xDistance: 0,
-      yDistance: -500,
-      speed: 1400,
+      yDistance: -300,
+      speed: 3000,
       gestureSourceType: 'touch'
     })
 
-    await page.waitFor(2500)
+    await page.waitFor(1000)
 
     const innerTransformText = await page.$eval(
       '.scroll-inner-content',
@@ -103,13 +103,13 @@ describe('Nested vertical scroll', () => {
     )
 
     const innerTranslateY = getTranslate(innerTransformText!, 'y')
-    await expect(innerTranslateY).toBeLessThan(-50)
+    await expect(innerTranslateY).toBeLessThan(-20)
 
     await page.dispatchScroll({
       x: 160,
       y: 430,
       xDistance: 0,
-      yDistance: -50,
+      yDistance: -100,
       gestureSourceType: 'touch'
     })
 

@@ -1,15 +1,20 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('One column picker', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
   extendTouch(page)
-  beforeEach(async () => {
+
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/picker/one-column')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should render picker DOM correctly', async () => {
@@ -23,7 +28,6 @@ describe('One column picker', () => {
       return window.getComputedStyle(node).display
     })
 
-    await page.click('.cancel')
     await expect(displayText).toBe('block')
   })
 
@@ -37,9 +41,8 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const matrix = transformText!.split(')')[0].split(', ')
-    const translateY = +(matrix[13] || matrix[5])
-    await page.click('.cancel')
+    const translateY = getTranslate(transformText!, 'y')
+
     await expect(translateY).toBe(-72)
   })
 
@@ -55,9 +58,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const matrix = transformText!.split(')')[0].split(', ')
-    const translateY = +(matrix[13] || matrix[5])
-    await page.click('.cancel')
+    const translateY = getTranslate(transformText!, 'y')
     await expect(translateY).toBe(-72)
   })
 
@@ -79,9 +80,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const matrix = transformText!.split(')')[0].split(', ')
-    const translateY = +(matrix[13] || matrix[5])
-    await page.click('.cancel')
+    const translateY = getTranslate(transformText!, 'y')
     await expect(translateY).toBe(-36)
   })
 
@@ -92,42 +91,13 @@ describe('One column picker', () => {
 
     await page.waitFor(1000)
 
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 200,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 200,
+      y: 630,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // wait for transition ends
     await page.waitFor(1000)
@@ -135,8 +105,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const matrix = transformText!.split(')')[0].split(', ')
-    const translateY = +(matrix[13] || matrix[5])
+    const translateY = getTranslate(transformText!, 'y')
     await expect(translateY).toBeLessThan(-72)
   })
 })

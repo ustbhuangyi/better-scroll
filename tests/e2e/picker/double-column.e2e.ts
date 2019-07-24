@@ -1,15 +1,19 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('Double column picker', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
   extendTouch(page)
-  beforeEach(async () => {
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/picker/double-column')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should render picker DOM correctly', async () => {
@@ -23,7 +27,6 @@ describe('Double column picker', () => {
       return window.getComputedStyle(node).display
     })
 
-    await page.click('.cancel')
     await expect(displayText).toBe('block')
   })
 
@@ -44,7 +47,7 @@ describe('Double column picker', () => {
     const innerText = await page.$eval('.open', node => {
       return node.textContent
     })
-    await page.click('.cancel')
+
     await expect(innerText).toBe('Venomancer-Durable')
   })
 
@@ -56,80 +59,22 @@ describe('Double column picker', () => {
     await page.waitFor(1000)
 
     // first column
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 100,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 100,
+      y: 630,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // second column
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 270,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 270,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 270,
+      y: 630,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // wait for transition ends
     await page.waitFor(1000)
@@ -137,12 +82,9 @@ describe('Double column picker', () => {
     const transformTexts = await page.$$eval('.wheel-scroll', nodes => {
       return nodes.map(node => window.getComputedStyle(node).transform)
     })
-    await page.click('.cancel')
-    const matrixs = transformTexts.map(transformText =>
-      transformText!.split(')')[0].split(', ')
-    )
-    for (const matrix of matrixs) {
-      const translateY = +(matrix[13] || matrix[5])
+
+    for (const transformText of transformTexts) {
+      const translateY = getTranslate(transformText!, 'y')
       await expect(translateY).toBeLessThan(-72)
     }
   })

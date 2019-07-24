@@ -5,11 +5,15 @@ jest.setTimeout(10000000)
 
 describe('Scrollbar', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
+
   extendTouch(page)
-  beforeEach(async () => {
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/scrollbar/')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should render DOM correctly', async () => {

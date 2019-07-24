@@ -5,8 +5,6 @@ jest.setTimeout(10000000)
 
 describe('Pulldown', () => {
   let page = (global as any).page as Page
-  // disable cache
-  page.setCacheEnabled(false)
   extendTouch(page)
   beforeEach(async () => {
     await page.goto('http://0.0.0.0:8932/#/pulldown/')
@@ -26,60 +24,14 @@ describe('Pulldown', () => {
   it('should trigger pullingup when BS reached the bottom', async () => {
     await page.waitFor(300)
 
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 200,
-            y: 100
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 400
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 450
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 500
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 550
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 560
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 575
-          }
-        ],
-        [
-          {
-            x: 200,
-            y: 630
-          }
-        ]
-      ],
-      () => {},
-      5
-    )
+    await page.dispatchScroll({
+      x: 200,
+      y: 100,
+      xDistance: 0,
+      yDistance: 400,
+      speed: 1500,
+      gestureSourceType: 'touch'
+    })
 
     // wait for requesting data
     await page.waitFor(3000)
