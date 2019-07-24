@@ -35,7 +35,6 @@ describe('Nested horizontal scroll', () => {
       return window.getComputedStyle(node).transform
     })
 
-    const matrix = transformText!.split(')')[0].split(', ')
     const translateX = getTranslate(transformText!, 'x')
     await expect(translateX).toBeLessThan(-30)
   })
