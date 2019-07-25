@@ -69,12 +69,18 @@ export default class NestedScroll {
     }
 
     singleton.appendBScroll(scroll)
+    this.addHooks(scroll)
 
     return singleton
   }
 
   private initStores(): void {
     this.stores = []
+  }
+  private addHooks(scroll: BScroll): void {
+    scroll.on('destroy', () => {
+      this.removeBScroll(scroll)
+    })
   }
 
   appendBScroll(scroll: BScroll): void {
@@ -83,11 +89,25 @@ export default class NestedScroll {
     this.handleCompatible()
   }
 
+  removeBScroll(scroll: BScroll): void {
+    const index = this.stores.indexOf(scroll)
+    if (index === -1) return
+    this.stores.splice(index, 1)
+    this.handleContainRelationship()
+    this.handleCompatible()
+  }
+
   private handleContainRelationship(): void {
     // bs's length <= 1
-    if (this.stores.length <= 1) return
-
     const stores = this.stores
+    if (stores.length <= 1) {
+      // there is only a childBScroll left.
+      if (stores[0] && stores[0].__parentInfo) {
+        stores[0].__parentInfo = undefined
+      }
+      return
+    }
+
     let outerBS
     let outerBSWrapper
     let innerBS
