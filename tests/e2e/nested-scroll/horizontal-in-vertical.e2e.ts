@@ -9,7 +9,7 @@ describe('Nested horizontal-in-vertical scroll', () => {
   extendTouch(page)
   beforeAll(async () => {
     await page.goto(
-      'http://0.0.0.0:8932/#/nested-scroll/nested-horizontal-in-vertical'
+      'http://0.0.0.0:8932/#/nested-scroll/horizontal-in-vertical'
     )
   })
   beforeEach(async () => {

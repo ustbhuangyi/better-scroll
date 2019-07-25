@@ -8,9 +8,7 @@ describe('Nested horizontal scroll', () => {
   let page = (global as any).page as Page
   extendTouch(page)
   beforeAll(async () => {
-    await page.goto(
-      'http://0.0.0.0:8932/#/nested-scroll/nested-horizontal-scroll'
-    )
+    await page.goto('http://0.0.0.0:8932/#/nested-scroll/horizontal')
   })
   beforeEach(async () => {
     await page.reload({
@@ -23,7 +21,7 @@ describe('Nested horizontal scroll', () => {
 
     await page.dispatchScroll({
       x: 100,
-      y: 60,
+      y: 110,
       xDistance: -70,
       yDistance: 0,
       gestureSourceType: 'touch'
@@ -45,11 +43,12 @@ describe('Nested horizontal scroll', () => {
     const oldOuterTransformText = await page.$eval('.outer-content', node => {
       return window.getComputedStyle(node).transform
     })
+
     const oldOuterTranslateX = getTranslate(oldOuterTransformText!, 'x')
 
     await page.dispatchScroll({
       x: 270,
-      y: 60,
+      y: 110,
       xDistance: -70,
       yDistance: 0,
       gestureSourceType: 'touch'
@@ -75,7 +74,7 @@ describe('Nested horizontal scroll', () => {
 
     await page.dispatchScroll({
       x: 270,
-      y: 60,
+      y: 110,
       xDistance: -600,
       yDistance: 0,
       speed: 1800,
@@ -92,7 +91,7 @@ describe('Nested horizontal scroll', () => {
 
     await page.dispatchScroll({
       x: 270,
-      y: 60,
+      y: 110,
       xDistance: -50,
       yDistance: 0,
       gestureSourceType: 'touch'

@@ -8,9 +8,7 @@ describe('Nested vertical scroll', () => {
   let page = (global as any).page as Page
   extendTouch(page)
   beforeAll(async () => {
-    await page.goto(
-      'http://0.0.0.0:8932/#/nested-scroll/nested-vertical-scroll'
-    )
+    await page.goto('http://0.0.0.0:8932/#/nested-scroll/vertical')
   })
   beforeEach(async () => {
     await page.reload({
@@ -31,7 +29,7 @@ describe('Nested vertical scroll', () => {
 
     await page.waitFor(2500)
 
-    const transformText = await page.$eval('.scroll-outer-content', node => {
+    const transformText = await page.$eval('.outer-content', node => {
       return window.getComputedStyle(node).transform
     })
 
@@ -42,12 +40,9 @@ describe('Nested vertical scroll', () => {
   it('should only make innerBScroll scroll and outerBScroll stop', async () => {
     await page.waitFor(300)
 
-    const oldOuterTransformText = await page.$eval(
-      '.scroll-outer-content',
-      node => {
-        return window.getComputedStyle(node).transform
-      }
-    )
+    const oldOuterTransformText = await page.$eval('.outer-content', node => {
+      return window.getComputedStyle(node).transform
+    })
     const oldOuterTranslateY = getTranslate(oldOuterTransformText!, 'y')
 
     await page.dispatchScroll({
@@ -60,22 +55,16 @@ describe('Nested vertical scroll', () => {
 
     await page.waitFor(1000)
 
-    const outerTransformText = await page.$eval(
-      '.scroll-outer-content',
-      node => {
-        return window.getComputedStyle(node).transform
-      }
-    )
+    const outerTransformText = await page.$eval('.outer-content', node => {
+      return window.getComputedStyle(node).transform
+    })
 
     const outerTranslateY = getTranslate(outerTransformText!, 'y')
     await expect(outerTranslateY).toBe(oldOuterTranslateY)
 
-    const innerTransformText = await page.$eval(
-      '.scroll-inner-content',
-      node => {
-        return window.getComputedStyle(node).transform
-      }
-    )
+    const innerTransformText = await page.$eval('.inner-content', node => {
+      return window.getComputedStyle(node).transform
+    })
 
     const innerTranslateY = getTranslate(innerTransformText!, 'y')
     await expect(innerTranslateY).toBeLessThan(-30)
@@ -95,12 +84,9 @@ describe('Nested vertical scroll', () => {
 
     await page.waitFor(1000)
 
-    const innerTransformText = await page.$eval(
-      '.scroll-inner-content',
-      node => {
-        return window.getComputedStyle(node).transform
-      }
-    )
+    const innerTransformText = await page.$eval('.inner-content', node => {
+      return window.getComputedStyle(node).transform
+    })
 
     const innerTranslateY = getTranslate(innerTransformText!, 'y')
     await expect(innerTranslateY).toBeLessThan(-20)
@@ -113,12 +99,9 @@ describe('Nested vertical scroll', () => {
       gestureSourceType: 'touch'
     })
 
-    const outerTransformText = await page.$eval(
-      '.scroll-outer-content',
-      node => {
-        return window.getComputedStyle(node).transform
-      }
-    )
+    const outerTransformText = await page.$eval('.outer-content', node => {
+      return window.getComputedStyle(node).transform
+    })
     const outerTranslateY = getTranslate(outerTransformText!, 'y')
     await expect(outerTranslateY).toBeLessThan(-50)
   })
