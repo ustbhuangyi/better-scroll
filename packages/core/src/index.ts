@@ -31,7 +31,6 @@ interface PropertyConfig {
 }
 
 export default class BScroll extends EventEmitter {
-  static readonly version: string = '2.0.0'
   static plugins: PluginItem[] = []
   static pluginsMap: PluginsMap = {}
   scroller: Scroller
