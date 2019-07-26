@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-      <div
-        ref="outerScroll"
-        class="outer-wrapper">
+      <div ref="outerScroll" class="outer-wrapper">
         <ul class="outer-content">
           <li v-for="item in items1" class="list-item">{{ item }}</li>
           <li class="list-item inner-list-item">

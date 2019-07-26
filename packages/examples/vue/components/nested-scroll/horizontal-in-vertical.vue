@@ -87,22 +87,22 @@ export default {
         line-height: 40px
         text-align: center
     .slide-banner-content
-      height 200px
-      white-space nowrap
-      font-size 0
+      height: 200px
+      white-space: nowrap
+      font-size: 0
       .slide-item
-        display inline-block
-        height 200px
-        width 100%
-        line-height 200px
-        text-align center
-        font-size 26px
+        display: inline-block
+        height: 200px
+        width: 100%
+        line-height: 200px
+        text-align: center
+        font-size: 26px
         &.page1
-          background-color #95B8D1
+          background-color: #95B8D1
         &.page2
-          background-color #DDA789
+          background-color: #DDA789
         &.page3
-          background-color #C3D899
+          background-color: #C3D899
         &.page4
-          background-color #F2D4A7
+          background-color: #F2D4A7
 </style>

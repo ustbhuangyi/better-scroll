@@ -1,27 +1,17 @@
 <template>
   <div class="container">
-    <div
-      ref="outerScroll"
-      class="outer-wrapper">
+    <div ref="outerScroll" class="outer-wrapper">
       <div class="outer-content">
         <ul>
-        <li class="outer-list-item"
-          v-for="(item, index) in items1"
-          :key="index">{{item}}</li>
+          <li class="outer-list-item" v-for="(item, index) in items1" :key="index">{{item}}</li>
         </ul>
-        <div
-          ref="innerScroll"
-          class="inner-wrapper">
+        <div ref="innerScroll" class="inner-wrapper">
           <ul class="inner-content">
-            <li class="inner-list-item"
-              v-for="(item, index) in items2"
-              :key="index">{{item}}</li>
+            <li class="inner-list-item" v-for="(item, index) in items2" :key="index">{{item}}</li>
           </ul>
         </div>
         <ul>
-          <li class="outer-list-item"
-            v-for="(item, index) in items1"
-            :key="index">{{item}}</li>
+          <li class="outer-list-item" v-for="(item, index) in items1" :key="index">{{item}}</li>
         </ul>
       </div>
 
