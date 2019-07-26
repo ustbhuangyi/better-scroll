@@ -1,18 +1,23 @@
 # better-scroll
 
-[中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/packages/nested-scroll-manager/README_zh-CN.md)
+[中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/packages/nested-scroll/README_zh-CN.md)
 
-nestedScrollManager is a plugin which helps you solve the trouble of nested Scroll
+nestedScroll is a plugin which helps you solve the trouble of nested Scroll
 
 ## Usage
 
 ```js
-import BScroll from 'better-scroll'
+  import BScroll from 'better-scroll'
+  import NestedScroll from '@better-scroll/nested-scroll'
 
-const bs = new BScroll('.wrapper', {
-  pullUpLoad: true,
-  scrollbar: true,
-  pullDownRefresh: true
-  // and so on
-})
+  BScroll.use(NestedScroll)
+
+  // parent bs
+  new BScroll('.outerWrapper', {
+    nestedScroll: true
+  })
+  // child bs
+  new BScroll('.innerWrapper', {
+    nestedScroll: true
+  })
 ```

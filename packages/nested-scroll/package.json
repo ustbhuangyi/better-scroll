@@ -28,7 +28,7 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:ustbhuangyi/better-scroll.git",
-    "directory": "packages/better-scroll"
+    "directory": "packages/nested-scroll"
   },
   "dependencies": {
     "@better-scroll/core": "^2.0.0-alpha.18"
