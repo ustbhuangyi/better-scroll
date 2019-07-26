@@ -22,182 +22,172 @@ webpackConfig
   .mode(isProd ? 'production' : 'development')
   .devtool(isProd ? 'false' : 'eval-source-map')
   .entry('app')
-  .add('./vue/main.js')
-  .end()
-  .output.path(isProd ? path.resolve(__dirname, '../dist/vue') : undefined)
-  .publicPath(isProd ? '' : '/')
-  .filename(isProd ? 'static/js/[name].[chunkhash].js' : '[name].js')
-  .chunkFilename(isProd ? 'static/js/[id].[chunkhash].js' : '[name].js')
-  .end()
-  .resolve.alias.set('vue-example', resolve('vue'))
-  .set('common', resolve('common'))
-  .end()
-  .extensions.add('.js')
-  .add('.vue')
-  .add('.json')
-  .add('.ts')
-  .end()
-  .end()
-  .module.rule('compileVue')
-  .test(/\.vue$/)
-  .use('vue')
-  .loader('vue-loader')
-  .end()
-  .end()
-  .rule('transformJs')
-  .test(/\.js$/)
-  .use('babel')
-  .loader('babel-loader')
-  .options({
-    presets: ['@babel/preset-env']
-  })
-  .end()
-  .include.add(resolve('common'))
-  .add(resolve('vue'))
-  .end()
-  .end()
-  .rule('url')
-  .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-  .use('url')
-  .loader('url-loader')
-  .options({
-    limit: 10000,
-    name: 'static/img/[name].[hash:7].[ext]'
-  })
-  .end()
-  .end()
-  .rule('ts')
-  .test(/\.ts$/)
-  .use('ts')
-  .loader('ts-loader')
-  .options({
-    transpileOnly: true
-  })
-  .end()
-  .end()
-  .rule('css')
-  .test(/\.css$/)
-  .use('style-loader')
-  .loader(
-    process.env.NODE_ENV !== 'production'
-      ? 'vue-style-loader'
-      : MiniCssExtractPlugin.loader
-  )
-  .end()
-  .use('css-loader')
-  .loader('css-loader')
-  .end()
-  .end()
-  .rule('stylus')
-  .test(/.styl(us)?$/)
-  .use('style-loader')
-  .loader(
-    process.env.NODE_ENV !== 'production'
-      ? 'vue-style-loader'
-      : MiniCssExtractPlugin.loader
-  )
-  .end()
-  .use('css-loader')
-  .loader('css-loader')
-  .end()
-  .use('postcss-loader')
-  .loader('postcss-loader')
-  .end()
-  .use('stylus-loader')
-  .loader('stylus-loader')
-  .end()
-  .end()
-  .end()
+    .add('./vue/main.js')
+    .end()
+  .output
+    .path(isProd ? path.resolve(__dirname, '../dist/vue') : undefined)
+    .publicPath(isProd ? '' : '/')
+    .filename(isProd ? 'static/js/[name].[chunkhash].js' : '[name].js')
+    .chunkFilename(isProd ? 'static/js/[id].[chunkhash].js' : '[name].js')
+    .end()
+  .resolve
+    .alias
+      .set('vue-example', resolve('vue'))
+      .set('common', resolve('common'))
+      .end()
+    .extensions
+      .add('.js')
+      .add('.vue')
+      .add('.json')
+      .add('.ts')
+      .end()
+    .end()
+  .module
+    .rule('compileVue')
+      .test(/\.vue$/)
+      .use('vue')
+        .loader('vue-loader')
+        .end()
+      .end()
+    .rule('transformJs')
+      .test(/\.js$/)
+      .use('babel')
+        .loader('babel-loader')
+        .options({
+          presets: ["@babel/preset-env"]
+        })
+        .end()
+      .include
+        .add(resolve('common'))
+        .add(resolve('vue'))
+        .end()
+      .end()
+    .rule('url')
+      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+      .use('url')
+        .loader('url-loader')
+        .options({
+          limit: 10000,
+          name: 'static/img/[name].[hash:7].[ext]'
+        })
+        .end()
+      .end()
+    .rule('ts')
+      .test(/\.ts$/)
+      .use('ts')
+        .loader('ts-loader')
+        .options({
+          transpileOnly: true
+        })
+        .end()
+      .end()
+    .rule('css')
+      .test(/\.css$/)
+      .use('style-loader')
+        .loader(
+          process.env.NODE_ENV !== 'production' ?
+          'vue-style-loader' :
+          MiniCssExtractPlugin.loader
+        )
+        .end()
+      .use('css-loader')
+        .loader('css-loader')
+        .end()
+      .end()
+    .rule('stylus')
+      .test(/.styl(us)?$/)
+      .use('style-loader')
+        .loader(
+          process.env.NODE_ENV !== 'production' ?
+          'vue-style-loader' :
+          MiniCssExtractPlugin.loader
+        )
+        .end()
+      .use('css-loader')
+        .loader('css-loader')
+        .end()
+      .use('postcss-loader')
+        .loader('postcss-loader')
+        .end()
+      .use('stylus-loader')
+        .loader('stylus-loader')
+        .end()
+      .end()
+    .end()
   .plugin('VueLoaderPlugin')
-  .use(VueLoaderPlugin)
-  .end()
+    .use(VueLoaderPlugin)
+    .end()
   .plugin('WebpackBar')
-  .use(webpackBar)
-  .end()
+    .use(webpackBar)
+    .end()
   .plugin('MiniCssExtractPlugin')
-  .use(MiniCssExtractPlugin, [
-    {
+    .use(MiniCssExtractPlugin, [{
       filename: 'static/css/[name].[contenthash].css'
-    }
-  ])
-  .end()
-  .when(
-    !isProd,
-    () => {
-      webpackConfig.devServer
+    }])
+    .end()
+  .when(!isProd, () => {
+    webpackConfig
+      .devServer
         .open(true)
         .hot(true)
         .compress(true)
         .end()
-        .plugin('HotModuleReplacementPlugin')
+      .plugin('HotModuleReplacementPlugin')
         .use(webpack.HotModuleReplacementPlugin)
         .end()
-        .plugin('NoEmitOnErrorsPlugin')
+      .plugin('NoEmitOnErrorsPlugin')
         .use(webpack.NoEmitOnErrorsPlugin)
         .end()
-        .plugin('HtmlWebpackPlugin')
-        .use(HtmlWebpackPlugin, [
-          {
-            filename: 'index.html',
-            template: './vue/index.html',
-            inject: true
-          }
-        ])
+      .plugin('HtmlWebpackPlugin')
+        .use(HtmlWebpackPlugin, [{
+          filename: 'index.html',
+          template: './vue/index.html',
+          inject: true
+        }])
         .end()
-        .plugin('FriendlyErrorsPlugin')
+      .plugin('FriendlyErrorsPlugin')
         .use(FriendlyErrorsPlugin)
         .end()
-    },
-    () => {
-      webpackConfig.optimization
-        .minimizer([
-          new UglifyJsPlugin({
-            uglifyOptions: {
-              warnings: false
-            }
-          })
-        ])
-        .end()
-        .plugin('OptimizeCSSPlugin')
-        .use(OptimizeCSSPlugin, [
-          {
-            cssProcessorOptions: {
-              safe: true
-            }
+  }, () => {
+    webpackConfig
+      .optimization
+        .minimizer([new UglifyJsPlugin({
+          uglifyOptions: {
+            warnings: false
           }
-        ])
+        })])
         .end()
-        .plugin('HtmlWebpackPlugin')
-        .use(HtmlWebpackPlugin, [
-          {
-            filename: 'index.html',
-            template: './vue/index.html',
-            inject: true,
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeAttributeQuotes: true
-              // more options:
-              // https://github.com/kangax/html-minifier#options-quick-reference
-            },
-            // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-            chunksSortMode: 'dependency'
+      .plugin('OptimizeCSSPlugin')
+        .use(OptimizeCSSPlugin, [{
+          cssProcessorOptions: {
+            safe: true
           }
-        ])
+        }])
         .end()
-        .plugin('CopyWebpackPlugin')
-        .use(CopyWebpackPlugin, [
-          [
-            {
-              from: path.resolve(__dirname, '../static'),
-              to: 'static',
-              ignore: ['.*']
-            }
-          ]
-        ])
+      .plugin('HtmlWebpackPlugin')
+        .use(HtmlWebpackPlugin, [{
+          filename: 'index.html',
+          template: './vue/index.html',
+          inject: true,
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true
+            // more options:
+            // https://github.com/kangax/html-minifier#options-quick-reference
+          },
+          // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+          chunksSortMode: 'dependency'
+        }])
         .end()
-    }
-  )
+      .plugin('CopyWebpackPlugin')
+        .use(CopyWebpackPlugin, [[{
+          from: path.resolve(__dirname, '../static'),
+          to: 'static',
+          ignore: ['.*']
+        }]])
+        .end()
+  })
 function getPackagesName() {
   let ret
   let all = fs.readdirSync(resolve('../../packages'))
@@ -205,25 +195,24 @@ function getPackagesName() {
   // drop hidden file whose name is startWidth '.'
   // drop packages which would not be published(eg: examples and vuepress-docs)
   ret = all
-    .filter(name => {
-      const isHiddenFile = /^\./g.test(name)
-      return !isHiddenFile
-    })
-    .filter(name => {
-      const isPrivatePackages = require(resolve(
-        `../../packages/${name}/package.json`
-      )).private
-      return !isPrivatePackages
-    })
-    .map(name => {
-      return require(resolve(`../../packages/${name}/package.json`)).name
-    })
+          .filter(name => {
+            const isHiddenFile = /^\./g.test(name)
+            return !isHiddenFile
+          })
+          .filter(name => {
+            const isPrivatePackages = require(resolve(`../../packages/${name}/package.json`)).private
+            return !isPrivatePackages
+          })
+          .map((name) => {
+            return require(resolve(`../../packages/${name}/package.json`)).name
+          })
 
   return ret
 }
 
 // add alias
-getPackagesName().forEach(name => {
+getPackagesName().forEach((name) => {
   webpackConfig.resolve.alias.set(`${name}$`, `${name}/src/index.ts`)
 })
+
 module.exports = webpackConfig.toConfig()
