@@ -377,8 +377,8 @@ export default class Scroller {
     let pointerEvents = enabled ? 'auto' : 'none'
     for (let i = 0; i < el.length; i++) {
       let node = el[i] as HTMLElement
-      // ignore BetterScroll instance wrapper DOM
-      if (node.getAttribute('data-bs') === 'yes') {
+      // ignore BetterScroll instance's wrapper DOM
+      if (node.isBScroll) {
         continue
       }
       node.style.pointerEvents = pointerEvents

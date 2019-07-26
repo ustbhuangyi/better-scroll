@@ -65,36 +65,43 @@ export default class NestedScroll {
     let singleton = baseCtor.nestedScroll
     if (!singleton) {
       singleton = baseCtor.nestedScroll = this
-      singleton.initStores()
+      singleton.stores = []
     }
 
-    singleton.appendBScroll(scroll)
+    singleton.setup(scroll)
     this.addHooks(scroll)
 
     return singleton
   }
 
-  private initStores(): void {
-    this.stores = []
+  private setup(scroll: BScroll): void {
+    this.appendBScroll(scroll)
+    this.handleContainRelationship()
+    this.handleCompatible()
   }
+
   private addHooks(scroll: BScroll): void {
     scroll.on('destroy', () => {
-      this.removeBScroll(scroll)
+      this.teardown(scroll)
     })
+  }
+
+  private teardown(scroll: BScroll): void {
+    this.removeBScroll(scroll)
+    this.handleContainRelationship()
+    this.handleCompatible()
   }
 
   appendBScroll(scroll: BScroll): void {
     this.stores.push(scroll)
-    this.handleContainRelationship()
-    this.handleCompatible()
   }
 
   removeBScroll(scroll: BScroll): void {
     const index = this.stores.indexOf(scroll)
     if (index === -1) return
+
+    scroll.wrapper.isBScroll = null
     this.stores.splice(index, 1)
-    this.handleContainRelationship()
-    this.handleCompatible()
   }
 
   private handleContainRelationship(): void {
