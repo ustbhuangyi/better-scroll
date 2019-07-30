@@ -59,17 +59,15 @@ export default class NestedScroll {
   static nestedScroll?: NestedScroll
   stores: BScroll[]
   constructor(scroll: BScroll) {
-    const baseCtor = this.constructor as typeof NestedScroll
+    let singleton = NestedScroll.nestedScroll
 
-    // only need an unique NestedScroll instance
-    let singleton = baseCtor.nestedScroll
-    if (!singleton) {
-      singleton = baseCtor.nestedScroll = this
+    if (!(singleton instanceof NestedScroll)) {
+      singleton = NestedScroll.nestedScroll = this
       singleton.stores = []
     }
 
     singleton.setup(scroll)
-    this.addHooks(scroll)
+    singleton.addHooks(scroll)
 
     return singleton
   }
