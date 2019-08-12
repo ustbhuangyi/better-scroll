@@ -86,9 +86,6 @@
     methods: {
       createInfinityScroll() {
         this.scroll = new BScroll(this.$refs.chat, {
-          observeDOM: false,
-          // useTransition: false,
-          // useTransform: false,
           infinity: {
             render: (item, div) => {
               div = div || this.$refs.message.cloneNode(true)
@@ -134,7 +131,7 @@
                     }
                     resolve(Promise.all(items))
                   }
-                }, 200)
+                }, 2000)
               })
             }
           }
@@ -165,88 +162,81 @@
     -webkit-transform-style: flat
 
   .infinity-item
-    display: flex;
-    padding: 10px 0;
-    width: 100%;
-    contain: layout;
-    will-change: transform;
+    display: flex
+    left: 0
+    padding: 10px 0
+    width: 100%
+    contain: layout
+    will-change: transform
+    list-style: none
   
   .infinity-avatar
-    border-radius: 500px;
-    margin-left: 20px;
-    margin-right: 6px;
-    min-width: 48px;
+    border-radius: 500px
+    margin-left: 20px
+    margin-right: 6px
+    min-width: 48px
 
   .infinity-item
     p
-      margin: 0;
-      word-wrap: break-word;
-      font-size: 13px;
+      margin: 0
+      word-wrap: break-word
+      font-size: 13px
 
   .infinity-item.tombstone
     p
-      width: 100%;
-      height: 0.5em;
-      background-color: #ccc;
-      margin: 0.5em 0;
+      width: 100%
+      height: 0.5em
+      background-color: #ccc
+      margin: 0.5em 0
 
-  .infinity-bubble img {
-    max-width: 100%;
-    height: auto;
-  }
+  .infinity-bubble img 
+    max-width: 100%
+    height: auto
 
-  .infinity-bubble {
-    padding: 7px 10px;
-    color: #333;
-    background: #fff;
-    /*box-shadow: 0 3px 2px rgba(0, 0, 0, 0.1);*/
-    position: relative;
-    max-width: 420px;
-    min-width: 80px;
-    margin: 0 5px;
-  }
+  .infinity-bubble 
+    padding: 7px 10px
+    color: #333
+    background: #fff
+    /*box-shadow: 0 3px 2px rgba(0, 0, 0, 0.1)*/
+    position: relative
+    max-width: 420px
+    min-width: 80px
+    margin: 0 5px
 
-  .infinity-bubble::before {
-    content: '';
-    border-style: solid;
-    border-width: 0 10px 10px 0;
-    border-color: transparent #fff transparent transparent;
-    position: absolute;
-    top: 0;
-    left: -10px;
-  }
+  .infinity-bubble::before 
+    content: ''
+    border-style: solid
+    border-width: 0 10px 10px 0
+    border-color: transparent #fff transparent transparent
+    position: absolute
+    top: 0
+    left: -10px
 
-  .infinity-meta {
-    font-size: 0.8rem;
-    color: #999;
-    margin-top: 3px;
-  }
+  .infinity-meta 
+    font-size: 0.8rem
+    color: #999
+    margin-top: 3px
 
-  .infinity-from-me {
-    justify-content: flex-end;
-  }
+  .infinity-from-me 
+    justify-content: flex-end
 
-  .infinity-from-me .infinity-avatar {
-    order: 1;
-    margin-left: 6px;
-    margin-right: 20px;
-  }
+  .infinity-from-me .infinity-avatar 
+    order: 1
+    margin-left: 6px
+    margin-right: 20px
 
-  .infinity-from-me .infinity-bubble {
-    background: #F9D7FF;
-  }
+  .infinity-from-me .infinity-bubble 
+    background: #F9D7FF
 
-  .infinity-from-me .infinity-bubble::before {
-    left: 100%;
-    border-width: 10px 10px 0 0;
-    /*border-color: #F9D7FF transparent transparent transparent;*/
-  }
+  .infinity-from-me .infinity-bubble::before 
+    left: 100%
+    border-width: 10px 10px 0 0
+    /*border-color: #F9D7FF transparent transparent transparent*/
 
-  .infinity-state {
-    display: none;
-  }
-
-  .infinity-invisible {
+  .infinity-state 
     display: none
-  }
+
+  .infinity-invisible 
+    display: none
+  
 </style>
