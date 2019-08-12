@@ -1,4 +1,4 @@
-import DataManager, { pListItem } from './DataManager'
+import { pListItem } from './DataManager'
 import Tombstone from './Tombstone'
 import { style, cssVendor } from '@better-scroll/shared-utils'
 
@@ -35,6 +35,7 @@ export default class DomManager {
 
     this.collectUnusedDom(list, start, end)
     this.createDom(list, start, end)
+    this.cacheHeight(list, start, end)
 
     const { startPos, startDelta, endPos } = this.positionDom(list, start, end)
 
@@ -61,8 +62,8 @@ export default class DomManager {
 
       if (list[i].dom) {
         const dom = list[i].dom as HTMLElement
-        if (this.tombstone.isTombstone(dom)) {
-          this.tombstone.recycle(dom)
+        if (Tombstone.isTombstone(dom)) {
+          this.tombstone.recycleOne(dom)
           dom.style.display = 'none'
         } else {
           this.unusedDom.push(dom)
@@ -79,7 +80,7 @@ export default class DomManager {
       let dom = list[i].dom
       const data = list[i].data
       if (dom) {
-        if (this.tombstone.isTombstone(dom) && data) {
+        if (Tombstone.isTombstone(dom) && data) {
           list[i].tombstone = dom
           list[i].dom = null
         } else {
@@ -94,7 +95,13 @@ export default class DomManager {
       list[i].pos = -1
       this.content.appendChild(dom)
     }
+  }
 
+  private cacheHeight(
+    list: Array<pListItem>,
+    start: number,
+    end: number
+  ): void {
     for (let i = start; i < end; i++) {
       if (list[i].data && !list[i].height) {
         list[i].height = list[i].dom!.offsetHeight
@@ -119,11 +126,12 @@ export default class DomManager {
     for (let i = start; i < end; i++) {
       const tombstone = list[i].tombstone
       if (tombstone) {
-        ;(<any>tombstone.style)[
+        const tombstoneStyle = tombstone.style as any
+        tombstoneStyle[
           style.transition
         ] = `${cssVendor}transform ${ANIMATION_DURATION_MS}ms, opacity ${ANIMATION_DURATION_MS}ms`
-        ;(<any>tombstone.style)[style.transform] = `translateY(${pos}px)`
-        tombstone.style.opacity = '0'
+        tombstoneStyle[style.transform] = `translateY(${pos}px)`
+        tombstoneStyle.opacity = '0'
 
         list[i].tombstone = null
         tombstoneEles.push(tombstone)
@@ -168,7 +176,7 @@ export default class DomManager {
 
     let i
     for (i = start; i < end; i++) {
-      if (!this.tombstone.isTombstone(list[i].dom) && list[i].pos !== -1) {
+      if (!Tombstone.isTombstone(list[i].dom) && list[i].pos !== -1) {
         pos = list[i].pos
         break
       }

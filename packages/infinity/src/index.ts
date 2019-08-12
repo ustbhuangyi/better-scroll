@@ -99,7 +99,6 @@ export default class InfinityScroll {
       this.end
     )
 
-    // important!
     if (startDelta) {
       this.bscroll.minScrollY = startDelta
     }

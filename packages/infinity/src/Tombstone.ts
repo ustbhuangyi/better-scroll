@@ -1,4 +1,4 @@
-import { style, cssVendor } from '@better-scroll/shared-utils'
+import { style } from '@better-scroll/shared-utils'
 
 export default class Tombstone {
   private cached: Array<HTMLElement> = []
@@ -9,6 +9,13 @@ export default class Tombstone {
 
   constructor(private create: () => HTMLElement) {
     this.getSize()
+  }
+
+  static isTombstone(el: HTMLElement): boolean {
+    if (el && el.classList) {
+      return el.classList.contains('tombstone')
+    }
+    return false
   }
 
   private getSize(): void {
@@ -30,32 +37,27 @@ export default class Tombstone {
   getOne(): HTMLElement {
     let tombstone = this.cached.pop()
     if (tombstone) {
-      tombstone.style.display = ''
-      tombstone.style.opacity = '1'
-      ;(<any>tombstone.style)[style.transform] = ''
-      ;(<any>tombstone.style)[style.transition] = ''
+      const tombstoneStyle = tombstone.style as any
+
+      tombstoneStyle.display = ''
+      tombstoneStyle.opacity = '1'
+      tombstoneStyle[style.transform] = ''
+      tombstoneStyle[style.transition] = ''
       return tombstone
     }
     return this.create()
   }
 
-  isTombstone(el: HTMLElement): boolean {
-    if (el && el.classList) {
-      return el.classList.contains('tombstone')
+  recycle(tombstones: Array<HTMLElement>): Array<HTMLElement> {
+    for (let tombstone of tombstones) {
+      tombstone.style.display = 'none'
+      this.cached.push(tombstone)
     }
-    return false
+    return this.cached
   }
 
-  recycle(tombstones: Array<HTMLElement> | HTMLElement): Array<HTMLElement> {
-    if (Array.isArray(tombstones)) {
-      for (let tombstone of tombstones) {
-        tombstone.style.display = 'none'
-        // Tombstone can be recycled now.
-        this.cached.push(tombstone)
-      }
-    } else {
-      this.cached.push(tombstones)
-    }
+  recycleOne(tombstone: HTMLElement) {
+    this.cached.push(tombstone)
 
     return this.cached
   }

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
 
-jest.setTimeout(50000)
+jest.setTimeout(10000)
 
 describe('Infinity', () => {
   let page = (global as any).page as Page
@@ -15,7 +15,7 @@ describe('Infinity', () => {
   })
 
   it('should not render all elements when fetch data too mouch', async () => {
-    await page.waitForSelector('.infinity-timeline .infinity-item')
+    await page.waitForSelector('.infinity-timeline .infinity-item:not(.tombstone)')
     // when
     await page.dispatchSwipe2(
       [

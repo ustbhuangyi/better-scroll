@@ -1,15 +1,19 @@
-import DomManager from './DomManager'
-import BScroll from '@better-scroll/core'
-
-const EXTRA_SCROLL_Y = -2000
-
-interface ListItem {
+class ListItem {
   data: any | null
   dom: HTMLElement | null
   tombstone: HTMLElement | null
   width: number
   height: number
   pos: number
+
+  constructor() {
+    this.data = null
+    this.dom = null
+    this.tombstone = null
+    this.width = 0
+    this.height = 0
+    this.pos = 0
+  }
 }
 
 export type pListItem = Partial<ListItem>
@@ -35,33 +39,28 @@ export default class DataManager {
     // add data placeholder
     if (end > this.list.length) {
       const len = end - this.list.length
-      this.add(len)
+      this.addEmptyData(len)
     }
 
     // tslint:disable-next-line: no-floating-promises
     return this.checkToFetch(end)
   }
 
-  add(data: Array<any> | number): Array<pListItem> {
-    if (typeof data === 'number') {
-      for (let i = 0; i < data; i++) {
-        this.list.push({
-          data: null,
-          dom: null,
-          height: 0,
-          width: 0,
-          pos: 0
-        })
+  add(data: Array<any>): Array<pListItem> {
+    for (let i = 0; i < data.length; i++) {
+      if (!this.list[this.loadedNum]) {
+        this.list[this.loadedNum] = { data: data[i] }
+      } else {
+        Object.assign(this.list[this.loadedNum], { data: data[i] })
       }
-    } else if (data instanceof Array) {
-      for (let i = 0; i < data.length; i++) {
-        if (!this.list[this.loadedNum]) {
-          this.list[this.loadedNum] = { data: data[i] }
-        } else {
-          Object.assign(this.list[this.loadedNum], { data: data[i] })
-        }
-        this.loadedNum++
-      }
+      this.loadedNum++
+    }
+    return this.list
+  }
+
+  addEmptyData(len: number): Array<pListItem> {
+    for (let i = 0; i < len; i++) {
+      this.list.push(new ListItem())
     }
     return this.list
   }
