@@ -30,6 +30,11 @@ declare module 'puppeteer' {
       cb: Function,
       interval?: number
     ) => Promise<void>
+    dispatchSwipe2: (
+      touches: TouchPoint[][],
+      cb: Function,
+      interval?: number
+    ) => Promise<void>
     touchsceen: Touchscreen
   }
 }
@@ -53,7 +58,7 @@ export default (page: Page) => {
   page.dispatchTouchEnd = async () => {
     await page.dispatchTouch('touchEnd', [])
   }
-  page.dispatchSwipe = async (
+  page.dispatchSwipe2 = async (
     touches: TouchPoint[][],
     cb: Function,
     interval: number = 30
