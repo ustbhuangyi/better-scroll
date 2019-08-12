@@ -50,10 +50,15 @@ export class Options {
     tagName?: RegExp
     className?: RegExp
   }
+  tagException: {
+    tagName?: RegExp
+    className?: RegExp
+  }
   HWCompositing: boolean
   useTransition: boolean
   bindToWrapper: boolean
   disableMouse: boolean | ''
+  disableTouch: boolean
   autoBlur: boolean
   translateZ: string
   dblclick: dblclickOptions
@@ -98,12 +103,16 @@ export class Options {
     this.preventDefaultException = {
       tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
     }
+    this.tagException = {
+      tagName: /^TEXTAREA$/
+    }
 
     this.HWCompositing = true
     this.useTransition = true
 
     this.bindToWrapper = false
     this.disableMouse = hasTouch
+    this.disableTouch = !hasTouch
     this.autoBlur = true
   }
   merge(options?: { [key: string]: any }) {

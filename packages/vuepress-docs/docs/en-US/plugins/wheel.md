@@ -6,7 +6,7 @@ The wheel plugin is the cornerstone for implementing similar IOS Picker componen
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/wheel@next --save
 
 // or

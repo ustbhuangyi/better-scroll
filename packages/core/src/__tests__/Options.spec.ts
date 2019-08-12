@@ -27,6 +27,7 @@ describe('BetterScroll Options', () => {
       deceleration: 0.0015,
       directionLockThreshold: 5,
       disableMouse: false,
+      disableTouch: true,
       eventPassthrough: '',
       flickLimitDistance: 100,
       flickLimitTime: 200,
@@ -37,6 +38,9 @@ describe('BetterScroll Options', () => {
       preventDefault: true,
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      },
+      tagException: {
+        tagName: /^TEXTAREA$/
       },
       probeType: 0,
       resizePolling: 60,
@@ -70,6 +74,7 @@ describe('BetterScroll Options', () => {
       deceleration: 0.0015,
       directionLockThreshold: 5,
       disableMouse: false,
+      disableTouch: true,
       eventPassthrough: '',
       flickLimitDistance: 100,
       flickLimitTime: 200,
@@ -80,6 +85,9 @@ describe('BetterScroll Options', () => {
       preventDefault: true,
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      },
+      tagException: {
+        tagName: /^TEXTAREA$/
       },
       probeType: 0,
       resizePolling: 60,
@@ -114,6 +122,7 @@ describe('BetterScroll Options', () => {
       deceleration: 0.0015,
       directionLockThreshold: 5,
       disableMouse: false,
+      disableTouch: true,
       eventPassthrough: '',
       flickLimitDistance: 100,
       flickLimitTime: 200,
@@ -124,6 +133,9 @@ describe('BetterScroll Options', () => {
       preventDefault: true,
       preventDefaultException: {
         tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      },
+      tagException: {
+        tagName: /^TEXTAREA$/
       },
       probeType: 0,
       resizePolling: 60,

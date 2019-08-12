@@ -4,7 +4,7 @@ Add zoom functionality for BetterScroll.
 
 ## Install
 
-```shell
+```bash
 npm install @better-scroll/zoom@next --save
 
 // or

@@ -143,7 +143,7 @@ export default class BScroll extends EventEmitter {
 
   private handleAutoBlur() {
     if (this.options.autoBlur) {
-      this.on(this.eventTypes.scrollStart, () => {
+      this.on(this.eventTypes.beforeScrollStart, () => {
         let activeElement = document.activeElement as HTMLElement
         if (
           activeElement &&
@@ -197,9 +197,9 @@ export default class BScroll extends EventEmitter {
   }
 
   destroy() {
-    this.scroller.destroy()
     this.hooks.trigger(this.hooks.eventTypes.destroy)
     this.trigger(this.eventTypes.destroy)
+    this.scroller.destroy()
   }
   eventRegister(names: string[]) {
     this.registerType(names)

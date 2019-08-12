@@ -59,7 +59,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
   - Usage: To override the native scrolling BetterScroll has to inhibit some default browser behaviors, such as mouse clicks. If you want your application to respond to the click event you have to explicitly set this option to `true`. And then BetterScroll will add a private attribute called `_constructed` to the dispatched event whose value is true.
 
 
-## dblclick(v1.12.0+)
+## dblclick
   - Type：`Boolean | Object`
   - Default：`false`
   - Usage：Send dblclick event. When configured to true, by default the two times click delay is 300 ms. If configured to an object, the `delay` can be modified.
@@ -155,6 +155,12 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - Usage: BetterScroll will inhibit the native scrolling and meanwhile inhibit some native components' default behaviours. In this situation, we can't 'preventDefault' on these elements, so we can configure 'preventDefaultException'. Default `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/}` represents that default behaviours of elements with tagnames like 'input', 'textarea', 'button', 'select', 'audio' will not be inhibited
    - Note: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is 'test', then the configuration is `{className:/(^|\s)test(\s|$)/}`.
 
+## tagException
+   - Type: Object
+   - Default`{ tagName: /^TEXTAREA$/ }`
+   - Usage: If BetterScroll nests form elements such as `textarea`, the user's expectation should be that sliding textarea should not cause bs scrolling. If the manipulated DOM (eg:textarea tag) hits the configured rule, `bs` won't scroll.
+   - Note: This is a pretty powerful option. Its key is the attribute value of DOM elements, the corresponding value can be a regular expression. For example, if we want to configure the element whose class name is 'test', then the configuration is `{className:/(^|\s)test(\s|$)/}`.
+
 ## HWCompositing
    - Type: `Boolean`
    - Default: `true` (modification is not recommended)
@@ -176,6 +182,22 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - Type: `Boolean`
    - Default: get the result by current browser environment (modification is not recommended)
    - Usage: When in mobile environment (supporting touch event),  disableMouse will be `true` and mouse event will not be listened. While in PC environment, disableMouse will be `false` and mouse event will be listened. We suggest not modifying this unless you konw what you are doing.
+
+## disableTouch
+   - Type: `Boolean`
+   - Default: get the result by current browser environment (modification is not recommended)
+   - Usage: When in mobile environment (supporting touch event),  `disableTouch` will be `false` and touch event will be listened. While in PC environment, `disableMouse` will be `true` and touch event will not be listened. We suggest not modifying this unless you konw what you are doing.
+
+  ::: warning
+  Considering some specific scenarios of the user, such as **the tablet needs to support the touch event, the tablet access mouse has to support the mouse event**, In other words, if you need to listen to the touch and mouse events at the same time, then the instantiation of bs needs to be configured as follows:
+
+  ```js
+  let bs = new BScroll('.wrapper', {
+    disableMouse: false,
+    disableTouch: false
+  })
+  ```
+  :::
 
 ## autoBlur
    - Type：`Boolean`

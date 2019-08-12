@@ -155,6 +155,12 @@ let scroll = new BScroll('.wrapper',{
    - 作用：BetterScroll 会阻止原生的滚动，这样也同时阻止了一些原生组件的默认行为。这个时候我们不能对这些元素做 preventDefault，所以我们可以配置 preventDefaultException。默认值 `{tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/}`表示标签名为 input、textarea、button、select、audio 这些元素的默认行为都不会被阻止。
    - 备注：这是一个非常有用的配置，它的 key 是 DOM 元素的属性值，value 可以是一个正则表达式。比如我们想配一个 class 名称为 test 的元素，那么配置规则为 `{className:/(^|\s)test(\s|$)/}`。
 
+## tagException
+   - 类型：Object
+   - 默认值：`{ tagName: /^TEXTAREA$/ }`
+   - 作用：如果 BetterScroll 嵌套了 textarea 等表单元素，往往用户的预期应该是滑动 textarea 不应该引起 bs 滚动，也就是如果操纵的 DOM（eg：textarea 标签） 命中了配置的规则，bs 不会滚动。
+   - 备注：这是一个非常有用的配置，它的 key 是 DOM 元素的属性值，value 可以是一个正则表达式。比如我们想配一个 classname 含有 test 类名的元素，那么配置规则为 `{className:/(^|\s)test(\s|$)/}`。
+
 ## HWCompositing
    - 类型：Boolean
    - 默认值：true（不建议修改）
@@ -176,6 +182,22 @@ let scroll = new BScroll('.wrapper',{
    - 类型：Boolean
    - 默认值：根据当前浏览器环境计算而来（不建议修改）
    - 作用：当在移动端环境（支持 touch 事件），disableMouse 会计算为 true，这样就不会监听鼠标相关的事件，而在 PC 环境，disableMouse 会计算为 false，就会监听鼠标相关事件。
+
+## disableTouch
+   - 类型：Boolean
+   - 默认值：根据当前浏览器环境计算而来（不建议修改）
+   - 作用：当在移动端环境（支持 touch 事件），disableTouch 会计算为 false，监听 touch 相关的事件，而在 PC 环境，disableTouch 会计算为 true，不会监听 touch 相关事件。
+
+  ::: warning
+  考虑到用户的一些特定场景，比如在**平板电脑需要支持 touch 事件，平板电脑接入鼠标又得支持 mouse 事件**，那么实例化 bs 需要如下配置：
+
+  ```js
+  let bs = new BScroll('.wrapper', {
+    disableMouse: false,
+    disableTouch: false
+  })
+  ```
+  :::
 
 ## autoBlur
    - 类型：Boolean

@@ -54,6 +54,10 @@
     {
       name: 'infinity',
       path: '/infinity/'
+    },
+    {
+      name: 'form',
+      path: '/form/'
     }
   ]
   export default {

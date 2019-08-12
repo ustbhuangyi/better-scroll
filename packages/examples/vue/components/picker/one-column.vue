@@ -2,7 +2,7 @@
   <div class="container">
     <ul class="example-list">
       <li class="example-item" @click="show">
-          <span>{{selectedText}}</span>
+          <span class="open">{{selectedText}}</span>
       </li>
     </ul>
     <transition name="picker-fade">

@@ -2,7 +2,17 @@
 
 ## 介绍
 
-  pullup 插件为 BetterScroll 提供了监测上拉动作的能力。当成功监测到一次上拉动作时，会触发 `pullingUp` 事件。通常用于实现列表/页面滚动到底部时，上拉加载更多数据。
+  pullup 插件为 BetterScroll 提供了监测上拉动作的能力。当成功监测到一次上拉动作时，会触发 `pullingUp` 事件。通常用于实现列表/页面滚动到底部时，上拉加载更多数据的功能。
+
+## 安装
+
+```bash
+npm install @better-scroll/pull-up@next --save
+
+// or
+
+yarn add @better-scroll/pull-up@next
+```
 
 ## 使用
 

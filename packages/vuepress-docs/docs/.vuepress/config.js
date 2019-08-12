@@ -9,6 +9,7 @@ function resolve(p) {
 module.exports = {
   base: '/docs/',
   publicPath: '/docs/',
+  cache: false,
   locales: {
     '/en-US/': {
       lang: 'en-US',

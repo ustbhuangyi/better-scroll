@@ -158,19 +158,3 @@ BetterScroll provides a feature of `slide`. If you implement a horizontal scroll
       eventPassthrough: 'vertical' // keep vertical native scrolling
     })
   ```
-
-### [Question 9] Why BetterScroll nests textarea form tags, and textarea content cannot be scrolled.
-
-- **Reason**
-
-  The reason is similar to the **Questionn 2**, the `e.preventDefault()` of the `touchmove` event of BetterScroll affects the default scrolling behavior.
-
-- **Solution**
-
-  ```js
-  let innerBS = new BScroll('.wrapper', {
-    preventDefault: false
-  })
-  ```
-
-  Side effects have been mentioned in **Question 3**.

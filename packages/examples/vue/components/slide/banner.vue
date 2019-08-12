@@ -18,8 +18,8 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button @click="nextPage">nextPage</button>
-      <button @click="prePage">prePage</button>
+      <button class="next" @click="nextPage">nextPage</button>
+      <button class="prev" @click="prePage">prePage</button>
     </div>
   </div>
 </template>
@@ -58,7 +58,8 @@
           useTransition: true,
           momentum: false,
           bounce: false,
-          stopPropagation: true
+          stopPropagation: true,
+          probeType: 2
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
 
@@ -70,7 +71,9 @@
         this.slide.on('scrollEnd', () => {
           this.autoGoNext()
         })
-        window.bs = this.slide
+        this.slide.on('slideWillChange', (page) => {
+          this.currentPageIndex = page.pageX
+        })
         this.autoGoNext()
       },
       nextPage() {
@@ -80,8 +83,6 @@
         this.slide.prev()
       },
       _onScrollEnd() {
-        let pageIndex = this.slide.getCurrentPage().pageX
-        this.currentPageIndex = pageIndex
         this.autoGoNext()
       },
       autoGoNext() {

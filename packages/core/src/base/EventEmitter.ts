@@ -87,10 +87,11 @@ export default class EventEmitter {
       let [fn, context] = event
       if (fn) {
         ret = fn.apply(context, args)
-        if (ret === true) break
+        if (ret === true) {
+          return ret
+        }
       }
     }
-    return ret
   }
   registerType(names: string[]) {
     names.forEach((type: string) => {

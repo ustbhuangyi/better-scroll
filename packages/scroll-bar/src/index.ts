@@ -64,16 +64,16 @@ export default class ScrollBar {
     indicatorEl.style.cssText =
       'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;'
 
-    indicatorEl.className = 'this.bscroll-indicator'
+    indicatorEl.className = 'bscroll-indicator'
 
     if (direction === 'horizontal') {
       scrollbarEl.style.cssText += ';height:7px;left:2px;right:2px;bottom:0'
       indicatorEl.style.height = '100%'
-      scrollbarEl.className = 'this.bscroll-horizontal-scrollbar'
+      scrollbarEl.className = 'bscroll-horizontal-scrollbar'
     } else {
       scrollbarEl.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px'
       indicatorEl.style.width = '100%'
-      scrollbarEl.className = 'this.bscroll-vertical-scrollbar'
+      scrollbarEl.className = 'bscroll-vertical-scrollbar'
     }
 
     scrollbarEl.style.cssText += ';overflow:hidden'

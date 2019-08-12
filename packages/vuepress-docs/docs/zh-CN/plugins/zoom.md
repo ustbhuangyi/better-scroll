@@ -6,7 +6,7 @@ zoom 插件为 BetterScroll 增加缩放的功能。
 
 ## 安装
 
-```shell
+```bash
 npm install @better-scroll/zoom@next --save
 
 // or
