@@ -58,6 +58,29 @@ export default (page: Page) => {
   page.dispatchTouchEnd = async () => {
     await page.dispatchTouch('touchEnd', [])
   }
+  page.dispatchSwipe = async (
+    touches: TouchPoint[][],
+    cb: Function,
+    interval: number = 30
+  ) => {
+    await page.dispatchTouchStart(touches[0])
+    return new Promise(resolve => {
+      const nextMove = function(i: number) {
+        setTimeout(async () => {
+          await page.dispatchTouchMove(touches[i])
+          if (i === touches.length - 1) {
+            // last one
+            await page.dispatchTouchEnd()
+            cb && cb()
+            resolve()
+          } else {
+            nextMove(++i)
+          }
+        }, interval)
+      }
+      nextMove(1)
+    })
+  }
   page.dispatchSwipe2 = async (
     touches: TouchPoint[][],
     cb: Function,
