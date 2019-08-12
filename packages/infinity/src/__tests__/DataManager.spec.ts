@@ -1,42 +1,39 @@
 import DataManager from '../DataManager'
-import DomManager from '../DomManager'
-
-jest.mock('../DomManager')
 
 describe('DataManager unit test', () => {
   const NEW_LEN = 10
   let list: Array<any>
   let dataManager: DataManager
-  let domManager: DomManager
 
   let fetchFn = jest.fn()
-  let renderFn = jest.fn()
-  let content = document.createElement('div')
+  let onFetchFinish = jest.fn().mockReturnValue(0)
 
   beforeEach(() => {
     list = []
-    domManager = new DomManager(content, renderFn)
-    ;(<jest.Mock>domManager.update).mockReturnValue({})
-    dataManager = new DataManager(list, fetchFn, domManager)
+
+    dataManager = new DataManager(list, fetchFn, onFetchFinish)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should add new list element when endIndex < list.length', () => {
+  it('should fetch new data when loadedNum < list.length', () => {
     // given
-    let start = 0
     let end = NEW_LEN
+    const DATA = 1
+    const newData = new Array(NEW_LEN).fill(DATA)
+    fetchFn.mockReturnValue(Promise.resolve(newData))
     // when
     // tslint:disable-next-line: no-floating-promises
-    dataManager.update(start, end)
+    dataManager.update(end)
     // then
-    expect(dataManager.list.length).not.toBeLessThan(NEW_LEN)
-    expect(domManager.update).toBeCalled()
+    // create empty data firstly, and then, go to fetch data
+    expect(dataManager.getList().length).not.toBeLessThan(NEW_LEN)
+    expect(fetchFn).toBeCalledWith(NEW_LEN)
   })
 
-  it('should load new data when endIndex < list.length', async () => {
+  it('should call onFetchFinish with hasMore equal true when loaded new data', async () => {
     // given
     const start = 0
     const end = NEW_LEN
@@ -44,10 +41,19 @@ describe('DataManager unit test', () => {
     const newData = new Array(NEW_LEN).fill(DATA)
     fetchFn.mockReturnValue(Promise.resolve(newData))
     // when
-    await dataManager.update(start, end)
+    await dataManager.update(end)
     // then
-    expect(fetchFn).toBeCalled()
-    expect(dataManager.loadedNum).not.toBeLessThan(NEW_LEN)
-    expect(domManager.update).toBeCalledTimes(2)
+    expect(onFetchFinish).toBeCalledWith(dataManager.getList(), true)
+  })
+
+  it('should call onFetchFinish with hasMore equal false when no more data', async () => {
+    // given
+    const start = 0
+    const end = NEW_LEN
+    fetchFn.mockReturnValue(Promise.resolve(false))
+    // when
+    await dataManager.update(end)
+    // then
+    expect(onFetchFinish).toBeCalledWith(dataManager.getList(), false)
   })
 })
