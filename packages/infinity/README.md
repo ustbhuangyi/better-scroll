@@ -14,17 +14,17 @@ BScroll.use(Infinity)
 const bs = new BScroll('.wrapper', {
   infinity: {
     fetch(count) {
-      // 获取大于 count 数量的数据，该函数是异步的，它需要返回一个 Promise。
-      // 成功获取数据后，你需要 resolve 数据数组（也可以 resolve 一个 Promise）。
-      // 数组的每一个元素是列表数据，在 render 方法执行的时候会传递这个数据渲染。
-      // 如果没有数据的时候，你可以 resolve(false)，来告诉无限滚动列表已经没有更多数据了。
+      // Fetch data that is larger than count, the function is asynchronous, and it needs to return a Promise.。
+      // After you have successfully fetch the data, you need resolve an array of data (or resolve Promise).
+      // Each element of the array is list data, which will be rendered when the render method executes。
+      // If there is no data, you can resolve (false) to tell the infinite scroll list that there is no more data。
     }
     render(item, div) {
-      // 渲染每一个元素节点，item 是数据，div 是包裹元素节点的容器。
-      // 该函数需要返回渲染后的 DOM 节点。
+      // Rendering each element node, item is data, and div is a container for wrapping element nodes.
+      // The function needs to return to the rendered DOM node.
     },
     createTombstone() {
-      // 返回一个墓碑 DOM 节点。
+      // Returns a tombstone DOM node.。
     }
   }
 })
