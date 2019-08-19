@@ -61,7 +61,7 @@ export default class BScroll extends EventEmitter {
     this.plugins.push({
       name,
       enforce: ctor.enforce,
-      ctor: ctor
+      ctor
     })
     return this
   }
