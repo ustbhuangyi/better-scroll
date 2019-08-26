@@ -8,12 +8,12 @@ const curVersion = require('../lerna.json').version
 const release = async () => {
   console.log(chalk.yellow(`Current version: ${curVersion}`))
 
-  const bumps = ['patch', 'minor', 'major', 'prerelease', 'premajor']
+  const bumps = ['patch', 'minor', 'major', 'prerelease-alpha', 'prerelease-beta', 'premajor']
   const versions = {}
   bumps.forEach(b => {
-    versions[b] = semver.inc(curVersion, b)
+    const args = b.split('-')
+    versions[b] = semver.inc(curVersion, ...args)
   })
-
   const bumpChoices = bumps.map(b => ({ name: `${b} (${versions[b]})`, value: b }))
 
   function getVersion (answers) {
