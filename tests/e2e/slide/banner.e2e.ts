@@ -65,7 +65,7 @@ describe('Slider for banner', () => {
       return index + 1
     })
     const nextDocsIndex = currentIndex === 3 ? 0 : currentIndex + 1
-    await page.dispatchSwipe({
+    await page.dispatchScroll({
       x: 200,
       y: 120,
       xDistance: -150,

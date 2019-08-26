@@ -13,6 +13,7 @@
 - [zoom](./zoom.html)
 - [mouse-wheel](./mouse-wheel.html)
 - [observe-dom](./observe-dom.html)
+- [infinity](./infinity.html)
 
 非常欢迎大家参与编写插件的这件有意义的事情，在此之前，你需要花点时间了解这个[如何编写插件](./how-to-write.html)。
 

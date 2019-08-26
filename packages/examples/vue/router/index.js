@@ -8,6 +8,7 @@ import Picker from 'vue-example/pages/picker-entry'
 import Pullup from 'vue-example/pages/pullup-entry'
 import PullDown from 'vue-example/pages/pulldown-entry'
 import ScrollBar from 'vue-example/pages/scrollbar-entry'
+import InfinityScroll from 'vue-example/pages/infinity-entry'
 import FormEntry from 'vue-example/pages/form-entry'
 import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 
@@ -111,6 +112,10 @@ export default new Router({
     {
       path: '/scrollbar',
       component: ScrollBar
+    },
+    {
+      path: '/infinity',
+      component: InfinityScroll
     },
     {
       path: '/form',
