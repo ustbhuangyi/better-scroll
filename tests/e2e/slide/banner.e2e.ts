@@ -65,36 +65,13 @@ describe('Slider for banner', () => {
       return index + 1
     })
     const nextDocsIndex = currentIndex === 3 ? 0 : currentIndex + 1
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 200,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 150,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 50,
-            y: 120
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 200,
+      y: 120,
+      xDistance: -150,
+      yDistance: 0,
+      gestureSourceType: 'touch'
+    })
     const secondDots = await page.$eval(
       `.docs-wrapper .doc:nth-child(${nextDocsIndex})`,
       el => el.className

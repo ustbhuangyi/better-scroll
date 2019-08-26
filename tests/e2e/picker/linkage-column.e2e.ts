@@ -5,12 +5,14 @@ jest.setTimeout(10000000)
 
 describe('Linkage column picker', () => {
   let page = (global as any).page as Page
-
   extendTouch(page)
-  beforeEach(async () => {
-    // disable cache
-    await page.setCacheEnabled(false)
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/picker/linkage-column')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should get correct text when click "confirm" button', async () => {
@@ -30,7 +32,7 @@ describe('Linkage column picker', () => {
     const innerText = await page.$eval('.open', node => {
       return node.textContent
     })
-    await page.click('.cancel')
+
     await expect(innerText).toBe('北京市-北京市')
   })
 
@@ -65,42 +67,13 @@ describe('Linkage column picker', () => {
     await page.waitFor(1000)
 
     // first column
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 100,
-            y: 630
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 625
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 620
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 615
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 610
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 100,
+      y: 630,
+      xDistance: 0,
+      yDistance: -70,
+      gestureSourceType: 'touch'
+    })
 
     // when transition ends
     await page.waitFor(1000)

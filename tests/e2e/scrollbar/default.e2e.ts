@@ -7,10 +7,13 @@ describe('Scrollbar', () => {
   let page = (global as any).page as Page
 
   extendTouch(page)
-  beforeEach(async () => {
-    // disable cache
-    await page.setCacheEnabled(false)
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/scrollbar/')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should render DOM correctly', async () => {

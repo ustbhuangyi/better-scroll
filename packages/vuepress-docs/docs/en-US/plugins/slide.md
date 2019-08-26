@@ -53,13 +53,13 @@ The following are the configuration related to the slide:
   When setted to true, vertical slide would be enabled. **Note: scrollX and scrollY cannot be set to true at the same time**
 
 - momentum
-  This value needs to be set to false to prevent the flicker when users quickly flick on screen.
+  This value needs to be set to false to prevent the flicker and scrolling multiple pages when users quickly flick on screen.
 
 - bounce
   Setting this to false if you have enabled the loop feature with `slide.loop = true`. Bounce feature will cause flicker when the slide switch from the last page to the fist page or from the first page to the last page.
 
 - probeType
-  
+
   This value needs to be set to 2 or 3, if you want to get the index of page which will be showed by listening to  `slideWillChange` event, when user drags the slide.
 
 ## Demo

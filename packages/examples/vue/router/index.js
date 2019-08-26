@@ -8,7 +8,9 @@ import Picker from 'vue-example/pages/picker-entry'
 import Pullup from 'vue-example/pages/pullup-entry'
 import PullDown from 'vue-example/pages/pulldown-entry'
 import ScrollBar from 'vue-example/pages/scrollbar-entry'
+import InfinityScroll from 'vue-example/pages/infinity-entry'
 import FormEntry from 'vue-example/pages/form-entry'
+import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -20,12 +22,15 @@ import HorizontalScroll from 'vue-example/components/core/horizontal'
 import Freescroll from 'vue-example/components/core/freescroll'
 import MouseWheelCore from 'vue-example/components/core/mouse-wheel'
 
-import oneColumnPicker from 'vue-example/components/picker/one-column'
-import doubleColumnPicker from 'vue-example/components/picker/double-column'
-import linkageColumnPicker from 'vue-example/components/picker/linkage-column'
+import OneColumnPicker from 'vue-example/components/picker/one-column'
+import DoubleColumnPicker from 'vue-example/components/picker/double-column'
+import LinkageColumnPicker from 'vue-example/components/picker/linkage-column'
 
-import formTextarea from 'vue-example/components/form/textarea'
+import FormTextarea from 'vue-example/components/form/textarea'
 
+import NestedVerticalScroll from 'vue-example/components/nested-scroll/vertical'
+import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizontal'
+import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 Vue.use(Router)
 
 export default new Router({
@@ -84,15 +89,15 @@ export default new Router({
       children: [
         {
           path: 'one-column',
-          component: oneColumnPicker
+          component: OneColumnPicker
         },
         {
           path: 'double-column',
-          component: doubleColumnPicker
+          component: DoubleColumnPicker
         },
         {
           path: 'linkage-column',
-          component: linkageColumnPicker
+          component: LinkageColumnPicker
         }
       ]
     },
@@ -109,12 +114,34 @@ export default new Router({
       component: ScrollBar
     },
     {
+      path: '/infinity',
+      component: InfinityScroll
+    },
+    {
       path: '/form',
       component: FormEntry,
       children: [
         {
           path: 'textarea',
-          component: formTextarea
+          component: FormTextarea
+        }
+      ]
+    },
+    {
+      path: '/nested-scroll',
+      component: NestedScrollEntry,
+      children: [
+        {
+          path: 'vertical',
+          component: NestedVerticalScroll
+        },
+        {
+          path: 'horizontal',
+          component: NestedHorizontalScroll
+        },
+        {
+          path: 'horizontal-in-vertical',
+          component: NestedHorizontalInVertical
         }
       ]
     }

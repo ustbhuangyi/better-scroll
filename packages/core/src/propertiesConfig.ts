@@ -64,6 +64,10 @@ export const propertiesConfig = [
     key: 'pending'
   },
   {
+    sourceKey: 'scroller.animater.stop',
+    key: 'stop'
+  },
+  {
     sourceKey: 'scroller.scrollTo',
     key: 'scrollTo'
   },

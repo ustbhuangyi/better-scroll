@@ -21,42 +21,13 @@ describe('Slider for fullpage', () => {
   it('should work by dispatching touch events', async () => {
     await page.waitFor(300)
 
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 100,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 90,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 80,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 75,
-            y: 120
-          }
-        ],
-        [
-          {
-            x: 70,
-            y: 120
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: -70,
+      yDistance: 0,
+      gestureSourceType: 'touch'
+    })
 
     const content = await page.$('.slide-banner-wrapper')
     const boundingBox = await content!.boundingBox()

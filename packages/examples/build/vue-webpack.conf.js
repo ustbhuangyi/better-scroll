@@ -196,15 +196,15 @@ function getPackagesName() {
   // drop packages which would not be published(eg: examples and vuepress-docs)
   ret = all
           .filter(name => {
-              const isHiddenFile = /^\./g.test(name)
-              return !isHiddenFile
+            const isHiddenFile = /^\./g.test(name)
+            return !isHiddenFile
           })
           .filter(name => {
-              const isPrivatePackages = require(resolve(`../../packages/${name}/package.json`)).private
-              return !isPrivatePackages
+            const isPrivatePackages = require(resolve(`../../packages/${name}/package.json`)).private
+            return !isPrivatePackages
           })
           .map((name) => {
-              return require(resolve(`../../packages/${name}/package.json`)).name
+            return require(resolve(`../../packages/${name}/package.json`)).name
           })
 
   return ret

@@ -52,8 +52,16 @@
       path: '/scrollbar/'
     },
     {
+      name: 'infinity',
+      path: '/infinity/'
+    },
+    {
       name: 'form',
       path: '/form/'
+    },
+    {
+      name: 'nested-scroll',
+      path: '/nested-scroll/'
     }
   ]
   export default {
