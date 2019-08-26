@@ -58,6 +58,11 @@ declare module 'puppeteer' {
       cb: Function,
       interval?: number
     ) => Promise<void>
+    dispatchSwipe2: (
+      touches: TouchPoint[][],
+      cb: Function,
+      interval?: number
+    ) => Promise<void>
     dispatchPinch: (pinchParams: PinchParams) => Promise<void>
     dispatchScroll: (scrollParams: ScrollParams) => Promise<void>
     touchsceen: Touchscreen
@@ -105,6 +110,24 @@ export default (page: Page) => {
       }
       nextMove(1)
     })
+  }
+  page.dispatchSwipe2 = async (
+    touches: TouchPoint[][],
+    cb: Function,
+    interval: number = 30
+  ) => {
+    await page.dispatchTouchStart(touches[0])
+    const nextMove = async function nextMove(i: number) {
+      await page.waitFor(interval)
+      await page.dispatchTouchMove(touches[i])
+      if (i === touches.length - 1) {
+        await page.dispatchTouchEnd()
+        cb && cb()
+      } else {
+        await nextMove(++i)
+      }
+    }
+    return nextMove(1)
   }
   page.dispatchPinch = async pinchParams => {
     await page.touchscreen._client.send(PINCH_NAME, pinchParams)

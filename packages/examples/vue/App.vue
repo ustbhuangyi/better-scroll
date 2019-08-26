@@ -52,6 +52,10 @@
       path: '/scrollbar/'
     },
     {
+      name: 'infinity',
+      path: '/infinity/'
+    },
+    {
       name: 'form',
       path: '/form/'
     }

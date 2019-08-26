@@ -27,7 +27,8 @@ const getPluginsSideBar = function (lang) {
         'scroll-bar',
         'slide',
         'wheel',
-        'zoom'
+        'zoom',
+        'infinity'
       ]
     }
   ]
