@@ -8,6 +8,8 @@ describe('Pullup', () => {
   extendTouch(page)
 
   beforeEach(async () => {
+    // disable cache
+    await page.setCacheEnabled(false)
     await page.goto('http://0.0.0.0:8932/#/pullup/')
   })
 

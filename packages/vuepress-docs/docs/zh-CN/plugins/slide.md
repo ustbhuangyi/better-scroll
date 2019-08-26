@@ -63,6 +63,10 @@ yarn add @better-scroll/slide@next
 
   当你设置了 slide.loop 为 true 时，bounce 值需要设置为 false，否则会在循环衔接的时候出现闪烁。
 
+- probeType
+  
+  如果你想通过监听 `slideWillChange` 事件，在用户拖动 slide 时，实时获取到 slide 的页面 index 的改变，需要设置 probeType 值为 2 或者 3
+
 ## 示例
 
 - 水平方向下的轮播图
@@ -246,3 +250,45 @@ slider 切换时过度动画。
 |y|number|当前的偏移的 y 坐标值|
 |pageX|number| X 轴方向方向的页面 index 值(从 0 开始)|
 |pageY|number| Y 轴方向方向的页面 index 值(从 0 开始)|
+
+## 事件
+
+### slideWillChange
+
+- 参数: Object
+
+|名称|类型|描述|
+|----------|:-----:|:-----------|
+|pageX|number|即将展示页面的 pageX|
+|pageY|number|即将展示页面的 pageY|
+
+- 触发时机：slide 的 currentPage 值将要改变时
+
+- 用法:
+
+在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“水平方向下的轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
+
+<img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
+
+通过监听 `slideWillChange` 事件，可以实现该效果。代码如下：
+
+```js
+  let currentPageIndex // 控制当前页面
+  const slide = new BScroll(this.$refs.slide, {
+    scrollX: true,
+    scrollY: false,
+    slide: {
+      loop: true,
+      threshold: 100
+    },
+    useTransition: true,
+    momentum: false,
+    bounce: false,
+    stopPropagation: true,
+    probeType: 2
+  })
+  slide.on('slideWillChange', (page) => {
+    currentPageIndex = page.pageX
+  })
+```
+

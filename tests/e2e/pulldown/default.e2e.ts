@@ -7,6 +7,8 @@ describe('Pulldown', () => {
   let page = (global as any).page as Page
   extendTouch(page)
   beforeEach(async () => {
+    // disable cache
+    await page.setCacheEnabled(false)
     await page.goto('http://0.0.0.0:8932/#/pulldown/')
   })
 

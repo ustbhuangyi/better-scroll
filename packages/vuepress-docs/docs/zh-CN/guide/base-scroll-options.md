@@ -183,6 +183,22 @@ let scroll = new BScroll('.wrapper',{
    - 默认值：根据当前浏览器环境计算而来（不建议修改）
    - 作用：当在移动端环境（支持 touch 事件），disableMouse 会计算为 true，这样就不会监听鼠标相关的事件，而在 PC 环境，disableMouse 会计算为 false，就会监听鼠标相关事件。
 
+## disableTouch
+   - 类型：Boolean
+   - 默认值：根据当前浏览器环境计算而来（不建议修改）
+   - 作用：当在移动端环境（支持 touch 事件），disableTouch 会计算为 false，监听 touch 相关的事件，而在 PC 环境，disableTouch 会计算为 true，不会监听 touch 相关事件。
+
+  ::: warning
+  考虑到用户的一些特定场景，比如在**平板电脑需要支持 touch 事件，平板电脑接入鼠标又得支持 mouse 事件**，那么实例化 bs 需要如下配置：
+
+  ```js
+  let bs = new BScroll('.wrapper', {
+    disableMouse: false,
+    disableTouch: false
+  })
+  ```
+  :::
+
 ## autoBlur
    - 类型：Boolean
    - 默认值：true

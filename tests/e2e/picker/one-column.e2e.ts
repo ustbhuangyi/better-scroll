@@ -7,7 +7,6 @@ jest.setTimeout(10000000)
 describe('One column picker', () => {
   let page = (global as any).page as Page
   extendTouch(page)
-
   beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/picker/one-column')
   })
