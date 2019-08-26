@@ -1,16 +1,19 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('Double column picker', () => {
   let page = (global as any).page as Page
-
   extendTouch(page)
-  beforeEach(async () => {
-    // disable cache
-    await page.setCacheEnabled(false)
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/picker/double-column')
+  })
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should render picker DOM correctly', async () => {
@@ -24,7 +27,6 @@ describe('Double column picker', () => {
       return window.getComputedStyle(node).display
     })
 
-    await page.click('.cancel')
     await expect(displayText).toBe('block')
   })
 
@@ -45,7 +47,7 @@ describe('Double column picker', () => {
     const innerText = await page.$eval('.open', node => {
       return node.textContent
     })
-    await page.click('.cancel')
+
     await expect(innerText).toBe('Venomancer-Durable')
   })
 
@@ -59,7 +61,7 @@ describe('Double column picker', () => {
     // first column
     await page.dispatchScroll({
       x: 100,
-      y: 610,
+      y: 630,
       xDistance: 0,
       yDistance: -70,
       gestureSourceType: 'touch'
@@ -68,7 +70,7 @@ describe('Double column picker', () => {
     // second column
     await page.dispatchScroll({
       x: 270,
-      y: 610,
+      y: 630,
       xDistance: 0,
       yDistance: -70,
       gestureSourceType: 'touch'
@@ -80,12 +82,9 @@ describe('Double column picker', () => {
     const transformTexts = await page.$$eval('.wheel-scroll', nodes => {
       return nodes.map(node => window.getComputedStyle(node).transform)
     })
-    await page.click('.cancel')
-    const matrixs = transformTexts.map(transformText =>
-      transformText!.split(')')[0].split(', ')
-    )
-    for (const matrix of matrixs) {
-      const translateY = +(matrix[13] || matrix[5])
+
+    for (const transformText of transformTexts) {
+      const translateY = getTranslate(transformText!, 'y')
       await expect(translateY).toBeLessThan(-72)
     }
   })

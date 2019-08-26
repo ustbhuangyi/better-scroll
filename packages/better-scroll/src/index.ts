@@ -7,6 +7,7 @@ import ScrollBar from '@better-scroll/scroll-bar'
 import Slide from '@better-scroll/slide'
 import Wheel from '@better-scroll/wheel'
 import Zoom from '@better-scroll/zoom'
+import NestedScroll from '@better-scroll/nested-scroll'
 
 BetterScrollCore.use(MouseWheel)
   .use(ObserveDom)
@@ -16,5 +17,6 @@ BetterScrollCore.use(MouseWheel)
   .use(Slide)
   .use(Wheel)
   .use(Zoom)
+  .use(NestedScroll)
 
 export default BetterScrollCore

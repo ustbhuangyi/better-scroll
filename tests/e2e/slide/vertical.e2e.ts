@@ -13,42 +13,14 @@ describe('Slider for vertical', () => {
   it('should work by dispatching touch events', async () => {
     await page.waitFor(300)
 
-    await page.dispatchSwipe(
-      [
-        [
-          {
-            x: 100,
-            y: 200
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 190
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 180
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 170
-          }
-        ],
-        [
-          {
-            x: 100,
-            y: 160
-          }
-        ]
-      ],
-      () => {},
-      30
-    )
+    await page.dispatchScroll({
+      x: 100,
+      y: 200,
+      xDistance: 0,
+      yDistance: -300,
+      gestureSourceType: 'touch'
+    })
+
     await page.waitFor(500)
     const content = await page.$('.slide-group')
     const boundingBox = await content!.boundingBox()

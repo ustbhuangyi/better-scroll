@@ -31,7 +31,6 @@ interface PropertyConfig {
 }
 
 export default class BScroll extends EventEmitter {
-  static readonly version: string = '2.0.0'
   static plugins: PluginItem[] = []
   static pluginsMap: PluginsMap = {}
   scroller: Scroller
@@ -106,6 +105,9 @@ export default class BScroll extends EventEmitter {
 
   private init(wrapper: HTMLElement) {
     this.wrapper = wrapper
+
+    // mark wrapper to recognize bs instance by DOM attribute
+    ;(wrapper as any).isBScroll = true
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
     this.eventBubbling()

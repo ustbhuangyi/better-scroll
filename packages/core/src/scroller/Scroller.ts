@@ -286,7 +286,6 @@ export default class Scroller {
     )
 
     this.hooks.trigger(this.hooks.eventTypes.momentum, meta, this)
-
     // when x or y changed, do momentum animation now!
     if (meta.newX !== pos.x || meta.newY !== pos.y) {
       // change easing function when scroller goes out of the boundaries
@@ -377,7 +376,12 @@ export default class Scroller {
       : [this.content]
     let pointerEvents = enabled ? 'auto' : 'none'
     for (let i = 0; i < el.length; i++) {
-      ;(el[i] as HTMLElement).style.pointerEvents = pointerEvents
+      let node = el[i] as HTMLElement
+      // ignore BetterScroll instance's wrapper DOM
+      if (node.isBScroll) {
+        continue
+      }
+      node.style.pointerEvents = pointerEvents
     }
   }
 

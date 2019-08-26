@@ -72,50 +72,18 @@ describe('CoreScroll', () => {
 
     it('should scroll when dispatch touch', async () => {
       await page.waitFor(1000)
-      const SwiperHandler = jest.fn()
-      await page.dispatchSwipe(
-        [
-          [
-            {
-              x: 100,
-              y: 150
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 140
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 130
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 110
-            }
-          ]
-        ],
-        () => {
-          SwiperHandler()
-        },
-        30
-      )
+
+      await page.dispatchScroll({
+        x: 100,
+        y: 150,
+        xDistance: 0,
+        yDistance: -70,
+        gestureSourceType: 'touch'
+      })
 
       const content = await page.$('.scroll-content')
       await page.waitFor(1000)
       const boundingBox = await content!.boundingBox()
-      await expect(SwiperHandler).toHaveBeenCalled()
       await expect(boundingBox!.y).toBeLessThan(0)
     })
 
@@ -125,42 +93,13 @@ describe('CoreScroll', () => {
         mockHandler()
       })
       await page.waitFor(1000)
-      await page.dispatchSwipe(
-        [
-          [
-            {
-              x: 100,
-              y: 150
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 140
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 130
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 100,
-              y: 110
-            }
-          ]
-        ],
-        () => {},
-        30
-      )
+      await page.dispatchScroll({
+        x: 100,
+        y: 150,
+        xDistance: 0,
+        yDistance: -70,
+        gestureSourceType: 'touch'
+      })
       await page.waitFor(1000)
       await expect(mockHandler).toBeCalled()
     })
@@ -181,42 +120,13 @@ describe('CoreScroll', () => {
 
     it('should scroll to right when finger moves from right to left', async () => {
       await page.waitFor(1000)
-      await page.dispatchSwipe(
-        [
-          [
-            {
-              x: 100,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 90,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 80,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 75,
-              y: 120
-            }
-          ],
-          [
-            {
-              x: 70,
-              y: 120
-            }
-          ]
-        ],
-        () => {},
-        30
-      )
+      await page.dispatchScroll({
+        x: 100,
+        y: 120,
+        xDistance: -70,
+        yDistance: 0,
+        gestureSourceType: 'touch'
+      })
 
       const content = await page.$('.scroll-content')
       await page.waitFor(1000)
@@ -232,42 +142,13 @@ describe('CoreScroll', () => {
 
     it('should scroll correctly when oblique scrolling occurred', async () => {
       await page.waitFor(1000)
-      await page.dispatchSwipe(
-        [
-          [
-            {
-              x: 100,
-              y: 100
-            }
-          ],
-          [
-            {
-              x: 90,
-              y: 90
-            }
-          ],
-          [
-            {
-              x: 80,
-              y: 80
-            }
-          ],
-          [
-            {
-              x: 75,
-              y: 75
-            }
-          ],
-          [
-            {
-              x: 70,
-              y: 70
-            }
-          ]
-        ],
-        () => {},
-        30
-      )
+      await page.dispatchScroll({
+        x: 100,
+        y: 100,
+        xDistance: -70,
+        yDistance: -70,
+        gestureSourceType: 'touch'
+      })
 
       const content = await page.$('.scroll-content')
       await page.waitFor(1000)
