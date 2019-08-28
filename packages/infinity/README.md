@@ -8,8 +8,8 @@ The ability to inject a infinity load for BetterScroll.
 
 ```js
 import BScroll from '@better-scroll/core'
-import Infinity from '@better-scroll/infinity'
-BScroll.use(Infinity)
+import InfinityScroll from '@better-scroll/infinity'
+BScroll.use(InfinityScroll)
 
 const bs = new BScroll('.wrapper', {
   infinity: {
