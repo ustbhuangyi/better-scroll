@@ -8,6 +8,7 @@ node_js:
 branches:
   only:
     - master
+    - dev
 script:
   - npm test
   - ./node_modules/.bin/codecov
