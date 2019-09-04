@@ -268,18 +268,32 @@ export function removeChild(el: HTMLElement, child: HTMLElement) {
 }
 
 export function hasClass(el: HTMLElement, className: string) {
-  let reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
-  return reg.test(el.className)
+  if (el.classList) {
+    return el.classList.contains(className)
+  } else {
+    const reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
+    return reg.test(el.className)
+  }
 }
+
+const whitespaceRE = /\s+/
 
 export function addClass(el: HTMLElement, className: string) {
   if (hasClass(el, className)) {
     return
   }
 
-  let newClass = el.className.split(' ')
-  newClass.push(className)
-  el.className = newClass.join(' ')
+  if (el.classList) {
+    if (className.indexOf(' ') > -1) {
+      className.split(whitespaceRE).forEach(c => el.classList.add(c))
+    } else {
+      el.classList.add(className)
+    }
+  } else {
+    const newClass = el.className.split(whitespaceRE)
+    newClass.push(className)
+    el.className = newClass.join(' ')
+  }
 }
 
 export function removeClass(el: HTMLElement, className: string) {
@@ -287,6 +301,17 @@ export function removeClass(el: HTMLElement, className: string) {
     return
   }
 
-  let reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
-  el.className = el.className.replace(reg, ' ')
+  if (el.classList) {
+    if (className.indexOf(' ') > -1) {
+      className.split(whitespaceRE).forEach(c => el.classList.remove(c))
+    } else {
+      el.classList.remove(className)
+    }
+    if (!el.classList.length) {
+      el.removeAttribute('class')
+    }
+  } else {
+    const reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
+    el.className = el.className.replace(reg, ' ')
+  }
 }
