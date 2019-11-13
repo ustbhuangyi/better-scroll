@@ -47,7 +47,7 @@ export default class PullUp {
       .pullUpLoad as PullUpLoadConfig
     if (
       this.bscroll.movingDirectionY === Direction.Positive &&
-      pos.y <= this.bscroll.maxScrollY + threshold
+      Math.abs(pos.y) >= Math.abs(this.bscroll.maxScrollY) + threshold
     ) {
       // reset pullupWatching status after scroll end to promise that trigger 'pullingUp' only once when pulling up
       this.bscroll.once('scrollEnd', () => {
