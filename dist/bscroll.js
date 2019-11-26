@@ -1264,8 +1264,14 @@ function coreMixin(BScroll) {
       }
       var wrapperWidth = this.directionX === DIRECTION_RIGHT && left || this.directionX === DIRECTION_LEFT && right ? this.wrapperWidth : 0;
       var wrapperHeight = this.directionY === DIRECTION_DOWN && top || this.directionY === DIRECTION_UP && bottom ? this.wrapperHeight : 0;
-      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options, this) : { destination: newX, duration: 0 };
-      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options, this) : { destination: newY, duration: 0 };
+      var momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options, this) : {
+        destination: newX,
+        duration: 0
+      };
+      var momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options, this) : {
+        destination: newY,
+        duration: 0
+      };
       newX = momentumX.destination;
       newY = momentumY.destination;
       time = Math.max(momentumX.duration, momentumY.duration);
@@ -1461,12 +1467,17 @@ function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      var _options$wheel$rotate = this.options.wheel.rotate,
-          rotate = _options$wheel$rotate === undefined ? 25 : _options$wheel$rotate;
+      var _options$wheel = this.options.wheel,
+          _options$wheel$rotate = _options$wheel.rotate,
+          rotate = _options$wheel$rotate === undefined ? 25 : _options$wheel$rotate,
+          _options$wheel$maxSca = _options$wheel.maxScale,
+          maxScale = _options$wheel$maxSca === undefined ? 1 : _options$wheel$maxSca;
 
       for (var i = 0; i < this.items.length; i++) {
         var deg = rotate * (y / this.itemHeight + i);
-        this.items[i].style[style.transform] = 'rotateX(' + deg + 'deg)';
+        var _scale = maxScale - Math.abs(deg) / 270;
+        _scale = _scale > maxScale ? maxScale : _scale < maxScale - 0.5 ? maxScale - 0.5 : _scale;
+        this.items[i].style[style.transform] = 'rotateX(' + deg + 'deg) scale(' + _scale + ')';
       }
     }
 
@@ -2868,154 +2879,154 @@ function mouseWheelMixin(BScroll) {
 }
 
 function zoomMixin(BScroll) {
-  BScroll.prototype._initZoom = function () {
-    var _options$zoom = this.options.zoom,
-        _options$zoom$start = _options$zoom.start,
-        start = _options$zoom$start === undefined ? 1 : _options$zoom$start,
-        _options$zoom$min = _options$zoom.min,
-        min = _options$zoom$min === undefined ? 1 : _options$zoom$min,
-        _options$zoom$max = _options$zoom.max,
-        max = _options$zoom$max === undefined ? 4 : _options$zoom$max;
+    BScroll.prototype._initZoom = function () {
+        var _options$zoom = this.options.zoom,
+            _options$zoom$start = _options$zoom.start,
+            start = _options$zoom$start === undefined ? 1 : _options$zoom$start,
+            _options$zoom$min = _options$zoom.min,
+            min = _options$zoom$min === undefined ? 1 : _options$zoom$min,
+            _options$zoom$max = _options$zoom.max,
+            max = _options$zoom$max === undefined ? 4 : _options$zoom$max;
 
-    this.scale = Math.min(Math.max(start, min), max);
-    this.setScale(this.scale);
-    this.scrollerStyle[style.transformOrigin] = '0 0';
-  };
+        this.scale = Math.min(Math.max(start, min), max);
+        this.setScale(this.scale);
+        this.scrollerStyle[style.transformOrigin] = '0 0';
+    };
 
-  BScroll.prototype._zoomTo = function (scale, originX, originY, startScale) {
-    this.scaled = true;
+    BScroll.prototype._zoomTo = function (scale, originX, originY, startScale) {
+        this.scaled = true;
 
-    var lastScale = scale / (startScale || this.scale);
-    this.setScale(scale);
+        var lastScale = scale / (startScale || this.scale);
+        this.setScale(scale);
 
-    this.refresh();
+        this.refresh();
 
-    var newX = Math.round(this.startX - (originX - this.relativeX) * (lastScale - 1));
-    var newY = Math.round(this.startY - (originY - this.relativeY) * (lastScale - 1));
+        var newX = Math.round(this.startX - (originX - this.relativeX) * (lastScale - 1));
+        var newY = Math.round(this.startY - (originY - this.relativeY) * (lastScale - 1));
 
-    if (newX > this.minScrollX) {
-      newX = this.minScrollX;
-    } else if (newX < this.maxScrollX) {
-      newX = this.maxScrollX;
-    }
+        if (newX > this.minScrollX) {
+            newX = this.minScrollX;
+        } else if (newX < this.maxScrollX) {
+            newX = this.maxScrollX;
+        }
 
-    if (newY > this.minScrollY) {
-      newY = this.minScrollY;
-    } else if (newY < this.maxScrollY) {
-      newY = this.maxScrollY;
-    }
+        if (newY > this.minScrollY) {
+            newY = this.minScrollY;
+        } else if (newY < this.maxScrollY) {
+            newY = this.maxScrollY;
+        }
 
-    if (this.x !== newX || this.y !== newY) {
-      this.scrollTo(newX, newY, this.options.bounceTime);
-    }
+        if (this.x !== newX || this.y !== newY) {
+            this.scrollTo(newX, newY, this.options.bounceTime);
+        }
 
-    this.scaled = false;
-  };
+        this.scaled = false;
+    };
 
-  BScroll.prototype.zoomTo = function (scale, x, y) {
-    var _offsetToBody = offsetToBody(this.wrapper),
-        left = _offsetToBody.left,
-        top = _offsetToBody.top;
+    BScroll.prototype.zoomTo = function (scale, x, y) {
+        var _offsetToBody = offsetToBody(this.wrapper),
+            left = _offsetToBody.left,
+            top = _offsetToBody.top;
 
-    var originX = x + left - this.x;
-    var originY = y + top - this.y;
-    this._zoomTo(scale, originX, originY);
-  };
+        var originX = x + left - this.x;
+        var originY = y + top - this.y;
+        this._zoomTo(scale, originX, originY);
+    };
 
-  BScroll.prototype._zoomStart = function (e) {
-    var firstFinger = e.touches[0];
-    var secondFinger = e.touches[1];
-    var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
-    var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
+    BScroll.prototype._zoomStart = function (e) {
+        var firstFinger = e.touches[0];
+        var secondFinger = e.touches[1];
+        var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
+        var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
 
-    this.startDistance = getDistance(deltaX, deltaY);
-    this.startScale = this.scale;
+        this.startDistance = getDistance(deltaX, deltaY);
+        this.startScale = this.scale;
 
-    var _offsetToBody2 = offsetToBody(this.wrapper),
-        left = _offsetToBody2.left,
-        top = _offsetToBody2.top;
+        var _offsetToBody2 = offsetToBody(this.wrapper),
+            left = _offsetToBody2.left,
+            top = _offsetToBody2.top;
 
-    this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + left - this.x;
-    this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + top - this.y;
+        this.originX = Math.abs(firstFinger.pageX + secondFinger.pageX) / 2 + left - this.x;
+        this.originY = Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 + top - this.y;
 
-    this.trigger('zoomStart');
-  };
+        this.trigger('zoomStart');
+    };
 
-  BScroll.prototype._zoom = function (e) {
-    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
-      return;
-    }
+    BScroll.prototype._zoom = function (e) {
+        if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
+            return;
+        }
 
-    if (this.options.preventDefault) {
-      e.preventDefault();
-    }
+        if (this.options.preventDefault) {
+            e.preventDefault();
+        }
 
-    if (this.options.stopPropagation) {
-      e.stopPropagation();
-    }
+        if (this.options.stopPropagation) {
+            e.stopPropagation();
+        }
 
-    var firstFinger = e.touches[0];
-    var secondFinger = e.touches[1];
-    var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
-    var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
-    var distance = getDistance(deltaX, deltaY);
-    var scale = distance / this.startDistance * this.startScale;
+        var firstFinger = e.touches[0];
+        var secondFinger = e.touches[1];
+        var deltaX = Math.abs(firstFinger.pageX - secondFinger.pageX);
+        var deltaY = Math.abs(firstFinger.pageY - secondFinger.pageY);
+        var distance = getDistance(deltaX, deltaY);
+        var scale = distance / this.startDistance * this.startScale;
 
-    this.scaled = true;
+        this.scaled = true;
 
-    var _options$zoom2 = this.options.zoom,
-        _options$zoom2$min = _options$zoom2.min,
-        min = _options$zoom2$min === undefined ? 1 : _options$zoom2$min,
-        _options$zoom2$max = _options$zoom2.max,
-        max = _options$zoom2$max === undefined ? 4 : _options$zoom2$max;
-
-
-    if (scale < min) {
-      scale = 0.5 * min * Math.pow(2.0, scale / min);
-    } else if (scale > max) {
-      scale = 2.0 * max * Math.pow(0.5, max / scale);
-    }
-
-    var lastScale = scale / this.startScale;
-
-    var x = this.startX - (this.originX - this.relativeX) * (lastScale - 1);
-    var y = this.startY - (this.originY - this.relativeY) * (lastScale - 1);
-
-    this.setScale(scale);
-
-    this.scrollTo(x, y, 0);
-  };
-
-  BScroll.prototype._zoomEnd = function (e) {
-    if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
-      return;
-    }
-
-    if (this.options.preventDefault) {
-      e.preventDefault();
-    }
-
-    if (this.options.stopPropagation) {
-      e.stopPropagation();
-    }
-
-    this.isInTransition = false;
-    this.isAnimating = false;
-    this.initiated = 0;
-
-    var _options$zoom3 = this.options.zoom,
-        _options$zoom3$min = _options$zoom3.min,
-        min = _options$zoom3$min === undefined ? 1 : _options$zoom3$min,
-        _options$zoom3$max = _options$zoom3.max,
-        max = _options$zoom3$max === undefined ? 4 : _options$zoom3$max;
+        var _options$zoom2 = this.options.zoom,
+            _options$zoom2$min = _options$zoom2.min,
+            min = _options$zoom2$min === undefined ? 1 : _options$zoom2$min,
+            _options$zoom2$max = _options$zoom2.max,
+            max = _options$zoom2$max === undefined ? 4 : _options$zoom2$max;
 
 
-    var scale = this.scale > max ? max : this.scale < min ? min : this.scale;
+        if (scale < min) {
+            scale = 0.5 * min * Math.pow(2.0, scale / min);
+        } else if (scale > max) {
+            scale = 2.0 * max * Math.pow(0.5, max / scale);
+        }
 
-    this._zoomTo(scale, this.originX, this.originY, this.startScale);
+        var lastScale = scale / this.startScale;
 
-    this.trigger('zoomEnd');
-  };
+        var x = this.startX - (this.originX - this.relativeX) * (lastScale - 1);
+        var y = this.startY - (this.originY - this.relativeY) * (lastScale - 1);
+
+        this.setScale(scale);
+
+        this.scrollTo(x, y, 0);
+    };
+
+    BScroll.prototype._zoomEnd = function (e) {
+        if (!this.enabled || this.destroyed || eventType[e.type] !== this.initiated) {
+            return;
+        }
+
+        if (this.options.preventDefault) {
+            e.preventDefault();
+        }
+
+        if (this.options.stopPropagation) {
+            e.stopPropagation();
+        }
+
+        this.isInTransition = false;
+        this.isAnimating = false;
+        this.initiated = 0;
+
+        var _options$zoom3 = this.options.zoom,
+            _options$zoom3$min = _options$zoom3.min,
+            min = _options$zoom3$min === undefined ? 1 : _options$zoom3$min,
+            _options$zoom3$max = _options$zoom3.max,
+            max = _options$zoom3$max === undefined ? 4 : _options$zoom3$max;
+
+
+        var scale = this.scale > max ? max : this.scale < min ? min : this.scale;
+
+        this._zoomTo(scale, this.originX, this.originY, this.startScale);
+
+        this.trigger('zoomEnd');
+    };
 }
 
 // import { ease } from '../util/ease'

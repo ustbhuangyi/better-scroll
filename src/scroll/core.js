@@ -9,10 +9,20 @@ import {
   offset,
   offsetToBody
 } from '../util/dom'
-import { ease } from '../util/ease'
-import { momentum } from '../util/momentum'
-import { requestAnimationFrame, cancelAnimationFrame } from '../util/raf'
-import { getNow, isUndef } from '../util/lang'
+import {
+  ease
+} from '../util/ease'
+import {
+  momentum
+} from '../util/momentum'
+import {
+  requestAnimationFrame,
+  cancelAnimationFrame
+} from '../util/raf'
+import {
+  getNow,
+  isUndef
+} from '../util/lang'
 import {
   DIRECTION_DOWN,
   DIRECTION_UP,
@@ -21,8 +31,12 @@ import {
   PROBE_DEBOUNCE,
   PROBE_REALTIME
 } from '../util/const'
-import { isAndroid } from '../util/env'
-import { assert } from '../util/debug'
+import {
+  isAndroid
+} from '../util/env'
+import {
+  assert
+} from '../util/debug'
 
 export function coreMixin(BScroll) {
   BScroll.prototype._start = function (e) {
@@ -203,8 +217,7 @@ export function coreMixin(BScroll) {
     let pX = this.pointX - scrollLeft
     let pY = this.pointY - scrollTop
 
-    if (pX > document.documentElement.clientWidth - this.options.momentumLimitDistance || pX < this.options.momentumLimitDistance || pY < this.options.momentumLimitDistance || pY > document.documentElement.clientHeight - this.options.momentumLimitDistance
-    ) {
+    if (pX > document.documentElement.clientWidth - this.options.momentumLimitDistance || pX < this.options.momentumLimitDistance || pY < this.options.momentumLimitDistance || pY > document.documentElement.clientHeight - this.options.momentumLimitDistance) {
       this._end(e)
     }
   }
@@ -283,10 +296,16 @@ export function coreMixin(BScroll) {
       }
       const wrapperWidth = ((this.directionX === DIRECTION_RIGHT && left) || (this.directionX === DIRECTION_LEFT && right)) ? this.wrapperWidth : 0
       const wrapperHeight = ((this.directionY === DIRECTION_DOWN && top) || (this.directionY === DIRECTION_UP && bottom)) ? this.wrapperHeight : 0
-      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options, this)
-        : { destination: newX, duration: 0 }
-      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options, this)
-        : { destination: newY, duration: 0 }
+      let momentumX = this.hasHorizontalScroll ? momentum(this.x, this.startX, duration, this.maxScrollX, this.minScrollX, wrapperWidth, this.options, this) :
+        {
+          destination: newX,
+          duration: 0
+        }
+      let momentumY = this.hasVerticalScroll ? momentum(this.y, this.startY, duration, this.maxScrollY, this.minScrollY, wrapperHeight, this.options, this) :
+        {
+          destination: newY,
+          duration: 0
+        }
       newX = momentumX.destination
       newY = momentumY.destination
       time = Math.max(momentumX.duration, momentumY.duration)
@@ -362,7 +381,9 @@ export function coreMixin(BScroll) {
           const _dblclick = this.options.dblclick
           let dblclickTrigged = false
           if (_dblclick && this.lastClickTime) {
-            const { delay = 300 } = _dblclick
+            const {
+              delay = 300
+            } = _dblclick
             if (getNow() - this.lastClickTime < delay) {
               dblclickTrigged = true
               dblclick(e)
@@ -480,10 +501,15 @@ export function coreMixin(BScroll) {
     }
 
     if (this.options.wheel) {
-      const { rotate = 25 } = this.options.wheel
+      const {
+        rotate = 25, 
+        maxScale = 1
+      } = this.options.wheel
       for (let i = 0; i < this.items.length; i++) {
-        let deg = rotate * (y / this.itemHeight + i)
-        this.items[i].style[style.transform] = `rotateX(${deg}deg)`
+        let deg = rotate * (y / this.itemHeight + i);
+        let scale = maxScale - Math.abs(deg) / 270;
+        scale = scale > maxScale ? maxScale : scale < maxScale - 0.5 ? maxScale - 0.5 : scale;
+        this.items[i].style[style.transform] = `rotateX(${deg}deg) scale(${scale})`
       }
     }
 
