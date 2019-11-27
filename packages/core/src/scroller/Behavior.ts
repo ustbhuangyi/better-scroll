@@ -48,7 +48,11 @@ export default class Behavior {
   }
 
   move(delta: number) {
-    delta = this.hasScroll ? delta : 0
+    delta = this.hasScroll ||
+      (delta > 0 && this.options.bounces[0]) ||
+      (delta < 0 && this.options.bounces[1])
+        ? delta
+        : 0
     this.movingDirection =
       delta > 0
         ? Direction.Negative
