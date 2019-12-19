@@ -1,9 +1,9 @@
 import BScroll from '@better-scroll/core'
-import { Direction } from './const'
 import { style } from '@better-scroll/shared-utils/src/dom'
 import EventHandler from './event-handler'
 import { TranslaterPoint } from '@better-scroll/core/src/translater'
 import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { Direction } from './index'
 
 export interface IndicatorOption {
   wrapper: HTMLElement

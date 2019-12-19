@@ -6,10 +6,10 @@ import {
   preventDefaultExceptionFn,
   tagExceptionFn,
   eventTypeMap,
-  hasTouch
+  hasTouch,
+  EventType,
+  MouseButton
 } from '@better-scroll/shared-utils'
-
-import { EventType, MouseButton } from '../enums'
 
 type Exception = {
   tagName?: RegExp

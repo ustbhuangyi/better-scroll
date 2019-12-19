@@ -10,7 +10,6 @@ import {
   createActionsHandlerOptions,
   createBehaviorOptions
 } from './createOptions'
-import { Probe } from '../enums'
 import {
   getElement,
   ease,
@@ -25,7 +24,8 @@ import {
   isUndef,
   getNow,
   cancelAnimationFrame,
-  EaseItem
+  EaseItem,
+  Probe
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
 

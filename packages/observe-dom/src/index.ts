@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
 import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
-import { getRect } from '@better-scroll/shared-utils/src/dom'
+import { getRect } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
   interface Options {

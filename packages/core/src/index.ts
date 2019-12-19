@@ -5,11 +5,11 @@ import {
   getElement,
   warn,
   isUndef,
-  propertiesProxy
+  propertiesProxy,
+  EnforceOrder
 } from '@better-scroll/shared-utils'
 import { bubbling } from './utils/bubbling'
 import { propertiesConfig } from './propertiesConfig'
-import { EnforceOrder } from './enums/enforce-order'
 
 interface PluginCtor {
   pluginName: string

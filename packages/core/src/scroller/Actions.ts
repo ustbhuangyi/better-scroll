@@ -4,12 +4,12 @@ import DirectionLockAction from './DirectionLock'
 import { Animater } from '../animater'
 import EventEmitter from '../base/EventEmitter'
 import { Options as BScrollOptions } from '../Options'
-import { Probe } from '../enums'
 import { TranslaterPoint } from '../translater'
 import {
   preventDefaultExceptionFn,
   TouchEvent,
-  getNow
+  getNow,
+  Probe
 } from '@better-scroll/shared-utils'
 
 export default class ScrollerActions {

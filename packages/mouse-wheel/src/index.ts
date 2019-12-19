@@ -1,12 +1,12 @@
 import BScroll from '@better-scroll/core'
 import EventRegister from '@better-scroll/core/src/base/EventRegister'
 import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
-import { Direction } from '@better-scroll/core/src/enums/direction'
-import { EnforceOrder } from '@better-scroll/core/src/enums/enforce-order'
 import {
   warn,
   preventDefaultExceptionFn,
-  fixInboundValue
+  fixInboundValue,
+  Direction,
+  EnforceOrder
 } from '@better-scroll/shared-utils'
 
 export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined

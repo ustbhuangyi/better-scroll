@@ -4,9 +4,9 @@ import {
   getNow,
   requestAnimationFrame,
   cancelAnimationFrame,
-  EaseFn
+  EaseFn,
+  Probe
 } from '@better-scroll/shared-utils'
-import { Probe } from '../enums/probe'
 
 export default class Animation extends Base {
   move(
