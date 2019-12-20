@@ -1,25 +1,25 @@
-import EventEmitter from './base/EventEmitter'
 import { Options } from './Options'
-import Scroller from './scroller/Scroller'
+import Scroller, { MountedBScrollHTMLElement } from './scroller/Scroller'
 import {
   getElement,
   warn,
   isUndef,
   propertiesProxy,
-  EnforceOrder
+  ApplyOrder,
+  EventEmitter
 } from '@better-scroll/shared-utils'
 import { bubbling } from './utils/bubbling'
 import { propertiesConfig } from './propertiesConfig'
 
 interface PluginCtor {
   pluginName: string
-  enforce?: EnforceOrder
+  applyOrder?: ApplyOrder
   new (scroll: BScroll): any
 }
 
 interface PluginItem {
   name: string
-  enforce?: EnforceOrder.Pre | EnforceOrder.Post
+  applyOrder?: ApplyOrder.Pre | ApplyOrder.Post
   ctor: PluginCtor
 }
 interface PluginsMap {
@@ -59,7 +59,7 @@ export default class BScroll extends EventEmitter {
     this.pluginsMap[name] = true
     this.plugins.push({
       name,
-      enforce: ctor.enforce,
+      applyOrder: ctor.applyOrder,
       ctor
     })
     return this
@@ -107,7 +107,7 @@ export default class BScroll extends EventEmitter {
     this.wrapper = wrapper
 
     // mark wrapper to recognize bs instance by DOM attribute
-    ;(wrapper as any).isBScroll = true
+    ;(wrapper as any).isBScrollContainer = true
     this.scroller = new Scroller(wrapper as HTMLElement, this.options)
 
     this.eventBubbling()
@@ -127,12 +127,12 @@ export default class BScroll extends EventEmitter {
     const options = this.options
     ;(this.constructor as typeof BScroll).plugins
       .sort((a, b) => {
-        const enforeOrderMap = {
-          [EnforceOrder.Pre]: -1,
-          [EnforceOrder.Post]: 1
+        const applyOrderMap = {
+          [ApplyOrder.Pre]: -1,
+          [ApplyOrder.Post]: 1
         }
-        const aOrder = a.enforce ? enforeOrderMap[a.enforce] : 0
-        const bOrder = b.enforce ? enforeOrderMap[b.enforce] : 0
+        const aOrder = a.applyOrder ? applyOrderMap[a.applyOrder] : 0
+        const bOrder = b.applyOrder ? applyOrderMap[b.applyOrder] : 0
         return aOrder - bOrder
       })
       .forEach((item: PluginItem) => {
@@ -208,4 +208,6 @@ export default class BScroll extends EventEmitter {
   }
 }
 
-export { Options }
+export { Options, MountedBScrollHTMLElement }
+export { TranslaterPoint } from './translater'
+export { default as Behavior } from './scroller/Behavior'

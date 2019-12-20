@@ -11,7 +11,7 @@ export const enum Direction {
   Default = 0
 }
 
-export const enum EnforceOrder {
+export const enum ApplyOrder {
   Pre = 'pre',
   Post = 'post'
 }

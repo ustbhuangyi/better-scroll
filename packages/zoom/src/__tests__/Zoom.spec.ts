@@ -1,9 +1,9 @@
-import BScroll from '@better-scroll/core/src/index'
-import Zoom from '@better-scroll/zoom'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import BScroll from '@better-scroll/core'
+import Zoom from '../index'
+import { EventEmitter } from '@better-scroll/shared-utils'
 import { createTouchEvent } from './__utils__/util'
 import { bscrollZoom, replaceBscrollProperties } from './__utils__/bscroll'
-jest.mock('@better-scroll/core/src/index')
+jest.mock('@better-scroll/core')
 jest.mock('@better-scroll/core/src/animater/index')
 
 function createBScroll(

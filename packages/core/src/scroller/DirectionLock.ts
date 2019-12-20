@@ -4,7 +4,7 @@ import {
   EventPassthrough
 } from '@better-scroll/shared-utils'
 
-enum Passthrough {
+const enum Passthrough {
   Yes = 'yes',
   No = 'no'
 }

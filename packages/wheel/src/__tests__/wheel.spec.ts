@@ -1,5 +1,5 @@
 import BScroll from '@better-scroll/core'
-import Wheel from '@better-scroll/wheel'
+import Wheel from '../index'
 jest.mock('@better-scroll/core')
 
 describe('wheel plugin tests', () => {

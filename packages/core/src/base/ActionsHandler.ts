@@ -1,5 +1,3 @@
-import EventEmitter from './EventEmitter'
-import EventRegister from './EventRegister'
 import {
   TouchEvent,
   // dom
@@ -8,7 +6,9 @@ import {
   eventTypeMap,
   hasTouch,
   EventType,
-  MouseButton
+  MouseButton,
+  EventRegister,
+  EventEmitter
 } from '@better-scroll/shared-utils'
 
 type Exception = {

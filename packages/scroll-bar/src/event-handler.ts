@@ -1,7 +1,9 @@
-import EventRegister from '@better-scroll/core/src/base/EventRegister'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 import BScroll from '@better-scroll/core'
-import { TouchEvent } from '@better-scroll/shared-utils/src/Touch'
+import {
+  TouchEvent,
+  EventRegister,
+  EventEmitter
+} from '@better-scroll/shared-utils'
 import Indicator from './indicator'
 
 interface EventHandlerOptions {

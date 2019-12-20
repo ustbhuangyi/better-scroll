@@ -1,9 +1,9 @@
-import Scroller from '@better-scroll/core/src/scroller/Scroller'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
-import { Options } from '@better-scroll/core/src/Options'
+import Scroller from '../scroller/Scroller'
+import { Options } from '../Options'
+import { EventEmitter } from '@better-scroll/shared-utils'
 
-jest.mock('@better-scroll/core/src/scroller/Scroller')
-jest.mock('@better-scroll/core/src/Options')
+jest.mock('../scroller/Scroller')
+jest.mock('../Options')
 
 const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   options = Object.assign(new Options(), options)

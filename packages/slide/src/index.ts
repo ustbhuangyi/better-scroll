@@ -5,11 +5,11 @@ import {
   removeChild,
   ease,
   EaseItem,
-  Direction
+  Direction,
+  EventEmitter
 } from '@better-scroll/shared-utils'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {

@@ -1,5 +1,5 @@
-import Translater from '@better-scroll/core/src/translater/index'
-jest.mock('@better-scroll/core/src/translater/index')
+import Translater from '../../translater/index'
+jest.mock('../../translater/index')
 
 let mockRequestAnimationFrame = jest.fn()
 let mockCancelAnimationFrame = jest.fn()

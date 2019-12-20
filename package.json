@@ -14,7 +14,7 @@
     "vue:build": "lerna run --stream --scope examples vue:build",
     "vue:release": "lerna run --stream --scope examples vue:release",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "test": "jest --coverage",
+    "test": "jest --coverage --runInBand",
     "test:e2e": "jest --config=jest-e2e.config.js --runInBand",
     "cm": "git-cz"
   },

@@ -1,12 +1,10 @@
-import Indicator from '@better-scroll/scroll-bar/src/indicator'
-import { Options } from '@better-scroll/core/src/Options'
-import BScroll from '@better-scroll/core'
+import Indicator from '../indicator'
+import BScroll, { Options } from '@better-scroll/core'
 
 jest.mock('@better-scroll/core')
-jest.mock('@better-scroll/core/src/Options')
-jest.mock('@better-scroll/scroll-bar/src/indicator')
+jest.mock('../indicator')
 
-import ScrollBar from '@better-scroll/scroll-bar'
+import ScrollBar from '../index'
 
 describe('scroll-bar unit tests', () => {
   let bscroll: BScroll

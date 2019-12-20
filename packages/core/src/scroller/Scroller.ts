@@ -1,6 +1,4 @@
 import ActionsHandler from '../base/ActionsHandler'
-import EventEmitter from '../base/EventEmitter'
-import EventRegister from '../base/EventRegister'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
 import { Options as BScrollOptions, BounceConfig } from '../Options'
@@ -25,9 +23,14 @@ import {
   getNow,
   cancelAnimationFrame,
   EaseItem,
-  Probe
+  Probe,
+  EventEmitter,
+  EventRegister
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
+export interface MountedBScrollHTMLElement extends HTMLElement {
+  isBScrollContainer?: boolean
+}
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -376,9 +379,9 @@ export default class Scroller {
       : [this.content]
     let pointerEvents = enabled ? 'auto' : 'none'
     for (let i = 0; i < el.length; i++) {
-      let node = el[i] as HTMLElement
+      let node = el[i] as MountedBScrollHTMLElement
       // ignore BetterScroll instance's wrapper DOM
-      if (node.isBScroll) {
+      if (node.isBScrollContainer) {
         continue
       }
       node.style.pointerEvents = pointerEvents

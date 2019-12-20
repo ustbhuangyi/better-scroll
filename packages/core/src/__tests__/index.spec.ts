@@ -1,4 +1,4 @@
-import BScroll from '@better-scroll/core'
+import BScroll from '../index'
 
 describe('BetterScroll Core', () => {
   let bscroll: BScroll

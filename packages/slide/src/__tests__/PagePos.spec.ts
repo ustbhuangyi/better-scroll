@@ -1,4 +1,4 @@
-import PagesPos from '@better-scroll/slide/src/PagesPos'
+import PagesPos from '../PagesPos'
 import BScroll from '@better-scroll/core'
 import { bscrollHorizon, bscrollVertical } from './__utils__/bscroll'
 import { mockDomOffset } from '@better-scroll/core/src/__tests__/__utils__/layout'

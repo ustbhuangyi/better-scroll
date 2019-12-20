@@ -1,5 +1,3 @@
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
-
 const DirectionLock = jest
   .fn()
   .mockImplementation((content, bscrollOptions) => {
