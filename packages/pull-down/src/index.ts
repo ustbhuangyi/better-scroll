@@ -1,7 +1,5 @@
 import BScroll from '@better-scroll/core'
-import { Direction } from '@better-scroll/core/src/enums/direction'
-import { Probe } from '@better-scroll/core/src/enums/probe'
-import { ease } from '@better-scroll/shared-utils/src/ease'
+import { ease, Probe, Direction } from '@better-scroll/shared-utils'
 import propertiesProxyConfig from './propertiesConfig'
 
 export type pullDownRefreshOptions = Partial<PullDownRefreshConfig> | boolean

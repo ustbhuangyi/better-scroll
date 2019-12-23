@@ -1,7 +1,7 @@
 import BScroll from '@better-scroll/core'
 jest.mock('@better-scroll/core')
 
-import NestedScroll from '@better-scroll/nested-scroll'
+import NestedScroll from '../index'
 
 describe('NestedScroll tests', () => {
   let parentWrapper: HTMLElement

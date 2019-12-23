@@ -1,4 +1,4 @@
-import SlidePage from '@better-scroll/slide/src/SlidePage'
+import SlidePage from '../SlidePage'
 import BScroll from '@better-scroll/core'
 import { warn } from '@better-scroll/shared-utils/src/debug'
 jest.mock('@better-scroll/shared-utils/src/debug')

@@ -1,10 +1,6 @@
 module.exports = {
   "verbose": true,
-  globals: {
-    'ts-jest': {
-      isolatedModules: true
-    }
-  },
+  globals: {},
   "roots": ["<rootDir>"],
   "cache": false,
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",

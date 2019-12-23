@@ -1,9 +1,10 @@
 import {
   hasTransition,
   hasPerspective,
-  hasTouch
+  hasTouch,
+  Probe,
+  EventPassthrough
 } from '@better-scroll/shared-utils'
-import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<BounceConfig> | boolean

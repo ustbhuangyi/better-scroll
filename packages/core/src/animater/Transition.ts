@@ -2,9 +2,9 @@ import {
   style,
   requestAnimationFrame,
   cancelAnimationFrame,
-  EaseFn
+  EaseFn,
+  Probe
 } from '@better-scroll/shared-utils'
-import { Probe } from '../enums/probe'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
 

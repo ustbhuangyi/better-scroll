@@ -1,4 +1,4 @@
-import EventEmitter from '../base/EventEmitter'
+import { EventEmitter } from '@better-scroll/shared-utils'
 
 interface BubblingEventMap {
   source: string

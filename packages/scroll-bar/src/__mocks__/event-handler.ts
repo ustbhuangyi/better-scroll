@@ -1,4 +1,4 @@
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import { EventEmitter } from '@better-scroll/shared-utils'
 
 const EventHandler = jest.fn().mockImplementation(() => {
   return {

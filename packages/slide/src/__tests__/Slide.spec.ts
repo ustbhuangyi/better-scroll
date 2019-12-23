@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
-import Slide from '@better-scroll/slide'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import Slide from '../index'
+import { EventEmitter } from '@better-scroll/shared-utils'
 import {
   bscrollHorizon,
   bscrollVertical,

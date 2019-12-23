@@ -4,12 +4,12 @@ import {
   prepend,
   removeChild,
   ease,
-  EaseItem
+  EaseItem,
+  Direction,
+  EventEmitter
 } from '@better-scroll/shared-utils'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
-import { Direction } from '@better-scroll/core/src/enums/direction'
 
 export type slideOptions = Partial<SlideConfig> | boolean | undefined
 export interface SlideConfig {

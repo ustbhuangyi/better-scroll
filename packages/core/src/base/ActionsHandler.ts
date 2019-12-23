@@ -1,15 +1,15 @@
-import EventEmitter from './EventEmitter'
-import EventRegister from './EventRegister'
 import {
   TouchEvent,
   // dom
   preventDefaultExceptionFn,
   tagExceptionFn,
   eventTypeMap,
-  hasTouch
+  hasTouch,
+  EventType,
+  MouseButton,
+  EventRegister,
+  EventEmitter
 } from '@better-scroll/shared-utils'
-
-import { EventType, MouseButton } from '../enums'
 
 type Exception = {
   tagName?: RegExp

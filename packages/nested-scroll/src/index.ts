@@ -1,4 +1,4 @@
-import BScroll from '@better-scroll/core'
+import BScroll, { MountedBScrollHTMLElement } from '@better-scroll/core'
 
 declare module '@better-scroll/core' {
   interface Options {
@@ -98,7 +98,7 @@ export default class NestedScroll {
     const index = this.stores.indexOf(scroll)
     if (index === -1) return
 
-    scroll.wrapper.isBScroll = null
+    ;(scroll.wrapper as MountedBScrollHTMLElement).isBScrollContainer = undefined
     this.stores.splice(index, 1)
   }
 

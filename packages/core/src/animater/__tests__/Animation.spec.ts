@@ -1,5 +1,5 @@
-import Translater from '@better-scroll/core/src/translater/index'
-jest.mock('@better-scroll/core/src/translater/index')
+import Translater from '../../translater'
+jest.mock('../../translater')
 
 let mockRequestAnimationFrame = jest.fn()
 let mockCancelAnimationFrame = jest.fn()
@@ -17,7 +17,7 @@ jest.mock('@better-scroll/shared-utils/src/lang', () => {
   }
 })
 
-import Animation from '@better-scroll/core/src/animater/Animation'
+import Animation from '../Animation'
 
 function createTransition(probeType: number) {
   const dom = document.createElement('div')

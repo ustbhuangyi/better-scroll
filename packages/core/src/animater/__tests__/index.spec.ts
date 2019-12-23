@@ -1,12 +1,12 @@
-import Translater from '@better-scroll/core/src/translater/index'
-import Transition from '@better-scroll/core/src/animater/Transition'
-import Animation from '@better-scroll/core/src/animater/Animation'
-import { Options } from '@better-scroll/core/src/Options'
-jest.mock('@better-scroll/core/src/animater/Animation')
-jest.mock('@better-scroll/core/src/animater/Transition')
-jest.mock('@better-scroll/core/src/animater/Base')
-jest.mock('@better-scroll/core/src/translater/index')
-jest.mock('@better-scroll/core/src/Options')
+import Translater from '../../translater/index'
+import Transition from '../Transition'
+import Animation from '../Animation'
+import { Options } from '../../Options'
+jest.mock('../Animation')
+jest.mock('../Transition')
+jest.mock('../Base')
+jest.mock('../../translater/index')
+jest.mock('../../Options')
 
 import createAnimater from '../index'
 

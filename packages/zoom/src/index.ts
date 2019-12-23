@@ -1,5 +1,4 @@
-import BScroll from '@better-scroll/core'
-import EventEmitter from '@better-scroll/core/src/base/EventEmitter'
+import BScroll, { TranslaterPoint, Behavior } from '@better-scroll/core'
 import propertiesConfig from './propertiesConfig'
 import {
   getDistance,
@@ -8,10 +7,9 @@ import {
   offsetToBody,
   getRect,
   DOMRect,
-  style
+  style,
+  EventEmitter
 } from '@better-scroll/shared-utils'
-import { TranslaterPoint } from '@better-scroll/core/src/translater'
-import Behavior from '@better-scroll/core/src/scroller/Behavior'
 
 interface ZoomConfig {
   start: number

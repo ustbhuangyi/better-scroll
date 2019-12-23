@@ -1,4 +1,4 @@
-import { Options } from '@better-scroll/core/src/Options'
+import { Options } from '../Options'
 
 describe('BetterScroll Options', () => {
   let options: Options

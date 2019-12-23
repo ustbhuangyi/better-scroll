@@ -1,5 +1,5 @@
-import Behavior from '@better-scroll/core/src/scroller/Behavior'
-import { createDiv } from '@better-scroll/core/src/__tests__/__utils__/layout'
+import Behavior from '../Behavior'
+import { createDiv } from '../../__tests__/__utils__/layout'
 
 describe('Behavior Class tests', () => {
   let behavior: Behavior

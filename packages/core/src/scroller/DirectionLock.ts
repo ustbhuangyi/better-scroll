@@ -1,7 +1,10 @@
-import { DirectionLock, EventPassthrough } from '../enums'
-import { TouchEvent } from '@better-scroll/shared-utils'
+import {
+  TouchEvent,
+  DirectionLock,
+  EventPassthrough
+} from '@better-scroll/shared-utils'
 
-enum Passthrough {
+const enum Passthrough {
   Yes = 'yes',
   No = 'no'
 }

@@ -1,10 +1,10 @@
 import {
   createActionsHandlerOptions,
   createBehaviorOptions
-} from '@better-scroll/core/src/scroller/createOptions'
-import { Options } from '@better-scroll/core/src/Options'
+} from '../createOptions'
+import { Options } from '../../Options'
 
-jest.mock('@better-scroll/core/src/Options')
+jest.mock('../../Options')
 
 describe('createOptions helper function tests', () => {
   let bsOptions: any

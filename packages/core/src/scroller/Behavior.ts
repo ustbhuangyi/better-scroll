@@ -1,6 +1,4 @@
-import { getRect } from '@better-scroll/shared-utils'
-import { Direction } from '../enums/direction'
-import EventEmitter from '../base/EventEmitter'
+import { getRect, Direction, EventEmitter } from '@better-scroll/shared-utils'
 
 export type Bounces = [boolean, boolean]
 
