@@ -151,4 +151,32 @@ describe('BetterScroll Options', () => {
       translateZ: ' translateZ(0)'
     })
   })
+
+  it('should resolve bounce when calling process', () => {
+    options
+      .merge({
+        bounce: false
+      })
+      .process()
+
+    expect(options.bounce).toEqual({
+      bottom: false,
+      left: false,
+      right: false,
+      top: false
+    })
+
+    options
+      .merge({
+        bounce: true
+      })
+      .process()
+
+    expect(options.bounce).toEqual({
+      bottom: true,
+      left: true,
+      right: true,
+      top: true
+    })
+  })
 })
