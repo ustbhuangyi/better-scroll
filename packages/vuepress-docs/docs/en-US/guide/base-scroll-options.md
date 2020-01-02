@@ -88,6 +88,11 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    ```
    `bounce` can support the effect of closing the back of some edges. You can set the `key` of the corresponding side to `false`.
 
+  :::tip
+  If you want to conveniently set all edges to **true** or **false**, you only need to set `bounce` to **true** or **false**.
+  :::
+
+
 ## bounceTime
    - Type：`Number`
    - Default：Default: `800` (ms, modification is not recommended)
