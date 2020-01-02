@@ -121,10 +121,10 @@ function generateBuildConfigs(packagesName) {
   })
   return result
 }
-function generateBuildPluginsConfigs(isMin, packageName) {
+function generateBuildPluginsConfigs(isMin) {
   const tsConfig = {
     verbosity: -1,
-    tsconfig: `./packages/${packageName}/tsconfig.json`
+    tsconfig: path.resolve(__dirname, '../tsconfig.json'),
   }
   const plugins = []
     if (isMin) {
