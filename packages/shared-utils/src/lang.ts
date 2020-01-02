@@ -1,5 +1,5 @@
 export function getNow() {
-  return window.performance && window.performance.now
+  return window.performance && window.performance.now && window.performance.timing
     ? window.performance.now() + window.performance.timing.navigationStart
     : +new Date()
 }

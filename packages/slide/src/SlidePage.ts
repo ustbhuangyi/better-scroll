@@ -12,11 +12,11 @@ export interface Position {
   y: number
 }
 
-enum Direction {
+const enum Direction {
   Positive = 'positive',
   Negative = 'negative'
 }
-enum LoopStage {
+const enum LoopStage {
   Head = 'head',
   Tail = 'tail',
   Middle = 'middle'

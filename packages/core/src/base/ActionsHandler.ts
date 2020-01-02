@@ -1,15 +1,15 @@
-import EventEmitter from './EventEmitter'
-import EventRegister from './EventRegister'
 import {
   TouchEvent,
   // dom
   preventDefaultExceptionFn,
   tagExceptionFn,
   eventTypeMap,
-  hasTouch
+  hasTouch,
+  EventType,
+  MouseButton,
+  EventRegister,
+  EventEmitter
 } from '@better-scroll/shared-utils'
-
-import { EventType, MouseButton } from '../enums'
 
 type Exception = {
   tagName?: RegExp
@@ -53,8 +53,8 @@ export default class ActionsHandler {
     const target = bindToWrapper ? wrapper : window
     const wrapperEvents = []
     const targetEvents = []
-    const shouldRegiserTouch = hasTouch && !disableTouch
-    const sholdRegisterMouse = !disableMouse
+    const shouldRegisterTouch = hasTouch && !disableTouch
+    const shouldRegisterMouse = !disableMouse
 
     if (click) {
       wrapperEvents.push({
@@ -64,7 +64,7 @@ export default class ActionsHandler {
       })
     }
 
-    if (shouldRegiserTouch) {
+    if (shouldRegisterTouch) {
       wrapperEvents.push({
         name: 'touchstart',
         handler: this.start.bind(this)
@@ -86,7 +86,7 @@ export default class ActionsHandler {
       )
     }
 
-    if (sholdRegisterMouse) {
+    if (shouldRegisterMouse) {
       wrapperEvents.push({
         name: 'mousedown',
         handler: this.start.bind(this)

@@ -1,6 +1,5 @@
 import BScroll from '@better-scroll/core'
-import { Direction } from '@better-scroll/core/src/enums/direction'
-import { Probe } from '@better-scroll/core/src/enums/probe'
+import { Probe, Direction } from '@better-scroll/shared-utils'
 import propertiesProxyConfig from './propertiesConfig'
 
 export type pullUpLoadOptions = Partial<PullUpLoadConfig> | boolean

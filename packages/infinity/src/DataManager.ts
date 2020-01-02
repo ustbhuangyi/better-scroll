@@ -51,7 +51,10 @@ export default class DataManager {
       if (!this.list[this.loadedNum]) {
         this.list[this.loadedNum] = { data: data[i] }
       } else {
-        Object.assign(this.list[this.loadedNum], { data: data[i] })
+        this.list[this.loadedNum] = {
+          ...this.list[this.loadedNum],
+          ...{ data: data[i] }
+        }
       }
       this.loadedNum++
     }

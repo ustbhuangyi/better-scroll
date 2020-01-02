@@ -1,8 +1,8 @@
-import EventEmitter from '../base/EventEmitter'
 import {
   EaseFn,
   safeCSSStyleDeclaration,
-  cancelAnimationFrame
+  cancelAnimationFrame,
+  EventEmitter
 } from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 

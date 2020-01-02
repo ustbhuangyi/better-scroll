@@ -1,7 +1,7 @@
 export const PRE_NUM = 10
 export const POST_NUM = 30
 
-enum DIRECTION {
+const enum DIRECTION {
   UP,
   DOWN
 }

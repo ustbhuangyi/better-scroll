@@ -1,5 +1,5 @@
 import BScroll from '@better-scroll/core'
-import { Probe } from '@better-scroll/core/src/enums/probe'
+import { Probe } from '@better-scroll/shared-utils'
 import IndexCalculator from './IndexCalculator'
 import DataManager from './DataManager'
 import DomManager from './DomManager'

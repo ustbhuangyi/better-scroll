@@ -1,16 +1,16 @@
-import Behavior from '@better-scroll/core/src/scroller/Behavior'
-import createAnimater from '@better-scroll/core/src/animater'
-import Translater from '@better-scroll/core/src/translater'
-import { Options } from '@better-scroll/core/src/Options'
-import ActionsHandler from '@better-scroll/core/src/base/ActionsHandler'
+import Behavior from '../Behavior'
+import createAnimater from '../../animater'
+import Translater from '../../translater'
+import { Options } from '../../Options'
+import ActionsHandler from '../../base/ActionsHandler'
 
-jest.mock('@better-scroll/core/src/scroller/Behavior')
-jest.mock('@better-scroll/core/src/animater')
-jest.mock('@better-scroll/core/src/translater')
-jest.mock('@better-scroll/core/src/Options')
-jest.mock('@better-scroll/core/src/base/ActionsHandler')
+jest.mock('../Behavior')
+jest.mock('../../animater')
+jest.mock('../../translater')
+jest.mock('../../Options')
+jest.mock('../../base/ActionsHandler')
 
-import Actions from '@better-scroll/core/src/scroller/Actions'
+import Actions from '../Actions'
 
 describe('Actions Class tests', () => {
   let actions: Actions

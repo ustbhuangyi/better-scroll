@@ -1,10 +1,8 @@
 # infinity
 
-## 介绍
-
 The infinity plugin provides BetterScroll with unlimited scrolling capabilities. If you have a large amount of list data to render, you can use the infinity plugin, in which BetterScroll will only render a certain number of DOM elements, so that the page will continue to scroll smoothly when a large amount of data. Note: Unless you have a lot of data rendering needs, use normal scrolling.
 
-## 安装
+## Install
 
 ```shell
 npm install @better-scroll/infinity@next --save
@@ -14,7 +12,7 @@ npm install @better-scroll/infinity@next --save
 yarn add @better-scroll/infinity@next
 ```
 
-## 使用
+## Usage
 
 First, install the plugin via the static method `BScroll.use()`
 
@@ -48,7 +46,7 @@ new BScroll('.bs-wrap', {
 })
 ```
 
-## 示例
+## Demo
 
 <demo qrcode-url="infinity/">
   <template slot="code-template">

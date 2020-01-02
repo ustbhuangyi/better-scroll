@@ -1,15 +1,12 @@
 import BScroll from '@better-scroll/core'
-import EventHandler from '@better-scroll/scroll-bar/src/event-handler'
+import EventHandler from '../event-handler'
+import { style } from '@better-scroll/shared-utils'
 
 jest.mock('@better-scroll/core')
-jest.mock('@better-scroll/core/src/Options')
-jest.mock('@better-scroll/shared-utils/src/dom')
-jest.mock('@better-scroll/scroll-bar/src/event-handler')
+jest.mock('../event-handler')
 
-import Indicator, {
-  IndicatorOption
-} from '@better-scroll/scroll-bar/src/indicator'
-import { Direction } from '@better-scroll/scroll-bar/src/const'
+import Indicator, { IndicatorOption } from '../indicator'
+import { Direction } from '../index'
 import { mockDomClient } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
 describe('indicator unit tests', () => {
@@ -70,7 +67,7 @@ describe('indicator unit tests', () => {
       bscroll.trigger('refresh')
       // then
       expect(indicator.el.style.width).toBe('50px')
-      expect(indicator.el.style.transform).toBe('translateX(5px)')
+      expect(indicator.el.style[style.transform as any]).toBe('translateX(5px)')
     })
 
     it('should update position and size correctly when direction is vertical', () => {
@@ -81,7 +78,7 @@ describe('indicator unit tests', () => {
       bscroll.trigger('refresh')
       // then
       expect(indicator.el.style.height).toBe('50px')
-      expect(indicator.el.style.transform).toBe('translateY(5px)')
+      expect(indicator.el.style[style.transform as any]).toBe('translateY(5px)')
     })
   })
 
@@ -138,7 +135,9 @@ describe('indicator unit tests', () => {
       bscroll.trigger('scrollStart')
       // then
       expect(indicator.wrapperStyle.opacity).toBe('1')
-      expect(indicator.wrapperStyle.transitionDuration).toBe('250ms')
+      expect(indicator.wrapperStyle[style.transitionDuration as any]).toBe(
+        '250ms'
+      )
     })
 
     it('indicator fade invisible when trigger scrollEnd', () => {
@@ -148,7 +147,9 @@ describe('indicator unit tests', () => {
       bscroll.trigger('scrollEnd')
       // then
       expect(indicator.wrapperStyle.opacity).toBe('0')
-      expect(indicator.wrapperStyle.transitionDuration).toBe('500ms')
+      expect(indicator.wrapperStyle[style.transitionDuration as any]).toBe(
+        '500ms'
+      )
     })
   })
 

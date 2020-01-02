@@ -3,7 +3,7 @@ import * as domUtil from '@better-scroll/shared-utils/src/dom'
 jest.mock('@better-scroll/core')
 const mockDomUtil = jest.spyOn(domUtil, 'preventDefaultExceptionFn')
 
-import MouseWheel from '@better-scroll/mouse-wheel/src/index'
+import MouseWheel from '../index'
 import { createEvent } from '@better-scroll/core/src/__tests__/__utils__/event'
 
 interface CustomMouseWheel extends Event {

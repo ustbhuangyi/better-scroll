@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": "./packages",
-    "composite": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
     "moduleResolution": "node",
     "paths": {
-      "@better-scroll/*": ["./*/src"]
+      "@better-scroll/*": ["packages/*/src"]
     },
     "target": "es5",
     "module":"es2015",
@@ -20,5 +21,9 @@
     "typeRoots": [
       "node_modules/@types"
     ]
-  }
+  },
+  "include": [
+    "packages/*/src"
+  ],
+  "exclude": ["packages/*/src/**/__tests__", "packages/*/src/**/__mocks__"]
 }

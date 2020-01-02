@@ -1,9 +1,10 @@
 import {
   hasTransition,
   hasPerspective,
-  hasTouch
+  hasTouch,
+  Probe,
+  EventPassthrough
 } from '@better-scroll/shared-utils'
-import { Probe, EventPassthrough } from './enums'
 // type
 export type tap = 'tap' | ''
 export type bounceOptions = Partial<BounceConfig> | boolean
@@ -130,6 +131,8 @@ export class Options {
 
     this.preventDefault = !this.eventPassthrough && this.preventDefault
 
+    this.resolveBounce()
+
     // If you want eventPassthrough I have to lock one of the axes
     this.scrollX =
       this.eventPassthrough === EventPassthrough.Horizontal
@@ -151,4 +154,20 @@ export class Options {
 
     return this
   }
+
+  resolveBounce() {
+    const directions = ['top', 'right', 'bottom', 'left']
+    const bounce = this.bounce
+    if (bounce === false || bounce === true) {
+      this.bounce = makeMap(directions, bounce as boolean)
+    }
+  }
+}
+
+function makeMap(keys: string[], val: boolean = true) {
+  const ret: { [key: string]: boolean } = {}
+  keys.forEach(key => {
+    ret[key] = val
+  })
+  return ret
 }

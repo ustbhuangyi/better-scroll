@@ -1,5 +1,5 @@
 import BScroll from '@better-scroll/core'
-import ObserveDom from '@better-scroll/observe-dom'
+import ObserveDom from '../index'
 import {
   createDiv,
   mockDomOffset

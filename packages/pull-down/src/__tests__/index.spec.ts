@@ -3,7 +3,7 @@ import { ease } from '@better-scroll/shared-utils/src/ease'
 jest.mock('@better-scroll/core')
 jest.mock('@better-scroll/shared-utils/src/ease')
 
-import PullDown from '@better-scroll/pull-down'
+import PullDown from '../index'
 
 describe('pull down tests', () => {
   let bscroll: BScroll

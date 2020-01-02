@@ -89,9 +89,7 @@ const release = async () => {
     await execa('git', ['add', '-A'], { stdio: 'inherit' })
     await execa('git', ['commit', '-m', `chore: ${version} published`], { stdio: 'inherit' })
     await execa('git', ['push', 'origin', `master`], { stdio: 'inherit' })
-  } catch (error) {
-    console.log(error)
-  }
+  } catch (error) {}
 
   // sync dev from master
   await execa('git', ['checkout', 'dev'], { stdio: 'inherit' })

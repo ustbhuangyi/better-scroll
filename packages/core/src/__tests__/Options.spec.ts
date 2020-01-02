@@ -1,4 +1,4 @@
-import { Options } from '@better-scroll/core/src/Options'
+import { Options } from '../Options'
 
 describe('BetterScroll Options', () => {
   let options: Options
@@ -149,6 +149,34 @@ describe('BetterScroll Options', () => {
       tap: '',
       useTransition: true,
       translateZ: ' translateZ(0)'
+    })
+  })
+
+  it('should resolve bounce when calling process', () => {
+    options
+      .merge({
+        bounce: false
+      })
+      .process()
+
+    expect(options.bounce).toEqual({
+      bottom: false,
+      left: false,
+      right: false,
+      top: false
+    })
+
+    options
+      .merge({
+        bounce: true
+      })
+      .process()
+
+    expect(options.bounce).toEqual({
+      bottom: true,
+      left: true,
+      right: true,
+      top: true
     })
   })
 })

@@ -17,6 +17,12 @@ npm install better-scroll -S # install 1.x
 npm install better-scroll@next -S # install 2.x，with full-featured plugin.
 ```
 
+or include it directly via CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/better-scroll"></script>
+```
+
 ## What is BetterScroll ?
 
 BetterScroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (PC supported already). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of BetterScroll are compatible with iscroll on the whole. What's more, BetterScroll also extends some features and optimizes for performance based on iscroll.
