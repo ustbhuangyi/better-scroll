@@ -19,11 +19,11 @@ yarn add @better-scroll/observe-dom@next
 
   ```js
     import BScroll from '@better-scroll/core'
-    import ObserveDom from '@better-scroll/observe-dom'
-    BScroll.use(ObserveDom)
+    import ObserveDOM from '@better-scroll/observe-dom'
+    BScroll.use(ObserveDOM)
 
     new BScroll('.bs-wrap', {
       //...
-      observeDom: true // 设置 observeDom 值为 true
+      observeDOM: true // 设置 observeDOM 值为 true
     })
   ```
