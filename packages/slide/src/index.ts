@@ -25,6 +25,7 @@ export interface SlideConfig {
   }
   listenFlick: boolean
   disableSetWidth: boolean
+  disableSetHeight: boolean
 }
 
 declare module '@better-scroll/core' {
@@ -66,6 +67,7 @@ export default class Slide {
       }
     }
     const needRefresh = this.setSlideWidth(slideEls)
+    this.setSlideHeight(this.scroll.scroller.wrapper, slideEls)
     this.page.currentPage = {
       x: 0,
       y: 0,
@@ -306,6 +308,24 @@ export default class Slide {
     }
     slideEls.style.width = slideItemWidth * children.length + 'px'
     return true
+  }
+  // height change will not effect minScrollY & maxScrollY
+  private setSlideHeight(
+    slideWrapper: HTMLElement,
+    slideEls: HTMLElement
+  ): void {
+    if (this.slideOpt.disableSetHeight) {
+      return
+    }
+    if (!this.scroll.options.scrollY) {
+      return
+    }
+    const wrapperHeight = slideWrapper.clientHeight
+    const children = slideEls.children
+    for (let i = 0; i < children.length; i++) {
+      const slideItemDom = children[i] as HTMLElement
+      slideItemDom.style.height = wrapperHeight + 'px'
+    }
   }
   private goTo(
     pageX: number,

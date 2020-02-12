@@ -165,7 +165,7 @@ describe('slide test for SlidePage class', () => {
     expect(bscroll.scroller.content.style.width).toBe('600px')
     slide.destroy()
   })
-  it('should hava right initial value with slide has one child', () => {
+  it('should hava right initial value with slide has one child on loop x', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
       slideNum: 1,
       slideOpt: {
@@ -181,6 +181,24 @@ describe('slide test for SlidePage class', () => {
     expect(bscroll.refresh).toBeCalled()
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('300px')
+    slide.destroy()
+  })
+  it('should hava right initial value with slide has one child on loop y', () => {
+    const { bscroll, originSlideLen } = createBScroll(hooks, {
+      slideNum: 1,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: false,
+      scrollY: true,
+      direction: 'vertical'
+    })
+    const slide = new Slide(bscroll)
+    expect(bscroll.options.slide.loop).toBe(false)
+    expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
+    expect(bscroll.refresh).not.toBeCalled()
+    // setHeight
+    expect(bscroll.scroller.content.children[0].style.height).toBe('300px')
     slide.destroy()
   })
   it('should have right init slide state for loopX', () => {
