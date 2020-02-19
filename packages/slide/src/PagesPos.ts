@@ -1,6 +1,6 @@
 import { getRect } from '@better-scroll/shared-utils'
 import BScroll from '@better-scroll/core'
-import { SlideConfig } from './index'
+import { Config } from './index'
 
 interface PagePos {
   x: number
@@ -20,7 +20,7 @@ export default class PagesPos {
   private scrollerWidth: number
   private scrollerHeight: number
   private slideEl: NodeListOf<HTMLElement> | null = null
-  constructor(private scroll: BScroll, private slideOpt: Partial<SlideConfig>) {
+  constructor(private scroll: BScroll, private slideOpt: Partial<Config>) {
     this.init()
   }
   init() {

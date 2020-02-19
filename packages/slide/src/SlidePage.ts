@@ -1,6 +1,6 @@
 import { fixInboundValue, extend, warn } from '@better-scroll/shared-utils'
 import BScroll from '@better-scroll/core'
-import { SlideConfig } from './index'
+import { Config } from './index'
 import PagesPos from './PagesPos'
 
 export interface Page {
@@ -29,7 +29,7 @@ export default class PageInfo {
   needLoop: boolean
   pagesPos: PagesPos
   currentPage: Page & Position
-  constructor(public scroll: BScroll, private slideOpt: Partial<SlideConfig>) {}
+  constructor(public scroll: BScroll, private slideOpt: Partial<Config>) {}
   init() {
     this.currentPage = {
       x: 0,
@@ -39,6 +39,9 @@ export default class PageInfo {
     }
     this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
     this.checkSlideLoop()
+  }
+  changeCurrentPage(newPage: Page & Position): void {
+    this.currentPage = newPage
   }
   change2safePage(pageX: number, pageY: number): Page & Position | undefined {
     if (!this.pagesPos.hasInfo()) {
@@ -62,6 +65,14 @@ export default class PageInfo {
       pageY,
       x: x,
       y: y
+    }
+  }
+  getInitPage(): Page {
+    let initPageX = this.loopX ? 1 : 0
+    let initPageY = this.loopY ? 1 : 0
+    return {
+      pageX: initPageX,
+      pageY: initPageY
     }
   }
   getRealPage(page?: Page): Page {
@@ -212,6 +223,15 @@ export default class PageInfo {
         }
       }
     }
+  }
+  isSameWithCurrent(page: Page): Boolean {
+    if (
+      page.pageX !== this.currentPage.pageX ||
+      page.pageY !== this.currentPage.pageY
+    ) {
+      return false
+    }
+    return true
   }
   private changedPageNum(
     direction: Direction

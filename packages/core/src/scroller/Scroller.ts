@@ -69,7 +69,8 @@ export default class Scroller {
       'momentum',
       'scrollTo',
       'ignoreDisMoveForSamePos',
-      'scrollToElement'
+      'scrollToElement',
+      'resize'
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -345,14 +346,17 @@ export default class Scroller {
     if (!this.actions.enabled) {
       return
     }
+
     // fix a scroll problem under Android condition
     if (isAndroid) {
       this.wrapper.scrollTop = 0
     }
-    clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = window.setTimeout(() => {
-      this.refresh()
-    }, this.options.resizePolling)
+    if (!this.hooks.trigger(this.hooks.eventTypes.resize)) {
+      clearTimeout(this.resizeTimeout)
+      this.resizeTimeout = window.setTimeout(() => {
+        this.refresh()
+      }, this.options.resizePolling)
+    }
   }
 
   private transitionEnd(e: TouchEvent) {
