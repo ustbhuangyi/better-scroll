@@ -71,8 +71,12 @@ export default class Slide {
         slide.loop = false
       }
     }
-    const shouldRefresh = this.setSlideWidth(slideEls)
-    this.setSlideHeight(this.scroll.scroller.wrapper, slideEls)
+    const shouldRefreshByWidth = this.setSlideWidth(slideEls)
+    const shouldRefreshByHeight = this.setSlideHeight(
+      this.scroll.scroller.wrapper,
+      slideEls
+    )
+    const shouldRefresh = shouldRefreshByWidth || shouldRefreshByHeight
 
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
@@ -341,14 +345,15 @@ export default class Slide {
       const slideItemDom = children[i] as HTMLElement
       slideItemDom.removeAttribute('style')
     }
+    slideEls.removeAttribute('style')
   }
   // height change will not effect minScrollY & maxScrollY
   private setSlideHeight(
     slideWrapper: HTMLElement,
     slideEls: HTMLElement
-  ): void {
+  ): Boolean {
     if (!this.shouldSetWidthHeight('height')) {
-      return
+      return false
     }
     const wrapperHeight = slideWrapper.clientHeight
     const children = slideEls.children
@@ -356,6 +361,8 @@ export default class Slide {
       const slideItemDom = children[i] as HTMLElement
       slideItemDom.style.height = wrapperHeight + 'px'
     }
+    slideEls.style.height = wrapperHeight * children.length + 'px'
+    return true
   }
   private goTo(
     pageX: number,

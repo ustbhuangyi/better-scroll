@@ -152,6 +152,12 @@ describe('slide test for SlidePage class', () => {
       scrollY: false,
       direction: 'horizon'
     })
+    SlidePage.getInitPage.mockImplementation(() => {
+      return {
+        pageX: 0,
+        pageY: 0
+      }
+    })
     const slide = new Slide(bscroll)
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
     expect(bscroll.refresh).toBeCalled()
@@ -196,7 +202,7 @@ describe('slide test for SlidePage class', () => {
     const slide = new Slide(bscroll)
     expect(bscroll.options.slide.loop).toBe(false)
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).not.toBeCalled()
+    expect(bscroll.refresh).toBeCalled()
     // setHeight
     expect(bscroll.scroller.content.children[0].style.height).toBe('300px')
     slide.destroy()
@@ -324,7 +330,7 @@ describe('slide test for SlidePage class', () => {
     bscroll.scroller.scrollBehaviorX.currentPos = 0
     bscroll.scroller.scrollBehaviorY.currentPos = 0
     const slide = new Slide(bscroll)
-
+    hooks.trigger('refresh')
     expect(SlidePage.change2safePage).toBeCalledWith(0, 0)
     expect(mockscrollTo.mock.calls[0][0]).toBe(0)
     expect(mockscrollTo.mock.calls[0][1]).toBe(-300)
