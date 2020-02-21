@@ -6,6 +6,10 @@ BetterScroll is a plugin which is aimed at solving scrolling circumstances on th
 
 BetterScroll is implemented with plain JavaScript, which means it's dependency free.
 
+## Demo
+
+<img :src="$withBase('/assets/images/qrcode.png')" alt="demo">
+
 ## Getting started
 
 The most common application scenario of BetterScroll is list scrolling. Let's see its HTML:

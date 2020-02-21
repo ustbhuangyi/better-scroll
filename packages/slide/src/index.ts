@@ -1,4 +1,4 @@
-import BScroll from '@better-scroll/core'
+import BScroll, { Options } from '@better-scroll/core'
 import {
   fixInboundValue,
   prepend,
@@ -11,8 +11,8 @@ import {
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
 
-export type slideOptions = Partial<SlideConfig> | boolean | undefined
-export interface SlideConfig {
+export type SlideOptions = Partial<Config> | boolean | undefined
+export interface Config {
   loop: boolean
   el: HTMLElement | string
   threshold: number
@@ -25,57 +25,55 @@ export interface SlideConfig {
   }
   listenFlick: boolean
   disableSetWidth: boolean
+  disableSetHeight: boolean
 }
 
 declare module '@better-scroll/core' {
   interface Options {
-    slide?: slideOptions
+    slide?: SlideOptions
   }
 }
 
 export default class Slide {
+  static pluginName = 'slide'
   private page: SlidePage
-  private slideOpt: Partial<SlideConfig>
+  private slideOpt: Partial<Config>
   private thresholdX: number
   private thresholdY: number
-  static pluginName = 'slide'
   private hooksFn: Array<[EventEmitter, string, Function]>
   private resetLooping = false
   private isTouching = false
   private willChangeToPage: Page
+  private resizeTimeout: number
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
     this.scroll.registerType(['slideWillChange'])
-    this.slideOpt = this.scroll.options.slide as Partial<SlideConfig>
+    this.slideOpt = this.scroll.options.slide as Partial<Config>
     this.page = new SlidePage(scroll, this.slideOpt)
     this.hooksFn = []
+    this.willChangeToPage = {
+      pageX: 0,
+      pageY: 0
+    }
     this.init()
   }
   init() {
     const slide = this.slideOpt
     const slideEls = this.scroll.scroller.content
-    let lazyInit2Refresh = false
+    let lazyInitByRefresh = false
     if (slide.loop) {
       let children = slideEls.children
       if (children.length > 1) {
         this.cloneSlideEleForLoop(slideEls)
-        lazyInit2Refresh = true
+        lazyInitByRefresh = true
       } else {
         // Loop does not make any sense if there is only one child.
         slide.loop = false
       }
     }
-    const needRefresh = this.setSlideWidth(slideEls)
-    this.page.currentPage = {
-      x: 0,
-      y: 0,
-      pageX: 0,
-      pageY: 0
-    }
-    this.willChangeToPage = {
-      pageX: 0,
-      pageY: 0
-    }
+    const shouldRefresh = this.setSlideWidth(slideEls)
+    this.setSlideHeight(this.scroll.scroller.wrapper, slideEls)
+
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
 
@@ -86,6 +84,7 @@ export default class Slide {
     this.registorHooks(this.scroll, 'scrollEnd', this.amendCurrentPage)
     this.registorHooks(scrollerHooks, 'beforeStart', this.setTouchFlag)
     this.registorHooks(scrollerHooks, 'scroll', this.scrollMoving)
+    this.registorHooks(scrollerHooks, 'resize', this.resize)
 
     // for mousewheel event
     if (
@@ -120,11 +119,24 @@ export default class Slide {
       this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
     }
 
-    if (!lazyInit2Refresh && !needRefresh) {
+    if (!lazyInitByRefresh && !shouldRefresh) {
       this.initSlideState()
     } else {
       this.scroll.refresh()
     }
+  }
+  resize() {
+    const slideEls = this.scroll.scroller.content
+    const slideWrapper = this.scroll.scroller.wrapper
+    clearTimeout(this.resizeTimeout)
+    this.resizeTimeout = window.setTimeout(() => {
+      this.clearSlideWidth(slideEls)
+      this.clearSlideHeight(slideEls)
+      this.setSlideWidth(slideEls)
+      this.setSlideHeight(slideWrapper, slideEls)
+      this.scroll.refresh()
+    }, this.scroll.options.resizePolling)
+    return true
   }
   next(time?: number, easing?: EaseItem) {
     const { pageX, pageY } = this.page.nextPage()
@@ -195,15 +207,8 @@ export default class Slide {
   private initSlideState() {
     this.page.init()
     this.initThreshold()
-    if (this.page.slideX || this.page.slideY) {
-      let initPageX = this.page.loopX ? 1 : 0
-      let initPageY = this.page.loopY ? 1 : 0
-      this.goTo(
-        this.page.currentPage.pageX || initPageX,
-        this.page.currentPage.pageY || initPageY,
-        0
-      )
-    }
+    const initPage = this.page.getInitPage()
+    this.goTo(initPage.pageX, initPage.pageY, 0)
   }
   private initThreshold() {
     const slideThreshold = this.slideOpt.threshold || 0.1
@@ -275,11 +280,8 @@ export default class Slide {
         pageX: newPos.pageX,
         pageY: newPos.pageY
       }
-      if (
-        newPage.pageX !== this.page.currentPage.pageX ||
-        newPage.pageY !== this.page.currentPage.pageY
-      ) {
-        this.page.currentPage = newPage
+      if (!this.page.isSameWithCurrent(newPage)) {
+        this.page.changeCurrentPage(newPage)
       }
     }
     const changePage = this.page.resetLoopPage()
@@ -291,11 +293,34 @@ export default class Slide {
     // amend willChangeToPage, because willChangeToPage maybe wrong when sliding quickly
     this.pageWillChangeTo(this.page.currentPage)
   }
-  private setSlideWidth(slideEls: HTMLElement): Boolean {
-    if (this.slideOpt.disableSetWidth) {
+  private shouldSetWidthHeight(checkType: 'width' | 'height'): Boolean {
+    type checkOption = [keyof Options, keyof Config]
+    const checkMap = {
+      width: <checkOption>['scrollX', 'disableSetWidth'],
+      height: <checkOption>['scrollY', 'disableSetHeight']
+    }
+    const checkOption = checkMap[checkType]
+    if (!this.scroll.options[checkOption[0]]) {
       return false
     }
-    if (!this.scroll.options.scrollX) {
+    if (this.slideOpt[checkOption[1]]) {
+      return false
+    }
+    return true
+  }
+  private clearSlideWidth(slideEls: HTMLElement): void {
+    if (!this.shouldSetWidthHeight('width')) {
+      return
+    }
+    const children = slideEls.children
+    for (let i = 0; i < children.length; i++) {
+      const slideItemDom = children[i] as HTMLElement
+      slideItemDom.removeAttribute('style')
+    }
+    slideEls.removeAttribute('style')
+  }
+  private setSlideWidth(slideEls: HTMLElement): Boolean {
+    if (!this.shouldSetWidthHeight('width')) {
       return false
     }
     const children = slideEls.children
@@ -306,6 +331,31 @@ export default class Slide {
     }
     slideEls.style.width = slideItemWidth * children.length + 'px'
     return true
+  }
+  private clearSlideHeight(slideEls: HTMLElement) {
+    if (!this.shouldSetWidthHeight('height')) {
+      return
+    }
+    const children = slideEls.children
+    for (let i = 0; i < children.length; i++) {
+      const slideItemDom = children[i] as HTMLElement
+      slideItemDom.removeAttribute('style')
+    }
+  }
+  // height change will not effect minScrollY & maxScrollY
+  private setSlideHeight(
+    slideWrapper: HTMLElement,
+    slideEls: HTMLElement
+  ): void {
+    if (!this.shouldSetWidthHeight('height')) {
+      return
+    }
+    const wrapperHeight = slideWrapper.clientHeight
+    const children = slideEls.children
+    for (let i = 0; i < children.length; i++) {
+      const slideItemDom = children[i] as HTMLElement
+      slideItemDom.style.height = wrapperHeight + 'px'
+    }
   }
   private goTo(
     pageX: number,
@@ -326,12 +376,12 @@ export default class Slide {
       return
     }
     time = time === undefined ? this.getAnimateTime(deltaX, deltaY) : time
-    this.page.currentPage = {
+    this.page.changeCurrentPage({
       x: posX,
       y: posY,
       pageX: newPageInfo.pageX,
       pageY: newPageInfo.pageY
-    }
+    })
     this.pageWillChangeTo(this.page.currentPage)
     this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
   }
@@ -373,12 +423,12 @@ export default class Slide {
     scrollMeta.newX = <number>newPos.x
     scrollMeta.newY = <number>newPos.y
     scrollMeta.easing = this.slideOpt.easing || ease.bounce
-    this.page.currentPage = {
+    this.page.changeCurrentPage({
       x: scrollMeta.newX,
       y: scrollMeta.newY,
       pageX: newPos.pageX,
       pageY: newPos.pageY
-    }
+    })
     this.pageWillChangeTo(this.page.currentPage)
   }
   private scrollMoving(point: Position) {

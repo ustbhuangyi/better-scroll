@@ -88,6 +88,10 @@ let scroll = new BScroll('.wrapper',{
    ```
    `bounce` 可以支持关闭某些边的回弹效果，可以设置对应边的 `key` 为 `false` 即可。
 
+  :::tip
+  如果想要便捷的设置所有边为 true 或者 false，只需要设置 `bounce` 为 true 或 false 即可。
+  :::
+
 ## bounceTime
    - 类型：Number
    - 默认值：800（单位ms，不建议修改）

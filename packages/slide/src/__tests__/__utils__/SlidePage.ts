@@ -15,8 +15,15 @@ export const getRealPage = jest.fn().mockImplementation(page => {
 export const nearestPage = jest.fn()
 export const resetLoopPage = jest.fn()
 export const currentPageSetter = jest.fn(v => v)
+export const changeCurrentPage = jest.fn()
+export const getInitPage = jest.fn()
 export const SlidePage = jest.fn().mockImplementation(() => {
-  let currentPage = {}
+  let currentPage = {
+    x: 0,
+    y: 0,
+    pageX: 0,
+    pageY: 0
+  }
   const slidePage = {
     getPageSize: jest.fn().mockImplementation(() => {
       return {
@@ -24,14 +31,34 @@ export const SlidePage = jest.fn().mockImplementation(() => {
         height: 300
       }
     }),
-    init: () => {},
+    init: () => {
+      currentPage = {
+        x: 0,
+        y: 0,
+        pageX: 0,
+        pageY: 0
+      }
+    },
     change2safePage: change2safePage,
     nextPage: nextPage,
     prevPage: prevPage,
     realPage2Page: realPage2Page,
     getRealPage: getRealPage,
     nearestPage: nearestPage,
-    resetLoopPage: resetLoopPage
+    resetLoopPage: resetLoopPage,
+    getInitPage: getInitPage,
+    changeCurrentPage: (v: {
+      x: number
+      y: number
+      pageX: number
+      pageY: number
+    }) => {
+      changeCurrentPage(v)
+      currentPage = v
+    },
+    isSameWithCurrent: () => {
+      return false
+    }
   }
   Object.defineProperty(slidePage, 'loopX', {
     get: loopXGetter

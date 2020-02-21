@@ -35,7 +35,6 @@
       }
     },
     mounted() {
-      this._setSlideHeight()
       this.init()
     },
     beforeDestroy() {
@@ -61,18 +60,6 @@
       _onScrollEnd() {
         let pageIndex = this.slide.getCurrentPage().pageY
         this.currentPageIndex = pageIndex
-      },
-      _setSlideHeight() {
-        const children = this.$refs.slideGroup.children
-        let height = 0
-        let slideHeight = this.$refs.slide.clientHeight
-        for (let i = 0; i < children.length; i++) {
-          let child = children[i]
-          child.style.height = slideHeight + 'px'
-          height += slideHeight
-        }
-        height += 2 * slideHeight
-        this.$refs.slideGroup.style.height = height + 'px'
       }
     }
   }
@@ -93,7 +80,6 @@
     overflow hidden
     .slide-item
       display inline-block
-      height 100%
       width 100%
       line-height 200px
       text-align center

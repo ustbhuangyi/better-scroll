@@ -187,7 +187,14 @@ Similar to stepX, but this is used on the y-axis direction.
 
 ### disableSetWidth
 
-In default, slide plugin will give the slide wrapper element a width value which is calculated according to the width of a slide item and the number of slide items when scrolling in the x direction. If you want to set the width of slider wrapper by yourself, you need to prohibit this default action by setting this value to false, otherwise your settings of slider wrapper width will be overwrite.
+In default, slide plugin will give the slide wrapper element a width value which is calculated according to the width of a slide item and the number of slide items when scrolling in the x direction. If you want to set the width of slider wrapper by yourself, you need to prohibit this default action by setting this value to false, otherwise your settings of slider wrapper width will be overwritten.
+
+- Type: boolean
+- Default: false
+
+### disableSetHeight
+
+In default, slide plugin will give the slide item element a height value which is calculated according to the height of a slide wrapper when scrolling in the y direction. If you want to set the height of slider item by yourself, you need to prohibit this default action by setting this value to false, otherwise your settings of slider item height will be overwritten.
 
 - Type: boolean
 - Default: false

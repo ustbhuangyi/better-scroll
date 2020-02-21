@@ -103,13 +103,13 @@ yarn add @better-scroll/slide@next
 
   <demo qrcode-url="slide/vertical">
     <template slot="code-template">
-      <<< @/examples/vue/components/zoom/vertical.vue?template
+      <<< @/examples/vue/components/slide/vertical.vue?template
     </template>
     <template slot="code-script">
-      <<< @/examples/vue/components/zoom/vertical.vue?script
+      <<< @/examples/vue/components/slide/vertical.vue?script
     </template>
     <template slot="code-style">
-      <<< @/examples/vue/components/zoom/vertical.vue?style
+      <<< @/examples/vue/components/slide/vertical.vue?style
     </template>
     <slide-vertical slot="demo"></slide-vertical>
   </demo>
@@ -189,6 +189,13 @@ slider 切换时过度动画。
 ### disableSetWidth
 
 默认情况下，在水平方向 slider 时，会根据 slider 元素的的宽度设置其包裹元素的宽度，以使得 slider 效果正常。当你要自己设置 slider 包裹元素的宽度时，需要设置该值为 true，否则你的设置可能会不生效。
+
+- 类型：boolean
+- 默认值：false
+
+### disableSetHeight
+
+默认情况下，在垂直方向 slider 时，会根据 slider 包裹元素的的高度设置其内部元素的高度，以使得全屏的 slider 效果正常。当你要自己设置 slider 内部元素的高度时，需要设置该值为 true，否则你的设置可能会不生效。
 
 - 类型：boolean
 - 默认值：false

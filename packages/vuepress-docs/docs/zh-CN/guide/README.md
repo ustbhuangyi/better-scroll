@@ -6,6 +6,10 @@ BetterScroll 是一款重点解决移动端（已支持 PC）各种滚动场景�
 
 BetterScroll 是使用纯 JavaScript 实现的，这意味着它是无依赖的。
 
+## 线上示例
+
+<img :src="$withBase('/assets/images/qrcode.png')" alt="示例">
+
 ## 起步
 
 BetterScroll 最常见的应用场景是列表滚动，我们来看一下它的 html 结构。
