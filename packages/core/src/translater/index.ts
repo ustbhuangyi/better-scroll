@@ -35,7 +35,8 @@ export default class Translater {
       this.content,
       null
     ) as safeCSSStyleDeclaration
-    let matrix = cssStyle[style.transform].split(')')[0].split(', ')
+//     let matrix = cssStyle[style.transform].split(')')[0].split(', ')
+    let matrix = cssStyle[style.transform].match(/[-\d\.*\d*e\-\d]+/g)
     const x = +(matrix[12] || matrix[4])
     const y = +(matrix[13] || matrix[5])
 
