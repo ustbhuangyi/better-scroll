@@ -7,6 +7,8 @@ import {
   replaceBscrollProperties
 } from './__utils__/bscroll'
 import * as SlidePage from './__utils__/SlidePage'
+import { mockDomClient } from '@better-scroll/core/src/__tests__/__utils__/layout'
+
 jest.mock('@better-scroll/slide/src/SlidePage', () => {
   return require('./__utils__/SlidePage').SlidePage
 })
@@ -44,10 +46,12 @@ function createBScroll(
   }
   bscroll.scroller.scrollTo = mockscrollTo
   const originSlideLen = bscroll.scroller.content.children.length
+  const slideDom = bscroll.scroller.content
   return {
     bscroll,
     mockscrollTo,
-    originSlideLen
+    originSlideLen,
+    slideDom
   }
 }
 
@@ -65,6 +69,7 @@ describe('slide test for SlidePage class', () => {
       'destroy',
       'resize'
     ])
+    jest.useFakeTimers()
   })
 
   beforeEach(() => {
@@ -77,6 +82,7 @@ describe('slide test for SlidePage class', () => {
         return 0
       }
     })
+    jest.clearAllTimers()
   })
   it('should hava right initial value & should off all events when destroy', () => {
     const { bscroll, originSlideLen } = createBScroll(hooks, {
@@ -801,6 +807,52 @@ describe('slide test for SlidePage class', () => {
     slide.next()
 
     expect(pageIndex.pageX).toBe(2)
+    slide.destroy()
+  })
+  it('should reset width when resize', () => {
+    const { bscroll } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: true,
+      scrollY: false,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+    expect(bscroll.scroller.content.style.width).toBe('1200px')
+    hooks.trigger('resize')
+    const childrenDom = bscroll.scroller.content.children
+    for (let i = 0; i < childrenDom.length; i++) {
+      const slideItemDom = childrenDom[i] as HTMLDivElement
+      mockDomClient(slideItemDom, {
+        width: 600
+      })
+    }
+    jest.runAllTimers()
+    expect(bscroll.scroller.content.style.width).toBe('2400px')
+    expect(bscroll.refresh).toBeCalled()
+    slide.destroy()
+  })
+  it('should reset height when resize', () => {
+    const { bscroll } = createBScroll(hooks, {
+      slideNum: 2,
+      slideOpt: {
+        loop: true
+      },
+      scrollX: false,
+      scrollY: true,
+      direction: 'horizon'
+    })
+    const slide = new Slide(bscroll)
+    expect(bscroll.scroller.content.children[0].style.height).toBe('300px')
+    hooks.trigger('resize')
+    mockDomClient(bscroll.scroller.wrapper, {
+      height: 100
+    })
+    jest.runAllTimers()
+    expect(bscroll.scroller.content.children[0].style.height).toBe('100px')
+    expect(bscroll.refresh).toBeCalled()
     slide.destroy()
   })
 })

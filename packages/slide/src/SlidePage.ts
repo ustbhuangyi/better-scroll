@@ -31,7 +31,7 @@ export default class PageInfo {
   currentPage: Page & Position
   constructor(public scroll: BScroll, private slideOpt: Partial<Config>) {}
   init() {
-    this.currentPage = {
+    this.currentPage = this.currentPage || {
       x: 0,
       y: 0,
       pageX: 0,
@@ -71,8 +71,8 @@ export default class PageInfo {
     let initPageX = this.loopX ? 1 : 0
     let initPageY = this.loopY ? 1 : 0
     return {
-      pageX: initPageX,
-      pageY: initPageY
+      pageX: this.currentPage.pageX || initPageX,
+      pageY: this.currentPage.pageY || initPageY
     }
   }
   getRealPage(page?: Page): Page {
