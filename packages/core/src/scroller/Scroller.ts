@@ -270,7 +270,7 @@ export default class Scroller {
   private momentum(pos: TranslaterPoint, duration: number) {
     const meta = {
       time: 0,
-      easing: ease.swiper,
+      easing: ease.swipe,
       newX: pos.x,
       newY: pos.y
     }
