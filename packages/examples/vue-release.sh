@@ -8,7 +8,7 @@ cd dist/vue
 
 git init
 git add -A
-git commit -m 'update docs'
+git commit -m 'update examples'
 
 git push -f git@github.com:better-scroll/examples.git master:gh-pages
 
