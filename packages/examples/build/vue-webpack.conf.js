@@ -10,6 +10,8 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const path = require('path')
 const fs = require('fs')
+const { e2e } = require('yargs').argv
+const execa = require('execa')
 const isProd = process.env.NODE_ENV === 'production'
 
 function resolve(dir) {
@@ -215,4 +217,17 @@ getPackagesName().forEach((name) => {
   webpackConfig.resolve.alias.set(`${name}$`, `${name}/src/index.ts`)
 })
 
-module.exports = webpackConfig.toConfig()
+let config = webpackConfig.toConfig()
+// run test e2e
+if (e2e) {
+  config.devServer.setup = (app, server) => {
+    server.middleware.waitUntilValid(async () => {
+      // back to src directory
+      const cwd = path.join(__dirname, '../../')
+
+      await execa('yarn', ['test:e2e'], { stdio: 'inherit', cwd })
+    })
+  }
+}
+
+module.exports = config
