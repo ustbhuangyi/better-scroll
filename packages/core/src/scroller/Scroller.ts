@@ -49,6 +49,7 @@ export default class Scroller {
     left: number
     top: number
   }
+  _reflow: number
   resizeTimeout: number
   lastClickTime: number | null
   [key: string]: any
@@ -524,7 +525,9 @@ export default class Scroller {
     if (xInBoundary && yInBoundary) {
       return false
     }
-
+    // fix ios 13.4 bouncing
+    // see it in issues 982
+    this._reflow = this.content.offsetHeight
     // out of boundary
     this.scrollTo(x, y, time, easing)
 
