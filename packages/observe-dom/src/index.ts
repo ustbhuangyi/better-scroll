@@ -66,6 +66,7 @@ export default class ObserveDOM {
         }
       }
     }
+
     if (immediateRefresh) {
       this.scroll.refresh()
     } else if (deferredRefresh) {
@@ -87,16 +88,18 @@ export default class ObserveDOM {
     observer.observe(this.scroll.scroller.content, config)
   }
   private shouldNotRefresh() {
-    const scroller = this.scroll.scroller
-    const scrollBehaviorX = scroller.scrollBehaviorX
-    const scrollBehaviorY = scroller.scrollBehaviorY
+    const { plugins, scroller } = this.scroll
+    const { scrollBehaviorX, scrollBehaviorY } = scroller
+    // perform an pulldown action
+    const isPullingDown = (plugins.pullDownRefresh || {}).pulling
+
     let outsideBoundaries =
       scrollBehaviorX.currentPos > scrollBehaviorX.minScrollPos ||
       scrollBehaviorX.currentPos < scrollBehaviorX.maxScrollPos ||
       scrollBehaviorY.currentPos > scrollBehaviorY.minScrollPos ||
       scrollBehaviorY.currentPos < scrollBehaviorY.maxScrollPos
 
-    return scroller.animater.pending || outsideBoundaries
+    return scroller.animater.pending || outsideBoundaries || isPullingDown
   }
   private checkDOMUpdate() {
     const me = this

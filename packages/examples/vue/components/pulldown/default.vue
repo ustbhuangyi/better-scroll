@@ -29,13 +29,20 @@
 
   BScroll.use(PullDown)
 
-  function getOneRandomList(step = 0) {
-    const arr = Array.apply(null, {length: (30 + step)}).map((...args) => args[1])
-    return arr.sort(() => Math.random() - 0.5)
+  function generateData() {
+    const BASE = 20
+    const begin = BASE * STEP
+    const end = BASE * (STEP + 1)
+    let ret = []
+    for(let i = end; i > begin; i--) {
+      ret.push(i)
+    }
+    return ret
   }
 
   const TIME_BOUNCE = 800
   const TIME_STOP = 600
+  const REQUEST_TIME = 3000
   const THRESHOLD = 70
   const STOP = 56
   let STEP = 0
@@ -45,7 +52,7 @@
       return {
         beforePullDown: true,
         isPullingDown: false,
-        dataList: getOneRandomList()
+        dataList: generateData()
       }
     },
     created() {
@@ -59,6 +66,7 @@
         this.bscroll = new BScroll(this.$refs.bsWrapper, {
           scrollY: true,
           bounceTime: TIME_BOUNCE,
+          observeDOM: true,
           pullDownRefresh: {
             threshold: THRESHOLD,
             stop: STOP
@@ -74,7 +82,7 @@
       async pullingDownHandler() {
         this.beforePullDown = false
         this.isPullingDown = true
-        STEP += 10
+        STEP += 1
 
         await this.requestData()
 
@@ -97,7 +105,7 @@
       async requestData() {
         try {
           const newData = await this.ajaxGet(/* url */)
-          this.dataList = newData
+          this.dataList = newData.concat(this.dataList)
         } catch (err) {
           // handle err
           console.log(err)
@@ -106,9 +114,9 @@
       ajaxGet(/* url */) {
         return new Promise(resolve => {
           setTimeout(() => {
-            const dataList = getOneRandomList(STEP)
+            const dataList = generateData(STEP)
             resolve(dataList)
-          }, 1000)
+          }, REQUEST_TIME)
         })
       }
     }
