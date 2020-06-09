@@ -20,7 +20,7 @@ describe('Pulldown', () => {
       element => element.length
     )
 
-    await expect(itemsCounts).toBeGreaterThanOrEqual(30)
+    await expect(itemsCounts).toBeGreaterThanOrEqual(20)
   })
 
   it('should trigger pullingup when BS reached the bottom', async () => {
@@ -36,7 +36,7 @@ describe('Pulldown', () => {
     })
 
     // wait for requesting data
-    await page.waitFor(3000)
+    await page.waitFor(4000)
     const itemsCounts = await page.$$eval(
       '.pulldown-list-item',
       element => element.length
