@@ -257,12 +257,13 @@ export default class Scroller {
   }
 
   private checkFlick(duration: number, deltaX: number, deltaY: number) {
-    // flick
+    const flickMinMovingDistance = 1 // distinguish flick from click
     if (
       this.hooks.events.flick.length > 1 &&
       duration < this.options.flickLimitTime &&
       deltaX < this.options.flickLimitDistance &&
-      deltaY < this.options.flickLimitDistance
+      deltaY < this.options.flickLimitDistance &&
+      (deltaY > flickMinMovingDistance || deltaX > flickMinMovingDistance)
     ) {
       return true
     }
