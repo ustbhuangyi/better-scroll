@@ -58,6 +58,8 @@ export default class PullUp {
   }
 
   finish() {
+    // reset Direction, fix #936
+    this.bscroll.movingDirectionY = Direction.Default
     if (this.watching) {
       this.bscroll.once('scrollEnd', this._watch, this)
     } else {
