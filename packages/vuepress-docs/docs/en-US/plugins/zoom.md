@@ -111,3 +111,15 @@ zoom the scroller to the specified size.
 
 - trigger: After zoom action completing(the animation may not be over yet).
 
+### zooming
+
+- Arguments: Object
+
+|Name|Type|Description|
+|----------|:-----:|:-----------|
+|scale|number|transform scale value|
+|bounceTime|number|transition duration time|
+
+- trigger: zoom action is happening (The zooming event will not be triggered during the transition animation which is used at the end of the zoom action and zoomTo function. In this case, you can use the scale and bounceTime to predict the actual behavior of the transition animation)
+
+- Usage: With zooming events, another thing can scale along with zooming operation as in the example above

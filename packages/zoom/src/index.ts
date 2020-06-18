@@ -49,7 +49,7 @@ export default class Zoom {
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
-    this.scroll.registerType(['zoomStart', 'zoomEnd'])
+    this.scroll.registerType(['zoomStart', 'zoomEnd', 'zooming'])
     this.zoomOpt = this.scroll.options.zoom as Partial<ZoomConfig>
     this.lastTransformScale = this.scale
     this.hooksFn = []
@@ -150,6 +150,10 @@ export default class Zoom {
     const y = this.getNewPos(this.origin.y, lastScale, scrollBehaviorY)
     this.resetBoundaries(this.scale, scrollBehaviorX, 'x', x)
     this.resetBoundaries(this.scale, scrollBehaviorY, 'y', y)
+    this.scroll.trigger(this.scroll.eventTypes.zooming, {
+      scale: this.scale,
+      bounceTime: 0
+    })
     scrollerIns.scrollTo(x, y, 0, undefined, {
       start: {
         scale: this.lastTransformScale
@@ -198,6 +202,10 @@ export default class Zoom {
       scrollBehaviorY.currentPos !== Math.round(newY) ||
       this.scale !== this.lastTransformScale
     ) {
+      this.scroll.trigger(this.scroll.eventTypes.zooming, {
+        scale: this.scale,
+        bounceTime: this.scroll.options.bounceTime
+      })
       scrollerIns.scrollTo(
         newX,
         newY,

@@ -113,3 +113,16 @@ new BScroll('.bs-wrap', {
 
 - 参数：无
 - 触发时机：缩放行为结束后（这时缩放的动画可能并未执行结束）
+
+### zooming
+
+- 参数: Object
+
+|名称|类型|描述|
+|----------|:-----:|:-----------|
+|scale|number|下一帧的scale值|
+|bounceTime|number|变化到scale的动画时间|
+
+- 触发时机：缩放行为正在进行时（当通过 zoomTo 来改变 zoom，或者缩放行为结束时候的过渡动画期间是不会有 zooming 事件派发的。但是你可以通过 zooming 的 scale 和 bounceTime 来预测过渡动画的实际行为）
+
+- 用法: 利用 zooming 事件，可以实现和 zoom 的联动效果。例如上面 demo 中动画。
