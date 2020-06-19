@@ -42,6 +42,9 @@ export default class EventHandler {
   }
 
   private _start(e: TouchEvent) {
+    if (!this.bscroll.scroller.actions.enabled) {
+      return
+    }
     let point = (e.touches ? e.touches[0] : e) as Touch
 
     e.preventDefault()

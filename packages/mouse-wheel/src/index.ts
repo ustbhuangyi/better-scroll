@@ -87,6 +87,9 @@ export default class MouseWheel {
     ])
   }
   wheelHandler(e: CompatibleWheelEvent) {
+    if (!this.scroll.scroller.actions.enabled) {
+      return
+    }
     this.beforeHandler(e)
     // start
     if (!this.wheelStart) {
