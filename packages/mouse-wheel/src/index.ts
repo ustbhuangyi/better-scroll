@@ -116,6 +116,8 @@ export default class MouseWheel {
       this.wheelStart = false
       window.clearTimeout(this.wheelMoveTimer)
       this.wheelMoveTimer = 0
+      this.scroll.scroller.scrollBehaviorX.movingDirection = 0
+      this.scroll.scroller.scrollBehaviorY.movingDirection = 0
       this.scroll.trigger(this.scroll.eventTypes.mousewheelEnd, delta)
     }, delayTime)
   }
@@ -191,7 +193,12 @@ export default class MouseWheel {
       e.stopPropagation()
     }
   }
-  private wheelMove(delta: { x: number; y: number }) {
+  private wheelMove(delta: {
+    x: number
+    y: number
+    directionX: number
+    directionY: number
+  }) {
     if (this.mouseWheelOpt.debounce && this.wheelMoveTimer) {
       this.deltaCache.push(delta)
     } else {
@@ -209,6 +216,10 @@ export default class MouseWheel {
       let newY = this.scroll.y + Math.round(delta.y) + cachedDelta.y
       const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
       const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+      scrollBehaviorX.movingDirection =
+        delta.directionX > 0 ? 1 : delta.directionX < 0 ? -1 : 0
+      scrollBehaviorY.movingDirection =
+        delta.directionY > 0 ? 1 : delta.directionY < 0 ? -1 : 0
       newX = fixInboundValue(
         newX,
         scrollBehaviorX.maxScrollPos,
