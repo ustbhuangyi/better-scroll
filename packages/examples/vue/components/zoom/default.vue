@@ -83,6 +83,7 @@
 .zoom-default
   .zoom-wrapper
     width 100%
+    height 500px
     overflow hidden
     .zoom-items
       display flex

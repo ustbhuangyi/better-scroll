@@ -62,6 +62,10 @@
     {
       name: 'nested-scroll',
       path: '/nested-scroll/'
+    },
+    {
+      name: 'movable',
+      path: '/movable/'
     }
   ]
   export default {

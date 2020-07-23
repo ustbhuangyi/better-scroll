@@ -210,4 +210,4 @@ export default class BScroll extends EventEmitter {
 
 export { Options, MountedBScrollHTMLElement }
 export { TranslaterPoint } from './translater'
-export { default as Behavior } from './scroller/Behavior'
+export { default as Behavior, Boundary } from './scroller/Behavior'

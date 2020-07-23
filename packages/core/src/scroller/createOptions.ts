@@ -34,7 +34,8 @@ export function createBehaviorOptions(
     'momentumLimitDistance',
     'deceleration',
     'swipeBounceTime',
-    'swipeTime'
+    'swipeTime',
+    'movable'
   ].reduce<BehaviorOptions>(
     (prev, cur) => {
       prev[cur] = bsOptions[cur]

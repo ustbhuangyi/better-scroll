@@ -14,8 +14,11 @@ export interface Options {
   swipeTime: number
   bounces: Bounces
   rect: Rect
+  movable: boolean
   [key: string]: number | boolean | Bounces | Rect
 }
+
+export type Boundary = { minScrollPos: number; maxScrollPos: number }
 
 export default class Behavior {
   content: HTMLElement
@@ -33,7 +36,12 @@ export default class Behavior {
   contentSize: number
   hooks: EventEmitter
   constructor(public wrapper: HTMLElement, public options: Options) {
-    this.hooks = new EventEmitter(['momentum', 'end'])
+    this.hooks = new EventEmitter([
+      'beforeComputeBoundary',
+      'computeBoundary',
+      'momentum',
+      'end'
+    ])
     this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
@@ -177,21 +185,36 @@ export default class Behavior {
       this.relativeOffset -= wrapperRect[position]
     }
 
-    this.minScrollPos = 0
-    this.maxScrollPos = this.wrapperSize - this.contentSize
-    if (this.maxScrollPos < 0) {
-      this.maxScrollPos -= this.relativeOffset
-      this.minScrollPos = -this.relativeOffset
+    this.computeBoundary()
+
+    this.direction = 0
+  }
+
+  computeBoundary(enforceScroll = false, min = 0, max = NaN) {
+    this.hooks.trigger(this.hooks.eventTypes.beforeComputeBoundary)
+    if (isNaN(max)) {
+      max = this.wrapperSize - this.contentSize
     }
+    const boundary: Boundary = {
+      minScrollPos: min,
+      maxScrollPos: max
+    }
+    if (boundary.maxScrollPos < 0) {
+      boundary.maxScrollPos -= this.relativeOffset
+      boundary.minScrollPos = -this.relativeOffset
+    }
+    this.hooks.trigger(this.hooks.eventTypes.computeBoundary, boundary)
+
+    this.minScrollPos = boundary.minScrollPos
+    this.maxScrollPos = boundary.maxScrollPos
 
     this.hasScroll =
-      this.options.scrollable && this.maxScrollPos < this.minScrollPos
+      enforceScroll ||
+      (this.options.scrollable && this.maxScrollPos < this.minScrollPos)
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos
       this.contentSize = this.wrapperSize
     }
-
-    this.direction = 0
   }
 
   updatePosition(pos: number) {

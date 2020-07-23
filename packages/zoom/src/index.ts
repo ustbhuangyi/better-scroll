@@ -50,6 +50,7 @@ export default class Zoom {
   constructor(public scroll: BScroll) {
     this.scroll.proxy(propertiesConfig)
     this.scroll.registerType(['zoomStart', 'zoomEnd', 'zooming'])
+    // todo: start logic?
     this.zoomOpt = this.scroll.options.zoom as Partial<ZoomConfig>
     this.lastTransformScale = this.scale
     this.hooksFn = []
@@ -67,6 +68,14 @@ export default class Zoom {
       x: [scrollBehaviorX.minScrollPos, scrollBehaviorX.maxScrollPos],
       y: [scrollBehaviorY.minScrollPos, scrollBehaviorY.maxScrollPos]
     }
+    const beforeComputeBoundaryHook = 'beforeComputeBoundary'
+    this.registorHooks(scrollBehaviorX.hooks, beforeComputeBoundaryHook, () => {
+      scrollBehaviorX.contentSize = this.scaleElementInitSize.width * this.scale
+    })
+    this.registorHooks(scrollBehaviorY.hooks, beforeComputeBoundaryHook, () => {
+      scrollBehaviorY.contentSize =
+        this.scaleElementInitSize.height * this.scale
+    })
     this.registorHooks(scrollerIns.actions.hooks, 'start', (e: TouchEvent) => {
       if (e.touches && e.touches.length > 1) {
         this.zoomStart(e)
@@ -148,20 +157,29 @@ export default class Zoom {
     const scrollBehaviorY = scrollerIns.scrollBehaviorY
     const x = this.getNewPos(this.origin.x, lastScale, scrollBehaviorX)
     const y = this.getNewPos(this.origin.y, lastScale, scrollBehaviorY)
-    this.resetBoundaries(this.scale, scrollBehaviorX, 'x', x)
-    this.resetBoundaries(this.scale, scrollBehaviorY, 'y', y)
+    // this.resetBoundaries(this.scale, scrollBehaviorX, 'x', x)
+    // this.resetBoundaries(this.scale, scrollBehaviorY, 'y', y)
     this.scroll.trigger(this.scroll.eventTypes.zooming, {
       scale: this.scale,
       bounceTime: 0
     })
-    scrollerIns.scrollTo(x, y, 0, undefined, {
-      start: {
-        scale: this.lastTransformScale
+    // todo do not use scrollTo
+    // hack use isSilent
+    scrollerIns.scrollTo(
+      x,
+      y,
+      0,
+      undefined,
+      {
+        start: {
+          scale: this.lastTransformScale
+        },
+        end: {
+          scale: this.scale
+        }
       },
-      end: {
-        scale: this.scale
-      }
-    })
+      true
+    )
   }
   private getFingerDistance(e: TouchEvent): number {
     const firstFinger = e.touches[0]
@@ -228,25 +246,47 @@ export default class Zoom {
     direction: 'x' | 'y',
     extendValue?: number
   ) {
-    let min = this.initScrollBoundary[direction][0]
-    let max = this.initScrollBoundary[direction][1]
-    let hasScroll = false
-    if (scale > 1) {
-      let sideName = direction === 'x' ? 'width' : 'height'
-      max =
-        -this.scaleElementInitSize[sideName] * (scale - 1) -
-        this.initScrollBoundary[direction][1]
-      hasScroll = true
-    }
-    if (!isUndef(extendValue)) {
-      max = Math.min(<number>extendValue, max)
-      min = Math.max(<number>extendValue, min) // max & min & curValue is negative value
-      hasScroll = !!(min || max)
-    }
+    // let min = this.initScrollBoundary[direction][0]
+    // let max = this.initScrollBoundary[direction][1]
+    // let hasScroll = false
+    // if (scale > 1) {
+    //   let sideName = direction === 'x' ? 'width' : 'height'
+    //   max =
+    //     -this.scaleElementInitSize[sideName] * (scale - 1) -
+    //     this.initScrollBoundary[direction][1]
+    //   hasScroll = true
+    // }
+    // if (!isUndef(extendValue)) {
+    //   console.log('zoom0', hasScroll, min, max, extendValue, direction, scale)
+    //   max = Math.min(<number>extendValue, max)
+    //   min = Math.max(<number>extendValue, min) // max & min & curValue is negative value
+    //   hasScroll = !!(min || max)
+    //   console.log('zoom1', hasScroll, min, max)
+    //   scrollBehavior.computeBoundary(hasScroll, min, max)
+    // } else {
+    //   scrollBehavior.computeBoundary(hasScroll)
+    // }
+    scrollBehavior.computeBoundary()
 
-    scrollBehavior.minScrollPos = Math.floor(min)
-    scrollBehavior.maxScrollPos = Math.floor(max)
-    scrollBehavior.hasScroll = hasScroll
+    // let min = this.initScrollBoundary[direction][0]
+    // let max = this.initScrollBoundary[direction][1]
+    // let hasScroll = false
+    // if (scale > 1) {
+    //   let sideName = direction === 'x' ? 'width' : 'height'
+    //   max =
+    //     -this.scaleElementInitSize[sideName] * (scale - 1) -
+    //     this.initScrollBoundary[direction][1]
+    //   hasScroll = true
+    // }
+    // if (!isUndef(extendValue)) {
+    //   max = Math.min(<number>extendValue, max)
+    //   min = Math.max(<number>extendValue, min) // max & min & curValue is negative value
+    //   hasScroll = !!(min || max)
+    // }
+    // console.log('resetBoundaries', hasScroll, min, max)
+    // scrollBehavior.hasScroll = hasScroll
+    // scrollBehavior.minScrollPos = min
+    // scrollBehavior.maxScrollPos = max
   }
   private getNewPos(
     origin: number,
@@ -256,7 +296,11 @@ export default class Zoom {
   ) {
     let newPos = origin - origin * lastScale + scrollBehavior.startPos
     if (fixInBound) {
-      newPos = fixInboundValue(newPos, scrollBehavior.maxScrollPos, 0)
+      newPos = fixInboundValue(
+        newPos,
+        scrollBehavior.maxScrollPos,
+        scrollBehavior.minScrollPos
+      )
     }
     return Math.floor(newPos)
   }
