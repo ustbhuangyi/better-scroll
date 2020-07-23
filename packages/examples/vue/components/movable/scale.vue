@@ -36,6 +36,7 @@
     methods: {
       init() {
         this.bs = new BScroll(this.$refs.scroll, {
+          bindToTarget: true,
           scrollX: true,
           scrollY: true,
           freeScroll: true,

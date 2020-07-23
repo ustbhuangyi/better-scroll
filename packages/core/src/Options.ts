@@ -58,6 +58,7 @@ export class Options {
   HWCompositing: boolean
   useTransition: boolean
   bindToWrapper: boolean
+  bindToTarget: boolean
   disableMouse: boolean | ''
   disableTouch: boolean
   autoBlur: boolean
@@ -112,6 +113,7 @@ export class Options {
     this.useTransition = true
 
     this.bindToWrapper = false
+    this.bindToTarget = false
     this.disableMouse = hasTouch
     this.disableTouch = !hasTouch
     this.autoBlur = true

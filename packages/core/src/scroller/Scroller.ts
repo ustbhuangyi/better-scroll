@@ -101,7 +101,7 @@ export default class Scroller {
     this.animater = createAnimater(this.content, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
-      wrapper,
+      this.options.bindToTarget ? this.content : wrapper,
       createActionsHandlerOptions(this.options)
     )
 
