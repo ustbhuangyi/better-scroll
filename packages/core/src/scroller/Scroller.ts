@@ -1,8 +1,8 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
-import { Options as BScrollOptions, BounceConfig } from '../Options'
-import Behavior from './Behavior'
+import { OptionsConstructor as BScrollOptions, BounceConfig } from '../Options'
+import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
 import {
   createActionsHandlerOptions,

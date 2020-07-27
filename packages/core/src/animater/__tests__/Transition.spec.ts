@@ -92,7 +92,7 @@ describe('Transition Class test suit', () => {
     transition.destroy()
   })
 
-  it('should not trigger end hook with isSlient=true,time=0', () => {
+  it('should not trigger end hook with isSilent=true,time=0', () => {
     const { transition, translater, dom } = createTransition(0)
     const onEnd = jest.fn()
     transition.hooks.on('end', onEnd)
@@ -115,7 +115,7 @@ describe('Transition Class test suit', () => {
     expect(onEnd).not.toHaveBeenCalled()
     transition.destroy()
   })
-  it('should trigger end hook with isSlient=false,time=0', () => {
+  it('should trigger end hook with isSilent=false,time=0', () => {
     const { transition, translater, dom } = createTransition(0)
     const onEnd = jest.fn()
     transition.hooks.on('end', onEnd)

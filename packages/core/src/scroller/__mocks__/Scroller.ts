@@ -1,6 +1,6 @@
 import createAnimater from '../../animater'
 import Translater from '../../translater'
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import ActionsHandler from '../../base/ActionsHandler'
 import Actions from '../Actions'
 

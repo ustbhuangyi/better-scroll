@@ -1,4 +1,4 @@
-import BetterScrollCore from '@better-scroll/core'
+import BScroll from '@better-scroll/core'
 import MouseWheel from '@better-scroll/mouse-wheel'
 import ObserveDom from '@better-scroll/observe-dom'
 import PullDownRefresh from '@better-scroll/pull-down'
@@ -11,7 +11,33 @@ import NestedScroll from '@better-scroll/nested-scroll'
 import InfinityScroll from '@better-scroll/infinity'
 import Movable from '@better-scroll/movable'
 
-BetterScrollCore.use(MouseWheel)
+export {
+  createBScroll,
+  BScrollInstance,
+  Options,
+  CustomOptions,
+  TranslaterPoint,
+  MountedBScrollHTMLElement,
+  Behavior,
+  Boundary,
+  CustomAPI
+} from '@better-scroll/core'
+
+export {
+  MouseWheel,
+  ObserveDom,
+  PullDownRefresh,
+  PullUpLoad,
+  ScrollBar,
+  Slide,
+  Wheel,
+  Zoom,
+  NestedScroll,
+  InfinityScroll,
+  Movable
+}
+
+BScroll.use(MouseWheel)
   .use(ObserveDom)
   .use(PullDownRefresh)
   .use(PullUpLoad)
@@ -23,4 +49,4 @@ BetterScrollCore.use(MouseWheel)
   .use(InfinityScroll)
   .use(Movable)
 
-export default BetterScrollCore
+export default BScroll

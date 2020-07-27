@@ -43,7 +43,7 @@
     methods: {
       init() {
         clearTimeout(this.playTimer)
-        this.slide = new BScroll(this.$refs.slide, {
+        const slide = new BScroll(this.$refs.slide, {
           scrollX: false,
           scrollY: true,
           slide: {
@@ -55,6 +55,8 @@
           bounce: false,
           stopPropagation: true
         })
+        slide.scrollTo()
+        this.slide = slide
         this.slide.on('scrollEnd', this._onScrollEnd)
       },
       _onScrollEnd() {

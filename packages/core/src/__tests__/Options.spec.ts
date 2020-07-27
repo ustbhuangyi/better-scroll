@@ -1,10 +1,10 @@
-import { Options } from '../Options'
+import { OptionsConstructor } from '../Options'
 
 describe('BetterScroll Options', () => {
-  let options: Options
+  let options: OptionsConstructor
 
   beforeEach(() => {
-    options = new Options()
+    options = new OptionsConstructor()
   })
   afterEach(() => {
     jest.clearAllMocks()

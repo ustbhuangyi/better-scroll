@@ -1,4 +1,4 @@
-import BScroll, { TranslaterPoint, Behavior } from '@better-scroll/core'
+import BScroll, { Behavior, TranslaterPoint } from '@better-scroll/core'
 import propertiesConfig from './propertiesConfig'
 import {
   getDistance,
@@ -11,15 +11,20 @@ import {
   EventEmitter
 } from '@better-scroll/shared-utils'
 
-interface ZoomConfig {
-  start: number
-  min: number
-  max: number
+export interface ZoomConfig {
+  start?: number
+  min?: number
+  max?: number
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     zoom?: ZoomConfig
+  }
+  interface CustomAPI {
+    zoom: {
+      zoomTo: Zoom['zoomTo']
+    }
   }
 }
 
@@ -37,7 +42,7 @@ export default class Zoom {
   static pluginName = 'zoom'
   origin: Point
   scale = 1
-  private zoomOpt: Partial<ZoomConfig>
+  private zoomOpt: ZoomConfig
   private startDistance: number
   private startScale: number
   private wrapper: HTMLElement
@@ -51,7 +56,7 @@ export default class Zoom {
     this.scroll.proxy(propertiesConfig)
     this.scroll.registerType(['zoomStart', 'zoomEnd', 'zooming'])
     // todo: start logic?
-    this.zoomOpt = this.scroll.options.zoom as Partial<ZoomConfig>
+    this.zoomOpt = this.scroll.options.zoom as ZoomConfig
     this.lastTransformScale = this.scale
     this.hooksFn = []
     this.init()

@@ -1,8 +1,8 @@
 import ActionsHandler from '../base/ActionsHandler'
-import Behavior from './Behavior'
+import { Behavior } from './Behavior'
 import DirectionLockAction from './DirectionLock'
 import { Animater } from '../animater'
-import { Options as BScrollOptions } from '../Options'
+import { OptionsConstructor as BScrollOptions } from '../Options'
 import { TranslaterPoint } from '../translater'
 import {
   preventDefaultExceptionFn,

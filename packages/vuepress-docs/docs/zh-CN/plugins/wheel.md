@@ -113,7 +113,7 @@ BetterScroll 结合 Wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
 **返回值**：当前选中项的索引
 
-### wheelTo(index = 0, time = 0, ease?: EaseItem, isSlient?: boolean)
+### wheelTo(index = 0, time = 0, ease?: EaseItem, isSilent?: boolean)
 
 滚动至对应索引的 item
 
@@ -124,4 +124,4 @@ BetterScroll 结合 Wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 |index|number|索引（下标从 0 开始）|
 |time|number|动画的时长，单位为毫秒|
 |ease|?:EaseItem|缓存函数，可在 `packages/shared-utils/src/ease` 查看，一般可不传|
-|isSlient|?:boolean|一般为 false，如果为 true，那么在 time 为 0 的时候，是不会派发 scroll 和 scrollEnd 钩子|
+|isSilent|?:boolean|一般为 false，如果为 true，那么在 time 为 0 的时候，是不会派发 scroll 和 scrollEnd 钩子|

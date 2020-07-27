@@ -2,7 +2,7 @@ import BScroll, { Behavior, Boundary } from '@better-scroll/core'
 import { ApplyOrder, EventEmitter } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     movable?: boolean
   }
 }

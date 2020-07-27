@@ -1,7 +1,7 @@
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import createAnimater from '../../animater'
 import Translater from '../../translater'
-import { Options } from '../../Options'
+import { OptionsConstructor } from '../../Options'
 import ActionsHandler from '../../base/ActionsHandler'
 
 jest.mock('../Behavior')
@@ -26,7 +26,7 @@ describe('Actions Class tests', () => {
 
     let content = document.createElement('div')
     let wrapper = document.createElement('div')
-    let bscrollOptions = new Options() as any
+    let bscrollOptions = new OptionsConstructor() as any
     let scrollBehaviorX = new Behavior(content, bscrollOptions)
     let scrollBehaviorY = new Behavior(content, bscrollOptions)
     let actionsHandler = new ActionsHandler(wrapper, bscrollOptions)

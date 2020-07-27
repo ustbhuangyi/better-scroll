@@ -20,7 +20,7 @@ export interface Options {
 
 export type Boundary = { minScrollPos: number; maxScrollPos: number }
 
-export default class Behavior {
+export class Behavior {
   content: HTMLElement
   currentPos: number
   startPos: number

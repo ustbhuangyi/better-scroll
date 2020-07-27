@@ -33,4 +33,4 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
   }
 })
 
-export default Behavior
+export { Behavior }

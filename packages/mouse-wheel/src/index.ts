@@ -9,8 +9,7 @@ import {
   ApplyOrder
 } from '@better-scroll/shared-utils'
 
-export type mouseWheelOptions = Partial<MouseWheelConfig> | boolean | undefined
-export interface MouseWheelConfig {
+export interface MouseWheelOptions {
   speed?: number
   invert?: boolean
   easeTime?: number
@@ -19,7 +18,7 @@ export interface MouseWheelConfig {
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     /**
      * for mouse wheel
      * mouseWheel: {
@@ -30,7 +29,7 @@ declare module '@better-scroll/core' {
      *   throttle: 400
      * }
      */
-    mouseWheel?: mouseWheelOptions
+    mouseWheel?: MouseWheelOptions
   }
 }
 
@@ -44,7 +43,7 @@ interface CompatibleWheelEvent extends WheelEvent {
 export default class MouseWheel {
   static pluginName = 'mouseWheel'
   static applyOrder = ApplyOrder.Pre
-  public mouseWheelOpt: Partial<MouseWheelConfig>
+  public mouseWheelOpt: MouseWheelOptions
   private eventRegistor: EventRegister
   private wheelEndTimer: number
   private wheelMoveTimer: number
@@ -53,7 +52,7 @@ export default class MouseWheel {
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     scroll.registerType(['mousewheelMove', 'mousewheelStart', 'mousewheelEnd'])
-    this.mouseWheelOpt = scroll.options.mouseWheel as Partial<MouseWheelConfig>
+    this.mouseWheelOpt = scroll.options.mouseWheel as MouseWheelOptions
     this.deltaCache = []
     this.registorEvent()
     this.hooksFn = []

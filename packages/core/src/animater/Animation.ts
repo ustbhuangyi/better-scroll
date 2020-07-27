@@ -14,7 +14,7 @@ export default class Animation extends Base {
     endPoint: TranslaterPoint,
     time: number,
     easingFn: EaseFn | string,
-    isSlient?: boolean
+    isSilent?: boolean
   ) {
     // time is 0
     if (!time) {
@@ -25,7 +25,7 @@ export default class Animation extends Base {
       // so we forceupdate by reflow
       this._reflow = this.content.offsetHeight
       // no need to dispatch move and end when slient
-      if (isSlient) return
+      if (isSilent) return
 
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)

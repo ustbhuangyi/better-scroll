@@ -113,7 +113,7 @@ Get the index of the currently selected item.
 
 **return**：The index of the currently selected item
 
-### wheelTo(index = 0, time = 0, ease?: EaseItem, isSlient?: boolean)
+### wheelTo(index = 0, time = 0, ease?: EaseItem, isSilent?: boolean)
 
 Scroll to the item of the corresponding index.
 
@@ -124,4 +124,4 @@ Scroll to the item of the corresponding index.
 |index|number|Index(subscript starts at 0)|
 |time|number|The duration of the animation, in milliseconds|
 |ease|?:EaseItem|viewed in `packages/shared-utils/src/ease`, generally not passed|
-|isSlient|?:boolean|Usually false, if true, then scroll and scrollEnd hooks will not be dispatched when time is 0|
+|isSilent|?:boolean|Usually false, if true, then scroll and scrollEnd hooks will not be dispatched when time is 0|

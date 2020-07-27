@@ -15,7 +15,7 @@ export interface ScrollbarConfig {
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     scrollbar?: scrollbarOptions
   }
 }
