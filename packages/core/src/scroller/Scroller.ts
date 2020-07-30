@@ -16,6 +16,7 @@ import {
   preventDefaultExceptionFn,
   TouchEvent,
   isAndroid,
+  isIOSBadVersion,
   click,
   dblclick,
   tap,
@@ -524,9 +525,12 @@ export default class Scroller {
     if (xInBoundary && yInBoundary) {
       return false
     }
-    // fix ios 13.4 bouncing
-    // see it in issues 982
-    this._reflow = this.content.offsetHeight
+
+    if (isIOSBadVersion) {
+      // fix ios 13.4 bouncing
+      // see it in issues 982
+      this._reflow = this.content.offsetHeight
+    }
     // out of boundary
     this.scrollTo(x, y, time, easing)
 
