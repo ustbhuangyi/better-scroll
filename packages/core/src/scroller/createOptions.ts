@@ -44,7 +44,7 @@ export function createBehaviorOptions(
     {} as BehaviorOptions
   )
   // add extra property
-  options.scrollable = bsOptions[extraProp]
+  options.scrollable = !!bsOptions[extraProp]
   options.bounces = bounces
   options.rect = rect
   return options

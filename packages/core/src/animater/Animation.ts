@@ -57,13 +57,13 @@ export default class Animation extends Base {
 
       now = (now - startTime) / duration
       let easing = easingFn(now)
-      const newPoint = {} as { [key: string]: any }
+      const newPoint = {} as TranslaterPoint
       Object.keys(endPoint).forEach(key => {
         const startValue = startPoint[key]
         const endValue = endPoint[key]
         newPoint[key] = (endValue - startValue) * easing + startValue
       })
-      this.translate(<TranslaterPoint>newPoint)
+      this.translate(newPoint)
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)

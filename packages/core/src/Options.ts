@@ -61,7 +61,7 @@ export interface DefOptions {
   useTransition?: boolean
   bindToWrapper?: boolean
   bindToTarget?: boolean
-  disableMouse?: boolean | ''
+  disableMouse?: boolean
   disableTouch?: boolean
   autoBlur?: boolean
   translateZ?: string
@@ -107,7 +107,7 @@ export class OptionsConstructor implements Options {
   useTransition: boolean
   bindToWrapper: boolean
   bindToTarget: boolean
-  disableMouse: boolean | ''
+  disableMouse: boolean
   disableTouch: boolean
   autoBlur: boolean
   translateZ: string
@@ -208,8 +208,8 @@ export class OptionsConstructor implements Options {
   resolveBounce() {
     const directions = ['top', 'right', 'bottom', 'left']
     const bounce = this.bounce
-    if (bounce === false || bounce === true) {
-      this.bounce = makeMap(directions, bounce as boolean)
+    if (typeof bounce === 'boolean') {
+      this.bounce = makeMap(directions, bounce)
     }
   }
 }

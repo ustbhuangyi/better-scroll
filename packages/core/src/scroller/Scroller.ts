@@ -28,9 +28,7 @@ import {
   EventRegister
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
-export interface MountedBScrollHTMLElement extends HTMLElement {
-  isBScrollContainer?: boolean
-}
+import { MountedBScrollHTMLElement } from '../BScroll'
 
 export default class Scroller {
   wrapper: HTMLElement

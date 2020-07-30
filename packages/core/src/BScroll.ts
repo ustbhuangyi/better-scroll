@@ -32,6 +32,10 @@ interface PropertyConfig {
 
 type ElementParam = HTMLElement | string
 
+export interface MountedBScrollHTMLElement extends HTMLElement {
+  isBScrollContainer?: boolean
+}
+
 export class BScrollConstructor<O = {}> extends EventEmitter {
   static plugins: PluginItem[] = []
   static pluginsMap: PluginsMap = {}
@@ -107,7 +111,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     this.init(wrapper)
   }
 
-  private init(wrapper: HTMLElement) {
+  private init(wrapper: MountedBScrollHTMLElement) {
     this.wrapper = wrapper
 
     // mark wrapper to recognize bs instance by DOM attribute
