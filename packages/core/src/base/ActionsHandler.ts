@@ -48,12 +48,12 @@ export default class ActionsHandler {
   }
 
   private handleDOMEvents() {
-    const { bindToWrapper, disableMouse, disableTouch, click } = this.options
+    const { bindToWrapper, disableMouse, disableTouch, click, isTouchScreen } = this.options
     const wrapper = this.wrapper
     const target = bindToWrapper ? wrapper : window
     const wrapperEvents = []
     const targetEvents = []
-    const shouldRegisterTouch = hasTouch && !disableTouch
+    const shouldRegisterTouch = (hasTouch || isTouchScreen) && !disableTouch
     const shouldRegisterMouse = !disableMouse
 
     if (click) {

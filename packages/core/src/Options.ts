@@ -63,6 +63,7 @@ export class Options {
   autoBlur: boolean
   translateZ: string
   dblclick: dblclickOptions
+  isTouchScreen: boolean
 
   constructor() {
     this.startX = 0
@@ -115,6 +116,7 @@ export class Options {
     this.disableMouse = hasTouch
     this.disableTouch = !hasTouch
     this.autoBlur = true
+    this.isTouchScreen = false
   }
   merge(options?: { [key: string]: any }) {
     if (!options) return this
