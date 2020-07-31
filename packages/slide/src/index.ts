@@ -6,7 +6,8 @@ import {
   ease,
   EaseItem,
   Direction,
-  EventEmitter
+  EventEmitter,
+  removeSizeStyle
 } from '@better-scroll/shared-utils'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
@@ -319,9 +320,9 @@ export default class Slide {
     const children = slideEls.children
     for (let i = 0; i < children.length; i++) {
       const slideItemDom = children[i] as HTMLElement
-      slideItemDom.removeAttribute('style')
+      removeSizeStyle(slideItemDom, 'width')
     }
-    slideEls.removeAttribute('style')
+    removeSizeStyle(slideEls, 'width')
   }
   private setSlideWidth(slideEls: HTMLElement): Boolean {
     if (!this.shouldSetWidthHeight('width')) {
@@ -343,9 +344,9 @@ export default class Slide {
     const children = slideEls.children
     for (let i = 0; i < children.length; i++) {
       const slideItemDom = children[i] as HTMLElement
-      slideItemDom.removeAttribute('style')
+      removeSizeStyle(slideItemDom, 'height')
     }
-    slideEls.removeAttribute('style')
+    removeSizeStyle(slideEls, 'height')
   }
   // height change will not effect minScrollY & maxScrollY
   private setSlideHeight(
