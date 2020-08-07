@@ -115,8 +115,8 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     this.wrapper = wrapper
 
     // mark wrapper to recognize bs instance by DOM attribute
-    ;(wrapper as any).isBScrollContainer = true
-    this.scroller = new Scroller(wrapper as HTMLElement, this.options)
+    wrapper.isBScrollContainer = true
+    this.scroller = new Scroller(wrapper, this.options)
 
     this.eventBubbling()
     this.handleAutoBlur()
@@ -168,13 +168,13 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
 
   private eventBubbling() {
     bubbling(this.scroller.hooks, this, [
-      'beforeScrollStart',
-      'scrollStart',
-      'scroll',
-      'scrollEnd',
-      'scrollCancel',
-      'touchEnd',
-      'flick'
+      this.eventTypes.beforeScrollStart,
+      this.eventTypes.scrollStart,
+      this.eventTypes.scroll,
+      this.eventTypes.scrollEnd,
+      this.eventTypes.scrollCancel,
+      this.eventTypes.touchEnd,
+      this.eventTypes.flick
     ])
   }
 

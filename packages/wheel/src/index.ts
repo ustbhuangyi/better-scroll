@@ -192,7 +192,8 @@ export default class Wheel {
     this.scroll.minScrollY = 0
 
     scrollBehaviorY.hasScroll =
-      scrollBehaviorY.options && this.scroll.maxScrollY < this.scroll.minScrollY
+      scrollBehaviorY.options.scrollable &&
+      this.scroll.maxScrollY < this.scroll.minScrollY
   }
 
   getSelectedIndex() {

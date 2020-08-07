@@ -2,7 +2,7 @@ import BScroll from '@better-scroll/core'
 import {
   warn,
   preventDefaultExceptionFn,
-  fixInboundValue,
+  between,
   EventRegister,
   EventEmitter,
   Direction,
@@ -219,12 +219,12 @@ export default class MouseWheel {
         delta.directionX > 0 ? 1 : delta.directionX < 0 ? -1 : 0
       scrollBehaviorY.movingDirection =
         delta.directionY > 0 ? 1 : delta.directionY < 0 ? -1 : 0
-      newX = fixInboundValue(
+      newX = between(
         newX,
         scrollBehaviorX.maxScrollPos,
         scrollBehaviorX.minScrollPos
       )
-      newY = fixInboundValue(
+      newY = between(
         newY,
         scrollBehaviorY.maxScrollPos,
         scrollBehaviorY.minScrollPos

@@ -187,7 +187,7 @@ export class Behavior {
 
     this.computeBoundary()
 
-    this.direction = 0
+    this.direction = Direction.Default
   }
 
   computeBoundary(enforceScroll = false, min = 0, max = NaN) {
@@ -211,6 +211,7 @@ export class Behavior {
     this.hasScroll =
       enforceScroll ||
       (this.options.scrollable && this.maxScrollPos < this.minScrollPos)
+
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos
       this.contentSize = this.wrapperSize

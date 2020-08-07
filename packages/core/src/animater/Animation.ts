@@ -13,19 +13,11 @@ export default class Animation extends Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easingFn: EaseFn | string,
-    isSilent?: boolean
+    easingFn: EaseFn | string
   ) {
     // time is 0
     if (!time) {
       this.translate(endPoint)
-      // if we change content's transformY in a tick
-      // such as: 0 -> 50px -> 0
-      // transitionend will not be triggered
-      // so we forceupdate by reflow
-      this._reflow = this.content.offsetHeight
-      // no need to dispatch move and end when slient
-      if (isSilent) return
 
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
@@ -41,11 +33,9 @@ export default class Animation extends Base {
     easingFn: EaseFn
   ) {
     let startTime = getNow()
-    let destTime = startTime + duration
-
+    const destTime = startTime + duration
     const step = () => {
       let now = getNow()
-
       // js animation end
       if (now >= destTime) {
         this.translate(endPoint)

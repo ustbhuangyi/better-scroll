@@ -29,6 +29,7 @@ import {
   EventRegister
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
+import { isSamePoint } from '../utils/compare'
 import { MountedBScrollHTMLElement } from '../BScroll'
 
 export default class Scroller {
@@ -68,7 +69,6 @@ export default class Scroller {
       'scrollCancel',
       'momentum',
       'scrollTo',
-      'ignoreDisMoveForSamePos',
       'scrollToElement',
       'resize'
     ])
@@ -228,7 +228,6 @@ export default class Scroller {
           return true
         }
         this.animater.setForceStopped(false)
-
         // reset if we are outside of the boundaries
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
           return true
@@ -418,8 +417,7 @@ export default class Scroller {
     extraTransform = {
       start: {},
       end: {}
-    },
-    isSilent?: boolean
+    }
   ) {
     easing = !easing ? ease.bounce : easing
     const easingFn = this.options.useTransition ? easing.style : easing.fn
@@ -437,13 +435,11 @@ export default class Scroller {
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
-    if (!this.hooks.trigger(this.hooks.eventTypes.ignoreDisMoveForSamePos)) {
-      // it is an useless move
-      if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
-        return
-      }
-    }
-    this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
+
+    // it is an useless move
+    if (isSamePoint(startPoint, endPoint)) return
+
+    this.animater.move(startPoint, endPoint, time, easingFn)
   }
 
   scrollToElement(

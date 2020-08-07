@@ -1,6 +1,6 @@
 import BScroll, { Options } from '@better-scroll/core'
 import {
-  fixInboundValue,
+  between,
   prepend,
   removeChild,
   ease,
@@ -183,16 +183,8 @@ export default class Slide {
     }
 
     return this.page.nearestPage(
-      fixInboundValue(
-        x,
-        scrollBehaviorX.maxScrollPos,
-        scrollBehaviorX.minScrollPos
-      ),
-      fixInboundValue(
-        y,
-        scrollBehaviorY.maxScrollPos,
-        scrollBehaviorY.minScrollPos
-      ),
+      between(x, scrollBehaviorX.maxScrollPos, scrollBehaviorX.minScrollPos),
+      between(y, scrollBehaviorY.maxScrollPos, scrollBehaviorY.minScrollPos),
       scrollBehaviorX.direction,
       scrollBehaviorY.direction
     )
@@ -273,12 +265,12 @@ export default class Slide {
       const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
       const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
       const newPos = this.page.nearestPage(
-        fixInboundValue(
+        between(
           this.scroll.x,
           scrollBehaviorX.maxScrollPos,
           scrollBehaviorX.minScrollPos
         ),
-        fixInboundValue(
+        between(
           this.scroll.y,
           scrollBehaviorY.maxScrollPos,
           scrollBehaviorY.minScrollPos
