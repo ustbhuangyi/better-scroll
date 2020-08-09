@@ -2,13 +2,17 @@ import BScroll, { Behavior, TranslaterPoint } from '@better-scroll/core'
 import propertiesConfig from './propertiesConfig'
 import {
   getDistance,
+  ease,
   between,
   offsetToBody,
   getRect,
   DOMRect,
   style,
   EventEmitter,
-  extend
+  extend,
+  getNow,
+  requestAnimationFrame,
+  cancelAnimationFrame
 } from '@better-scroll/shared-utils'
 
 export interface ZoomConfig {
@@ -37,10 +41,10 @@ declare module '@better-scroll/core' {
 interface Point {
   x: number
   y: number
-  scale: number
+  baseScale: number
 }
 
-interface TransformFormula {
+interface ResolveFormula {
   left(): number
   top(): number
   right(): number
@@ -76,6 +80,16 @@ export default class Zoom {
     this.handleHooks()
 
     this.tryInitialZoomTo(this.zoomOpt)
+  }
+
+  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime: number) {
+    ;[x, y] = this.resolveOrigin([x, y])
+    const origin: Point = {
+      x,
+      y,
+      baseScale: this.scale
+    }
+    this._doZoomTo(scale, origin, bounceTime, true)
   }
 
   private handleBScroll() {
@@ -196,7 +210,7 @@ export default class Zoom {
   }
 
   // getter or setter operation
-  fingersOperation(amounts?: number): number | void {
+  private fingersOperation(amounts?: number): number | void {
     if (typeof amounts === 'number') {
       this.numberOfFingers = amounts
     } else {
@@ -204,17 +218,104 @@ export default class Zoom {
     }
   }
 
-  zoomTo(scale: number, x: OriginX, y: OriginY, time?: number) {
-    // TODO full hooks logic, like zoomStart, zooming, zoomEnd
-    ;[x, y] = this.transformOrigin([x, y])
+  private _doZoomTo(
+    scale: number,
+    origin: Point,
+    time: number = this.zoomOpt.bounceTime,
+    useCurrentPos = false
+  ) {
+    const { min, max } = this.zoomOpt
+    const fromScale = this.scale
+    const toScale = between(scale, min, max)
+
+      // dispatch zooming hooks
+    ;(() => {
+      if (time === 0) {
+        this.scroll.trigger(this.scroll.eventTypes.zooming, {
+          scale: toScale
+        })
+        return
+      }
+      if (time > 0) {
+        let timer: number
+        const startTime = getNow()
+        const endTime = startTime + time
+        const scheduler = () => {
+          const now = getNow()
+          if (now >= endTime) {
+            this.scroll.trigger(this.scroll.eventTypes.zooming, {
+              scale: toScale
+            })
+            cancelAnimationFrame(timer)
+            return
+          }
+          const ratio = ease.bounce.fn((now - startTime) / time)
+          const currentScale = ratio * (toScale - fromScale) + fromScale
+          this.scroll.trigger(this.scroll.eventTypes.zooming, {
+            scale: currentScale
+          })
+          timer = requestAnimationFrame(scheduler)
+        }
+        // start scheduler job
+        scheduler()
+      }
+    })()
+
     // suppose you are zooming by two fingers
     this.fingersOperation(2)
-    this._zoomTo(scale, this.scale, { x, y, scale: this.scale }, time)
+    this._zoomTo(toScale, fromScale, origin, time, useCurrentPos)
   }
 
-  transformOrigin(rawOrigin: [OriginX, OriginY]) {
+  private _zoomTo(
+    toScale: number,
+    fromScale: number,
+    origin: Point,
+    time: number,
+    useCurrentPos = false
+  ) {
+    const ratio = toScale / origin.baseScale
+    this.setScale(toScale)
+
+    const scrollerIns = this.scroll.scroller
+    const scrollBehaviorX = scrollerIns.scrollBehaviorX
+    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+
+    this.resetBoundaries([scrollBehaviorX, scrollBehaviorY])
+    // position is restrained in boundary
+    const newX = this.getNewPos(
+      origin.x,
+      ratio,
+      scrollBehaviorX,
+      true,
+      useCurrentPos
+    )
+    const newY = this.getNewPos(
+      origin.y,
+      ratio,
+      scrollBehaviorY,
+      true,
+      useCurrentPos
+    )
+
+    if (
+      scrollBehaviorX.currentPos !== Math.round(newX) ||
+      scrollBehaviorY.currentPos !== Math.round(newY) ||
+      toScale !== fromScale
+    ) {
+      scrollerIns.scrollTo(newX, newY, time, ease.bounce, {
+        start: {
+          scale: fromScale
+        },
+        end: {
+          scale: toScale
+        }
+      })
+    }
+  }
+
+  private resolveOrigin(rawOrigin: [OriginX, OriginY]) {
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
-    const transformFormula: TransformFormula = {
+    const resolveFormula: ResolveFormula = {
       left() {
         return 0
       },
@@ -222,23 +323,23 @@ export default class Zoom {
         return 0
       },
       right() {
-        return scrollBehaviorX.wrapperSize
+        return scrollBehaviorX.contentSize
       },
       bottom() {
-        return scrollBehaviorY.wrapperSize
+        return scrollBehaviorY.contentSize
       },
       center(index: number) {
         const baseSize =
           index === 0
-            ? scrollBehaviorX.wrapperSize
-            : scrollBehaviorY.wrapperSize
+            ? scrollBehaviorX.contentSize
+            : scrollBehaviorY.contentSize
         return baseSize / 2
       }
     }
     return rawOrigin.map((raw, index) => {
       const origin = raw
       if (typeof origin === 'number') return origin
-      return transformFormula[origin](index)
+      return resolveFormula[origin](index)
     })
   }
 
@@ -259,7 +360,7 @@ export default class Zoom {
         Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 +
         top -
         this.scroll.y,
-      scale: this.startScale
+      baseScale: this.startScale
     }
     this.scroll.trigger(this.scroll.eventTypes.beforeZoomStart)
   }
@@ -289,14 +390,36 @@ export default class Zoom {
     const scrollerIns = this.scroll.scroller
     const scrollBehaviorX = scrollerIns.scrollBehaviorX
     const scrollBehaviorY = scrollerIns.scrollBehaviorY
-    const x = this.getNewPos(this.origin.x, ratio, scrollBehaviorX)
-    const y = this.getNewPos(this.origin.y, ratio, scrollBehaviorY)
+    const x = this.getNewPos(
+      this.origin.x,
+      ratio,
+      scrollBehaviorX,
+      false,
+      false
+    )
+    const y = this.getNewPos(
+      this.origin.y,
+      ratio,
+      scrollBehaviorY,
+      false,
+      false
+    )
 
     this.scroll.trigger(this.scroll.eventTypes.zooming, {
       scale: this.scale,
       bounceTime: 0
     })
     scrollerIns.translater.translate({ x, y, scale: endScale })
+  }
+
+  zoomEnd() {
+    if (!this.zoomed) return
+    // if out of boundary, do rebound!
+    if (this.shouldRebound()) {
+      this._doZoomTo(this.scale, this.origin, this.zoomOpt.bounceTime)
+      return
+    }
+    this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
   }
 
   private getFingerDistance(e: TouchEvent): number {
@@ -307,97 +430,21 @@ export default class Zoom {
 
     return getDistance(deltaX, deltaY)
   }
-  zoomEnd() {
-    if (!this.zoomed) return
+
+  private shouldRebound(): boolean {
     const { min, max } = this.zoomOpt
-    const needRebound = this.scale !== between(this.scale, min, max)
-    // if out of boundary, do rebound!
-    if (needRebound) {
-      this._zoomTo(this.scale, this.scale, this.origin)
-      return
+    const currentScale = this.scale
+    // scale exceeded!
+    if (currentScale !== between(currentScale, min, max)) {
+      return true
     }
 
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
     // enlarge boundaries manually when zoom is end
     this.resetBoundaries([scrollBehaviorX, scrollBehaviorY])
-    this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
-  }
-
-  destroy() {
-    this.hooksFn.forEach(item => {
-      const hooks = item[0]
-      const hooksName = item[1]
-      const handlerFn = item[2]
-      hooks.off(hooksName, handlerFn)
-    })
-    this.hooksFn.length = 0
-  }
-
-  private setScale(scale: number) {
-    this.scale = scale
-  }
-
-  private _zoomTo(
-    toScale: number,
-    fromScale: number,
-    origin: Point,
-    time: number = this.zoomOpt.bounceTime
-  ) {
-    const { min, max } = this.zoomOpt
-    toScale = between(toScale, min, max)
-    const scaleChanged = this.scale !== toScale
-    const ratio = toScale / origin.scale
-    this.setScale(toScale)
-
-    const scrollerIns = this.scroll.scroller
-    const scrollBehaviorX = scrollerIns.scrollBehaviorX
-    const scrollBehaviorY = scrollerIns.scrollBehaviorY
-
-    this.resetBoundaries([scrollBehaviorX, scrollBehaviorY])
-    // position is restrained in boundary
-    const newX = this.getNewPos(origin.x, ratio, scrollBehaviorX, true)
-    const newY = this.getNewPos(origin.y, ratio, scrollBehaviorY, true)
-
-    if (
-      scrollBehaviorX.currentPos !== Math.round(newX) ||
-      scrollBehaviorY.currentPos !== Math.round(newY) ||
-      (toScale !== fromScale && scaleChanged)
-    ) {
-      this.scroll.trigger(this.scroll.eventTypes.zooming, {
-        scale: toScale,
-        bounceTime: time
-      })
-
-      scrollerIns.scrollTo(newX, newY, time, undefined, {
-        start: {
-          scale: fromScale
-        },
-        end: {
-          scale: toScale
-        }
-      })
-    }
-  }
-  private resetBoundaries(scrollBehaviorPairs: [Behavior, Behavior]) {
-    scrollBehaviorPairs.forEach(behavior => behavior.computeBoundary())
-  }
-
-  private getNewPos(
-    origin: number,
-    lastScale: number,
-    scrollBehavior: Behavior,
-    shouldInBoundary?: boolean
-  ) {
-    let newPos = origin - origin * lastScale + scrollBehavior.startPos
-    if (shouldInBoundary) {
-      newPos = between(
-        newPos,
-        scrollBehavior.maxScrollPos,
-        scrollBehavior.minScrollPos
-      )
-    }
-    // maxScrollPos or minScrollPos maybe a negative or positive digital
-    return newPos > 0 ? Math.floor(newPos) : Math.ceil(newPos)
+    const { inBoundary: xInBoundary } = scrollBehaviorX.checkInBoundary()
+    const { inBoundary: yInBoundary } = scrollBehaviorX.checkInBoundary()
+    return !(xInBoundary && yInBoundary)
   }
 
   private dampingScale(scale: number) {
@@ -411,8 +458,48 @@ export default class Zoom {
     return scale
   }
 
+  private setScale(scale: number) {
+    this.scale = scale
+  }
+
+  private resetBoundaries(scrollBehaviorPairs: [Behavior, Behavior]) {
+    scrollBehaviorPairs.forEach(behavior => behavior.computeBoundary())
+  }
+
+  private getNewPos(
+    origin: number,
+    lastScale: number,
+    scrollBehavior: Behavior,
+    shouldInBoundary?: boolean,
+    useCurrentPos = false
+  ) {
+    let newPos =
+      origin -
+      origin * lastScale +
+      (useCurrentPos ? scrollBehavior.currentPos : scrollBehavior.startPos)
+    if (shouldInBoundary) {
+      newPos = between(
+        newPos,
+        scrollBehavior.maxScrollPos,
+        scrollBehavior.minScrollPos
+      )
+    }
+    // maxScrollPos or minScrollPos maybe a negative or positive digital
+    return newPos > 0 ? Math.floor(newPos) : Math.ceil(newPos)
+  }
+
   private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
+  }
+
+  destroy() {
+    this.hooksFn.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksFn.length = 0
   }
 }
