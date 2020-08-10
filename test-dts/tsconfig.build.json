@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@better-scroll/*": ["../packages/*/dist"],
+      "better-scroll": ["../packages/better-scroll/dist"]
+    }
+  },
+  "exclude": ["../tests", "../packages/*/src"]
+}
