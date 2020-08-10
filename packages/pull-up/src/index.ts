@@ -1,15 +1,22 @@
 import BScroll from '@better-scroll/core'
 import { Probe, Direction } from '@better-scroll/shared-utils'
-import propertiesProxyConfig from './propertiesConfig'
+import propertiesConfig from './propertiesConfig'
 
-export type pullUpLoadOptions = Partial<PullUpLoadConfig> | boolean
+export type PullUpLoadOptions = PullUpLoadConfig | boolean
 export interface PullUpLoadConfig {
-  threshold: number
+  threshold?: number
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
-    pullUpLoad?: pullUpLoadOptions
+  interface CustomOptions {
+    pullUpLoad?: PullUpLoadOptions
+  }
+  interface CustomAPI {
+    pullUpLoad: {
+      finishPullUp: PullUp['finish']
+      openPullUp: PullUp['open']
+      closePullUp: PullUp['close']
+    }
   }
 }
 
@@ -24,7 +31,7 @@ export default class PullUp {
 
     this.bscroll.registerType(['pullingUp'])
 
-    this.bscroll.proxy(propertiesProxyConfig)
+    this.bscroll.proxy(propertiesConfig)
   }
 
   private _watch() {
@@ -58,6 +65,8 @@ export default class PullUp {
   }
 
   finish() {
+    // reset Direction, fix #936
+    this.bscroll.movingDirectionY = Direction.Default
     if (this.watching) {
       this.bscroll.once('scrollEnd', this._watch, this)
     } else {
@@ -65,7 +74,7 @@ export default class PullUp {
     }
   }
 
-  open(config: pullUpLoadOptions = true) {
+  open(config: PullUpLoadOptions = true) {
     this.bscroll.options.pullUpLoad = config
 
     this._watch()

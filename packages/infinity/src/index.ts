@@ -11,7 +11,7 @@ export interface InfinityOptions {
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     infinity?: InfinityOptions
   }
 }

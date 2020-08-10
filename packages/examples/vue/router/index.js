@@ -11,6 +11,7 @@ import ScrollBar from 'vue-example/pages/scrollbar-entry'
 import InfinityScroll from 'vue-example/pages/infinity-entry'
 import FormEntry from 'vue-example/pages/form-entry'
 import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
+import MovableEntry from 'vue-example/pages/movable-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -31,6 +32,10 @@ import FormTextarea from 'vue-example/components/form/textarea'
 import NestedVerticalScroll from 'vue-example/components/nested-scroll/vertical'
 import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizontal'
 import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
+
+import Movable from 'vue-example/components/movable/default'
+import MovableScale from 'vue-example/components/movable/scale'
+
 Vue.use(Router)
 
 export default new Router({
@@ -142,6 +147,20 @@ export default new Router({
         {
           path: 'horizontal-in-vertical',
           component: NestedHorizontalInVertical
+        }
+      ]
+    },
+    {
+      path: '/movable',
+      component: MovableEntry,
+      children: [
+        {
+          path: 'default',
+          component: Movable
+        },
+        {
+          path: 'scale',
+          component: MovableScale
         }
       ]
     }

@@ -51,10 +51,7 @@
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: {
-            loop: true,
-            threshold: 100
-          },
+          slide: {},
           useTransition: true,
           momentum: false,
           bounce: false,

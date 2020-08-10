@@ -1,7 +1,7 @@
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import createAnimater from '../../animater'
 import Translater from '../../translater'
-import { Options } from '../../Options'
+import { OptionsConstructor } from '../../Options'
 import ActionsHandler from '../../base/ActionsHandler'
 import Actions from '../Actions'
 
@@ -33,7 +33,7 @@ describe('Scroller Class tests', () => {
     content = createDiv(100, 400, 0, 0)
     document.body.appendChild(content)
     wrapper.appendChild(content)
-    let bscrollOptions = new Options() as any
+    let bscrollOptions = new OptionsConstructor() as any
 
     scroller = new Scroller(wrapper, bscrollOptions)
   })

@@ -1,4 +1,4 @@
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import { createDiv } from '../../__tests__/__utils__/layout'
 
 describe('Behavior Class tests', () => {
@@ -6,6 +6,7 @@ describe('Behavior Class tests', () => {
   let content: HTMLElement
   let wrapper: HTMLElement
   let options = {
+    movable: false,
     scrollable: true,
     momentum: true,
     momentumLimitTime: 300,

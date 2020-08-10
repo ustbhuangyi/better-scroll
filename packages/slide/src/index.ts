@@ -11,7 +11,7 @@ import {
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
 
-export type SlideOptions = Partial<Config> | boolean | undefined
+export type SlideOptions = Partial<Config> | boolean
 export interface Config {
   loop: boolean
   el: HTMLElement | string
@@ -29,8 +29,16 @@ export interface Config {
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
+  interface CustomOptions {
     slide?: SlideOptions
+  }
+  interface CustomAPI {
+    slide: {
+      next: Slide['next']
+      prev: Slide['prev']
+      goToPage: Slide['goToPage']
+      getCurrentPage: Slide['getCurrentPage']
+    }
   }
 }
 

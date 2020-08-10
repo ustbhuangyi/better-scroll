@@ -45,6 +45,7 @@ describe('zoom plugin', () => {
       'destroy',
       'zoomStart',
       'zoomEnd',
+      'zooming',
       'ignoreDisMoveForSamePos'
     ])
   })
@@ -62,7 +63,11 @@ describe('zoom plugin', () => {
     })
     new Zoom(bscroll)
     expect(bscroll.proxy).toBeCalled()
-    expect(bscroll.registerType).toBeCalledWith(['zoomStart', 'zoomEnd'])
+    expect(bscroll.registerType).toBeCalledWith([
+      'zoomStart',
+      'zoomEnd',
+      'zooming'
+    ])
     expect(bscroll.scroller.content.style['webkit-transform-origin']).toBe(
       '0 0'
     )

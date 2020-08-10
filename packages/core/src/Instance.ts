@@ -1,3 +1,33 @@
+import { Behavior } from './scroller/Behavior'
+import Actions from './scroller/Actions'
+import Scroller from './scroller/Scroller'
+import { Animater } from './animater'
+
+export interface BScrollInstance {
+  [key: string]: any
+  x: Behavior['currentPos']
+  y: Behavior['currentPos']
+  hasHorizontalScroll: Behavior['hasScroll']
+  hasVerticalScroll: Behavior['hasScroll']
+  scrollerWidth: Behavior['contentSize']
+  scrollerHeight: Behavior['contentSize']
+  maxScrollX: Behavior['maxScrollPos']
+  maxScrollY: Behavior['maxScrollPos']
+  minScrollX: Behavior['minScrollPos']
+  minScrollY: Behavior['minScrollPos']
+  movingDirectionX: Behavior['movingDirection']
+  movingDirectionY: Behavior['movingDirection']
+  directionX: Behavior['direction']
+  directionY: Behavior['direction']
+  enabled: Actions['enabled']
+  pending: Animater['pending']
+  stop: Animater['stop']
+  scrollTo: Scroller['scrollTo']
+  scrollBy: Scroller['scrollBy']
+  scrollToElement: Scroller['scrollToElement']
+  resetPosition: Scroller['resetPosition']
+}
+
 export const propertiesConfig = [
   {
     sourceKey: 'scroller.scrollBehaviorX.currentPos',

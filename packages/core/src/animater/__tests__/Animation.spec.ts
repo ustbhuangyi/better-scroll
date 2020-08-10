@@ -70,7 +70,7 @@ describe('Animation Class test suit', () => {
     expect(onEnd).toBeCalled()
   })
 
-  it('should not trigger hooks with isSlient=true& time=0', () => {
+  it('should not trigger hooks with isSilent=true& time=0', () => {
     const { animation, translater, dom } = createTransition(0)
     const onMove = jest.fn()
     const onEnd = jest.fn()

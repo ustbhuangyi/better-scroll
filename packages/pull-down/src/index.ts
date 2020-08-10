@@ -1,15 +1,24 @@
 import BScroll from '@better-scroll/core'
 import { ease, Probe, Direction } from '@better-scroll/shared-utils'
-import propertiesProxyConfig from './propertiesConfig'
+import propertiesConfig from './propertiesConfig'
 
-export type pullDownRefreshOptions = Partial<PullDownRefreshConfig> | boolean
+export type PullDownRefreshOptions = PullDownRefreshConfig | boolean
 export interface PullDownRefreshConfig {
-  threshold: number
-  stop: number
+  threshold?: number
+  stop?: number
 }
+
 declare module '@better-scroll/core' {
-  interface Options {
-    pullDownRefresh?: pullDownRefreshOptions
+  interface CustomOptions {
+    pullDownRefresh?: PullDownRefreshOptions
+  }
+  interface CustomAPI {
+    pullDownRefresh: {
+      finishPullDown: PullDown['finish']
+      openPullDown: PullDown['open']
+      closePullDown: PullDown['close']
+      autoPullDownRefresh: PullDown['autoPull']
+    }
   }
 }
 
@@ -25,7 +34,7 @@ export default class PullDown {
 
     this.scroll.registerType(['pullingDown'])
 
-    this.scroll.proxy(propertiesProxyConfig)
+    this.scroll.proxy(propertiesConfig)
   }
 
   private _watch() {
@@ -75,7 +84,7 @@ export default class PullDown {
     this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
-  open(config: pullDownRefreshOptions = true) {
+  open(config: PullDownRefreshOptions = true) {
     this.scroll.options.pullDownRefresh = config
     this._watch()
   }

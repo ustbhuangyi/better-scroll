@@ -1,8 +1,8 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
-import { Options as BScrollOptions, BounceConfig } from '../Options'
-import Behavior from './Behavior'
+import { OptionsConstructor as BScrollOptions, BounceConfig } from '../Options'
+import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
 import {
   createActionsHandlerOptions,
@@ -16,6 +16,7 @@ import {
   preventDefaultExceptionFn,
   TouchEvent,
   isAndroid,
+  isIOSBadVersion,
   click,
   dblclick,
   tap,
@@ -28,9 +29,7 @@ import {
   EventRegister
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
-export interface MountedBScrollHTMLElement extends HTMLElement {
-  isBScrollContainer?: boolean
-}
+import { MountedBScrollHTMLElement } from '../BScroll'
 
 export default class Scroller {
   wrapper: HTMLElement
@@ -101,7 +100,7 @@ export default class Scroller {
     this.animater = createAnimater(this.content, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
-      wrapper,
+      this.options.bindToTarget ? this.content : wrapper,
       createActionsHandlerOptions(this.options)
     )
 
@@ -257,12 +256,13 @@ export default class Scroller {
   }
 
   private checkFlick(duration: number, deltaX: number, deltaY: number) {
-    // flick
+    const flickMinMovingDistance = 1 // distinguish flick from click
     if (
       this.hooks.events.flick.length > 1 &&
       duration < this.options.flickLimitTime &&
       deltaX < this.options.flickLimitDistance &&
-      deltaY < this.options.flickLimitDistance
+      deltaY < this.options.flickLimitDistance &&
+      (deltaY > flickMinMovingDistance || deltaX > flickMinMovingDistance)
     ) {
       return true
     }
@@ -525,9 +525,12 @@ export default class Scroller {
     if (xInBoundary && yInBoundary) {
       return false
     }
-    // fix ios 13.4 bouncing
-    // see it in issues 982
-    this._reflow = this.content.offsetHeight
+
+    if (isIOSBadVersion) {
+      // fix ios 13.4 bouncing
+      // see it in issues 982
+      this._reflow = this.content.offsetHeight
+    }
     // out of boundary
     this.scrollTo(x, y, time, easing)
 

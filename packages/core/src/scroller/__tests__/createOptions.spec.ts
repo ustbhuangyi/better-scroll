@@ -2,14 +2,14 @@ import {
   createActionsHandlerOptions,
   createBehaviorOptions
 } from '../createOptions'
-import { Options } from '../../Options'
+import { OptionsConstructor } from '../../Options'
 
 jest.mock('../../Options')
 
 describe('createOptions helper function tests', () => {
   let bsOptions: any
   beforeEach(() => {
-    bsOptions = new Options()
+    bsOptions = new OptionsConstructor()
   })
   it('should return correct object when invoking createActionsHandlerOptions function', () => {
     let ret = createActionsHandlerOptions(bsOptions)

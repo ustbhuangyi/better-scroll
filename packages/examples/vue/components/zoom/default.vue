@@ -25,6 +25,10 @@
       <button @click="zoomTo(1)">zoomTo:1</button>
       <button @click="zoomTo(2)">zoomTo:2</button>
     </div>
+    <div class="linkwork-wrap">
+      <p>changing with zooming action</p>
+      <div class="linkwork-block" :style="{transform: linkworkTransform, transitionDuration: linkworkTransformTiming}"></div>
+    </div>
   </div>
 </template>
 
@@ -40,7 +44,9 @@
     name: COMPONENT_NAME,
     data() {
       return {
-        zoom: null
+        zoom: null,
+        linkworkTransform: 'scale(1)',
+        linkworkTransformTiming: '0ms'
       }
     },
     mounted() {
@@ -60,7 +66,11 @@
             max: 2
           }
         })
-        window.bs = this.zoom
+
+        this.zoom.on('zooming', ({scale, bounceTime}) => {
+          this.linkworkTransformTiming = `${bounceTime}ms`
+          this.linkworkTransform = `scale(${scale})`
+        })
       },
       zoomTo(value) {
         this.zoom.zoomTo(value, 0, 0)
@@ -73,6 +83,7 @@
 .zoom-default
   .zoom-wrapper
     width 100%
+    height 500px
     overflow hidden
     .zoom-items
       display flex
@@ -100,5 +111,18 @@
       color #fff
       border-radius 4px
       background-color #666
-
+  .linkwork-wrap
+    margin-top 50px
+    p
+      margin 10px 0
+      font-size 16px
+      font-weight bold
+      text-align center
+  .linkwork-block
+    margin 10px auto
+    width 60px
+    height 60px
+    border-radius 50%
+    background-image url("../../../common/images/good.svg")
+    background-size 100%
 </style>

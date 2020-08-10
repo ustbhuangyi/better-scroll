@@ -22,7 +22,55 @@ export interface DblclickConfig {
   delay: number
 }
 
-export class Options {
+export interface CustomOptions {}
+
+export interface DefOptions {
+  [key: string]: any
+  startX?: number
+  startY?: number
+  scrollX?: boolean
+  scrollY?: boolean
+  freeScroll?: boolean
+  directionLockThreshold?: number
+  eventPassthrough?: string
+  click?: boolean
+  tap?: tap
+  bounce?: bounceOptions
+  bounceTime?: number
+  momentum?: boolean
+  momentumLimitTime?: number
+  momentumLimitDistance?: number
+  swipeTime?: number
+  swipeBounceTime?: number
+  deceleration?: number
+  flickLimitTime?: number
+  flickLimitDistance?: number
+  resizePolling?: number
+  probeType?: number
+  stopPropagation?: boolean
+  preventDefault?: boolean
+  preventDefaultException?: {
+    tagName?: RegExp
+    className?: RegExp
+  }
+  tagException?: {
+    tagName?: RegExp
+    className?: RegExp
+  }
+  HWCompositing?: boolean
+  useTransition?: boolean
+  bindToWrapper?: boolean
+  bindToTarget?: boolean
+  disableMouse?: boolean
+  disableTouch?: boolean
+  autoBlur?: boolean
+  translateZ?: string
+  dblclick?: dblclickOptions
+}
+
+export interface Options extends DefOptions, CustomOptions {}
+
+export class OptionsConstructor implements Options {
   [key: string]: any
   startX: number
   startY: number
@@ -58,7 +106,8 @@ export class Options {
   HWCompositing: boolean
   useTransition: boolean
   bindToWrapper: boolean
-  disableMouse: boolean | ''
+  bindToTarget: boolean
+  disableMouse: boolean
   disableTouch: boolean
   autoBlur: boolean
   translateZ: string
@@ -112,11 +161,12 @@ export class Options {
     this.useTransition = true
 
     this.bindToWrapper = false
+    this.bindToTarget = false
     this.disableMouse = hasTouch
     this.disableTouch = !hasTouch
     this.autoBlur = true
   }
-  merge(options?: { [key: string]: any }) {
+  merge(options?: Options) {
     if (!options) return this
     for (let key in options) {
       this[key] = options[key]
@@ -158,8 +208,8 @@ export class Options {
   resolveBounce() {
     const directions = ['top', 'right', 'bottom', 'left']
     const bounce = this.bounce
-    if (bounce === false || bounce === true) {
-      this.bounce = makeMap(directions, bounce as boolean)
+    if (typeof bounce === 'boolean') {
+      this.bounce = makeMap(directions, bounce)
     }
   }
 }
