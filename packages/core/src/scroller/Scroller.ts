@@ -32,7 +32,31 @@ import { bubbling } from '../utils/bubbling'
 import { isSamePoint } from '../utils/compare'
 import { MountedBScrollHTMLElement } from '../BScroll'
 
-export default class Scroller {
+export interface ExposedAPI {
+  scrollTo(
+    x: number,
+    y: number,
+    time?: number,
+    easing?: EaseItem,
+    extraTransform?: { start: object; end: object }
+  ): void
+  scrollBy(
+    deltaX: number,
+    deltaY: number,
+    time?: number,
+    easing?: EaseItem
+  ): void
+  scrollToElement(
+    el: HTMLElement | string,
+    time: number,
+    offsetX: number | boolean,
+    offsetY: number | boolean,
+    easing?: EaseItem
+  ): void
+  resetPosition(time?: number, easing?: EaseItem): boolean
+}
+
+export default class Scroller implements ExposedAPI {
   wrapper: HTMLElement
   content: HTMLElement
   actionsHandler: ActionsHandler
@@ -413,13 +437,12 @@ export default class Scroller {
     x: number,
     y: number,
     time = 0,
-    easing?: EaseItem,
+    easing = ease.bounce,
     extraTransform = {
       start: {},
       end: {}
     }
   ) {
-    easing = !easing ? ease.bounce : easing
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
 
@@ -507,8 +530,7 @@ export default class Scroller {
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
-  resetPosition(time = 0, easing?: EaseItem) {
-    easing = !easing ? ease.bounce : easing
+  resetPosition(time = 0, easing = ease.bounce) {
     const {
       position: x,
       inBoundary: xInBoundary

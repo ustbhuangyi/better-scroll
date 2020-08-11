@@ -24,15 +24,13 @@ export default class ScrollBar {
   static pluginName = 'scrollbar'
   public indicators: Array<Indicator> = []
 
-  constructor(bscroll: BScroll) {
-    if (bscroll.options.scrollbar) {
-      this.indicators = this._initIndicators(bscroll)
+  constructor(scroll: BScroll) {
+    this.indicators = this.createIndicators(scroll)
 
-      bscroll.on('destroy', this.destroy, this)
-    }
+    scroll.on(scroll.eventTypes.destroy, this.destroy, this)
   }
 
-  private _initIndicators(bscroll: BScroll) {
+  private createIndicators(bscroll: BScroll) {
     const { fade = true, interactive = false } = bscroll.options
       .scrollbar as ScrollbarConfig
     let indicatorOption: IndicatorOption
@@ -47,7 +45,7 @@ export default class ScrollBar {
       const direction: Direction = scrolls[key]
       if (bscroll.options[key]) {
         indicatorOption = {
-          wrapper: this._createIndicatorElement(direction),
+          wrapper: this.createIndicatorElement(direction),
           direction: direction,
           fade,
           interactive
@@ -59,7 +57,7 @@ export default class ScrollBar {
     return indicators
   }
 
-  private _createIndicatorElement(direction: Direction) {
+  private createIndicatorElement(direction: Direction) {
     let scrollbarEl: HTMLDivElement = document.createElement('div')
     let indicatorEl: HTMLDivElement = document.createElement('div')
 

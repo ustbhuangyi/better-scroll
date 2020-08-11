@@ -23,24 +23,28 @@ export default class Movable {
         boundary.maxScrollPos = 0
       }
     }
-    const computeBoundaryHook = 'computeBoundary'
+
     this.registorHooks(
       scrollBehaviorX.hooks,
-      computeBoundaryHook,
+      scrollBehaviorX.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorX)
       }
     )
     this.registorHooks(
       scrollBehaviorY.hooks,
-      computeBoundaryHook,
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorY)
       }
     )
-    this.registorHooks(this.scroll.hooks, 'destroy', () => {
-      this.destroy()
-    })
+    this.registorHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.destroy,
+      () => {
+        this.destroy()
+      }
+    )
 
     // trigger refresh
     scroll.refresh()

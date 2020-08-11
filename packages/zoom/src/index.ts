@@ -37,6 +37,10 @@ declare module '@better-scroll/core' {
     }
   }
 }
+interface PluginAPI {
+  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime: number): void
+}
+
 interface Point {
   x: number
   y: number
@@ -52,7 +56,7 @@ interface ResolveFormula {
 }
 
 const TWO_FINGERS = 2
-export default class Zoom {
+export default class Zoom implements PluginAPI {
   static pluginName = 'zoom'
   origin: Point
   scale: number = 1

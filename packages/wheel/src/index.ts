@@ -10,30 +10,32 @@ import {
 import propertiesConfig from './propertiesConfig'
 
 export interface WheelConfig {
-  selectedIndex?: number
-  rotate?: number
-  adjustTime?: number
-  wheelWrapperClass?: string
-  wheelItemClass?: string
-  wheelDisabledItemClass?: string
+  selectedIndex: number
+  rotate: number
+  adjustTime: number
+  wheelWrapperClass: string
+  wheelItemClass: string
+  wheelDisabledItemClass: string
 }
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    wheel?: WheelConfig
+    wheel?: Partial<WheelConfig>
   }
   interface CustomAPI {
-    wheel: {
-      wheelTo: Wheel['wheelTo']
-      getSelectedIndex: Wheel['getSelectedIndex']
-    }
+    wheel: PluginAPI
   }
+}
+
+interface PluginAPI {
+  wheelTo(index?: number, time?: number, ease?: EaseItem): void
+  getSelectedIndex(): number
 }
 
 const CONSTANTS = {
   rate: 4
 }
-export default class Wheel {
+export default class Wheel implements PluginAPI {
   static pluginName = 'wheel'
   options: WheelConfig
   wheelItemsAllDisabled: boolean
@@ -200,9 +202,9 @@ export default class Wheel {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0, time = 0, ease?: EaseItem, isSilent?: boolean) {
+  wheelTo(index = 0, time = 0, ease?: EaseItem) {
     const y = -index * this.itemHeight
-    this.scroll.scrollTo(0, y, time, ease, undefined, isSilent)
+    this.scroll.scrollTo(0, y, time, ease)
   }
 
   private transitionDuration(time: number) {

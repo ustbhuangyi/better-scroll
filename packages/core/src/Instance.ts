@@ -1,9 +1,12 @@
 import { Behavior } from './scroller/Behavior'
 import Actions from './scroller/Actions'
-import Scroller from './scroller/Scroller'
+import { ExposedAPI as ExposedAPIByScroller } from './scroller/Scroller'
 import { Animater } from './animater'
+import { ExposedAPI as ExposedAPIByAnimater } from './animater/Base'
 
-export interface BScrollInstance {
+export interface BScrollInstance
+  extends ExposedAPIByScroller,
+    ExposedAPIByAnimater {
   [key: string]: any
   x: Behavior['currentPos']
   y: Behavior['currentPos']
@@ -21,11 +24,6 @@ export interface BScrollInstance {
   directionY: Behavior['direction']
   enabled: Actions['enabled']
   pending: Animater['pending']
-  stop: Animater['stop']
-  scrollTo: Scroller['scrollTo']
-  scrollBy: Scroller['scrollBy']
-  scrollToElement: Scroller['scrollToElement']
-  resetPosition: Scroller['resetPosition']
 }
 
 export const propertiesConfig = [

@@ -34,16 +34,18 @@ declare module '@better-scroll/core' {
     slide?: SlideOptions
   }
   interface CustomAPI {
-    slide: {
-      next: Slide['next']
-      prev: Slide['prev']
-      goToPage: Slide['goToPage']
-      getCurrentPage: Slide['getCurrentPage']
-    }
+    slide: PluginAPI
   }
 }
 
-export default class Slide {
+interface PluginAPI {
+  next(time?: number, easing?: EaseItem): void
+  prev(time?: number, easing?: EaseItem): void
+  goToPage(x: number, y: number, time?: number, easing?: EaseItem): void
+  getCurrentPage(): Page
+}
+
+export default class Slide implements PluginAPI {
   static pluginName = 'slide'
   private page: SlidePage
   private slideOpt: Partial<Config>

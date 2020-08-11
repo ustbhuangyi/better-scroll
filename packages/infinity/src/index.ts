@@ -59,8 +59,8 @@ export default class InfinityScroll {
       this.onFetchFinish.bind(this)
     )
 
-    this.bscroll.on('destroy', this.destroy, this)
-    this.bscroll.on('scroll', this.update, this)
+    this.bscroll.on(this.bscroll.eventTypes.destroy, this.destroy, this)
+    this.bscroll.on(this.bscroll.eventTypes.scroll, this.update, this)
 
     this.update({ y: 0 })
   }

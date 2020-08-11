@@ -6,8 +6,10 @@ export const enum DirectionLock {
 }
 
 export const enum Direction {
-  Positive = 1, // bottom to top and right to left
-  Negative = -1, // top to bottom and left to right
+  // fingers move from bottom to top or right to left
+  Positive = 1,
+  // on the contrary as above
+  Negative = -1,
   Default = 0
 }
 
