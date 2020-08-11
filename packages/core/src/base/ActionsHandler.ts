@@ -48,7 +48,13 @@ export default class ActionsHandler {
   }
 
   private handleDOMEvents() {
-    const { bindToWrapper, disableMouse, disableTouch, click, isTouchScreen } = this.options
+    const {
+      bindToWrapper,
+      disableMouse,
+      disableTouch,
+      click,
+      isTouchScreen
+    } = this.options
     const wrapper = this.wrapper
     const target = bindToWrapper ? wrapper : window
     const wrapperEvents = []
@@ -159,7 +165,7 @@ export default class ActionsHandler {
       return
     }
 
-    // no mouse left button
+    // only allow mouse left button
     if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
 
     if (this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)) {
@@ -198,7 +204,7 @@ export default class ActionsHandler {
       return
     }
 
-    // auto end when out of wrapper
+    // auto end when out of viewport
     let scrollLeft =
       document.documentElement.scrollLeft ||
       window.pageXOffset ||

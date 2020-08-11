@@ -11,7 +11,8 @@ export function createActionsHandlerOptions(bsOptions: BScrollOptions) {
     'preventDefault',
     'stopPropagation',
     'tagException',
-    'preventDefaultException'
+    'preventDefaultException',
+    'momentumLimitDistance'
   ].reduce<ActionsHandlerOptions>(
     (prev, cur) => {
       prev[cur] = bsOptions[cur]
