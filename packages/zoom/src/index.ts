@@ -37,7 +37,6 @@ declare module '@better-scroll/core' {
     }
   }
 }
-
 interface Point {
   x: number
   y: number
@@ -83,10 +82,10 @@ export default class Zoom {
   }
 
   zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime: number) {
-    ;[x, y] = this.resolveOrigin([x, y])
+    const { originX, originY } = this.resolveOrigin(x, y)
     const origin: Point = {
-      x,
-      y,
+      x: originX,
+      y: originY,
       baseScale: this.scale
     }
     this._doZoomTo(scale, origin, bounceTime, true)
@@ -313,7 +312,7 @@ export default class Zoom {
     }
   }
 
-  private resolveOrigin(rawOrigin: [OriginX, OriginY]) {
+  private resolveOrigin(x: OriginX, y: OriginY) {
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
     const resolveFormula: ResolveFormula = {
       left() {
@@ -336,11 +335,10 @@ export default class Zoom {
         return baseSize / 2
       }
     }
-    return rawOrigin.map((raw, index) => {
-      const origin = raw
-      if (typeof origin === 'number') return origin
-      return resolveFormula[origin](index)
-    })
+    return {
+      originX: typeof x === 'number' ? x : resolveFormula[x](0),
+      originY: typeof y === 'number' ? y : resolveFormula[y](1)
+    }
   }
 
   zoomStart(e: TouchEvent) {
