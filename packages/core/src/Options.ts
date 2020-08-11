@@ -175,7 +175,7 @@ export class OptionsConstructor implements Options {
   }
   process() {
     this.translateZ =
-      this.HWCompositing && hasPerspective ? ' translateZ(0)' : ''
+      this.HWCompositing && hasPerspective ? ' translateZ(1px)' : ''
 
     this.useTransition = this.useTransition && hasTransition
 
