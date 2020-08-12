@@ -1,5 +1,7 @@
 # zoom
 
+## Introduction
+
 Add zoom functionality for BetterScroll.
 
 ## Install
@@ -14,54 +16,52 @@ yarn add @better-scroll/zoom@next
 
 ## Usage
 
-It is required for zoom functionality than importing zoom plugin and calling the global function `BScroll.use()`.
+import `zoom`, then call `BScroll.use()`.
 
 ```js
-  import BScroll from '@better-scroll/core'
-  import Zoom from '@better-scroll/zoom'
+import BScroll from '@better-scroll/core'
+import Zoom from '@better-scroll/zoom'
 
-  BScroll.use(Zoom)
+BScroll.use(Zoom)
 ```
 
-The zoom functionality has been added into BetterScroll after the above steps are completed. But if you want the zoom functionality to take effect, you need to pass in the correct configuration in `options`, for example:
+pass in the correct configuration in options, for example:
 
 ```js
-  new BScroll('.bs-wrap', {
-    freeScroll: true,
-    scrollX: true,
-    scrollY: true,
-    disableMouse: true,
-    useTransition: true,
-    zoom: {
-      start: 1,
-      min: 0.5,
-      max: 2
-    }
-  })
+new BScroll('.bs-wrapper', {
+  freeScroll: true,
+  scrollX: true,
+  scrollY: true,
+  zoom: {
+    start: 1,
+    min: 0.5,
+    max: 2
+  }
+})
 ```
 
-The following are the configuration related to the zoom:
+The following are the configuration related to the `zoom`:
 
-- zoom
+- **zoom**
 
-  Enable zoom functionality. That is to say, the zoom plugin won't work without the zoom option. This option is also be used to set the zoom feature. Refer to [zoom options](./zoom.html#zoom-options)] for more details.
+  Enable zoom functionality. That is to say, the zoom plugin won't work without the zoom option, see [zoom option](./zoom.html#option).
 
-- freeScroll
+- **freeScroll**
 
-  If you want to scroll in x and y axies after zooming in, the freeScroll value should be set to true. In addtional, scrollX and scrollY are also need to be true.
+  If you want to scroll in x and y axies after zooming in, the **freeScroll** value should be set to `true`. In addtional, **scrollX** and **scrollY** are also need to be true.
 
-- scrollX
+- **scrollX**
 
   `true` is be required if you want to scroll in x axies after zooming in.
 
-- scrollY
+- **scrollY**
 
   `true` is be required if you want to scroll in y axies after zooming in.
 
 ## Demo
 
   :::warning
-  The interactive operation on pc is not supported at this time. Please scan the qrcode by mobile phone.
+  pc is not allowed, scan the qrcode
   :::
 
   <demo qrcode-url="zoom/default">
@@ -77,49 +77,138 @@ The following are the configuration related to the zoom:
     <zoom-default slot="demo"></zoom-default>
   </demo>
 
-## Options
+## Option
 
-|name|type|description|default|example|
-|----------|:-----:|:-----------|:--------:|:-------|
-|start|number|the benchmark ratio of scalling begin to zoom|-|start:1|
-|min|number|the smallest scaling|-|min:0.5|
-|max|number|the maximum scaling|-|max:2|
+### start
+  - **Type:** `number`
+  - **Default:** `1`
 
-## API
+    Initial scale.
 
-### zoomTo(scale, x, y)
+### min
+  - **Type:** `number`
+  - **Default:** `1`
 
-zoom the scroller to the specified size.
+    min scale.
 
-**Arguments**:
+### max
+  - **Type:** `number`
+  - **Default:** `4`
 
-|name|type|description|
-|----------|:-----:|:-----------|
-|scale|number|zoom size|
-|x|number|X coordinate of the zoom origin, relative to the left edge of the scroll wrapper|
-|y|number|Y coordinate of the zoom origin, relative to the top edge of the scroll wrapper|
+    max scale.
 
-**Return**: void
+### initialOrigin
+  - **Type:** `[OriginX, OriginY]`
+    - **OriginX**: `number | 'left' | 'right' | 'center'`
+    - **OriginY**: `number | 'top' | 'bottom' | 'center'`
+  - **Default:** `[0, 0]`
+
+    The origin of first initializing zoom instance, It is valid when `start` is not `1`.The origin is all based on the coordinate system of `scaled element`.
+
+  - **Examples:**
+
+  ```js
+    new BScroll('.bs-wrapper', {
+      // ... other configuration
+      zoom: {
+        initialOrigin: [50, 50], // Based on 'scaled element', offsetLeft is 50px, offsetRight is 50px
+        initialOrigin: [0, 0], // Based on 'scaled element', the left vertex
+        initialOrigin: ['left', 'top'], // same as above
+        initialOrigin: ['center', 'center'], // Based on 'scaled element', center position
+        initialOrigin: ['right', 'top'], // Based on 'scaled element', the right vertex
+      }
+    })
+  ```
+
+  When you initialize zoom, you usually focus on zooming with the endpoint or center. You can refer to the above example.
+
+### minimalZoomDistance
+  - **Type:** `number`
+  - **Default:** `5`
+
+    When you zoom with two fingers, only when the zoom distance exceeds `minimalZoomDistance`, the zoom will take effect.
+
+### bounceTime
+  - **Type:** `number`
+  - **Default:** `800`(ms)
+
+    When the two fingers continue to zoom and the scale exceeds the threshold of `max`, when the two fingers leave, the internal "bounce" to the form of `max`, and `bounceTime` is the animation of this "bounce" behavior duration.
+
+## Instance Methods
+
+### zoomTo(scale, x, y, [bounceTime])
+  - **Arguments**
+    - `{number} scale`: scale ratio
+    - `{OriginX} x`: The x of origin that is based on the left vertex of the **scaled element**
+      - `OriginX: 'number | 'left' | 'right' | 'center'`
+    - `{OriginY} y`:  The y of origin that is based on the left vertex of the **scaled element**
+      - `OriginY: 'number | 'top' | 'bottom' | 'center'`
+    - `{number} [bounceTime]<Optional>: Animation duration of a zoom action`
+
+    Scale the element with `[x, y]` as the coordinate origin. x and y can be not only `number`, but also corresponding `string`, because general scenes are scaled based on endpoints or centers.
+
+  - **Examples**
+
+  ```js
+  const bs = new BScroll('.bs-wrapper', {
+    freeScroll: true,
+    scrollX: true,
+    scrollY: true,
+    zoom: {
+      start: 1,
+      min: 0.5,
+      max: 2
+    }
+  })
+  // scaled to 1.8 based on the bottom left point of the scaled element
+  bs.zoomTo(1.8, 'left', 'bottom')
+  // animation duration is 1000ms
+  bs.zoomTo(1.8, 'left', 'bottom', 1000)
+  // scaled to 1.8 based on offsetLeft 100px & offsetTop 100px of the scaled element
+  bs.zoomTo(1.8, 100, 100)
+  // scaled to 2 based on the center of scaled element
+  bs.zoomTo(2, 'center', 'center')
+  ```
+
+  - **Returns**: void
 
 ## Hooks
 
+### beforeZoomStart
+- **Arguments**: none
+- **Trigger timing**: When two fingers touch the scaled element, it does not include directly calling the `zoomTo` method
+
 ### zoomStart
-
-- trigger: Before starting zoom action.
-
-### zoomEnd
-
-- trigger: After zoom action completing(the animation may not be over yet).
+- **Arguments**: none
+- **Trigger timing**: The two finger zoom distance exceeds the minimum threshold `minimalZoomDistance`, and the zoom will start soon. it does not include directly calling the `zoomTo` method
 
 ### zooming
+- **Arguments**: `{ scale: number }`
+- **Trigger timing**: the process of two-finger zooming action in progress or directly calling `zoomTo` to zoom
 
-- Arguments: Object
+- **Examples**:
+```js
+const bs = new BScroll('.bs-wrapper', {
+  freeScroll: true,
+  scrollX: true,
+  scrollY: true,
+  zoom: {
+    start: 1,
+    min: 0.5,
+    max: 2
+  }
+})
 
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|scale|number|transform scale value|
-|bounceTime|number|transition duration time|
+bs.on('zooming', ({ scale }) => {
+  // use scale
+  console.log(scale) // current scale
+})
+```
 
-- trigger: zoom action is happening (The zooming event will not be triggered during the transition animation which is used at the end of the zoom action and zoomTo function. In this case, you can use the scale and bounceTime to predict the actual behavior of the transition animation)
+### zoomEnd
+- **Arguments**: none
+- **Trigger timing**: After two finger zooming behavior ends (if there is a rebound, the trigger timing is after the rebound animation ends) or after calling `zoomTo` to complete the zoom
 
-- Usage: With zooming events, another thing can scale along with zooming operation as in the example above
+:::warning
+In the zoom scenario, you should listen to events such as `zoomStart`, `zooming`, `zoomEnd`, and not the lower-level `scroll` and `scrollEnd` events, otherwise it may not match your expectations.
+:::

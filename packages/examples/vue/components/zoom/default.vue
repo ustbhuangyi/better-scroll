@@ -86,7 +86,6 @@
     width 100%
     overflow hidden
     .zoom-items
-      -webkit-backface-visibility hidden
       display flex
       flex-direction row
       flex-wrap wrap

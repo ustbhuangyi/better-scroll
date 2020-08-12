@@ -32,13 +32,11 @@ declare module '@better-scroll/core' {
     zoom?: Partial<ZoomConfig>
   }
   interface CustomAPI {
-    zoom: {
-      zoomTo: Zoom['zoomTo']
-    }
+    zoom: PluginAPI
   }
 }
 interface PluginAPI {
-  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime: number): void
+  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime?: number): void
 }
 
 interface Point {
@@ -85,7 +83,7 @@ export default class Zoom implements PluginAPI {
     this.tryInitialZoomTo(this.zoomOpt)
   }
 
-  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime: number) {
+  zoomTo(scale: number, x: OriginX, y: OriginY, bounceTime?: number) {
     const { originX, originY } = this.resolveOrigin(x, y)
     const origin: Point = {
       x: originX,
@@ -408,8 +406,7 @@ export default class Zoom implements PluginAPI {
     )
 
     this.scroll.trigger(this.scroll.eventTypes.zooming, {
-      scale: this.scale,
-      bounceTime: 0
+      scale: this.scale
     })
     scrollerIns.translater.translate({ x, y, scale: endScale })
   }

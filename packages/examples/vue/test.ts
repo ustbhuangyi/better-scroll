@@ -18,7 +18,6 @@ const c = createBScroll('', {
   //   min: 1
   // }
 })
-c
 
 const d = createBScroll('', {
   // pullUpLoad: true,
