@@ -21,9 +21,9 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button @click="zoomTo(0.5)">zoomTo:0.5</button>
-      <button @click="zoomTo(1)">zoomTo:1</button>
-      <button @click="zoomTo(2)">zoomTo:2</button>
+      <button class="zoom-half" @click="zoomTo(0.5)">zoomTo:0.5</button>
+      <button class="zoom-original" @click="zoomTo(1)">zoomTo:1</button>
+      <button class="zoom-double" @click="zoomTo(2)">zoomTo:2</button>
     </div>
     <div class="linkwork-wrap">
       <p>changing with zooming action</p>
@@ -59,9 +59,10 @@
           disableMouse: true,
           useTransition: true,
           zoom: {
-            start: 1,
+            start: 1.5,
             min: 0.5,
-            max: 3
+            max: 3,
+            initialOrigin: ['center', 'center']
           }
         })
 
@@ -74,7 +75,7 @@
         })
       },
       zoomTo(value) {
-        this.zoom.zoomTo(value, 'right', 'center')
+        this.zoom.zoomTo(value, 'center', 'center')
       }
     }
   }
