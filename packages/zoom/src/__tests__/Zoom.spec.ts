@@ -1,372 +1,502 @@
 import BScroll from '@better-scroll/core'
 import Zoom from '../index'
-import { EventEmitter } from '@better-scroll/shared-utils'
-import { createTouchEvent } from './__utils__/util'
-import { bscrollZoom, replaceBscrollProperties } from './__utils__/bscroll'
+import { EventEmitter, ease } from '@better-scroll/shared-utils'
+import { createTouchEvent, createZoomElements } from './__utils__/util'
 jest.mock('@better-scroll/core')
 jest.mock('@better-scroll/core/src/animater/index')
 
-function createBScroll(
-  hooks: EventEmitter,
-  zoomOptions: {
-    start: number
-    min: number
-    max: number
-  }
-) {
-  const mockscrollTo = jest.fn()
-  const { partOfbscroll, dom } = bscrollZoom(zoomOptions)
-  const bscroll = new BScroll(dom) as any
-  replaceBscrollProperties(bscroll, partOfbscroll)
-  bscroll.hooks = hooks
-  bscroll.scroller.hooks = hooks
-  bscroll.scroller.translater.hooks = hooks
-  bscroll.scroller.animater = {
-    hooks: hooks
-  }
-  bscroll.scroller.actions = {
-    hooks: hooks
-  }
-  bscroll.scroller.scrollTo = mockscrollTo
-  return {
-    bscroll,
-    mockscrollTo
-  }
-}
-
 describe('zoom plugin', () => {
-  let hooks: EventEmitter
-  beforeAll(() => {
-    hooks = new EventEmitter([
-      'start',
-      'beforeMove',
-      'beforeEnd',
-      'beforeTranslate',
-      'destroy',
-      'zoomStart',
-      'zoomEnd',
-      'zooming',
-      'ignoreDisMoveForSamePos'
-    ])
-  })
+  let scroll: BScroll
 
   beforeEach(() => {
+    // create DOM
+    const { wrapper } = createZoomElements()
+    scroll = new BScroll(wrapper)
+  })
+
+  afterEach(() => {
     jest.clearAllMocks()
   })
 
-  afterAll(() => {})
-  it('should right be inited when new Zoom', () => {
-    const { bscroll } = createBScroll(hooks, {
+  it('should proxy properties to BScroll instance', () => {
+    new Zoom(scroll)
+
+    expect(scroll.proxy).toBeCalled()
+    expect(scroll.proxy).toHaveBeenLastCalledWith([
+      {
+        key: 'zoomTo',
+        sourceKey: 'plugins.zoom.zoomTo'
+      }
+    ])
+  })
+
+  it('should register hooks to BScroll instance', () => {
+    new Zoom(scroll)
+
+    expect(scroll.registerType).toBeCalled()
+    expect(scroll.registerType).toHaveBeenLastCalledWith([
+      'beforeZoomStart',
+      'zoomStart',
+      'zooming',
+      'zoomEnd'
+    ])
+    expect(scroll.eventTypes.beforeZoomStart).toEqual('beforeZoomStart')
+    expect(scroll.eventTypes.zoomStart).toEqual('zoomStart')
+  })
+
+  it('should handle default options and user options', () => {
+    // case 1
+    scroll.options.zoom = true
+    let zoom = new Zoom(scroll)
+    expect(zoom.zoomOpt).toMatchObject({
       start: 1,
       min: 1,
-      max: 2
+      max: 4,
+      initialOrigin: [0, 0],
+      minimalZoomDistance: 5,
+      bounceTime: 800
     })
-    new Zoom(bscroll)
-    expect(bscroll.proxy).toBeCalled()
-    expect(bscroll.registerType).toBeCalledWith([
-      'zoomStart',
-      'zoomEnd',
-      'zooming'
-    ])
-    expect(bscroll.scroller.content.style['webkit-transform-origin']).toBe(
-      '0 0'
+
+    // case 2
+    scroll.options.zoom = {
+      initialOrigin: ['center', 'center'],
+      bounceTime: 300
+    }
+    zoom = new Zoom(scroll)
+    expect(zoom.zoomOpt).toMatchObject({
+      start: 1,
+      min: 1,
+      max: 4,
+      initialOrigin: ['center', 'center'],
+      minimalZoomDistance: 5,
+      bounceTime: 300
+    })
+  })
+
+  it('should try initialZoomTo when new zoom()', () => {
+    // start is 1, no zoomTo
+    new Zoom(scroll)
+    expect(scroll.scroller.scrollTo).toBeCalledTimes(0)
+
+    // start !== 1
+    scroll.options.zoom = {
+      start: 1.5,
+      initialOrigin: [0, 0]
+    }
+    new Zoom(scroll)
+    expect(scroll.scroller.scrollTo).toBeCalledTimes(1)
+    expect(scroll.scroller.scrollTo).toHaveBeenLastCalledWith(
+      0,
+      0,
+      0,
+      ease.bounce,
+      {
+        start: {
+          scale: 1
+        },
+        end: {
+          scale: 1.5
+        }
+      }
+    )
+
+    // start should <= max
+    scroll.options.zoom = {
+      start: 3.5,
+      max: 3,
+      initialOrigin: [0, 0]
+    }
+    new Zoom(scroll)
+    expect(scroll.scroller.scrollTo).toBeCalledTimes(2)
+    expect(scroll.scroller.scrollTo).toHaveBeenLastCalledWith(
+      0,
+      0,
+      0,
+      ease.bounce,
+      {
+        start: {
+          scale: 1
+        },
+        end: {
+          scale: 3 // equals max
+        }
+      }
     )
   })
-  it('should destroy all events', () => {
-    hooks.trigger('destroy')
-    expect(hooks.events['start'].length).toBe(0)
-    expect(hooks.events['beforeMove'].length).toBe(0)
-    expect(hooks.events['beforeEnd'].length).toBe(0)
-    expect(hooks.events['beforeTranslate'].length).toBe(0)
-    expect(hooks.events['destroy'].length).toBe(0)
+
+  it("should set scaled element's transform origin", () => {
+    new Zoom(scroll)
+    expect(
+      scroll.scroller.content.style['webkit-transform-origin' as any]
+    ).toBe('0 0')
   })
-  it('should not react when zooming with one finger', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      start: 1,
-      min: 1,
-      max: 2
-    })
-    const zoom = new Zoom(bscroll)
+
+  it('should not response with one finger', () => {
+    const zoom = new Zoom(scroll)
+    const hooks = scroll.scroller.actions.hooks
+
     const zoomStartSpy = jest.spyOn(zoom, 'zoomStart')
     const zoomSpy = jest.spyOn(zoom, 'zoom')
     const zoomEndSpy = jest.spyOn(zoom, 'zoomEnd')
 
     const e = createTouchEvent({ pageX: 0, pageY: 0 })
-    hooks.trigger('start', e)
+    hooks.trigger(hooks.eventTypes.start, e)
     expect(zoomStartSpy).not.toHaveBeenCalled()
 
-    hooks.trigger('beforeMove', e)
+    hooks.trigger(hooks.eventTypes.beforeMove, e)
     expect(zoomSpy).not.toHaveBeenCalled()
 
-    hooks.trigger('beforeEnd', e)
+    hooks.trigger(hooks.eventTypes.beforeEnd, e)
     expect(zoomEndSpy).not.toHaveBeenCalled()
-
-    const transformStyle: string[] = []
-    hooks.trigger('beforeTranslate', transformStyle, {})
-    expect(transformStyle[0]).toBe('scale(1)')
-    hooks.trigger('destroy')
-    zoomStartSpy.mockRestore()
-    zoomSpy.mockRestore()
-    zoomEndSpy.mockRestore()
   })
-  it('should have correct behavior when zooming out', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      start: 1,
-      min: 1,
-      max: 2
+
+  it('should compute boundary of Behavior when zoom ends', () => {
+    const zoom = new Zoom(scroll) as any
+    // allow trigger beforeEnd hooks
+    zoom.zoomed = true
+
+    const e = createTouchEvent({ pageX: 0, pageY: 0 }, { pageX: 20, pageY: 20 })
+    const actions = scroll.scroller.actions
+    const behaviorX = scroll.scroller.scrollBehaviorX
+    const behaviorY = scroll.scroller.scrollBehaviorY
+    behaviorX.checkInBoundary = jest.fn().mockImplementation(() => {
+      return { inBoundary: true }
     })
-    bscroll.x = 0
-    bscroll.y = 0
-    bscroll.scroller.scrollBehaviorX.startPos = 0
-    bscroll.scroller.scrollBehaviorY.startPos = 0
-    bscroll.options.bounceTime = 800
-    const zoom = new Zoom(bscroll)
+    behaviorY.checkInBoundary = jest.fn().mockImplementation(() => {
+      return { inBoundary: true }
+    })
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeEnd, e)
+
+    expect(behaviorX.computeBoundary).toHaveBeenCalled()
+    expect(behaviorY.computeBoundary).toHaveBeenCalled()
+  })
+
+  it('should fail when zooming distance < minimalZoomDistance', () => {
+    scroll.options.zoom = {
+      minimalZoomDistance: 10
+    }
+    new Zoom(scroll)
+    const actions = scroll.scroller.actions
+    const mockZoomingFn = jest.fn()
+    scroll.on(scroll.eventTypes.zooming, mockZoomingFn)
+    // zoomStart
     const e = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 130, pageY: 130 }
     )
-    hooks.trigger('start', e)
+    actions.hooks.trigger(actions.hooks.eventTypes.start, e)
+    // zoom
+    const e2 = createTouchEvent(
+      { pageX: 30, pageY: 30 },
+      { pageX: 135, pageY: 135 }
+    )
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeMove, e2)
+    expect(mockZoomingFn).toHaveBeenCalledTimes(0)
+  })
 
+  it('should have correct behavior when zooming out', () => {
+    scroll.options.zoom = {
+      max: 2
+    }
+    const zoom = new Zoom(scroll)
+    const actions = scroll.scroller.actions
+    const translater = scroll.scroller.translater
+    const mockZoomingFn = jest.fn()
+    scroll.on(scroll.eventTypes.zooming, mockZoomingFn)
+
+    // zoomStart
+    const e = createTouchEvent(
+      { pageX: 30, pageY: 30 },
+      { pageX: 130, pageY: 130 }
+    )
+    actions.hooks.trigger(actions.hooks.eventTypes.start, e)
+    // zoom
     const e2 = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 150, pageY: 150 }
     )
-    hooks.trigger('beforeMove', e2)
-    expect(mockscrollTo).toBeCalledWith(-16, -16, 0, undefined, {
-      start: {
-        scale: 1
-      },
-      end: {
-        scale: 1.2
-      }
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeMove, e2)
+
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalled()
+    expect(mockZoomingFn).toHaveBeenCalledTimes(1)
+    // beforeMove hooks use translater.translate, not scroller.scrollTo
+    expect(scroll.scroller.translater.translate).toBeCalledWith({
+      x: -16,
+      y: -16,
+      scale: 1.2
     })
+    expect(zoom.scale).toBe(1.2)
+    // triggered beforeTranslate hooks
     const transformString: string[] = []
     const transformPoint = {
       scale: 1.2
     }
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
+    translater.hooks.trigger(
+      translater.hooks.eventTypes.beforeTranslate,
+      transformString,
+      transformPoint
+    )
     expect(transformString[0]).toBe('scale(1.2)')
-    // resetBoundary should be right
-    expect(bscroll.scroller.scrollBehaviorX.hasScroll).toBe(true)
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(-60)
-    expect(bscroll.scroller.scrollBehaviorY.hasScroll).toBe(true)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBeCloseTo(-60)
 
+    // keep zoom
     const e3 = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 170, pageY: 170 }
     )
-    hooks.trigger('beforeMove', e3)
-    transformPoint.scale = 1.4
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
+    actions.hooks.trigger('beforeMove', e3)
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalledTimes(2)
 
-    expect(mockscrollTo).toHaveBeenLastCalledWith(-32, -32, 0, undefined, {
-      start: {
-        scale: 1.2
-      },
-      end: {
-        scale: 1.4
-      }
+    expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
+      x: -32,
+      y: -32,
+      scale: 1.4
     })
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(-120)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBeCloseTo(-120)
+    expect(zoom.scale).toBe(1.4)
 
-    // zoom out bigger then max
+    // keep zoom, allow zooming exceeds max
     const e4 = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 240, pageY: 240 }
     )
-    hooks.trigger('beforeMove', e4)
+    actions.hooks.trigger('beforeMove', e4)
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalledTimes(3)
 
-    expect(mockscrollTo).lastCalledWith(-86, -86, 0, undefined, {
-      start: {
-        scale: 1.4
-      },
-      end: {
-        scale: 2 * 2 * Math.pow(0.5, 2 / 2.1)
-      }
+    expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
+      x: -85,
+      y: -85,
+      scale: 2 * 2 * Math.pow(0.5, 2 / 2.1)
     })
     expect(zoom.scale).toBeCloseTo(2.067)
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(-321)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBe(-321)
 
-    transformPoint.scale = 2.1
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
-
-    // zoom end
-    hooks.trigger('beforeEnd', e4)
+    // zoom end, perform a rebound animation,back to max scale
+    actions.hooks.trigger('beforeEnd')
     expect(zoom.scale).toBe(2)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(-80, -80, 800, undefined, {
-      start: {
-        scale: 2.1
-      },
-      end: {
-        scale: 2
+    expect(scroll.scroller.scrollTo).toHaveBeenLastCalledWith(
+      0,
+      0,
+      800,
+      ease.bounce,
+      {
+        start: {
+          scale: 2.0671155660140554
+        },
+        end: {
+          scale: 2
+        }
       }
-    })
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(-300)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBeCloseTo(-300)
-
-    hooks.trigger('destroy')
+    )
   })
+
   it('should have correct behavior when zooming in', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      start: 1,
-      min: 0.5,
-      max: 2
-    })
-    bscroll.x = 0
-    bscroll.y = 0
-    bscroll.scroller.scrollBehaviorX.startPos = 0
-    bscroll.scroller.scrollBehaviorY.startPos = 0
-    bscroll.options.bounceTime = 800
-    const zoom = new Zoom(bscroll)
+    scroll.options.zoom = {
+      min: 0.5
+    }
+    const zoom = new Zoom(scroll)
+    const actions = scroll.scroller.actions
+    const translater = scroll.scroller.translater
+    const mockZoomingFn = jest.fn()
+    scroll.on(scroll.eventTypes.zooming, mockZoomingFn)
+
+    // zoomStart
     const e = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 130, pageY: 130 }
     )
-    hooks.trigger('start', e)
-
+    actions.hooks.trigger(actions.hooks.eventTypes.start, e)
+    // zoom
     const e2 = createTouchEvent(
       { pageX: 30, pageY: 30 },
       { pageX: 110, pageY: 110 }
     )
-    hooks.trigger('beforeMove', e2)
-    expect(mockscrollTo).toBeCalledWith(16, 16, 0, undefined, {
-      start: {
-        scale: 1
-      },
-      end: {
-        scale: 0.8
-      }
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeMove, e2)
+
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalled()
+    expect(mockZoomingFn).toHaveBeenCalledTimes(1)
+    // beforeMove hooks use translater.translate, not scroller.scrollTo
+    expect(scroll.scroller.translater.translate).toBeCalledWith({
+      x: 16,
+      y: 16,
+      scale: 0.8
     })
+    expect(zoom.scale).toBe(0.8)
+    // triggered beforeTranslate hooks
     const transformString: string[] = []
     const transformPoint = {
       scale: 0.8
     }
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
+    translater.hooks.trigger(
+      translater.hooks.eventTypes.beforeTranslate,
+      transformString,
+      transformPoint
+    )
     expect(transformString[0]).toBe('scale(0.8)')
-    // resetBoundary should be right
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(16)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(16)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBe(0)
 
-    // zoom in smaller then min
+    // keep zoom
     const e3 = createTouchEvent(
       { pageX: 30, pageY: 30 },
-      { pageX: 70, pageY: 70 }
+      { pageX: 90, pageY: 90 }
     )
-    hooks.trigger('beforeMove', e3)
+    actions.hooks.trigger('beforeMove', e3)
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalledTimes(2)
 
-    expect(mockscrollTo).lastCalledWith(45, 45, 0, undefined, {
-      start: {
-        scale: 0.8
-      },
-      end: {
-        scale: 0.5 * 0.5 * Math.pow(2.0, 0.4 / 0.5)
-      }
+    expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
+      x: 32,
+      y: 32,
+      scale: 0.6
     })
-    expect(zoom.scale).toBeCloseTo(0.435)
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(45)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(45)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBe(0)
+    expect(zoom.scale).toBe(0.6)
 
-    transformPoint.scale = 0.4
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
+    // keep zoom, allow zooming exceeds max
+    const e4 = createTouchEvent(
+      { pageX: 30, pageY: 30 },
+      { pageX: 40, pageY: 40 }
+    )
+    actions.hooks.trigger('beforeMove', e4)
+    // triggered zooming hooks
+    expect(mockZoomingFn).toHaveBeenCalledTimes(3)
 
-    // zoom end
-    hooks.trigger('beforeEnd', e3)
+    expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
+      x: 57,
+      y: 57,
+      scale: 0.5 * 0.5 * Math.pow(2, 0.1 / 0.5)
+    })
+    expect(zoom.scale).toBeCloseTo(0.287)
+
+    // zoom end, perform a rebound animation,back to max scale
+    actions.hooks.trigger('beforeEnd')
     expect(zoom.scale).toBe(0.5)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(0, 0, 800, undefined, {
-      start: {
-        scale: 0.4
-      },
-      end: {
-        scale: 0.5
+    expect(scroll.scroller.scrollTo).toHaveBeenLastCalledWith(
+      0,
+      0,
+      800,
+      ease.bounce,
+      {
+        start: {
+          scale: 0.2871745887492588
+        },
+        end: {
+          scale: 0.5
+        }
       }
-    })
-    expect(bscroll.scroller.scrollBehaviorX.hasScroll).toBe(false)
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBeCloseTo(0)
-    expect(bscroll.scroller.scrollBehaviorY.hasScroll).toBe(false)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBeCloseTo(0)
-
-    hooks.trigger('destroy')
+    )
   })
 
   it('should have correct behavior for zoomTo', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      start: 1,
+    scroll.options.zoom = {
       min: 0.5,
-      max: 2
-    })
-    bscroll.x = 0
-    bscroll.y = 0
-    bscroll.scroller.scrollBehaviorX.startPos = 0
-    bscroll.scroller.scrollBehaviorY.startPos = 0
-    bscroll.options.bounceTime = 800
-    const zoom = new Zoom(bscroll)
-    zoom.zoomTo(1.5, 10, 20)
-
-    expect(zoom.scale).toBe(1.5)
-    expect(mockscrollTo).toHaveBeenLastCalledWith(-5, -10, 800, undefined, {
-      start: {
-        scale: 1
-      },
-      end: {
-        scale: 1.5
-      }
-    })
-    expect(bscroll.scroller.scrollBehaviorX.hasScroll).toBe(true)
-    expect(bscroll.scroller.scrollBehaviorX.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorX.maxScrollPos).toBe(-150)
-    expect(bscroll.scroller.scrollBehaviorY.hasScroll).toBe(true)
-    expect(bscroll.scroller.scrollBehaviorY.minScrollPos).toBe(0)
-    expect(bscroll.scroller.scrollBehaviorY.maxScrollPos).toBe(-150)
-
-    const transformString: string[] = []
-    const transformPoint = {
-      scale: 1.5
+      max: 3,
+      start: 1
     }
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
+    const zoom = new Zoom(scroll)
+    const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+    scrollBehaviorX.contentSize = 100
+    scrollBehaviorY.contentSize = 100
+    scrollBehaviorX.wrapperSize = 100
+    scrollBehaviorY.wrapperSize = 100
 
-    // zoomTo bigger than max
-    zoom.zoomTo(3, 10, 20)
-    expect(zoom.scale).toBe(2)
-    transformPoint.scale = 2
-    hooks.trigger('beforeTranslate', transformString, transformPoint)
-
-    // change origin
+    // [0, 0] as origin, scale to 2
     zoom.zoomTo(2, 0, 0)
-    expect(mockscrollTo).lastCalledWith(0, 0, 800, undefined, {
-      start: {
-        scale: 2
-      },
-      end: {
-        scale: 2
+    expect(scroll.scroller.scrollTo).toHaveBeenCalledWith(
+      0,
+      0,
+      800,
+      ease.bounce,
+      {
+        start: {
+          scale: 1
+        },
+        end: {
+          scale: 2
+        }
       }
+    )
+
+    // ['center', 'center'] as origin, time is 300, scale to 1.5
+    zoom.zoomTo(1.5, 'center', 'center', 300)
+    expect(scroll.scroller.scrollTo).toHaveBeenCalledWith(
+      0,
+      0,
+      300,
+      ease.bounce,
+      {
+        start: {
+          scale: 2
+        },
+        end: {
+          scale: 1.5
+        }
+      }
+    )
+  })
+
+  it('should support full hooks', () => {
+    scroll.options.zoom = {
+      min: 1,
+      start: 1,
+      max: 4
+    }
+    new Zoom(scroll)
+    const actions = scroll.scroller.actions
+    const behaviorX = scroll.scroller.scrollBehaviorX
+    const behaviorY = scroll.scroller.scrollBehaviorY
+    behaviorX.checkInBoundary = jest.fn().mockImplementation(() => {
+      return { inBoundary: true }
+    })
+    behaviorY.checkInBoundary = jest.fn().mockImplementation(() => {
+      return { inBoundary: true }
     })
 
-    // zoomTo zoomIn
-    zoom.zoomTo(0.8, 0, 0)
-    expect(mockscrollTo).lastCalledWith(0, 0, 800, undefined, {
-      start: {
-        scale: 2
-      },
-      end: {
-        scale: 0.8
-      }
-    })
+    const mockBeforeZoomStartFn = jest.fn()
+    const mockZoomStartFn = jest.fn()
+    const mockZoomingFn = jest.fn()
+    const mockZoomEndFn = jest.fn()
+
+    // tap hooks
+    scroll.on(scroll.eventTypes.beforeZoomStart, mockBeforeZoomStartFn)
+    scroll.on(scroll.eventTypes.zoomStart, mockZoomStartFn)
+    scroll.on(scroll.eventTypes.zooming, mockZoomingFn)
+    scroll.on(scroll.eventTypes.zoomEnd, mockZoomEndFn)
+
+    // zoomStart
+    const e1 = createTouchEvent(
+      { pageX: 30, pageY: 30 },
+      { pageX: 130, pageY: 130 }
+    )
+    actions.hooks.trigger(actions.hooks.eventTypes.start, e1)
+    // zooming
+    const e2 = createTouchEvent(
+      { pageX: 30, pageY: 30 },
+      { pageX: 150, pageY: 150 }
+    )
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeMove, e2)
+    // zoomEnd
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeEnd)
+
+    expect(mockBeforeZoomStartFn).toBeCalledTimes(1)
+    expect(mockZoomStartFn).toBeCalledTimes(1)
+    expect(mockZoomingFn).toBeCalledTimes(1)
+    expect(mockZoomEndFn).toBeCalledTimes(1)
+  })
+
+  it('should destroy all events', () => {
+    new Zoom(scroll)
+    const {
+      actions,
+      scrollBehaviorX,
+      scrollBehaviorY,
+      translater
+    } = scroll.scroller
+    scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
+    expect(scrollBehaviorX.hooks.events['beforeComputeBoundary'].length).toBe(0)
+    expect(scrollBehaviorY.hooks.events['beforeComputeBoundary'].length).toBe(0)
+    expect(actions.hooks.events['start'].length).toBe(0)
+    expect(actions.hooks.events['beforeMove'].length).toBe(0)
+    expect(actions.hooks.events['beforeEnd'].length).toBe(0)
+    expect(translater.hooks.events['beforeTranslate'].length).toBe(0)
   })
 })

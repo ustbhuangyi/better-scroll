@@ -45,7 +45,9 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
         eventTypes[name] = name
       })
     }),
-    plugins: {}
+    plugins: {},
+    x: 0,
+    y: 0
   }
 
   Object.setPrototypeOf(res, eventEmitter)

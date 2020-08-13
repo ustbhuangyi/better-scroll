@@ -147,4 +147,33 @@ describe('Zoom', () => {
     expect(xDouble).toBeLessThan(0)
     expect(yDouble).toBeLessThan(0)
   })
+
+  it('should allow moving with one finger when scaled out', async () => {
+    await page.waitFor(300)
+
+    // zoom out
+    await page.dispatchPinch({
+      x: 100,
+      y: 100,
+      scaleFactor: 1.2,
+      gestureSourceType: 'touch'
+    })
+
+    // touchmove
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: 200,
+      yDistance: 0,
+      gestureSourceType: 'touch'
+    })
+
+    await page.waitFor(2500)
+
+    let transformText = await page.$eval('.zoom-items', node => {
+      return window.getComputedStyle(node).transform
+    })
+    const xDouble = getTranslate(transformText, 'x')
+    expect(xDouble).toEqual(0)
+  })
 })
