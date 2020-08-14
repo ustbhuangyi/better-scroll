@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
 import Zoom from '../index'
-import { EventEmitter, ease } from '@better-scroll/shared-utils'
+import { ease } from '@better-scroll/shared-utils'
 import { createTouchEvent, createZoomElements } from './__utils__/util'
 jest.mock('@better-scroll/core')
 jest.mock('@better-scroll/core/src/animater/index')

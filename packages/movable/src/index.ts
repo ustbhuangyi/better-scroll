@@ -12,9 +12,12 @@ export default class Movable {
   static applyOrder = ApplyOrder.Pre
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
+    this.handleHooks()
+  }
+
+  private handleHooks() {
     this.hooksFn = []
-    const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-    const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
     const computeBoundary = (boundary: Boundary, behavior: Behavior) => {
       if (!behavior.options.scrollable) return
       if (boundary.maxScrollPos > 0) {
@@ -24,31 +27,30 @@ export default class Movable {
       }
     }
 
-    this.registorHooks(
+    this.registerHooks(
       scrollBehaviorX.hooks,
       scrollBehaviorX.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorX)
       }
     )
-    this.registorHooks(
+    this.registerHooks(
       scrollBehaviorY.hooks,
       scrollBehaviorY.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorY)
       }
     )
-    this.registorHooks(
+
+    this.registerHooks(
       this.scroll.hooks,
       this.scroll.hooks.eventTypes.destroy,
       () => {
         this.destroy()
       }
     )
-
-    // trigger refresh
-    scroll.refresh()
   }
+
   destroy() {
     this.hooksFn.forEach(item => {
       const hooks = item[0]
@@ -58,7 +60,7 @@ export default class Movable {
     })
     this.hooksFn.length = 0
   }
-  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
   }

@@ -20,10 +20,6 @@ export function isUndef(v: any): boolean {
   return v === undefined || v === null
 }
 
-export function isPlainObject(v: any): boolean {
-  return typeof v === 'object' && v !== null
-}
-
 export function getDistance(x: number, y: number) {
   return Math.sqrt(x * x + y * y)
 }

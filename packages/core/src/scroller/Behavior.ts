@@ -45,6 +45,7 @@ export class Behavior {
     this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
+    this.refresh()
   }
 
   start() {
@@ -190,14 +191,12 @@ export class Behavior {
     this.direction = Direction.Default
   }
 
-  computeBoundary(enforceScroll = false, min = 0, max = NaN) {
+  computeBoundary() {
     this.hooks.trigger(this.hooks.eventTypes.beforeComputeBoundary)
-    if (isNaN(max)) {
-      max = this.wrapperSize - this.contentSize
-    }
+
     const boundary: Boundary = {
-      minScrollPos: min,
-      maxScrollPos: max
+      minScrollPos: 0,
+      maxScrollPos: this.wrapperSize - this.contentSize
     }
     if (boundary.maxScrollPos < 0) {
       boundary.maxScrollPos -= this.relativeOffset
@@ -209,8 +208,7 @@ export class Behavior {
     this.maxScrollPos = boundary.maxScrollPos
 
     this.hasScroll =
-      enforceScroll ||
-      (this.options.scrollable && this.maxScrollPos < this.minScrollPos)
+      this.options.scrollable && this.maxScrollPos < this.minScrollPos
 
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos

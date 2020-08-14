@@ -69,7 +69,6 @@ export default class Zoom implements PluginAPI {
   private prevScale: number = 1
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
-    this.hooksFn = []
     this.init()
   }
 
@@ -118,6 +117,7 @@ export default class Zoom implements PluginAPI {
   }
 
   private handleHooks() {
+    const scroll = this.scroll
     const scrollerIns = this.scroll.scroller
     this.wrapper = this.scroll.scroller.wrapper
     this.scaleElement = this.scroll.scroller.content
@@ -126,8 +126,20 @@ export default class Zoom implements PluginAPI {
     const scrollBehaviorX = scrollerIns.scrollBehaviorX
     const scrollBehaviorY = scrollerIns.scrollBehaviorY
 
+    this.hooksFn = []
+
+    // BScroll
+    this.registerHooks(
+      scroll.hooks,
+      scroll.hooks.eventTypes.beforeInitialScrollTo,
+      () => {
+        // cancel coreScroll scrollTo logic when initialized
+        return true
+      }
+    )
+
     // enlarge boundary
-    this.registorHooks(
+    this.registerHooks(
       scrollBehaviorX.hooks,
       scrollBehaviorX.hooks.eventTypes.beforeComputeBoundary,
       () => {
@@ -136,7 +148,7 @@ export default class Zoom implements PluginAPI {
         )
       }
     )
-    this.registorHooks(
+    this.registerHooks(
       scrollBehaviorY.hooks,
       scrollBehaviorY.hooks.eventTypes.beforeComputeBoundary,
       () => {
@@ -147,7 +159,7 @@ export default class Zoom implements PluginAPI {
     )
 
     // touch event
-    this.registorHooks(
+    this.registerHooks(
       scrollerIns.actions.hooks,
       scrollerIns.actions.hooks.eventTypes.start,
       (e: TouchEvent) => {
@@ -158,7 +170,7 @@ export default class Zoom implements PluginAPI {
         }
       }
     )
-    this.registorHooks(
+    this.registerHooks(
       scrollerIns.actions.hooks,
       scrollerIns.actions.hooks.eventTypes.beforeMove,
       (e: TouchEvent) => {
@@ -170,7 +182,7 @@ export default class Zoom implements PluginAPI {
         }
       }
     )
-    this.registorHooks(
+    this.registerHooks(
       scrollerIns.actions.hooks,
       scrollerIns.actions.hooks.eventTypes.beforeEnd,
       (e: TouchEvent) => {
@@ -182,7 +194,7 @@ export default class Zoom implements PluginAPI {
       }
     )
 
-    this.registorHooks(
+    this.registerHooks(
       scrollerIns.translater.hooks,
       scrollerIns.translater.hooks.eventTypes.beforeTranslate,
       (transformStyle: string[], point: TranslaterPoint) => {
@@ -192,7 +204,7 @@ export default class Zoom implements PluginAPI {
       }
     )
 
-    this.registorHooks(
+    this.registerHooks(
       scrollerIns.hooks,
       scrollerIns.hooks.eventTypes.scrollEnd,
       () => {
@@ -202,7 +214,7 @@ export default class Zoom implements PluginAPI {
       }
     )
 
-    this.registorHooks(this.scroll.hooks, 'destroy', this.destroy)
+    this.registerHooks(this.scroll.hooks, 'destroy', this.destroy)
   }
 
   private tryInitialZoomTo(options: ZoomConfig) {
@@ -487,7 +499,7 @@ export default class Zoom implements PluginAPI {
     return newPos > 0 ? Math.floor(newPos) : Math.ceil(newPos)
   }
 
-  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
   }

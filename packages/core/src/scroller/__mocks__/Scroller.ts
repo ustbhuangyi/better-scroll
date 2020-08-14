@@ -64,7 +64,8 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
     scrollBehaviorY,
     resizeRegister: new EventRegister(wrapper, []),
     transitionEndRegister: new EventRegister(wrapper, []),
-    scrollTo: jest.fn()
+    scrollTo: jest.fn(),
+    togglePointerEvents: jest.fn()
   }
 })
 

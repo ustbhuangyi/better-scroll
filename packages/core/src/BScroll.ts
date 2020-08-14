@@ -106,7 +106,8 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       'refresh',
       'enable',
       'disable',
-      'destroy'
+      'destroy',
+      'beforeInitialScrollTo'
     ])
     this.init(wrapper)
   }
@@ -120,15 +121,25 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
 
     this.eventBubbling()
     this.handleAutoBlur()
-
-    this.innerRefresh()
-
-    this.scroller.scrollTo(this.options.startX, this.options.startY)
     this.enable()
 
     this.proxy(propertiesConfig)
-
     this.applyPlugins()
+
+    // maybe boundary has changed, should refresh
+    this.refreshWithoutReset()
+    const { startX, startY } = this.options
+    const position = {
+      x: startX,
+      y: startY
+    }
+    // maybe plugins want to control scroll position
+    if (
+      this.hooks.trigger(this.hooks.eventTypes.beforeInitialScrollTo, position)
+    ) {
+      return
+    }
+    this.scroller.scrollTo(position.x, position.y)
   }
 
   private applyPlugins() {
@@ -178,7 +189,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     ])
   }
 
-  private innerRefresh() {
+  private refreshWithoutReset() {
     this.scroller.refresh()
     this.hooks.trigger(this.hooks.eventTypes.refresh)
     this.trigger(this.eventTypes.refresh)
@@ -190,7 +201,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     })
   }
   refresh() {
-    this.innerRefresh()
+    this.refreshWithoutReset()
     this.scroller.resetPosition()
   }
 

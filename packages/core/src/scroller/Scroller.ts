@@ -177,8 +177,12 @@ export default class Scroller implements ExposedAPI {
     })
     // disable pointer events when scrolling
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
+      const prevPos = this.getCurrentPos()
       this.updatePositions(pos)
-      this.togglePointerEvents(false)
+      // a valid translate
+      if (pos.x !== prevPos.x || pos.y !== prevPos.y) {
+        this.togglePointerEvents(false)
+      }
     })
   }
 
@@ -401,7 +405,7 @@ export default class Scroller implements ExposedAPI {
     }
   }
 
-  private togglePointerEvents(enabled = true) {
+  togglePointerEvents(enabled = true) {
     let el = this.content.children.length
       ? this.content.children
       : [this.content]

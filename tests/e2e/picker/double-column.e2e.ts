@@ -84,7 +84,7 @@ describe('Double column picker', () => {
     })
 
     for (const transformText of transformTexts) {
-      const translateY = getTranslate(transformText!, 'y')
+      const translateY = getTranslate(transformText, 'y')
       await expect(translateY).toBeLessThan(-72)
     }
   })
