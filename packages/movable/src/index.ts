@@ -9,7 +9,6 @@ declare module '@better-scroll/core' {
 
 export default class Movable {
   static pluginName = 'movable'
-  static applyOrder = ApplyOrder.Pre
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
     this.handleHooks()
@@ -18,6 +17,7 @@ export default class Movable {
   private handleHooks() {
     this.hooksFn = []
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+
     const computeBoundary = (boundary: Boundary, behavior: Behavior) => {
       if (!behavior.options.scrollable) return
       if (boundary.maxScrollPos > 0) {

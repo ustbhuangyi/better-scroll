@@ -54,7 +54,9 @@
           scrollX: true,
           scrollY: true,
           freeScroll: true,
-          movable: true
+          movable: true,
+          startX: 20,
+          startY: 20
         })
       }
     }
