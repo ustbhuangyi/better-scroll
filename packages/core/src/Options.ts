@@ -66,6 +66,7 @@ export interface DefOptions {
   autoBlur?: boolean
   translateZ?: string
   dblclick?: dblclickOptions
+  autoEndDistance: number
 }
 
 export interface Options extends DefOptions, CustomOptions {}
@@ -112,7 +113,7 @@ export class OptionsConstructor implements Options {
   autoBlur: boolean
   translateZ: string
   dblclick: dblclickOptions
-  isTouchScreen: boolean
+  autoEndDistance: number
 
   constructor() {
     this.startX = 0
@@ -166,7 +167,8 @@ export class OptionsConstructor implements Options {
     this.disableMouse = hasTouch
     this.disableTouch = !hasTouch
     this.autoBlur = true
-    this.isTouchScreen = false
+
+    this.autoEndDistance = 5
   }
   merge(options?: Options) {
     if (!options) return this
