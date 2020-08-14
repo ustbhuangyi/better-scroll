@@ -43,7 +43,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   options: OptionsConstructor
   hooks: EventEmitter
   plugins: { [name: string]: any }
-  wrapper: HTMLElement
+  wrapper: HTMLElement;
   [key: string]: any
 
   static use(ctor: PluginCtor) {
@@ -223,8 +223,8 @@ export interface CustomAPI {
 }
 
 type UnionToIntersection<U> = (U extends any
-  ? (k: U) => void
-  : never) extends ((k: infer I) => void)
+? (k: U) => void
+: never) extends (k: infer I) => void
   ? I
   : never
 
