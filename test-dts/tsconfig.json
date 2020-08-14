@@ -4,5 +4,11 @@
     "noEmit": true,
     "declaration": true
   },
-  "exclude": ["../tests"]
+  "include": ["../test-dts"],
+  "exclude": [
+    "../tests",
+    "../packages/*/src/__tests__",
+    "../packages/*/src/__mocks__",
+    "../packages/*/src"
+  ]
 }

@@ -8,7 +8,7 @@
       "@better-scroll/*": ["packages/*/src"]
     },
     "target": "es5",
-    "module":"es2015",
+    "module": "es2015",
     "lib": ["es2015", "es2016", "es2017", "dom"],
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
@@ -18,12 +18,8 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "packages/*/src"
-  ],
+  "include": ["packages/*/src"],
   "exclude": ["packages/*/src/**/__tests__", "packages/*/src/**/__mocks__"]
 }

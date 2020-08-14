@@ -1,11 +1,12 @@
 import BScroll, { createBScroll } from 'better-scroll'
 
-const a = new BScroll('', {
+const a = new BScroll<{}>('', {
   zoom: {
     start: 1,
     max: 1,
     min: 1
-  }
+  },
+  name: '123'
 })
 
 const b = new BScroll('', {})
