@@ -40,7 +40,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const translateY = getTranslate(transformText!, 'y')
+    const translateY = getTranslate(transformText, 'y')
 
     await expect(translateY).toBe(-72)
   })
@@ -57,7 +57,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const translateY = getTranslate(transformText!, 'y')
+    const translateY = getTranslate(transformText, 'y')
     await expect(translateY).toBe(-72)
   })
 
@@ -79,7 +79,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const translateY = getTranslate(transformText!, 'y')
+    const translateY = getTranslate(transformText, 'y')
     await expect(translateY).toBe(-36)
   })
 
@@ -104,7 +104,7 @@ describe('One column picker', () => {
     const transformText = await page.$eval('.wheel-scroll', node => {
       return window.getComputedStyle(node).transform
     })
-    const translateY = getTranslate(transformText!, 'y')
+    const translateY = getTranslate(transformText, 'y')
     await expect(translateY).toBeLessThan(-72)
   })
 })

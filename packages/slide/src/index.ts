@@ -1,12 +1,13 @@
 import BScroll, { Options } from '@better-scroll/core'
 import {
-  fixInboundValue,
+  between,
   prepend,
   removeChild,
   ease,
   EaseItem,
   Direction,
-  EventEmitter
+  EventEmitter,
+  removeSizeStyle
 } from '@better-scroll/shared-utils'
 import SlidePage, { Page, Position } from './SlidePage'
 import propertiesConfig from './propertiesConfig'
@@ -33,16 +34,18 @@ declare module '@better-scroll/core' {
     slide?: SlideOptions
   }
   interface CustomAPI {
-    slide: {
-      next: Slide['next']
-      prev: Slide['prev']
-      goToPage: Slide['goToPage']
-      getCurrentPage: Slide['getCurrentPage']
-    }
+    slide: PluginAPI
   }
 }
 
-export default class Slide {
+interface PluginAPI {
+  next(time?: number, easing?: EaseItem): void
+  prev(time?: number, easing?: EaseItem): void
+  goToPage(x: number, y: number, time?: number, easing?: EaseItem): void
+  getCurrentPage(): Page
+}
+
+export default class Slide implements PluginAPI {
   static pluginName = 'slide'
   private page: SlidePage
   private slideOpt: Partial<Config>
@@ -183,16 +186,8 @@ export default class Slide {
     }
 
     return this.page.nearestPage(
-      fixInboundValue(
-        x,
-        scrollBehaviorX.maxScrollPos,
-        scrollBehaviorX.minScrollPos
-      ),
-      fixInboundValue(
-        y,
-        scrollBehaviorY.maxScrollPos,
-        scrollBehaviorY.minScrollPos
-      ),
+      between(x, scrollBehaviorX.maxScrollPos, scrollBehaviorX.minScrollPos),
+      between(y, scrollBehaviorY.maxScrollPos, scrollBehaviorY.minScrollPos),
       scrollBehaviorX.direction,
       scrollBehaviorY.direction
     )
@@ -273,12 +268,12 @@ export default class Slide {
       const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
       const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
       const newPos = this.page.nearestPage(
-        fixInboundValue(
+        between(
           this.scroll.x,
           scrollBehaviorX.maxScrollPos,
           scrollBehaviorX.minScrollPos
         ),
-        fixInboundValue(
+        between(
           this.scroll.y,
           scrollBehaviorY.maxScrollPos,
           scrollBehaviorY.minScrollPos
@@ -327,9 +322,9 @@ export default class Slide {
     const children = slideEls.children
     for (let i = 0; i < children.length; i++) {
       const slideItemDom = children[i] as HTMLElement
-      slideItemDom.removeAttribute('style')
+      removeSizeStyle(slideItemDom, 'width')
     }
-    slideEls.removeAttribute('style')
+    removeSizeStyle(slideEls, 'width')
   }
   private setSlideWidth(slideEls: HTMLElement): Boolean {
     if (!this.shouldSetWidthHeight('width')) {
@@ -351,9 +346,9 @@ export default class Slide {
     const children = slideEls.children
     for (let i = 0; i < children.length; i++) {
       const slideItemDom = children[i] as HTMLElement
-      slideItemDom.removeAttribute('style')
+      removeSizeStyle(slideItemDom, 'height')
     }
-    slideEls.removeAttribute('style')
+    removeSizeStyle(slideEls, 'height')
   }
   // height change will not effect minScrollY & maxScrollY
   private setSlideHeight(

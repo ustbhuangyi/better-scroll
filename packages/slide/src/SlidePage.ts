@@ -1,4 +1,4 @@
-import { fixInboundValue, extend, warn } from '@better-scroll/shared-utils'
+import { between, extend, warn } from '@better-scroll/shared-utils'
 import BScroll from '@better-scroll/core'
 import { Config } from './index'
 import PagesPos from './PagesPos'
@@ -43,7 +43,7 @@ export default class PageInfo {
   changeCurrentPage(newPage: Page & Position): void {
     this.currentPage = newPage
   }
-  change2safePage(pageX: number, pageY: number): Page & Position | undefined {
+  change2safePage(pageX: number, pageY: number): (Page & Position) | undefined {
     if (!this.pagesPos.hasInfo()) {
       return
     }
@@ -85,9 +85,7 @@ export default class PageInfo {
       pageIndex.push(0)
       return pageIndex[page]
     }
-    let currentPage = page
-      ? (extend({}, page) as Page)
-      : (extend({}, this.currentPage) as Page)
+    let currentPage = page ? extend({}, page) : extend({}, this.currentPage)
     if (this.loopX) {
       currentPage.pageX = fixedPage(currentPage.pageX, this.pagesPos.xLen - 2)
     }
@@ -123,8 +121,8 @@ export default class PageInfo {
       firstY = firstY + 1
       lastY = lastY - 1
     }
-    x = fixInboundValue(x, firstX, lastX)
-    y = fixInboundValue(y, firstY, lastY)
+    x = between(x, firstX, lastX)
+    y = between(y, firstY, lastY)
     return {
       realX: x,
       realY: y
@@ -157,11 +155,11 @@ export default class PageInfo {
     let newY
     if (pageX === this.currentPage.pageX) {
       pageX += directionX
-      pageX = fixInboundValue(pageX, 0, this.pagesPos.xLen - 1)
+      pageX = between(pageX, 0, this.pagesPos.xLen - 1)
     }
     if (pageY === this.currentPage.pageY) {
       pageY += directionY
-      pageY = fixInboundValue(pageInfo.pageY, 0, this.pagesPos.yLen - 1)
+      pageY = between(pageInfo.pageY, 0, this.pagesPos.yLen - 1)
     }
     newX = this.pagesPos.getPos(pageX, 0).x
     newY = this.pagesPos.getPos(0, pageY).y

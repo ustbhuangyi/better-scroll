@@ -290,3 +290,28 @@ export function removeClass(el: HTMLElement, className: string) {
   let reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
   el.className = el.className.replace(reg, ' ')
 }
+
+export function removeSizeStyle(
+  el: HTMLElement,
+  styleName: 'width' | 'height'
+): void {
+  const originStyle = el.getAttribute('style')
+  if (!originStyle) {
+    return
+  }
+  const styleArr = originStyle
+    .split(';')
+    .map(s => {
+      const SPACE_REGEXP = /(^\s*)|(\s*$)/g
+      return s.replace(SPACE_REGEXP, '').split(':')
+    })
+    .filter(s => {
+      const SPACE_REGEXP = /(^\s*)/
+      const name = s[0].replace(SPACE_REGEXP, '')
+      return name !== styleName
+    })
+    .map(s => {
+      return s.join(':')
+    })
+  el.setAttribute('style', styleArr.join(';'))
+}

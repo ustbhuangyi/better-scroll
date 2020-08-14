@@ -38,12 +38,9 @@ export default class Transition extends Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easingFn: string | EaseFn,
-    isSilent?: boolean
+    easingFn: string | EaseFn
   ) {
-    this.setPending(
-      time > 0 && (startPoint.x !== endPoint.x || startPoint.y !== endPoint.y)
-    )
+    this.setPending(time > 0)
     this.transitionTimingFunction(easingFn as string)
     this.transitionTime(time)
     this.translate(endPoint)
@@ -58,12 +55,8 @@ export default class Transition extends Base {
     // so we forceupdate by reflow
     if (!time) {
       this._reflow = this.content.offsetHeight
-    }
 
-    // no need to dispatch move and end when slient
-    if (!time && !isSilent) {
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
-
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
     }
   }

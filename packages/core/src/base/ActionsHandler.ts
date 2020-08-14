@@ -4,7 +4,6 @@ import {
   preventDefaultExceptionFn,
   tagExceptionFn,
   eventTypeMap,
-  hasTouch,
   EventType,
   MouseButton,
   EventRegister,
@@ -26,7 +25,7 @@ export interface Options {
   stopPropagation: boolean
   preventDefaultException: Exception
   tagException: Exception
-  momentumLimitDistance: number
+  autoEndDistance: number
 }
 
 export default class ActionsHandler {
@@ -53,7 +52,7 @@ export default class ActionsHandler {
     const target = bindToWrapper ? wrapper : window
     const wrapperEvents = []
     const targetEvents = []
-    const shouldRegisterTouch = hasTouch && !disableTouch
+    const shouldRegisterTouch = !disableTouch
     const shouldRegisterMouse = !disableMouse
 
     if (click) {
@@ -159,7 +158,7 @@ export default class ActionsHandler {
       return
     }
 
-    // no mouse left button
+    // only allow mouse left button
     if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
 
     if (this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)) {
@@ -198,7 +197,7 @@ export default class ActionsHandler {
       return
     }
 
-    // auto end when out of wrapper
+    // auto end when out of viewport
     let scrollLeft =
       document.documentElement.scrollLeft ||
       window.pageXOffset ||
@@ -211,15 +210,12 @@ export default class ActionsHandler {
     let pX = this.pointX - scrollLeft
     let pY = this.pointY - scrollTop
 
+    const autoEndDistance = this.options.autoEndDistance
     if (
-      pX >
-        document.documentElement.clientWidth -
-          this.options.momentumLimitDistance ||
-      pX < this.options.momentumLimitDistance ||
-      pY < this.options.momentumLimitDistance ||
-      pY >
-        document.documentElement.clientHeight -
-          this.options.momentumLimitDistance
+      pX > document.documentElement.clientWidth - autoEndDistance ||
+      pY > document.documentElement.clientHeight - autoEndDistance ||
+      pX < autoEndDistance ||
+      pY < autoEndDistance
     ) {
       this.end(e)
     }

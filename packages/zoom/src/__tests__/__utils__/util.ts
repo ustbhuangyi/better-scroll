@@ -4,11 +4,11 @@ import {
 } from '@better-scroll/core/src/__tests__/__utils__/event'
 import { createDiv } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
-export function createZoom() {
-  const dom = createDiv(300, 300)
-  const zoomEl = createDiv(300, 300, 0, 0)
-  dom.appendChild(zoomEl)
-  return { dom, zoomEl }
+export function createZoomElements() {
+  const wrapper = createDiv(300, 300)
+  const scaledElement = createDiv(300, 300, 0, 0)
+  wrapper.appendChild(scaledElement)
+  return { wrapper, scaledElement }
 }
 
 export function createTouchEvent(

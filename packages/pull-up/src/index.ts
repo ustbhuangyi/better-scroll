@@ -2,9 +2,9 @@ import BScroll from '@better-scroll/core'
 import { Probe, Direction } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
-export type PullUpLoadOptions = PullUpLoadConfig | boolean
+export type PullUpLoadOptions = Partial<PullUpLoadConfig> | boolean
 export interface PullUpLoadConfig {
-  threshold?: number
+  threshold: number
 }
 
 declare module '@better-scroll/core' {
@@ -12,80 +12,81 @@ declare module '@better-scroll/core' {
     pullUpLoad?: PullUpLoadOptions
   }
   interface CustomAPI {
-    pullUpLoad: {
-      finishPullUp: PullUp['finish']
-      openPullUp: PullUp['open']
-      closePullUp: PullUp['close']
-    }
+    pullUpLoad: PluginAPI
   }
 }
+interface PluginAPI {
+  finishPullUp(): void
+  openPullUp(config?: PullUpLoadOptions): void
+  closePullUp(): void
+}
 
-export default class PullUp {
+export default class PullUp implements PluginAPI {
   public watching = false
   static pluginName = 'pullUpLoad'
 
-  constructor(public bscroll: BScroll) {
-    if (bscroll.options.pullUpLoad) {
-      this._watch()
-    }
-
-    this.bscroll.registerType(['pullingUp'])
-
-    this.bscroll.proxy(propertiesConfig)
+  constructor(public scroll: BScroll) {
+    this.handleBScroll()
+    this.watch()
   }
 
-  private _watch() {
+  private handleBScroll() {
+    this.scroll.registerType(['pullingUp'])
+
+    this.scroll.proxy(propertiesConfig)
+  }
+
+  private watch() {
     if (this.watching) {
       return
     }
     // must watch scroll in real time
-    this.bscroll.options.probeType = Probe.Realtime
+    this.scroll.options.probeType = Probe.Realtime
     this.watching = true
-    this.bscroll.on('scroll', this._checkToEnd, this)
+    this.scroll.on(this.scroll.eventTypes.scroll, this.checkToEnd, this)
   }
 
-  private _checkToEnd(pos: { y: number }) {
-    if (!this.bscroll.options.pullUpLoad) {
+  private checkToEnd(pos: { y: number }) {
+    if (!this.scroll.options.pullUpLoad) {
       return
     }
 
-    const { threshold = 0 } = this.bscroll.options
-      .pullUpLoad as PullUpLoadConfig
+    const { threshold = 0 } = this.scroll.options.pullUpLoad as PullUpLoadConfig
     if (
-      this.bscroll.movingDirectionY === Direction.Positive &&
-      pos.y <= this.bscroll.maxScrollY + threshold
+      this.scroll.movingDirectionY === Direction.Positive &&
+      pos.y <= this.scroll.maxScrollY + threshold
     ) {
       // reset pullupWatching status after scroll end to promise that trigger 'pullingUp' only once when pulling up
-      this.bscroll.once('scrollEnd', () => {
+      this.scroll.once('scrollEnd', () => {
         this.watching = false
       })
-      this.bscroll.trigger('pullingUp')
-      this.bscroll.off('scroll', this._checkToEnd)
+      this.scroll.trigger('pullingUp')
+      this.scroll.off('scroll', this.checkToEnd)
     }
   }
 
-  finish() {
+  finishPullUp() {
     // reset Direction, fix #936
-    this.bscroll.movingDirectionY = Direction.Default
+    this.scroll.movingDirectionY = Direction.Default
     if (this.watching) {
-      this.bscroll.once('scrollEnd', this._watch, this)
+      this.scroll.once('scrollEnd', this.watch, this)
     } else {
-      this._watch()
+      this.watch()
     }
   }
 
-  open(config: PullUpLoadOptions = true) {
-    this.bscroll.options.pullUpLoad = config
+  openPullUp(config: PullUpLoadOptions = true) {
+    this.scroll.options.pullUpLoad = config
 
-    this._watch()
+    this.watch()
   }
 
-  close() {
-    this.bscroll.options.pullUpLoad = false
+  closePullUp() {
+    this.scroll.options.pullUpLoad = false
     if (!this.watching) {
       return
     }
     this.watching = false
-    this.bscroll.off('scroll', this._checkToEnd)
+    this.scroll.off('scroll', this.checkToEnd)
   }
 }

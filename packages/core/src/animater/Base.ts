@@ -6,14 +6,17 @@ import {
 } from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 
-export type Displacement = [number, number]
-export default abstract class Base {
+export interface ExposedAPI {
+  stop(): void
+}
+
+export default abstract class Base implements ExposedAPI {
   style: safeCSSStyleDeclaration
   hooks: EventEmitter
   timer: number
   pending: boolean
   forceStopped: boolean
-  _reflow: number
+  _reflow: number;
   [key: string]: any
 
   constructor(
@@ -53,6 +56,7 @@ export default abstract class Base {
     easing: string | EaseFn,
     isSilent?: boolean
   ): void
+
   abstract stop(): void
 
   destroy() {

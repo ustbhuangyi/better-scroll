@@ -15,17 +15,29 @@ export default class ObserveDOM {
     this.stopObserver = false
     this.hooksFn = []
     this.init()
-    this.registorHooks(this.scroll.hooks, 'enable', () => {
-      if (this.stopObserver) {
-        this.init()
+    this.registorHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.enable,
+      () => {
+        if (this.stopObserver) {
+          this.init()
+        }
       }
-    })
-    this.registorHooks(this.scroll.hooks, 'disable', () => {
-      this.stopObserve()
-    })
-    this.registorHooks(this.scroll.hooks, 'destroy', () => {
-      this.destroy()
-    })
+    )
+    this.registorHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.disable,
+      () => {
+        this.stopObserve()
+      }
+    )
+    this.registorHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.destroy,
+      () => {
+        this.destroy()
+      }
+    )
   }
   init() {
     if (typeof MutationObserver !== 'undefined') {

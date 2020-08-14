@@ -32,7 +32,7 @@ const compatibleFeatures: {
       scrollsPair.forEach((scroll, index) => {
         const oppositeScroll = scrollsPair[(index + 1) % 2]
 
-        scroll.on('beforeScrollStart', () => {
+        scroll.on(scroll.eventTypes.beforeScrollStart, () => {
           if (oppositeScroll.pending) {
             oppositeScroll.stop()
             oppositeScroll.resetPosition()
@@ -41,12 +41,12 @@ const compatibleFeatures: {
           oppositeScroll.disable()
         })
 
-        scroll.on('touchEnd', () => {
+        scroll.on(scroll.eventTypes.touchEnd, () => {
           oppositeScroll.enable()
         })
       })
 
-      childScroll.on('scrollStart', () => {
+      childScroll.on(childScroll.eventTypes.scrollStart, () => {
         if (checkBeyondBoundary(childScroll)) {
           childScroll.disable()
           parentScroll.enable()
@@ -97,7 +97,9 @@ export default class NestedScroll {
 
   removeBScroll(scroll: BScroll): void {
     const index = this.stores.indexOf(scroll)
-    if (index === -1) return
+    if (index === -1) {
+      return
+    }
     ;(scroll.wrapper as MountedBScrollHTMLElement).isBScrollContainer = undefined
     this.stores.splice(index, 1)
   }
@@ -225,7 +227,7 @@ function setupData(scroll: BScroll): void {
 
 function hasScroll(scroll: BScroll) {
   return {
-    hasHorizontalScroll: scroll.scroller.scrollBehaviorX.hasScroll,
-    hasVerticalScroll: scroll.scroller.scrollBehaviorY.hasScroll
+    hasHorizontalScroll: scroll.hasHorizontalScroll,
+    hasVerticalScroll: scroll.hasVerticalScroll
   }
 }

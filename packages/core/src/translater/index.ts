@@ -9,9 +9,6 @@ export interface TranslaterPoint {
   [key: string]: number
 }
 
-interface Options {
-  translateZ: string
-}
 interface TranslaterMetaData {
   x: [string, string]
   y: [string, string]

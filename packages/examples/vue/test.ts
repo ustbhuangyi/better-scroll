@@ -1,29 +1,23 @@
 import BScroll, { createBScroll } from 'better-scroll'
 
-const a = new BScroll<{}>('', {
-  zoom: {
-    start: 1,
-    max: 1,
-    min: 1
-  },
-  name: '123'
+const a = new BScroll('', {
+  zoom: true
 })
 
 const b = new BScroll('', {})
 
 const c = createBScroll('', {
-  pullDownRefresh: true
+  pullDownRefresh: true,
+  wheel: true
   // zoom: {
   //   start: 1,
   //   max: 1,
   //   min: 1
   // }
 })
-c
 
 const d = createBScroll('', {
   // pullUpLoad: true,
-  pullDownRefresh: true
 })
 d.zoomTo
 const e = createBScroll('', {

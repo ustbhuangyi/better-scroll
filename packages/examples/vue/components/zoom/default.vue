@@ -21,13 +21,13 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button @click="zoomTo(0.5)">zoomTo:0.5</button>
-      <button @click="zoomTo(1)">zoomTo:1</button>
-      <button @click="zoomTo(2)">zoomTo:2</button>
+      <button class="zoom-half" @click="zoomTo(0.5)">zoomTo:0.5</button>
+      <button class="zoom-original" @click="zoomTo(1)">zoomTo:1</button>
+      <button class="zoom-double" @click="zoomTo(2)">zoomTo:2</button>
     </div>
     <div class="linkwork-wrap">
       <p>changing with zooming action</p>
-      <div class="linkwork-block" :style="{transform: linkworkTransform, transitionDuration: linkworkTransformTiming}"></div>
+      <div class="linkwork-block" :style="{transform: linkworkTransform}"></div>
     </div>
   </div>
 </template>
@@ -44,9 +44,7 @@
     name: COMPONENT_NAME,
     data() {
       return {
-        zoom: null,
-        linkworkTransform: 'scale(1)',
-        linkworkTransformTiming: '0ms'
+        linkworkTransform: 'scale(1)'
       }
     },
     mounted() {
@@ -61,19 +59,23 @@
           disableMouse: true,
           useTransition: true,
           zoom: {
-            start: 1,
+            start: 1.5,
             min: 0.5,
-            max: 2
+            max: 3,
+            initialOrigin: ['center', 'center']
           }
         })
 
-        this.zoom.on('zooming', ({scale, bounceTime}) => {
-          this.linkworkTransformTiming = `${bounceTime}ms`
+        this.zoom.on('zooming', ({ scale }) => {
           this.linkworkTransform = `scale(${scale})`
+        })
+
+        this.zoom.on('zoomEnd', () => {
+          console.log('zoom ended')
         })
       },
       zoomTo(value) {
-        this.zoom.zoomTo(value, 0, 0)
+        this.zoom.zoomTo(value, 'center', 'center')
       }
     }
   }
@@ -83,7 +85,6 @@
 .zoom-default
   .zoom-wrapper
     width 100%
-    height 500px
     overflow hidden
     .zoom-items
       display flex

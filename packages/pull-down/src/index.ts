@@ -1,11 +1,12 @@
 import BScroll from '@better-scroll/core'
-import { ease, Probe, Direction } from '@better-scroll/shared-utils'
+import { ease, Direction } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
-export type PullDownRefreshOptions = PullDownRefreshConfig | boolean
+export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | boolean
+
 export interface PullDownRefreshConfig {
-  threshold?: number
-  stop?: number
+  threshold: number
+  stop: number
 }
 
 declare module '@better-scroll/core' {
@@ -13,38 +14,43 @@ declare module '@better-scroll/core' {
     pullDownRefresh?: PullDownRefreshOptions
   }
   interface CustomAPI {
-    pullDownRefresh: {
-      finishPullDown: PullDown['finish']
-      openPullDown: PullDown['open']
-      closePullDown: PullDown['close']
-      autoPullDownRefresh: PullDown['autoPull']
-    }
+    pullDownRefresh: PluginAPI
   }
 }
 
-export default class PullDown {
+interface PluginAPI {
+  finishPullDown(): void
+  openPullDown(config?: PullDownRefreshOptions): void
+  closePullDown(): void
+  autoPullDownRefresh(): void
+}
+
+export default class PullDown implements PluginAPI {
   static pluginName = 'pullDownRefresh'
   pulling: boolean = false
   originalMinScrollY: number
 
   constructor(public scroll: BScroll) {
-    if (scroll.options.pullDownRefresh) {
-      this._watch()
-    }
+    this.handleBScroll()
+    this.watch()
+  }
 
+  private handleBScroll() {
     this.scroll.registerType(['pullingDown'])
 
     this.scroll.proxy(propertiesConfig)
   }
 
-  private _watch() {
-    // 需要设置 probe = 3 吗？
-    // must watch scroll in real time
-    this.scroll.options.probeType = Probe.Realtime
-    this.scroll.scroller.hooks.on('end', this._checkPullDown, this)
+  private watch() {
+    const scroller = this.scroll.scroller
+    scroller.hooks.on(
+      this.scroll.scroller.hooks.eventTypes.end,
+      this.checkPullDown,
+      this
+    )
   }
 
-  private _checkPullDown() {
+  private checkPullDown() {
     if (!this.scroll.options.pullDownRefresh) {
       return
     }
@@ -78,22 +84,22 @@ export default class PullDown {
     return this.pulling
   }
 
-  finish() {
+  finishPullDown() {
     this.pulling = false
     this.scroll.minScrollY = this.originalMinScrollY
     this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
-  open(config: PullDownRefreshOptions = true) {
+  openPullDown(config: PullDownRefreshOptions = true) {
     this.scroll.options.pullDownRefresh = config
-    this._watch()
+    this.watch()
   }
 
-  close() {
+  closePullDown() {
     this.scroll.options.pullDownRefresh = false
   }
 
-  autoPull() {
+  autoPullDownRefresh() {
     const { threshold = 90, stop = 40 } = this.scroll.options
       .pullDownRefresh as PullDownRefreshConfig
 

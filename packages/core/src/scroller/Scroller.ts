@@ -29,9 +29,34 @@ import {
   EventRegister
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
+import { isSamePoint } from '../utils/compare'
 import { MountedBScrollHTMLElement } from '../BScroll'
 
-export default class Scroller {
+export interface ExposedAPI {
+  scrollTo(
+    x: number,
+    y: number,
+    time?: number,
+    easing?: EaseItem,
+    extraTransform?: { start: object; end: object }
+  ): void
+  scrollBy(
+    deltaX: number,
+    deltaY: number,
+    time?: number,
+    easing?: EaseItem
+  ): void
+  scrollToElement(
+    el: HTMLElement | string,
+    time: number,
+    offsetX: number | boolean,
+    offsetY: number | boolean,
+    easing?: EaseItem
+  ): void
+  resetPosition(time?: number, easing?: EaseItem): boolean
+}
+
+export default class Scroller implements ExposedAPI {
   wrapper: HTMLElement
   content: HTMLElement
   actionsHandler: ActionsHandler
@@ -50,7 +75,7 @@ export default class Scroller {
   }
   _reflow: number
   resizeTimeout: number
-  lastClickTime: number | null
+  lastClickTime: number | null;
   [key: string]: any
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
     this.hooks = new EventEmitter([
@@ -68,7 +93,6 @@ export default class Scroller {
       'scrollCancel',
       'momentum',
       'scrollTo',
-      'ignoreDisMoveForSamePos',
       'scrollToElement',
       'resize'
     ])
@@ -153,8 +177,12 @@ export default class Scroller {
     })
     // disable pointer events when scrolling
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
+      const prevPos = this.getCurrentPos()
       this.updatePositions(pos)
-      this.togglePointerEvents(false)
+      // a valid translate
+      if (pos.x !== prevPos.x || pos.y !== prevPos.y) {
+        this.togglePointerEvents(false)
+      }
     })
   }
 
@@ -228,7 +256,6 @@ export default class Scroller {
           return true
         }
         this.animater.setForceStopped(false)
-
         // reset if we are outside of the boundaries
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
           return true
@@ -378,7 +405,7 @@ export default class Scroller {
     }
   }
 
-  private togglePointerEvents(enabled = true) {
+  togglePointerEvents(enabled = true) {
     let el = this.content.children.length
       ? this.content.children
       : [this.content]
@@ -414,14 +441,12 @@ export default class Scroller {
     x: number,
     y: number,
     time = 0,
-    easing?: EaseItem,
+    easing = ease.bounce,
     extraTransform = {
       start: {},
       end: {}
-    },
-    isSilent?: boolean
+    }
   ) {
-    easing = !easing ? ease.bounce : easing
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
 
@@ -437,13 +462,11 @@ export default class Scroller {
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
-    if (!this.hooks.trigger(this.hooks.eventTypes.ignoreDisMoveForSamePos)) {
-      // it is an useless move
-      if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
-        return
-      }
-    }
-    this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
+
+    // it is an useless move
+    if (isSamePoint(startPoint, endPoint)) return
+
+    this.animater.move(startPoint, endPoint, time, easingFn)
   }
 
   scrollToElement(
@@ -511,8 +534,7 @@ export default class Scroller {
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
-  resetPosition(time = 0, easing?: EaseItem) {
-    easing = !easing ? ease.bounce : easing
+  resetPosition(time = 0, easing = ease.bounce) {
     const {
       position: x,
       inBoundary: xInBoundary
