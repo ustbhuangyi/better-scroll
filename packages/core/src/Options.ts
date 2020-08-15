@@ -70,8 +70,8 @@ export interface DefOptions {
 }
 
 export interface Options extends DefOptions, CustomOptions {}
-
-export class OptionsConstructor implements Options {
+export class CustomOptions {}
+export class OptionsConstructor extends CustomOptions implements DefOptions {
   [key: string]: any
   startX: number
   startY: number
@@ -116,6 +116,7 @@ export class OptionsConstructor implements Options {
   autoEndDistance: number
 
   constructor() {
+    super()
     this.startX = 0
     this.startY = 0
     this.scrollX = false

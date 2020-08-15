@@ -16,7 +16,7 @@ export default abstract class Base implements ExposedAPI {
   timer: number
   pending: boolean
   forceStopped: boolean
-  _reflow: number
+  _reflow: number;
   [key: string]: any
 
   constructor(

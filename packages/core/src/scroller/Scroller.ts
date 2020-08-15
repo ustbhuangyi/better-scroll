@@ -75,7 +75,7 @@ export default class Scroller implements ExposedAPI {
   }
   _reflow: number
   resizeTimeout: number
-  lastClickTime: number | null
+  lastClickTime: number | null;
   [key: string]: any
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
     this.hooks = new EventEmitter([

@@ -16,6 +16,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "test": "jest --coverage --runInBand",
     "test:e2e": "jest --config=jest-e2e.config.js --runInBand",
+    "test:tsd": "tsc -p ./test-dts/tsconfig.json",
     "vue:test:e2e": "lerna run --stream --scope examples vue:test:e2e",
     "cm": "git-cz"
   },

@@ -43,7 +43,7 @@ export default class PageInfo {
   changeCurrentPage(newPage: Page & Position): void {
     this.currentPage = newPage
   }
-  change2safePage(pageX: number, pageY: number): Page & Position | undefined {
+  change2safePage(pageX: number, pageY: number): (Page & Position) | undefined {
     if (!this.pagesPos.hasInfo()) {
       return
     }
