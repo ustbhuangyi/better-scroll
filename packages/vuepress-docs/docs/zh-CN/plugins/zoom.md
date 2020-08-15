@@ -40,9 +40,9 @@ new BScroll('.bs-wrapper', {
 })
 ```
 
-以下是和缩放功能相关的配置：
+以下是 zoom 插件专属以及[ BetterScroll 的配置](../guide/base-scroll-options.html)：
 
-- **zoom**
+- **zoom<插件专属>**
 
   开启 zoom 功能。若没有该项，则插件不会生效。该配置同时也是用来设置 zoom 特性的相关配置，具体请参考[ zoom 选项对象](./zoom.html#zoom-选项对象)。
 

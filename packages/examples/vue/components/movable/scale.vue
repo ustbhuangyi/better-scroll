@@ -11,7 +11,7 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import Movable from '@better-scroll/movable'
-  import Zoom from '@better-scroll/zoom' 
+  import Zoom from '@better-scroll/zoom'
 
   BScroll.use(Movable)
   BScroll.use(Zoom)
@@ -41,7 +41,6 @@
           scrollY: true,
           freeScroll: true,
           movable: true,
-          useTransition: true,
           zoom: {
             start: 1,
             min: 0.5,

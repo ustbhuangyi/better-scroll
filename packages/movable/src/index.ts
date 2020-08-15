@@ -1,5 +1,5 @@
 import BScroll, { Behavior, Boundary } from '@better-scroll/core'
-import { ApplyOrder, EventEmitter } from '@better-scroll/shared-utils'
+import { EventEmitter } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {

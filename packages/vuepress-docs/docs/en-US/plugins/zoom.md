@@ -40,9 +40,9 @@ new BScroll('.bs-wrapper', {
 })
 ```
 
-The following are the configuration related to the `zoom`:
+The following is related to `zoom` plugin and [BetterScroll configuration](../guide/base-scroll-options.html):
 
-- **zoom**
+- **zoom(for plugin)**
 
   Enable zoom functionality. That is to say, the zoom plugin won't work without the zoom option, see [zoom option](./zoom.html#option).
 
@@ -61,7 +61,7 @@ The following are the configuration related to the `zoom`:
 ## Demo
 
   :::warning
-  pc is not allowed, scan the qrcode
+  pc is not allowed, scan the qrcode.
   :::
 
   <demo qrcode-url="zoom/default">

@@ -1,7 +1,7 @@
 import BScroll, { createBScroll } from 'better-scroll'
 
 const a = new BScroll('', {
-  zoom: true
+  zoom: false
 })
 
 const b = new BScroll('', {})
