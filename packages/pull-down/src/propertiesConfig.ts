@@ -3,19 +3,19 @@ const sourcePrefix = 'plugins.pullDownRefresh'
 const propertiesMap = [
   {
     key: 'finishPullDown',
-    name: 'finish'
+    name: 'finishPullDown'
   },
   {
     key: 'openPullDown',
-    name: 'open'
+    name: 'openPullDown'
   },
   {
     key: 'closePullDown',
-    name: 'close'
+    name: 'closePullDown'
   },
   {
     key: 'autoPullDownRefresh',
-    name: 'autoPull'
+    name: 'autoPullDownRefresh'
   }
 ]
 

@@ -1,8 +1,8 @@
 <template>
   <div class="slide-fullpage">
     <div class="banner-wrapper">
-      <div class="slide-banner-scroll" ref="slide">
-        <div class="slide-banner-wrapper">
+      <div class="slide-banner-wrapper" ref="slide">
+        <div class="slide-banner-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
@@ -29,7 +29,6 @@
   export default {
     data() {
       return {
-        slide: null,
         currentPageIndex: 0,
         playTimer: 0
       }
@@ -66,7 +65,6 @@
         this.slide.on('scrollEnd', () => {
           this.autoGoNext()
         })
-        window.bs = this.slide
         this.autoGoNext()
       },
       nextPage() {
@@ -99,10 +97,10 @@
   .banner-wrapper
     position relative
     height 100%
-  .slide-banner-scroll
+  .slide-banner-wrapper
     height 100%
     overflow hidden
-  .slide-banner-wrapper
+  .slide-banner-content
     height 100%
     white-space nowrap
     font-size 0

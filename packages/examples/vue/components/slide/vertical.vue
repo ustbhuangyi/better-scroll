@@ -1,8 +1,8 @@
 <template>
   <div class="slide-vertical">
     <div class="vertical-wrapper">
-      <div class="slide-vertical-scroll" ref="slide">
-        <div class="slide-group" ref="slideGroup">
+      <div class="slide-vertical-wrapper" ref="slide">
+        <div class="slide-vertical-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
@@ -29,7 +29,6 @@
   export default {
     data() {
       return {
-        slide: null,
         playTimer: 0,
         currentPageIndex: 0
       }
@@ -43,7 +42,7 @@
     methods: {
       init() {
         clearTimeout(this.playTimer)
-        const slide = new BScroll(this.$refs.slide, {
+        this.slide = new BScroll(this.$refs.slide, {
           scrollX: false,
           scrollY: true,
           slide: {
@@ -55,8 +54,7 @@
           bounce: false,
           stopPropagation: true
         })
-        slide.scrollTo()
-        this.slide = slide
+        this.slide.scrollTo()
         this.slide.on('scrollEnd', this._onScrollEnd)
       },
       _onScrollEnd() {
@@ -77,7 +75,7 @@
     position relative
     height 100%
     font-size 0
-  .slide-vertical-scroll
+  .slide-vertical-wrapper
     height 100%
     overflow hidden
     .slide-item

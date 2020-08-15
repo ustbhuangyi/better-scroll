@@ -1,21 +1,34 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('Slider for fullpage', () => {
   let page = (global as any).page as Page
   extendTouch(page)
-  beforeEach(async () => {
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/slide/fullpage')
+  })
+
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should loop by default', async () => {
     await page.waitFor(300)
-    const content = await page.$('.slide-banner-wrapper')
+
+    // wait for slide autoplay
     await page.waitFor(5000)
-    const boundingBox = await content!.boundingBox()
-    await expect(boundingBox!.x).toBeLessThan(-600)
+
+    const transformText = await page.$eval('.slide-banner-content', node => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+
+    expect(x).toBe(-750)
   })
 
   it('should work by dispatching touch events', async () => {
@@ -29,8 +42,13 @@ describe('Slider for fullpage', () => {
       gestureSourceType: 'touch'
     })
 
-    const content = await page.$('.slide-banner-wrapper')
-    const boundingBox = await content!.boundingBox()
-    await expect(boundingBox!.x).toBeLessThan(-600)
+    await page.waitFor(1500)
+
+    const transformText = await page.$eval('.slide-banner-content', node => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+
+    expect(x).toBe(-375)
   })
 })

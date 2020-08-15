@@ -48,6 +48,7 @@ interface PluginAPI {
 export default class Slide implements PluginAPI {
   static pluginName = 'slide'
   private page: SlidePage
+  private inited: boolean
   private slideOpt: Partial<Config>
   private thresholdX: number
   private thresholdY: number
@@ -92,25 +93,25 @@ export default class Slide implements PluginAPI {
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
 
-    this.registorHooks(scrollHooks, 'refresh', this.initSlideState)
-    this.registorHooks(scrollHooks, 'destroy', this.destroy)
-    this.registorHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
+    this.registerHooks(scrollHooks, 'refresh', this.initSlideState)
+    this.registerHooks(scrollHooks, 'destroy', this.destroy)
+    this.registerHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
     // scrollEnd handler should be called before customized handlers
-    this.registorHooks(this.scroll, 'scrollEnd', this.amendCurrentPage)
-    this.registorHooks(scrollerHooks, 'beforeStart', this.setTouchFlag)
-    this.registorHooks(scrollerHooks, 'scroll', this.scrollMoving)
-    this.registorHooks(scrollerHooks, 'resize', this.resize)
+    this.registerHooks(this.scroll, 'scrollEnd', this.amendCurrentPage)
+    this.registerHooks(scrollerHooks, 'beforeStart', this.setTouchFlag)
+    this.registerHooks(scrollerHooks, 'scroll', this.scrollMoving)
+    this.registerHooks(scrollerHooks, 'resize', this.resize)
 
     // for mousewheel event
     if (
       this.scroll.eventTypes.mousewheelMove &&
       this.scroll.eventTypes.mousewheelEnd
     ) {
-      this.registorHooks(this.scroll, 'mousewheelMove', () => {
+      this.registerHooks(this.scroll, 'mousewheelMove', () => {
         // prevent default action of mousewheelMove
         return true
       })
-      this.registorHooks(
+      this.registerHooks(
         this.scroll,
         'mousewheelEnd',
         (delta: { directionX: number; directionY: number }) => {
@@ -131,7 +132,7 @@ export default class Slide implements PluginAPI {
     }
 
     if (slide.listenFlick !== false) {
-      this.registorHooks(scrollerHooks, 'flick', this.flickHandler)
+      this.registerHooks(scrollerHooks, 'flick', this.flickHandler)
     }
 
     if (!lazyInitByRefresh && !shouldRefresh) {
@@ -215,7 +216,21 @@ export default class Slide implements PluginAPI {
     this.page.init()
     this.initThreshold()
     const initPage = this.page.getInitPage()
-    this.goTo(initPage.pageX, initPage.pageY, 0)
+    const pageSize = this.page.getPageSize()
+    // TODO optimize logic
+    if (!this.inited) {
+      this.registerHooks(
+        this.scroll.hooks,
+        this.scroll.hooks.eventTypes.beforeInitialScrollTo,
+        (position: { x: number; y: number }) => {
+          position.x = -(pageSize.width * initPage.pageX)
+          position.y = -(pageSize.height * initPage.pageY)
+        }
+      )
+      this.inited = true
+    } else {
+      this.goTo(initPage.pageX, initPage.pageY, 0)
+    }
   }
   private initThreshold() {
     const slideThreshold = this.slideOpt.threshold || 0.1
@@ -461,7 +476,7 @@ export default class Slide implements PluginAPI {
   private setTouchFlag() {
     this.isTouching = true
   }
-  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
   }

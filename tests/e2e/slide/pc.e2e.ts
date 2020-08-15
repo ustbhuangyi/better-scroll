@@ -1,13 +1,20 @@
 import { Page } from 'puppeteer'
 import extendMouseWheel from '../../util/extendMouseWheel'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('Slider for mousewheel', () => {
   let page = (global as any).page as Page
   extendMouseWheel(page)
-  beforeEach(async () => {
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/slide/pc')
+  })
+
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded'
+    })
   })
 
   it('should work by dispatching touch events', async () => {
@@ -22,8 +29,11 @@ describe('Slider for mousewheel', () => {
     })
     // wait for transition ends
     await page.waitFor(1000)
-    const content = await page.$('.slide-banner-wrapper')
-    const boundingBox = await content!.boundingBox()
-    await expect(boundingBox!.x).toBeLessThan(-600)
+
+    const transformText = await page.$eval('.slide-banner-content', node => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+    expect(x).toBe(-670)
   })
 })
