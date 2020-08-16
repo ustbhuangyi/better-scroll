@@ -9,6 +9,7 @@ import ObserveDom from '@better-scroll/observe-dom'
 import NestedScroll from '@better-scroll/nested-scroll'
 import MouseWheel from '@better-scroll/mouse-wheel'
 import Infinity from '@better-scroll/infinity'
+import Movable from '@better-scroll/movable'
 import { IfEquals } from './util'
 
 export * from '@better-scroll/core'
@@ -22,6 +23,7 @@ export * from '@better-scroll/observe-dom'
 export * from '@better-scroll/nested-scroll'
 export * from '@better-scroll/mouse-wheel'
 export * from '@better-scroll/infinity'
+export * from '@better-scroll/movable'
 
 export type ArgumentsCheck<
   T extends any[],
@@ -57,5 +59,6 @@ export {
   ObserveDom,
   NestedScroll,
   MouseWheel,
-  Infinity
+  Infinity,
+  Movable
 }

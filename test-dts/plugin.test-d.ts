@@ -16,6 +16,7 @@ import {
   ObserveDom,
   NestedScroll,
   MouseWheel,
+  Movable,
   ZoomConfig,
   WheelConfig,
   Config,
@@ -301,4 +302,14 @@ describe('mouseWhell plugin options and api type shoule be inferred correctly', 
   expectType<boolean, FilterUndef<BSOptions['mouseWheel']['invert']>>()
   expectType<number, FilterUndef<BSOptions['mouseWheel']['speed']>>()
   expectType<number, FilterUndef<BSOptions['mouseWheel']['throttleTime']>>()
+})
+
+describe('movable plugin options and api type shoule be inferred correctly', () => {
+  BScroll.use(Movable)
+  const bscroll = new BScroll('', {
+    movable: true
+  })
+  // Options
+  type BSOptions = DeepNonNullable<typeof bscroll.options>
+  expectType<boolean, FilterUndef<BSOptions['movable']>>()
 })
