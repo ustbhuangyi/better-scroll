@@ -69,10 +69,7 @@ describe('zoom plugin options and api type shoule be inferred correctly', () => 
   type ZoomToAPI = typeof bscroll.zoomTo
   type OriginX = number | 'left' | 'right' | 'center'
   type OriginY = number | 'top' | 'bottom' | 'center'
-  expectFuncArguments<
-    [number, OriginX, OriginY, (number | undefined)?],
-    ZoomToAPI
-  >()
+  expectFuncArguments<[number, OriginX, OriginY, number?], ZoomToAPI>()
 })
 
 describe('whell plugin options and api type shoule be inferred correctly', () => {
@@ -101,10 +98,7 @@ describe('whell plugin options and api type shoule be inferred correctly', () =>
   //API
   type WhellToAPI = typeof bscroll.wheelTo
   type GetSelectedIndexAPI = typeof bscroll.getSelectedIndex
-  expectFuncArguments<
-    [(number | undefined)?, (number | undefined)?, (EaseItem | undefined)?],
-    WhellToAPI
-  >()
+  expectFuncArguments<[number?, number?, EaseItem?], WhellToAPI>()
   expectFuncReturnValue<number, GetSelectedIndexAPI>()
 })
 
@@ -157,18 +151,9 @@ describe('slider plugin options and api type shoule be inferred correctly', () =
     pageX: number
     pageY: number
   }
-  expectFuncArguments<
-    [(number | undefined)?, (EaseItem | undefined)?],
-    BS['next']
-  >()
-  expectFuncArguments<
-    [(number | undefined)?, (EaseItem | undefined)?],
-    BS['prev']
-  >()
-  expectFuncArguments<
-    [number, number, (number | undefined)?, (EaseItem | undefined)?],
-    BS['goToPage']
-  >()
+  expectFuncArguments<[number?, EaseItem?], BS['next']>()
+  expectFuncArguments<[number?, EaseItem?], BS['prev']>()
+  expectFuncArguments<[number, number, number?, EaseItem?], BS['goToPage']>()
   expectFuncReturnValue<Page, BS['getCurrentPage']>()
 })
 
@@ -219,7 +204,7 @@ describe('pullUp plugin options and api type shoule be inferred correctly', () =
   type BS = typeof bscroll
   expectFuncArguments<[], BS['finishPullUp']>()
   expectFuncArguments<
-    [(boolean | Partial<PullUpLoadConfig> | undefined)?],
+    [(boolean | Partial<PullUpLoadConfig>)?],
     BS['openPullUp']
   >()
   expectFuncArguments<[], BS['closePullUp']>()
@@ -256,7 +241,7 @@ describe('pullDown plugin options and api type shoule be inferred correctly', ()
   type BS = typeof bscroll
   expectFuncArguments<[], BS['finishPullDown']>()
   expectFuncArguments<
-    [(boolean | Partial<PullDownRefreshConfig> | undefined)?],
+    [(boolean | Partial<PullDownRefreshConfig>)?],
     BS['openPullDown']
   >()
   expectFuncArguments<[], BS['closePullDown']>()
