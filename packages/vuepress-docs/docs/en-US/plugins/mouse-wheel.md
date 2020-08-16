@@ -126,7 +126,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 - **Type**：`number`
 - **Default**: `400`(ms)
 
-  Because the mousw wheel is a discrete movement, there is no event type of **start**, **move**, **end**, so as long as no scroll is detected within `discreteTime`, then one scroll wheel action ends.
+  Because the mouse wheel is a discrete movement, there is no event type of **start**, **move**, **end**, so as long as no scroll is detected within `discreteTime`, then one scroll wheel action ends.
 
 ### throttleTime
 
