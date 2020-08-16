@@ -16,7 +16,7 @@ yarn add @better-scroll/wheel@next
 
 ## 使用
 
-首先引入 wheel 插件，并通过全局方法 `BScroll.use()` 扩展 BetterScroll 的能力。
+首先引入 wheel 插件，并通过静态方法 `BScroll.use()` 扩展 BetterScroll 的能力。
 
 ```js
 import BScroll from '@better-scroll/core'

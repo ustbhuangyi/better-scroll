@@ -65,8 +65,8 @@ export default class MouseWheel {
 
   private handleBScroll() {
     this.scroll.registerType([
-      'mousewheelMove',
       'mousewheelStart',
+      'mousewheelMove',
       'mousewheelEnd'
     ])
   }

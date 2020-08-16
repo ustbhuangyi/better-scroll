@@ -1,8 +1,8 @@
 # mouse-wheel
 
-This plugin supports for mouse wheel for core scrolling and some plugins in PC.
+mouseWheel extends the capabilities of the BetterScroll mouse wheel.
 
-## Install
+# Install
 
 ```bash
 npm install @better-scroll/mouse-wheel@next --save
@@ -13,30 +13,50 @@ yarn add @better-scroll/mouse-wheel@next
 ```
 
 :::tip
-Currently, the core scrolling has supported mouse wheel.
-Plugins supported for mouse wheel action are **slide** and **wheel**.
+Currently supports mouse wheel: core, slide, wheel plugins.
 :::
 
-# Usage
+## Basic Usage
 
-- Add mouse wheel feature for core scrolling
+In order to enable the mouseWheel plugin, you need to first import it, register the plugin through the static method `BScroll.use()`, and finally pass in the correct [mouseWheel option](./mouse-wheel.html#mousewheel-options)
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import MouseWheel from '@better-scroll/mouse-wheel'
-    BScroll.use(MouseWheel)
+```js
+import BScroll from '@better-scroll/core'
+import MouseWheel from '@better-scroll/mouse-wheel'
+BScroll.use(MouseWheel)
 
-    new BScroll('.bs-wrap', {
-      //...
-      mouseWheel: {
-        speed: 20,
-        invert: false,
-        easeTime: 300
-      }
-    })
-  ```
+new BScroll('.bs-wrapper', {
+  //...
+  mouseWheel: {
+    speed: 20,
+    invert: false,
+    easeTime: 300
+  }
+})
+```
 
-- add mouse wheel feature for other plugins. In this case, you should use mouse-wheel plugin together with which plugin you will use.
+- **Demo**
+
+    <demo :hide-qrcode="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/core/mouse-wheel.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/core/mouse-wheel.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/core/mouse-wheel.vue?style
+      </template>
+      <core-mouse-wheel slot="demo"></core-mouse-wheel>
+    </demo>
+
+## Advanced Usage
+
+The mouseWheel plugin can also be used with other plugins to increase the operation of the mouse wheel.
+
+- **mouseWheel & slide**
+
+  Operate [slide](./slide.html) with the mouse wheel.
 
   ```js
     import BScroll from '@better-scroll/core'
@@ -46,7 +66,7 @@ Plugins supported for mouse wheel action are **slide** and **wheel**.
     BScroll.use(MouseWheel)
     BScroll.use(Slide)
 
-    new BScroll('.bs-wrap', {
+    new BScroll('.bs-wrapper', {
       scrollX: true,
       scrollY: false,
       slide: {
@@ -64,27 +84,7 @@ Plugins supported for mouse wheel action are **slide** and **wheel**.
     })
   ```
 
-## Demo
-
-- core scroll
-
-  <demo :hide-qrcode="true">
-    <template slot="code-template">
-      <<< @/examples/vue/components/core/mouse-wheel.vue?template
-    </template>
-    <template slot="code-script">
-      <<< @/examples/vue/components/core/mouse-wheel.vue?script
-    </template>
-    <template slot="code-style">
-      <<< @/examples/vue/components/core/mouse-wheel.vue?style
-    </template>
-    <core-mouse-wheel slot="demo"></core-mouse-wheel>
-  </demo>
-
-- wheel
-
-- slide
-
+  - **Demo**
   <demo :hide-qrcode="true">
     <template slot="code-template">
       <<< @/examples/vue/components/slide/pc.vue?template
@@ -98,25 +98,41 @@ Plugins supported for mouse wheel action are **slide** and **wheel**.
     <slide-pc slot="demo"></slide-pc>
   </demo>
 
-## Options
+## mouseWheel options
 
 ### speed
 
-The speed of mouse wheel.
+- **Type**：`number`
+- **Default**：`20`
 
-- Type:number
-- Default: 20
+  The speed at which the mouse wheel scrolls.
 
 ### invert
 
-The `true` value means that the direction of mouse wheel and the direction of real scroll are opposite.
+- **Type**：`boolean`
+- **Default**：`false`
 
-- Type: boolean
-- Default: false
+  When the value is true, it means that the scrolling direction of the wheel is opposite to that of BetterScroll.
 
 ### easeTime
 
-The ease time of the rolling animation. The unit is milliseconds.
+- **Type**：`number`
+- **Default**: `300`(ms)
 
-- Type: number
-- Default: 300
+  The duration of the scroll animation.
+
+### discreteTime
+
+- **Type**：`number`
+- **Default**: `400`(ms)
+
+  Because the mousw wheel is a discrete movement, there is no event type of **start**, **move**, **end**, so as long as no scroll is detected within `discreteTime`, then one scroll wheel action ends.
+
+### throttleTime
+
+- **Type**：`number`
+- **Default**: `0`(ms)
+
+  Since the scroll wheel is a high-frequency action, the trigger frequency can be limited by `throttleTime`. MouseWheel will cache the scrolling distance, and calculate the cached distance and scroll every throttleTime.
+
+  > Modifying throttleTime may cause discontinuous scrolling animation, please adjust it according to the actual scene.
