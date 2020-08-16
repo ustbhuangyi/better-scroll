@@ -66,7 +66,7 @@ export interface DefOptions {
   autoBlur?: boolean
   translateZ?: string
   dblclick?: dblclickOptions
-  autoEndDistance: number
+  autoEndDistance?: number
 }
 
 export interface Options extends DefOptions, CustomOptions {}

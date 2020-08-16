@@ -16,7 +16,7 @@ yarn add @better-scroll/zoom@next
 
 ## 使用
 
-为了开启缩放功能，你需要首先引入 zoom 插件，并通过全局方法 `BScroll.use()` 注册插件
+为了开启缩放功能，你需要首先引入 zoom 插件，并通过静态方法 `BScroll.use()` 注册插件
 
 ```js
 import BScroll from '@better-scroll/core'
