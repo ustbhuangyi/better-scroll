@@ -10,3 +10,15 @@ export type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X
   : 2) extends <T>() => T extends Y ? 1 : 2
   ? A
   : B
+
+export type FilterType<T, F> = T extends F ? never : T
+
+export type FilterUndef<T> = FilterType<T, undefined>
+export type FilterBoolean<T> = FilterType<T, boolean>
+export type FilterNull<T> = FilterType<T, null>
+export type FilterString<T> = FilterType<T, string>
+export type FilterNumber<T> = FilterType<T, number>
+export type FilterSymbol<T> = FilterType<T, symbol>
+export type FilterArray<T> = FilterType<T, Array<any>>
+export type FilterFunc<T> = FilterType<T, Function>
+export type FilterObject<T> = FilterType<T, object>
