@@ -22,10 +22,18 @@ export * from '@better-scroll/observe-dom'
 export * from '@better-scroll/nested-scroll'
 export * from '@better-scroll/mouse-wheel'
 export * from '@better-scroll/infinity'
+type ArgumentsCheck<T extends any[], U extends (...args: any[]) => any> = (
+  ...args: any[]
+) => U extends (...args: infer P) => any ? IfEquals<T, P, ReturnType<U>> : never
 
-export declare function expectType<T, T1 extends IfEquals<T, T1>>(): void
+export declare function expectType<T, T1 extends IfEquals<T, T1, T, T>>(): void
 export declare function expectError<T>(value: T): void
 export declare function expectAssignable<T1 extends T, T>(): void
+export declare function expectFuncArguments<
+  T extends any[],
+  T1 extends ArgumentsCheck<T, T1>
+>(): void
+
 export {
   BScroll,
   Zoom,

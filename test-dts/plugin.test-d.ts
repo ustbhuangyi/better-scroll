@@ -2,6 +2,7 @@ import {
   expectType,
   expectError,
   expectAssignable,
+  expectFuncArguments,
   BScroll,
   createBScroll,
   Zoom,
@@ -16,10 +17,15 @@ import {
   ZoomConfig,
   WheelConfig,
   Config,
-  MouseWheelOptions
+  MouseWheelOptions,
+  scrollbarOptions,
+  ScrollbarConfig,
+  PullUpLoadOptions,
+  PullUpLoadConfig,
+  PullDownRefreshOptions,
+  PullDownRefreshConfig
 } from './index'
 import { DeepNonNullable, FilterType, FilterUndef, FilterBoolean } from './util'
-
 describe('BScroll.use should be used normally', () => {
   // @ts-expect-error
   expectError(BScroll.use())
@@ -127,10 +133,26 @@ describe('slider plugin option type shoule be inferred correctly', () => {
 describe('scrollBar plugin option type shoule be inferred correctly', () => {
   BScroll.use(ScrollBar)
   const bscroll = new BScroll('', {
-    scrollbar: true
+    scrollbar: {
+      fade: true,
+      interactive: true
+    }
   })
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectAssignable<boolean, BSOptions['scrollbar']>()
+  expectType<scrollbarOptions, BSOptions['scrollbar']>()
+  expectType<
+    boolean,
+    FilterType<BSOptions['scrollbar'], Partial<ScrollbarConfig>>
+  >()
+  expectType<Partial<ScrollbarConfig>, FilterBoolean<BSOptions['scrollbar']>>()
+  expectType<
+    boolean,
+    FilterUndef<FilterBoolean<BSOptions['scrollbar']>['fade']>
+  >()
+  expectType<
+    boolean,
+    FilterUndef<FilterBoolean<BSOptions['scrollbar']>['interactive']>
+  >()
 })
 
 describe('pullUp plugin option type shoule be inferred correctly', () => {
@@ -139,16 +161,43 @@ describe('pullUp plugin option type shoule be inferred correctly', () => {
     pullUpLoad: true
   })
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectAssignable<boolean, BSOptions['pullUpLoad']>()
+  expectType<PullUpLoadOptions, BSOptions['pullUpLoad']>()
+  expectType<
+    boolean,
+    FilterType<BSOptions['pullUpLoad'], Partial<PullUpLoadConfig>>
+  >()
+  expectType<
+    number,
+    FilterUndef<FilterBoolean<BSOptions['pullUpLoad']>['threshold']>
+  >()
 })
 
 describe('pullDown plugin option type shoule be inferred correctly', () => {
   BScroll.use(PullDown)
   const bscroll = new BScroll('', {
-    pullDownRefresh: true
+    pullDownRefresh: {
+      threshold: 1,
+      stop: 1
+    }
   })
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectAssignable<boolean, BSOptions['pullDownRefresh']>()
+  expectType<PullDownRefreshOptions, BSOptions['pullDownRefresh']>()
+  expectType<
+    boolean,
+    FilterType<BSOptions['pullDownRefresh'], Partial<PullDownRefreshConfig>>
+  >()
+  expectType<
+    Partial<PullDownRefreshConfig>,
+    FilterBoolean<BSOptions['pullDownRefresh']>
+  >()
+  expectType<
+    number,
+    FilterUndef<FilterBoolean<BSOptions['pullDownRefresh']>['stop']>
+  >()
+  expectType<
+    number,
+    FilterUndef<FilterBoolean<BSOptions['pullDownRefresh']>['threshold']>
+  >()
 })
 
 describe('observeDom plugin option type shoule be inferred correctly', () => {
@@ -183,9 +232,9 @@ describe('mouseWhell plugin option type shoule be inferred correctly', () => {
 
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<Partial<MouseWheelOptions>, BSOptions['mouseWheel']>()
-  expectType<number, NonNullable<BSOptions['mouseWheel']['discreteTime']>>()
-  expectType<number, NonNullable<BSOptions['mouseWheel']['easeTime']>>()
-  expectType<boolean, NonNullable<BSOptions['mouseWheel']['invert']>>()
-  expectType<number, NonNullable<BSOptions['mouseWheel']['speed']>>()
-  expectType<number, NonNullable<BSOptions['mouseWheel']['throttleTime']>>()
+  expectType<number, FilterUndef<BSOptions['mouseWheel']['discreteTime']>>()
+  expectType<number, FilterUndef<BSOptions['mouseWheel']['easeTime']>>()
+  expectType<boolean, FilterUndef<BSOptions['mouseWheel']['invert']>>()
+  expectType<number, FilterUndef<BSOptions['mouseWheel']['speed']>>()
+  expectType<number, FilterUndef<BSOptions['mouseWheel']['throttleTime']>>()
 })
