@@ -1,5 +1,11 @@
-import BScroll from '@better-scroll/core'
-import { ease, Direction } from '@better-scroll/shared-utils'
+import BScroll, { Boundary } from '@better-scroll/core'
+import {
+  ease,
+  Direction,
+  extend,
+  EventEmitter,
+  Probe
+} from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
 export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | boolean
@@ -20,44 +26,101 @@ declare module '@better-scroll/core' {
 
 interface PluginAPI {
   finishPullDown(): void
-  openPullDown(config?: PullDownRefreshOptions): void
+  openPullDown(config?: Partial<PullDownRefreshConfig>): void
   closePullDown(): void
   autoPullDownRefresh(): void
 }
 
+const PULL_DOWN_HOOKS_NAME = 'pullingDown'
+
 export default class PullDown implements PluginAPI {
   static pluginName = 'pullDownRefresh'
+  private hooksFn: Array<[EventEmitter, string, Function]>
   pulling: boolean = false
-  originalMinScrollY: number
+  watching: boolean
+  options: PullDownRefreshConfig
+  cachedOriginanMinScrollY: number
+  currentMinScrollY: number
 
   constructor(public scroll: BScroll) {
+    this.init()
+  }
+
+  private init() {
     this.handleBScroll()
+
+    this.handleOptions()
+
+    this.handleHooks()
+
     this.watch()
   }
 
   private handleBScroll() {
-    this.scroll.registerType(['pullingDown'])
+    this.scroll.registerType([PULL_DOWN_HOOKS_NAME])
 
     this.scroll.proxy(propertiesConfig)
   }
 
-  private watch() {
-    const scroller = this.scroll.scroller
-    scroller.hooks.on(
-      this.scroll.scroller.hooks.eventTypes.end,
-      this.checkPullDown,
-      this
+  private handleOptions(userOptions?: Partial<PullDownRefreshConfig>) {
+    userOptions = (userOptions
+      ? userOptions
+      : this.scroll.options.pullDownRefresh === true
+      ? {}
+      : this.scroll.options.pullDownRefresh) as Partial<PullDownRefreshConfig>
+    const defaultOptions: PullDownRefreshConfig = {
+      threshold: 90,
+      stop: 40
+    }
+    this.options = extend(defaultOptions, userOptions)
+    // plugin relies on scrollTo api
+    // set it to Realtime make bs dispatch scroll、scrollEnd hooks
+    this.scroll.options.probeType = Probe.Realtime
+  }
+
+  private handleHooks() {
+    this.hooksFn = []
+    const { scrollBehaviorY } = this.scroll.scroller
+    this.currentMinScrollY = this.cachedOriginanMinScrollY =
+      scrollBehaviorY.minScrollPos
+
+    this.registerHooks(
+      scrollBehaviorY.hooks,
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
+      (boundary: Boundary) => {
+        // content is smaller than wrapper
+        if (boundary.maxScrollPos > 0) {
+          // allow scrolling when content is not full of wrapper
+          boundary.maxScrollPos = -1
+        }
+        boundary.minScrollPos = this.currentMinScrollY
+      }
     )
   }
 
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
+  }
+
+  private watch() {
+    const scroller = this.scroll.scroller
+    this.watching = true
+    this.registerHooks(
+      scroller.hooks,
+      scroller.hooks.eventTypes.end,
+      this.checkPullDown
+    )
+  }
+
+  private unwatch() {
+    const scroller = this.scroll.scroller
+    this.watching = false
+    scroller.hooks.off(scroller.hooks.eventTypes.end, this.checkPullDown)
+  }
+
   private checkPullDown() {
-    if (!this.scroll.options.pullDownRefresh) {
-      return
-    }
-
-    const { threshold = 90, stop = 40 } = this.scroll.options
-      .pullDownRefresh as PullDownRefreshConfig
-
+    const { threshold, stop } = this.options
     // check if a real pull down action
     if (
       this.scroll.directionY !== Direction.Negative ||
@@ -67,11 +130,11 @@ export default class PullDown implements PluginAPI {
     }
 
     if (!this.pulling) {
-      this.pulling = true
-      this.scroll.trigger('pullingDown')
+      this.modifyBehaviorYBoundary(stop)
 
-      this.originalMinScrollY = this.scroll.minScrollY
-      this.scroll.minScrollY = stop
+      this.pulling = true
+
+      this.scroll.trigger(PULL_DOWN_HOOKS_NAME)
     }
 
     this.scroll.scrollTo(
@@ -84,35 +147,48 @@ export default class PullDown implements PluginAPI {
     return this.pulling
   }
 
+  private modifyBehaviorYBoundary(stopDistance: number) {
+    const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+    // manually modify minScrollPos for a hang animation
+    // to prevent from resetPosition
+    this.cachedOriginanMinScrollY = scrollBehaviorY.minScrollPos
+    this.currentMinScrollY = stopDistance
+    scrollBehaviorY.computeBoundary()
+  }
+
   finishPullDown() {
+    const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+    // restore minScrollY since the hang animation has ended
+    this.currentMinScrollY = this.cachedOriginanMinScrollY
+    scrollBehaviorY.computeBoundary()
+
     this.pulling = false
-    this.scroll.minScrollY = this.originalMinScrollY
     this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
-  openPullDown(config: PullDownRefreshOptions = true) {
-    this.scroll.options.pullDownRefresh = config
-    this.watch()
+  openPullDown(config: Partial<PullDownRefreshConfig> = {}) {
+    this.handleOptions(config)
+    if (!this.watching) {
+      this.watch()
+    }
   }
 
   closePullDown() {
-    this.scroll.options.pullDownRefresh = false
+    this.unwatch()
   }
 
   autoPullDownRefresh() {
-    const { threshold = 90, stop = 40 } = this.scroll.options
-      .pullDownRefresh as PullDownRefreshConfig
+    const { threshold, stop } = this.options
 
-    if (this.pulling) {
+    if (this.pulling || !this.watching) {
       return
     }
     this.pulling = true
 
-    this.originalMinScrollY = this.scroll.minScrollY
-    this.scroll.minScrollY = threshold
+    this.modifyBehaviorYBoundary(stop)
 
     this.scroll.scrollTo(this.scroll.x, threshold)
-    this.scroll.trigger('pullingDown')
+    this.scroll.trigger(PULL_DOWN_HOOKS_NAME)
     this.scroll.scrollTo(
       this.scroll.x,
       stop,

@@ -30,7 +30,7 @@
   BScroll.use(PullDown)
 
   function generateData() {
-    const BASE = 20
+    const BASE = 30
     const begin = BASE * STEP
     const end = BASE * (STEP + 1)
     let ret = []
@@ -55,9 +55,6 @@
         dataList: generateData()
       }
     },
-    created() {
-      this.bscroll = null
-    },
     mounted() {
       this.initBscroll()
     },
@@ -75,11 +72,16 @@
 
         this.bscroll.on('pullingDown', this.pullingDownHandler)
         this.bscroll.on('scroll', this.scrollHandler)
+        this.bscroll.on('scrollEnd', (e) => {
+          console.log(e)
+          console.log('scrollEnd')
+        })
       },
       scrollHandler(pos) {
         console.log(pos.y)
       },
       async pullingDownHandler() {
+        console.log('trigger pullDown')
         this.beforePullDown = false
         this.isPullingDown = true
         STEP += 1
@@ -114,7 +116,7 @@
       ajaxGet(/* url */) {
         return new Promise(resolve => {
           setTimeout(() => {
-            const dataList = generateData(STEP)
+            const dataList = generateData()
             resolve(dataList)
           }, REQUEST_TIME)
         })
