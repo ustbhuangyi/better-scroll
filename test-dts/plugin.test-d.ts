@@ -3,6 +3,8 @@ import {
   expectError,
   expectAssignable,
   expectFuncArguments,
+  expectFuncReturnValue,
+  ArgumentsCheck,
   BScroll,
   createBScroll,
   Zoom,
@@ -14,6 +16,7 @@ import {
   ObserveDom,
   NestedScroll,
   MouseWheel,
+  Movable,
   ZoomConfig,
   WheelConfig,
   Config,
@@ -26,6 +29,7 @@ import {
   PullDownRefreshConfig
 } from './index'
 import { DeepNonNullable, FilterType, FilterUndef, FilterBoolean } from './util'
+import { EaseItem } from '@better-scroll/shared-utils/src'
 describe('BScroll.use should be used normally', () => {
   // @ts-expect-error
   expectError(BScroll.use())
@@ -46,7 +50,7 @@ describe('BScroll.use should be used normally', () => {
   )
 })
 
-describe('zoom plugin option type shoule be inferred correctly', () => {
+describe('zoom plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(Zoom)
   const bscroll = createBScroll('', {
     zoom: {
@@ -55,14 +59,20 @@ describe('zoom plugin option type shoule be inferred correctly', () => {
       start: 1
     }
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<Partial<ZoomConfig>, BSOptions['zoom']>()
   expectType<number, FilterUndef<BSOptions['zoom']['max']>>()
   expectType<number, FilterUndef<BSOptions['zoom']['min']>>()
   expectType<number, FilterUndef<BSOptions['zoom']['start']>>()
+  // API
+  type ZoomToAPI = typeof bscroll.zoomTo
+  type OriginX = number | 'left' | 'right' | 'center'
+  type OriginY = number | 'top' | 'bottom' | 'center'
+  expectFuncArguments<[number, OriginX, OriginY, number?], ZoomToAPI>()
 })
 
-describe('whell plugin option type shoule be inferred correctly', () => {
+describe('whell plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(Wheel)
   const bscroll = new BScroll('', {
     wheel: {
@@ -74,6 +84,7 @@ describe('whell plugin option type shoule be inferred correctly', () => {
       wheelDisabledItemClass: 'wheelDisabledItemClass'
     }
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<Partial<WheelConfig>, BSOptions['wheel']>()
   expectType<number, FilterUndef<BSOptions['wheel']['rotate']>>()
@@ -84,15 +95,21 @@ describe('whell plugin option type shoule be inferred correctly', () => {
   >()
   expectType<string, FilterUndef<BSOptions['wheel']['wheelItemClass']>>()
   expectType<string, FilterUndef<BSOptions['wheel']['wheelWrapperClass']>>()
+  //API
+  type WhellToAPI = typeof bscroll.wheelTo
+  type GetSelectedIndexAPI = typeof bscroll.getSelectedIndex
+  expectFuncArguments<[number?, number?, EaseItem?], WhellToAPI>()
+  expectFuncReturnValue<number, GetSelectedIndexAPI>()
 })
 
-describe('slider plugin option type shoule be inferred correctly', () => {
+describe('slider plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(Slide)
   const bscroll = createBScroll('', {
     slide: {
       loop: true
     }
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   type EaseType = {
     style: string
@@ -128,9 +145,19 @@ describe('slider plugin option type shoule be inferred correctly', () => {
     boolean,
     FilterUndef<FilterBoolean<BSOptions['slide']>['disableSetHeight']>
   >()
+  // API
+  type BS = typeof bscroll
+  type Page = {
+    pageX: number
+    pageY: number
+  }
+  expectFuncArguments<[number?, EaseItem?], BS['next']>()
+  expectFuncArguments<[number?, EaseItem?], BS['prev']>()
+  expectFuncArguments<[number, number, number?, EaseItem?], BS['goToPage']>()
+  expectFuncReturnValue<Page, BS['getCurrentPage']>()
 })
 
-describe('scrollBar plugin option type shoule be inferred correctly', () => {
+describe('scrollBar plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(ScrollBar)
   const bscroll = new BScroll('', {
     scrollbar: {
@@ -138,6 +165,7 @@ describe('scrollBar plugin option type shoule be inferred correctly', () => {
       interactive: true
     }
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<scrollbarOptions, BSOptions['scrollbar']>()
   expectType<
@@ -153,13 +181,15 @@ describe('scrollBar plugin option type shoule be inferred correctly', () => {
     boolean,
     FilterUndef<FilterBoolean<BSOptions['scrollbar']>['interactive']>
   >()
+  // API
 })
 
-describe('pullUp plugin option type shoule be inferred correctly', () => {
+describe('pullUp plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(PullUp)
   const bscroll = new BScroll('', {
     pullUpLoad: true
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<PullUpLoadOptions, BSOptions['pullUpLoad']>()
   expectType<
@@ -170,9 +200,17 @@ describe('pullUp plugin option type shoule be inferred correctly', () => {
     number,
     FilterUndef<FilterBoolean<BSOptions['pullUpLoad']>['threshold']>
   >()
+  // API
+  type BS = typeof bscroll
+  expectFuncArguments<[], BS['finishPullUp']>()
+  expectFuncArguments<
+    [(boolean | Partial<PullUpLoadConfig>)?],
+    BS['openPullUp']
+  >()
+  expectFuncArguments<[], BS['closePullUp']>()
 })
 
-describe('pullDown plugin option type shoule be inferred correctly', () => {
+describe('pullDown plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(PullDown)
   const bscroll = new BScroll('', {
     pullDownRefresh: {
@@ -180,6 +218,7 @@ describe('pullDown plugin option type shoule be inferred correctly', () => {
       stop: 1
     }
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<PullDownRefreshOptions, BSOptions['pullDownRefresh']>()
   expectType<
@@ -198,27 +237,38 @@ describe('pullDown plugin option type shoule be inferred correctly', () => {
     number,
     FilterUndef<FilterBoolean<BSOptions['pullDownRefresh']>['threshold']>
   >()
+  // API
+  type BS = typeof bscroll
+  expectFuncArguments<[], BS['finishPullDown']>()
+  expectFuncArguments<
+    [(boolean | Partial<PullDownRefreshConfig>)?],
+    BS['openPullDown']
+  >()
+  expectFuncArguments<[], BS['closePullDown']>()
+  expectFuncArguments<[], BS['autoPullDownRefresh']>()
 })
 
-describe('observeDom plugin option type shoule be inferred correctly', () => {
+describe('observeDom plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(ObserveDom)
   const bscroll = new BScroll('', {
     observeDOM: true
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<boolean, BSOptions['observeDOM']>()
 })
 
-describe('nestedScroll plugin option type shoule be inferred correctly', () => {
+describe('nestedScroll plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(NestedScroll)
   const bscroll = new BScroll('', {
     nestedScroll: true
   })
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<true, BSOptions['nestedScroll']>()
 })
 
-describe('mouseWhell plugin option type shoule be inferred correctly', () => {
+describe('mouseWhell plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(MouseWheel)
   const bscroll = new BScroll('', {
     mouseWheel: {
@@ -229,7 +279,7 @@ describe('mouseWhell plugin option type shoule be inferred correctly', () => {
       debounce: 1
     }
   })
-
+  // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
   expectType<Partial<MouseWheelOptions>, BSOptions['mouseWheel']>()
   expectType<number, FilterUndef<BSOptions['mouseWheel']['discreteTime']>>()
@@ -237,4 +287,14 @@ describe('mouseWhell plugin option type shoule be inferred correctly', () => {
   expectType<boolean, FilterUndef<BSOptions['mouseWheel']['invert']>>()
   expectType<number, FilterUndef<BSOptions['mouseWheel']['speed']>>()
   expectType<number, FilterUndef<BSOptions['mouseWheel']['throttleTime']>>()
+})
+
+describe('movable plugin options and api type shoule be inferred correctly', () => {
+  BScroll.use(Movable)
+  const bscroll = new BScroll('', {
+    movable: true
+  })
+  // Options
+  type BSOptions = DeepNonNullable<typeof bscroll.options>
+  expectType<boolean, FilterUndef<BSOptions['movable']>>()
 })
