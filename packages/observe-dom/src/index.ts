@@ -9,37 +9,16 @@ declare module '@better-scroll/core' {
 export default class ObserveDOM {
   static pluginName = 'observeDOM'
   private observer: MutationObserver
-  private stopObserver: boolean
+  private stopObserver: boolean = false
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
-    this.stopObserver = false
-    this.hooksFn = []
     this.init()
-    this.registorHooks(
-      this.scroll.hooks,
-      this.scroll.hooks.eventTypes.enable,
-      () => {
-        if (this.stopObserver) {
-          this.init()
-        }
-      }
-    )
-    this.registorHooks(
-      this.scroll.hooks,
-      this.scroll.hooks.eventTypes.disable,
-      () => {
-        this.stopObserve()
-      }
-    )
-    this.registorHooks(
-      this.scroll.hooks,
-      this.scroll.hooks.eventTypes.destroy,
-      () => {
-        this.destroy()
-      }
-    )
   }
   init() {
+    this.handleMutationObserver()
+    this.handleHooks()
+  }
+  private handleMutationObserver() {
     if (typeof MutationObserver !== 'undefined') {
       let timer = 0
       this.observer = new MutationObserver(mutations => {
@@ -50,15 +29,31 @@ export default class ObserveDOM {
       this.checkDOMUpdate()
     }
   }
-  destroy() {
-    this.stopObserve()
-    this.hooksFn.forEach(item => {
-      const hooks = item[0]
-      const hooksName = item[1]
-      const handlerFn = item[2]
-      hooks.off(hooksName, handlerFn)
-    })
-    this.hooksFn.length = 0
+  private handleHooks() {
+    this.hooksFn = []
+    this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.enable,
+      () => {
+        if (this.stopObserver) {
+          this.init()
+        }
+      }
+    )
+    this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.disable,
+      () => {
+        this.stopObserve()
+      }
+    )
+    this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.destroy,
+      () => {
+        this.destroy()
+      }
+    )
   }
   private mutationObserverHandler(mutations: MutationRecord[], timer: number) {
     if (this.shouldNotRefresh()) {
@@ -91,6 +86,7 @@ export default class ObserveDOM {
       }, 60)
     }
   }
+
   private startObserve(observer: MutationObserver) {
     const config = {
       attributes: true,
@@ -99,30 +95,26 @@ export default class ObserveDOM {
     }
     observer.observe(this.scroll.scroller.content, config)
   }
-  private shouldNotRefresh() {
-    const { plugins, scroller } = this.scroll
-    const { scrollBehaviorX, scrollBehaviorY } = scroller
-    // perform an pulldown action
-    const isPullingDown = (plugins.pullDownRefresh || {}).pulling
 
+  private shouldNotRefresh() {
+    const { scroller } = this.scroll
+    const { scrollBehaviorX, scrollBehaviorY } = scroller
     let outsideBoundaries =
       scrollBehaviorX.currentPos > scrollBehaviorX.minScrollPos ||
       scrollBehaviorX.currentPos < scrollBehaviorX.maxScrollPos ||
       scrollBehaviorY.currentPos > scrollBehaviorY.minScrollPos ||
       scrollBehaviorY.currentPos < scrollBehaviorY.maxScrollPos
-
-    return scroller.animater.pending || outsideBoundaries || isPullingDown
+    return scroller.animater.pending || outsideBoundaries
   }
+
   private checkDOMUpdate() {
-    const me = this
-    const scrollIns = this.scroll
-    const scrollerEl = scrollIns.scroller.content
+    const scrollerEl = this.scroll.scroller.content
     let scrollerRect = getRect(scrollerEl)
     let oldWidth = scrollerRect.width
     let oldHeight = scrollerRect.height
 
-    function check() {
-      if (me.stopObserver) {
+    const check = () => {
+      if (this.stopObserver) {
         return
       }
       scrollerRect = getRect(scrollerEl)
@@ -130,7 +122,7 @@ export default class ObserveDOM {
       let newHeight = scrollerRect.height
 
       if (oldWidth !== newWidth || oldHeight !== newHeight) {
-        scrollIns.refresh()
+        this.scroll.refresh()
       }
       oldWidth = newWidth
       oldHeight = newHeight
@@ -138,7 +130,7 @@ export default class ObserveDOM {
       next()
     }
 
-    function next() {
+    const next = () => {
       setTimeout(() => {
         check()
       }, 1000)
@@ -146,14 +138,27 @@ export default class ObserveDOM {
 
     next()
   }
-  private registorHooks(hooks: EventEmitter, name: string, handler: Function) {
+
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
   }
+
   private stopObserve() {
     this.stopObserver = true
     if (this.observer) {
       this.observer.disconnect()
     }
+  }
+
+  destroy() {
+    this.stopObserve()
+    this.hooksFn.forEach(item => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksFn.length = 0
   }
 }
