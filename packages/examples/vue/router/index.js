@@ -12,6 +12,7 @@ import InfinityScroll from 'vue-example/pages/infinity-entry'
 import FormEntry from 'vue-example/pages/form-entry'
 import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 import MovableEntry from 'vue-example/pages/movable-entry'
+import ComposeEntry from 'vue-example/pages/compose-entry'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
@@ -35,6 +36,8 @@ import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/hor
 
 import Movable from 'vue-example/components/movable/default'
 import MovableScale from 'vue-example/components/movable/scale'
+
+import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
 
 Vue.use(Router)
 
@@ -161,6 +164,16 @@ export default new Router({
         {
           path: 'scale',
           component: MovableScale
+        }
+      ]
+    },
+    {
+      path: '/compose',
+      component: ComposeEntry,
+      children: [
+        {
+          path: 'pullup-pulldown',
+          component: ComposePullUpPullDown
         }
       ]
     }
