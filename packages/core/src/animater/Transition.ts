@@ -13,15 +13,15 @@ export default class Transition extends Base {
     const probe = () => {
       let pos = this.translater.getComputedPosition()
       this.hooks.trigger(this.hooks.eventTypes.move, pos)
-      // excute when transition ends
+      // transition ends or call stop() in animation.hooks.move or bs.scroll
       if (!this.pending) {
         this.hooks.trigger(this.hooks.eventTypes.end, pos)
-        return
+      } else {
+        this.timer = requestAnimationFrame(probe)
       }
-      this.timer = requestAnimationFrame(probe)
     }
     cancelAnimationFrame(this.timer)
-    this.timer = requestAnimationFrame(probe)
+    probe()
   }
 
   transitionTime(time = 0) {
@@ -61,9 +61,10 @@ export default class Transition extends Base {
     }
   }
 
-  stop() {
+  doStop(): boolean {
+    const pending = this.pending
     // still in transition
-    if (this.pending) {
+    if (pending) {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const { x, y } = this.translater.getComputedPosition()
@@ -71,11 +72,15 @@ export default class Transition extends Base {
       this.translate({ x, y })
       this.setForceStopped(true)
 
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, { x, y })) {
-        return
-      }
-
       this.hooks.trigger(this.hooks.eventTypes.forceStop, { x, y })
+    }
+    return pending
+  }
+
+  stop() {
+    const stopFromTransition = this.doStop()
+    if (stopFromTransition) {
+      this.hooks.trigger(this.hooks.eventTypes.callStop)
     }
   }
 }

@@ -29,7 +29,7 @@ type OriginY = number | 'top' | 'bottom' | 'center'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    zoom?: Partial<ZoomConfig>
+    zoom?: Partial<ZoomConfig> | true
   }
   interface CustomAPI {
     zoom: PluginAPI

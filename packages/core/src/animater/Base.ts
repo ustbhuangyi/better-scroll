@@ -29,8 +29,8 @@ export default abstract class Base implements ExposedAPI {
     this.hooks = new EventEmitter([
       'move',
       'end',
-      'beforeForceStop',
       'forceStop',
+      'callStop',
       'time',
       'timeFunction'
     ])
@@ -57,6 +57,7 @@ export default abstract class Base implements ExposedAPI {
     isSilent?: boolean
   ): void
 
+  abstract doStop(): void
   abstract stop(): void
 
   destroy() {

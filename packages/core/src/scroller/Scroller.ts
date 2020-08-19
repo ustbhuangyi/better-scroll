@@ -202,10 +202,6 @@ export default class Scroller implements ExposedAPI {
       {
         source: this.animater.hooks.eventTypes.move,
         target: this.hooks.eventTypes.scroll
-      },
-      {
-        source: this.animater.hooks.eventTypes.forceStop,
-        target: this.hooks.eventTypes.scrollEnd
       }
     ])
   }
@@ -335,7 +331,6 @@ export default class Scroller implements ExposedAPI {
   }
 
   private checkClick(e: TouchEvent) {
-    // when in the process of pulling down, it should not prevent click
     const cancelable = {
       preventClick: this.animater.forceStopped
     }
