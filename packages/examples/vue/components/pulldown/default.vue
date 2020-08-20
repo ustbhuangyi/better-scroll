@@ -63,7 +63,6 @@
         this.bscroll = new BScroll(this.$refs.bsWrapper, {
           scrollY: true,
           bounceTime: TIME_BOUNCE,
-          observeDOM: true,
           pullDownRefresh: {
             threshold: THRESHOLD,
             stop: STOP
@@ -73,7 +72,6 @@
         this.bscroll.on('pullingDown', this.pullingDownHandler)
         this.bscroll.on('scroll', this.scrollHandler)
         this.bscroll.on('scrollEnd', (e) => {
-          console.log(e)
           console.log('scrollEnd')
         })
       },

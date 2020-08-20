@@ -26,7 +26,7 @@ declare module '@better-scroll/core' {
 
 interface PluginAPI {
   finishPullDown(): void
-  openPullDown(config?: Partial<PullDownRefreshConfig>): void
+  openPullDown(config?: PullDownRefreshOptions): void
   closePullDown(): void
   autoPullDownRefresh(): void
 }
@@ -49,7 +49,7 @@ export default class PullDown implements PluginAPI {
   private init() {
     this.handleBScroll()
 
-    this.handleOptions(this.scroll.options.pullDownRefresh as true)
+    this.handleOptions(this.scroll.options.pullDownRefresh)
 
     this.handleHooks()
 
@@ -62,9 +62,7 @@ export default class PullDown implements PluginAPI {
     this.scroll.proxy(propertiesConfig)
   }
 
-  private handleOptions(
-    userOptions: Partial<PullDownRefreshConfig> | true = {}
-  ) {
+  private handleOptions(userOptions: PullDownRefreshOptions = {}) {
     userOptions = (userOptions === true ? {} : userOptions) as Partial<
       PullDownRefreshConfig
     >
@@ -167,7 +165,7 @@ export default class PullDown implements PluginAPI {
   }
 
   // allow 'true' type is compat for beta version implements
-  openPullDown(config: Partial<PullDownRefreshConfig> | true = {}) {
+  openPullDown(config: PullDownRefreshOptions = {}) {
     this.handleOptions(config)
     if (!this.watching) {
       this.watch()

@@ -39,6 +39,10 @@ describe('pullUp plugins', () => {
       {
         key: 'closePullUp',
         sourceKey: 'plugins.pullUpLoad.closePullUp'
+      },
+      {
+        key: 'autoPullUpLoad',
+        sourceKey: 'plugins.pullUpLoad.autoPullUpLoad'
       }
     ])
   })
@@ -214,5 +218,13 @@ describe('pullUp plugins', () => {
     scroll.movingDirectionY = 1
     scroll.trigger(scroll.eventTypes.scroll, pos)
     expect(pullUpMockFn).toBeCalledTimes(2)
+  })
+
+  it('should work well when call autoPullUpLoad()', () => {
+    pullUp.autoPullUpLoad()
+
+    const outOfBoundaryPos = -1
+    expect(scroll.movingDirectionY).toBe(1)
+    expect(scroll.scrollTo).toBeCalledWith(0, outOfBoundaryPos, 800)
   })
 })

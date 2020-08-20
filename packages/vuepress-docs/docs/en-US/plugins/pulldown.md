@@ -2,7 +2,7 @@
 
 ## Introduction
 
-  The pulldown plugin provides BetterScroll with the ability to monitor pulldowns. The 'pullingDown' event is fired when a pulldown is successfully detected. Usually used to implement the interaction of loading more data after the list/page is pulled down.
+  The pulldown plugin provides BetterScroll with the ability to monitor pulldown operation.
 
 ## Install
 
@@ -25,11 +25,10 @@ import PullDown from '@better-scroll/pull-down'
 BScroll.use(PullDown)
 ```
 
-Then, To instantiate BetterScroll, you need to pass the pulldown related configuration item `pullDownRefresh`:
+pass in the correct configuration in [options](./pulldown.html#pulldownrefresh-options), for example:
 
 ```js
-new BScroll('.bs-wrap', {
-  scrollY: true,
+new BScroll('.bs-wrapper', {
   pullDownRefresh: true
 })
 ```
@@ -49,44 +48,70 @@ new BScroll('.bs-wrap', {
   <pulldown-default slot="demo"></pulldown-default>
 </demo>
 
-## Options pullDownRefresh
+## pullDownRefresh Options
 
-The default is false. When set to true or an Object, pull-down refresh can be turned on. When the configuration item is an Object, it has the following properties:
+### threshold
 
-|Name|Type|Description|Default|
-|----------|:-----:|:-----------|:--------:|
-| threshold | number | Configure the distance from the top to determine if available trigger 'pullingDown' | 90 |
-| stop | number | Rebound distance | 40 |
+  - **Type**: `number`
+  - **Default**: `90`
 
-## API
+    Configure the top pull-down distance to determine dispatching `pullingDown` hooks.
+
+### stop
+
+  - **Type**: `number`
+  - **Default**: `40`
+
+    Rebound distance. After BetterScroll dispatches the `pullingDown` hook, it will immediately execute the rebound animation.
+
+## Instance Methods
 
 ### `finishPullDown()`
 
-  - **Introduction**：Identifies the end of a pulldown action.
-  - **Parameters**: None
-  - **Returen value**: None
+  - **Details**: End the pull-down refresh behavior.
+  - **Arguments**: None
+  - **Returns**: None
 
 ::: warning
 
-Note: **The `finishPullDown()` method should be called at the end of the callback function each time a `pullingDown` event is triggered. The next `pullingDown` event will not fire until the `finishPullDown()` method is called.**
+Every time the `pullingDown` hook is triggered, you should **actively call** `finishPullDown()` to tell BetterScroll to be ready for the next pullingDown hook.
 
 :::
 
-### `openPullDown(config: pullDownRefreshOptions = true)`
+### `openPullDown(config: PullDownRefreshOptions = {})`
 
-  - **Introduction**：Turn on the pull-down refresh function. This method does not need to be called if the `pullDownRefresh` configuration is not `false` when BetterScroll is instantiated.
-  - **Parameters**：`config: boolean | { threshold: number, stop: number }`, The parameter is the pullDownRefresh configuration. The default is false.
-  - **Returen value**: None
+  - **Details**: Turn on the pull-down refresh dynamically.
+  - **Arguments**:
+    - `{ PullDownRefreshOptions } config`: Modify the option of the pulldown plugin
+    - `PullDownRefreshOptions`:
+
+    ```typescript
+    export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | true
+
+    export interface PullDownRefreshConfig {
+      threshold: number
+      stop: number
+    }
+    ```
+  - **Returns**: None
+
+::: warning
+The **openPullDown** method should be used with **closePullDown**, because in the process of generating the pulldown plugin, the pull-down refresh action has been automatically monitored.
+:::
 
 ### `closePullDown()`
 
-  - **Introduction**：Turn off pulldown.
-  - **Parameters**: None
-  - **Returen value**: None
+  - **Details**: Turn off the pull-down refresh dynamically.
+  - **Arguments**: None
+  - **Returns**: None
 
 ## Hooks
 
 ### `pullingDown`
 
-- **Parameters**: None
-- **Trigger**：A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
+- **Arguments**: None
+- **Trigger**:A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
+
+::: danger Note
+After the pull-down refresh action is detected, the consumption opportunity of the `pullingDown` hook is only once, so you need to call `finishPullDown()` to tell BetterScroll to provide the next consumption opportunity of the `pullingDown` hook.
+:::

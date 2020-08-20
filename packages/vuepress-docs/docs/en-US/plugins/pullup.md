@@ -2,7 +2,7 @@
 
 ## Introduction
 
-  The pullup plugin provides BetterScroll with the ability to monitor pullups. The 'pullingUp' event is triggered when a pull up is successfully detected. Usually used to implement list/page scrolling to the bottom, pull up to load more data.
+  The pullup plugin provides BetterScroll with the ability to monitor pulldown operation.
 
 ## Install
 
@@ -20,16 +20,15 @@ First, install the plugin via the static method `BScroll.use()`
 
 ```js
 import BScroll from '@better-scroll/core'
-import Pullup from '@better-scroll/pull-up'
+import PullUp from '@better-scroll/pull-up'
 
-BScroll.use(Pullup)
+BScroll.use(PullUp)
 ```
 
-Then, To instantiate BetterScroll, you need to pass the pullup related configuration item `pullUpLoad`:
+pass in the correct configuration in [options](./pullup.html#pullupload-options), for example:
 
 ```js
-new BScroll('.bs-wrap', {
-  scrollY: true,
+new BScroll('.bs-wrapper', {
   pullUpLoad: true
 })
 ```
@@ -49,49 +48,63 @@ new BScroll('.bs-wrap', {
   <pullup-default slot="demo"></pullup-default>
 </demo>
 
-## Options: pullUpLoad
+## pullUpLoad Options
 
-The default is false. When set to true or an Object, pull-up loading can be turned on. When the configuration item is an Object, it has the following properties:
+### threshold
 
-|Name|Type|Description|Default|
-|----------|:-----:|:-----------|:--------:|
-| threshold | number | Threshold for triggering a pullup event | 0 |
+  - **Type**: `number`
+  - **Default**: `0`
 
-## API
+    The threshold for triggering a `pullingUp` hook.
+
+## Instance Methods
 
 ### `finishPullUp()`
 
-  - **Introduction**：Identifies the end of a pull-up loading action.
-  - **Parameters**: None
-  - **Return value**: None
+  - **Details**: End the pullUpLoad behavior.
+  - **Arguments**: None
+  - **Returns**: None
 
 ::: warning
 
-Note: **The `finishPullUp()` method should be called at the end of the callback function each time the pullup event is triggered. The next `pullingUp` event will not fire until the `finishPullUp()` method is called.**
+Every time you trigger the `pullingUp` hook, you should **actively call** `finishPullUp()` to tell BetterScroll to be ready for the next pullingUp hook.
 
 :::
 
-### `openPullUp(config: pullUpLoadOptions = true)`
+### `openPullUp(config: PullUpLoadOptions = {})`
 
-  - **Introduction**：Turn on the pull-up loading function. This method does not need to be called if the `pullUpLoad` configuration item is not `false` when BetterScroll is instantiated.
-  - **Parameters**：`config: boolean | { threshold: number }` ，The parameter is the pullUpLoad configuration. The default is false.
-  - **Return value**：None
+  - **Details**: Turn on the pullUpLoad dynamically.
+  - **Arguments**:
+    - `{ PullDownRefreshOptions } config`: Modify the option of the pullup plugin
+    - `PullDownRefreshOptions`:
+
+    ```typescript
+    export type PullUpLoadOptions = Partial<PullUpLoadConfig> | true
+
+    export interface PullUpLoadConfig {
+      threshold: number
+      stop: number
+    }
+    ```
+  - **Returns**: None
+
+::: warning
+The **openPullUp** method should be used with **closePullUp**, because in the process of generating the pullup plugin, the pullUpLoad action has been automatically monitored.
+:::
 
 ### `closePullUp()`
 
-  - **Introduction**：Turn off pullup.
-  - **Parameters**: None
-  - **Return value**：None
-
-### `autoPullDownRefresh()`
-
-  - **Introduction**：Auto pulldown-refresh。
-  - **Parameters**：None
-  - **Return value**：None
+  - **Details**: Turn off pullUpLoad dynamically.
+  - **Arguments**: None
+  - **Returns**: None
 
 ## Hooks
 
 ### `pullingUp`
 
-- **params**: None
-- **trigger**：A `pullingUp` event is fired when the distance scrolls to the bottom less than the `threshold` value.
+- **Arguments**: None
+- **Trigger**: When the distance to the bottom is less than the value of `threshold`, a `pullingUp` hook is triggered.
+
+::: danger Note
+After the pullUpLoad action is detected, the consumption opportunity of the `pullingUp` hook is only once, so you need to call `finishPullUp()` to tell BetterScroll to provide the next consumption opportunity of the `pullingUp` hook.
+:::

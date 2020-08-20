@@ -22,8 +22,9 @@ declare module '@better-scroll/core' {
 }
 interface PluginAPI {
   finishPullUp(): void
-  openPullUp(config?: Partial<PullUpLoadConfig>): void
+  openPullUp(config?: PullUpLoadOptions): void
   closePullUp(): void
+  autoPullUpLoad(): void
 }
 
 const PULL_UP_HOOKS_NAME = 'pullingUp'
@@ -41,7 +42,7 @@ export default class PullUp implements PluginAPI {
   private init() {
     this.handleBScroll()
 
-    this.handleOptions(this.scroll.options.pullUpLoad as true)
+    this.handleOptions(this.scroll.options.pullUpLoad)
 
     this.handleHooks()
 
@@ -54,7 +55,7 @@ export default class PullUp implements PluginAPI {
     this.scroll.proxy(propertiesConfig)
   }
 
-  private handleOptions(userOptions: Partial<PullUpLoadConfig> | true) {
+  private handleOptions(userOptions: PullUpLoadOptions = {}) {
     userOptions = (userOptions === true ? {} : userOptions) as Partial<
       PullUpLoadConfig
     >
@@ -107,6 +108,7 @@ export default class PullUp implements PluginAPI {
 
   private checkPullUp(pos: { x: number; y: number }) {
     const { threshold } = this.options
+
     if (
       this.scroll.movingDirectionY === Direction.Positive &&
       pos.y <= this.scroll.maxScrollY + threshold
@@ -134,12 +136,30 @@ export default class PullUp implements PluginAPI {
   }
 
   // allow 'true' type is compat for beta version implements
-  openPullUp(config: Partial<PullUpLoadConfig> | true = {}) {
+  openPullUp(config: PullUpLoadOptions = {}) {
     this.handleOptions(config)
     this.watch()
   }
 
   closePullUp() {
     this.unwatch()
+  }
+
+  autoPullUpLoad() {
+    const { threshold } = this.options
+    const { scrollBehaviorY } = this.scroll.scroller
+
+    if (this.pulling || !this.watching) {
+      return
+    }
+
+    // simulate a pullUp action
+    const outOfBoundaryPos = scrollBehaviorY.maxScrollPos + threshold - 1
+    this.scroll.movingDirectionY = Direction.Positive
+    this.scroll.scrollTo(
+      this.scroll.x,
+      outOfBoundaryPos,
+      this.scroll.options.bounceTime
+    )
   }
 }
