@@ -8,7 +8,7 @@ import {
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
-export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | boolean
+export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | true
 
 export interface PullDownRefreshConfig {
   threshold: number
@@ -49,7 +49,7 @@ export default class PullDown implements PluginAPI {
   private init() {
     this.handleBScroll()
 
-    this.handleOptions()
+    this.handleOptions(this.scroll.options.pullDownRefresh as true)
 
     this.handleHooks()
 
@@ -62,12 +62,12 @@ export default class PullDown implements PluginAPI {
     this.scroll.proxy(propertiesConfig)
   }
 
-  private handleOptions(userOptions?: Partial<PullDownRefreshConfig>) {
-    userOptions = (userOptions
-      ? userOptions
-      : this.scroll.options.pullDownRefresh === true
-      ? {}
-      : this.scroll.options.pullDownRefresh) as Partial<PullDownRefreshConfig>
+  private handleOptions(
+    userOptions: Partial<PullDownRefreshConfig> | true = {}
+  ) {
+    userOptions = (userOptions === true ? {} : userOptions) as Partial<
+      PullDownRefreshConfig
+    >
     const defaultOptions: PullDownRefreshConfig = {
       threshold: 90,
       stop: 40
@@ -166,7 +166,8 @@ export default class PullDown implements PluginAPI {
     this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
   }
 
-  openPullDown(config: Partial<PullDownRefreshConfig> = {}) {
+  // allow 'true' type is compat for beta version implements
+  openPullDown(config: Partial<PullDownRefreshConfig> | true = {}) {
     this.handleOptions(config)
     if (!this.watching) {
       this.watch()

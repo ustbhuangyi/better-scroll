@@ -1,144 +1,218 @@
 import BScroll from '@better-scroll/core'
 jest.mock('@better-scroll/core')
 
-import PullUp, { pullUpLoadOptions } from '@better-scroll/pull-up'
+import PullUp from '@better-scroll/pull-up'
+import { Probe } from '@better-scroll/shared-utils'
 
-describe('pull up tests', () => {
-  let bscroll: BScroll
-  const MAX_SCROLL_Y = -1000
-  const THRESHOLD = 0
-  const MOVING_DIRECTION_Y = 1
-  let pullup: PullUp
-  const pullingUpHandler = jest.fn()
+const createPullUpElements = () => {
+  const wrapper = document.createElement('div')
+  const content = document.createElement('div')
+  wrapper.appendChild(content)
+  return { wrapper }
+}
 
-  beforeAll(() => {
+describe('pullUp plugins', () => {
+  let scroll: BScroll
+  let pullUp: PullUp
+
+  beforeEach(() => {
     // create DOM
-    const wrapper = document.createElement('div')
-    const content = document.createElement('div')
-    wrapper.appendChild(content)
-    // mock bscroll
-    bscroll = new BScroll(wrapper, {})
-    bscroll.maxScrollY = MAX_SCROLL_Y
-    bscroll.movingDirectionY = MOVING_DIRECTION_Y
+    const { wrapper } = createPullUpElements()
+    scroll = new BScroll(wrapper, {})
+    pullUp = new PullUp(scroll)
   })
 
   afterEach(() => {
-    bscroll.off()
     jest.clearAllMocks()
   })
 
-  it('should proxy properties to BScroll instance', () => {
-    // given when
-    pullup = new PullUp(bscroll)
-    // then
-    expect(bscroll.proxy).toBeCalledWith([
+  it('should proxy properties to scroll instance', () => {
+    expect(scroll.proxy).toBeCalledWith([
       {
         key: 'finishPullUp',
-        sourceKey: 'plugins.pullUpLoad.finish'
+        sourceKey: 'plugins.pullUpLoad.finishPullUp'
       },
       {
         key: 'openPullUp',
-        sourceKey: 'plugins.pullUpLoad.open'
+        sourceKey: 'plugins.pullUpLoad.openPullUp'
       },
       {
         key: 'closePullUp',
-        sourceKey: 'plugins.pullUpLoad.close'
+        sourceKey: 'plugins.pullUpLoad.closePullUp'
       }
     ])
   })
 
-  describe('trigger pullingUp', () => {
-    beforeEach(() => {
-      // given
-      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-      pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', pullingUpHandler)
+  it('should handle default options and user options', () => {
+    // case 1
+    scroll.options.pullUpLoad = true
+    pullUp = new PullUp(scroll)
+
+    expect(pullUp.options).toMatchObject({
+      threshold: 0
     })
 
-    it('should not trigger event pullingUp when not set pullUpLoad', () => {
-      // given
-      bscroll.options.pullUpLoad = false
-      // when
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toHaveBeenCalledTimes(0)
+    // case 2
+    scroll.options.pullUpLoad = {
+      threshold: 40
+    }
+    pullUp = new PullUp(scroll)
+
+    expect(pullUp.options).toMatchObject({
+      threshold: 40
     })
 
-    it('should trigger event pullingUp when set pullUpLoad', () => {
-      // when
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toHaveBeenCalledTimes(1)
+    // case 3
+    scroll.options.pullUpLoad = {
+      threshold: -40
+    }
+    pullUp = new PullUp(scroll)
+
+    expect(pullUp.options).toMatchObject({
+      threshold: -40
     })
 
-    it('should trigger event pullingUp once', () => {
-      // when
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toBeCalledTimes(1)
+    expect(scroll.options.probeType).toBe(Probe.Realtime)
+  })
+
+  it('should modify maxScrollY when content is full of wrapper', () => {
+    const scrollBehaviorY = scroll.scroller.scrollBehaviorY
+    let boundary = {
+      minScrollPos: 0,
+      maxScrollPos: 20
+    }
+    scrollBehaviorY.hooks.trigger(
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
+      boundary
+    )
+    expect(boundary).toMatchObject({
+      minScrollPos: 0,
+      maxScrollPos: -1
     })
   })
 
-  describe('api close', () => {
-    beforeEach(() => {
-      // given
-      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-      pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', pullingUpHandler)
-    })
+  it('should checkPullUp', () => {
+    const mockFn = jest.fn()
+    scroll.on(scroll.eventTypes.pullingUp, mockFn)
 
-    it('should not trigger pullingUp when invoking api close', () => {
-      // when
-      pullup.close()
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toBeCalledTimes(0)
-    })
+    const pos1 = {
+      x: 0,
+      y: 100
+    }
+    // simulate pullDown action
+    scroll.movingDirectionY = -1
+
+    scroll.trigger(scroll.eventTypes.scroll, pos1)
+    expect(mockFn).toHaveBeenCalledTimes(0)
+
+    // simulate pullUp action
+    const pos2 = {
+      x: 0,
+      y: -100
+    }
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos2)
+    expect(mockFn).toHaveBeenCalledTimes(1)
   })
 
-  describe('api open', () => {
-    beforeEach(() => {
-      // given
-      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-      pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', pullingUpHandler)
-    })
-
-    it('should trigger pullingUp when invoking api open', () => {
-      // when
-      pullup.open({ threshold: THRESHOLD })
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toBeCalledTimes(1)
-    })
+  it('should trigger pullingUp once', () => {
+    const mockFn = jest.fn()
+    const pos = {
+      x: 0,
+      y: -100
+    }
+    scroll.on(scroll.eventTypes.pullingUp, mockFn)
+    // when
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+    // then
+    expect(mockFn).toBeCalledTimes(1)
   })
 
-  describe('finish api', () => {
-    beforeEach(() => {
-      // given
-      bscroll.options.pullUpLoad = { threshold: THRESHOLD }
-      pullup = new PullUp(bscroll)
-      bscroll.on('pullingUp', pullingUpHandler)
+  it('should work well when call finishPullUp()', () => {
+    // simulate pullUp action
+    const pos = {
+      x: 0,
+      y: -100
+    }
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+
+    pullUp.finishPullUp()
+
+    expect(scroll.movingDirectionY).toBe(0)
+    expect(scroll.events.scrollEnd.length).toBe(2)
+    expect(pullUp.watching).toBe(false)
+  })
+
+  it('should work well when call closePullUp()', () => {
+    pullUp.closePullUp()
+
+    expect(pullUp.watching).toBe(false)
+    expect(scroll.events.scroll.length).toBe(0)
+  })
+
+  it('should work well when call openPullUp()', () => {
+    pullUp.closePullUp()
+
+    expect(pullUp.watching).toBe(false)
+    expect(pullUp.options).toMatchObject({
+      threshold: 0
     })
 
-    it('should trigger pullingUp once when invoking api finish before scrollEnd', () => {
-      // when
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      pullup.finish()
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toBeCalledTimes(1)
+    // modify options
+    pullUp.openPullUp({
+      threshold: 200
     })
 
-    it('should trigger pullingUp twice when invoking api finish after scrollEnd', () => {
-      // when
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      bscroll.trigger('scrollEnd')
-      pullup.finish()
-      bscroll.trigger('scroll', { y: MAX_SCROLL_Y + THRESHOLD - 1 })
-      // then
-      expect(pullingUpHandler).toBeCalledTimes(2)
+    expect(pullUp.options).toMatchObject({
+      threshold: 200
     })
+    expect(pullUp.watching).toBe(true)
+  })
+
+  it('should reset pulling when scrollEnd triggered', () => {
+    // simulate pullUp action
+    const pos = {
+      x: 0,
+      y: -100
+    }
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+
+    expect(pullUp.pulling).toBe(true)
+
+    scroll.trigger(scroll.eventTypes.scrollEnd)
+
+    expect(pullUp.pulling).toBe(false)
+  })
+
+  it('should call watch() in scrollEnd hooks when pullingUp', () => {
+    const pullUpMockFn = jest.fn()
+    // simulate pullUp action
+    const pos = {
+      x: 0,
+      y: -100
+    }
+    scroll.on(scroll.eventTypes.pullingUp, pullUpMockFn)
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+
+    expect(pullUpMockFn).toBeCalledTimes(1)
+    expect(pullUp.pulling).toBe(true)
+
+    pullUp.finishPullUp()
+    // because pulling is true, won't trigger pullingUp
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+    expect(pullUpMockFn).toBeCalledTimes(1)
+    expect(pullUp.watching).toBe(false)
+
+    // register another watch in scrollEnd
+    scroll.trigger(scroll.eventTypes.scrollEnd)
+
+    scroll.movingDirectionY = 1
+    scroll.trigger(scroll.eventTypes.scroll, pos)
+    expect(pullUpMockFn).toBeCalledTimes(2)
   })
 })

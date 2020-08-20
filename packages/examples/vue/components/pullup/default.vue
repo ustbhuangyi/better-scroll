@@ -33,16 +33,12 @@
         data: 30
       }
     },
-    created() {
-      this.bscroll = null
-    },
     mounted() {
       this.initBscroll()
     },
     methods: {
       initBscroll() {
         this.bscroll = new BScroll(this.$refs.scroller, {
-          scrollY: true,
           pullUpLoad: true
         })
 
