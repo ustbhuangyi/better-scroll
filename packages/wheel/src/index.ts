@@ -8,6 +8,8 @@ import {
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
+export type WheelOptions = Partial<WheelConfig> | true
+
 export interface WheelConfig {
   selectedIndex: number
   rotate: number
@@ -19,7 +21,7 @@ export interface WheelConfig {
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    wheel?: Partial<WheelConfig> | true
+    wheel?: WheelOptions
   }
   interface CustomAPI {
     wheel: PluginAPI

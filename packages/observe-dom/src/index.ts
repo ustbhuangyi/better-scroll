@@ -3,7 +3,7 @@ import { getRect, EventEmitter } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    observeDOM?: boolean
+    observeDOM?: true
   }
 }
 export default class ObserveDOM {

@@ -3,7 +3,7 @@ import { EventEmitter } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    movable?: boolean
+    movable?: true
   }
 }
 
