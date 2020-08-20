@@ -13,7 +13,7 @@ export interface ExposedAPI {
 export default abstract class Base implements ExposedAPI {
   style: safeCSSStyleDeclaration
   hooks: EventEmitter
-  timer: number
+  timer: number = 0
   pending: boolean
   forceStopped: boolean
   _reflow: number;
@@ -29,6 +29,7 @@ export default abstract class Base implements ExposedAPI {
     this.hooks = new EventEmitter([
       'move',
       'end',
+      'beforeForceStop',
       'forceStop',
       'callStop',
       'time',

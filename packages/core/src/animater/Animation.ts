@@ -61,8 +61,12 @@ export default class Animation extends Base {
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)
-      } else {
-        // call stop() in animation.hooks.move or bs.scroll
+      }
+
+      // when call stop() in animation.hooks.move or bs.scroll
+      // should not dispatch end hook, because forceStop hook will do this.
+      if (!this.pending && !this.forceStopped) {
+        console.log(this.forceStopped)
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       }
     }
@@ -74,12 +78,17 @@ export default class Animation extends Base {
 
   doStop(): boolean {
     const pending = this.pending
+    this.setForceStopped(false)
     // still in requestFrameAnimation
     if (pending) {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
+
+      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
+        return true
+      }
 
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
     }

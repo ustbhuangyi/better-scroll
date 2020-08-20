@@ -202,9 +202,11 @@ export default class Wheel implements PluginAPI {
     )
 
     animater.hooks.on(
-      animater.hooks.eventTypes.forceStop,
+      animater.hooks.eventTypes.beforeForceStop,
       ({ y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
+        // don't dispatch scrollEnd when it is a click operation
+        return true
       }
     )
     // bs.stop() to make wheel stop at a correct position
