@@ -212,7 +212,9 @@ export default class Zoom implements PluginAPI {
       scrollerIns.hooks.eventTypes.scrollEnd,
       () => {
         if (this.fingersOperation() === TWO_FINGERS) {
-          this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
+          this.scroll.trigger(this.scroll.eventTypes.zoomEnd, {
+            scale: this.scale
+          })
         }
       }
     )
@@ -433,7 +435,7 @@ export default class Zoom implements PluginAPI {
       this._doZoomTo(this.scale, this.origin, this.zoomOpt.bounceTime)
       return
     }
-    this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
+    this.scroll.trigger(this.scroll.eventTypes.zoomEnd, { scale: this.scale })
   }
 
   private getFingerDistance(e: TouchEvent): number {

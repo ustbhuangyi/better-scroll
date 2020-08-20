@@ -70,8 +70,8 @@
           this.linkworkTransform = `scale(${scale})`
         })
 
-        this.zoom.on('zoomEnd', () => {
-          console.log('zoom ended')
+        this.zoom.on('zoomEnd', ({ scale }) => {
+          console.log(scale)
         })
       },
       zoomTo(value) {
