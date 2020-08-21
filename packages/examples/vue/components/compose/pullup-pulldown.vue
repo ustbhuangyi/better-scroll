@@ -46,9 +46,8 @@ import PullUp from '@better-scroll/pull-up'
 BScroll.use(PullDown)
 BScroll.use(PullUp)
 
-const BASE = 20
+const BASE = 30
 const TIME_BOUNCE = 800
-const TIME_STOP = 600
 const REQUEST_TIME = 3000
 const THRESHOLD = 70
 const STOP = 56
@@ -73,47 +72,46 @@ export default {
       this.bscroll = new BScroll(this.$refs.bsWrapper, {
         scrollY: true,
         bounceTime: TIME_BOUNCE,
+        // pullDown options
         pullDownRefresh: {
           threshold: THRESHOLD,
           stop: STOP
         },
-        pullUpLoad: true
+        // pullUp options
+        pullUpLoad: {
+          threshold: THRESHOLD
+        }
       })
-
+      // listening evnets
       this.bscroll.on('pullingDown', this.pullingDownHandler)
       this.bscroll.on('pullingUp', this.pullingUpHandler)
       this.bscroll.on('scroll', this.scrollHandler)
     },
+    // scroll event handler
     scrollHandler(pos) {
       console.log(pos.y)
     },
+    // pullingDown event handler
     async pullingDownHandler() {
       this.beforePullDown = false
       this.isPullingDown = true
       await this.requestData('refresh')
       this.isPullingDown = false
-      this.finishPullHandler('finishPullDown', 'beforePullDown')
+      this.$nextTick(() => {
+        this.bscroll.finishPullDown()
+        this.beforePullDown = true
+        this.bscroll.refresh()
+      })
     },
-
+    // pullingUp event handler
     async pullingUpHandler() {
-      console.log('123')
       this.isPullingUp = true
       await this.requestData('load')
       this.isPullingUp = false
-      this.finishPullHandler('finishPullUp')
-    },
-    async finishPullHandler(handlerType, pullType) {
-      const stopTime = TIME_STOP
-      await new Promise(resolve => {
-        setTimeout(() => {
-          this.bscroll[handlerType]()
-          resolve()
-        }, stopTime)
-      })
-      setTimeout(() => {
-        pullType && (this[pullType] = true)
+      this.$nextTick(() => {
+        this.bscroll.finishPullUp()
         this.bscroll.refresh()
-      }, TIME_BOUNCE)
+      })
     },
     async requestData(type) {
       try {
