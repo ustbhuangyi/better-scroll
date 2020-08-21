@@ -7,6 +7,12 @@
       >
         <span>pullup-pulldown</span>
       </li>
+      <li
+        @click="goPage('/compose/pullup-pulldown-slide')"
+        class="example-item"
+      >
+        <span>pullup-pulldown-slide</span>
+      </li>
     </ul>
     <transition name="move">
       <router-view class="view"></router-view>
