@@ -14,7 +14,7 @@ export interface Options {
   swipeTime: number
   bounces: Bounces
   rect: Rect
-  movable: boolean
+  outOfBoundaryDampingFactor: number
   [key: string]: number | boolean | Bounces | Rect
 }
 
@@ -49,29 +49,47 @@ export class Behavior {
   }
 
   start() {
-    this.direction = Direction.Default
-    this.movingDirection = Direction.Default
     this.dist = 0
+    this.setMovingDirection(Direction.Default)
+    this.setDirection(Direction.Default)
   }
 
-  move(delta: number) {
+  move(delta: number): number {
     delta = this.hasScroll ? delta : 0
+    this.setMovingDirection(delta)
+    return this.performDampingAlgorithm(
+      delta,
+      this.options.outOfBoundaryDampingFactor
+    )
+  }
+
+  setMovingDirection(delta: number) {
     this.movingDirection =
       delta > 0
         ? Direction.Negative
         : delta < 0
         ? Direction.Positive
         : Direction.Default
+  }
 
+  setDirection(delta: number) {
+    this.direction =
+      delta > 0
+        ? Direction.Negative
+        : delta < 0
+        ? Direction.Positive
+        : Direction.Default
+  }
+
+  performDampingAlgorithm(delta: number, dampingFactor: number) {
     let newPos = this.currentPos + delta
-
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
       if (
         (newPos > this.minScrollPos && this.options.bounces[0]) ||
         (newPos < this.maxScrollPos && this.options.bounces[1])
       ) {
-        newPos = this.currentPos + delta / 3
+        newPos = this.currentPos + delta * dampingFactor
       } else {
         newPos =
           newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
@@ -163,12 +181,7 @@ export class Behavior {
 
   updateDirection() {
     const absDist = Math.round(this.currentPos) - this.absStartPos
-    this.direction =
-      absDist > 0
-        ? Direction.Negative
-        : absDist < 0
-        ? Direction.Positive
-        : Direction.Default
+    this.setDirection(absDist)
   }
 
   refresh() {
@@ -188,7 +201,7 @@ export class Behavior {
 
     this.computeBoundary()
 
-    this.direction = Direction.Default
+    this.setDirection(Direction.Default)
   }
 
   computeBoundary() {

@@ -103,7 +103,7 @@ export default class Wheel implements PluginAPI {
       // scrollEnd will not be fired
       // so manually reset point-events
       this.scroll.scroller.togglePointerEvents(true)
-      this.wheelTo(index, this.options.adjustTime, ease.swipe)
+      this.wheelToAfterClick(index, this.options.adjustTime, ease.swipe)
       return true
     })
     scroller.hooks.on(
@@ -207,7 +207,7 @@ export default class Wheel implements PluginAPI {
       animater.hooks.eventTypes.beforeForceStop,
       ({ y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
-        // don't dispatch scrollEnd when it is a click operation
+        // don't dispatch scrollEnd when forceStop from transition or animation
         return true
       }
     )
@@ -246,9 +246,22 @@ export default class Wheel implements PluginAPI {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0, time = 0, ease?: EaseItem) {
+  wheelTo(index = 0, time = 0, ease?: EaseItem): boolean {
     const y = -index * this.itemHeight
+    const currentY = Math.round(this.scroll.y)
+
     this.scroll.scrollTo(0, y, time, ease)
+    return y === currentY
+  }
+
+  private wheelToAfterClick(index = 0, time = 0, ease: EaseItem) {
+    const needDispatchScrollEnd = this.wheelTo(index, time, ease)
+    // startpoint === endpoint
+    // manually trigger scrollEnd
+    if (needDispatchScrollEnd) {
+      const hooks = this.scroll.scroller.hooks
+      hooks.trigger(hooks.eventTypes.scrollEnd)
+    }
   }
 
   private transitionDuration(time: number) {

@@ -344,7 +344,10 @@ export default class Scroller implements ExposedAPI {
       preventClick: this.animater.forceStopped
     }
     // we scrolled less than momentumLimitDistance pixels
-    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) return true
+    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) {
+      this.animater.setForceStopped(false)
+      return true
+    }
     if (!cancelable.preventClick) {
       const _dblclick = this.options.dblclick
       let dblclickTrigged = false

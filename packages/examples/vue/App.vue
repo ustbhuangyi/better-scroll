@@ -64,6 +64,10 @@
       path: '/nested-scroll/'
     },
     {
+      name: 'mouse-wheel',
+      path: '/mouse-wheel/'
+    },
+    {
       name: 'movable',
       path: '/movable/'
     }

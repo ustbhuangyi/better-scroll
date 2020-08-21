@@ -1,8 +1,7 @@
-import BScroll from '@better-scroll/core'
+import BScroll, { Behavior } from '@better-scroll/core'
 import {
   warn,
   preventDefaultExceptionFn,
-  between,
   EventRegister,
   EventEmitter,
   Direction,
@@ -10,17 +9,20 @@ import {
   extend
 } from '@better-scroll/shared-utils'
 
-export interface MouseWheelOptions {
+export type MouseWheelOptions = Partial<MouseWheelConfig> | true
+
+export interface MouseWheelConfig {
   speed: number
   invert: boolean
   easeTime: number
   discreteTime: number
   throttleTime: number
+  dampingFactor: number
 }
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    mouseWheel?: Partial<MouseWheelOptions>
+    mouseWheel?: MouseWheelOptions
   }
 }
 
@@ -42,7 +44,7 @@ interface WheelDelta {
 export default class MouseWheel {
   static pluginName = 'mouseWheel'
   static applyOrder = ApplyOrder.Pre
-  mouseWheelOpt: MouseWheelOptions
+  mouseWheelOpt: MouseWheelConfig
   private eventRegister: EventRegister
   private wheelEndTimer: number = 0
   private wheelMoveTimer: number = 0
@@ -56,15 +58,14 @@ export default class MouseWheel {
   private init() {
     this.handleBScroll()
     this.handleOptions()
+    this.handleHooks()
 
     this.registerEvent()
-
-    this.hooksFn = []
-    this.registerHooks(this.scroll.hooks, 'destroy', this.destroy)
   }
 
   private handleBScroll() {
     this.scroll.registerType([
+      'alterOptions',
       'mousewheelStart',
       'mousewheelMove',
       'mousewheelEnd'
@@ -72,18 +73,23 @@ export default class MouseWheel {
   }
 
   private handleOptions() {
-    const userOptions =
-      this.scroll.options.mouseWheel === true
-        ? {}
-        : this.scroll.options.mouseWheel
-    const defaultOptions: MouseWheelOptions = {
+    const userOptions = (this.scroll.options.mouseWheel === true
+      ? {}
+      : this.scroll.options.mouseWheel) as Partial<MouseWheelConfig>
+    const defaultOptions: MouseWheelConfig = {
       speed: 20,
       invert: false,
       easeTime: 300,
       discreteTime: 400,
-      throttleTime: 0
+      throttleTime: 0,
+      dampingFactor: 0.1
     }
     this.mouseWheelOpt = extend(defaultOptions, userOptions)
+  }
+
+  private handleHooks() {
+    this.hooksFn = []
+    this.registerHooks(this.scroll.hooks, 'destroy', this.destroy)
   }
 
   private registerEvent() {
@@ -125,11 +131,19 @@ export default class MouseWheel {
     this.wheelMoveHandler(delta)
 
     // end
-    this.wheelEndDetector(e, delta)
+    this.wheelEndDetector(delta)
   }
 
   private wheelStartHandler(e: CompatibleWheelEvent) {
     this.cleanCache()
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+
+    scrollBehaviorX.setMovingDirection(Direction.Default)
+    scrollBehaviorY.setMovingDirection(Direction.Default)
+    scrollBehaviorX.setDirection(Direction.Default)
+    scrollBehaviorY.setDirection(Direction.Default)
+
+    this.scroll.trigger(this.scroll.eventTypes.alterOptions, this.mouseWheelOpt)
     this.scroll.trigger(this.scroll.eventTypes.mousewheelStart)
   }
 
@@ -143,7 +157,8 @@ export default class MouseWheel {
     directionX: number
     directionY: number
   }) {
-    if (this.mouseWheelOpt.throttleTime && this.wheelMoveTimer) {
+    const { throttleTime, dampingFactor } = this.mouseWheelOpt
+    if (throttleTime && this.wheelMoveTimer) {
       this.deltaCache.push(delta)
     } else {
       const cachedDelta = this.deltaCache.reduce(
@@ -157,33 +172,22 @@ export default class MouseWheel {
       )
 
       this.cleanCache()
-      let newX = this.scroll.x + Math.round(delta.x) + cachedDelta.x
-      let newY = this.scroll.y + Math.round(delta.y) + cachedDelta.y
 
-      const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-      const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
-      scrollBehaviorX.movingDirection =
-        delta.directionX > 0
-          ? Direction.Positive
-          : delta.directionX < 0
-          ? Direction.Negative
-          : Direction.Default
-      scrollBehaviorY.movingDirection =
-        delta.directionY > 0
-          ? Direction.Positive
-          : delta.directionY < 0
-          ? Direction.Negative
-          : Direction.Default
+      const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
 
-      newX = between(
-        newX,
-        scrollBehaviorX.maxScrollPos,
-        scrollBehaviorX.minScrollPos
+      scrollBehaviorX.setMovingDirection(-delta.directionX)
+      scrollBehaviorY.setMovingDirection(-delta.directionY)
+      scrollBehaviorX.setDirection(delta.x)
+      scrollBehaviorY.setDirection(delta.y)
+
+      // when out of boundary, perform a damping scroll
+      const newX = scrollBehaviorX.performDampingAlgorithm(
+        Math.round(delta.x) + cachedDelta.x,
+        dampingFactor
       )
-      newY = between(
-        newY,
-        scrollBehaviorY.maxScrollPos,
-        scrollBehaviorY.minScrollPos
+      const newY = scrollBehaviorY.performDampingAlgorithm(
+        Math.round(delta.y) + cachedDelta.x,
+        dampingFactor
       )
 
       if (
@@ -197,25 +201,21 @@ export default class MouseWheel {
           this.scroll.scrollTo(newX, newY, easeTime)
         }
       }
-      if (this.mouseWheelOpt.throttleTime) {
+      if (throttleTime) {
         this.wheelMoveTimer = window.setTimeout(() => {
           this.wheelMoveTimer = 0
-        }, this.mouseWheelOpt.throttleTime)
+        }, throttleTime)
       }
     }
   }
 
-  private wheelEndDetector(
-    e: CompatibleWheelEvent,
-    delta: { x: number; y: number }
-  ) {
+  private wheelEndDetector(delta: WheelDelta) {
     window.clearTimeout(this.wheelEndTimer)
     this.wheelEndTimer = window.setTimeout(() => {
       this.wheelStart = false
       window.clearTimeout(this.wheelMoveTimer)
       this.wheelMoveTimer = 0
-      this.scroll.scroller.scrollBehaviorX.movingDirection = 0
-      this.scroll.scroller.scrollBehaviorY.movingDirection = 0
+
       this.scroll.trigger(this.scroll.eventTypes.mousewheelEnd, delta)
     }, this.mouseWheelOpt.discreteTime)
   }

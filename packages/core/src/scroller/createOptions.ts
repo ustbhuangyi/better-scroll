@@ -33,7 +33,7 @@ export function createBehaviorOptions(
     'deceleration',
     'swipeBounceTime',
     'swipeTime',
-    'movable'
+    'outOfBoundaryDampingFactor'
   ].reduce<BehaviorOptions>((prev, cur) => {
     prev[cur] = bsOptions[cur]
     return prev

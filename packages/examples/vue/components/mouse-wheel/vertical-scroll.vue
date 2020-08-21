@@ -1,8 +1,8 @@
 <template>
-  <div class="core-mouse-wheel">
-    <div class="scroll-wrapper" ref="scroll">
-      <div class="wheel-scroll">
-        <div class="wheel-item" v-for="n in 15" :key="n">{{n}}</div>
+  <div class="vertical-mouse-wheel">
+    <div class="mouse-wheel-wrapper" ref="scroll">
+      <div class="mouse-wheel-content">
+        <div class="mouse-wheel-item" v-for="n in 100" :key="n">{{n}}</div>
       </div>
     </div>
   </div>
@@ -17,19 +17,10 @@
     mounted() {
       this.init()
     },
-    beforeDestroy() {
-      this.slide.destroy()
-    },
     methods: {
       init() {
-        this.slide = new BScroll(this.$refs.scroll, {
-          scrollX: false,
-          scrollY: true,
-          mouseWheel: {
-            speed: 2,
-            invert: false,
-            easeTime: 300,
-          }
+        this.scroll = new BScroll(this.$refs.scroll, {
+          mouseWheel: true
         })
       }
     }
@@ -37,15 +28,16 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-.core-mouse-wheel
-  .scroll-wrapper
-    height 200px
+.vertical-mouse-wheel
+  .mouse-wheel-wrapper
+    height 400px
     overflow hidden
-    .wheel-item
+    .mouse-wheel-item
       height 30px
       line-height 30px
       font-size 20px
       font-weight bold
+      color black
       border-bottom 1px solid #eee
       text-align center
       &:nth-child(2n)

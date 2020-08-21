@@ -125,7 +125,7 @@ export default class PullUp implements PluginAPI {
 
   finishPullUp() {
     // reset Direction, fix #936
-    this.scroll.movingDirectionY = Direction.Default
+    this.scroll.scroller.scrollBehaviorY.setMovingDirection(Direction.Default)
     if (this.pulling) {
       this.scroll.once(this.scroll.eventTypes.scrollEnd, () => {
         this.watch()
@@ -154,8 +154,10 @@ export default class PullUp implements PluginAPI {
     }
 
     // simulate a pullUp action
-    const outOfBoundaryPos = scrollBehaviorY.maxScrollPos + threshold - 1
-    this.scroll.movingDirectionY = Direction.Positive
+    const outOfBoundaryPos =
+      scrollBehaviorY.maxScrollPos + threshold + NEGATIVE_VALUE
+    const NEGATIVE_VALUE = -1
+    this.scroll.scroller.scrollBehaviorY.setMovingDirection(NEGATIVE_VALUE)
     this.scroll.scrollTo(
       this.scroll.x,
       outOfBoundaryPos,

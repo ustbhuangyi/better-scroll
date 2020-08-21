@@ -1,25 +1,21 @@
 <template>
-  <div class="slide-banner">
-    <div class="banner-wrapper">
-      <div class="slide-banner-wrapper" ref="slide">
-        <div class="slide-banner-content">
+  <div class="mouse-wheel-slide-vertical">
+    <div class="vertical-wrapper">
+      <div class="slide-vertical-wrapper" ref="slide">
+        <div class="slide-vertical-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
           <div class="slide-item page4">page 4</div>
         </div>
       </div>
-      <div class="dots-wrapper">
+      <div class="docs-wrapper">
         <span
-          class="dot"
+          class="doc"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
       </div>
-    </div>
-    <div class="btn-wrap">
-      <button @click="nextPage">nextPage</button>
-      <button @click="prePage">prePage</button>
     </div>
   </div>
 </template>
@@ -28,9 +24,8 @@
   import BScroll from '@better-scroll/core'
   import Slide from '@better-scroll/slide'
   import MouseWheel from '@better-scroll/mouse-wheel'
-
-  BScroll.use(Slide)
   BScroll.use(MouseWheel)
+  BScroll.use(Slide)
 
   export default {
     data() {
@@ -47,32 +42,21 @@
     methods: {
       init() {
         this.slide = new BScroll(this.$refs.slide, {
-          scrollX: true,
-          scrollY: false,
+          scrollX: false,
+          scrollY: true,
           slide: {
             loop: true,
             threshold: 100
           },
-          useTransition: false,
+          mouseWheel: true,
           momentum: false,
           bounce: false,
-          stopPropagation: true,
-          mouseWheel: {
-            speed: 2,
-            invert: false,
-            easeTime: 300
-          }
+          stopPropagation: true
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
       },
-      nextPage() {
-        this.slide.next()
-      },
-      prePage() {
-        this.slide.prev()
-      },
       _onScrollEnd() {
-        let pageIndex = this.slide.getCurrentPage().pageX
+        let pageIndex = this.slide.getCurrentPage().pageY
         this.currentPageIndex = pageIndex
       }
     }
@@ -80,55 +64,48 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 
-.slide-banner
-  .banner-wrapper
+.mouse-wheel-slide-vertical
+  height 100%
+  &.view
+    padding 0
+    height 100%
+  .vertical-wrapper
     position relative
-  .slide-banner-wrapper
-    min-height 1px
-    overflow hidden
-  .slide-banner-content
-    height 200px
-    white-space nowrap
+    height 100%
     font-size 0
+  .slide-vertical-wrapper
+    height 100%
+    overflow hidden
     .slide-item
       display inline-block
-      height 200px
       width 100%
       line-height 200px
       text-align center
       font-size 26px
+      transform translate3d(0,0,0)
+      backface-visibility hidden
       &.page1
-        background-color #95B8D1
+        background-color #D6EADF
       &.page2
         background-color #DDA789
       &.page3
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .dots-wrapper
+  .docs-wrapper
     position absolute
-    bottom 4px
-    left 50%
-    transform translateX(-50%)
-    .dot
-      display inline-block
-      margin 0 4px
+    right 4px
+    top 50%
+    transform translateY(-50%)
+    .doc
+      display block
+      margin 4px 0
       width 8px
       height 8px
       border-radius 50%
       background #eee
       &.active
-        width 20px
+        height  20px
         border-radius 5px
-  .btn-wrap
-    margin-top 20px
-    display flex
-    justify-content center
-    button
-      margin 0 10px
-      padding 10px
-      color #fff
-      border-radius 4px
-      background-color #666
 
 </style>
