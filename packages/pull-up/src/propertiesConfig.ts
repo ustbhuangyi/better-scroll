@@ -12,6 +12,10 @@ const propertiesMap = [
   {
     key: 'closePullUp',
     name: 'closePullUp'
+  },
+  {
+    key: 'autoPullUpLoad',
+    name: 'autoPullUpLoad'
   }
 ]
 

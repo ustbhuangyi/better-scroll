@@ -95,5 +95,8 @@
     "Android >= 4.0",
     "iOS >= 8"
   ],
-  "name": "better-scroll"
+  "name": "better-scroll",
+  "dependencies": {
+    "vconsole": "^3.3.4"
+  }
 }

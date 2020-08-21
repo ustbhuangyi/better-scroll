@@ -6,13 +6,14 @@ export const enum Direction {
   Vertical = 'vertical'
 }
 
-// augmentation for Options
-export type scrollbarOptions = Partial<ScrollbarConfig> | boolean
+export type scrollbarOptions = Partial<ScrollbarConfig> | true
 
 export interface ScrollbarConfig {
   fade: boolean
   interactive: boolean
 }
+
+// augmentation for Options
 
 declare module '@better-scroll/core' {
   interface CustomOptions {

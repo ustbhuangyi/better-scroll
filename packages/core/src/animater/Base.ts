@@ -13,7 +13,7 @@ export interface ExposedAPI {
 export default abstract class Base implements ExposedAPI {
   style: safeCSSStyleDeclaration
   hooks: EventEmitter
-  timer: number
+  timer: number = 0
   pending: boolean
   forceStopped: boolean
   _reflow: number;
@@ -31,6 +31,7 @@ export default abstract class Base implements ExposedAPI {
       'end',
       'beforeForceStop',
       'forceStop',
+      'callStop',
       'time',
       'timeFunction'
     ])
@@ -57,6 +58,7 @@ export default abstract class Base implements ExposedAPI {
     isSilent?: boolean
   ): void
 
+  abstract doStop(): void
   abstract stop(): void
 
   destroy() {

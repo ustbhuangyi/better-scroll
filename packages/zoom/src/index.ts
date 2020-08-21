@@ -15,6 +15,8 @@ import {
   cancelAnimationFrame
 } from '@better-scroll/shared-utils'
 
+export type ZoomOptions = Partial<ZoomConfig> | true
+
 export interface ZoomConfig {
   start: number
   min: number
@@ -29,7 +31,7 @@ type OriginY = number | 'top' | 'bottom' | 'center'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    zoom?: Partial<ZoomConfig>
+    zoom?: ZoomOptions
   }
   interface CustomAPI {
     zoom: PluginAPI
@@ -103,8 +105,9 @@ export default class Zoom implements PluginAPI {
   }
 
   private handleOptions() {
-    const userOptions =
-      this.scroll.options.zoom === true ? {} : this.scroll.options.zoom
+    const userOptions = (this.scroll.options.zoom === true
+      ? {}
+      : this.scroll.options.zoom) as Partial<ZoomConfig>
     const defaultOptions: ZoomConfig = {
       start: 1,
       min: 1,
@@ -209,7 +212,9 @@ export default class Zoom implements PluginAPI {
       scrollerIns.hooks.eventTypes.scrollEnd,
       () => {
         if (this.fingersOperation() === TWO_FINGERS) {
-          this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
+          this.scroll.trigger(this.scroll.eventTypes.zoomEnd, {
+            scale: this.scale
+          })
         }
       }
     )
@@ -430,7 +435,7 @@ export default class Zoom implements PluginAPI {
       this._doZoomTo(this.scale, this.origin, this.zoomOpt.bounceTime)
       return
     }
-    this.scroll.trigger(this.scroll.eventTypes.zoomEnd)
+    this.scroll.trigger(this.scroll.eventTypes.zoomEnd, { scale: this.scale })
   }
 
   private getFingerDistance(e: TouchEvent): number {

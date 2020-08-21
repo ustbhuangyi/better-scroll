@@ -8,6 +8,8 @@ import {
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
+export type WheelOptions = Partial<WheelConfig> | true
+
 export interface WheelConfig {
   selectedIndex: number
   rotate: number
@@ -19,7 +21,7 @@ export interface WheelConfig {
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    wheel?: Partial<WheelConfig>
+    wheel?: WheelOptions
   }
   interface CustomAPI {
     wheel: PluginAPI
@@ -60,8 +62,9 @@ export default class Wheel implements PluginAPI {
   }
 
   private handleOptions() {
-    const userOptions =
-      this.scroll.options.wheel === true ? {} : this.scroll.options.wheel
+    const userOptions = (this.scroll.options.wheel === true
+      ? {}
+      : this.scroll.options.wheel) as Partial<WheelConfig>
 
     const defaultOptions: WheelConfig = {
       wheelWrapperClass: 'wheel-scroll',
@@ -205,9 +208,19 @@ export default class Wheel implements PluginAPI {
       ({ y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
         // don't dispatch scrollEnd when it is a click operation
-        return false
+        return true
       }
     )
+    // bs.stop() to make wheel stop at a correct position
+    animater.hooks.on(animater.hooks.eventTypes.callStop, () => {
+      const index = Array.prototype.slice
+        .call(this.items, 0)
+        .indexOf(this.target as Element)
+      if (index > 0) {
+        const y = -(index * this.itemHeight)
+        animater.translate({ x: 0, y })
+      }
+    })
 
     // Translater
     animater.translater.hooks.on(

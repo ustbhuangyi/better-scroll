@@ -116,7 +116,7 @@ export default class ScrollerActions {
     this.scrollBehaviorY.start()
 
     // force stopping last transition or animation
-    this.animater.stop()
+    this.animater.doStop()
 
     this.scrollBehaviorX.resetStartPos()
     this.scrollBehaviorY.resetStartPos()

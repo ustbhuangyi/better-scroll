@@ -55,12 +55,19 @@ export default class Animation extends Base {
       })
       this.translate(newPoint)
 
+      if (this.options.probeType === Probe.Realtime) {
+        this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
+      }
+
       if (this.pending) {
         this.timer = requestAnimationFrame(step)
       }
 
-      if (this.options.probeType === Probe.Realtime) {
-        this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
+      // when call stop() in animation.hooks.move or bs.scroll
+      // should not dispatch end hook, because forceStop hook will do this.
+      if (!this.pending && !this.forceStopped) {
+        console.log(this.forceStopped)
+        this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       }
     }
 
@@ -69,19 +76,29 @@ export default class Animation extends Base {
     step()
   }
 
-  stop() {
+  doStop(): boolean {
+    const pending = this.pending
+    this.setForceStopped(false)
     // still in requestFrameAnimation
-    if (this.pending) {
+    if (pending) {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
 
       if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
-        return
+        return true
       }
 
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
+    }
+    return pending
+  }
+
+  stop() {
+    const stopFromAnimation = this.doStop()
+    if (stopFromAnimation) {
+      this.hooks.trigger(this.hooks.eventTypes.callStop)
     }
   }
 }

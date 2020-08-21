@@ -169,7 +169,7 @@ new BScroll('.bs-wrapper', {
 
   - **返回值**：无
 
-## 事件
+## 钩子
 
 ### beforeZoomStart
 - **参数**：无
@@ -180,7 +180,8 @@ new BScroll('.bs-wrapper', {
 - **触发时机**：双指缩放距离超过最小阈值 `minimalZoomDistance`，缩放即将开始。不包括直接调用 zoomTo 方法
 
 ### zooming
-- **参数**: `{ scale: number }`
+- **参数**: `{ scale }`
+- **类型**: `{ scale: number }`
 - **触发时机**：双指缩放行为正在进行时或者直接调用 zoomTo 进行缩放的过程
 
 - **示例**：
@@ -203,7 +204,8 @@ bs.on('zooming', ({ scale }) => {
 ```
 
 ### zoomEnd
-- **参数**：无
+- **参数**：`{ scale }`
+- **类型**: `{ scale: number }`
 - **触发时机**：双指缩放行为结束后（如果有回弹，触发时机在回弹动画结束之后）或者调用 zoomTo 完成缩放之后
 
 :::warning

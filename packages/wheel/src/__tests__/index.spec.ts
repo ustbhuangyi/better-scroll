@@ -1,5 +1,6 @@
 import BScroll, { Boundary } from '@better-scroll/core'
 import Wheel from '../index'
+import { extend } from '@better-scroll/shared-utils'
 
 jest.mock('@better-scroll/core')
 
@@ -234,6 +235,23 @@ describe('wheel plugin tests', () => {
     })
     scroll.scroller.animater.hooks.trigger('beforeForceStop', { x: 0, y: -20 })
     expect(wheel.target).toEqual(div)
+  })
+
+  it('should stop at correct position when callStop hook is trigger', () => {
+    let div1 = document.createElement('div')
+    let div2 = document.createElement('div')
+    addPropertiesToWheel(wheel, {
+      items: [div1, div2],
+      target: div2,
+      itemHeight: 40,
+      wheelItemsAllDisabled: false
+    })
+    scroll.scroller.animater.hooks.trigger('callStop')
+    expect(wheel.target).toEqual(div2)
+    expect(scroll.scroller.animater.translate).toBeCalledWith({
+      x: 0,
+      y: -40
+    })
   })
 
   it('should change selectedIndex when scroll.scroller.animater.translater trigger translate hook', () => {

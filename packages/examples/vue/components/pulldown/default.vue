@@ -65,63 +65,85 @@ export default {
   mounted() {
     this.initBscroll()
   },
-  async pullingDownHandler() {
-    this.beforePullDown = false
-    this.isPullingDown = true
-    STEP += 1
+  methods: {
+    initBscroll() {
+      this.bscroll = new BScroll(this.$refs.bsWrapper, {
+        scrollY: true,
+        bounceTime: TIME_BOUNCE,
+        pullDownRefresh: {
+          threshold: THRESHOLD,
+          stop: STOP
+        }
+      })
 
-    this.bscroll.on('pullingDown', this.pullingDownHandler)
-    this.bscroll.on('scroll', this.scrollHandler)
-    this.bscroll.on('scrollEnd', e => {
-      console.log(e)
-      console.log('scrollEnd')
-    })
-  },
-  scrollHandler(pos) {
-    console.log(pos.y)
-  },
-  async pullingDownHandler() {
-    console.log('trigger pullDown')
-    this.beforePullDown = false
-    this.isPullingDown = true
-    STEP += 1
+      this.bscroll.on('pullingDown', this.pullingDownHandler)
+      this.bscroll.on('scroll', this.scrollHandler)
+      this.bscroll.on('scrollEnd', e => {
+        console.log('scrollEnd')
+      })
+    },
+    scrollHandler(pos) {
+      console.log(pos.y)
+    },
+    async pullingDownHandler() {
+      console.log('trigger pullDown')
+      this.beforePullDown = false
+      this.isPullingDown = true
+      STEP += 1
 
-    this.isPullingDown = false
-    this.finishPullDown()
-  },
-  async finishPullDown() {
-    const stopTime = TIME_STOP
-    await new Promise(resolve => {
-      setTimeout(() => {
-        this.beforePullDown = true
-        this.bscroll.refresh()
-      }, TIME_BOUNCE)
-    })
-  },
-  async requestData() {
-    try {
-      const newData = await this.ajaxGet(/* url */)
-      this.dataList = newData.concat(this.dataList)
-    } catch (err) {
-      // handle err
-      console.log(err)
+      this.bscroll.on('pullingDown', this.pullingDownHandler)
+      this.bscroll.on('scroll', this.scrollHandler)
+      this.bscroll.on('scrollEnd', e => {
+        console.log(e)
+        console.log('scrollEnd')
+      })
+    },
+    scrollHandler(pos) {
+      console.log(pos.y)
+    },
+    async pullingDownHandler() {
+      console.log('trigger pullDown')
+      this.beforePullDown = false
+      this.isPullingDown = true
+      STEP += 1
+
+      this.isPullingDown = false
+      this.finishPullDown()
+    },
+    async finishPullDown() {
+      const stopTime = TIME_STOP
+      await new Promise(resolve => {
+        setTimeout(() => {
+          this.beforePullDown = true
+          this.bscroll.refresh()
+        }, TIME_BOUNCE)
+      })
+    },
+    async requestData() {
+      try {
+        const newData = await this.ajaxGet(/* url */)
+        this.dataList = newData.concat(this.dataList)
+      } catch (err) {
+        // handle err
+        console.log(err)
+      }
+    },
+    ajaxGet(/* url */) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const dataList = generateData()
+          resolve(dataList)
+        }, REQUEST_TIME)
+      })
+    },
+    ajaxGet(/* url */) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const dataList = generateData(STEP)
+          resolve(dataList)
+        }, REQUEST_TIME)
+      })
     }
-  },
-  ajaxGet(/* url */) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const dataList = generateData()
-        resolve(dataList)
-      }, REQUEST_TIME)
-    })
-  },
-  ajaxGet(/* url */) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const dataList = generateData(STEP)
-        resolve(dataList)
-      }, REQUEST_TIME)
-    })
   }
 }
 </script>

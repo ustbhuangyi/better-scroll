@@ -13,9 +13,11 @@
 - [zoom](./zoom.html)
 - [mouse-wheel](./mouse-wheel.html)
 - [observe-dom](./observe-dom.html)
+- [nested-scroll](./nested-scroll.html)
 - [infinity](./infinity.html)
+- [movable](./movable.html)
 
-非常欢迎大家参与编写插件的这件有意义的事情，在此之前，你需要花点时间了解这个[如何编写插件](./how-to-write.html)。
+非常欢迎大家参与插件的贡献，在此之前，你需要花点时间了解这个[如何编写插件](./how-to-write.html)。
 
 ## 使用插件
 
@@ -69,8 +71,6 @@
     freeScroll: true,
     scrollX: true,
     scrollY: true,
-    disableMouse: true,
-    useTransition: true,
     zoom: {
       start: 1,
       min: 0.5,
@@ -97,3 +97,7 @@
     // 等等
   })
 ```
+
+::: warning 注意
+引用全部的 BetterScroll 可能对你的 bundle 体积有很大的冲击，**尽量按需引入**。
+:::

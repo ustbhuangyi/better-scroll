@@ -74,7 +74,7 @@ export default class Scroller implements ExposedAPI {
     top: number
   }
   _reflow: number
-  resizeTimeout: number
+  resizeTimeout: number = 0
   lastClickTime: number | null;
   [key: string]: any
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
@@ -251,13 +251,12 @@ export default class Scroller implements ExposedAPI {
 
         // check if it is a click operation
         if (!actions.moved && this.checkClick(e)) {
-          this.animater.setForceStopped(false)
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
           return true
         }
-        this.animater.setForceStopped(false)
         // reset if we are outside of the boundaries
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
+          this.animater.setForceStopped(false)
           return true
         }
       }
@@ -277,7 +276,13 @@ export default class Scroller implements ExposedAPI {
         if (this.momentum(pos, duration)) {
           return
         }
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+
+        // force stop from transition or animation when click a point
+        if (!this.animater.forceStopped || actions.moved) {
+          this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+        } else {
+          this.animater.setForceStopped(false)
+        }
       }
     )
   }
@@ -335,11 +340,9 @@ export default class Scroller implements ExposedAPI {
   }
 
   private checkClick(e: TouchEvent) {
-    // when in the process of pulling down, it should not prevent click
     const cancelable = {
       preventClick: this.animater.forceStopped
     }
-
     // we scrolled less than momentumLimitDistance pixels
     if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) return true
     if (!cancelable.preventClick) {
