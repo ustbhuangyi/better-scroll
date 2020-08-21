@@ -233,3 +233,8 @@ let scroll = new BScroll('.wrapper',{
    - **类型**：`number`
    - **默认值**：`5`
    - **作用**：当手指操作幅度过大，滑出视口导致可能没有触发 touchend 事件，因此 autoEndDistance 的作用就是当手指即将脱离当前视口的时候，自动调用 touchend 事件。默认距离边界 5px 的时候，结束滚动。
+
+## outOfBoundaryDampingFactor
+   - **类型**：`number`
+   - **默认值**：`1 / 3`
+   - **作用**：当超过边界的时候，进行阻尼行为，阻尼因子越小，阻力越大，取值范围：[0, 1]。
