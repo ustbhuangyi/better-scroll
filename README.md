@@ -7,6 +7,7 @@
 [1.x Docs](https://ustbhuangyi.github.io/better-scroll/#/)
 
 [2.x Docs](https://better-scroll.github.io/docs/en-US/)
+
 [2.x Demo](https://better-scroll.github.io/examples/)
 
 > **Note**: The following code is the syntax of `2.x`.
