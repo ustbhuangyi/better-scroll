@@ -1,13 +1,13 @@
 <template>
   <div class="mouse-wheel-pullup">
-    <div ref="scroller" class="pullup-bswrapper">
-      <div class="pullup-scroller">
+    <div ref="scroll" class="pullup-wrapper">
+      <div class="pullup-content">
         <ul class="pullup-list">
           <li v-for="i of data" :key="i" class="pullup-list-item">
             {{ i % 5 === 0 ? 'use your mousewheel please 👆🏻' : `I am item ${i} `}}
           </li>
         </ul>
-        <div class="pullup-wrapper">
+        <div class="pullup-tips">
           <div v-if="!isPullUpLoad" class="before-trigger">
             <span class="pullup-txt">mousewheel trigger pullingup and load more</span>
           </div>
@@ -40,7 +40,8 @@
     },
     methods: {
       initBscroll() {
-        this.scroll = new BScroll(this.$refs.scroller, {
+        this.scroll = new BScroll(this.$refs.scroll, {
+          probeType: 3,
           pullUpLoad: true,
           mouseWheel: true
         })
@@ -76,10 +77,10 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .mouse-wheel-pullup
   height: 100%
-  .pullup-bswrapper
+  .pullup-wrapper
     height: 100%
     padding: 0 10px
     border: 1px solid #ccc
@@ -90,7 +91,7 @@
     padding: 10px 0
     list-style: none
     border-bottom: 1px solid #ccc
-  .pullup-wrapper
+  .pullup-tips
     padding: 20px
     text-align: center
     color: #999

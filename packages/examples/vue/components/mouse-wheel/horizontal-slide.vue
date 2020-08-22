@@ -1,8 +1,8 @@
 <template>
-  <div class="horizontal-slide-mouse-wheel">
-    <div class="banner-wrapper">
-      <div class="slide-banner-wrapper" ref="slide">
-        <div class="slide-banner-content">
+  <div class="mouse-wheel-horizontal-slide">
+    <div class="slide-container">
+      <div class="slide-wrapper" ref="slide">
+        <div class="slide-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
@@ -70,13 +70,13 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 
-.horizontal-slide-mouse-wheel
-  .banner-wrapper
+.mouse-wheel-horizontal-slide
+  .slide-container
     position relative
-  .slide-banner-wrapper
+  .slide-wrapper
     min-height 1px
     overflow hidden
-  .slide-banner-content
+  .slide-content
     height 200px
     white-space nowrap
     font-size 0

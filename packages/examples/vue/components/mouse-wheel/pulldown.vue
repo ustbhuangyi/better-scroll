@@ -1,8 +1,8 @@
 <template>
   <div class="mouse-wheel-pulldown">
-    <div ref="bsWrapper" class="pulldown-bswrapper">
-      <div class="pulldown-scroller">
-        <div class="pulldown-wrapper">
+    <div ref="scroll" class="pulldown-wrapper">
+      <div class="pulldown-content">
+        <div class="pulldown-tips">
           <div v-show="beforePullDown">
             <span>Pull Down and refresh</span>
           </div>
@@ -62,7 +62,7 @@
     },
     methods: {
       initBscroll() {
-        this.bscroll = new BScroll(this.$refs.bsWrapper, {
+        this.bscroll = new BScroll(this.$refs.scroll, {
           scrollY: true,
           bounceTime: TIME_BOUNCE,
           mouseWheel: true,
@@ -126,10 +126,10 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .mouse-wheel-pulldown
   height: 100%
-  .pulldown-bswrapper
+  .pulldown-wrapper
     position: relative
     height: 100%
     padding: 0 10px
@@ -141,7 +141,7 @@
     padding: 10px 0
     list-style: none
     border-bottom: 1px solid #ccc
-  .pulldown-wrapper
+  .pulldown-tips
     position: absolute
     width: 100%
     padding: 20px

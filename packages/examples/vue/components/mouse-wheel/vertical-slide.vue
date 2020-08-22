@@ -1,17 +1,17 @@
 <template>
   <div class="mouse-wheel-slide-vertical">
-    <div class="vertical-wrapper">
-      <div class="slide-vertical-wrapper" ref="slide">
-        <div class="slide-vertical-content">
+    <div class="slide-container">
+      <div class="slide-wrapper" ref="slide">
+        <div class="slide-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
           <div class="slide-item page4">page 4</div>
         </div>
       </div>
-      <div class="docs-wrapper">
+      <div class="dots-wrapper">
         <span
-          class="doc"
+          class="dot"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
@@ -69,11 +69,11 @@
   &.view
     padding 0
     height 100%
-  .vertical-wrapper
+  .slide-container
     position relative
     height 100%
     font-size 0
-  .slide-vertical-wrapper
+  .slide-wrapper
     height 100%
     overflow hidden
     .slide-item
@@ -92,12 +92,12 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .docs-wrapper
+  .dots-wrapper
     position absolute
     right 4px
     top 50%
     transform translateY(-50%)
-    .doc
+    .dot
       display block
       margin 4px 0
       width 8px

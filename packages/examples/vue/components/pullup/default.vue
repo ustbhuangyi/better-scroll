@@ -1,13 +1,13 @@
 <template>
   <div class="pullup">
-    <div ref="scroller" class="pullup-bswrapper">
-      <div class="pullup-scroller">
+    <div ref="scroll" class="pullup-wrapper">
+      <div class="pullup-content">
         <ul class="pullup-list">
           <li v-for="i of data" :key="i" class="pullup-list-item">
             {{ i % 5 === 0 ? 'scroll up 👆🏻' : `I am item ${i} `}}
           </li>
         </ul>
-        <div class="pullup-wrapper">
+        <div class="pullup-tips">
           <div v-if="!isPullUpLoad" class="before-trigger">
             <span class="pullup-txt">Pull up and load more</span>
           </div>
@@ -38,7 +38,7 @@
     },
     methods: {
       initBscroll() {
-        this.bscroll = new BScroll(this.$refs.scroller, {
+        this.bscroll = new BScroll(this.$refs.scroll, {
           pullUpLoad: true
         })
 
@@ -76,19 +76,19 @@
 <style lang="stylus">
 .pullup
   height: 100%
-.pullup-bswrapper
-  height: 100%
-  padding: 0 10px
-  border: 1px solid #ccc
-  overflow: hidden
-.pullup-list
-  padding: 0
-.pullup-list-item
-  padding: 10px 0
-  list-style: none
-  border-bottom: 1px solid #ccc
-.pullup-wrapper
-  padding: 20px
-  text-align: center
-  color: #999
+  .pullup-wrapper
+    height: 100%
+    padding: 0 10px
+    border: 1px solid #ccc
+    overflow: hidden
+  .pullup-list
+    padding: 0
+  .pullup-list-item
+    padding: 10px 0
+    list-style: none
+    border-bottom: 1px solid #ccc
+  .pullup-tips
+    padding: 20px
+    text-align: center
+    color: #999
 </style>

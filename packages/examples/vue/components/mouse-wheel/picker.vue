@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mouse-wheel-picker">
     <ul class="example-list">
       <li class="example-item" @click="show">
           <span class="open">{{selectedText}}</span>
@@ -162,7 +162,6 @@
             useTransition: true,
           })
           this.wheel.on('scrollEnd', () => {
-            console.log('scrollEnd---')
             this.$emit(EVENT_CHANGE, this.wheel.getSelectedIndex())
           })
         } else {

@@ -1,5 +1,5 @@
 <template>
-  <div class="vertical-mouse-wheel">
+  <div class="mouse-wheel-vertical-scroll">
     <div class="mouse-wheel-wrapper" ref="scroll">
       <div class="mouse-wheel-content">
         <div class="mouse-wheel-item" v-for="n in 100" :key="n">{{n}}</div>
@@ -28,20 +28,18 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-.vertical-mouse-wheel
+.mouse-wheel-vertical-scroll
   .mouse-wheel-wrapper
     height 400px
     overflow hidden
     .mouse-wheel-item
-      height 30px
-      line-height 30px
+      height 50px
+      line-height 50px
       font-size 20px
       font-weight bold
-      color black
-      border-bottom 1px solid #eee
       text-align center
       &:nth-child(2n)
-        background-color #c3d899
+        background-color #C3D899
       &:nth-child(2n+1)
-        background-color #f1ffc7
+        background-color #F2D4A7
 </style>

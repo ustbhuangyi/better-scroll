@@ -123,7 +123,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .pulldown
   height: 100%
 .pulldown-bswrapper
