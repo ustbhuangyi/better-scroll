@@ -6,11 +6,11 @@ import {
   bscrollVertical,
   replaceBscrollProperties
 } from './__utils__/bscroll'
-import * as SlidePage from './__utils__/SlidePage'
+import * as SlidePage from './__utils__/SlidePages'
 import { mockDomClient } from '@better-scroll/core/src/__tests__/__utils__/layout'
 
-jest.mock('@better-scroll/slide/src/SlidePage', () => {
-  return require('./__utils__/SlidePage').SlidePage
+jest.mock('@better-scroll/slide/src/SlidePages', () => {
+  return require('./__utils__/SlidePages').SlidePage
 })
 jest.mock('@better-scroll/core')
 jest.mock('@better-scroll/core/src/animater/index')
@@ -67,7 +67,8 @@ describe('slide test for SlidePage class', () => {
       'forceStop',
       'flick',
       'destroy',
-      'resize'
+      'resize',
+      'beforeInitialScrollTo'
     ])
     jest.useFakeTimers()
   })
@@ -99,8 +100,6 @@ describe('slide test for SlidePage class', () => {
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen + 2)
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('1200px')
-    // lazyInit
-    expect(bscroll.refresh).toBeCalled()
     slide.destroy()
     // destroy
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
@@ -166,7 +165,6 @@ describe('slide test for SlidePage class', () => {
     })
     const slide = new Slide(bscroll)
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).toBeCalled()
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('600px')
     slide.destroy()
@@ -182,9 +180,8 @@ describe('slide test for SlidePage class', () => {
       direction: 'horizon'
     })
     const slide = new Slide(bscroll)
-    expect(bscroll.options.slide.loop).toBe(false)
+    expect((<any>slide).options.loop).toBe(false) //forcibly obtain private variables
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).toBeCalled()
     // setWidth
     expect(bscroll.scroller.content.style.width).toBe('300px')
     slide.destroy()
@@ -202,18 +199,19 @@ describe('slide test for SlidePage class', () => {
     SlidePage.getInitPage.mockImplementation(() => {
       return {
         pageX: 0,
-        pageY: 1
+        pageY: 1,
+        x: 0,
+        y: -300
       }
     })
     const slide = new Slide(bscroll)
-    expect(bscroll.options.slide.loop).toBe(false)
+    expect((<any>slide).options.loop).toBe(false)
     expect(bscroll.scroller.content.children.length).toBe(originSlideLen)
-    expect(bscroll.refresh).toBeCalled()
     // setHeight
     expect(bscroll.scroller.content.children[0].style.height).toBe('300px')
     slide.destroy()
   })
-  it('should have right init slide state for loopX', () => {
+  it('should have right init slide state', () => {
     const { bscroll, mockscrollTo } = createBScroll(hooks, {
       slideNum: 2,
       slideOpt: {
@@ -224,126 +222,32 @@ describe('slide test for SlidePage class', () => {
       direction: 'horizon'
     })
     const slide = new Slide(bscroll)
-
-    expect(bscroll.refresh).toBeCalled()
-
-    SlidePage.change2safePage.mockImplementationOnce(() => {
-      return {
-        x: -300,
-        y: 0,
-        pageX: 1,
-        pageY: 0
-      }
-    })
-    SlidePage.loopXGetter.mockImplementation(() => {
-      return true
-    })
-    SlidePage.slideXGetter.mockImplementation(() => {
-      return true
-    })
     SlidePage.getInitPage.mockImplementation(() => {
       return {
         pageX: 1,
-        pageY: 0
+        pageY: 0,
+        x: -300,
+        y: 0
       }
     })
-    bscroll.scroller.scrollBehaviorX.currentPos = 0
-    bscroll.scroller.scrollBehaviorY.currentPos = 0
     hooks.trigger('refresh')
-    expect(SlidePage.change2safePage).toBeCalledWith(1, 0)
-    expect(mockscrollTo.mock.calls[0][0]).toBe(-300)
-    expect(mockscrollTo.mock.calls[0][1]).toBe(0)
-    expect(mockscrollTo.mock.calls[0][2]).toBe(0)
+    const initPos = {
+      x: 0,
+      y: 0
+    }
+    hooks.trigger('beforeInitialScrollTo', initPos)
+    expect((<any>slide).inited).toBe(true)
+    expect(initPos.x).toBe(-300)
+    expect(initPos.y).toBe(0)
+    expect(SlidePage.changeCurrentPage).toBeCalledWith({
+      pageX: 1,
+      pageY: 0,
+      x: -300,
+      y: 0
+    })
     slide.destroy()
     SlidePage.loopXGetter.mockReset()
     SlidePage.slideXGetter.mockReset()
-  })
-  it('should have right init slide state for loopY', () => {
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      slideNum: 2,
-      slideOpt: {
-        loop: true
-      },
-      scrollX: false,
-      scrollY: true,
-      direction: 'vertical'
-    })
-    const slide = new Slide(bscroll)
-
-    expect(bscroll.refresh).toBeCalled()
-
-    SlidePage.change2safePage.mockImplementationOnce(() => {
-      return {
-        x: 0,
-        y: -300,
-        pageX: 0,
-        pageY: 1
-      }
-    })
-    SlidePage.loopYGetter.mockImplementation(() => {
-      return true
-    })
-    SlidePage.slideYGetter.mockImplementation(() => {
-      return true
-    })
-    SlidePage.getInitPage.mockImplementation(() => {
-      return {
-        pageX: 0,
-        pageY: 1
-      }
-    })
-    bscroll.scroller.scrollBehaviorX.currentPos = 0
-    bscroll.scroller.scrollBehaviorY.currentPos = 0
-    hooks.trigger('refresh')
-    expect(SlidePage.change2safePage).toBeCalledWith(0, 1)
-    expect(mockscrollTo.mock.calls[0][0]).toBe(0)
-    expect(mockscrollTo.mock.calls[0][1]).toBe(-300)
-    expect(mockscrollTo.mock.calls[0][2]).toBe(0)
-    slide.destroy()
-    SlidePage.loopYGetter.mockReset()
-    SlidePage.slideYGetter.mockReset()
-  })
-  it('should have right init slide state for no loop', () => {
-    SlidePage.change2safePage.mockImplementationOnce(() => {
-      return {
-        x: 0,
-        y: -300,
-        pageX: 0,
-        pageY: 1
-      }
-    })
-    SlidePage.loopYGetter.mockImplementation(() => {
-      return false
-    })
-    SlidePage.slideYGetter.mockImplementation(() => {
-      return true
-    })
-    const { bscroll, mockscrollTo } = createBScroll(hooks, {
-      slideNum: 2,
-      slideOpt: {
-        loop: false
-      },
-      scrollX: false,
-      scrollY: true,
-      direction: 'vertical'
-    })
-    SlidePage.getInitPage.mockImplementation(() => {
-      return {
-        pageX: 0,
-        pageY: 0
-      }
-    })
-    bscroll.scroller.scrollBehaviorX.currentPos = 0
-    bscroll.scroller.scrollBehaviorY.currentPos = 0
-    const slide = new Slide(bscroll)
-    hooks.trigger('refresh')
-    expect(SlidePage.change2safePage).toBeCalledWith(0, 0)
-    expect(mockscrollTo.mock.calls[0][0]).toBe(0)
-    expect(mockscrollTo.mock.calls[0][1]).toBe(-300)
-    expect(mockscrollTo.mock.calls[0][2]).toBe(0)
-    slide.destroy()
-    SlidePage.loopYGetter.mockReset()
-    SlidePage.slideYGetter.mockReset()
   })
   it('should have correct behavior for next function', () => {
     SlidePage.nextPage.mockImplementationOnce(() => {
@@ -372,13 +276,16 @@ describe('slide test for SlidePage class', () => {
     SlidePage.getInitPage.mockImplementation(() => {
       return {
         pageX: 1,
-        pageY: 0
+        pageY: 0,
+        x: -300,
+        y: 0
       }
     })
     const slide = new Slide(bscroll)
     bscroll.scroller.scrollBehaviorX.currentPos = 0
     bscroll.scroller.scrollBehaviorY.currentPos = 0
-
+    hooks.trigger('refresh')
+    hooks.trigger('beforeInitialScrollTo', { x: 0, y: 0 })
     slide.next()
     expect(SlidePage.changeCurrentPage).toBeCalledWith({
       x: -600,

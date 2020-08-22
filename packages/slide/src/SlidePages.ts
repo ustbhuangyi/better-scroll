@@ -21,7 +21,7 @@ const enum LoopStage {
   Tail = 'tail',
   Middle = 'middle'
 }
-export default class PageInfo {
+export default class SlidePages {
   loopX: boolean
   loopY: boolean
   slideX: boolean
@@ -67,12 +67,19 @@ export default class PageInfo {
       y: y
     }
   }
-  getInitPage(): Page {
+  getInitPage(): Page & Position {
     let initPageX = this.loopX ? 1 : 0
     let initPageY = this.loopY ? 1 : 0
-    return {
+    const initPage = {
       pageX: this.currentPage.pageX || initPageX,
       pageY: this.currentPage.pageY || initPageY
+    }
+    const initPosition = this.pagesPos.getPos(initPage.pageX, initPage.pageY)
+    return {
+      pageX: initPage.pageX,
+      pageY: initPage.pageY,
+      x: initPosition.x,
+      y: initPosition.y
     }
   }
   getRealPage(page?: Page): Page {
