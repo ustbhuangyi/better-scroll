@@ -1,6 +1,5 @@
 import BScroll, { Boundary } from '@better-scroll/core'
 import Wheel from '../index'
-import { extend } from '@better-scroll/shared-utils'
 
 jest.mock('@better-scroll/core')
 

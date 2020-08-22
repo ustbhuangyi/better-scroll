@@ -99,10 +99,7 @@ export default class Wheel implements PluginAPI {
         .call(this.items, 0)
         .indexOf(this.target as Element)
       if (index === -1) return true
-      // sometimes when scrolling, and click many times
-      // scrollEnd will not be fired
-      // so manually reset point-events
-      this.scroll.scroller.togglePointerEvents(true)
+
       this.wheelToAfterClick(index, this.options.adjustTime, ease.swipe)
       return true
     })

@@ -155,7 +155,8 @@
               wheelItemClass: 'wheel-item',
               wheelDisabledItemClass: 'wheel-disabled-item'
             },
-            probeType: 3
+            useTransition: false,
+            probeType: 2
           })
           this.wheel.on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, this.wheel.getSelectedIndex())
