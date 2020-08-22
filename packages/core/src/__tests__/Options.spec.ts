@@ -52,7 +52,10 @@ describe('BetterScroll Options', () => {
       swipeBounceTime: 500,
       swipeTime: 2500,
       tap: '',
-      useTransition: true
+      useTransition: true,
+      autoEndDistance: 5,
+      bindToTarget: false,
+      outOfBoundaryDampingFactor: 1 / 3
     })
   })
 
@@ -99,7 +102,10 @@ describe('BetterScroll Options', () => {
       swipeBounceTime: 500,
       swipeTime: 2500,
       tap: '',
-      useTransition: true
+      useTransition: true,
+      autoEndDistance: 5,
+      bindToTarget: false,
+      outOfBoundaryDampingFactor: 1 / 3
     })
   })
 
@@ -148,7 +154,10 @@ describe('BetterScroll Options', () => {
       swipeTime: 2500,
       tap: '',
       useTransition: true,
-      translateZ: ' translateZ(0)'
+      translateZ: ' translateZ(1px)',
+      autoEndDistance: 5,
+      bindToTarget: false,
+      outOfBoundaryDampingFactor: 1 / 3
     })
   })
 

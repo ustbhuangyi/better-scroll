@@ -154,9 +154,9 @@ export default class PullUp implements PluginAPI {
     }
 
     // simulate a pullUp action
+    const NEGATIVE_VALUE = -1
     const outOfBoundaryPos =
       scrollBehaviorY.maxScrollPos + threshold + NEGATIVE_VALUE
-    const NEGATIVE_VALUE = -1
     this.scroll.scroller.scrollBehaviorY.setMovingDirection(NEGATIVE_VALUE)
     this.scroll.scrollTo(
       this.scroll.x,

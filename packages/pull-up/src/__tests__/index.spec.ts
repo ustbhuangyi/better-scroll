@@ -145,7 +145,7 @@ describe('pullUp plugins', () => {
 
     pullUp.finishPullUp()
 
-    expect(scroll.movingDirectionY).toBe(0)
+    expect(scroll.scroller.scrollBehaviorY.setMovingDirection).toBeCalledWith(0)
     expect(scroll.events.scrollEnd.length).toBe(2)
     expect(pullUp.watching).toBe(false)
   })
@@ -224,7 +224,9 @@ describe('pullUp plugins', () => {
     pullUp.autoPullUpLoad()
 
     const outOfBoundaryPos = -1
-    expect(scroll.movingDirectionY).toBe(1)
+    expect(scroll.scroller.scrollBehaviorY.setMovingDirection).toBeCalledWith(
+      -1
+    )
     expect(scroll.scrollTo).toBeCalledWith(0, outOfBoundaryPos, 800)
   })
 })

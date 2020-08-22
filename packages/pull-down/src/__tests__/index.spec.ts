@@ -154,7 +154,7 @@ describe('pull down tests', () => {
     expect(scroll.scroller.hooks.events.end.length).toBe(0)
   })
 
-  it.only('should work well when call openPullDown()', () => {
+  it('should work well when call openPullDown()', () => {
     pullDown.closePullDown()
 
     expect(pullDown.watching).toBe(false)

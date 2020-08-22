@@ -68,6 +68,12 @@ describe('Scroller Class tests', () => {
     })
 
     it('should bind translate hook', () => {
+      scroller.actions.getCurrentPos = jest.fn().mockImplementation(() => {
+        return {
+          x: 0,
+          y: 0
+        }
+      })
       scroller.translater.hooks.trigger('translate', { x: 0, y: -20 })
 
       expect(scroller.scrollBehaviorX.updatePosition).toBeCalled()
@@ -139,8 +145,6 @@ describe('Scroller Class tests', () => {
         x: 0,
         y: 0
       })
-      expect(scroller.animater.setForceStopped).toBeCalled()
-      expect(scroller.animater.setForceStopped).toHaveBeenCalledWith(false)
     })
 
     it('bind scrollEnd hook', () => {
@@ -197,7 +201,7 @@ describe('Scroller Class tests', () => {
         y: 0
       }
     })
-    scroller.scrollTo(0, -20)
+    scroller.scrollTo(0, -20, 800)
 
     expect(scrollToMockHandler).toBeCalledWith({
       x: 0,
@@ -212,9 +216,8 @@ describe('Scroller Class tests', () => {
         x: 0,
         y: -20
       },
-      0,
-      expect.anything(),
-      undefined
+      800,
+      'cubic-bezier(0.165, 0.84, 0.44, 1)'
     )
   })
 

@@ -257,6 +257,8 @@ export function createBScroll<O = {}>(
 }
 
 createBScroll.use = BScrollConstructor.use
+createBScroll.plugins = BScrollConstructor.plugins
+createBScroll.pluginsMap = BScrollConstructor.pluginsMap
 
 type createBScroll = typeof createBScroll
 export interface BScrollFactory extends createBScroll {

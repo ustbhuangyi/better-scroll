@@ -13,6 +13,7 @@ describe('Behavior Class tests', () => {
     momentumLimitDistance: 15,
     deceleration: 0.001,
     swipeBounceTime: 2500,
+    outOfBoundaryDampingFactor: 1 / 3,
     swipeTime: 2000,
     bounces: [true, true] as [boolean, boolean],
     rect: {

@@ -58,7 +58,7 @@ describe('Actions Class tests', () => {
     expect(actions.scrollBehaviorY.start).toBeCalled()
     expect(actions.scrollBehaviorX.resetStartPos).toBeCalled()
     expect(actions.scrollBehaviorY.resetStartPos).toBeCalled()
-    expect(actions.animater.stop).toBeCalled()
+    expect(actions.animater.doStop).toBeCalled()
   })
 
   it('should invoke handleMove when actionsHandler trigger move hook', () => {

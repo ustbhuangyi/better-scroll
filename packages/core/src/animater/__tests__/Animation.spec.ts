@@ -40,7 +40,7 @@ describe('Animation Class test suit', () => {
   })
 
   it('should off hooks and cancelAnimationFrame when destroy', () => {
-    const { animation, translater, dom } = createTransition(0)
+    const { animation } = createTransition(0)
     const hooksDestroySpy = jest.spyOn(animation.hooks, 'destroy')
     animation.destroy()
     expect(mockCancelAnimationFrame).toBeCalledTimes(1)
@@ -48,7 +48,7 @@ describe('Animation Class test suit', () => {
   })
 
   it('should move to endPoint and trigger hooks in one step when time=0', () => {
-    const { animation, translater, dom } = createTransition(0)
+    const { animation, translater } = createTransition(0)
     const onMove = jest.fn()
     const onEnd = jest.fn()
     animation.hooks.on('move', onMove)
@@ -63,32 +63,11 @@ describe('Animation Class test suit', () => {
       y: 10
     }
 
-    animation.move(startPoint, endPoint, 0, 'easing', false)
+    animation.move(startPoint, endPoint, 0, 'easing')
     expect(translater.translate).toBeCalledTimes(1)
     expect(translater.translate).toBeCalledWith(endPoint)
     expect(onMove).toBeCalled()
     expect(onEnd).toBeCalled()
-  })
-
-  it('should not trigger hooks with isSilent=true& time=0', () => {
-    const { animation, translater, dom } = createTransition(0)
-    const onMove = jest.fn()
-    const onEnd = jest.fn()
-    animation.hooks.on('move', onMove)
-    animation.hooks.on('end', onEnd)
-
-    const startPoint = {
-      x: 0,
-      y: 0
-    }
-    const endPoint = {
-      x: 10,
-      y: 10
-    }
-
-    animation.move(startPoint, endPoint, 0, 'easing', true)
-    expect(onMove).not.toBeCalled()
-    expect(onEnd).not.toBeCalled()
   })
 
   it('should move to endPoint for serveral steps with time', () => {
@@ -126,7 +105,7 @@ describe('Animation Class test suit', () => {
     easeFn.mockImplementationOnce(() => {
       return 0.2
     })
-    animation.move(startPoint, endPoint, 500, easeFn, false)
+    animation.move(startPoint, endPoint, 500, easeFn)
     expect(easeFn).toBeCalledWith(0.2)
     expect(translater.translate).toBeCalledWith({
       x: 0,
@@ -144,7 +123,7 @@ describe('Animation Class test suit', () => {
     animation.destroy()
   })
   it('should force stop', () => {
-    const { animation, translater, dom } = createTransition(3)
+    const { animation, translater } = createTransition(3)
     const onMove = jest.fn()
     const onForceStop = jest.fn()
     const easeFn = jest.fn()
@@ -178,7 +157,7 @@ describe('Animation Class test suit', () => {
     easeFn.mockImplementationOnce(() => {
       return 0.2
     })
-    animation.move(startPoint, endPoint, 500, easeFn, false)
+    animation.move(startPoint, endPoint, 500, easeFn)
     expect(easeFn).toBeCalledWith(0.2)
     expect(translater.translate).toBeCalledWith({
       x: 0,
