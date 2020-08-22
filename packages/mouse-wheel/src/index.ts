@@ -1,4 +1,4 @@
-import BScroll, { Behavior } from '@better-scroll/core'
+import BScroll from '@better-scroll/core'
 import {
   warn,
   preventDefaultExceptionFn,

@@ -50,7 +50,10 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     x: 0,
     y: 0,
     maxScrollY: 0,
-    maxScrollX: 0
+    maxScrollX: 0,
+    hasVerticalScroll: true,
+    hasHorizontalScroll: false,
+    enabled: true
   }
 
   Object.setPrototypeOf(res, eventEmitter)
