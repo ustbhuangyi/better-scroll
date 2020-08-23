@@ -64,7 +64,6 @@
     "lint-staged": "^8.0.0",
     "ora": "^3.4.0",
     "prettier": "^1.14.3",
-    "puppeteer": "^1.17.0",
     "rimraf": "^2.6.2",
     "rollup": "^2.23.0",
     "rollup-plugin-commonjs": "^9.1.8",

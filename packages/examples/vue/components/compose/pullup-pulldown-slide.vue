@@ -21,25 +21,26 @@
       ref="bsWrapper"
     >
       <div class="pulldown-scroller">
-        <li
+        <div
           :key="idx"
           class="pullup-down-list-item"
           v-for="(item, idx) of dataList"
-        >{{ `I am item ${idx} ` }}</li>
-      </div>
-    </div>
-    <div class="pullup-wrapper">
-      <div v-show="!isPullingUp">
-        <span>Pull Up and load</span>
-      </div>
-      <div v-show="isPullingUp">
-        <span>Loading...</span>
+        >{{ `I am item ${idx} ` }}</div>
+        <div class="pullup-wrapper">
+          <div v-show="!isPullingUp">
+            <span>Pull Up and load</span>
+          </div>
+          <div v-show="isPullingUp">
+            <span>Loading...</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// 仿抖音视频silde
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import PullUp from '@better-scroll/pull-up'
@@ -49,7 +50,7 @@ BScroll.use(PullDown)
 BScroll.use(PullUp)
 BScroll.use(Slide)
 
-const BASE = 30
+const BASE = 10
 const TIME_BOUNCE = 700
 const REQUEST_TIME = 3000
 const THRESHOLD = 70
@@ -158,7 +159,7 @@ export default {
 
 .pullup-down-bswrapper
   position relative
-  height 100%
+  height 770px
   padding 0 10px
   border 1px solid #ccc
   overflow hidden
