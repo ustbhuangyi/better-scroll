@@ -13,6 +13,12 @@
       >
         <span>pullup-pulldown-slide</span>
       </li>
+      <li
+        @click="goPage('/compose/zoom-slide')"
+        class="example-item"
+      >
+        <span>zoom-slide</span>
+      </li>
     </ul>
     <transition name="move">
       <router-view class="view"></router-view>

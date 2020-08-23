@@ -17,13 +17,13 @@
       </div>
     </div>
     <div
-      class="pullup-down-bswrapper"
+      class="pullup-pulldown-slide-bswrapper"
       ref="bsWrapper"
     >
-      <div class="pulldown-scroller">
+      <div class="pullup-pulldown-slide-scroller">
         <div
           :key="idx"
-          class="pullup-down-list-item"
+          class="pullup-pulldown-slide-item"
           v-for="(item, idx) of dataList"
         >{{ `I am item ${idx} ` }}</div>
         <div class="pullup-wrapper">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-// 仿抖音视频silde
+// 仿抖音视频silde及上拉加载下拉刷新
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import PullUp from '@better-scroll/pull-up'
@@ -157,7 +157,7 @@ export default {
 .pullup-down
   height 100%
 
-.pullup-down-bswrapper
+.pullup-pulldown-slide-bswrapper
   position relative
   height 770px
   padding 0 10px
@@ -167,7 +167,7 @@ export default {
 .pullup-down-list
   padding 0
 
-.pullup-down-list-item
+.pullup-pulldown-slide-item
   height 770px
   padding 10px 0
   list-style none

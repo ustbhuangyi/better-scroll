@@ -39,6 +39,7 @@ import MovableScale from 'vue-example/components/movable/scale'
 
 import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
 import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
+import ComposeZoomSilde from 'vue-example/components/compose/zoom-slide'
 
 Vue.use(Router)
 
@@ -179,6 +180,10 @@ export default new Router({
         {
           path: 'pullup-pulldown-slide',
           component: ComposePullUpPullDownSlide
+        },
+        {
+          path: 'zoom-slide',
+          component: ComposeZoomSilde
         }
       ]
     }
