@@ -12,7 +12,7 @@ describe('One column picker', () => {
   })
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -23,7 +23,7 @@ describe('One column picker', () => {
 
     await page.waitFor(500)
 
-    const displayText = await page.$eval('.picker-panel', node => {
+    const displayText = await page.$eval('.picker-panel', (node) => {
       return window.getComputedStyle(node).display
     })
 
@@ -37,7 +37,7 @@ describe('One column picker', () => {
 
     await page.waitFor(500)
 
-    const transformText = await page.$eval('.wheel-scroll', node => {
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
       return window.getComputedStyle(node).transform
     })
     const translateY = getTranslate(transformText, 'y')
@@ -54,11 +54,13 @@ describe('One column picker', () => {
 
     await page.tap('.wheel-disabled-item')
 
-    const transformText = await page.$eval('.wheel-scroll', node => {
+    await page.waitFor(500)
+
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
       return window.getComputedStyle(node).transform
     })
     const translateY = getTranslate(transformText, 'y')
-    await expect(translateY).toBe(-72)
+    await expect(translateY).toBe(-36)
   })
 
   it('should wheel to second item when click second item', async () => {
@@ -76,7 +78,7 @@ describe('One column picker', () => {
     // wait for transition ends
     await page.waitFor(1000)
 
-    const transformText = await page.$eval('.wheel-scroll', node => {
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
       return window.getComputedStyle(node).transform
     })
     const translateY = getTranslate(transformText, 'y')
@@ -95,13 +97,13 @@ describe('One column picker', () => {
       y: 630,
       xDistance: 0,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     // wait for transition ends
     await page.waitFor(1000)
 
-    const transformText = await page.$eval('.wheel-scroll', node => {
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
       return window.getComputedStyle(node).transform
     })
     const translateY = getTranslate(transformText, 'y')

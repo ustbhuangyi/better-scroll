@@ -22,16 +22,8 @@ module.exports = {
   },
   "coverageDirectory": "<rootDir>/tests/coverage",
   "coveragePathIgnorePatterns": [
-    "/node_modules/",
     "/test/",
     "/__tests__/"
   ],
-  "coverageReporters": ['json', 'text', 'lcov', 'clover'],
-  "coverageThreshold": {
-  },
-  "collectCoverageFrom": [
-    "packages/**/*.{ts}",
-    "!packages/**/dist/**",
-    "!packages/better-scroll/**"
-  ]
+  "coverageReporters": ['json', 'text', 'lcov', 'clover']
 }

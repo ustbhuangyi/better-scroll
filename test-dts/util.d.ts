@@ -22,3 +22,5 @@ export type FilterSymbol<T> = FilterType<T, symbol>
 export type FilterArray<T> = FilterType<T, Array<any>>
 export type FilterFunc<T> = FilterType<T, Function>
 export type FilterObject<T> = FilterType<T, object>
+
+export type ExcludeTrue<T> = FilterType<T, true>

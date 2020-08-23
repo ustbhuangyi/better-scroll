@@ -188,9 +188,9 @@ function buildEntry(config, curIndex, next) {
 
 function copyDTSFiles (packageName) {
   console.log(chalk.cyan('> start copying .d.ts file to dist dir of packages own.'))
-  const sourceDir = resolve(`packages/${packageName}/dist/packages/${packageName}/src/*`)
+  const sourceDir = resolve(`packages/${packageName}/dist/packages/${packageName}/src/`)
   const targetDir = resolve(`packages/${packageName}/dist/types/`)
-  execa.shellSync(`mv ${sourceDir} ${targetDir}`)
+  execa.commandSync(`mv ${sourceDir} ${targetDir}`)
   console.log(chalk.cyan('> copy job is done.'))
 
   rimraf.sync(resolve(`packages/${packageName}/dist/packages`))
