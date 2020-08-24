@@ -151,7 +151,7 @@ export default {
     // pullingDown event handler
     async pullingDownHandler() {
       this.beforePullDown = false
-      this.isPullignDown = true
+      this.isPullingDown = true
       await this.requestData('refresh')
       this.isPullingDown = false
       this.$nextTick(() => {
@@ -164,9 +164,6 @@ export default {
     async pullingUpHandler() {
       this.isPullingUp = true
       await this.requestData('load')
-      console.log('Hello world')
-      console.log(this.bottomOutItems)
-
       this.isPullingUp = false
       this.$nextTick(() => {
         this.outerScroll.finishPullUp()
@@ -227,4 +224,18 @@ export default {
   line-height: 40px
   text-align: center
   list-style: none
+
+.pulldown-wrapper
+  position absolute
+  width 100%
+  padding 20px
+  box-sizing border-box
+  transform translateY(-100%) translateZ(0)
+  text-align center
+  color #999
+
+.pullup-wrapper
+  padding 20px
+  text-align center
+  color #999
 </style>
