@@ -26,8 +26,9 @@
         <div
           :key="idx"
           class="pullup-pulldown-slide-item"
+          :class="{['page' + idx % 4 ]: true}"
           v-for="(item, idx) of dataList"
-        >{{ `I am item ${idx} ` }}</div>
+        >{{ `Page ${idx} ` }}</div>
         <!-- pollup -->
         <div class="pullup-wrapper">
           <div v-show="!isPullingUp">
@@ -162,7 +163,6 @@ export default {
 .pullup-pulldown-slide-bswrapper
   position relative
   height 770px
-  padding 0 10px
   border 1px solid #ccc
   overflow hidden
 
@@ -174,6 +174,12 @@ export default {
   padding 10px 0
   list-style none
   border-bottom 1px solid #ccc
+  width 100%
+  line-height 200px
+  text-align center
+  font-size 26px
+  transform translate3d(0,0,0)
+  backface-visibility hidden
 
 .pulldown-wrapper
   position absolute
@@ -188,4 +194,12 @@ export default {
   padding 20px
   text-align center
   color #999
+.page1
+  background-color #D6EADF
+.page2
+  background-color #DDA789
+.page3
+  background-color #C3D899
+.page0
+  background-color #F2D4A7
 </style>

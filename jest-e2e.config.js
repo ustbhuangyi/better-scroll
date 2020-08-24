@@ -8,7 +8,8 @@ module.exports = {
     }
   },
   "preset": "jest-puppeteer",
-  "testMatch": ["**/tests/e2e/**/*.e2e.ts"],
+  "testMatch": ["**/tests/e2e/pulldown/*.e2e.ts"],
+  // "testMatch": ["**/tests/e2e/compose-plugins/*.e2e.ts"],
   "transform": {
     ".ts": "ts-jest"
   },

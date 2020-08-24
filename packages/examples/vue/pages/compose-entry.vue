@@ -1,5 +1,5 @@
 <template>
-  <div class="core">
+  <div class="compose">
     <ul class="example-list">
       <li
         @click="goPage('/compose/pullup-pulldown')"
@@ -18,6 +18,12 @@
         class="example-item"
       >
         <span>pullup-pulldown-outnested</span>
+      </li>
+      <li
+        @click="goPage('/compose/slide-nested')"
+        class="example-item"
+      >
+        <span>slide-nested</span>
       </li>
       
     </ul>

@@ -36,7 +36,7 @@ describe('Pulldown', () => {
     })
 
     // wait for requesting data
-    await page.waitFor(4000)
+    await page.waitFor(5000)
     const itemsCounts = await page.$$eval(
       '.pulldown-list-item',
       (element) => element.length

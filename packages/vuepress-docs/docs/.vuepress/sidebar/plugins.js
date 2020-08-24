@@ -6,6 +6,10 @@ const pluginContent = {
   'zh-US': '插件',
   'en-US': 'Plugins'
 }
+const highPluginContent = {
+  'zh-US': '插件的高阶使用',
+  'en-US': 'High Level Use Of Plugins'
+}
 const getPluginsSideBar = function (lang) {
   return [
     {
@@ -13,7 +17,7 @@ const getPluginsSideBar = function (lang) {
       collapsable: false,
       children: [
         '',
-        'how-to-write'
+        'how-to-write',
       ]
     },
     {
@@ -32,7 +36,14 @@ const getPluginsSideBar = function (lang) {
         'infinity',
         'movable'
       ]
-    }
+    },
+    // {
+    //   title: highPluginContent[lang],
+    //   collapsable: false,
+    //   children: [
+    //     'compose-plugins'
+    //   ]
+    // }
   ]
 }
 module.exports = getPluginsSideBar

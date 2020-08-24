@@ -47,7 +47,7 @@ import MovableScale from 'vue-example/components/movable/scale'
 import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
 import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
 import ComposePullUpPullDownNested from 'vue-example/components/compose/pullup-pulldown-outnested'
-
+import ComposeSlideNested from 'vue-example/components/compose/slide-nested'
 Vue.use(Router)
 
 export default new Router({
@@ -217,6 +217,10 @@ export default new Router({
         {
           path: 'pullup-pulldown-outnested',
           component: ComposePullUpPullDownNested
+        },
+        {
+          path: 'slide-nested',
+          component: ComposeSlideNested
         }
       ],
     },
