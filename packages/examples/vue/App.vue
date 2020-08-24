@@ -74,6 +74,10 @@ const examples = [
   {
     name: 'movable',
     path: '/movable/'
+  },
+  {
+    name: 'compose plugins',
+    path: '/compose/'
   }
 ]
 export default {

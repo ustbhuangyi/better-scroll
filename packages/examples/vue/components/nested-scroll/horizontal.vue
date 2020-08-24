@@ -2,17 +2,17 @@
   <div class="container">
       <div ref="outerScroll" class="outer-wrapper">
         <ul class="outer-content">
-          <li v-for="item in items1" class="list-item">{{ item }}</li>
+          <li v-for="(item, idx) in items1" :key="idx" class="list-item">{{ item }}</li>
           <li class="list-item inner-list-item">
             <div
               ref="innerScroll"
               class="inner-wrapper">
               <ul class="inner-content">
-                <li v-for="item in items2" class="list-item">{{ item }}</li>
+                <li v-for="(item, idx) in items2" :key="idx" class="list-item">{{ item }}</li>
               </ul>
             </div>
           </li>
-          <li v-for="item in items1" class="list-item">{{ item }}</li>
+          <li v-for="(item, idx) in items1" :key="idx" class="list-item">{{ item }}</li>
         </ul>
       </div>
   </div>

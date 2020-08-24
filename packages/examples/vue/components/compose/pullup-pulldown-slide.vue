@@ -1,5 +1,6 @@
 <template>
-  <div class="pullup-down">
+  <div class="pullup-down-slide">
+    <!-- pulldown -->
     <div
       class="pulldown-wrapper"
       ref="pulldown"
@@ -21,11 +22,13 @@
       ref="bsWrapper"
     >
       <div class="pullup-pulldown-slide-scroller">
+        <!-- slide item -->
         <div
           :key="idx"
           class="pullup-pulldown-slide-item"
           v-for="(item, idx) of dataList"
         >{{ `I am item ${idx} ` }}</div>
+        <!-- pollup -->
         <div class="pullup-wrapper">
           <div v-show="!isPullingUp">
             <span>Pull Up and load</span>
@@ -40,7 +43,6 @@
 </template>
 
 <script>
-// 仿抖音视频silde及上拉加载下拉刷新
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
 import PullUp from '@better-scroll/pull-up'
@@ -154,7 +156,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.pullup-down
+.pullup-down-slide
   height 100%
 
 .pullup-pulldown-slide-bswrapper
