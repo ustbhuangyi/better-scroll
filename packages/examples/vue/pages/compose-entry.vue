@@ -19,6 +19,12 @@
       >
         <span>pullup-pulldown-outnested</span>
       </li>
+      <li
+        @click="goPage('/compose/slide-nested')"
+        class="example-item"
+      >
+        <span>slide-nested</span>
+      </li>
       
     </ul>
     <transition name="move">
