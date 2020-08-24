@@ -13,7 +13,7 @@ describe('Slider for banner', () => {
 
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -21,14 +21,14 @@ describe('Slider for banner', () => {
     await page.waitFor(300)
 
     // wait for slide autoplay
-    await page.waitFor(5000)
+    await page.waitFor(4000)
 
-    const transformText = await page.$eval('.slide-banner-content', node => {
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x = getTranslate(transformText, 'x')
 
-    expect(x).toBe(-335)
+    expect(x).toBe(-670)
   })
 
   it('should go nextPage when click nextPage button', async () => {
@@ -40,12 +40,12 @@ describe('Slider for banner', () => {
     // wait for bs to do a transition
     await page.waitFor(1500)
 
-    const transformText = await page.$eval('.slide-banner-content', node => {
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x = getTranslate(transformText, 'x')
 
-    expect(x).toBe(-335)
+    expect(x).toBe(-670)
   })
 
   it('should go prevPage when click prevPage button', async () => {
@@ -55,27 +55,27 @@ describe('Slider for banner', () => {
     // wairt for bs to do a transition
     await page.waitFor(1500)
 
-    const transformText1 = await page.$eval('.slide-banner-content', node => {
+    const transformText1 = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x1 = getTranslate(transformText1, 'x')
 
-    expect(x1).toBe(-335)
+    expect(x1).toBe(-670)
 
     // simulate click
     await page.click('.prev')
     await page.waitFor(1500)
 
-    const transformText2 = await page.$eval('.slide-banner-content', node => {
+    const transformText2 = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x2 = getTranslate(transformText2, 'x')
 
-    expect(x2).toBe(0)
+    expect(x2).toBe(-335)
   })
   it('should change index when drap slide', async () => {
     await page.waitFor(300)
-    const currentIndex = await page.$eval('.dots-wrapper', el => {
+    const currentIndex = await page.$eval('.dots-wrapper', (el) => {
       const children = el.children
       let index = 0
       for (let i = 0; i < children.length; i++) {
@@ -92,11 +92,11 @@ describe('Slider for banner', () => {
       y: 120,
       xDistance: -150,
       yDistance: 0,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
     const secondDots = await page.$eval(
       `.dots-wrapper .dot:nth-child(${nextDotsIndex})`,
-      el => el.className
+      (el) => el.className
     )
     expect(secondDots).toContain('active')
   })
