@@ -37,13 +37,13 @@ const getPluginsSideBar = function (lang) {
         'movable'
       ]
     },
-    {
-      title: highPluginContent[lang],
-      collapsable: false,
-      children: [
-        'compose-plugins'
-      ]
-    }
+    // {
+    //   title: highPluginContent[lang],
+    //   collapsable: false,
+    //   children: [
+    //     'compose-plugins'
+    //   ]
+    // }
   ]
 }
 module.exports = getPluginsSideBar
