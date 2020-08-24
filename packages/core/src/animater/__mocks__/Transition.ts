@@ -18,7 +18,7 @@ const Transition = jest
         'beforeForceStop',
         'callStop',
         'time',
-        'timeFunction'
+        'timeFunction',
       ]),
       translate: jest.fn(),
       stop: jest.fn(),
@@ -29,7 +29,7 @@ const Transition = jest
       transitionTimingFunction: jest.fn(),
       destroy: jest.fn(),
       setPending: jest.fn(),
-      setForceStopped: jest.fn()
+      setForceStopped: jest.fn(),
     }
   })
 

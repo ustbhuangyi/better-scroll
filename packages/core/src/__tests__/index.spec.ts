@@ -34,7 +34,7 @@ describe('BetterScroll Core', () => {
     wrapper.appendChild(document.createElement('p'))
 
     let bs = new BScroll(wrapper, {
-      myPlugin2: true
+      myPlugin2: true,
     })
     expect(mockFn).toBeCalledWith(bs)
   })

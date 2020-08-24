@@ -20,7 +20,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     'scroll',
     'scrollEnd',
     'touchEnd',
-    'flick'
+    'flick',
   ])
   const res = {
     wrapper: wrapper,
@@ -31,7 +31,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
       'enable',
       'disable',
       'destroy',
-      'beforeInitialScrollTo'
+      'beforeInitialScrollTo',
     ]),
     scroller: new Scroller(wrapper, options),
     // own methods
@@ -41,7 +41,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
     registerType: jest.fn().mockImplementation((names: string[]) => {
-      names.forEach(name => {
+      names.forEach((name) => {
         const eventTypes = eventEmitter.eventTypes
         eventTypes[name] = name
       })
@@ -53,7 +53,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     maxScrollX: 0,
     hasVerticalScroll: true,
     hasHorizontalScroll: false,
-    enabled: true
+    enabled: true,
   }
 
   Object.setPrototypeOf(res, eventEmitter)

@@ -1,9 +1,9 @@
 import ActionsHandler, {
-  Options
+  Options,
 } from '@better-scroll/core/src/base/ActionsHandler'
 import {
   dispatchTouch,
-  dispatchMouse
+  dispatchMouse,
 } from '@better-scroll/core/src/__tests__/__utils__/event'
 
 describe('ActionsHandler', () => {
@@ -21,10 +21,10 @@ describe('ActionsHandler', () => {
       preventDefault: true,
       stopPropagation: true,
       preventDefaultException: {
-        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
       },
       tagException: { tagName: /^TEXTAREA$/ },
-      autoEndDistance: 5
+      autoEndDistance: 5,
     }
   })
   afterEach(() => {
@@ -36,11 +36,11 @@ describe('ActionsHandler', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
 
     const wrapperEventsName = actionsHandler.wrapperEventRegister.events.map(
-      event => event.name
+      (event) => event.name
     )
 
     const targetEventsName = actionsHandler.targetEventRegister.events.map(
-      event => event.name
+      (event) => event.name
     )
 
     expect(wrapperEventsName).toMatchObject(['mousedown'])
@@ -107,8 +107,8 @@ describe('ActionsHandler', () => {
     dispatchTouch(wrapper, 'click', [
       {
         pageX: 10,
-        pageY: 10
-      }
+        pageY: 10,
+      },
     ])
 
     expect(clickMockHandler).toBeCalled()

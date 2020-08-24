@@ -6,15 +6,15 @@ export const slideYGetter = jest.fn()
 export const nextPage = jest.fn()
 export const prevPage = jest.fn()
 export const realPage2Page = jest.fn()
-export const getRealPage = jest.fn().mockImplementation(page => {
+export const getRealPage = jest.fn().mockImplementation((page) => {
   return {
     pageX: page.pageX,
-    pageY: page.pageY
+    pageY: page.pageY,
   }
 })
 export const nearestPage = jest.fn()
 export const resetLoopPage = jest.fn()
-export const currentPageSetter = jest.fn(v => v)
+export const currentPageSetter = jest.fn((v) => v)
 export const changeCurrentPage = jest.fn()
 export const getInitPage = jest.fn()
 export const SlidePage = jest.fn().mockImplementation(() => {
@@ -22,13 +22,13 @@ export const SlidePage = jest.fn().mockImplementation(() => {
     x: 0,
     y: 0,
     pageX: 0,
-    pageY: 0
+    pageY: 0,
   }
   const slidePage = {
     getPageSize: jest.fn().mockImplementation(() => {
       return {
         width: 300,
-        height: 300
+        height: 300,
       }
     }),
     init: () => {
@@ -36,7 +36,7 @@ export const SlidePage = jest.fn().mockImplementation(() => {
         x: 0,
         y: 0,
         pageX: 0,
-        pageY: 0
+        pageY: 0,
       }
     },
     change2safePage: change2safePage,
@@ -58,27 +58,27 @@ export const SlidePage = jest.fn().mockImplementation(() => {
     },
     isSameWithCurrent: () => {
       return false
-    }
+    },
   }
   Object.defineProperty(slidePage, 'loopX', {
-    get: loopXGetter
+    get: loopXGetter,
   })
   Object.defineProperty(slidePage, 'loopY', {
-    get: loopYGetter
+    get: loopYGetter,
   })
   Object.defineProperty(slidePage, 'slideX', {
-    get: slideXGetter
+    get: slideXGetter,
   })
   Object.defineProperty(slidePage, 'slideY', {
-    get: slideYGetter
+    get: slideYGetter,
   })
   Object.defineProperty(slidePage, 'currentPage', {
     get: () => {
       return currentPage
     },
-    set: v => {
+    set: (v) => {
       currentPage = currentPageSetter(v)
-    }
+    },
   })
   return slidePage
 })

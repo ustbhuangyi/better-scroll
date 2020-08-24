@@ -14,11 +14,11 @@ describe('MouseWheel plugin', () => {
       viewport: {
         isMobile: false,
         width: 375,
-        height: 667
+        height: 667,
       },
       // tslint:disable-next-line: max-line-length
       userAgent:
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36',
     })
   })
 
@@ -33,12 +33,12 @@ describe('MouseWheel plugin', () => {
         x: 100,
         y: 100,
         deltaX: 0,
-        deltaY: 50
+        deltaY: 50,
       })
 
       await page.waitFor(1000)
 
-      const transformText = await page.$eval('.mouse-wheel-content', node => {
+      const transformText = await page.$eval('.mouse-wheel-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
@@ -56,11 +56,11 @@ describe('MouseWheel plugin', () => {
         x: 130,
         y: 130,
         deltaX: 0,
-        deltaY: 100
+        deltaY: 100,
       })
 
       await page.waitFor(1000)
-      const transformText = await page.$eval('.mouse-wheel-content', node => {
+      const transformText = await page.$eval('.mouse-wheel-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
@@ -80,12 +80,12 @@ describe('MouseWheel plugin', () => {
         x: 100,
         y: 100,
         deltaX: 0,
-        deltaY: 200
+        deltaY: 200,
       })
 
       await page.waitFor(3000)
 
-      const transformText = await page.$eval('.slide-content', node => {
+      const transformText = await page.$eval('.slide-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
@@ -103,11 +103,11 @@ describe('MouseWheel plugin', () => {
         x: 130,
         y: 130,
         deltaX: 0,
-        deltaY: 200
+        deltaY: 200,
       })
 
       await page.waitFor(3000)
-      const transformText = await page.$eval('.slide-content', node => {
+      const transformText = await page.$eval('.slide-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
@@ -127,12 +127,12 @@ describe('MouseWheel plugin', () => {
         x: 100,
         y: 100,
         deltaX: 0,
-        deltaY: 10000
+        deltaY: 10000,
       })
 
       await page.waitFor(3000)
 
-      const transformText = await page.$eval('.pullup-content', node => {
+      const transformText = await page.$eval('.pullup-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
@@ -144,7 +144,7 @@ describe('MouseWheel plugin', () => {
 
       const itemsCounts = await page.$$eval(
         '.pullup-list-item',
-        element => element.length
+        (element) => element.length
       )
 
       await expect(itemsCounts).toBeGreaterThanOrEqual(30)
@@ -162,7 +162,7 @@ describe('MouseWheel plugin', () => {
         x: 100,
         y: 100,
         deltaX: 0,
-        deltaY: -1000
+        deltaY: -1000,
       })
 
       // wait for loading data
@@ -170,7 +170,7 @@ describe('MouseWheel plugin', () => {
 
       const itemsCounts = await page.$$eval(
         '.pulldown-list-item',
-        element => element.length
+        (element) => element.length
       )
 
       await expect(itemsCounts).toBeGreaterThanOrEqual(30)
@@ -192,12 +192,12 @@ describe('MouseWheel plugin', () => {
         x: 200,
         y: 630,
         deltaX: 0,
-        deltaY: 100
+        deltaY: 100,
       })
 
       await page.waitFor(1000)
 
-      const transformText = await page.$eval('.wheel-scroll', node => {
+      const transformText = await page.$eval('.wheel-scroll', (node) => {
         return window.getComputedStyle(node).transform
       })
 

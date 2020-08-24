@@ -41,12 +41,12 @@ describe('mouse-wheel plugin', () => {
 
     scroll.scroller.scrollBehaviorX.performDampingAlgorithm = jest
       .fn()
-      .mockImplementation(arg1 => {
+      .mockImplementation((arg1) => {
         return arg1
       })
     scroll.scroller.scrollBehaviorY.performDampingAlgorithm = jest
       .fn()
-      .mockImplementation(arg1 => {
+      .mockImplementation((arg1) => {
         return arg1
       })
 
@@ -63,7 +63,7 @@ describe('mouse-wheel plugin', () => {
       'alterOptions',
       'mousewheelStart',
       'mousewheelMove',
-      'mousewheelEnd'
+      'mousewheelEnd',
     ])
   })
 
@@ -78,13 +78,13 @@ describe('mouse-wheel plugin', () => {
       easeTime: 300,
       discreteTime: 400,
       throttleTime: 0,
-      dampingFactor: 0.1
+      dampingFactor: 0.1,
     })
 
     // case 2
     scroll.options.mouseWheel = {
       dampingFactor: 1,
-      throttleTime: 50
+      throttleTime: 50,
     }
     mouseWheel = new MouseWheel(scroll)
 
@@ -94,7 +94,7 @@ describe('mouse-wheel plugin', () => {
       easeTime: 300,
       discreteTime: 400,
       throttleTime: 50,
-      dampingFactor: 1
+      dampingFactor: 1,
     })
   })
 
@@ -127,7 +127,7 @@ describe('mouse-wheel plugin', () => {
 
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       preventDefault: mockPreventDefault,
-      stopPropagation: mockStopPropagation
+      stopPropagation: mockStopPropagation,
     })
     expect(mockPreventDefault).toBeCalled()
     expect(mockStopPropagation).not.toBe(0)
@@ -138,12 +138,12 @@ describe('mouse-wheel plugin', () => {
 
     // preventDefaultException work
     scroll.options.preventDefaultException = {
-      tagName: /^(DIV)$/
+      tagName: /^(DIV)$/,
     }
 
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       preventDefault: mockPreventDefault,
-      stopPropagation: mockStopPropagation
+      stopPropagation: mockStopPropagation,
     })
     expect(mockPreventDefault).not.toBeCalled()
   })
@@ -176,7 +176,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 0
+      deltaMode: 0,
     })
 
     expect(scroll.scrollTo).toBeCalledWith(-10, 0, 300)
@@ -185,7 +185,7 @@ describe('mouse-wheel plugin', () => {
       x: -10,
       y: 0,
       directionX: 1,
-      directionY: 0
+      directionY: 0,
     })
 
     // y direction
@@ -194,7 +194,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 0
+      deltaMode: 0,
     })
     expect(scroll.scrollTo).toBeCalledWith(0, -10, 300)
     jest.advanceTimersByTime(410)
@@ -202,7 +202,7 @@ describe('mouse-wheel plugin', () => {
       x: 0,
       y: -10,
       directionX: 0,
-      directionY: 1
+      directionY: 1,
     })
   })
 
@@ -214,7 +214,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 2,
-      deltaMode: 1
+      deltaMode: 1,
     })
     expect(scroll.scrollTo).toBeCalledWith(-40, 0, 300)
 
@@ -224,7 +224,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 2,
-      deltaMode: 1
+      deltaMode: 1,
     })
     expect(scroll.scrollTo).toBeCalledWith(0, -40, 300)
   })
@@ -235,7 +235,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       wheelDeltaX: -120,
       wheelDeltaY: -240,
-      deltaMode: 0
+      deltaMode: 0,
     })
     expect(scroll.scrollTo).toBeCalledWith(-20, -40, 300)
   })
@@ -245,7 +245,7 @@ describe('mouse-wheel plugin', () => {
     scroll.hasHorizontalScroll = true
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       wheelDelta: -120,
-      deltaMode: 0
+      deltaMode: 0,
     })
     expect(scroll.scrollTo).toBeCalledWith(-20, -20, 300)
   })
@@ -256,7 +256,7 @@ describe('mouse-wheel plugin', () => {
 
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       detail: 60,
-      deltaMode: 0
+      deltaMode: 0,
     })
     expect(scroll.scrollTo).toBeCalledWith(-400, -400, 300)
   })
@@ -271,7 +271,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 2,
-      deltaMode: 1
+      deltaMode: 1,
     })
     expect(scroll.scrollTo).toBeCalledWith(40, 0, 300)
   })
@@ -293,7 +293,7 @@ describe('mouse-wheel plugin', () => {
     dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 2,
-      deltaMode: 1
+      deltaMode: 1,
     })
 
     expect(scroll.scrollTo).toBeCalledWith(0, -4, 300)

@@ -5,7 +5,7 @@ import {
   Direction,
   extend,
   EventEmitter,
-  Probe
+  Probe,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -69,7 +69,7 @@ export default class PullDown implements PluginAPI {
     >
     const defaultOptions: PullDownRefreshConfig = {
       threshold: 90,
-      stop: 40
+      stop: 40,
     }
     this.options = extend(defaultOptions, userOptions)
     // plugin relies on scrollTo api

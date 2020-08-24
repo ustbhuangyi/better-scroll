@@ -21,7 +21,7 @@ describe('Actions Class tests', () => {
     Object.defineProperty(window, 'performance', {
       get() {
         return undefined
-      }
+      },
     })
 
     let content = document.createElement('div')
@@ -72,7 +72,7 @@ describe('Actions Class tests', () => {
     actions.actionsHandler.hooks.trigger('move', {
       deltaX: 0,
       deltaY: -20,
-      e
+      e,
     })
 
     expect(beforeMoveMockHandler).toBeCalled()

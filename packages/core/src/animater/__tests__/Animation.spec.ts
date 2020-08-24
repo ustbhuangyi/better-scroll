@@ -6,14 +6,14 @@ let mockCancelAnimationFrame = jest.fn()
 jest.mock('@better-scroll/shared-utils/src/raf', () => {
   return {
     requestAnimationFrame: (cb: any) => mockRequestAnimationFrame(cb),
-    cancelAnimationFrame: () => mockCancelAnimationFrame()
+    cancelAnimationFrame: () => mockCancelAnimationFrame(),
   }
 })
 
 let mockGetNow = jest.fn()
 jest.mock('@better-scroll/shared-utils/src/lang', () => {
   return {
-    getNow: () => mockGetNow()
+    getNow: () => mockGetNow(),
   }
 })
 
@@ -26,7 +26,7 @@ function createTransition(probeType: number) {
   return {
     dom,
     translater,
-    animation
+    animation,
   }
 }
 describe('Animation Class test suit', () => {
@@ -56,11 +56,11 @@ describe('Animation Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
 
     animation.move(startPoint, endPoint, 0, 'easing')
@@ -80,14 +80,14 @@ describe('Animation Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 0,
-      y: 100
+      y: 100,
     }
 
-    mockRequestAnimationFrame.mockImplementation(cb => {
+    mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()
       }, 200)
@@ -109,14 +109,14 @@ describe('Animation Class test suit', () => {
     expect(easeFn).toBeCalledWith(0.2)
     expect(translater.translate).toBeCalledWith({
       x: 0,
-      y: 20
+      y: 20,
     })
     expect(onMove).toBeCalledTimes(1)
 
     jest.advanceTimersByTime(200)
     expect(translater.translate).toBeCalledWith({
       x: 0,
-      y: 100
+      y: 100,
     })
     expect(onMove).toBeCalledTimes(2)
     expect(onEnd).toBeCalled()
@@ -132,14 +132,14 @@ describe('Animation Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 0,
-      y: 100
+      y: 100,
     }
 
-    mockRequestAnimationFrame.mockImplementation(cb => {
+    mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()
       }, 200)
@@ -161,7 +161,7 @@ describe('Animation Class test suit', () => {
     expect(easeFn).toBeCalledWith(0.2)
     expect(translater.translate).toBeCalledWith({
       x: 0,
-      y: 20
+      y: 20,
     })
     expect(animation.pending).toBe(true)
     ;(<jest.Mock>translater.getComputedPosition).mockImplementation(() => {

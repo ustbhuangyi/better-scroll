@@ -18,8 +18,8 @@ describe('Behavior Class tests', () => {
     bounces: [true, true] as [boolean, boolean],
     rect: {
       size: 'height',
-      position: 'top'
-    }
+      position: 'top',
+    },
   }
   beforeEach(() => {
     wrapper = createDiv(100, 200, 0, 0)
@@ -69,7 +69,7 @@ describe('Behavior Class tests', () => {
     behavior.end(400)
     expect(endMockHandler).toBeCalled()
     expect(endMockHandler).toHaveBeenCalledWith({
-      duration: 0
+      duration: 0,
     })
   })
 
@@ -80,7 +80,7 @@ describe('Behavior Class tests', () => {
     expect(behavior.end(100)).toEqual({
       destination: -200,
       duration: 2500,
-      rate: 15
+      rate: 15,
     })
   })
 
@@ -99,7 +99,7 @@ describe('Behavior Class tests', () => {
     behavior.updatePosition(-400)
     expect(behavior.checkInBoundary()).toEqual({
       position: -200,
-      inBoundary: false
+      inBoundary: false,
     })
   })
 })

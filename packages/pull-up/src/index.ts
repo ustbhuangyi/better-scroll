@@ -3,7 +3,7 @@ import {
   Probe,
   Direction,
   extend,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -60,7 +60,7 @@ export default class PullUp implements PluginAPI {
       PullUpLoadConfig
     >
     const defaultOptions: PullUpLoadConfig = {
-      threshold: 0
+      threshold: 0,
     }
     this.options = extend(defaultOptions, userOptions)
 

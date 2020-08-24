@@ -19,7 +19,7 @@ describe('BetterScroll Options', () => {
         bottom: true,
         left: true,
         right: true,
-        top: true
+        top: true,
       },
       bounceTime: 800,
       click: false,
@@ -37,10 +37,10 @@ describe('BetterScroll Options', () => {
       momentumLimitTime: 300,
       preventDefault: true,
       preventDefaultException: {
-        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
       },
       tagException: {
-        tagName: /^TEXTAREA$/
+        tagName: /^TEXTAREA$/,
       },
       probeType: 0,
       resizePolling: 60,
@@ -55,7 +55,7 @@ describe('BetterScroll Options', () => {
       useTransition: true,
       autoEndDistance: 5,
       bindToTarget: false,
-      outOfBoundaryDampingFactor: 1 / 3
+      outOfBoundaryDampingFactor: 1 / 3,
     })
   })
 
@@ -63,7 +63,7 @@ describe('BetterScroll Options', () => {
     options.merge({
       scrollY: false,
       scrollX: true,
-      bounce: false
+      bounce: false,
     })
 
     expect(options).toEqual({
@@ -87,10 +87,10 @@ describe('BetterScroll Options', () => {
       momentumLimitTime: 300,
       preventDefault: true,
       preventDefaultException: {
-        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
       },
       tagException: {
-        tagName: /^TEXTAREA$/
+        tagName: /^TEXTAREA$/,
       },
       probeType: 0,
       resizePolling: 60,
@@ -105,7 +105,7 @@ describe('BetterScroll Options', () => {
       useTransition: true,
       autoEndDistance: 5,
       bindToTarget: false,
-      outOfBoundaryDampingFactor: 1 / 3
+      outOfBoundaryDampingFactor: 1 / 3,
     })
   })
 
@@ -120,7 +120,7 @@ describe('BetterScroll Options', () => {
         bottom: true,
         left: true,
         right: true,
-        top: true
+        top: true,
       },
       bounceTime: 800,
       click: false,
@@ -138,10 +138,10 @@ describe('BetterScroll Options', () => {
       momentumLimitTime: 300,
       preventDefault: true,
       preventDefaultException: {
-        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
       },
       tagException: {
-        tagName: /^TEXTAREA$/
+        tagName: /^TEXTAREA$/,
       },
       probeType: 0,
       resizePolling: 60,
@@ -157,14 +157,14 @@ describe('BetterScroll Options', () => {
       translateZ: ' translateZ(1px)',
       autoEndDistance: 5,
       bindToTarget: false,
-      outOfBoundaryDampingFactor: 1 / 3
+      outOfBoundaryDampingFactor: 1 / 3,
     })
   })
 
   it('should resolve bounce when calling process', () => {
     options
       .merge({
-        bounce: false
+        bounce: false,
       })
       .process()
 
@@ -172,12 +172,12 @@ describe('BetterScroll Options', () => {
       bottom: false,
       left: false,
       right: false,
-      top: false
+      top: false,
     })
 
     options
       .merge({
-        bounce: true
+        bounce: true,
       })
       .process()
 
@@ -185,7 +185,7 @@ describe('BetterScroll Options', () => {
       bottom: true,
       left: true,
       right: true,
-      top: true
+      top: true,
     })
   })
 })

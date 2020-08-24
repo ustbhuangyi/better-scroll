@@ -32,20 +32,20 @@ describe('pull down tests', () => {
     expect(scroll.proxy).toBeCalledWith([
       {
         key: 'finishPullDown',
-        sourceKey: 'plugins.pullDownRefresh.finishPullDown'
+        sourceKey: 'plugins.pullDownRefresh.finishPullDown',
       },
       {
         key: 'openPullDown',
-        sourceKey: 'plugins.pullDownRefresh.openPullDown'
+        sourceKey: 'plugins.pullDownRefresh.openPullDown',
       },
       {
         key: 'closePullDown',
-        sourceKey: 'plugins.pullDownRefresh.closePullDown'
+        sourceKey: 'plugins.pullDownRefresh.closePullDown',
       },
       {
         key: 'autoPullDownRefresh',
-        sourceKey: 'plugins.pullDownRefresh.autoPullDownRefresh'
-      }
+        sourceKey: 'plugins.pullDownRefresh.autoPullDownRefresh',
+      },
     ])
   })
 
@@ -56,19 +56,19 @@ describe('pull down tests', () => {
 
     expect(pullDown.options).toMatchObject({
       threshold: 90,
-      stop: 40
+      stop: 40,
     })
 
     // case 2
     scroll.options.pullDownRefresh = {
       threshold: 100,
-      stop: 50
+      stop: 50,
     }
     pullDown = new PullDown(scroll)
 
     expect(pullDown.options).toMatchObject({
       threshold: 100,
-      stop: 50
+      stop: 50,
     })
 
     expect(scroll.options.probeType).toBe(Probe.Realtime)
@@ -84,7 +84,7 @@ describe('pull down tests', () => {
     const scrollBehaviorY = scroll.scroller.scrollBehaviorY
     let boundary = {
       minScrollPos: 0,
-      maxScrollPos: 20
+      maxScrollPos: 20,
     }
     scrollBehaviorY.hooks.trigger(
       scrollBehaviorY.hooks.eventTypes.computeBoundary,
@@ -92,7 +92,7 @@ describe('pull down tests', () => {
     )
     expect(boundary).toMatchObject({
       minScrollPos: 50,
-      maxScrollPos: -1
+      maxScrollPos: -1,
     })
   })
 
@@ -160,18 +160,18 @@ describe('pull down tests', () => {
     expect(pullDown.watching).toBe(false)
     expect(pullDown.options).toMatchObject({
       threshold: 90,
-      stop: 40
+      stop: 40,
     })
 
     // modify options
     pullDown.openPullDown({
       threshold: 200,
-      stop: 80
+      stop: 80,
     })
 
     expect(pullDown.options).toMatchObject({
       threshold: 200,
-      stop: 80
+      stop: 80,
     })
     expect(pullDown.watching).toBe(true)
   })

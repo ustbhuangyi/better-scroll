@@ -2,7 +2,7 @@
   <div class="horizontal-in-vertical-conntainer">
     <div class="vertical-wrapper" ref="outerScroll">
       <div class="vertical-content">
-        <div class="vertical-item" v-for="item in list1">{{item}}</div>
+        <div class="vertical-item" v-for="(item, idx) in list1" :key="idx">{{item}}</div>
         <div class="horizontal-wrapper" ref="innerScroll">
           <div class="slide-banner-content">
               <div class="slide-item page1">horizontal scroll 1</div>
@@ -11,7 +11,7 @@
               <div class="slide-item page4">horizontal scroll 4</div>
           </div>
         </div>
-        <div class="vertical-item" v-for="item in list2">{{item}}</div>
+        <div class="vertical-item" v-for="(item, idx) in list2" :key="idx">{{item}}</div>
       </div>
     </div>
   </div>

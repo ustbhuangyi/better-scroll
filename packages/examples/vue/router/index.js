@@ -13,6 +13,7 @@ import FormEntry from 'vue-example/pages/form-entry'
 import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 import MovableEntry from 'vue-example/pages/movable-entry'
 import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
+import ComposeEntry from 'vue-example/pages/compose-entry'
 
 import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
 import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
@@ -43,13 +44,17 @@ import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/hor
 import Movable from 'vue-example/components/movable/default'
 import MovableScale from 'vue-example/components/movable/scale'
 
+import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
+import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
+import ComposePullUpPullDownNested from 'vue-example/components/compose/pullup-pulldown-outnested'
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/zoom',
-      component: ZoomEntry
+      component: ZoomEntry,
     },
     {
       path: '/slide',
@@ -57,17 +62,17 @@ export default new Router({
       children: [
         {
           path: 'banner',
-          component: BannerSlide
+          component: BannerSlide,
         },
         {
           path: 'fullpage',
-          component: PageSlide
+          component: PageSlide,
         },
         {
           path: 'vertical',
-          component: VerticalSlide
-        }
-      ]
+          component: VerticalSlide,
+        },
+      ],
     },
     {
       path: '/core',
@@ -75,17 +80,17 @@ export default new Router({
       children: [
         {
           path: 'default',
-          component: VerticalScroll
+          component: VerticalScroll,
         },
         {
           path: 'horizontal',
-          component: HorizontalScroll
+          component: HorizontalScroll,
         },
         {
           path: 'freescroll',
-          component: Freescroll
-        }
-      ]
+          component: Freescroll,
+        },
+      ],
     },
     {
       path: '/mouse-wheel',
@@ -93,33 +98,33 @@ export default new Router({
       children: [
         {
           path: 'vertical-scroll',
-          component: MouseWheelVerticalScroll
+          component: MouseWheelVerticalScroll,
         },
         {
           path: 'horizontal-scroll',
-          component: MouseWheelHorizontalScroll
+          component: MouseWheelHorizontalScroll,
         },
         {
           path: 'vertical-slide',
-          component: MouseWheelVerticalSlide
+          component: MouseWheelVerticalSlide,
         },
         {
           path: 'horizontal-slide',
-          component: MouseWheelHorizontalSlide
+          component: MouseWheelHorizontalSlide,
         },
         {
           path: 'pullup',
-          component: MouseWheelPullUp
+          component: MouseWheelPullUp,
         },
         {
           path: 'pulldown',
-          component: MouseWheelPullDown
+          component: MouseWheelPullDown,
         },
         {
           path: 'picker',
-          component: MouseWheelPicker
-        }
-      ]
+          component: MouseWheelPicker,
+        },
+      ],
     },
     {
       path: '/picker',
@@ -127,33 +132,33 @@ export default new Router({
       children: [
         {
           path: 'one-column',
-          component: OneColumnPicker
+          component: OneColumnPicker,
         },
         {
           path: 'double-column',
-          component: DoubleColumnPicker
+          component: DoubleColumnPicker,
         },
         {
           path: 'linkage-column',
-          component: LinkageColumnPicker
-        }
-      ]
+          component: LinkageColumnPicker,
+        },
+      ],
     },
     {
       path: '/pullup',
-      component: PullupEntry
+      component: PullupEntry,
     },
     {
       path: '/pulldown',
-      component: PullDownEntry
+      component: PullDownEntry,
     },
     {
       path: '/scrollbar',
-      component: ScrollBarEntry
+      component: ScrollBarEntry,
     },
     {
       path: '/infinity',
-      component: InfinityScrollEntry
+      component: InfinityScrollEntry,
     },
     {
       path: '/form',
@@ -161,9 +166,9 @@ export default new Router({
       children: [
         {
           path: 'textarea',
-          component: FormTextarea
-        }
-      ]
+          component: FormTextarea,
+        },
+      ],
     },
     {
       path: '/nested-scroll',
@@ -171,17 +176,17 @@ export default new Router({
       children: [
         {
           path: 'vertical',
-          component: NestedVerticalScroll
+          component: NestedVerticalScroll,
         },
         {
           path: 'horizontal',
-          component: NestedHorizontalScroll
+          component: NestedHorizontalScroll,
         },
         {
           path: 'horizontal-in-vertical',
-          component: NestedHorizontalInVertical
-        }
-      ]
+          component: NestedHorizontalInVertical,
+        },
+      ],
     },
     {
       path: '/movable',
@@ -189,13 +194,31 @@ export default new Router({
       children: [
         {
           path: 'default',
-          component: Movable
+          component: Movable,
         },
         {
           path: 'scale',
-          component: MovableScale
+          component: MovableScale,
+        },
+      ],
+    },
+    {
+      path: '/compose',
+      component: ComposeEntry,
+      children: [
+        {
+          path: 'pullup-pulldown',
+          component: ComposePullUpPullDown,
+        },
+        {
+          path: 'pullup-pulldown-slide',
+          component: ComposePullUpPullDownSlide,
+        },
+        {
+          path: 'pullup-pulldown-outnested',
+          component: ComposePullUpPullDownNested
         }
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 })

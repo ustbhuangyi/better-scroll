@@ -3,7 +3,7 @@ import {
   hasPerspective,
   hasTouch,
   Probe,
-  EventPassthrough
+  EventPassthrough,
 } from '@better-scroll/shared-utils'
 // type
 export type tap = 'tap' | ''
@@ -134,7 +134,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
       top: true,
       bottom: true,
       left: true,
-      right: true
+      right: true,
     }
     this.bounceTime = 800
 
@@ -156,10 +156,10 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
     this.stopPropagation = false
     this.preventDefault = true
     this.preventDefaultException = {
-      tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+      tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
     }
     this.tagException = {
-      tagName: /^TEXTAREA$/
+      tagName: /^TEXTAREA$/,
     }
 
     this.HWCompositing = true
@@ -224,7 +224,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
 
 function makeMap(keys: string[], val: boolean = true) {
   const ret: { [key: string]: boolean } = {}
-  keys.forEach(key => {
+  keys.forEach((key) => {
     ret[key] = val
   })
   return ret

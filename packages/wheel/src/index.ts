@@ -4,7 +4,7 @@ import {
   hasClass,
   ease,
   EaseItem,
-  extend
+  extend,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -34,7 +34,7 @@ interface PluginAPI {
 }
 
 const CONSTANTS = {
-  rate: 4
+  rate: 4,
 }
 export default class Wheel implements PluginAPI {
   static pluginName = 'wheel'
@@ -72,7 +72,7 @@ export default class Wheel implements PluginAPI {
       rotate: 25,
       adjustTime: 400,
       selectedIndex: 0,
-      wheelDisabledItemClass: 'wheel-disabled-item'
+      wheelDisabledItemClass: 'wheel-disabled-item',
     }
     this.options = extend(defaultOptions, userOptions)
   }
@@ -83,7 +83,7 @@ export default class Wheel implements PluginAPI {
       actionsHandler,
       scrollBehaviorX,
       scrollBehaviorY,
-      animater
+      animater,
     } = scroller
     // BScroll
     this.scroll.hooks.on(
@@ -333,7 +333,7 @@ export default class Wheel implements PluginAPI {
     // when all the items are disabled, this.selectedIndex should always be -1
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
-      y: -currentIndex * this.itemHeight
+      y: -currentIndex * this.itemHeight,
     }
   }
 

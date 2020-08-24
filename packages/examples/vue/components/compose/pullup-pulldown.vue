@@ -1,7 +1,7 @@
 <template>
-  <div class="pulldown">
+  <div class="pullup-down">
     <div
-      class="pulldown-bswrapper"
+      class="pullup-down-bswrapper"
       ref="bsWrapper"
     >
       <div class="pulldown-scroller">
@@ -18,13 +18,21 @@
             </div>
           </div>
         </div>
-        <ul class="pulldown-list">
+        <ul class="pullup-down-list">
           <li
-            :key="i"
-            class="pulldown-list-item"
-            v-for="i of dataList"
-          >{{ `I am item ${i} ` }}</li>
+            :key="idx"
+            class="pullup-down-list-item"
+            v-for="(item, idx) of dataList"
+          >{{ `I am item ${idx} ` }}</li>
         </ul>
+        <div class="pullup-wrapper">
+          <div v-show="!isPullingUp">
+            <span>Pull Up and load</span>
+          </div>
+          <div v-show="isPullingUp">
+            <span>Loading...</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,34 +41,28 @@
 <script>
 import BScroll from '@better-scroll/core'
 import PullDown from '@better-scroll/pull-down'
+import PullUp from '@better-scroll/pull-up'
 
 BScroll.use(PullDown)
+BScroll.use(PullUp)
 
-function generateData() {
-  const BASE = 30
-  const begin = BASE * STEP
-  const end = BASE * (STEP + 1)
-  let ret = []
-  for (let i = end; i > begin; i--) {
-    ret.push(i)
-  }
-  return ret
-}
-
+const BASE = 30
 const TIME_BOUNCE = 800
-const TIME_STOP = 600
 const REQUEST_TIME = 3000
 const THRESHOLD = 70
 const STOP = 56
-let STEP = 0
 
 export default {
   data() {
     return {
       beforePullDown: true,
       isPullingDown: false,
-      dataList: generateData()
+      isPullingUp: false,
+      dataList: new Array(BASE)
     }
+  },
+  created() {
+    this.bscroll = null
   },
   mounted() {
     this.initBscroll()
@@ -70,59 +72,55 @@ export default {
       this.bscroll = new BScroll(this.$refs.bsWrapper, {
         scrollY: true,
         bounceTime: TIME_BOUNCE,
+        // pullDown options
         pullDownRefresh: {
           threshold: THRESHOLD,
           stop: STOP
+        },
+        // pullUp options
+        pullUpLoad: {
+          threshold: THRESHOLD
         }
       })
-
+      // listening evnets
       this.bscroll.on('pullingDown', this.pullingDownHandler)
+      this.bscroll.on('pullingUp', this.pullingUpHandler)
       this.bscroll.on('scroll', this.scrollHandler)
-      this.bscroll.on('scrollEnd', e => {
-        console.log('scrollEnd')
-      })
     },
+    // scroll event handler
     scrollHandler(pos) {
       console.log(pos.y)
     },
+    // pullingDown event handler
     async pullingDownHandler() {
-      console.log('trigger pullDown')
       this.beforePullDown = false
       this.isPullingDown = true
-      STEP += 1
-
-      this.bscroll.on('pullingDown', this.pullingDownHandler)
-      this.bscroll.on('scroll', this.scrollHandler)
-      this.bscroll.on('scrollEnd', e => {
-        console.log(e)
-        console.log('scrollEnd')
-      })
-    },
-    scrollHandler(pos) {
-      console.log(pos.y)
-    },
-    async pullingDownHandler() {
-      console.log('trigger pullDown')
-      this.beforePullDown = false
-      this.isPullingDown = true
-      STEP += 1
-
+      await this.requestData('refresh')
       this.isPullingDown = false
-      this.finishPullDown()
-    },
-    async finishPullDown() {
-      const stopTime = TIME_STOP
-      await new Promise(resolve => {
-        setTimeout(() => {
-          this.beforePullDown = true
-          this.bscroll.refresh()
-        }, TIME_BOUNCE)
+      this.$nextTick(() => {
+        this.bscroll.finishPullDown()
+        this.beforePullDown = true
+        this.bscroll.refresh()
       })
     },
-    async requestData() {
+    // pullingUp event handler
+    async pullingUpHandler() {
+      this.isPullingUp = true
+      await this.requestData('load')
+      this.isPullingUp = false
+      this.$nextTick(() => {
+        this.bscroll.finishPullUp()
+        this.bscroll.refresh()
+      })
+    },
+    async requestData(type) {
       try {
         const newData = await this.ajaxGet(/* url */)
-        this.dataList = newData.concat(this.dataList)
+        if (type === 'load') {
+          this.dataList = newData.concat(this.dataList)
+        } else {
+          this.dataList = newData
+        }
       } catch (err) {
         // handle err
         console.log(err)
@@ -131,15 +129,7 @@ export default {
     ajaxGet(/* url */) {
       return new Promise(resolve => {
         setTimeout(() => {
-          const dataList = generateData()
-          resolve(dataList)
-        }, REQUEST_TIME)
-      })
-    },
-    ajaxGet(/* url */) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const dataList = generateData(STEP)
+          const dataList = new Array(BASE)
           resolve(dataList)
         }, REQUEST_TIME)
       })
@@ -148,21 +138,21 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.pulldown
+<style lang="stylus">
+.pullup-down
   height 100%
 
-.pulldown-bswrapper
+.pullup-down-bswrapper
   position relative
   height 100%
   padding 0 10px
   border 1px solid #ccc
   overflow hidden
 
-.pulldown-list
+.pullup-down-list
   padding 0
 
-.pulldown-list-item
+.pullup-down-list-item
   padding 10px 0
   list-style none
   border-bottom 1px solid #ccc
@@ -173,6 +163,11 @@ export default {
   padding 20px
   box-sizing border-box
   transform translateY(-100%) translateZ(0)
+  text-align center
+  color #999
+
+.pullup-wrapper
+  padding 20px
   text-align center
   color #999
 </style>

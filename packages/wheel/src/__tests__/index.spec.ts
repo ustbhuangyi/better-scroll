@@ -38,12 +38,12 @@ describe('wheel plugin tests', () => {
     expect(scroll.proxy).toHaveBeenLastCalledWith([
       {
         key: 'wheelTo',
-        sourceKey: 'plugins.wheel.wheelTo'
+        sourceKey: 'plugins.wheel.wheelTo',
       },
       {
         key: 'getSelectedIndex',
-        sourceKey: 'plugins.wheel.getSelectedIndex'
-      }
+        sourceKey: 'plugins.wheel.getSelectedIndex',
+      },
     ])
   })
 
@@ -68,14 +68,14 @@ describe('wheel plugin tests', () => {
     expect(wheel.selectedIndex).toBe(0)
     // specified
     const { wheel: wheel2 } = createWheel({
-      selectedIndex: 2
+      selectedIndex: 2,
     })
     expect(wheel2.selectedIndex).toBe(2)
   })
 
   it('should trigger scroll.scrollTo when invoking wheelTo method', () => {
     addPropertiesToWheel(wheel, {
-      itemHeight: 40
+      itemHeight: 40,
     })
     wheel.wheelTo(0)
 
@@ -85,7 +85,7 @@ describe('wheel plugin tests', () => {
 
   it('should return seletedIndex when invoking getSelectedIndex', () => {
     const { wheel: wheel2 } = createWheel({
-      selectedIndex: 2
+      selectedIndex: 2,
     })
     expect(wheel2.getSelectedIndex()).toBe(2)
   })
@@ -93,17 +93,17 @@ describe('wheel plugin tests', () => {
   it('should support scrollTo somewhere by selectedIndex when initialized', () => {
     addPropertiesToWheel(wheel, {
       selectedIndex: 1,
-      itemHeight: 50
+      itemHeight: 50,
     })
     const postion = {
       x: 100,
-      y: 100
+      y: 100,
     }
     // manually trigger
     scroll.hooks.trigger(scroll.hooks.eventTypes.beforeInitialScrollTo, postion)
     expect(postion).toMatchObject({
       x: 0,
-      y: -50
+      y: -50,
     })
   })
 
@@ -112,7 +112,7 @@ describe('wheel plugin tests', () => {
     addPropertiesToWheel(wheel, {
       items: [div],
       target: div,
-      wheelTo: jest.fn()
+      wheelTo: jest.fn(),
     })
 
     scroll.scroller.hooks.trigger('checkClick')
@@ -127,7 +127,7 @@ describe('wheel plugin tests', () => {
       items: [div],
       target: div,
       itemHeight: 40,
-      wheelTo: jest.fn()
+      wheelTo: jest.fn(),
     })
 
     scroll.scroller.hooks.trigger('scrollTo', endPoint)
@@ -139,18 +139,18 @@ describe('wheel plugin tests', () => {
     addPropertiesToWheel(wheel, {
       items: [div],
       target: div,
-      itemHeight: 40
+      itemHeight: 40,
     })
     let pos = {
       top: -20,
-      left: 0
+      left: 0,
     }
     div.className = 'wheel-item'
     scroll.scroller.hooks.trigger('scrollToElement', div, pos)
 
     expect(pos).toEqual({
       top: -0,
-      left: 0
+      left: 0,
     })
   })
 
@@ -169,7 +169,7 @@ describe('wheel plugin tests', () => {
     let cachedYBoundary = {} as Boundary
     addPropertiesToWheel(wheel, {
       items: [div, div],
-      itemHight: 50
+      itemHight: 50,
     })
     const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
     // append two element
@@ -189,31 +189,31 @@ describe('wheel plugin tests', () => {
 
     expect(cachedXBoundary).toMatchObject({
       minScrollPos: 0,
-      maxScrollPos: 0
+      maxScrollPos: 0,
     })
 
     expect(cachedYBoundary).toMatchObject({
       minScrollPos: 0,
-      maxScrollPos: -50
+      maxScrollPos: -50,
     })
   })
 
   it('should change momentumInfo when scroll.scroller.scrollBehaviorY trigger momentum or end hook', () => {
     let momentumInfo = {
       destination: 0,
-      rate: 15
+      rate: 15,
     }
     let div = document.createElement('div')
     addPropertiesToWheel(wheel, {
       items: [div],
       target: div,
-      itemHeight: 40
+      itemHeight: 40,
     })
     scroll.scroller.scrollBehaviorY.hooks.trigger('momentum', momentumInfo)
 
     expect(momentumInfo).toEqual({
       destination: -0,
-      rate: 4
+      rate: 4,
     })
 
     scroll.scroller.scrollBehaviorY.currentPos = -20
@@ -221,7 +221,7 @@ describe('wheel plugin tests', () => {
     expect(momentumInfo).toEqual({
       destination: -0,
       rate: 4,
-      duration: 400
+      duration: 400,
     })
   })
 
@@ -230,7 +230,7 @@ describe('wheel plugin tests', () => {
     addPropertiesToWheel(wheel, {
       items: [div],
       itemHeight: 40,
-      wheelItemsAllDisabled: false
+      wheelItemsAllDisabled: false,
     })
     scroll.scroller.animater.hooks.trigger('beforeForceStop', { x: 0, y: -20 })
     expect(wheel.target).toEqual(div)
@@ -243,13 +243,13 @@ describe('wheel plugin tests', () => {
       items: [div1, div2],
       target: div2,
       itemHeight: 40,
-      wheelItemsAllDisabled: false
+      wheelItemsAllDisabled: false,
     })
     scroll.scroller.animater.hooks.trigger('callStop')
     expect(wheel.target).toEqual(div2)
     expect(scroll.scroller.animater.translate).toBeCalledWith({
       x: 0,
-      y: -40
+      y: -40,
     })
   })
 
@@ -258,12 +258,12 @@ describe('wheel plugin tests', () => {
     addPropertiesToWheel(wheel, {
       items: [div],
       itemHeight: 40,
-      wheelItemsAllDisabled: false
+      wheelItemsAllDisabled: false,
     })
 
     scroll.scroller.animater.translater.hooks.trigger('translate', {
       x: 0,
-      y: -20
+      y: -20,
     })
     expect(wheel.selectedIndex).toEqual(0)
   })

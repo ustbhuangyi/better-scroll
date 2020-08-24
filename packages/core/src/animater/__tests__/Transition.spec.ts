@@ -6,7 +6,7 @@ let mockCancelAnimationFrame = jest.fn()
 jest.mock('@better-scroll/shared-utils/src/raf', () => {
   return {
     requestAnimationFrame: (cb: any) => mockRequestAnimationFrame(cb),
-    cancelAnimationFrame: () => mockCancelAnimationFrame()
+    cancelAnimationFrame: () => mockCancelAnimationFrame(),
   }
 })
 
@@ -19,7 +19,7 @@ function createTransition(probeType: number) {
   return {
     dom,
     translater,
-    transition
+    transition,
   }
 }
 describe('Transition Class test suit', () => {
@@ -48,11 +48,11 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onTime).toHaveBeenCalledTimes(1)
@@ -69,11 +69,11 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(translater.translate).toBeCalledWith(endPoint)
@@ -87,11 +87,11 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
     transition.move(startPoint, endPoint, 0, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onEnd).toHaveBeenCalled()
@@ -104,11 +104,11 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 0,
-      y: 10
+      y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     ;(<jest.Mock>translater.getComputedPosition).mockImplementation(() => {
@@ -126,7 +126,7 @@ describe('Transition Class test suit', () => {
   })
   it('should startProbe with probeType=3', () => {
     const { transition } = createTransition(3)
-    mockRequestAnimationFrame.mockImplementation(cb => {
+    mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()
       }, 200)
@@ -138,11 +138,11 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     jest.advanceTimersByTime(200)

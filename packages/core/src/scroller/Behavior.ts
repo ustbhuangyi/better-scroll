@@ -40,7 +40,7 @@ export class Behavior {
       'beforeComputeBoundary',
       'computeBoundary',
       'momentum',
-      'end'
+      'end',
     ])
     this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
@@ -103,7 +103,7 @@ export class Behavior {
       destination?: number
       duration?: number
     } = {
-      duration: 0
+      duration: 0,
     }
 
     const absDist = Math.abs(this.currentPos - this.startPos)
@@ -152,7 +152,7 @@ export class Behavior {
     const momentumData = {
       destination: current + (speed / deceleration) * (distance < 0 ? -1 : 1),
       duration: swipeTime,
-      rate: 15
+      rate: 15,
     }
 
     this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData, distance)
@@ -209,7 +209,7 @@ export class Behavior {
 
     const boundary: Boundary = {
       minScrollPos: 0,
-      maxScrollPos: this.wrapperSize - this.contentSize
+      maxScrollPos: this.wrapperSize - this.contentSize,
     }
     if (boundary.maxScrollPos < 0) {
       boundary.maxScrollPos -= this.relativeOffset
@@ -242,7 +242,7 @@ export class Behavior {
     const inBoundary = position === this.getCurrentPos()
     return {
       position,
-      inBoundary
+      inBoundary,
     }
   }
 

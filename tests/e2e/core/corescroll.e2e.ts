@@ -15,10 +15,10 @@ describe('CoreScroll', () => {
   it('should display 4 items at least', async () => {
     const itemsCounts = await page.$$eval(
       '.core .example-item',
-      element => element.length
+      (element) => element.length
     )
-    const itemsContent = await page.$$eval('.core .example-item', element =>
-      element.map(el => el.textContent)
+    const itemsContent = await page.$$eval('.core .example-item', (element) =>
+      element.map((el) => el.textContent)
     )
 
     expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
@@ -26,8 +26,8 @@ describe('CoreScroll', () => {
   })
 
   it("should display correct items's texts", async () => {
-    const itemsContent = await page.$$eval('.core .example-item', element =>
-      element.map(el => el.textContent)
+    const itemsContent = await page.$$eval('.core .example-item', (element) =>
+      element.map((el) => el.textContent)
     )
 
     await expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
@@ -48,7 +48,7 @@ describe('CoreScroll', () => {
 
     it('should trigger eventListener when click wrapper DOM', async () => {
       let mockHandler = jest.fn()
-      page.once('dialog', async dialog => {
+      page.once('dialog', async (dialog) => {
         mockHandler()
         await dialog.dismiss()
       })
@@ -68,12 +68,12 @@ describe('CoreScroll', () => {
         y: 150,
         xDistance: 0,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
       await page.waitFor(1000)
 
-      const transformText = await page.$eval('.scroll-content', node => {
+      const transformText = await page.$eval('.scroll-content', (node) => {
         return window.getComputedStyle(node).transform
       })
       const y = getTranslate(transformText, 'y')
@@ -83,7 +83,7 @@ describe('CoreScroll', () => {
 
     it('should dispatch scroll event', async () => {
       let mockHandler = jest.fn()
-      page.once('console', async message => {
+      page.once('console', async (message) => {
         mockHandler()
       })
       await page.waitFor(1000)
@@ -92,7 +92,7 @@ describe('CoreScroll', () => {
         y: 150,
         xDistance: 0,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
       await page.waitFor(1000)
       expect(mockHandler).toBeCalled()
@@ -119,12 +119,12 @@ describe('CoreScroll', () => {
         y: 120,
         xDistance: -70,
         yDistance: 0,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
       await page.waitFor(1000)
 
-      const transformText = await page.$eval('.scroll-content', node => {
+      const transformText = await page.$eval('.scroll-content', (node) => {
         return window.getComputedStyle(node).transform
       })
       const x = getTranslate(transformText, 'x')
@@ -145,12 +145,12 @@ describe('CoreScroll', () => {
         y: 100,
         xDistance: -70,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
       await page.waitFor(1000)
 
-      const transformText = await page.$eval('.scroll-content', node => {
+      const transformText = await page.$eval('.scroll-content', (node) => {
         return window.getComputedStyle(node).transform
       })
       const y = getTranslate(transformText, 'y')

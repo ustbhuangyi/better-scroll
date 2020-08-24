@@ -6,7 +6,7 @@ import {
   EventEmitter,
   Direction,
   ApplyOrder,
-  extend
+  extend,
 } from '@better-scroll/shared-utils'
 
 export type MouseWheelOptions = Partial<MouseWheelConfig> | true
@@ -68,7 +68,7 @@ export default class MouseWheel {
       'alterOptions',
       'mousewheelStart',
       'mousewheelMove',
-      'mousewheelEnd'
+      'mousewheelEnd',
     ])
   }
 
@@ -82,7 +82,7 @@ export default class MouseWheel {
       easeTime: 300,
       discreteTime: 400,
       throttleTime: 0,
-      dampingFactor: 0.1
+      dampingFactor: 0.1,
     }
     this.mouseWheelOpt = extend(defaultOptions, userOptions)
   }
@@ -96,16 +96,16 @@ export default class MouseWheel {
     this.eventRegister = new EventRegister(this.scroll.scroller.wrapper, [
       {
         name: 'wheel',
-        handler: this.wheelHandler.bind(this)
+        handler: this.wheelHandler.bind(this),
       },
       {
         name: 'mousewheel',
-        handler: this.wheelHandler.bind(this)
+        handler: this.wheelHandler.bind(this),
       },
       {
         name: 'DOMMouseScroll', // FireFox
-        handler: this.wheelHandler.bind(this)
-      }
+        handler: this.wheelHandler.bind(this),
+      },
     ])
   }
 
@@ -165,7 +165,7 @@ export default class MouseWheel {
         (prev, current) => {
           return {
             x: prev.x + current.x,
-            y: prev.y + current.y
+            y: prev.y + current.y,
           }
         },
         { x: 0, y: 0 }
@@ -193,7 +193,7 @@ export default class MouseWheel {
       if (
         !this.scroll.trigger(this.scroll.eventTypes.mousewheelMove, {
           x: newX,
-          y: newY
+          y: newY,
         })
       ) {
         const easeTime = this.getEaseTime()
@@ -273,7 +273,7 @@ export default class MouseWheel {
       x: wheelDeltaX,
       y: wheelDeltaY,
       directionX,
-      directionY
+      directionY,
     }
   }
 
@@ -281,7 +281,7 @@ export default class MouseWheel {
     const {
       preventDefault,
       stopPropagation,
-      preventDefaultException
+      preventDefaultException,
     } = this.scroll.options
     if (
       preventDefault &&
@@ -315,7 +315,7 @@ export default class MouseWheel {
     window.clearTimeout(this.wheelEndTimer)
     window.clearTimeout(this.wheelMoveTimer)
 
-    this.hooksFn.forEach(item => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]
