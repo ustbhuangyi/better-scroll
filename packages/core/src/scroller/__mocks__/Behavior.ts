@@ -20,7 +20,7 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
       'momentum',
       'end',
       'beforeComputeBoundary',
-      'computeBoundary'
+      'computeBoundary',
     ]),
     start: jest.fn(),
     move: jest.fn(),
@@ -36,7 +36,10 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
     resetStartPos: jest.fn(),
     getAbsDist: jest.fn(),
     destroy: jest.fn(),
-    computeBoundary: jest.fn()
+    computeBoundary: jest.fn(),
+    setMovingDirection: jest.fn(),
+    setDirection: jest.fn(),
+    performDampingAlgorithm: jest.fn(),
   }
 })
 

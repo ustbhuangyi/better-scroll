@@ -1,28 +1,35 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Core from 'vue-example/pages/core-entry'
-import Zoom from 'vue-example/pages/zoom-entry'
-import Slide from 'vue-example/pages/slide-entry'
-import Picker from 'vue-example/pages/picker-entry'
-import Pullup from 'vue-example/pages/pullup-entry'
-import PullDown from 'vue-example/pages/pulldown-entry'
-import ScrollBar from 'vue-example/pages/scrollbar-entry'
-import InfinityScroll from 'vue-example/pages/infinity-entry'
+import CoreEntry from 'vue-example/pages/core-entry'
+import ZoomEntry from 'vue-example/pages/zoom-entry'
+import SlideEntry from 'vue-example/pages/slide-entry'
+import PickerEntry from 'vue-example/pages/picker-entry'
+import PullupEntry from 'vue-example/pages/pullup-entry'
+import PullDownEntry from 'vue-example/pages/pulldown-entry'
+import ScrollBarEntry from 'vue-example/pages/scrollbar-entry'
+import InfinityScrollEntry from 'vue-example/pages/infinity-entry'
 import FormEntry from 'vue-example/pages/form-entry'
 import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 import MovableEntry from 'vue-example/pages/movable-entry'
+import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
 import ComposeEntry from 'vue-example/pages/compose-entry'
+
+import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
+import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
+import MouseWheelVerticalSlide from 'vue-example/components/mouse-wheel/vertical-slide'
+import MouseWheelHorizontalSlide from 'vue-example/components/mouse-wheel/horizontal-slide'
+import MouseWheelPullUp from 'vue-example/components/mouse-wheel/pullup'
+import MouseWheelPullDown from 'vue-example/components/mouse-wheel/pulldown'
+import MouseWheelPicker from 'vue-example/components/mouse-wheel/picker'
 
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
 import VerticalSlide from 'vue-example/components/slide/vertical'
-import PcSlide from 'vue-example/components/slide/pc'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
 import Freescroll from 'vue-example/components/core/freescroll'
-import MouseWheelCore from 'vue-example/components/core/mouse-wheel'
 
 import OneColumnPicker from 'vue-example/components/picker/one-column'
 import DoubleColumnPicker from 'vue-example/components/picker/double-column'
@@ -47,11 +54,11 @@ export default new Router({
   routes: [
     {
       path: '/zoom',
-      component: Zoom
+      component: ZoomEntry
     },
     {
       path: '/slide',
-      component: Slide,
+      component: SlideEntry,
       children: [
         {
           path: 'banner',
@@ -64,21 +71,13 @@ export default new Router({
         {
           path: 'vertical',
           component: VerticalSlide
-        },
-        {
-          path: 'pc',
-          component: PcSlide
         }
       ]
     },
     {
       path: '/core',
-      component: Core,
+      component: CoreEntry,
       children: [
-        {
-          path: 'mouse-wheel',
-          component: MouseWheelCore
-        },
         {
           path: 'default',
           component: VerticalScroll
@@ -94,8 +93,42 @@ export default new Router({
       ]
     },
     {
+      path: '/mouse-wheel',
+      component: MouseWheelEntry,
+      children: [
+        {
+          path: 'vertical-scroll',
+          component: MouseWheelVerticalScroll
+        },
+        {
+          path: 'horizontal-scroll',
+          component: MouseWheelHorizontalScroll
+        },
+        {
+          path: 'vertical-slide',
+          component: MouseWheelVerticalSlide
+        },
+        {
+          path: 'horizontal-slide',
+          component: MouseWheelHorizontalSlide
+        },
+        {
+          path: 'pullup',
+          component: MouseWheelPullUp
+        },
+        {
+          path: 'pulldown',
+          component: MouseWheelPullDown
+        },
+        {
+          path: 'picker',
+          component: MouseWheelPicker
+        }
+      ]
+    },
+    {
       path: '/picker',
-      component: Picker,
+      component: PickerEntry,
       children: [
         {
           path: 'one-column',
@@ -113,19 +146,19 @@ export default new Router({
     },
     {
       path: '/pullup',
-      component: Pullup
+      component: PullupEntry
     },
     {
       path: '/pulldown',
-      component: PullDown
+      component: PullDownEntry
     },
     {
       path: '/scrollbar',
-      component: ScrollBar
+      component: ScrollBarEntry
     },
     {
       path: '/infinity',
-      component: InfinityScroll
+      component: InfinityScrollEntry
     },
     {
       path: '/form',

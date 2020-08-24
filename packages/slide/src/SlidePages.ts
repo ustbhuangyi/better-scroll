@@ -14,14 +14,14 @@ export interface Position {
 
 const enum Direction {
   Positive = 'positive',
-  Negative = 'negative'
+  Negative = 'negative',
 }
 const enum LoopStage {
   Head = 'head',
   Tail = 'tail',
-  Middle = 'middle'
+  Middle = 'middle',
 }
-export default class PageInfo {
+export default class SlidePages {
   loopX: boolean
   loopY: boolean
   slideX: boolean
@@ -35,7 +35,7 @@ export default class PageInfo {
       x: 0,
       y: 0,
       pageX: 0,
-      pageY: 0
+      pageY: 0,
     }
     this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
     this.checkSlideLoop()
@@ -64,15 +64,22 @@ export default class PageInfo {
       pageX,
       pageY,
       x: x,
-      y: y
+      y: y,
     }
   }
-  getInitPage(): Page {
+  getInitPage(): Page & Position {
     let initPageX = this.loopX ? 1 : 0
     let initPageY = this.loopY ? 1 : 0
-    return {
+    const initPage = {
       pageX: this.currentPage.pageX || initPageX,
-      pageY: this.currentPage.pageY || initPageY
+      pageY: this.currentPage.pageY || initPageY,
+    }
+    const initPosition = this.pagesPos.getPos(initPage.pageX, initPage.pageY)
+    return {
+      pageX: initPage.pageX,
+      pageY: initPage.pageY,
+      x: initPosition.x,
+      y: initPosition.y,
     }
   }
   getRealPage(page?: Page): Page {
@@ -94,7 +101,7 @@ export default class PageInfo {
     }
     return {
       pageX: currentPage.pageX,
-      pageY: currentPage.pageY
+      pageY: currentPage.pageY,
     }
   }
   getPageSize(): { width: number; height: number } {
@@ -125,7 +132,7 @@ export default class PageInfo {
     y = between(y, firstY, lastY)
     return {
       realX: x,
-      realY: y
+      realY: y,
     }
   }
   nextPage(): { pageX: number; pageY: number } {
@@ -146,7 +153,7 @@ export default class PageInfo {
         x: 0,
         y: 0,
         pageX: 0,
-        pageY: 0
+        pageY: 0,
       }
     }
     let pageX = pageInfo.pageX
@@ -167,7 +174,7 @@ export default class PageInfo {
       x: newX,
       y: newY,
       pageX,
-      pageY
+      pageY,
     }
   }
   getLoopStage(): LoopStage {
@@ -197,13 +204,13 @@ export default class PageInfo {
       if (this.currentPage.pageX === 0) {
         return {
           pageX: this.pagesPos.xLen - 2,
-          pageY: this.currentPage.pageY
+          pageY: this.currentPage.pageY,
         }
       }
       if (this.currentPage.pageX === this.pagesPos.xLen - 1) {
         return {
           pageX: 1,
-          pageY: this.currentPage.pageY
+          pageY: this.currentPage.pageY,
         }
       }
     }
@@ -211,13 +218,13 @@ export default class PageInfo {
       if (this.currentPage.pageY === 0) {
         return {
           pageX: this.currentPage.pageX,
-          pageY: this.pagesPos.yLen - 2
+          pageY: this.pagesPos.yLen - 2,
         }
       }
       if (this.currentPage.pageY === this.pagesPos.yLen - 1) {
         return {
           pageX: this.currentPage.pageX,
-          pageY: 1
+          pageY: 1,
         }
       }
     }
@@ -244,7 +251,7 @@ export default class PageInfo {
     }
     return {
       pageX: x,
-      pageY: y
+      pageY: y,
     }
   }
   private checkSlideLoop() {

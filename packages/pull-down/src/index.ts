@@ -1,10 +1,11 @@
 import BScroll, { Boundary } from '@better-scroll/core'
+import { MouseWheelConfig } from '@better-scroll/mouse-wheel'
 import {
   ease,
   Direction,
   extend,
   EventEmitter,
-  Probe
+  Probe,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -68,7 +69,7 @@ export default class PullDown implements PluginAPI {
     >
     const defaultOptions: PullDownRefreshConfig = {
       threshold: 90,
-      stop: 40
+      stop: 40,
     }
     this.options = extend(defaultOptions, userOptions)
     // plugin relies on scrollTo api
@@ -78,7 +79,8 @@ export default class PullDown implements PluginAPI {
 
   private handleHooks() {
     this.hooksFn = []
-    const { scrollBehaviorY } = this.scroll.scroller
+    const scroller = this.scroll.scroller
+    const scrollBehaviorY = scroller.scrollBehaviorY
     this.currentMinScrollY = this.cachedOriginanMinScrollY =
       scrollBehaviorY.minScrollPos
 
@@ -94,6 +96,30 @@ export default class PullDown implements PluginAPI {
         boundary.minScrollPos = this.currentMinScrollY
       }
     )
+
+    // integrate with mousewheel
+    if (this.scroll.eventTypes.alterOptions) {
+      this.registerHooks(
+        this.scroll,
+        this.scroll.eventTypes.alterOptions,
+        (mouseWheelOptions: MouseWheelConfig) => {
+          const SANE_DISCRETE_TIME = 300
+          const SANE_EASE_TIME = 350
+          mouseWheelOptions.discreteTime = SANE_DISCRETE_TIME
+          // easeTime > discreteTime ensure goInto checkPullDown function
+          mouseWheelOptions.easeTime = SANE_EASE_TIME
+        }
+      )
+
+      this.registerHooks(
+        this.scroll,
+        this.scroll.eventTypes.mousewheelEnd,
+        () => {
+          // mouseWheel need trigger checkPullDown manually
+          scroller.hooks.trigger(scroller.hooks.eventTypes.end)
+        }
+      )
+    }
   }
 
   private registerHooks(hooks: EventEmitter, name: string, handler: Function) {

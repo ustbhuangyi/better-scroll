@@ -6,7 +6,7 @@ import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
 import {
   createActionsHandlerOptions,
-  createBehaviorOptions
+  createBehaviorOptions,
 } from './createOptions'
 import {
   getElement,
@@ -26,7 +26,7 @@ import {
   EaseItem,
   Probe,
   EventEmitter,
-  EventRegister
+  EventRegister,
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
 import { isSamePoint } from '../utils/compare'
@@ -94,7 +94,7 @@ export default class Scroller implements ExposedAPI {
       'momentum',
       'scrollTo',
       'scrollToElement',
-      'resize'
+      'resize',
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -107,7 +107,7 @@ export default class Scroller implements ExposedAPI {
       wrapper,
       createBehaviorOptions(options, 'scrollX', [left, right], {
         size: 'width',
-        position: 'left'
+        position: 'left',
       })
     )
     // direction Y
@@ -115,7 +115,7 @@ export default class Scroller implements ExposedAPI {
       wrapper,
       createBehaviorOptions(options, 'scrollY', [top, bottom], {
         size: 'height',
-        position: 'top'
+        position: 'top',
       })
     )
 
@@ -140,19 +140,19 @@ export default class Scroller implements ExposedAPI {
     this.resizeRegister = new EventRegister(window, [
       {
         name: 'orientationchange',
-        handler: resizeHandler
+        handler: resizeHandler,
       },
       {
         name: 'resize',
-        handler: resizeHandler
-      }
+        handler: resizeHandler,
+      },
     ])
 
     this.transitionEndRegister = new EventRegister(this.content, [
       {
         name: style.transitionEnd,
-        handler: this.transitionEnd.bind(this)
-      }
+        handler: this.transitionEnd.bind(this),
+      },
     ])
 
     this.init()
@@ -201,12 +201,12 @@ export default class Scroller implements ExposedAPI {
     bubbling(this.animater.hooks, this.hooks, [
       {
         source: this.animater.hooks.eventTypes.move,
-        target: this.hooks.eventTypes.scroll
+        target: this.hooks.eventTypes.scroll,
       },
       {
         source: this.animater.hooks.eventTypes.forceStop,
-        target: this.hooks.eventTypes.scrollEnd
-      }
+        target: this.hooks.eventTypes.scrollEnd,
+      },
     ])
   }
 
@@ -216,28 +216,28 @@ export default class Scroller implements ExposedAPI {
     bubbling(actions.hooks, this.hooks, [
       {
         source: actions.hooks.eventTypes.start,
-        target: this.hooks.eventTypes.beforeStart
+        target: this.hooks.eventTypes.beforeStart,
       },
       {
         source: actions.hooks.eventTypes.start,
-        target: this.hooks.eventTypes.beforeScrollStart // just for event api
+        target: this.hooks.eventTypes.beforeScrollStart, // just for event api
       },
       {
         source: actions.hooks.eventTypes.beforeMove,
-        target: this.hooks.eventTypes.beforeMove
+        target: this.hooks.eventTypes.beforeMove,
       },
       {
         source: actions.hooks.eventTypes.scrollStart,
-        target: this.hooks.eventTypes.scrollStart
+        target: this.hooks.eventTypes.scrollStart,
       },
       {
         source: actions.hooks.eventTypes.scroll,
-        target: this.hooks.eventTypes.scroll
+        target: this.hooks.eventTypes.scroll,
       },
       {
         source: actions.hooks.eventTypes.beforeEnd,
-        target: this.hooks.eventTypes.beforeEnd
-      }
+        target: this.hooks.eventTypes.beforeEnd,
+      },
     ])
 
     actions.hooks.on(
@@ -305,7 +305,7 @@ export default class Scroller implements ExposedAPI {
       time: 0,
       easing: ease.swiper,
       newX: pos.x,
-      newY: pos.y
+      newY: pos.y,
     }
     // start momentum animation if needed
     const momentumX = this.scrollBehaviorX.end(duration)
@@ -341,10 +341,13 @@ export default class Scroller implements ExposedAPI {
 
   private checkClick(e: TouchEvent) {
     const cancelable = {
-      preventClick: this.animater.forceStopped
+      preventClick: this.animater.forceStopped,
     }
     // we scrolled less than momentumLimitDistance pixels
-    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) return true
+    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) {
+      this.animater.setForceStopped(false)
+      return true
+    }
     if (!cancelable.preventClick) {
       const _dblclick = this.options.dblclick
       let dblclickTrigged = false
@@ -447,7 +450,7 @@ export default class Scroller implements ExposedAPI {
     easing = ease.bounce,
     extraTransform = {
       start: {},
-      end: {}
+      end: {},
     }
   ) {
     const easingFn = this.options.useTransition ? easing.style : easing.fn
@@ -456,12 +459,12 @@ export default class Scroller implements ExposedAPI {
     const startPoint = {
       x: currentPos.x,
       y: currentPos.y,
-      ...extraTransform.start
+      ...extraTransform.start,
     }
     const endPoint = {
       x,
       y,
-      ...extraTransform.end
+      ...extraTransform.end,
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
@@ -540,11 +543,11 @@ export default class Scroller implements ExposedAPI {
   resetPosition(time = 0, easing = ease.bounce) {
     const {
       position: x,
-      inBoundary: xInBoundary
+      inBoundary: xInBoundary,
     } = this.scrollBehaviorX.checkInBoundary()
     const {
       position: y,
-      inBoundary: yInBoundary
+      inBoundary: yInBoundary,
     } = this.scrollBehaviorY.checkInBoundary()
 
     if (xInBoundary && yInBoundary) {
@@ -590,8 +593,8 @@ export default class Scroller implements ExposedAPI {
       'animater',
       'translater',
       'scrollBehaviorX',
-      'scrollBehaviorY'
+      'scrollBehaviorY',
     ]
-    keys.forEach(key => this[key].destroy())
+    keys.forEach((key) => this[key].destroy())
   }
 }

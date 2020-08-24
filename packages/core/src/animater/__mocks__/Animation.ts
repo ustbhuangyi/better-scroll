@@ -15,16 +15,18 @@ const Animation = jest
         'move',
         'end',
         'forceStop',
+        'beforeForceStop',
         'callStop',
         'time',
-        'timeFunction'
+        'timeFunction',
       ]),
       translate: jest.fn(),
       stop: jest.fn(),
+      doStop: jest.fn(),
       move: jest.fn(),
       destroy: jest.fn(),
       setPending: jest.fn(),
-      setForceStopped: jest.fn()
+      setForceStopped: jest.fn(),
     }
   })
 

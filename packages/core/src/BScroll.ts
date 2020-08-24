@@ -7,7 +7,7 @@ import {
   isUndef,
   propertiesProxy,
   ApplyOrder,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 import { bubbling } from './utils/bubbling'
 
@@ -49,7 +49,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   static use(ctor: PluginCtor) {
     const name = ctor.pluginName
     const installed = BScrollConstructor.plugins.some(
-      plugin => ctor === plugin.ctor
+      (plugin) => ctor === plugin.ctor
     )
     if (installed) return BScrollConstructor
     if (isUndef(name)) {
@@ -68,7 +68,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     BScrollConstructor.plugins.push({
       name,
       applyOrder: ctor.applyOrder,
-      ctor
+      ctor,
     })
     return BScrollConstructor
   }
@@ -85,7 +85,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       'scrollCancel',
       'touchEnd',
       'flick',
-      'destroy'
+      'destroy',
     ])
 
     const wrapper = getElement(el)
@@ -107,7 +107,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       'enable',
       'disable',
       'destroy',
-      'beforeInitialScrollTo'
+      'beforeInitialScrollTo',
     ])
     this.init(wrapper)
   }
@@ -131,7 +131,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     const { startX, startY } = this.options
     const position = {
       x: startX,
-      y: startY
+      y: startY,
     }
     // maybe plugins want to control scroll position
     if (
@@ -148,7 +148,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       .sort((a, b) => {
         const applyOrderMap = {
           [ApplyOrder.Pre]: -1,
-          [ApplyOrder.Post]: 1
+          [ApplyOrder.Post]: 1,
         }
         const aOrder = a.applyOrder ? applyOrderMap[a.applyOrder] : 0
         const bOrder = b.applyOrder ? applyOrderMap[b.applyOrder] : 0
@@ -185,7 +185,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       this.eventTypes.scrollEnd,
       this.eventTypes.scrollCancel,
       this.eventTypes.touchEnd,
-      this.eventTypes.flick
+      this.eventTypes.flick,
     ])
   }
 
@@ -233,9 +233,9 @@ export interface CustomAPI {
   [key: string]: {}
 }
 
-type UnionToIntersection<U> = (U extends any
-? (k: U) => void
-: never) extends (k: infer I) => void
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
   ? I
   : never
 
@@ -257,6 +257,8 @@ export function createBScroll<O = {}>(
 }
 
 createBScroll.use = BScrollConstructor.use
+createBScroll.plugins = BScrollConstructor.plugins
+createBScroll.pluginsMap = BScrollConstructor.pluginsMap
 
 type createBScroll = typeof createBScroll
 export interface BScrollFactory extends createBScroll {

@@ -8,7 +8,7 @@ declare module '@better-scroll/core' {
 }
 export default class ObserveDOM {
   static pluginName = 'observeDOM'
-  private observer: MutationObserver
+  observer: MutationObserver
   private stopObserver: boolean = false
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
@@ -21,7 +21,7 @@ export default class ObserveDOM {
   private handleMutationObserver() {
     if (typeof MutationObserver !== 'undefined') {
       let timer = 0
-      this.observer = new MutationObserver(mutations => {
+      this.observer = new MutationObserver((mutations) => {
         this.mutationObserverHandler(mutations, timer)
       })
       this.startObserve(this.observer)
@@ -91,7 +91,7 @@ export default class ObserveDOM {
     const config = {
       attributes: true,
       childList: true,
-      subtree: true
+      subtree: true,
     }
     observer.observe(this.scroll.scroller.content, config)
   }
@@ -153,7 +153,7 @@ export default class ObserveDOM {
 
   destroy() {
     this.stopObserve()
-    this.hooksFn.forEach(item => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]

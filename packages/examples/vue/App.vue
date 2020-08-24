@@ -68,18 +68,18 @@ const examples = [
     path: '/nested-scroll/'
   },
   {
-    name: 'movable',
-    path: '/movable/'
+    name: 'mouse-wheel',
+    path: '/mouse-wheel/'
   },
   {
-    name: 'compose',
-    path: '/compose/'
+    name: 'movable',
+    path: '/movable/'
   }
 ]
 export default {
   data() {
     return {
-      examples: examples
+      examples
     }
   },
   methods: {

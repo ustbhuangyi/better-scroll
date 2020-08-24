@@ -1,7 +1,5 @@
 import BScroll from '@better-scroll/core'
-import * as domUtil from '@better-scroll/shared-utils/src/dom'
 jest.mock('@better-scroll/core')
-const mockDomUtil = jest.spyOn(domUtil, 'preventDefaultExceptionFn')
 
 import MouseWheel from '../index'
 import { createEvent } from '@better-scroll/core/src/__tests__/__utils__/event'
@@ -13,6 +11,14 @@ interface CustomMouseWheel extends Event {
   pageY: number
   [key: string]: any
 }
+
+const createMouseWheelElements = () => {
+  const wrapper = document.createElement('div')
+  const content = document.createElement('div')
+  wrapper.appendChild(content)
+  return { wrapper }
+}
+
 function dispatchMouseWheel(
   target: EventTarget,
   name = 'wheel',
@@ -23,416 +29,273 @@ function dispatchMouseWheel(
   target.dispatchEvent(event)
 }
 
-function createBScroll() {
-  const wrapper = document.createElement('div')
-  const content = document.createElement('div')
-  wrapper.appendChild(content)
-
-  const options = {
-    mouseWheel: {
-      speed: 20,
-      invert: false,
-      easeTime: 0,
-      debounce: 0,
-      throttle: 400
-    }
-  }
-  return new BScroll(wrapper, options)
-}
-function initForMouseWheel(bscroll: BScroll) {
-  bscroll.x = 0
-  bscroll.y = 0
-  bscroll.scroller.scrollBehaviorX.hasScroll = false
-  bscroll.scroller.scrollBehaviorY.hasScroll = false
-  bscroll.scroller.scrollBehaviorX.minScrollPos = 0
-  bscroll.scroller.scrollBehaviorX.maxScrollPos = 0
-  bscroll.scroller.scrollBehaviorY.maxScrollPos = 0
-  bscroll.eventTypes['mousewheelMove'] = 'mousewheelMove'
-  bscroll.eventTypes['mousewheelEnd'] = 'mousewheelEnd'
-  bscroll.eventTypes['mousewheelStart'] = 'mousewheelStart'
-}
 describe('mouse-wheel plugin', () => {
-  beforeAll(() => {
-    jest.useFakeTimers()
-  })
+  const DISCRETE_TIME = 400
+  let scroll: BScroll
+  let mouseWheel: MouseWheel
+  jest.useFakeTimers()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    const { wrapper } = createMouseWheelElements()
+    scroll = new BScroll(wrapper, {})
+
+    scroll.scroller.scrollBehaviorX.performDampingAlgorithm = jest
+      .fn()
+      .mockImplementation((arg1) => {
+        return arg1
+      })
+    scroll.scroller.scrollBehaviorY.performDampingAlgorithm = jest
+      .fn()
+      .mockImplementation((arg1) => {
+        return arg1
+      })
+
+    mouseWheel = new MouseWheel(scroll)
   })
 
-  it('should registe event and hooks/ should off all event', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    const mockBsOn = jest.fn()
+  afterEach(() => {
+    jest.clearAllMocks()
+    jest.clearAllTimers()
+  })
 
-    expect(bscroll.registerType).toHaveBeenCalledWith([
-      'mousewheelMove',
+  it('should proxy hooks to BScroll instance', () => {
+    expect(scroll.registerType).toHaveBeenCalledWith([
+      'alterOptions',
       'mousewheelStart',
-      'mousewheelEnd'
+      'mousewheelMove',
+      'mousewheelEnd',
     ])
-
-    initForMouseWheel(bscroll)
-    bscroll.on('mousewheelStart', mockBsOn)
-
-    dispatchMouseWheel(bscroll.wrapper, 'wheel')
-    expect(mockBsOn).toBeCalledTimes(1)
-    jest.advanceTimersByTime(500)
-    dispatchMouseWheel(bscroll.wrapper, 'mousewheel')
-    expect(mockBsOn).toBeCalledTimes(2)
-    jest.advanceTimersByTime(500)
-    dispatchMouseWheel(bscroll.wrapper, 'DOMMouseScroll')
-    expect(mockBsOn).toBeCalledTimes(3)
-    jest.advanceTimersByTime(500)
-    mockBsOn.mockClear()
-    jest.clearAllMocks()
-
-    bscroll.hooks.trigger('destroy')
-    expect(bscroll.hooks.events['destroy'].length).toBe(0)
-    expect(clearTimeout).toBeCalledTimes(2)
-    dispatchMouseWheel(bscroll.wrapper, 'wheel')
-    expect(mockBsOn).not.toBeCalled()
   })
-  it('should trigger event when start/end/move', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
+
+  it('should handle default options and user options', () => {
+    // case 1
+    scroll.options.mouseWheel = true
+    mouseWheel = new MouseWheel(scroll)
+
+    expect(mouseWheel.mouseWheelOpt).toMatchObject({
+      speed: 20,
+      invert: false,
+      easeTime: 300,
+      discreteTime: 400,
+      throttleTime: 0,
+      dampingFactor: 0.1,
+    })
+
+    // case 2
+    scroll.options.mouseWheel = {
+      dampingFactor: 1,
+      throttleTime: 50,
+    }
+    mouseWheel = new MouseWheel(scroll)
+
+    expect(mouseWheel.mouseWheelOpt).toMatchObject({
+      speed: 20,
+      invert: false,
+      easeTime: 300,
+      discreteTime: 400,
+      throttleTime: 50,
+      dampingFactor: 1,
+    })
+  })
+
+  it('should trigger event when mouse(start|move|end) hooks', () => {
     const onStart = jest.fn()
     const onMove = jest.fn()
     const onEnd = jest.fn()
-    initForMouseWheel(bscroll)
-    bscroll.on('mousewheelStart', onStart)
-    bscroll.on('mousewheelMove', onMove)
-    bscroll.on('mousewheelEnd', onEnd)
+    const onAlterOptions = jest.fn()
 
-    dispatchMouseWheel(bscroll.wrapper, 'wheel')
+    scroll.on('mousewheelStart', onStart)
+    scroll.on('mousewheelMove', onMove)
+    scroll.on('mousewheelEnd', onEnd)
+    scroll.on('alterOptions', onAlterOptions)
+
+    dispatchMouseWheel(scroll.wrapper, 'wheel')
     expect(onStart).toBeCalledTimes(1)
     expect(onMove).toBeCalledTimes(1)
+    expect(onAlterOptions).toBeCalledTimes(1)
 
-    dispatchMouseWheel(bscroll.wrapper, 'wheel')
+    dispatchMouseWheel(scroll.wrapper, 'wheel')
+    jest.advanceTimersByTime(DISCRETE_TIME)
     expect(onMove).toBeCalledTimes(2)
 
-    jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledTimes(1)
-
-    mouseWheel.destroy()
   })
+
   it('should preventDefault & stopProgation if they are set', () => {
-    const bscroll = createBScroll()
-    bscroll.options.preventDefault = true
-    bscroll.options.stopPropagation = true
-    mockDomUtil.mockImplementation(() => {
-      return false
-    })
-    const mouseWheel = new MouseWheel(bscroll)
     const mockStopPropagation = jest.fn()
     const mockPreventDefault = jest.fn()
-    initForMouseWheel(bscroll)
 
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       preventDefault: mockPreventDefault,
-      stopPropagation: mockStopPropagation
+      stopPropagation: mockStopPropagation,
     })
     expect(mockPreventDefault).toBeCalled()
-    expect(mockStopPropagation).toBeCalled()
+    expect(mockStopPropagation).not.toBe(0)
     jest.advanceTimersByTime(400)
+
     mockPreventDefault.mockClear()
     mockStopPropagation.mockClear()
 
     // preventDefaultException work
-    bscroll.options.preventDefault = true
-    bscroll.options.stopProgation = true
-    bscroll.options.preventDefaultException = {
-      tagName: /^(DIV)$/
+    scroll.options.preventDefaultException = {
+      tagName: /^(DIV)$/,
     }
-    mockDomUtil.mockImplementation(() => {
-      return true
-    })
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       preventDefault: mockPreventDefault,
-      stopPropagation: mockStopPropagation
+      stopPropagation: mockStopPropagation,
     })
     expect(mockPreventDefault).not.toBeCalled()
-
-    mouseWheel.destroy()
   })
-  it('should forbide scrollTo', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
+
+  it('should forbid scrollTo when mousewheelMove hook return true', () => {
     const onStart = jest.fn()
     const onMove = jest.fn().mockImplementation(() => {
       return true
     })
     const onEnd = jest.fn()
-    initForMouseWheel(bscroll)
-    bscroll.on('mousewheelStart', onStart)
-    bscroll.on('mousewheelMove', onMove)
-    bscroll.on('mousewheelEnd', onEnd)
 
-    dispatchMouseWheel(bscroll.wrapper, 'wheel')
+    scroll.on('mousewheelStart', onStart)
+    scroll.on('mousewheelMove', onMove)
+    scroll.on('mousewheelEnd', onEnd)
+
+    dispatchMouseWheel(scroll.wrapper, 'wheel')
     expect(onStart).toBeCalledTimes(1)
     expect(onMove).toBeCalledTimes(1)
 
-    expect(bscroll.scrollTo).not.toBeCalled()
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).not.toBeCalled()
   })
-  it('should get right postion when move with deltaMode = 0', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
-    const onEnd = jest.fn()
-    bscroll.on('mousewheelEnd', onEnd)
 
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+  it('should get right postion when move with deltaMode = 0', () => {
+    const onEnd = jest.fn()
+    scroll.on('mousewheelEnd', onEnd)
+
+    // x direction
+    scroll.hasVerticalScroll = false
+    scroll.hasHorizontalScroll = true
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 0
+      deltaMode: 0,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-10, 0, 300)
+
+    expect(scroll.scrollTo).toBeCalledWith(-10, 0, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: -10,
       y: 0,
       directionX: 1,
-      directionY: 0
+      directionY: 0,
     })
 
-    // out boundar for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -20
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 0,
-      deltaY: 30,
-      deltaMode: 0
-    })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, 0, 300)
-    jest.advanceTimersByTime(410)
-    expect(onEnd).toBeCalledWith({
-      x: -30,
-      y: 0,
-      directionX: 1,
-      directionY: 0
-    })
-
-    // in boundary for y
-    bscroll.scroller.scrollBehaviorX.hasScroll = false
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+    // y direction
+    scroll.hasVerticalScroll = true
+    scroll.hasHorizontalScroll = false
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
       deltaY: 10,
-      deltaMode: 0
+      deltaMode: 0,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(0, -10, 300)
+    expect(scroll.scrollTo).toBeCalledWith(0, -10, 300)
     jest.advanceTimersByTime(410)
     expect(onEnd).toBeCalledWith({
       x: 0,
       y: -10,
       directionX: 0,
-      directionY: 1
+      directionY: 1,
     })
-
-    // out boundar for x
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -20
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 0,
-      deltaY: 30,
-      deltaMode: 0
-    })
-    expect(bscroll.scrollTo).toBeCalledWith(0, -20, 300)
-    jest.advanceTimersByTime(410)
-    expect(onEnd).toBeCalledWith({
-      x: 0,
-      y: -30,
-      directionX: 0,
-      directionY: 1
-    })
-
-    // x&y hasScroll = false
-    bscroll.scroller.scrollBehaviorX.hasScroll = false
-    bscroll.scroller.scrollBehaviorY.hasScroll = false
-    bscroll.scrollTo.mockClear()
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 40,
-      deltaY: 30,
-      deltaMode: 0
-    })
-    expect(bscroll.scrollTo).not.toHaveBeenCalled()
-    jest.advanceTimersByTime(410)
-    expect(onEnd).toBeCalledWith({
-      x: 0,
-      y: 0,
-      directionX: 0,
-      directionY: 0
-    })
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
   })
 
   it('should get right postion when move with deltaMode = 1', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
-    const onEnd = jest.fn()
-    bscroll.on('mousewheelEnd', onEnd)
+    // x direction
+    scroll.hasVerticalScroll = false
+    scroll.hasHorizontalScroll = true
 
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 1,
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
       deltaY: 2,
-      deltaMode: 1
+      deltaMode: 1,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
-    jest.advanceTimersByTime(410)
+    expect(scroll.scrollTo).toBeCalledWith(-40, 0, 300)
 
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    // y direction
+    scroll.hasVerticalScroll = true
+    scroll.hasHorizontalScroll = false
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
+      deltaY: 2,
+      deltaMode: 1,
+    })
+    expect(scroll.scrollTo).toBeCalledWith(0, -40, 300)
   })
 
   it('should get right postion when move with wheelDeltaX and wheelDeltaY', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
-    const onEnd = jest.fn()
-    bscroll.on('mousewheelEnd', onEnd)
-
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+    scroll.hasVerticalScroll = true
+    scroll.hasHorizontalScroll = true
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       wheelDeltaX: -120,
       wheelDeltaY: -240,
-      deltaMode: 0
+      deltaMode: 0,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
-    jest.advanceTimersByTime(410)
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).toBeCalledWith(-20, -40, 300)
   })
 
   it('should get right postion when move with wheelDelta', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
-    const onEnd = jest.fn()
-    bscroll.on('mousewheelEnd', onEnd)
-
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+    scroll.hasVerticalScroll = true
+    scroll.hasHorizontalScroll = true
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       wheelDelta: -120,
-      deltaMode: 0
+      deltaMode: 0,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 300)
-    jest.advanceTimersByTime(410)
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).toBeCalledWith(-20, -20, 300)
   })
 
   it('should get right postion when move with detail', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
-    const onEnd = jest.fn()
-    bscroll.on('mousewheelEnd', onEnd)
+    scroll.hasVerticalScroll = true
+    scroll.hasHorizontalScroll = true
 
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      detail: 3
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      detail: 60,
+      deltaMode: 0,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -20, 300)
-    jest.advanceTimersByTime(410)
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).toBeCalledWith(-400, -400, 300)
   })
 
   it('should get right postion when move with invert = true', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    initForMouseWheel(bscroll)
+    // x direction
+    scroll.hasVerticalScroll = false
+    scroll.hasHorizontalScroll = true
+
     mouseWheel.mouseWheelOpt.invert = true
 
-    // in boundary for x
-    bscroll.scroller.scrollBehaviorX.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorX.maxScrollPos = -200
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: -1,
-      deltaY: -2,
-      deltaMode: 1
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
+      deltaY: 2,
+      deltaMode: 1,
     })
-    expect(bscroll.scrollTo).toBeCalledWith(-20, -40, 300)
-    jest.advanceTimersByTime(410)
-
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).toBeCalledWith(40, 0, 300)
   })
 
-  it('should debounce config work', () => {
-    const bscroll = createBScroll()
-    const mouseWheel = new MouseWheel(bscroll)
-    mouseWheel.mouseWheelOpt.debounce = 300
-    const onStart = jest.fn()
-    const onMove = jest.fn().mockImplementation(() => {
-      return true
-    })
-    const onEnd = jest.fn()
-    initForMouseWheel(bscroll)
-    bscroll.on('mousewheelStart', onStart)
-    bscroll.on('mousewheelMove', onMove)
-    bscroll.on('mousewheelEnd', onEnd)
+  it('should work with dampingFactor', () => {
+    mouseWheel.mouseWheelOpt.dampingFactor = 0.1
 
-    bscroll.scroller.scrollBehaviorY.hasScroll = true
-    bscroll.scroller.scrollBehaviorY.maxScrollPos = -200
+    scroll.scroller.scrollBehaviorX.performDampingAlgorithm = jest
+      .fn()
+      .mockImplementation((distance, factor) => {
+        return distance * factor
+      })
+    scroll.scroller.scrollBehaviorY.performDampingAlgorithm = jest
+      .fn()
+      .mockImplementation((distance, factor) => {
+        return distance * factor
+      })
 
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
       deltaX: 0,
-      deltaY: 10,
-      deltaMode: 0
-    })
-    expect(onMove).toBeCalledWith({ x: 0, y: -10 })
-
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 0,
-      deltaY: 10,
-      deltaMode: 0
-    })
-    expect(onMove).toBeCalledTimes(1)
-
-    jest.advanceTimersByTime(300)
-    dispatchMouseWheel(bscroll.wrapper, 'wheel', {
-      deltaX: 0,
-      deltaY: 10,
-      deltaMode: 0
-    })
-    expect(onMove).toBeCalledTimes(2)
-    expect(onMove).toBeCalledWith({
-      x: 0,
-      y: -20
+      deltaY: 2,
+      deltaMode: 1,
     })
 
-    jest.clearAllTimers()
-    mouseWheel.destroy()
+    expect(scroll.scrollTo).toBeCalledWith(0, -4, 300)
   })
 })

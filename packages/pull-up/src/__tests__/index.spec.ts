@@ -30,20 +30,20 @@ describe('pullUp plugins', () => {
     expect(scroll.proxy).toBeCalledWith([
       {
         key: 'finishPullUp',
-        sourceKey: 'plugins.pullUpLoad.finishPullUp'
+        sourceKey: 'plugins.pullUpLoad.finishPullUp',
       },
       {
         key: 'openPullUp',
-        sourceKey: 'plugins.pullUpLoad.openPullUp'
+        sourceKey: 'plugins.pullUpLoad.openPullUp',
       },
       {
         key: 'closePullUp',
-        sourceKey: 'plugins.pullUpLoad.closePullUp'
+        sourceKey: 'plugins.pullUpLoad.closePullUp',
       },
       {
         key: 'autoPullUpLoad',
-        sourceKey: 'plugins.pullUpLoad.autoPullUpLoad'
-      }
+        sourceKey: 'plugins.pullUpLoad.autoPullUpLoad',
+      },
     ])
   })
 
@@ -53,27 +53,27 @@ describe('pullUp plugins', () => {
     pullUp = new PullUp(scroll)
 
     expect(pullUp.options).toMatchObject({
-      threshold: 0
+      threshold: 0,
     })
 
     // case 2
     scroll.options.pullUpLoad = {
-      threshold: 40
+      threshold: 40,
     }
     pullUp = new PullUp(scroll)
 
     expect(pullUp.options).toMatchObject({
-      threshold: 40
+      threshold: 40,
     })
 
     // case 3
     scroll.options.pullUpLoad = {
-      threshold: -40
+      threshold: -40,
     }
     pullUp = new PullUp(scroll)
 
     expect(pullUp.options).toMatchObject({
-      threshold: -40
+      threshold: -40,
     })
 
     expect(scroll.options.probeType).toBe(Probe.Realtime)
@@ -83,7 +83,7 @@ describe('pullUp plugins', () => {
     const scrollBehaviorY = scroll.scroller.scrollBehaviorY
     let boundary = {
       minScrollPos: 0,
-      maxScrollPos: 20
+      maxScrollPos: 20,
     }
     scrollBehaviorY.hooks.trigger(
       scrollBehaviorY.hooks.eventTypes.computeBoundary,
@@ -91,7 +91,7 @@ describe('pullUp plugins', () => {
     )
     expect(boundary).toMatchObject({
       minScrollPos: 0,
-      maxScrollPos: -1
+      maxScrollPos: -1,
     })
   })
 
@@ -101,7 +101,7 @@ describe('pullUp plugins', () => {
 
     const pos1 = {
       x: 0,
-      y: 100
+      y: 100,
     }
     // simulate pullDown action
     scroll.movingDirectionY = -1
@@ -112,7 +112,7 @@ describe('pullUp plugins', () => {
     // simulate pullUp action
     const pos2 = {
       x: 0,
-      y: -100
+      y: -100,
     }
     scroll.movingDirectionY = 1
     scroll.trigger(scroll.eventTypes.scroll, pos2)
@@ -123,7 +123,7 @@ describe('pullUp plugins', () => {
     const mockFn = jest.fn()
     const pos = {
       x: 0,
-      y: -100
+      y: -100,
     }
     scroll.on(scroll.eventTypes.pullingUp, mockFn)
     // when
@@ -138,14 +138,14 @@ describe('pullUp plugins', () => {
     // simulate pullUp action
     const pos = {
       x: 0,
-      y: -100
+      y: -100,
     }
     scroll.movingDirectionY = 1
     scroll.trigger(scroll.eventTypes.scroll, pos)
 
     pullUp.finishPullUp()
 
-    expect(scroll.movingDirectionY).toBe(0)
+    expect(scroll.scroller.scrollBehaviorY.setMovingDirection).toBeCalledWith(0)
     expect(scroll.events.scrollEnd.length).toBe(2)
     expect(pullUp.watching).toBe(false)
   })
@@ -162,16 +162,16 @@ describe('pullUp plugins', () => {
 
     expect(pullUp.watching).toBe(false)
     expect(pullUp.options).toMatchObject({
-      threshold: 0
+      threshold: 0,
     })
 
     // modify options
     pullUp.openPullUp({
-      threshold: 200
+      threshold: 200,
     })
 
     expect(pullUp.options).toMatchObject({
-      threshold: 200
+      threshold: 200,
     })
     expect(pullUp.watching).toBe(true)
   })
@@ -180,7 +180,7 @@ describe('pullUp plugins', () => {
     // simulate pullUp action
     const pos = {
       x: 0,
-      y: -100
+      y: -100,
     }
     scroll.movingDirectionY = 1
     scroll.trigger(scroll.eventTypes.scroll, pos)
@@ -197,7 +197,7 @@ describe('pullUp plugins', () => {
     // simulate pullUp action
     const pos = {
       x: 0,
-      y: -100
+      y: -100,
     }
     scroll.on(scroll.eventTypes.pullingUp, pullUpMockFn)
     scroll.movingDirectionY = 1
@@ -224,7 +224,9 @@ describe('pullUp plugins', () => {
     pullUp.autoPullUpLoad()
 
     const outOfBoundaryPos = -1
-    expect(scroll.movingDirectionY).toBe(1)
+    expect(scroll.scroller.scrollBehaviorY.setMovingDirection).toBeCalledWith(
+      -1
+    )
     expect(scroll.scrollTo).toBeCalledWith(0, outOfBoundaryPos, 800)
   })
 })

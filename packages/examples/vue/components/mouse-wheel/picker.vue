@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mouse-wheel-picker">
     <ul class="example-list">
       <li class="example-item" @click="show">
           <span class="open">{{selectedText}}</span>
@@ -39,7 +39,9 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import Wheel from '@better-scroll/wheel'
+  import MouseWheel from '@better-scroll/mouse-wheel'
   BScroll.use(Wheel)
+  BScroll.use(MouseWheel)
 
   const STATE_HIDE = 0
   const STATE_SHOW = 1
@@ -149,14 +151,15 @@
       _createWheel(wheelWrapper) {
         if (!this.wheel) {
           this.wheel = new BScroll(wheelWrapper, {
+            mouseWheel: true,
             wheel: {
               selectedIndex: this.selectedIndex,
               wheelWrapperClass: 'wheel-scroll',
               wheelItemClass: 'wheel-item',
               wheelDisabledItemClass: 'wheel-disabled-item'
             },
-            useTransition: false,
-            probeType: 2
+            probeType: 3,
+            useTransition: true,
           })
           this.wheel.on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, this.wheel.getSelectedIndex())

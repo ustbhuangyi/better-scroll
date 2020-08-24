@@ -1,17 +1,17 @@
 <template>
-  <div class="slide-vertical">
-    <div class="vertical-wrapper">
-      <div class="slide-vertical-wrapper" ref="slide">
-        <div class="slide-vertical-content">
+  <div class="mouse-wheel-horizontal-slide">
+    <div class="slide-container">
+      <div class="slide-wrapper" ref="slide">
+        <div class="slide-content">
           <div class="slide-item page1">page 1</div>
           <div class="slide-item page2">page 2</div>
           <div class="slide-item page3">page 3</div>
           <div class="slide-item page4">page 4</div>
         </div>
       </div>
-      <div class="docs-wrapper">
+      <div class="dots-wrapper">
         <span
-          class="doc"
+          class="dot"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
@@ -23,8 +23,10 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import Slide from '@better-scroll/slide'
+  import MouseWheel from '@better-scroll/mouse-wheel'
 
   BScroll.use(Slide)
+  BScroll.use(MouseWheel)
 
   export default {
     data() {
@@ -41,21 +43,26 @@
     methods: {
       init() {
         this.slide = new BScroll(this.$refs.slide, {
-          scrollX: false,
-          scrollY: true,
+          scrollX: true,
+          scrollY: false,
           slide: {
             loop: true,
             threshold: 100
           },
-          useTransition: true,
+          useTransition: false,
           momentum: false,
           bounce: false,
-          stopPropagation: true
+          stopPropagation: true,
+          mouseWheel: {
+            speed: 2,
+            invert: false,
+            easeTime: 300
+          }
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
       },
       _onScrollEnd() {
-        let pageIndex = this.slide.getCurrentPage().pageY
+        let pageIndex = this.slide.getCurrentPage().pageX
         this.currentPageIndex = pageIndex
       }
     }
@@ -63,48 +70,45 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 
-.slide-vertical
-  height 100%
-  &.view
-    padding 0
-    height 100%
-  .vertical-wrapper
+.mouse-wheel-horizontal-slide
+  .slide-container
     position relative
-    height 100%
-    font-size 0
-  .slide-vertical-wrapper
-    height 100%
+  .slide-wrapper
+    min-height 1px
     overflow hidden
+  .slide-content
+    height 200px
+    white-space nowrap
+    font-size 0
     .slide-item
       display inline-block
+      height 200px
       width 100%
       line-height 200px
       text-align center
       font-size 26px
-      transform translate3d(0,0,0)
-      backface-visibility hidden
       &.page1
-        background-color #D6EADF
+        background-color #95B8D1
       &.page2
         background-color #DDA789
       &.page3
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .docs-wrapper
+  .dots-wrapper
     position absolute
-    right 4px
-    top 50%
-    transform translateY(-50%)
-    .doc
-      display block
-      margin 4px 0
+    bottom 4px
+    left 50%
+    transform translateX(-50%)
+    .dot
+      display inline-block
+      margin 0 4px
       width 8px
       height 8px
       border-radius 50%
       background #eee
       &.active
-        height  20px
+        width 20px
         border-radius 5px
 
 </style>

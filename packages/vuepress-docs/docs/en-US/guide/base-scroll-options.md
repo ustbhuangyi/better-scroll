@@ -234,3 +234,8 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - **Type**: `number`
    - **Default**: `5`
    - **Usage**：When the finger operation is crazy, the `touchend` event may not be triggered when sliding out of the viewport, so the function of autoEndDistance is to automatically call the touchend event when the finger is about to leave the current viewport. When the default distance is 5px from the boundary, the scrolling ends.
+
+## outOfBoundaryDampingFactor
+   - **Type**：`number`
+   - **Default**：`1 / 3`
+   - **Usage**：When out of boundary, the damping behavior is performed. The smaller the damping factor, the greater the resistance. Value range: [0, 1].

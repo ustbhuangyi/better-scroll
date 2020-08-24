@@ -1,15 +1,15 @@
 <template>
-  <div class="pullup">
+  <div class="mouse-wheel-pullup">
     <div ref="scroll" class="pullup-wrapper">
       <div class="pullup-content">
         <ul class="pullup-list">
           <li v-for="i of data" :key="i" class="pullup-list-item">
-            {{ i % 5 === 0 ? 'scroll up 👆🏻' : `I am item ${i} `}}
+            {{ i % 5 === 0 ? 'use your mousewheel please 👆🏻' : `I am item ${i} `}}
           </li>
         </ul>
         <div class="pullup-tips">
           <div v-if="!isPullUpLoad" class="before-trigger">
-            <span class="pullup-txt">Pull up and load more</span>
+            <span class="pullup-txt">mousewheel trigger pullingup and load more</span>
           </div>
           <div v-else class="after-trigger">
             <span class="pullup-txt">Loading...</span>
@@ -23,8 +23,10 @@
 <script>
   import BScroll from '@better-scroll/core'
   import Pullup from '@better-scroll/pull-up'
+  import MouseWheel from '@better-scroll/mouse-wheel'
 
   BScroll.use(Pullup)
+  BScroll.use(MouseWheel)
 
   export default {
     data() {
@@ -38,19 +40,21 @@
     },
     methods: {
       initBscroll() {
-        this.bscroll = new BScroll(this.$refs.scroll, {
-          pullUpLoad: true
+        this.scroll = new BScroll(this.$refs.scroll, {
+          probeType: 3,
+          pullUpLoad: true,
+          mouseWheel: true
         })
 
-        this.bscroll.on('pullingUp', this.pullingUpHandler)
+        this.scroll.on('pullingUp', this.pullingUpHandler)
       },
       async pullingUpHandler() {
         this.isPullUpLoad = true
 
         await this.requestData()
 
-        this.bscroll.finishPullUp()
-        this.bscroll.refresh()
+        this.scroll.finishPullUp()
+        this.scroll.refresh()
         this.isPullUpLoad = false
       },
       async requestData() {
@@ -73,8 +77,8 @@
   }
 </script>
 
-<style lang="stylus">
-.pullup
+<style lang="stylus" scoped>
+.mouse-wheel-pullup
   height: 100%
   .pullup-wrapper
     height: 100%

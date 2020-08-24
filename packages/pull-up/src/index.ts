@@ -3,7 +3,7 @@ import {
   Probe,
   Direction,
   extend,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -60,7 +60,7 @@ export default class PullUp implements PluginAPI {
       PullUpLoadConfig
     >
     const defaultOptions: PullUpLoadConfig = {
-      threshold: 0
+      threshold: 0,
     }
     this.options = extend(defaultOptions, userOptions)
 
@@ -125,7 +125,7 @@ export default class PullUp implements PluginAPI {
 
   finishPullUp() {
     // reset Direction, fix #936
-    this.scroll.movingDirectionY = Direction.Default
+    this.scroll.scroller.scrollBehaviorY.setMovingDirection(Direction.Default)
     if (this.pulling) {
       this.scroll.once(this.scroll.eventTypes.scrollEnd, () => {
         this.watch()
@@ -154,8 +154,10 @@ export default class PullUp implements PluginAPI {
     }
 
     // simulate a pullUp action
-    const outOfBoundaryPos = scrollBehaviorY.maxScrollPos + threshold - 1
-    this.scroll.movingDirectionY = Direction.Positive
+    const NEGATIVE_VALUE = -1
+    const outOfBoundaryPos =
+      scrollBehaviorY.maxScrollPos + threshold + NEGATIVE_VALUE
+    this.scroll.scroller.scrollBehaviorY.setMovingDirection(NEGATIVE_VALUE)
     this.scroll.scrollTo(
       this.scroll.x,
       outOfBoundaryPos,

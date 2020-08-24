@@ -9,7 +9,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   >
     <div
       class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border-radius: 3px; height: 100%;"
+      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; height: 100%;"
     />
   </div>
   <div
@@ -18,7 +18,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   >
     <div
       class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border-radius: 3px; width: 100%;"
+      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; width: 100%;"
     />
   </div>
   <div
@@ -27,7 +27,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   >
     <div
       class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border-radius: 3px; height: 100%;"
+      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; height: 100%;"
     />
   </div>
   <div
@@ -36,7 +36,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   >
     <div
       class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border-radius: 3px; width: 100%;"
+      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; width: 100%;"
     />
   </div>
 </div>
