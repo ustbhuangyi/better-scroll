@@ -24,7 +24,7 @@
           </ul>
         </div>
         <ul>
-          <li class="outer-list-item" v-for="(item, index) in bottomOutItems" :key="index">{{item}}</li>
+          <li class="outer-list-item2" v-for="(item, index) in bottomOutItems" :key="index">{{item}}</li>
         </ul>
         <div class="pullup-wrapper">
           <div v-show="!isPullingUp">
@@ -218,7 +218,8 @@ export default {
   line-height: 50px
   text-align: center
   list-style: none
-
+  
+.outer-list-item2,
 .outer-list-item
   height: 40px
   line-height: 40px

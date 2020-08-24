@@ -3,7 +3,7 @@ import extendsTouch from '../../util/extendTouch'
 
 jest.setTimeout(1000000)
 
-describe('compose/pullup-pulldown', () => {
+describe('Compose/pullup-pulldown', () => {
   let page = (global as any).page as Page
   extendsTouch(page)
   beforeAll(async () => {

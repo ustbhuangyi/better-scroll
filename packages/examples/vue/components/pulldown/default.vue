@@ -90,25 +90,12 @@ export default {
       this.beforePullDown = false
       this.isPullingDown = true
       STEP += 1
-
-      this.bscroll.on('pullingDown', this.pullingDownHandler)
-      this.bscroll.on('scroll', this.scrollHandler)
-      this.bscroll.on('scrollEnd', e => {
-        console.log(e)
-        console.log('scrollEnd')
+      await this.requestData()
+      this.$nextTick(() => {
+        this.isPullingDown = false
+        this.finishPullDown()
       })
-    },
-    scrollHandler(pos) {
-      console.log(pos.y)
-    },
-    async pullingDownHandler() {
-      console.log('trigger pullDown')
-      this.beforePullDown = false
-      this.isPullingDown = true
-      STEP += 1
-
-      this.isPullingDown = false
-      this.finishPullDown()
+      
     },
     async finishPullDown() {
       const stopTime = TIME_STOP

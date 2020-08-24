@@ -17,7 +17,7 @@ describe('Pulldown', () => {
 
     const itemsCounts = await page.$$eval(
       '.pulldown-list-item',
-      element => element.length
+      (element) => element.length
     )
 
     await expect(itemsCounts).toBeGreaterThanOrEqual(20)
@@ -32,14 +32,14 @@ describe('Pulldown', () => {
       xDistance: 0,
       yDistance: 400,
       speed: 1500,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     // wait for requesting data
-    await page.waitFor(4000)
+    await page.waitFor(5000)
     const itemsCounts = await page.$$eval(
       '.pulldown-list-item',
-      element => element.length
+      (element) => element.length
     )
     // has loaded
     await expect(itemsCounts).toBeGreaterThanOrEqual(40)
