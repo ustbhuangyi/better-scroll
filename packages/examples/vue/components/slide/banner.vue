@@ -33,24 +33,24 @@
   export default {
     data() {
       return {
-        currentPageIndex: 0,
-        playTimer: 0
+        currentPageIndex: 0
       }
     },
     mounted() {
       this.init()
     },
     beforeDestroy() {
-      clearTimeout(this.playTimer)
       this.slide.destroy()
     },
     methods: {
       init() {
-        clearTimeout(this.playTimer)
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: {},
+          slide: {
+            autoplay: true,
+            loop: true
+          },
           useTransition: true,
           momentum: false,
           bounce: false,
@@ -59,33 +59,16 @@
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
 
-        // user touches the slide area
-        this.slide.on('beforeScrollStart', () => {
-          clearTimeout(this.playTimer)
-        })
-        // user touched the slide done
-        this.slide.on('scrollEnd', () => {
-          this.autoGoNext()
-        })
         this.slide.on('slideWillChange', (page) => {
+          console.log(page)
           this.currentPageIndex = page.pageX
         })
-        this.autoGoNext()
       },
       nextPage() {
         this.slide.next()
       },
       prePage() {
         this.slide.prev()
-      },
-      _onScrollEnd() {
-        this.autoGoNext()
-      },
-      autoGoNext() {
-        clearTimeout(this.playTimer)
-        this.playTimer = setTimeout(() => {
-          this.nextPage()
-        }, 4000)
       }
     }
   }

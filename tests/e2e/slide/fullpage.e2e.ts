@@ -13,7 +13,7 @@ describe('Slider for fullpage', () => {
 
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -21,9 +21,9 @@ describe('Slider for fullpage', () => {
     await page.waitFor(300)
 
     // wait for slide autoplay
-    await page.waitFor(5000)
+    await page.waitFor(4000)
 
-    const transformText = await page.$eval('.slide-banner-content', node => {
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x = getTranslate(transformText, 'x')
@@ -39,12 +39,12 @@ describe('Slider for fullpage', () => {
       y: 120,
       xDistance: -70,
       yDistance: 0,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     await page.waitFor(1500)
 
-    const transformText = await page.$eval('.slide-banner-content', node => {
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x = getTranslate(transformText, 'x')

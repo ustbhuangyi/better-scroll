@@ -1,4 +1,4 @@
-import BScroll, { Options } from '@better-scroll/core'
+import BScroll from '@better-scroll/core'
 import {
   between,
   prepend,
@@ -8,37 +8,25 @@ import {
   EaseItem,
   Direction,
   EventEmitter,
-  removeSizeStyle
+  removeSizeStyle,
 } from '@better-scroll/shared-utils'
-import SlidePages, { Page, Position } from './SlidePages'
+import SlidePages, { PageIndex, Page, Position } from './SlidePages'
 import propertiesConfig from './propertiesConfig'
 
-export interface Config {
+export interface SlideConfig {
   loop: boolean
-  el: HTMLElement | string
   threshold: number
-  stepX: number
-  stepY: number
   speed: number
   easing: {
     style: string
     fn: (t: number) => number
   }
   listenFlick: boolean
-  disableSetWidth: boolean
-  disableSetHeight: boolean
+  autoplay: boolean
+  interval: number
 }
-export type SlideOptions = Partial<Config> | boolean
+export type SlideOptions = Partial<SlideConfig> | true
 
-const DEFAULT_SLIDE_OPTIONS = {
-  loop: false,
-  threshold: 0.1,
-  easing: ease.bounce,
-  listenFlick: true,
-  disableSetWidth: false,
-  disableSetHeight: false
-}
-type SlideOptionsWithDefault = Partial<Config> & typeof DEFAULT_SLIDE_OPTIONS
 declare module '@better-scroll/core' {
   interface CustomOptions {
     slide?: SlideOptions
@@ -55,68 +43,117 @@ interface PluginAPI {
   getCurrentPage(): Page
 }
 
+export const BASE_PAGE = {
+  pageX: 0,
+  pageY: 0,
+  x: 0,
+  y: 0,
+}
+
+export const samePage = (p1: Page, p2: Page) => {
+  return p1.pageX === p2.pageX && p1.pageY === p2.pageY
+}
+
 export default class Slide implements PluginAPI {
   static pluginName = 'slide'
-  private page: SlidePages
+  private pages: SlidePages
   private inited: boolean
-  private options: SlideOptionsWithDefault
+  private options: SlideConfig
   private thresholdX: number
   private thresholdY: number
   private hooksFn: Array<[EventEmitter, string, Function]>
   private resetLooping = false
   private isTouching = false
   private willChangeToPage: Page
-  private resizeTimeout: number
+  private resizeTimer: number = 0
+  private autoplayTimer: number = 0
   constructor(public scroll: BScroll) {
-    this.scroll.proxy(propertiesConfig)
-    this.scroll.registerType(['slideWillChange'])
-    this.options = this.handleOptions(this.scroll.options.slide as SlideOptions)
-    this.page = new SlidePages(scroll, this.options)
-    this.hooksFn = []
-    this.willChangeToPage = {
-      pageX: 0,
-      pageY: 0
-    }
     this.init()
   }
   init() {
-    const slide = this.options
-    const slideEls = this.scroll.scroller.content
-    if (slide.loop) {
-      let children = slideEls.children
-      if (children.length > 1) {
-        this.cloneSlideEleForLoop(slideEls)
-      } else {
-        // Loop does not make any sense if there is only one child.
-        slide.loop = false
+    this.handleBScroll()
+    this.handleOptions()
+
+    this.createPage()
+    this.willChangeToPage = extend({}, BASE_PAGE)
+
+    this.handleLoop()
+    this.handleHooks()
+
+    this.setSlideInlineStyle()
+  }
+
+  private createPage() {
+    this.pages = new SlidePages(this.scroll, this.options)
+  }
+
+  private handleBScroll() {
+    this.scroll.registerType(['slideWillChange'])
+    this.scroll.proxy(propertiesConfig)
+  }
+
+  private handleOptions() {
+    const userOptions = (this.scroll.options.slide === true
+      ? {}
+      : this.scroll.options.slide) as Partial<SlideConfig>
+    const defaultOptions: SlideConfig = {
+      loop: true,
+      threshold: 0.1,
+      speed: 400,
+      easing: ease.bounce,
+      listenFlick: true,
+      autoplay: true,
+      interval: 3000,
+    }
+    this.options = extend(defaultOptions, userOptions)
+  }
+
+  private handleLoop() {
+    const { loop } = this.options
+    const slideContent = this.scroll.scroller.content
+    if (loop) {
+      const slideItems = slideContent.children
+      if (slideItems.length > 1) {
+        this.cloneFirstAndLastSlideItem(slideContent)
       }
     }
-    this.setSlideWidth(slideEls)
-    this.setSlideHeight(this.scroll.scroller.wrapper, slideEls)
+  }
 
+  private handleHooks() {
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
+    const { listenFlick } = this.options
 
-    this.registerHooks(scrollHooks, 'refresh', this.initSlideState)
-    this.registerHooks(scrollHooks, 'destroy', this.destroy)
-    this.registerHooks(scrollerHooks, 'momentum', this.modifyScrollMetaHandler)
-    // scrollEnd handler should be called before customized handlers
-    this.registerHooks(this.scroll, 'scrollEnd', this.amendCurrentPage)
-    this.registerHooks(scrollerHooks, 'beforeStart', this.setTouchFlag)
-    this.registerHooks(scrollerHooks, 'scroll', this.scrollMoving)
-    this.registerHooks(scrollerHooks, 'resize', this.resize)
+    this.hooksFn = []
+    // scroll
+    this.registerHooks(
+      this.scroll,
+      this.scroll.eventTypes.beforeScrollStart,
+      this.pausePlay
+    )
+    this.registerHooks(
+      this.scroll,
+      this.scroll.eventTypes.scrollEnd,
+      this.amendCurrentPage
+    )
+    this.registerHooks(
+      this.scroll,
+      this.scroll.eventTypes.scrollEnd,
+      this.startPlay
+    )
     // for mousewheel event
-    if (
-      this.scroll.eventTypes.mousewheelMove &&
-      this.scroll.eventTypes.mousewheelEnd
-    ) {
-      this.registerHooks(this.scroll, 'mousewheelMove', () => {
-        // prevent default action of mousewheelMove
-        return true
-      })
+    if (this.scroll.eventTypes.mousewheelMove) {
       this.registerHooks(
         this.scroll,
-        'mousewheelEnd',
+        this.scroll.eventTypes.mousewheelMove,
+        () => {
+          // prevent default action of mousewheelMove
+          return true
+        }
+      )
+      this.registerHooks(
+        this.scroll,
+        this.scroll.eventTypes.mousewheelEnd,
         (delta: { directionX: number; directionY: number }) => {
           if (
             delta.directionX === Direction.Positive ||
@@ -134,72 +171,187 @@ export default class Slide implements PluginAPI {
       )
     }
 
-    if (slide.listenFlick !== false) {
-      this.registerHooks(scrollerHooks, 'flick', this.flickHandler)
+    // scrollHooks
+    this.registerHooks(
+      scrollHooks,
+      scrollHooks.eventTypes.refresh,
+      this.initSlideState
+    )
+    this.registerHooks(
+      scrollHooks,
+      scrollHooks.eventTypes.destroy,
+      this.destroy
+    )
+
+    // scroller
+    this.registerHooks(
+      scrollerHooks,
+      scrollerHooks.eventTypes.momentum,
+      this.modifyScrollMetaHandler
+    )
+    this.registerHooks(
+      scrollerHooks,
+      scrollerHooks.eventTypes.beforeStart,
+      this.setTouchFlag
+    )
+    this.registerHooks(
+      scrollerHooks,
+      scrollerHooks.eventTypes.scroll,
+      this.scrollMoving
+    )
+    this.registerHooks(
+      scrollerHooks,
+      scrollerHooks.eventTypes.resize,
+      this.resize
+    )
+    // a click operation will clearTimer, so restart a new one
+    this.registerHooks(
+      scrollerHooks,
+      scrollerHooks.eventTypes.checkClick,
+      this.startPlay
+    )
+    if (listenFlick) {
+      this.registerHooks(
+        scrollerHooks,
+        scrollerHooks.eventTypes.flick,
+        this.flickHandler
+      )
     }
   }
+
+  private startPlay() {
+    const { interval, autoplay } = this.options
+    if (autoplay) {
+      clearTimeout(this.autoplayTimer)
+      this.autoplayTimer = window.setTimeout(() => {
+        this.next()
+      }, interval)
+    }
+  }
+
+  private pausePlay() {
+    if (this.options.autoplay) {
+      clearTimeout(this.autoplayTimer)
+    }
+  }
+
+  private setSlideInlineStyle() {
+    const {
+      content: slideContent,
+      wrapper: slideWrapper,
+    } = this.scroll.scroller
+    this.setSlideInlineWidthStyle(slideContent)
+    this.setSlideInlineHeightStyle(slideWrapper, slideContent)
+  }
+
   resize() {
-    const slideEls = this.scroll.scroller.content
-    const slideWrapper = this.scroll.scroller.wrapper
-    clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = window.setTimeout(() => {
-      this.clearSlideWidth(slideEls)
-      this.clearSlideHeight(slideEls)
-      this.setSlideWidth(slideEls)
-      this.setSlideHeight(slideWrapper, slideEls)
+    const { content: slideContent } = this.scroll.scroller
+    clearTimeout(this.resizeTimer)
+    this.resizeTimer = window.setTimeout(() => {
+      this.clearSlideInlineWidthStyle(slideContent)
+      this.clearSlideInlineHeightStyle(slideContent)
+
+      this.setSlideInlineStyle()
       this.scroll.refresh()
     }, this.scroll.options.resizePolling)
     return true
   }
+
+  private clearSlideInlineWidthStyle(slideContent: HTMLElement) {
+    const SIZE_TYPE = 'width'
+    if (this.shouldSetInlineSizeStyle(SIZE_TYPE)) {
+      const children = slideContent.children
+      for (let i = 0; i < children.length; i++) {
+        const slideItemDom = children[i] as HTMLElement
+        removeSizeStyle(slideItemDom, SIZE_TYPE)
+      }
+      removeSizeStyle(slideContent, SIZE_TYPE)
+    }
+  }
+
+  private clearSlideInlineHeightStyle(slideContent: HTMLElement) {
+    const SIZE_TYPE = 'height'
+    if (this.shouldSetInlineSizeStyle(SIZE_TYPE)) {
+      const children = slideContent.children
+      for (let i = 0; i < children.length; i++) {
+        const slideItemDom = children[i] as HTMLElement
+        removeSizeStyle(slideItemDom, SIZE_TYPE)
+      }
+      removeSizeStyle(slideContent, SIZE_TYPE)
+    }
+  }
+
   next(time?: number, easing?: EaseItem) {
-    const { pageX, pageY } = this.page.nextPage()
+    const { pageX, pageY } = this.pages.nextPageIndex()
     this.goTo(pageX, pageY, time, easing)
   }
   prev(time?: number, easing?: EaseItem) {
-    const { pageX, pageY } = this.page.prevPage()
+    const { pageX, pageY } = this.pages.prevPageIndex()
     this.goTo(pageX, pageY, time, easing)
   }
-  goToPage(x: number, y: number, time?: number, easing?: EaseItem) {
-    const pageInfo = this.page.realPage2Page(x, y)
-    if (!pageInfo) {
+
+  goToPage(pageX: number, pageY: number, time?: number, easing?: EaseItem) {
+    const pageIndex = this.pages.getValidPageIndex(pageX, pageY)
+    if (!pageIndex) {
       return
     }
-    this.goTo(pageInfo.realX, pageInfo.realY, time, easing)
+    this.goTo(pageIndex.pageX, pageIndex.pageY, time, easing)
   }
+
   getCurrentPage(): Page {
-    return this.page.getRealPage()
+    return this.pages.getExposedPage()
   }
-  nearestPage(x: number, y: number): Page & Position {
-    const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-    const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+
+  nearestPage(x: number, y: number): Page {
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    const {
+      absStartPos: absStartPosX,
+      maxScrollPos: maxScrollPosX,
+      minScrollPos: minScrollPosX,
+      direction: directionX,
+    } = scrollBehaviorX
+    const {
+      absStartPos: absStartPosY,
+      maxScrollPos: maxScrollPosY,
+      minScrollPos: minScrollPosY,
+      direction: directionY,
+    } = scrollBehaviorY
+
     let triggerThreshold = true
     if (
-      Math.abs(x - scrollBehaviorX.absStartPos) <= this.thresholdX &&
-      Math.abs(y - scrollBehaviorY.absStartPos) <= this.thresholdY
+      Math.abs(x - absStartPosX) <= this.thresholdX &&
+      Math.abs(y - absStartPosY) <= this.thresholdY
     ) {
       triggerThreshold = false
     }
     if (!triggerThreshold) {
-      return this.page.currentPage
+      return this.pages.currentPage
     }
 
-    return this.page.nearestPage(
-      between(x, scrollBehaviorX.maxScrollPos, scrollBehaviorX.minScrollPos),
-      between(y, scrollBehaviorY.maxScrollPos, scrollBehaviorY.minScrollPos),
-      scrollBehaviorX.direction,
-      scrollBehaviorY.direction
+    return this.pages.nearestPage(
+      between(x, maxScrollPosX, minScrollPosX),
+      between(y, maxScrollPosY, minScrollPosY),
+      directionX,
+      directionY
     )
   }
   destroy() {
-    const slideEls = this.scroll.scroller.content
-    if (this.options.loop) {
-      let children = slideEls.children
-      if (children.length > 2) {
-        removeChild(slideEls, <HTMLElement>children[children.length - 1])
-        removeChild(slideEls, <HTMLElement>children[0])
+    const slideContent = this.scroll.scroller.content
+    const { loop, autoplay } = this.options
+    if (loop) {
+      let slideItems = slideContent.children
+      if (slideItems.length > 2) {
+        removeChild(
+          slideContent,
+          <HTMLElement>slideItems[slideItems.length - 1]
+        )
+        removeChild(slideContent, <HTMLElement>slideItems[0])
       }
     }
-    this.hooksFn.forEach(item => {
+    if (autoplay) {
+      clearTimeout(this.autoplayTimer)
+    }
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]
@@ -209,15 +361,10 @@ export default class Slide implements PluginAPI {
     })
     this.hooksFn.length = 0
   }
-  private handleOptions(userOptions: SlideOptions): SlideOptionsWithDefault {
-    const options = (userOptions === true ? {} : userOptions) as Partial<Config>
-    const defaultOptions = extend({}, DEFAULT_SLIDE_OPTIONS)
-    return extend(defaultOptions, options)
-  }
   private initSlideState() {
-    this.page.init()
-    this.initThreshold()
-    const initPage = this.page.getInitPage()
+    this.pages.init()
+    this.computeThreshold()
+    const initPage = this.pages.getInitialPage()
     if (this.inited) {
       this.goTo(initPage.pageX, initPage.pageY, 0)
     } else {
@@ -228,30 +375,33 @@ export default class Slide implements PluginAPI {
           this.inited = true
           position.x = initPage.x
           position.y = initPage.y
-          this.page.changeCurrentPage(initPage)
+          this.pages.setCurrentPage(initPage)
         }
       )
     }
+    this.startPlay()
   }
-  private initThreshold() {
-    const slideThreshold = this.options.threshold
+  private computeThreshold() {
+    const threshold = this.options.threshold
 
-    if (slideThreshold % 1 === 0) {
-      this.thresholdX = slideThreshold
-      this.thresholdY = slideThreshold
+    // Integer
+    if (threshold % 1 === 0) {
+      this.thresholdX = threshold
+      this.thresholdY = threshold
     } else {
-      const pageSize = this.page.getPageSize()
-      this.thresholdX = Math.round(pageSize.width * slideThreshold)
-      this.thresholdY = Math.round(pageSize.height * slideThreshold)
+      // Digital
+      const { width, height } = this.pages.getPageStats()
+      this.thresholdX = Math.round(width * threshold)
+      this.thresholdY = Math.round(height * threshold)
     }
   }
-  private cloneSlideEleForLoop(slideEls: HTMLElement) {
-    const children = slideEls.children
+  private cloneFirstAndLastSlideItem(slideContent: HTMLElement) {
+    const children = slideContent.children
     prepend(
       <HTMLElement>children[children.length - 1].cloneNode(true),
-      slideEls
+      slideContent
     )
-    slideEls.appendChild(children[1].cloneNode(true))
+    slideContent.appendChild(children[1].cloneNode(true))
   }
   private amendCurrentPage() {
     this.isTouching = false
@@ -265,174 +415,144 @@ export default class Slide implements PluginAPI {
     }
     // fix bug: scroll two page or even more page at once and fetch the boundary.
     // In this case, momentum won't be trigger, so the pageIndex will be wrong and won't be trigger reset.
-    let isScrollToBoundary = false
+    let atTheBoundary = false
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    const {
+      currentPos: currentPosX,
+      minScrollPos: minScrollPosX,
+      maxScrollPos: maxScrollPosX,
+    } = scrollBehaviorX
+    const {
+      currentPos: currentPosY,
+      minScrollPos: minScrollPosY,
+      maxScrollPos: maxScrollPosY,
+    } = scrollBehaviorY
     if (
-      this.page.loopX &&
-      (this.scroll.x === this.scroll.scroller.scrollBehaviorX.minScrollPos ||
-        this.scroll.x === this.scroll.scroller.scrollBehaviorX.maxScrollPos)
+      this.pages.loopX &&
+      (currentPosX === minScrollPosX || currentPosX === maxScrollPosX)
     ) {
-      isScrollToBoundary = true
+      atTheBoundary = true
     }
     if (
-      this.page.loopY &&
-      (this.scroll.y === this.scroll.scroller.scrollBehaviorY.minScrollPos ||
-        this.scroll.y === this.scroll.scroller.scrollBehaviorY.maxScrollPos)
+      this.pages.loopY &&
+      (currentPosY === minScrollPosY || currentPosY === maxScrollPosY)
     ) {
-      isScrollToBoundary = true
+      atTheBoundary = true
     }
-    if (isScrollToBoundary) {
-      const scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-      const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
-      const newPos = this.page.nearestPage(
-        between(
-          this.scroll.x,
-          scrollBehaviorX.maxScrollPos,
-          scrollBehaviorX.minScrollPos
-        ),
-        between(
-          this.scroll.y,
-          scrollBehaviorY.maxScrollPos,
-          scrollBehaviorY.minScrollPos
-        ),
+    if (atTheBoundary) {
+      const newPage = this.pages.nearestPage(
+        between(currentPosX, maxScrollPosX, minScrollPosX),
+        between(currentPosY, maxScrollPosY, minScrollPosY),
         0,
         0
       )
-      const newPage = {
-        x: newPos.x,
-        y: newPos.y,
-        pageX: newPos.pageX,
-        pageY: newPos.pageY
-      }
-      if (!this.page.isSameWithCurrent(newPage)) {
-        this.page.changeCurrentPage(newPage)
+      if (!samePage(this.pages.currentPage, newPage)) {
+        this.pages.setCurrentPage(newPage)
       }
     }
-    const changePage = this.page.resetLoopPage()
+    const changePage = this.pages.resetLoopPage()
     if (changePage) {
       this.resetLooping = true
       this.goTo(changePage.pageX, changePage.pageY, 0)
-      return true // stop trigger chain
+      // stop user's scrollEnd
+      // since it is a seamless scroll
+      return true
     }
     // amend willChangeToPage, because willChangeToPage maybe wrong when sliding quickly
-    this.pageWillChangeTo(this.page.currentPage)
+    this.pageWillChangeTo(this.pages.currentPage)
   }
-  private shouldSetWidthHeight(checkType: 'width' | 'height'): Boolean {
-    type checkOption = [keyof Options, keyof Config]
-    const checkMap = {
-      width: <checkOption>['scrollX', 'disableSetWidth'],
-      height: <checkOption>['scrollY', 'disableSetHeight']
+
+  private setSlideInlineWidthStyle(slideContent: HTMLElement) {
+    if (this.shouldSetInlineSizeStyle('width')) {
+      const children = slideContent.children
+      const lenth = children.length
+      const slideItemWidth = children[0].clientWidth
+      for (let i = 0; i < lenth; i++) {
+        const slideItemDom = children[i] as HTMLElement
+        slideItemDom.style.width = slideItemWidth + 'px'
+      }
+      slideContent.style.width = slideItemWidth * lenth + 'px'
     }
-    const checkOption = checkMap[checkType]
-    if (!this.scroll.options[checkOption[0]]) {
-      return false
-    }
-    if (this.options[checkOption[1]]) {
-      return false
-    }
-    return true
   }
-  private clearSlideWidth(slideEls: HTMLElement): void {
-    if (!this.shouldSetWidthHeight('width')) {
-      return
-    }
-    const children = slideEls.children
-    for (let i = 0; i < children.length; i++) {
-      const slideItemDom = children[i] as HTMLElement
-      removeSizeStyle(slideItemDom, 'width')
-    }
-    removeSizeStyle(slideEls, 'width')
-  }
-  private setSlideWidth(slideEls: HTMLElement): Boolean {
-    if (!this.shouldSetWidthHeight('width')) {
-      return false
-    }
-    const children = slideEls.children
-    const slideItemWidth = children[0].clientWidth
-    for (let i = 0; i < children.length; i++) {
-      const slideItemDom = children[i] as HTMLElement
-      slideItemDom.style.width = slideItemWidth + 'px'
-    }
-    slideEls.style.width = slideItemWidth * children.length + 'px'
-    return true
-  }
-  private clearSlideHeight(slideEls: HTMLElement) {
-    if (!this.shouldSetWidthHeight('height')) {
-      return
-    }
-    const children = slideEls.children
-    for (let i = 0; i < children.length; i++) {
-      const slideItemDom = children[i] as HTMLElement
-      removeSizeStyle(slideItemDom, 'height')
-    }
-    removeSizeStyle(slideEls, 'height')
-  }
-  // height change will not effect minScrollY & maxScrollY
-  private setSlideHeight(
+
+  private setSlideInlineHeightStyle(
     slideWrapper: HTMLElement,
-    slideEls: HTMLElement
-  ): Boolean {
-    if (!this.shouldSetWidthHeight('height')) {
-      return false
+    slideContent: HTMLElement
+  ) {
+    if (this.shouldSetInlineSizeStyle('height')) {
+      const wrapperHeight = slideWrapper.clientHeight
+      const children = slideContent.children
+      const lenth = children.length
+      for (let i = 0; i < lenth; i++) {
+        const slideItemDom = children[i] as HTMLElement
+        slideItemDom.style.height = wrapperHeight + 'px'
+      }
+      slideContent.style.height = wrapperHeight * lenth + 'px'
     }
-    const wrapperHeight = slideWrapper.clientHeight
-    const children = slideEls.children
-    for (let i = 0; i < children.length; i++) {
-      const slideItemDom = children[i] as HTMLElement
-      slideItemDom.style.height = wrapperHeight + 'px'
-    }
-    slideEls.style.height = wrapperHeight * children.length + 'px'
-    return true
   }
+
+  private shouldSetInlineSizeStyle(sizeType: 'width' | 'height'): Boolean {
+    const scrollableMap = {
+      width: 'scrollX',
+      height: 'scrollY',
+    }
+    const scrollable = scrollableMap[sizeType]
+    return this.scroll.options[scrollable]
+  }
+
   private goTo(
     pageX: number,
     pageY: number = 0,
     time?: number,
     easing?: EaseItem
   ) {
-    const newPageInfo = this.page.change2safePage(pageX, pageY)
-    if (!newPageInfo) {
+    const newPage = this.pages.getInternalPage(pageX, pageY)
+    if (!newPage) {
       return
     }
     const scrollEasing = easing || this.options.easing || ease.bounce
-    let posX = newPageInfo.x!
-    let posY = newPageInfo.y!
-    const deltaX = posX - this.scroll.scroller.scrollBehaviorX.currentPos
-    const deltaY = posY - this.scroll.scroller.scrollBehaviorY.currentPos
+    const { x, y } = newPage
+
+    const deltaX = x - this.scroll.scroller.scrollBehaviorX.currentPos
+    const deltaY = y - this.scroll.scroller.scrollBehaviorY.currentPos
     if (!deltaX && !deltaY) {
       return
     }
-    time = time === undefined ? this.getAnimateTime(deltaX, deltaY) : time
-    this.page.changeCurrentPage({
-      x: posX,
-      y: posY,
-      pageX: newPageInfo.pageX,
-      pageY: newPageInfo.pageY
-    })
-    this.pageWillChangeTo(this.page.currentPage)
-    this.scroll.scroller.scrollTo(posX, posY, time, scrollEasing)
+    time = time === undefined ? this.getEaseTime(deltaX, deltaY) : time
+    this.pages.setCurrentPage(newPage)
+    this.pageWillChangeTo(this.pages.currentPage)
+    this.scroll.scroller.scrollTo(x, y, time, scrollEasing)
   }
   private flickHandler() {
-    let scrollBehaviorX = this.scroll.scroller.scrollBehaviorX
-    let scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
-    const deltaX = scrollBehaviorX.currentPos - scrollBehaviorX.startPos
-    const deltaY = scrollBehaviorY.currentPos - scrollBehaviorY.startPos
-    let time = this.getAnimateTime(deltaX, deltaY)
-    this.goTo(
-      this.page.currentPage.pageX + scrollBehaviorX.direction,
-      this.page.currentPage.pageY + scrollBehaviorY.direction,
-      time
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    const {
+      currentPos: currentPosX,
+      startPos: startPosX,
+      direction: directionX,
+    } = scrollBehaviorX
+    const {
+      currentPos: currentPosY,
+      startPos: startPosY,
+      direction: directionY,
+    } = scrollBehaviorY
+    const { pageX, pageY } = this.pages.currentPage
+
+    let time = this.getEaseTime(
+      currentPosX - startPosX,
+      currentPosY - startPosY
     )
+    this.goTo(pageX + directionX, pageY + directionY, time)
   }
-  private getAnimateTime(deltaX: number, deltaY: number): number {
-    if (this.options.speed) {
-      return this.options.speed
-    }
-    return Math.max(
+  private getEaseTime(deltaX: number, deltaY: number): number {
+    return (
+      this.options.speed ||
       Math.max(
-        Math.min(Math.abs(deltaX), 1000),
-        Math.min(Math.abs(deltaY), 1000)
-      ),
-      300
+        Math.max(
+          Math.min(Math.abs(deltaX), 1000),
+          Math.min(Math.abs(deltaY), 1000)
+        ),
+        300
+      )
     )
   }
   private modifyScrollMetaHandler(scrollMeta: {
@@ -441,21 +561,16 @@ export default class Slide implements PluginAPI {
     time: number
     [key: string]: any
   }) {
-    const newPos = this.nearestPage(scrollMeta.newX, scrollMeta.newY)
-    scrollMeta.time = this.getAnimateTime(
-      scrollMeta.newX - <number>newPos.x,
-      scrollMeta.newY - <number>newPos.y
+    const newPage = this.nearestPage(scrollMeta.newX, scrollMeta.newY)
+    scrollMeta.time = this.getEaseTime(
+      scrollMeta.newX - newPage.x,
+      scrollMeta.newY - newPage.y
     )
-    scrollMeta.newX = <number>newPos.x
-    scrollMeta.newY = <number>newPos.y
+    scrollMeta.newX = newPage.x
+    scrollMeta.newY = newPage.y
     scrollMeta.easing = this.options.easing || ease.bounce
-    this.page.changeCurrentPage({
-      x: scrollMeta.newX,
-      y: scrollMeta.newY,
-      pageX: newPos.pageX,
-      pageY: newPos.pageY
-    })
-    this.pageWillChangeTo(this.page.currentPage)
+    this.pages.setCurrentPage(newPage)
+    this.pageWillChangeTo(this.pages.currentPage)
   }
   private scrollMoving(point: Position) {
     if (this.isTouching) {
@@ -464,15 +579,14 @@ export default class Slide implements PluginAPI {
     }
   }
   private pageWillChangeTo(newPage: Page) {
-    const changeToPage = this.page.getRealPage(newPage)
-    if (
-      changeToPage.pageX === this.willChangeToPage.pageX &&
-      changeToPage.pageY === this.willChangeToPage.pageY
-    ) {
-      return
+    const changeToPage = this.pages.getExposedPage(newPage)
+    if (!samePage(this.willChangeToPage, changeToPage)) {
+      this.willChangeToPage = changeToPage
+      this.scroll.trigger(
+        this.scroll.eventTypes.slideWillChange,
+        this.willChangeToPage
+      )
     }
-    this.willChangeToPage = changeToPage
-    this.scroll.trigger('slideWillChange', this.willChangeToPage)
   }
   private setTouchFlag() {
     this.isTouching = true

@@ -1,9 +1,9 @@
 import { between, extend, warn } from '@better-scroll/shared-utils'
 import BScroll from '@better-scroll/core'
-import { Config } from './index'
-import PagesPos from './PagesPos'
+import { SlideConfig, BASE_PAGE } from './index'
+import PagesMatrix, { PageStats } from './PagesMatrix'
 
-export interface Page {
+export interface PageIndex {
   pageX: number
   pageY: number
 }
@@ -12,77 +12,77 @@ export interface Position {
   y: number
 }
 
+export type Page = PageIndex & Position
+
 const enum Direction {
   Positive = 'positive',
-  Negative = 'negative'
+  Negative = 'negative',
 }
-const enum LoopStage {
-  Head = 'head',
-  Tail = 'tail',
-  Middle = 'middle'
-}
+
 export default class SlidePages {
   loopX: boolean
   loopY: boolean
   slideX: boolean
   slideY: boolean
   needLoop: boolean
-  pagesPos: PagesPos
-  currentPage: Page & Position
-  constructor(public scroll: BScroll, private slideOpt: Partial<Config>) {}
+  pagesMatrix: PagesMatrix
+  currentPage: Page
+  constructor(public scroll: BScroll, private slideOptions: SlideConfig) {}
+
   init() {
-    this.currentPage = this.currentPage || {
-      x: 0,
-      y: 0,
-      pageX: 0,
-      pageY: 0
-    }
-    this.pagesPos = new PagesPos(this.scroll, this.slideOpt)
+    this.currentPage = this.currentPage || extend({}, BASE_PAGE)
+    this.pagesMatrix = new PagesMatrix(this.scroll)
     this.checkSlideLoop()
   }
-  changeCurrentPage(newPage: Page & Position): void {
+
+  setCurrentPage(newPage: Page) {
     this.currentPage = newPage
   }
-  change2safePage(pageX: number, pageY: number): (Page & Position) | undefined {
-    if (!this.pagesPos.hasInfo()) {
+
+  getInternalPage(pageX: number, pageY: number): Page | undefined {
+    if (!this.pagesMatrix.hasPages()) {
       return
     }
-    if (pageX >= this.pagesPos.xLen) {
-      pageX = this.pagesPos.xLen - 1
+    if (pageX >= this.pagesMatrix.pageLengthOfX) {
+      pageX = this.pagesMatrix.pageLengthOfX - 1
     } else if (pageX < 0) {
       pageX = 0
     }
 
-    if (pageY >= this.pagesPos.yLen) {
-      pageY = this.pagesPos.yLen - 1
+    if (pageY >= this.pagesMatrix.pageLengthOfY) {
+      pageY = this.pagesMatrix.pageLengthOfY - 1
     } else if (pageY < 0) {
       pageY = 0
     }
 
-    let { x, y } = this.pagesPos.getPos(pageX, pageY)
+    let { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
+
     return {
       pageX,
       pageY,
-      x: x,
-      y: y
+      x,
+      y,
     }
   }
-  getInitPage(): Page & Position {
+
+  getInitialPage(): Page {
     let initPageX = this.loopX ? 1 : 0
     let initPageY = this.loopY ? 1 : 0
-    const initPage = {
-      pageX: this.currentPage.pageX || initPageX,
-      pageY: this.currentPage.pageY || initPageY
-    }
-    const initPosition = this.pagesPos.getPos(initPage.pageX, initPage.pageY)
+
+    const pageX = this.currentPage.pageX || initPageX
+    const pageY = this.currentPage.pageY || initPageY
+
+    const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
+
     return {
-      pageX: initPage.pageX,
-      pageY: initPage.pageY,
-      x: initPosition.x,
-      y: initPosition.y
+      pageX,
+      pageY,
+      x,
+      y,
     }
   }
-  getRealPage(page?: Page): Page {
+
+  getExposedPage(page?: Page): Page {
     const fixedPage = (page: number, realPageLen: number) => {
       const pageIndex = []
       for (let i = 0; i < realPageLen; i++) {
@@ -92,30 +92,35 @@ export default class SlidePages {
       pageIndex.push(0)
       return pageIndex[page]
     }
-    let currentPage = page ? extend({}, page) : extend({}, this.currentPage)
+    let exposedPage = page ? extend({}, page) : extend({}, this.currentPage)
     if (this.loopX) {
-      currentPage.pageX = fixedPage(currentPage.pageX, this.pagesPos.xLen - 2)
+      exposedPage.pageX = fixedPage(
+        exposedPage.pageX,
+        this.pagesMatrix.pageLengthOfX - 2
+      )
     }
     if (this.loopY) {
-      currentPage.pageY = fixedPage(currentPage.pageY, this.pagesPos.yLen - 2)
+      exposedPage.pageY = fixedPage(
+        exposedPage.pageY,
+        this.pagesMatrix.pageLengthOfY - 2
+      )
     }
-    return {
-      pageX: currentPage.pageX,
-      pageY: currentPage.pageY
-    }
+    return exposedPage
   }
-  getPageSize(): { width: number; height: number } {
-    return this.pagesPos.getPos(this.currentPage.pageX, this.currentPage.pageY)
+
+  getPageStats(): PageStats {
+    return this.pagesMatrix.getPageStats(
+      this.currentPage.pageX,
+      this.currentPage.pageY
+    )
   }
-  realPage2Page(
-    x: number,
-    y: number
-  ): { realX: number; realY: number } | undefined {
-    if (!this.pagesPos.hasInfo()) {
+
+  getValidPageIndex(x: number, y: number): PageIndex | undefined {
+    if (!this.pagesMatrix.hasPages()) {
       return
     }
-    let lastX = this.pagesPos.xLen - 1
-    let lastY = this.pagesPos.yLen - 1
+    let lastX = this.pagesMatrix.pageLengthOfX - 1
+    let lastY = this.pagesMatrix.pageLengthOfY - 1
     let firstX = 0
     let firstY = 0
     if (this.loopX) {
@@ -130,87 +135,72 @@ export default class SlidePages {
     }
     x = between(x, firstX, lastX)
     y = between(y, firstY, lastY)
+
     return {
-      realX: x,
-      realY: y
+      pageX: x,
+      pageY: y,
     }
   }
-  nextPage(): { pageX: number; pageY: number } {
-    return this.changedPageNum(Direction.Positive)
+
+  nextPageIndex(): PageIndex {
+    return this.getPageIndexByDirection(Direction.Positive)
   }
-  prevPage(): { pageX: number; pageY: number } {
-    return this.changedPageNum(Direction.Negative)
+
+  prevPageIndex(): PageIndex {
+    return this.getPageIndexByDirection(Direction.Negative)
   }
+
   nearestPage(
     x: number,
     y: number,
     directionX: number,
     directionY: number
-  ): Page & Position {
-    const pageInfo = this.pagesPos.getNearestPage(x, y)
-    if (!pageInfo) {
+  ): Page {
+    const pageIndex = this.pagesMatrix.getNearestPageIndex(x, y)
+    if (!pageIndex) {
       return {
         x: 0,
         y: 0,
         pageX: 0,
-        pageY: 0
+        pageY: 0,
       }
     }
-    let pageX = pageInfo.pageX
-    let pageY = pageInfo.pageY
+    let { pageX, pageY } = pageIndex
     let newX
     let newY
+
     if (pageX === this.currentPage.pageX) {
       pageX += directionX
-      pageX = between(pageX, 0, this.pagesPos.xLen - 1)
+      pageX = between(pageX, 0, this.pagesMatrix.pageLengthOfX - 1)
     }
     if (pageY === this.currentPage.pageY) {
       pageY += directionY
-      pageY = between(pageInfo.pageY, 0, this.pagesPos.yLen - 1)
+      pageY = between(pageIndex.pageY, 0, this.pagesMatrix.pageLengthOfY - 1)
     }
-    newX = this.pagesPos.getPos(pageX, 0).x
-    newY = this.pagesPos.getPos(0, pageY).y
+
+    newX = this.pagesMatrix.getPageStats(pageX, 0).x
+    newY = this.pagesMatrix.getPageStats(0, pageY).y
+
     return {
       x: newX,
       y: newY,
       pageX,
-      pageY
+      pageY,
     }
   }
-  getLoopStage(): LoopStage {
-    if (!this.needLoop) {
-      return LoopStage.Middle
-    }
-    if (this.loopX) {
-      if (this.currentPage.pageX === 0) {
-        return LoopStage.Head
-      }
-      if (this.currentPage.pageX === this.pagesPos.xLen - 1) {
-        return LoopStage.Tail
-      }
-    }
-    if (this.loopY) {
-      if (this.currentPage.pageY === 0) {
-        return LoopStage.Head
-      }
-      if (this.currentPage.pageY === this.pagesPos.yLen - 1) {
-        return LoopStage.Tail
-      }
-    }
-    return LoopStage.Middle
-  }
-  resetLoopPage(): { pageX: number; pageY: number } | undefined {
+
+  resetLoopPage(): PageIndex | undefined {
     if (this.loopX) {
       if (this.currentPage.pageX === 0) {
         return {
-          pageX: this.pagesPos.xLen - 2,
-          pageY: this.currentPage.pageY
+          pageX: this.pagesMatrix.pageLengthOfX - 2,
+          pageY: this.currentPage.pageY,
         }
       }
-      if (this.currentPage.pageX === this.pagesPos.xLen - 1) {
+      if (this.currentPage.pageX === this.pagesMatrix.pageLengthOfX - 1) {
         return {
           pageX: 1,
-          pageY: this.currentPage.pageY
+          pageY: this.currentPage.pageY,
         }
       }
     }
@@ -218,29 +208,19 @@ export default class SlidePages {
       if (this.currentPage.pageY === 0) {
         return {
           pageX: this.currentPage.pageX,
-          pageY: this.pagesPos.yLen - 2
+          pageY: this.pagesMatrix.pageLengthOfY - 2,
         }
       }
-      if (this.currentPage.pageY === this.pagesPos.yLen - 1) {
+      if (this.currentPage.pageY === this.pagesMatrix.pageLengthOfY - 1) {
         return {
           pageX: this.currentPage.pageX,
-          pageY: 1
+          pageY: 1,
         }
       }
     }
   }
-  isSameWithCurrent(page: Page): Boolean {
-    if (
-      page.pageX !== this.currentPage.pageX ||
-      page.pageY !== this.currentPage.pageY
-    ) {
-      return false
-    }
-    return true
-  }
-  private changedPageNum(
-    direction: Direction
-  ): { pageX: number; pageY: number } {
+
+  private getPageIndexByDirection(direction: Direction): PageIndex {
     let x = this.currentPage.pageX
     let y = this.currentPage.pageY
     if (this.slideX) {
@@ -251,15 +231,16 @@ export default class SlidePages {
     }
     return {
       pageX: x,
-      pageY: y
+      pageY: y,
     }
   }
+
   private checkSlideLoop() {
-    this.needLoop = this.slideOpt.loop!
-    if (this.pagesPos.xLen > 1) {
+    this.needLoop = this.slideOptions.loop
+    if (this.pagesMatrix.pageLengthOfX > 1) {
       this.slideX = true
     }
-    if (this.pagesPos.pages[0] && this.pagesPos.yLen > 1) {
+    if (this.pagesMatrix.pages[0] && this.pagesMatrix.pageLengthOfY > 1) {
       this.slideY = true
     }
     this.loopX = this.needLoop && this.slideX
