@@ -1,5 +1,5 @@
 <template>
-  <div class="core">
+  <div class="compose">
     <ul class="example-list">
       <li
         @click="goPage('/compose/pullup-pulldown')"
