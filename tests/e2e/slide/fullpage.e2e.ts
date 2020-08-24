@@ -17,18 +17,80 @@ describe('Slider for fullpage', () => {
     })
   })
 
-  it('should loop by default', async () => {
+  it('should not allow move to pre page when it is first page and loop is false', async () => {
     await page.waitFor(300)
 
-    // wait for slide autoplay
-    await page.waitFor(4000)
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: 110,
+      yDistance: 0,
+      gestureSourceType: 'touch',
+    })
+
+    await page.waitFor(200)
 
     const transformText = await page.$eval('.slide-banner-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const x = getTranslate(transformText, 'x')
 
-    expect(x).toBe(-750)
+    expect(x).toBe(0)
+  })
+
+  it('should not allow move to next page when it is last page and loop is false', async () => {
+    await page.waitFor(300)
+
+    // to second page
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: -110,
+      yDistance: 0,
+      gestureSourceType: 'touch',
+    })
+
+    await page.waitFor(1000)
+
+    // to third page
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: -110,
+      yDistance: 0,
+      gestureSourceType: 'touch',
+    })
+
+    await page.waitFor(1000)
+
+    // to last page
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: -110,
+      yDistance: 0,
+      gestureSourceType: 'touch',
+    })
+
+    await page.waitFor(1000)
+
+    // attempts to go next
+    await page.dispatchScroll({
+      x: 100,
+      y: 120,
+      xDistance: -110,
+      yDistance: 0,
+      gestureSourceType: 'touch',
+    })
+
+    await page.waitFor(1000)
+
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+
+    expect(x).toBe(-1125)
   })
 
   it('should work by dispatching touch events', async () => {
@@ -37,7 +99,7 @@ describe('Slider for fullpage', () => {
     await page.dispatchScroll({
       x: 100,
       y: 120,
-      xDistance: -70,
+      xDistance: -110,
       yDistance: 0,
       gestureSourceType: 'touch',
     })

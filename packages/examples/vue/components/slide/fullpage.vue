@@ -44,7 +44,9 @@
           scrollX: true,
           scrollY: false,
           slide: {
-            threshold: 100
+            threshold: 100,
+            loop: false,
+            autoplay: false
           },
           useTransition: true,
           momentum: false,

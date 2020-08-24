@@ -389,7 +389,7 @@ export default class Slide implements PluginAPI {
       this.thresholdX = threshold
       this.thresholdY = threshold
     } else {
-      // Digital
+      // decimal
       const { width, height } = this.pages.getPageStats()
       this.thresholdX = Math.round(width * threshold)
       this.thresholdY = Math.round(height * threshold)
@@ -500,12 +500,7 @@ export default class Slide implements PluginAPI {
     return this.scroll.options[scrollable]
   }
 
-  private goTo(
-    pageX: number,
-    pageY: number = 0,
-    time?: number,
-    easing?: EaseItem
-  ) {
+  private goTo(pageX: number, pageY: number, time?: number, easing?: EaseItem) {
     const newPage = this.pages.getInternalPage(pageX, pageY)
     if (!newPage) {
       return

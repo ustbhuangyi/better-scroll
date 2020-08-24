@@ -36,7 +36,7 @@ let wheel = bs.plugins.wheel // wheel 实例
 ```
 
 :::tip
-wheel options 是一个真值（Truthy）或者对象，否则插件功能失效，具体请参考[ wheel options](./wheel.html#wheel-options)。
+wheel options 是 true 或者对象，否则插件功能失效，具体请参考[ wheel options](./wheel.html#wheel-options)。
 :::
 
 ## 需知

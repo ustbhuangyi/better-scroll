@@ -2,7 +2,7 @@
 
 ## 介绍
 
-用于轮播和 swipe 效果。
+slide 为 BetterScroll 扩展了轮播焦点图的能力。
 
 ## 安装
 
@@ -16,7 +16,7 @@ yarn add @better-scroll/slide@next
 
 ## 使用
 
-你需要首先引入 slide 插件，并通过全局方法 `BScroll.use()` 使用
+你需要首先引入 slide 插件，并通过静态方法 `BScroll.use()` 使用
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -25,14 +25,13 @@ yarn add @better-scroll/slide@next
   BScroll.use(Slide)
 ```
 
-上面步骤完成后，BScroll 的 `options` 中传入 slide 相关的配置后便可使用 slide。
+上面步骤完成后，BScroll 的 `options` 中传入 slide 相关的配置。
 
 ```js
-  new BScroll('.bs-wrap', {
+  new BScroll('.bs-wrapper', {
     scrollX: true,
     scrollY: false,
     slide: {
-      loop: true,
       threshold: 100
     },
     momentum: false,
@@ -41,35 +40,66 @@ yarn add @better-scroll/slide@next
   })
 ```
 
-和 slide 相关的配置
+以下是 slide 插件专属以及[ BetterScroll 的配置](../guide/base-scroll-options.html)：
 
-- slide
+- **slide<插件专属>**
 
-  slide 相关的配置。需要设置 slide 的值为一个具体的对象，来开启 slide 效果。更多详细配置，请参考[slide 配置](./slide.html#配置)。
+  开启 slide 功能。若没有该项，则插件不会生效。该配置同时也是用来设置 slide 特性的相关配置，具体请参考[ slide 选项对象](./slide.html#slide-选项对象)。
 
-- scrollX
+- **scrollX**
 
-  当值为 true 时，设置 slide 的方向为 X 方向。
+  当值为 true 时，设置 slide 的方向为**横向**。
 
-- scrollY
+- **scrollY**
 
-  当值为 true 时，设置 slide 的方向为 Y 方向。 **注意: scrollX 和 scrollY 不能同时设置为 true**
+  当值为 true 时，设置 slide 的方向为**纵向**。 **注意: scrollX 和 scrollY 不能同时设置为 true**
 
-- momentum
+- **momentum**
 
   当使用 slide 时，这个值需要设置为 false，用来避免惯性动画带来的快速滚动时的闪烁的问题和快速滑动时一次滚动多页的问题。
 
-- bounce
+- **bounce**
 
-  当你设置了 slide.loop 为 true 时，bounce 值需要设置为 false，否则会在循环衔接的时候出现闪烁。
+  bounce 值需要设置为 false，否则会在循环衔接的时候出现闪烁。
 
-- probeType
+- **probeType**
 
-  如果你想通过监听 `slideWillChange` 事件，在用户拖动 slide 时，实时获取到 slide 的页面 index 的改变，需要设置 probeType 值为 2 或者 3
+  如果你想通过监听 `slideWillChange` 钩子，在用户拖动 slide 时，实时获取到 slide 的 PageIndex 的改变，需要设置 probeType 值为 2 或者 3。
+
+## 关于 slide 的术语
+
+一般情况下，BetterScroll 的 slide 的布局如下：
+
+```html
+<div class="slide-wrapper">
+  <div class="slide-content">
+    <div class="slide-item"><div>
+    <div class="slide-item"><div>
+    <div class="slide-item"><div>
+    <div class="slide-item"><div>
+  <div/>
+<div/>
+```
+
+- **slide-wrapper**
+
+  slide 容器。
+
+- **slide-content**
+
+  slide 滚动元素。
+
+- **slide-item**
+
+  slide 由多个 Page 组成。
+
+  ::: tip
+  在 loop 的场景下，slide-content 前后会多插入两个 Page，以便实现无缝衔接滚动的视觉效果。
+  :::
 
 ## 示例
 
-- 水平方向下的轮播图
+- **横向轮播**
 
   <demo qrcode-url="slide/banner">
     <template slot="code-template">
@@ -84,7 +114,7 @@ yarn add @better-scroll/slide@next
     <slide-banner slot="demo"></slide-banner>
   </demo>
 
-- 全屏的轮播
+- **全屏轮播**
 
   <demo qrcode-url="slide/fullpage">
     <template slot="code-template">
@@ -99,7 +129,7 @@ yarn add @better-scroll/slide@next
     <slide-fullpage slot="demo"></slide-fullpage>
   </demo>
 
-- 垂直方向 swipe
+- **纵向轮播**
 
   <demo qrcode-url="slide/vertical">
     <template slot="code-template">
@@ -115,7 +145,7 @@ yarn add @better-scroll/slide@next
   </demo>
 
   ::: tip
-  注意：当设置 `useTransition = true`时，在 iphone 手上会出现闪烁。你需要像上面 demo 中的代码一样，给 swipe 的每一个元素额外增加下面两个样式：
+  注意：当设置 `useTransition = true`时，可能在 iphone 某些系统上出现闪烁。你需要像上面 demo 中的代码一样，每个 `slide-item` 额外增加下面两个样式：
 
   ```css
   transform: translate3d(0,0,0)
@@ -123,22 +153,21 @@ yarn add @better-scroll/slide@next
   ```
   :::
 
-## 配置
+## slide 选项对象
 
 ### loop
 
-是否可以循环。但是当只有一个元素的时候，该设置不生效。
+- **类型**：`boolean`
+- **默认值**：`true`
 
-- 类型：boolean
-- 默认值：false
+是否可以循环。但是当只有一个元素的时候，该设置不生效。
 
 ### easing
 
-slider 切换时过度动画。
-
-- 类型：object
-- 默认值
-
+- **类型**：`EaseItem`
+  - `{ string } style`：用来设置过度动画的 `transition-timing-function` 值。
+  - `{ Function } fn`：当设置 `useTransition:false` 时，由 `easing.fn` 来确定动画曲线。
+- **默认值**：
 ```js
 {
   style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
@@ -148,132 +177,100 @@ slider 切换时过度动画。
 }
 ```
 
-- easing.style {string}: 用来设置过度动画的 `transition-timing-function` 值。
-- easing.fn {function}: 当设置 `useTransition:false` 时，由 `easing.fn` 来确定动画曲线。
+滚动的缓动效果配置。
 
 ### listenFlick
 
-当快速轻抚过 slider 区域时，会触发切换上一页/下一页。设置 listenFlick 为 false，可关闭该效果。
+- **类型**：`boolean`
+- **默认值**：`true`
 
-- 类型：boolean
-- 默认值：true
+当快速轻抚过 slide 区域时，会触发切换上一页/下一页。设置 listenFlick 为 false，可关闭该效果。
 
 ### threshold
 
-可滚动到下一个或上一个的阈值。
+切换下一个或上一个 Page 的阈值。
 
-- 类型：number
-- 默认值：0.1
+- **类型**：`number`
+- **默认值**：`0.1`
 
 :::tip
-当滑动的范围小于该阈值时，不会触发切换到下一个或上一个。
+当滚动距离小于该阈值时，不会触发切换到下一个或上一个。
 
-可以设置为小数，如0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideItemWidth * threshold` 或者 `slideItemHeight * threshold`。当该值为整数时，则阈值就是 threshold 本身的值。
+可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideItemWidth * threshold` 或者 `slideItemHeight * threshold`。当该值为整数时，则阈值就是 threshold。
 :::
 
-### stepX
+## 实例方法
 
-切换到下一个/上一个期间滚动过的像素距离。适用于 slider 方向为 X 轴，一般情况下你不需要设置该值，也不要轻易改变它的默认值。
+### next([time], [easing])
 
-- 类型：number
-- 默认值：slideItemWidth
+  - **参数**：
+    - `{ number } time<可选>`：动画时长，默认是 `options.speed`
+    - `{ EaseItem } easing<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
+    ```typescript
+    interface EaseItem {
+      style: string
+      fn(t: number): number
+    }
+    ```
 
+  - **返回值**：无
 
-### stepY
+  滚动到下一张。
 
-切换到下一个/上一个期间滚动过的像素距离。适用于 slider 方向为 Y 轴，一般情况下你不需要设置该值，也不要轻易改变它的默认值。
+### prev([time], [easing])
 
-- 类型：number
-- 默认值：slideItemHeight
+  - **参数**：
+    - `{ number } time<可选>`：动画时长，默认是 `options.speed`
+    - `{ EaseItem } easing<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
 
-### disableSetWidth
+  - **返回值**：无
 
-默认情况下，在水平方向 slider 时，会根据 slider 元素的的宽度设置其包裹元素的宽度，以使得 slider 效果正常。当你要自己设置 slider 包裹元素的宽度时，需要设置该值为 true，否则你的设置可能会不生效。
+  滚动到上一张。
 
-- 类型：boolean
-- 默认值：false
+### goToPage(pageX, pageY, [time], [easing])
 
-### disableSetHeight
+  - **参数**：
+    - `{ number } pageX`：横向滚动到对应索引的 Page，下标从 0 开始
+    - `{ number } pageY`：纵向滚动到对应索引的 Page，下标从 0 开始
+    - `{ number } time<可选>`：动画时长，默认是 `options.speed`
+    - `{ EaseItem } easing<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
 
-默认情况下，在垂直方向 slider 时，会根据 slider 包裹元素的的高度设置其内部元素的高度，以使得全屏的 slider 效果正常。当你要自己设置 slider 内部元素的高度时，需要设置该值为 true，否则你的设置可能会不生效。
+  - **返回值**：无
 
-- 类型：boolean
-- 默认值：false
-
-## 方法
-
-### next(time, easing)
-
-滚动到下一个页面
-
-**参数**
-
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|time|number|动画执行时间|
-|easing|Object|easing 缓动函数，参考`slide.easing`配置|
-
-**返回值**：无
-
-### prev(time, easing)
-
-滚动到上一个页面
-
-**参数**
-
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|time|number|动画执行时间|
-|easing|Object|easing 缓动函数，参考`slide.easing`配置|
-
-**返回值**：无
-
-### goToPage(x, y, time, easing)
-
-当我们做 slide 组件的时候，slide 通常会分成多个页面。调用此方法可以滚动到指定的页面。
-
-**参数**
-
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|x|number|x轴的页数|
-|y|number|Y轴的页数|
-|time|number|动画执行时间|
-|easing|Object|easing 缓动函数，参考`slide.easing`配置|
-
-**返回值**：无
+  滚动到指定的 Page 位置。
 
 ### getCurrentPage()
 
-获取当前页面的信息
+  - **参数**: 无
 
-**参数**: 无
+  - **返回值**: `page`
+  ```typescript
+  type Page = {
+    x: number,
+    y: number,
+    pageX: number, // 横向对应 Page 的索引，下标从 0 开始
+    pageY: number  // 纵向对应 Page 的索引，下标从 0 开始
+  }
+  const page:Page = BScroll.getCurrentPage()
+  ```
 
-**返回值**: Object。
+  获取当前页面的信息。
 
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|x|number|当前的偏移的 x 坐标值|
-|y|number|当前的偏移的 y 坐标值|
-|pageX|number| X 轴方向方向的页面 index 值(从 0 开始)|
-|pageY|number| Y 轴方向方向的页面 index 值(从 0 开始)|
-
-## 事件
+## 钩子
 
 ### slideWillChange
 
-- 参数: Object
+- **参数**：page 对象
+  - `{ number } x`：即将展示页面的 x 坐标值
+  - `{ number } y`：即将展示页面的 y 坐标值
+  - `{ number } pageX`：即将展示的横向页面的索引值，下标从 0 开始
+  - `{ number } pageY`：即将展示的纵向页面的索引值，下标从 0 开始
 
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|pageX|number|即将展示页面的 pageX|
-|pageY|number|即将展示页面的 pageY|
+- **触发时机**：slide 的 currentPage 值将要改变时
 
-- 触发时机：slide 的 currentPage 值将要改变时
+- **用法**：
 
-- 用法:
-
-在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“水平方向下的轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
+在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“横向轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
 
 <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
@@ -285,7 +282,6 @@ slider 切换时过度动画。
     scrollX: true,
     scrollY: false,
     slide: {
-      loop: true,
       threshold: 100
     },
     useTransition: true,
