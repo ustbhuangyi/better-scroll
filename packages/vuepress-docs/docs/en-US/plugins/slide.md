@@ -73,10 +73,10 @@ In general, the layout of BetterScroll's slide is as follows:
 ```html
 <div class="slide-wrapper">
   <div class="slide-content">
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
   <div/>
 <div/>
 ```
@@ -89,7 +89,7 @@ In general, the layout of BetterScroll's slide is as follows:
 
   slide scroll element.
 
-- **slide-item**
+- **slide-page**
 
   slide is composed of multiple Pages.
 
@@ -145,7 +145,7 @@ In general, the layout of BetterScroll's slide is as follows:
   </demo>
 
   ::: tip
-  Note: When setting `useTransition = true`, there may be flickering on some iPhone systems. You need to add the following two additional styles to each `slide-item` like the code in the above demo:
+  Note: When setting `useTransition = true`, there may be flickering on some iPhone systems. You need to add the following two additional styles to each `slide-page` like the code in the above demo:
 
   ```css
   transform: translate3d(0,0,0)
@@ -196,7 +196,7 @@ Switch the threshold of the next or previous Page.
 :::tip
 When the scrolling distance is less than the threshold, the switch to the next or previous one will not be triggered.
 
-It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slideItemWidth * threshold` or `slideItemHeight * threshold`. When the value is an integer, the threshold is threshold.
+It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slidePageWidth * threshold` or `slidePageHeight * threshold`. When the value is an integer, the threshold is threshold.
 :::
 
 ## Instance Methods
@@ -213,7 +213,7 @@ It can be set to a decimal, such as 0.1, or an integer, such as 100. When the va
     }
     ```
 
-  - **Returns**：none
+  - **Returns**: none
 
   Scroll to the next page.
 
@@ -223,7 +223,7 @@ It can be set to a decimal, such as 0.1, or an integer, such as 100. When the va
     - `{ number } time<Optional>`: Animation duration, default is `options.speed`
     - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
 
-  - **Returns**：none
+  - **Returns**: none
 
   Scroll to the previous page.
 
@@ -231,7 +231,7 @@ It can be set to a decimal, such as 0.1, or an integer, such as 100. When the va
 
   - **Arguments**:
     - `{ number } pageX`: Scroll horizontally to the Page of the corresponding index, the subscript starts from 0
-    - `{ number } pageY`：Scroll vertically to the Page of the corresponding index, the subscript starts from 0
+    - `{ number } pageY`: Scroll vertically to the Page of the corresponding index, the subscript starts from 0
     - `{ number } time<Optional>`: Animation duration, default is `options.speed`
     - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
 
@@ -255,6 +255,22 @@ It can be set to a decimal, such as 0.1, or an integer, such as 100. When the va
   ```
 
   Get currentPage.
+
+### startPlay()
+
+  - **Arguments**: none
+
+  - **Returns**: none
+
+  If the loop configuration is turned on, manually turn on autoplay.
+
+### pausePlay()
+
+  - **Arguments**: none
+
+  - **Returns**: none
+
+  If the loop configuration is turned on, manually turn off autoplay.
 
 ## Hooks
 

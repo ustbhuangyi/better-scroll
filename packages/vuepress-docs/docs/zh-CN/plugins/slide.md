@@ -73,10 +73,10 @@ yarn add @better-scroll/slide@next
 ```html
 <div class="slide-wrapper">
   <div class="slide-content">
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
-    <div class="slide-item"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
   <div/>
 <div/>
 ```
@@ -89,7 +89,7 @@ yarn add @better-scroll/slide@next
 
   slide 滚动元素。
 
-- **slide-item**
+- **slide-page**
 
   slide 由多个 Page 组成。
 
@@ -145,7 +145,7 @@ yarn add @better-scroll/slide@next
   </demo>
 
   ::: tip
-  注意：当设置 `useTransition = true`时，可能在 iphone 某些系统上出现闪烁。你需要像上面 demo 中的代码一样，每个 `slide-item` 额外增加下面两个样式：
+  注意：当设置 `useTransition = true`时，可能在 iphone 某些系统上出现闪烁。你需要像上面 demo 中的代码一样，每个 `slide-page` 额外增加下面两个样式：
 
   ```css
   transform: translate3d(0,0,0)
@@ -241,9 +241,9 @@ yarn add @better-scroll/slide@next
 
 ### getCurrentPage()
 
-  - **参数**: 无
+  - **参数**： 无
 
-  - **返回值**: `page`
+  - **返回值**： `page`
   ```typescript
   type Page = {
     x: number,
@@ -255,6 +255,22 @@ yarn add @better-scroll/slide@next
   ```
 
   获取当前页面的信息。
+
+### startPlay()
+
+  - **参数**：无
+
+  - **返回值**：无
+
+  如果开启了 loop 的配置，手动开启循环播放。
+
+### pausePlay()
+
+  - **参数**：无
+
+  - **返回值**：无
+
+  如果开启了 loop 的配置，手动关闭循环播放。
 
 ## 钩子
 
