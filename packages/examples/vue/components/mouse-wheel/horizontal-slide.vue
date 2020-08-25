@@ -3,10 +3,10 @@
     <div class="slide-container">
       <div class="slide-wrapper" ref="slide">
         <div class="slide-content">
-          <div class="slide-item page1">page 1</div>
-          <div class="slide-item page2">page 2</div>
-          <div class="slide-item page3">page 3</div>
-          <div class="slide-item page4">page 4</div>
+          <div class="slide-page page1">page 1</div>
+          <div class="slide-page page2">page 2</div>
+          <div class="slide-page page3">page 3</div>
+          <div class="slide-page page4">page 4</div>
         </div>
       </div>
       <div class="dots-wrapper">
@@ -80,7 +80,7 @@
     height 200px
     white-space nowrap
     font-size 0
-    .slide-item
+    .slide-page
       display inline-block
       height 200px
       width 100%

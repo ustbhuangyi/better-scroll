@@ -1,301 +1,202 @@
 import SlidePages from '../SlidePages'
+import PageMatrix from '../PagesMatrix'
 import BScroll from '@better-scroll/core'
-import { warn } from '@better-scroll/shared-utils/src/debug'
-jest.mock('@better-scroll/shared-utils/src/debug')
+import { ease } from '@better-scroll/shared-utils'
 
-import {
-  bscrollHorizon,
-  bscrollVertical,
-  bscrollHorizonVertical,
-} from './__utils__/bscroll'
+jest.mock('@better-scroll/core')
+jest.mock('../PagesMatrix')
 
-describe('slide test for SlidePage class', () => {
-  let slidePage: SlidePages
-  let bscrollH: BScroll
-  let bscrollV: BScroll
-  beforeAll(() => {
-    bscrollH = bscrollHorizon().partOfbscroll
-    bscrollV = bscrollVertical().partOfbscroll
+const createSlideElements = () => {
+  const wrapper = document.createElement('div')
+  const content = document.createElement('div')
+  for (let i = 0; i < 3; i++) {
+    content.appendChild(document.createElement('p'))
+  }
+  wrapper.appendChild(content)
+  return { wrapper }
+}
+
+describe('slide test for SlidePages class', () => {
+  let slidePages: SlidePages
+  let scroll: BScroll
+  const BASE_PAGE = {
+    pageX: 0,
+    pageY: 0,
+    x: 0,
+    y: 0,
+  }
+  const slideOptions = {
+    loop: true,
+    threshold: 0.1,
+    speed: 400,
+    easing: ease.bounce,
+    listenFlick: true,
+    autoplay: true,
+    interval: 3000,
+  }
+  beforeEach(() => {
+    const { wrapper } = createSlideElements()
+    scroll = new BScroll(wrapper, {})
+    slidePages = new SlidePages(scroll, slideOptions)
+    slidePages.init()
   })
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks()
   })
 
+  it('should has base current page', () => {
+    expect(slidePages.currentPage).toMatchObject(BASE_PAGE)
+  })
+
   it('should set loopX and loopY when new SlidePage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(slidePage.loopX).toBe(true)
-    expect(slidePage.loopY).toBeUndefined
-    slidePage = new SlidePages(bscrollV, { loop: true })
-    slidePage.init()
-    expect(slidePage.loopY).toBe(true)
-    expect(slidePage.loopX).toBeUndefined
-    slidePage = new SlidePages(bscrollHorizonVertical().partOfbscroll, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(warn).toHaveBeenCalledTimes(1)
+    expect(slidePages.loopX).toBe(true)
+    expect(slidePages.loopY).toBe(false)
   })
-  it('should get right return value for change2safePage function', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(slidePage.change2safePage(-1, 3)).toMatchObject({
-      pageX: 0,
-      pageY: 0,
-      x: 0,
-      y: 0,
-    })
-    expect(slidePage.change2safePage(3, 3)).toMatchObject({
+
+  it('should work well with setCurrentPage()', () => {
+    const currentPage = {
       pageX: 1,
       pageY: 0,
-      x: -300,
-      y: 0,
-    })
-    expect(slidePage.change2safePage(1, 0)).toMatchObject({
-      pageX: 1,
-      pageY: 0,
-      x: -300,
-      y: 0,
-    })
-    expect(slidePage.change2safePage(0, 1)).toMatchObject({
-      pageX: 0,
-      pageY: 0,
-      x: 0,
-      y: 0,
-    })
-    expect(slidePage.change2safePage(0, -1)).toMatchObject({
-      pageX: 0,
-      pageY: 0,
-      x: 0,
-      y: 0,
-    })
-  })
-  it('should get right return value for getRealPage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: false,
-    })
-    slidePage.init()
-    slidePage.currentPage = {
-      x: -300,
-      y: 0,
-      pageX: 2,
-      pageY: 0,
+      x: 200,
+      y: 200,
     }
-    expect(slidePage.getRealPage().pageX).toBe(2)
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    slidePage.currentPage = {
-      x: -300,
-      y: 0,
-      pageX: 2,
-      pageY: 0,
-    }
-    slidePage.pagesPos.xLen = 4
-    expect(slidePage.getRealPage().pageX).toBe(1)
-    slidePage = new SlidePages(bscrollV, {
-      loop: true,
-    })
-    slidePage.init()
-    slidePage
-    slidePage.currentPage = {
-      x: 0,
-      y: -300,
-      pageX: 0,
-      pageY: 2,
-    }
-    slidePage.pagesPos.yLen = 4
-    expect(slidePage.getRealPage().pageY).toBe(1)
+    slidePages.setCurrentPage(currentPage)
+    expect(slidePages.currentPage).toMatchObject(currentPage)
   })
-  it('should get right return value for nearestPage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(slidePage.nearestPage(-100, 0, 1, 0)).toMatchObject({
+
+  it('should work well with getInternalPage()', () => {
+    const page1 = slidePages.getInternalPage(1, 0)
+
+    expect(page1).toMatchObject({
       pageX: 1,
-      pageY: 0,
-      x: -300,
-      y: 0,
-    })
-    expect(slidePage.nearestPage(-100, 0, 0, 1)).toMatchObject({
-      pageX: 0,
       pageY: 0,
       x: 0,
       y: 0,
     })
-    expect(slidePage.nearestPage(-100, -100, 0, 1)).toMatchObject({
-      pageX: 0,
+
+    // exceed maxPageX
+    const page2 = slidePages.getInternalPage(4, 0)
+
+    expect(page2).toMatchObject({
+      pageX: 3,
       pageY: 0,
       x: 0,
       y: 0,
     })
-    expect(slidePage.nearestPage(-180, 0, 0, 0)).toMatchObject({
+
+    // exceed maxPageY
+    const page3 = slidePages.getInternalPage(1, 2)
+
+    expect(page3).toMatchObject({
       pageX: 1,
       pageY: 0,
-      x: -300,
+      x: 0,
       y: 0,
     })
-    expect(slidePage.nearestPage(-180, 0, -1, 0)).toMatchObject({
+  })
+
+  it('should work well with getInitialPage()', () => {
+    const page = slidePages.getInitialPage()
+
+    expect(page).toMatchObject({
       pageX: 1,
       pageY: 0,
-      x: -300,
+      x: 0,
       y: 0,
     })
-    expect(slidePage.nearestPage(-100, 0, -1, 0)).toMatchObject({
+  })
+
+  it('should work well with getExposedPage() when loop is true', () => {
+    slidePages.setCurrentPage({
+      x: 0,
+      y: 0,
+      pageX: 1,
+      pageY: 0,
+    })
+    const page = slidePages.getExposedPage()
+
+    expect(page).toMatchObject({
       pageX: 0,
       pageY: 0,
       x: 0,
       y: 0,
     })
   })
-  it('should get right return value for getLoopStage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
+
+  it('should work well with getWillChangedPage() when loop is true', () => {
+    const page = slidePages.getWillChangedPage({
+      pageX: 0,
+      pageY: 0,
+      x: 0,
+      y: 0,
     })
-    slidePage.init()
-    slidePage.pagesPos.xLen = 4
-    slidePage.pagesPos.yLen = 4
-    slidePage.currentPage.pageX = 0
-    expect(slidePage.getLoopStage()).toBe('head')
-    slidePage.currentPage.pageX = 1
-    expect(slidePage.getLoopStage()).toBe('middle')
-    slidePage.currentPage.pageX = 3
-    expect(slidePage.getLoopStage()).toBe('tail')
-    slidePage.loopX = false
-    slidePage.loopY = true
-    slidePage.currentPage.pageY = 0
-    expect(slidePage.getLoopStage()).toBe('head')
-    slidePage.currentPage.pageY = 1
-    expect(slidePage.getLoopStage()).toBe('middle')
-    slidePage.currentPage.pageY = 3
-    expect(slidePage.getLoopStage()).toBe('tail')
-    slidePage = new SlidePages(bscrollHorizon().partOfbscroll, {
-      loop: false,
+
+    expect(page).toMatchObject({
+      pageX: 1,
+      pageY: 0,
+      x: 0,
+      y: 0,
     })
-    slidePage.init()
-    expect(slidePage.getLoopStage()).toBe('middle')
   })
-  it('should get right return value resetLoopPage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
+
+  it('should work well with getPageStats()', () => {
+    const pageStats = slidePages.getPageStats()
+
+    expect(pageStats).toMatchObject({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      cx: 50,
+      cy: 50,
     })
-    slidePage.init()
-    slidePage.pagesPos.xLen = 4
-    expect(slidePage.resetLoopPage()).toMatchObject({
+  })
+
+  it('should work well with getValidPageIndex()', () => {
+    const pageIndex = slidePages.getValidPageIndex(1, 0)
+
+    expect(pageIndex).toMatchObject({
       pageX: 2,
       pageY: 0,
     })
-    slidePage.currentPage.pageX = 3
-    expect(slidePage.resetLoopPage()).toMatchObject({
+  })
+
+  it('should work well with nextPageIndex()', () => {
+    const pageIndex = slidePages.nextPageIndex()
+
+    expect(pageIndex).toMatchObject({
       pageX: 1,
       pageY: 0,
     })
-    slidePage.loopX = false
-    slidePage.loopY = true
-    slidePage.pagesPos.yLen = 4
-    slidePage.currentPage.pageY = 0
-    slidePage.currentPage.pageX = 0
-    expect(slidePage.resetLoopPage()).toMatchObject({
-      pageX: 0,
-      pageY: 2,
-    })
-    slidePage.currentPage.pageY = 3
-    expect(slidePage.resetLoopPage()).toMatchObject({
-      pageX: 0,
-      pageY: 1,
-    })
-    slidePage.loopX = false
-    slidePage.loopY = false
-    expect(slidePage.resetLoopPage()).toBeUndefined()
   })
-  it('should get right return value realPage2Page', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    slidePage.loopY = true
-    slidePage.pagesPos.xLen = 4
-    slidePage.pagesPos.yLen = 4
-    expect(slidePage.realPage2Page(-1, -1)).toMatchObject({
-      realX: 1,
-      realY: 1,
-    })
-    expect(slidePage.realPage2Page(0, 0)).toMatchObject({
-      realX: 1,
-      realY: 1,
-    })
-    expect(slidePage.realPage2Page(1, 1)).toMatchObject({
-      realX: 2,
-      realY: 2,
-    })
-    expect(slidePage.realPage2Page(2, 2)).toMatchObject({
-      realX: 2,
-      realY: 2,
-    })
-    expect(slidePage.realPage2Page(3, 3)).toMatchObject({
-      realX: 2,
-      realY: 2,
-    })
-    slidePage.loopY = false
-    slidePage.loopX = false
-    expect(slidePage.realPage2Page(-1, -1)).toMatchObject({
-      realX: 0,
-      realY: 0,
-    })
-    expect(slidePage.realPage2Page(0, 0)).toMatchObject({
-      realX: 0,
-      realY: 0,
-    })
-    expect(slidePage.realPage2Page(3, 3)).toMatchObject({
-      realX: 3,
-      realY: 3,
-    })
-    expect(slidePage.realPage2Page(4, 4)).toMatchObject({
-      realX: 3,
-      realY: 3,
-    })
-    slidePage.pagesPos.pages = []
-    expect(slidePage.realPage2Page(0, 0)).toBeUndefined
-  })
-  it('should get right return value getPageSize', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(slidePage.getPageSize()).toMatchObject({
-      width: 300,
-      height: 300,
-    })
-  })
-  it('should get right return value nextPage', () => {
-    slidePage = new SlidePages(bscrollH, {
-      loop: true,
-    })
-    slidePage.init()
-    expect(slidePage.nextPage()).toMatchObject({
-      pageX: 1,
-      pageY: 0,
-    })
-    expect(slidePage.prevPage()).toMatchObject({
+
+  it('should work well with prevPageIndex()', () => {
+    const pageIndex = slidePages.prevPageIndex()
+
+    expect(pageIndex).toMatchObject({
       pageX: -1,
       pageY: 0,
     })
-    slidePage = new SlidePages(bscrollV, { loop: true })
-    slidePage.init()
-    expect(slidePage.nextPage()).toMatchObject({
-      pageX: 0,
-      pageY: 1,
+  })
+
+  it('should work well with nearestPage()', () => {
+    const pageIndex = slidePages.nearestPage(0, 0, 1, 1)
+
+    expect(pageIndex).toMatchObject({
+      pageX: 1,
+      pageY: 0,
+      x: 0,
+      y: 0,
     })
-    expect(slidePage.prevPage()).toMatchObject({
-      pageX: 0,
-      pageY: -1,
+  })
+
+  it('should work well with resetLoopPage()', () => {
+    const page = slidePages.resetLoopPage()
+
+    expect(page).toMatchObject({
+      pageX: 2,
+      pageY: 0,
     })
   })
 })

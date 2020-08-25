@@ -9,7 +9,6 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
   options = Object.assign(new OptionsConstructor(), options)
   const eventEmitter = new EventEmitter([
     // bscroll
-    'init',
     'refresh',
     'enable',
     'disable',
@@ -26,7 +25,6 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     wrapper: wrapper,
     options: options,
     hooks: new EventEmitter([
-      'init',
       'refresh',
       'enable',
       'disable',

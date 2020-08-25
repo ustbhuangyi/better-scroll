@@ -1,7 +1,8 @@
 import { between, extend, warn } from '@better-scroll/shared-utils'
 import BScroll from '@better-scroll/core'
-import { SlideConfig, BASE_PAGE } from './index'
+import { SlideConfig } from './index'
 import PagesMatrix, { PageStats } from './PagesMatrix'
+import { BASE_PAGE } from './constants'
 
 export interface PageIndex {
   pageX: number
@@ -22,8 +23,8 @@ const enum Direction {
 export default class SlidePages {
   loopX: boolean
   loopY: boolean
-  slideX: boolean
-  slideY: boolean
+  slideX: boolean = false
+  slideY: boolean = false
   needLoop: boolean
   pagesMatrix: PagesMatrix
   currentPage: Page
@@ -82,30 +83,52 @@ export default class SlidePages {
     }
   }
 
-  getExposedPage(page?: Page): Page {
-    const fixedPage = (page: number, realPageLen: number) => {
-      const pageIndex = []
-      for (let i = 0; i < realPageLen; i++) {
-        pageIndex.push(i)
-      }
-      pageIndex.unshift(realPageLen - 1)
-      pageIndex.push(0)
-      return pageIndex[page]
-    }
-    let exposedPage = page ? extend({}, page) : extend({}, this.currentPage)
+  getExposedPage(): Page {
+    let exposedPage = extend({}, this.currentPage)
+    // only pageX or pageY need fix
     if (this.loopX) {
-      exposedPage.pageX = fixedPage(
+      exposedPage.pageX = this.fixedPage(
         exposedPage.pageX,
         this.pagesMatrix.pageLengthOfX - 2
       )
     }
     if (this.loopY) {
-      exposedPage.pageY = fixedPage(
+      exposedPage.pageY = this.fixedPage(
         exposedPage.pageY,
         this.pagesMatrix.pageLengthOfY - 2
       )
     }
     return exposedPage
+  }
+
+  getWillChangedPage(page: Page): Page {
+    page = extend({}, page)
+    // Page need fix
+    if (this.loopX) {
+      page.pageX = this.fixedPage(
+        page.pageX,
+        this.pagesMatrix.pageLengthOfX - 2
+      )
+      page.x = this.pagesMatrix.getPageStats(page.pageX + 1, 0).x
+    }
+    if (this.loopY) {
+      page.pageY = this.fixedPage(
+        page.pageY,
+        this.pagesMatrix.pageLengthOfY - 2
+      )
+      page.y = this.pagesMatrix.getPageStats(0, page.pageY + 1).y
+    }
+    return page
+  }
+
+  private fixedPage(page: number, realPageLen: number): number {
+    const pageIndex = []
+    for (let i = 0; i < realPageLen; i++) {
+      pageIndex.push(i)
+    }
+    pageIndex.unshift(realPageLen - 1)
+    pageIndex.push(0)
+    return pageIndex[page]
   }
 
   getPageStats(): PageStats {
@@ -158,12 +181,7 @@ export default class SlidePages {
   ): Page {
     const pageIndex = this.pagesMatrix.getNearestPageIndex(x, y)
     if (!pageIndex) {
-      return {
-        x: 0,
-        y: 0,
-        pageX: 0,
-        pageY: 0,
-      }
+      return extend({}, BASE_PAGE)
     }
     let { pageX, pageY } = pageIndex
     let newX

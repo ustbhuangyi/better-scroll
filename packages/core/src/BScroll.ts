@@ -102,7 +102,6 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     this.plugins = {}
     this.options = new OptionsConstructor().merge(options).process()
     this.hooks = new EventEmitter([
-      'init',
       'refresh',
       'enable',
       'disable',

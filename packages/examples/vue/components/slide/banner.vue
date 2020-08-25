@@ -3,10 +3,10 @@
     <div class="banner-wrapper">
       <div class="slide-banner-wrapper" ref="slide">
         <div class="slide-banner-content">
-          <div class="slide-item page1">page 1</div>
-          <div class="slide-item page2">page 2</div>
-          <div class="slide-item page3">page 3</div>
-          <div class="slide-item page4">page 4</div>
+          <div class="slide-page page1">page 1</div>
+          <div class="slide-page page2">page 2</div>
+          <div class="slide-page page3">page 3</div>
+          <div class="slide-page page4">page 4</div>
         </div>
       </div>
       <div class="dots-wrapper">
@@ -48,8 +48,8 @@
           scrollX: true,
           scrollY: false,
           slide: {
-            autoplay: true,
-            loop: true
+            autoplay: false,
+            loop: false,
           },
           useTransition: true,
           momentum: false,
@@ -60,9 +60,11 @@
         this.slide.on('scrollEnd', this._onScrollEnd)
 
         this.slide.on('slideWillChange', (page) => {
-          console.log(page)
           this.currentPageIndex = page.pageX
         })
+      },
+      _onScrollEnd () {
+        console.log(this.slide.getCurrentPage())
       },
       nextPage() {
         this.slide.next()
@@ -85,7 +87,7 @@
     height 200px
     white-space nowrap
     font-size 0
-    .slide-item
+    .slide-page
       display inline-block
       height 200px
       width 100%

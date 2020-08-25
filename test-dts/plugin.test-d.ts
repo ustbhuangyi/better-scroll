@@ -17,7 +17,7 @@ import {
   Movable,
   ZoomConfig,
   WheelConfig,
-  Config,
+  SlideConfig,
   MouseWheelOptions,
   scrollbarOptions,
   ScrollbarConfig,
@@ -143,19 +143,13 @@ describe('slider plugin options and api type shoule be inferred correctly', () =
     style: string
     fn: (t: number) => number
   }
-  expectType<Partial<Config>, FilterBoolean<BSOptions['slide']>>()
-  expectType<boolean, FilterType<BSOptions['slide'], Partial<Config>>>()
+  expectType<Partial<SlideConfig>, FilterBoolean<BSOptions['slide']>>()
+  expectType<boolean, FilterType<BSOptions['slide'], Partial<SlideConfig>>>()
   expectType<boolean, FilterUndef<FilterBoolean<BSOptions['slide']>['loop']>>()
-  expectType<
-    HTMLElement | string,
-    FilterUndef<FilterBoolean<BSOptions['slide']>['el']>
-  >()
   expectType<
     number,
     FilterUndef<FilterBoolean<BSOptions['slide']>['threshold']>
   >()
-  expectType<number, FilterUndef<FilterBoolean<BSOptions['slide']>['stepX']>>()
-  expectType<number, FilterUndef<FilterBoolean<BSOptions['slide']>['stepY']>>()
   expectType<number, FilterUndef<FilterBoolean<BSOptions['slide']>['speed']>>()
   expectType<
     EaseType,
@@ -164,14 +158,6 @@ describe('slider plugin options and api type shoule be inferred correctly', () =
   expectType<
     boolean,
     FilterUndef<FilterBoolean<BSOptions['slide']>['listenFlick']>
-  >()
-  expectType<
-    boolean,
-    FilterUndef<FilterBoolean<BSOptions['slide']>['disableSetWidth']>
-  >()
-  expectType<
-    boolean,
-    FilterUndef<FilterBoolean<BSOptions['slide']>['disableSetHeight']>
   >()
   // API
   type BS = typeof bscroll

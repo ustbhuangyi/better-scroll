@@ -3,10 +3,10 @@
     <div class="banner-wrapper">
       <div class="slide-banner-wrapper" ref="slide">
         <div class="slide-banner-content">
-          <div class="slide-item page1">page 1</div>
-          <div class="slide-item page2">page 2</div>
-          <div class="slide-item page3">page 3</div>
-          <div class="slide-item page4">page 4</div>
+          <div class="slide-page page1">page 1</div>
+          <div class="slide-page page2">page 2</div>
+          <div class="slide-page page3">page 3</div>
+          <div class="slide-page page4">page 4</div>
         </div>
       </div>
       <div class="docs-wrapper">
@@ -85,7 +85,7 @@
     height 100%
     white-space nowrap
     font-size 0
-    .slide-item
+    .slide-page
       display inline-block
       height 100%
       width 100%

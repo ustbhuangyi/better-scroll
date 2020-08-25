@@ -10,8 +10,9 @@ import {
   EventEmitter,
   removeSizeStyle,
 } from '@better-scroll/shared-utils'
-import SlidePages, { PageIndex, Page, Position } from './SlidePages'
+import SlidePages, { Page, Position } from './SlidePages'
 import propertiesConfig from './propertiesConfig'
+import { BASE_PAGE } from './constants'
 
 export interface SlideConfig {
   loop: boolean
@@ -43,22 +44,15 @@ interface PluginAPI {
   getCurrentPage(): Page
 }
 
-export const BASE_PAGE = {
-  pageX: 0,
-  pageY: 0,
-  x: 0,
-  y: 0,
-}
-
 export const samePage = (p1: Page, p2: Page) => {
   return p1.pageX === p2.pageX && p1.pageY === p2.pageY
 }
 
 export default class Slide implements PluginAPI {
   static pluginName = 'slide'
-  private pages: SlidePages
+  pages: SlidePages
   private inited: boolean
-  private options: SlideConfig
+  options: SlideConfig
   private thresholdX: number
   private thresholdY: number
   private hooksFn: Array<[EventEmitter, string, Function]>
@@ -79,8 +73,6 @@ export default class Slide implements PluginAPI {
 
     this.handleLoop()
     this.handleHooks()
-
-    this.setSlideInlineStyle()
   }
 
   private createPage() {
@@ -112,8 +104,8 @@ export default class Slide implements PluginAPI {
     const { loop } = this.options
     const slideContent = this.scroll.scroller.content
     if (loop) {
-      const slideItems = slideContent.children
-      if (slideItems.length > 1) {
+      const slidePages = slideContent.children
+      if (slidePages.length > 1) {
         this.cloneFirstAndLastSlideItem(slideContent)
       }
     }
@@ -134,7 +126,7 @@ export default class Slide implements PluginAPI {
     this.registerHooks(
       this.scroll,
       this.scroll.eventTypes.scrollEnd,
-      this.amendCurrentPage
+      this.modifyCurrentPage
     )
     this.registerHooks(
       this.scroll,
@@ -219,7 +211,7 @@ export default class Slide implements PluginAPI {
     }
   }
 
-  private startPlay() {
+  startPlay() {
     const { interval, autoplay } = this.options
     if (autoplay) {
       clearTimeout(this.autoplayTimer)
@@ -229,7 +221,7 @@ export default class Slide implements PluginAPI {
     }
   }
 
-  private pausePlay() {
+  pausePlay() {
     if (this.options.autoplay) {
       clearTimeout(this.autoplayTimer)
     }
@@ -262,8 +254,8 @@ export default class Slide implements PluginAPI {
     if (this.shouldSetInlineSizeStyle(SIZE_TYPE)) {
       const children = slideContent.children
       for (let i = 0; i < children.length; i++) {
-        const slideItemDom = children[i] as HTMLElement
-        removeSizeStyle(slideItemDom, SIZE_TYPE)
+        const slidePageDOM = children[i] as HTMLElement
+        removeSizeStyle(slidePageDOM, SIZE_TYPE)
       }
       removeSizeStyle(slideContent, SIZE_TYPE)
     }
@@ -274,8 +266,8 @@ export default class Slide implements PluginAPI {
     if (this.shouldSetInlineSizeStyle(SIZE_TYPE)) {
       const children = slideContent.children
       for (let i = 0; i < children.length; i++) {
-        const slideItemDom = children[i] as HTMLElement
-        removeSizeStyle(slideItemDom, SIZE_TYPE)
+        const slidePageDOM = children[i] as HTMLElement
+        removeSizeStyle(slidePageDOM, SIZE_TYPE)
       }
       removeSizeStyle(slideContent, SIZE_TYPE)
     }
@@ -339,13 +331,13 @@ export default class Slide implements PluginAPI {
     const slideContent = this.scroll.scroller.content
     const { loop, autoplay } = this.options
     if (loop) {
-      let slideItems = slideContent.children
-      if (slideItems.length > 2) {
+      let slidePages = slideContent.children
+      if (slidePages.length > 2) {
         removeChild(
           slideContent,
-          <HTMLElement>slideItems[slideItems.length - 1]
+          <HTMLElement>slidePages[slidePages.length - 1]
         )
-        removeChild(slideContent, <HTMLElement>slideItems[0])
+        removeChild(slideContent, <HTMLElement>slidePages[0])
       }
     }
     if (autoplay) {
@@ -362,6 +354,7 @@ export default class Slide implements PluginAPI {
     this.hooksFn.length = 0
   }
   private initSlideState() {
+    this.setSlideInlineStyle()
     this.pages.init()
     this.computeThreshold()
     const initPage = this.pages.getInitialPage()
@@ -403,7 +396,7 @@ export default class Slide implements PluginAPI {
     )
     slideContent.appendChild(children[1].cloneNode(true))
   }
-  private amendCurrentPage() {
+  private modifyCurrentPage() {
     this.isTouching = false
     if (!this.options.loop) {
       return
@@ -413,7 +406,9 @@ export default class Slide implements PluginAPI {
       this.resetLooping = false
       return
     }
-    // fix bug: scroll two page or even more page at once and fetch the boundary.
+
+    // TODO:
+    // fix bug: scroll two page or even more page at once and fetch the boundary in pc
     // In this case, momentum won't be trigger, so the pageIndex will be wrong and won't be trigger reset.
     let atTheBoundary = false
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
@@ -466,12 +461,12 @@ export default class Slide implements PluginAPI {
     if (this.shouldSetInlineSizeStyle('width')) {
       const children = slideContent.children
       const lenth = children.length
-      const slideItemWidth = children[0].clientWidth
+      const slidePageWidth = children[0].clientWidth
       for (let i = 0; i < lenth; i++) {
-        const slideItemDom = children[i] as HTMLElement
-        slideItemDom.style.width = slideItemWidth + 'px'
+        const slidePageDOM = children[i] as HTMLElement
+        slidePageDOM.style.width = slidePageWidth + 'px'
       }
-      slideContent.style.width = slideItemWidth * lenth + 'px'
+      slideContent.style.width = slidePageWidth * lenth + 'px'
     }
   }
 
@@ -484,8 +479,8 @@ export default class Slide implements PluginAPI {
       const children = slideContent.children
       const lenth = children.length
       for (let i = 0; i < lenth; i++) {
-        const slideItemDom = children[i] as HTMLElement
-        slideItemDom.style.height = wrapperHeight + 'px'
+        const slidePageDOM = children[i] as HTMLElement
+        slidePageDOM.style.height = wrapperHeight + 'px'
       }
       slideContent.style.height = wrapperHeight * lenth + 'px'
     }
@@ -574,7 +569,7 @@ export default class Slide implements PluginAPI {
     }
   }
   private pageWillChangeTo(newPage: Page) {
-    const changeToPage = this.pages.getExposedPage(newPage)
+    const changeToPage = this.pages.getWillChangedPage(newPage)
     if (!samePage(this.willChangeToPage, changeToPage)) {
       this.willChangeToPage = changeToPage
       this.scroll.trigger(
