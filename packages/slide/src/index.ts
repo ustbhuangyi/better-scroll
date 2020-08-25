@@ -46,7 +46,7 @@ interface PluginAPI {
   pausePlay(): void
 }
 
-export const samePage = (p1: Page, p2: Page) => {
+const samePage = (p1: Page, p2: Page) => {
   return p1.pageX === p2.pageX && p1.pageY === p2.pageY
 }
 
