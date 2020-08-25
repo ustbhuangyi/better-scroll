@@ -112,7 +112,7 @@ describe('MouseWheel plugin', () => {
       })
 
       const x = getTranslate(transformText, 'x')
-      await expect(x).toBe(-660)
+      await expect(x).toBe(-670)
     })
   })
 
@@ -130,7 +130,7 @@ describe('MouseWheel plugin', () => {
         deltaY: 10000,
       })
 
-      await page.waitFor(3000)
+      await page.waitFor(2000)
 
       const transformText = await page.$eval('.pullup-content', (node) => {
         return window.getComputedStyle(node).transform

@@ -9,9 +9,9 @@
           <div class="slide-page page4">page 4</div>
         </div>
       </div>
-      <div class="docs-wrapper">
+      <div class="dots-wrapper">
         <span
-          class="doc"
+          class="dot"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
@@ -102,12 +102,12 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .docs-wrapper
+  .dots-wrapper
     position absolute
     bottom 4px
     left 50%
     transform translateX(-50%)
-    .doc
+    .dot
       display inline-block
       margin 0 4px
       width 8px

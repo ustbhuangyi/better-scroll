@@ -73,7 +73,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .pullup
   height: 100%
   .pullup-wrapper

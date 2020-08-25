@@ -138,7 +138,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .pullup-down
   height 100%
 

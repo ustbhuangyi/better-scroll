@@ -47,10 +47,7 @@
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: {
-            autoplay: false,
-            loop: false,
-          },
+          slide: true,
           useTransition: true,
           momentum: false,
           bounce: false,

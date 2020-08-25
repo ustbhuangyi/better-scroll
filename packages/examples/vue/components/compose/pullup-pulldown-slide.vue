@@ -29,7 +29,7 @@
           :class="{['page' + idx % 4 ]: true}"
           v-for="(item, idx) of dataList"
         >{{ `Page ${idx} ` }}</div>
-        
+
       </div>
     </div>
     <!-- pollup -->
@@ -160,7 +160,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .pullup-down-slide-wrapper
   height 100%
   overflow hidden

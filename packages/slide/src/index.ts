@@ -42,6 +42,8 @@ interface PluginAPI {
   prev(time?: number, easing?: EaseItem): void
   goToPage(x: number, y: number, time?: number, easing?: EaseItem): void
   getCurrentPage(): Page
+  startPlay(): void
+  pausePlay(): void
 }
 
 export const samePage = (p1: Page, p2: Page) => {
@@ -73,6 +75,8 @@ export default class Slide implements PluginAPI {
 
     this.handleLoop()
     this.handleHooks()
+
+    this.setSlideInlineStyle()
   }
 
   private createPage() {
@@ -354,7 +358,6 @@ export default class Slide implements PluginAPI {
     this.hooksFn.length = 0
   }
   private initSlideState() {
-    this.setSlideInlineStyle()
     this.pages.init()
     this.computeThreshold()
     const initPage = this.pages.getInitialPage()
