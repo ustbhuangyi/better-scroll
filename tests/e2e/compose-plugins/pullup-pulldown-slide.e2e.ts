@@ -60,7 +60,7 @@ describe('Compose/pullup-pulldown-slide', () => {
     )
     const y = getTranslate(transformText, 'y')
 
-    expect(y).toBe(-770)
+    expect(y).toBe(-627)
   })
   it('should trigger pullingup when BS reached the bottom', async () => {
     await page.waitFor(1000)
@@ -80,7 +80,7 @@ describe('Compose/pullup-pulldown-slide', () => {
       x: 100,
       y: 200,
       xDistance: 0,
-      yDistance: -20,
+      yDistance: -100,
       gestureSourceType: 'touch',
     })
 

@@ -92,7 +92,8 @@ export default {
           bottom: false
         },
         slide: {
-          loop: true
+          loop: true,
+          autoplay: false
         }
       })
     }

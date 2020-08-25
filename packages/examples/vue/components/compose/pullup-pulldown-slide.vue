@@ -1,5 +1,5 @@
 <template>
-  <div class="pullup-down-slide">
+  <div class="pullup-down-slide-wrapper">
     <!-- pulldown -->
     <div
       class="pulldown-wrapper"
@@ -29,15 +29,16 @@
           :class="{['page' + idx % 4 ]: true}"
           v-for="(item, idx) of dataList"
         >{{ `Page ${idx} ` }}</div>
-        <!-- pollup -->
-        <div class="pullup-wrapper">
-          <div v-show="!isPullingUp">
-            <span>Pull Up and load</span>
-          </div>
-          <div v-show="isPullingUp">
-            <span>Loading...</span>
-          </div>
-        </div>
+        
+      </div>
+    </div>
+    <!-- pollup -->
+    <div class="pullup-wrapper">
+      <div v-show="!isPullingUp">
+        <span>Pull Up and load</span>
+      </div>
+      <div v-show="isPullingUp">
+        <span>Loading...</span>
       </div>
     </div>
   </div>
@@ -55,8 +56,8 @@ BScroll.use(Slide)
 
 const BASE = 10
 const TIME_BOUNCE = 700
-const REQUEST_TIME = 3000
-const THRESHOLD = 70
+const REQUEST_TIME = 300
+const THRESHOLD = 20
 const STOP = 56
 
 export default {
@@ -86,12 +87,14 @@ export default {
         },
         // pullUp options
         pullUpLoad: {
-          threshold: THRESHOLD
+          threshold: -THRESHOLD
         },
         // slide options
         slide: {
-          threshold: 100,
-          disableSetHeight: true
+          threshold: 5,
+          disableSetHeight: true,
+          autoplay: false,
+          loop: false
         }
       })
       // listening evnets
@@ -101,7 +104,6 @@ export default {
     },
     // scroll event handler
     scrollHandler(pos) {
-      console.log(pos.y)
       if (pos.y >= 0) {
         const pullDownEle = this.$refs.pulldown
         const { height: pulldownH } = getComputedStyle(pullDownEle, null)
@@ -123,11 +125,13 @@ export default {
     },
     // pullingUp event handler
     async pullingUpHandler() {
+      // debugger
       this.isPullingUp = true
       await this.requestData('load')
       this.isPullingUp = false
       this.$nextTick(() => {
         this.bscroll.finishPullUp()
+        // debugger
         this.bscroll.refresh()
       })
     },
@@ -157,29 +161,28 @@ export default {
 </script>
 
 <style lang="stylus">
-.pullup-down-slide
+.pullup-down-slide-wrapper
   height 100%
+  overflow hidden
 
 .pullup-pulldown-slide-bswrapper
   position relative
-  height 770px
-  border 1px solid #ccc
+  height 100%
   overflow hidden
 
 .pullup-down-list
   padding 0
 
 .pullup-pulldown-slide-item
-  height 770px
-  padding 10px 0
   list-style none
-  border-bottom 1px solid #ccc
+  // border-bottom 1px solid #ccc
   width 100%
   line-height 200px
   text-align center
   font-size 26px
   transform translate3d(0,0,0)
   backface-visibility hidden
+  box-sizing: border-box
 
 .pulldown-wrapper
   position absolute
@@ -191,6 +194,7 @@ export default {
   color #999
 
 .pullup-wrapper
+  height 40px !important
   padding 20px
   text-align center
   color #999
