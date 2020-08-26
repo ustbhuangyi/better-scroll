@@ -106,13 +106,14 @@ describe('MouseWheel plugin', () => {
         deltaY: 200,
       })
 
-      await page.waitFor(3000)
+      await page.waitFor(1000)
       const transformText = await page.$eval('.slide-content', (node) => {
         return window.getComputedStyle(node).transform
       })
 
       const x = getTranslate(transformText, 'x')
-      await expect(x).toBe(-670)
+
+      await expect(x).toBeLessThan(-600)
     })
   })
 

@@ -7,16 +7,16 @@ wheel 插件，是实现类似 IOS Picker 组件的基石。
 ## 安装
 
 ```bash
-npm install @better-scroll/wheel@next --save
+npm install @better-scroll/wheel --save
 
 // or
 
-yarn add @better-scroll/wheel@next
+yarn add @better-scroll/wheel
 ```
 
 ## 使用
 
-首先引入 wheel 插件，并通过静态方法 `BScroll.use()` 扩展 BetterScroll 的能力。
+首先引入 wheel 插件，并通过静态方法 `BScroll.use()` 注册插件。
 
 ```js
 import BScroll from '@better-scroll/core'
@@ -25,23 +25,21 @@ import Wheel from '@better-scroll/wheel'
 BScroll.use(Wheel)
 ```
 
-只要传入以下的配置，bs 就扩展了 wheel 的能力。
+接着在 `options` 传入正确的配置
 
 ```js
-let bs = new BScroll('.bs-wrap', {
+let bs = new BScroll('.bs-wrapper', {
   wheel: true // wheel options 为 true
 })
-
-let wheel = bs.plugins.wheel // wheel 实例
 ```
 
 :::tip
-wheel options 是 true 或者对象，否则插件功能失效，具体请参考[ wheel options](./wheel.html#wheel-options)。
+wheel options 是 true 或者对象，否则插件功能失效，具体请参考[ wheel options](./wheel.html#wheel-选项对象)。
 :::
 
-## 需知
-
-BetterScroll 结合 Wheel 插件只是实现 Picker 效果的 JS 逻辑部分，还有 DOM 模版是需要用户去实现，所幸，对于大多数的 Picker 场景，我们给出了相对应的示例。
+::: danger 须知
+BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，还有 DOM 模版是需要用户去实现，所幸，对于大多数的 Picker 场景，我们给出了相对应的示例。
+:::
 
 - **基本使用**
 
@@ -58,7 +56,7 @@ BetterScroll 结合 Wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
     <picker-one-column slot="demo"></picker-one-column>
   </demo>
 
-  单列 Picker 是一个比较常见的效果。你可以通过 `selectedIndex` 来配置初始化选中对应索引的 item，`wheelDisabledItemClass` 配置想要禁用的 item 项来模拟 Web Select 标签 disable
+  单列 Picker 是一个比较常见的效果。你可以通过 `selectedIndex` 来配置初始化时选中对应索引的 item，`wheelDisabledItemClass` 配置想要禁用的 item 项来模拟 Web Select 标签 disable 的效果。
 
 - **多项选择器**
 
@@ -94,34 +92,63 @@ BetterScroll 结合 Wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
   城市联动 Picker 的效果，必须通过 JS 部分逻辑将不同 BetterScroll 的实例联系起来，不管是省市，还是省市区的联动，亦是如此。
 
-## wheel options
+## wheel 选项对象
 
-|名称|类型|描述|默认值|
-|----------|:-----:|:-----------|:--------:|
-|selectedIndex|number|初始化选中第几项|0|
-|rotate|number|运用在 wheel item 上的 transform: rotate 样式|25|
-|adjustTime|number|点击时矫正至正确索引项的时间|400|
-|wheelWrapperClass|string|容器的样式|'wheel-scroll'|
-|wheelItemClass|string|容器子元素 item 的样式|'wheel-item'|
-|wheelDisabledItemClass|string|容器禁用子元素 item 的样式|'wheel-disabled-item'|
+### selectedIndex
 
-## API
+  - **类型**：`number`
+  - **默认值**：`0`
+
+  实例化 Wheel，默认选中第 selectedIndex 项，索引从 0 开始。
+
+### rotate
+
+  - **类型**：`number`
+  - **默认值**：`25`
+
+  当滚动 wheel 时，wheel item 的弯曲程度。
+
+### adjustTime
+
+  - **类型**：`number`
+  - **默认值**：`400`(ms)
+
+  当点击某一项的时候，滚动过去的动画时长。
+
+### wheelWrapperClass
+
+  - **类型**：`string`
+  - **默认值**：`wheel-scroll`
+
+  滚动元素的 className，这里的「滚动元素」 指的就是 BetterScroll 的 content 元素。
+
+### wheelItemClass
+
+  - **类型**：`string`
+  - **默认值**：`wheel-item`
+
+  滚动元素的子元素的样式。
+
+### wheelDisabledItemClass
+
+  - **类型**：`string`
+  - **默认值**：`wheel-disabled-item`
+
+  滚动元素中想要禁用的子元素，类似于 `select` 元素中禁用的 `option` 效果。wheel 插件的内部根据 `wheelDisabledItemClass` 配置来判断是否将该项指定为 disabled 状态。
+
+## 实例方法
 
 ### getSelectedIndex()
 
-获取当前选中项的索引
+  - **返回值**：当前选中项的 index，下标从 0 开始
 
-**返回值**：当前选中项的索引
+  获取当前选中项的索引。
 
-### wheelTo(index = 0, time = 0, ease?: EaseItem, isSilent?: boolean)
+### wheelTo(index = 0, time = 0, [ease])
 
-滚动至对应索引的 item
+  - **参数**：
+    - `{ number } index`：选项索引
+    - `{ number } time`：动画时长
+    - `{ number } ease<可选>`：动画时长。缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
 
-**参数**
-
-|名称|类型|描述|
-|----------|:-----:|:-----------|
-|index|number|索引（下标从 0 开始）|
-|time|number|动画的时长，单位为毫秒|
-|ease|?:EaseItem|缓存函数，可在 `packages/shared-utils/src/ease` 查看，一般可不传|
-|isSilent|?:boolean|一般为 false，如果为 true，那么在 time 为 0 的时候，是不会派发 scroll 和 scrollEnd 钩子|
+  滚动至对应索引的列表项。

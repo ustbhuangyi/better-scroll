@@ -7,11 +7,11 @@ Add move functionality for BetterScroll.
 ## Install
 
 ```bash
-npm install @better-scroll/movable@next --save
+npm install @better-scroll/movable --save
 
 // or
 
-yarn add @better-scroll/movable@next
+yarn add @better-scroll/movable
 ```
 
 ## Basic Usage

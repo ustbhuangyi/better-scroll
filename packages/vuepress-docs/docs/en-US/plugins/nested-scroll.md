@@ -11,11 +11,11 @@ Currently, the plugin only solves the problem of double nesting, such as ** vert
 ## Installation
 
 ```bash
-npm install @better-scroll/nested-scroll@next --save
+npm install @better-scroll/nested-scroll --save
 
 // or
 
-yarn add @better-scroll/nested-scroll@next
+yarn add @better-scroll/nested-scroll
 ```
 
 ## Usage

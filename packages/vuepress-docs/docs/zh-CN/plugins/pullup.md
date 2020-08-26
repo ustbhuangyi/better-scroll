@@ -7,11 +7,11 @@ pullup 插件为 BetterScroll 扩展上拉加载的能力。
 ## 安装
 
 ```bash
-npm install @better-scroll/pull-up@next --save
+npm install @better-scroll/pull-up --save
 
 // or
 
-yarn add @better-scroll/pull-up@next
+yarn add @better-scroll/pull-up
 ```
 
 ## 使用

@@ -7,11 +7,11 @@ slide 为 BetterScroll 扩展了轮播焦点图的能力。
 ## 安装
 
 ```bash
-npm install @better-scroll/slide@next --save
+npm install @better-scroll/slide --save
 
 // or
 
-yarn add @better-scroll/slide@next
+yarn add @better-scroll/slide
 ```
 
 ## 使用
@@ -157,46 +157,67 @@ yarn add @better-scroll/slide@next
 
 ### loop
 
-- **类型**：`boolean`
-- **默认值**：`true`
+  - **类型**：`boolean`
+  - **默认值**：`true`
 
-是否可以循环。但是当只有一个元素的时候，该设置不生效。
+  是否可以循环。但是当只有一个元素的时候，该设置不生效。
+
+### autoplay
+
+  - **类型**：`boolean`
+  - **默认值**：`true`
+
+  是否开启自动播放。
+
+### interval
+
+  - **类型**：`number`
+  - **默认值**：`3000`
+
+  距离下一次播放的间隔。
+
+### speed
+
+  - **类型**：`number`
+  - **默认值**：`400`
+
+  切换 Page 动画的默认时长。
 
 ### easing
 
-- **类型**：`EaseItem`
-  - `{ string } style`：用来设置过度动画的 `transition-timing-function` 值。
-  - `{ Function } fn`：当设置 `useTransition:false` 时，由 `easing.fn` 来确定动画曲线。
-- **默认值**：
-```js
-{
-  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
-  fn: function(t: number) {
-    return 1 - --t * t * t * t
+  - **类型**：`EaseItem`
+    - `{ string } style`：用来设置过度动画的 `transition-timing-function` 值。
+    - `{ Function } fn`：当设置 `useTransition:false` 时，由 `easing.fn` 来确定动画曲线。
+  - **默认值**：
+  ```js
+  {
+    style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    fn: function(t: number) {
+      return 1 - --t * t * t * t
+    }
   }
-}
-```
+  ```
 
-滚动的缓动效果配置。
+  滚动的缓动效果配置。
 
 ### listenFlick
 
-- **类型**：`boolean`
-- **默认值**：`true`
+  - **类型**：`boolean`
+  - **默认值**：`true`
 
-当快速轻抚过 slide 区域时，会触发切换上一页/下一页。设置 listenFlick 为 false，可关闭该效果。
+  当快速轻抚过 slide 区域时，会触发切换上一页/下一页。设置 listenFlick 为 false，可关闭该效果。
 
 ### threshold
 
-切换下一个或上一个 Page 的阈值。
+  - **类型**：`number`
+  - **默认值**：`0.1`
 
-- **类型**：`number`
-- **默认值**：`0.1`
+  切换下一个或上一个 Page 的阈值。
 
 :::tip
 当滚动距离小于该阈值时，不会触发切换到下一个或上一个。
 
-可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideItemWidth * threshold` 或者 `slideItemHeight * threshold`。当该值为整数时，则阈值就是 threshold。
+可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideWrapperWidth * threshold` 或者 `slideWrapperHeight * threshold`。当该值为整数时，则阈值就是 threshold。
 :::
 
 ## 实例方法
@@ -276,38 +297,38 @@ yarn add @better-scroll/slide@next
 
 ### slideWillChange
 
-- **参数**：page 对象
-  - `{ number } x`：即将展示页面的 x 坐标值
-  - `{ number } y`：即将展示页面的 y 坐标值
-  - `{ number } pageX`：即将展示的横向页面的索引值，下标从 0 开始
-  - `{ number } pageY`：即将展示的纵向页面的索引值，下标从 0 开始
+  - **参数**：page 对象
+    - `{ number } x`：即将展示页面的 x 坐标值
+    - `{ number } y`：即将展示页面的 y 坐标值
+    - `{ number } pageX`：即将展示的横向页面的索引值，下标从 0 开始
+    - `{ number } pageY`：即将展示的纵向页面的索引值，下标从 0 开始
 
-- **触发时机**：slide 的 currentPage 值将要改变时
+  - **触发时机**：slide 的 currentPage 值将要改变时
 
-- **用法**：
+  - **用法**：
 
-在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“横向轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
+  在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“横向轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
 
-<img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
+  <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
-通过监听 `slideWillChange` 事件，可以实现该效果。代码如下：
+  通过监听 `slideWillChange` 事件，可以实现该效果。代码如下：
 
-```js
-  let currentPageIndex // 控制当前页面
-  const slide = new BScroll(this.$refs.slide, {
-    scrollX: true,
-    scrollY: false,
-    slide: {
-      threshold: 100
-    },
-    useTransition: true,
-    momentum: false,
-    bounce: false,
-    stopPropagation: true,
-    probeType: 2
-  })
-  slide.on('slideWillChange', (page) => {
-    currentPageIndex = page.pageX
-  })
-```
+  ```js
+    let currentPageIndex // 控制当前页面
+    const slide = new BScroll(this.$refs.slide, {
+      scrollX: true,
+      scrollY: false,
+      slide: {
+        threshold: 100
+      },
+      useTransition: true,
+      momentum: false,
+      bounce: false,
+      stopPropagation: true,
+      probeType: 2
+    })
+    slide.on('slideWillChange', (page) => {
+      currentPageIndex = page.pageX
+    })
+  ```
 

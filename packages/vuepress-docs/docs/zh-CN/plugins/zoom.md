@@ -7,11 +7,11 @@ zoom 插件为 BetterScroll 提供缩放功能。
 ## 安装
 
 ```bash
-npm install @better-scroll/zoom@next --save
+npm install @better-scroll/zoom --save
 
 // or
 
-yarn add @better-scroll/zoom@next
+yarn add @better-scroll/zoom
 ```
 
 ## 使用

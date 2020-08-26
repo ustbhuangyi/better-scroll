@@ -7,11 +7,11 @@ slide expands the ability of carousel for BetterScroll.
 ## 安装
 
 ```bash
-npm install @better-scroll/slide@next --save
+npm install @better-scroll/slide --save
 
 // or
 
-yarn add @better-scroll/slide@next
+yarn add @better-scroll/slide
 ```
 
 ## Usage
@@ -157,47 +157,68 @@ In general, the layout of BetterScroll's slide is as follows:
 
 ### loop
 
-- **Type**: `boolean`
-- **Default**: `true`
+  - **Type**: `boolean`
+  - **Default**: `true`
 
-Is it possible to loop. But when there is only one element, this setting does not take effect.
+  Is it possible to loop. But when there is only one element, this setting does not take effect.
+
+### autoplay
+
+  - **Type**: `boolean`
+  - **Default**: `true`
+
+  Whether to enable auto play.
+
+### interval
+
+  - **Type**: `number`
+  - **Default**: `3000`
+
+  The interval before the next play.
+
+### speed
+
+  - **Type**: `number`
+  - **Default**: `400`
+
+  the default duration of Page animation.
 
 ### easing
 
-- **Type**: `EaseItem`
-  - `{ string } style`: for `transition-timing-function`
-  - `{ Function } fn`: When setting `useTransition:false`, the animation curve is determined by `easing.fn`.
-- **Default**:
-```js
-{
-  style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
-  fn: function(t: number) {
-    return 1 - --t * t * t * t
+  - **Type**: `EaseItem`
+    - `{ string } style`: for `transition-timing-function`
+    - `{ Function } fn`: When setting `useTransition:false`, the animation curve is determined by `easing.fn`.
+  - **Default**:
+  ```js
+  {
+    style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    fn: function(t: number) {
+      return 1 - --t * t * t * t
+    }
   }
-}
-```
+  ```
 
-Scrolling easing effect.
+  Scrolling easing effect.
 
 ### listenFlick
 
-- **Type**: `boolean`
-- **Default**: `true`
+  - **Type**: `boolean`
+  - **Default**: `true`
 
-When quickly flicking across the slide area, it will trigger the switch to the previous/next page. Set listenFlick to false to turn off the effect.
+  When quickly flicking across the slide area, it will trigger the switch to the previous/next page. Set listenFlick to false to turn off the effect.
 
 ### threshold
 
-Switch the threshold of the next or previous Page.
+  - **Type**: `number`
+  - **Default**: `0.1`
 
-- **Type**: `number`
-- **Default**: `0.1`
+  :::tip
+  When the scrolling distance is less than the threshold, the switch to the next or previous one will not be triggered.
 
-:::tip
-When the scrolling distance is less than the threshold, the switch to the next or previous one will not be triggered.
+  It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slideWrapperWidth * threshold` or `slideWrapperHeight * threshold`. When the value is an integer, the threshold is threshold.
+  :::
 
-It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slidePageWidth * threshold` or `slidePageHeight * threshold`. When the value is an integer, the threshold is threshold.
-:::
+  Switch the threshold of the next or previous Page.
 
 ## Instance Methods
 
@@ -276,38 +297,38 @@ It can be set to a decimal, such as 0.1, or an integer, such as 100. When the va
 
 ### slideWillChange
 
-- **Arguments**: page object
-  - `{ number } x`: The x value of the page to be displayed
-  - `{ number } y`: The y value of the page to be displayed
-  - `{ number } pageX`: The index value of the horizontal page to be displayed, the subscript starts from 0
-  - `{ number } pageY`: The index value of the vertical page to be displayed, the subscript starts from 0
+  - **Arguments**: `page` object
+    - `{ number } x`: The x value of the page to be displayed
+    - `{ number } y`: The y value of the page to be displayed
+    - `{ number } pageX`: The index value of the horizontal page to be displayed, the subscript starts from 0
+    - `{ number } pageY`: The index value of the vertical page to be displayed, the subscript starts from 0
 
-- **Trigger timing**: When the currentPage value of slide is about to change
+  - **Trigger timing**: When the currentPage value of slide is about to change
 
-- **Usage**:
+  - **Usage**:
 
-In the banner, it is often accompanied by a dot legend to indicate which page the current banner is on, such as the "Horizontal Slide" example above. When the user drags the banner to the next one, we hope the dot legend below will change synchronously. As shown below
+  In the banner, it is often accompanied by a dot legend to indicate which page the current banner is on, such as the "Horizontal Slide" example above. When the user drags the banner to the next one, we hope the dot legend below will change synchronously. As shown below
 
-<img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
+  <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
-This effect can be achieved by register the `slideWillChange` hook. code show as below:
+  This effect can be achieved by register the `slideWillChange` hook. code show as below:
 
-```js
-  let currentPageIndex
-  const slide = new BScroll(this.$refs.slide, {
-    scrollX: true,
-    scrollY: false,
-    slide: {
-      threshold: 100
-    },
-    useTransition: true,
-    momentum: false,
-    bounce: false,
-    stopPropagation: true,
-    probeType: 2
-  })
-  slide.on('slideWillChange', (page) => {
-    currentPageIndex = page.pageX
-  })
-```
+  ```js
+    let currentPageIndex
+    const slide = new BScroll(this.$refs.slide, {
+      scrollX: true,
+      scrollY: false,
+      slide: {
+        threshold: 100
+      },
+      useTransition: true,
+      momentum: false,
+      bounce: false,
+      stopPropagation: true,
+      probeType: 2
+    })
+    slide.on('slideWillChange', (page) => {
+      currentPageIndex = page.pageX
+    })
+  ```
 

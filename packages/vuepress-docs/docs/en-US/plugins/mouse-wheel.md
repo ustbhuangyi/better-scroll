@@ -5,11 +5,11 @@ mouseWheel extends the capabilities of the BetterScroll mouse wheel.
 ## Install
 
 ```bash
-npm install @better-scroll/mouse-wheel@next --save
+npm install @better-scroll/mouse-wheel --save
 
 // or
 
-yarn add @better-scroll/mouse-wheel@next
+yarn add @better-scroll/mouse-wheel
 ```
 
 :::tip

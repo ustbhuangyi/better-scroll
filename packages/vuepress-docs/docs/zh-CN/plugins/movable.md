@@ -7,11 +7,11 @@ movable 插件为 BetterScroll 拓展可移动拖拽的能力。
 ## 安装
 
 ```bash
-npm install @better-scroll/movable@next --save
+npm install @better-scroll/movable --save
 
 // or
 
-yarn add @better-scroll/movable@next
+yarn add @better-scroll/movable
 ```
 
 ## 基本使用

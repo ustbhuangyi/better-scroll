@@ -7,11 +7,11 @@ Add zoom functionality for BetterScroll.
 ## Install
 
 ```bash
-npm install @better-scroll/zoom@next --save
+npm install @better-scroll/zoom --save
 
 // or
 
-yarn add @better-scroll/zoom@next
+yarn add @better-scroll/zoom
 ```
 
 ## Usage

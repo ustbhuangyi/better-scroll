@@ -7,11 +7,11 @@ pulldown 插件为 BetterScroll 扩展下拉刷新的能力。
 ## 安装
 
 ```bash
-npm install @better-scroll/pull-down@next --save
+npm install @better-scroll/pull-down --save
 
 // or
 
-yarn add @better-scroll/pull-down@next
+yarn add @better-scroll/pull-down
 ```
 
 ## 使用

@@ -5,11 +5,11 @@ mouseWheel 扩展 BetterScroll 鼠标滚轮的能力。
 # 安装
 
 ```bash
-npm install @better-scroll/mouse-wheel@next --save
+npm install @better-scroll/mouse-wheel --save
 
 // or
 
-yarn add @better-scroll/mouse-wheel@next
+yarn add @better-scroll/mouse-wheel
 ```
 
 :::tip

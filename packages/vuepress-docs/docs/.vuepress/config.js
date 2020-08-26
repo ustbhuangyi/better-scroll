@@ -75,6 +75,17 @@ module.exports = {
         componentsDir: resolve('examples/vue/components')
       }
     ],
+    [
+      '@vuepress/medium-zoom',
+      {
+        selector: 'img',
+        // medium-zoom options here
+        // See: https://github.com/francoischalifour/medium-zoom#options
+        options: {
+          margin: 16
+        }
+      }
+    ],
     require('./plugins/extract-code.js')
   ]
 }

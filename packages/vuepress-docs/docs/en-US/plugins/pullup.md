@@ -7,11 +7,11 @@
 ## Install
 
 ```bash
-npm install @better-scroll/pull-up@next --save
+npm install @better-scroll/pull-up --save
 
 // or
 
-yarn add @better-scroll/pull-up@next
+yarn add @better-scroll/pull-up
 ```
 
 ## Usage

@@ -50,6 +50,7 @@
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
     "@types/puppeteer": "^3.0.1",
+    "@vuepress/plugin-medium-zoom": "^1.5.4",
     "codecov": "^3.5.0",
     "commitizen": "^4.1.5",
     "coveralls": "^3.0.2",

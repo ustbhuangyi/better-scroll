@@ -7,16 +7,16 @@
 ## 安装
 
 ```bash
-npm install @better-scroll/scroll-bar@next --save
+npm install @better-scroll/scroll-bar --save
 
 // or
 
-yarn add @better-scroll/scroll-bar@next
+yarn add @better-scroll/scroll-bar
 ```
 
 ## 使用
 
-首先引入 scrollbar 插件，并通过静态方法 `BScroll.use()` 初始化插件
+首先引入 scrollbar 插件，并通过静态方法 `BScroll.use()` 注册插件
 
 ```js
 import BScroll from '@better-scroll/core'
@@ -25,10 +25,10 @@ import ScrollBar from '@better-scroll/scroll-bar'
 BScroll.use(ScrollBar)
 ```
 
-然后，实例化 BetterScroll 时需要传入 scrollbar 相关配置项 scrollbar：
+接着在 `options` 传入正确的配置。
 
 ```js
-new BScroll('.bs-wrap', {
+new BScroll('.bs-wrapper', {
   scrollY: true,
   scrollbar: true
 })
@@ -48,11 +48,18 @@ new BScroll('.bs-wrap', {
   <scrollbar-default slot="demo"></scrollbar-default>
 </demo>
 
-## 配置项 scrollbar
+## scrollbar 选项对象
 
-默认为 false。当设置为 true 或者是一个 Object 的时候，可以开启滚动条。当配置项为一个 Object 时，有如下属性
+### fade
 
-|名称|类型|描述|默认值|
-|----------|:-----:|:-----------|:--------:|
-| fade | boolean | 当滚动停止的时候，滚动条渐隐 | true |
-| interactive | boolean | 滚动条是否可以交互 | false |
+  - **类型**：`boolean`
+  - **默认值**：`true`
+
+  当滚动停止的时候，滚动条渐隐。
+
+### interactive
+
+  - **类型**：`boolean`
+  - **默认值**：`false`
+
+  滚动条是否可以交互。
