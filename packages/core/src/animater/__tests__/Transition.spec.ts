@@ -6,7 +6,7 @@ let mockCancelAnimationFrame = jest.fn()
 jest.mock('@better-scroll/shared-utils/src/raf', () => {
   return {
     requestAnimationFrame: (cb: any) => mockRequestAnimationFrame(cb),
-    cancelAnimationFrame: () => mockCancelAnimationFrame()
+    cancelAnimationFrame: () => mockCancelAnimationFrame(),
   }
 })
 
@@ -19,7 +19,7 @@ function createTransition(probeType: number) {
   return {
     dom,
     translater,
-    transition
+    transition,
   }
 }
 describe('Transition Class test suit', () => {
@@ -32,7 +32,7 @@ describe('Transition Class test suit', () => {
     jest.clearAllMocks()
   })
   it('should off hooks and cancelAnimationFrame when destroy', () => {
-    const { transition, translater, dom } = createTransition(0)
+    const { transition } = createTransition(0)
     const hooksDestroySpy = jest.spyOn(transition.hooks, 'destroy')
     transition.destroy()
     expect(mockCancelAnimationFrame).toBeCalledTimes(1)
@@ -40,7 +40,7 @@ describe('Transition Class test suit', () => {
   })
 
   it('should set timeFunction and trigger event', () => {
-    const { transition, translater, dom } = createTransition(0)
+    const { transition, dom } = createTransition(0)
     const onTimeFunction = jest.fn()
     const onTime = jest.fn()
     transition.hooks.on('time', onTime)
@@ -48,93 +48,52 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
-    transition.move(
-      startPoint,
-      endPoint,
-      200,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      false
-    )
+    transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onTime).toHaveBeenCalledTimes(1)
     expect(onTimeFunction).toHaveBeenCalledTimes(1)
-    expect(dom.style.webkitTransitionTimingFunction).toBe(
+    expect(dom.style.transitionTimingFunction).toBe(
       'cubic-bezier(0.23, 1, 0.32, 1)'
     )
-    expect(dom.style.webkitTransitionDuration).toBe('200ms')
+    expect(dom.style.transitionDuration).toBe('200ms')
     transition.destroy()
   })
 
   it('should call translater with right arguments', () => {
-    const { transition, translater, dom } = createTransition(0)
+    const { transition, translater } = createTransition(0)
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
-    transition.move(
-      startPoint,
-      endPoint,
-      200,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      false
-    )
+    transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(translater.translate).toBeCalledWith(endPoint)
     transition.destroy()
   })
 
-  it('should not trigger end hook with isSlient=true,time=0', () => {
-    const { transition, translater, dom } = createTransition(0)
+  it('should trigger end hook with time=0', () => {
+    const { transition } = createTransition(0)
     const onEnd = jest.fn()
     transition.hooks.on('end', onEnd)
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
-    transition.move(
-      startPoint,
-      endPoint,
-      0,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      true
-    )
-    expect(onEnd).not.toHaveBeenCalled()
-    transition.destroy()
-  })
-  it('should trigger end hook with isSlient=false,time=0', () => {
-    const { transition, translater, dom } = createTransition(0)
-    const onEnd = jest.fn()
-    transition.hooks.on('end', onEnd)
-
-    const startPoint = {
-      x: 0,
-      y: 0
-    }
-    const endPoint = {
-      x: 10,
-      y: 10
-    }
-    transition.move(
-      startPoint,
-      endPoint,
-      0,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      false
-    )
+    transition.move(startPoint, endPoint, 0, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onEnd).toHaveBeenCalled()
     transition.destroy()
   })
@@ -145,25 +104,19 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 0,
-      y: 10
+      y: 10,
     }
-    transition.move(
-      startPoint,
-      endPoint,
-      200,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      false
-    )
+    transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     ;(<jest.Mock>translater.getComputedPosition).mockImplementation(() => {
       return { x: 10, y: 10 }
     })
     transition.stop()
 
-    expect(dom.style.webkitTransitionDuration).toBe('0ms')
+    expect(dom.style.transitionDuration).toBe('0ms')
     expect(translater.translate).toBeCalledWith({ x: 10, y: 10 })
     expect(onForceStop).toBeCalledWith({ x: 10, y: 10 })
     expect(mockCancelAnimationFrame).toBeCalled()
@@ -172,8 +125,8 @@ describe('Transition Class test suit', () => {
     transition.destroy()
   })
   it('should startProbe with probeType=3', () => {
-    const { transition, translater, dom } = createTransition(3)
-    mockRequestAnimationFrame.mockImplementation(cb => {
+    const { transition } = createTransition(3)
+    mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()
       }, 200)
@@ -185,19 +138,13 @@ describe('Transition Class test suit', () => {
 
     const startPoint = {
       x: 0,
-      y: 0
+      y: 0,
     }
     const endPoint = {
       x: 10,
-      y: 10
+      y: 10,
     }
-    transition.move(
-      startPoint,
-      endPoint,
-      200,
-      'cubic-bezier(0.23, 1, 0.32, 1)',
-      false
-    )
+    transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     jest.advanceTimersByTime(200)
     expect(onMove).toBeCalled()
 

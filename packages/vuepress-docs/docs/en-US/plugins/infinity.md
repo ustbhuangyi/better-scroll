@@ -5,11 +5,11 @@ The infinity plugin provides BetterScroll with unlimited scrolling capabilities.
 ## Install
 
 ```shell
-npm install @better-scroll/infinity@next --save
+npm install @better-scroll/infinity --save
 
 // or
 
-yarn add @better-scroll/infinity@next
+yarn add @better-scroll/infinity
 ```
 
 ## Usage

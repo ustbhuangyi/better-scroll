@@ -1,206 +1,194 @@
 import BScroll from '@better-scroll/core'
+import { Probe } from '@better-scroll/shared-utils'
 import { ease } from '@better-scroll/shared-utils/src/ease'
 jest.mock('@better-scroll/core')
-jest.mock('@better-scroll/shared-utils/src/ease')
 
 import PullDown from '../index'
 
-describe('pull down tests', () => {
-  let bscroll: BScroll
-  const THRESHOLD = 90
-  const STOP = 50
-  const DIRECTION_Y = -1
-  let pullDownHandler = jest.fn()
+const createPullDownElements = () => {
+  const wrapper = document.createElement('div')
+  const content = document.createElement('div')
+  wrapper.appendChild(content)
+  return { wrapper }
+}
 
-  beforeAll(() => {
+describe('pull down tests', () => {
+  let scroll: BScroll
+  let pullDown: PullDown
+  beforeEach(() => {
     // create DOM
-    const wrapper = document.createElement('div')
-    const content = document.createElement('div')
-    wrapper.appendChild(content)
-    // mock bscroll
-    bscroll = new BScroll(wrapper, {})
-    bscroll.directionY = DIRECTION_Y
+    const { wrapper } = createPullDownElements()
+    scroll = new BScroll(wrapper, {})
+    pullDown = new PullDown(scroll)
   })
 
   afterEach(() => {
-    bscroll.off()
-    bscroll.scroller.hooks.off()
     jest.clearAllMocks()
   })
 
   it('should proxy properties to BScroll instance', () => {
-    new PullDown(bscroll)
+    new PullDown(scroll)
 
-    expect(bscroll.proxy).toBeCalledWith([
+    expect(scroll.proxy).toBeCalledWith([
       {
         key: 'finishPullDown',
-        sourceKey: 'plugins.pullDownRefresh.finish'
+        sourceKey: 'plugins.pullDownRefresh.finishPullDown',
       },
       {
         key: 'openPullDown',
-        sourceKey: 'plugins.pullDownRefresh.open'
+        sourceKey: 'plugins.pullDownRefresh.openPullDown',
       },
       {
         key: 'closePullDown',
-        sourceKey: 'plugins.pullDownRefresh.close'
+        sourceKey: 'plugins.pullDownRefresh.closePullDown',
       },
       {
         key: 'autoPullDownRefresh',
-        sourceKey: 'plugins.pullDownRefresh.autoPull'
-      }
+        sourceKey: 'plugins.pullDownRefresh.autoPullDownRefresh',
+      },
     ])
   })
 
-  describe('trigger pullingDown event', () => {
-    beforeEach(() => {
-      // given
-      bscroll.x = 0
-      bscroll.options.pullDownRefresh = {
-        threshold: THRESHOLD,
-        stop: STOP
-      }
-      new PullDown(bscroll)
-      bscroll.on('pullingDown', pullDownHandler)
+  it('should handle default options and user options', () => {
+    // case 1
+    scroll.options.pullDownRefresh = true
+    pullDown = new PullDown(scroll)
+
+    expect(pullDown.options).toMatchObject({
+      threshold: 90,
+      stop: 40,
     })
 
-    it('should not trigger pullingDown event when no pullDownRefresh', () => {
-      bscroll.options.pullDownRefresh = undefined
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(0)
+    // case 2
+    scroll.options.pullDownRefresh = {
+      threshold: 100,
+      stop: 50,
+    }
+    pullDown = new PullDown(scroll)
+
+    expect(pullDown.options).toMatchObject({
+      threshold: 100,
+      stop: 50,
     })
 
-    it('should trigger pullingDown event', () => {
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(1)
-    })
+    expect(scroll.options.probeType).toBe(Probe.Realtime)
+  })
 
-    it('should trigger pullingDown once', () => {
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(1)
-    })
+  it('should cache originalMinScrollY', () => {
+    expect(pullDown.cachedOriginanMinScrollY).toBe(0)
+    expect(pullDown.currentMinScrollY).toBe(0)
+  })
 
-    it('should stop at correct position', () => {
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(bscroll.scrollTo).toHaveBeenCalledWith(
-        0,
-        50,
-        bscroll.options.bounceTime,
-        ease.bounce
-      )
+  it('should modify minScrollY when necessary', () => {
+    pullDown.currentMinScrollY = 50
+    const scrollBehaviorY = scroll.scroller.scrollBehaviorY
+    let boundary = {
+      minScrollPos: 0,
+      maxScrollPos: 20,
+    }
+    scrollBehaviorY.hooks.trigger(
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
+      boundary
+    )
+    expect(boundary).toMatchObject({
+      minScrollPos: 50,
+      maxScrollPos: -1,
     })
   })
 
-  describe('api finish', () => {
-    let pullDown: PullDown
-    beforeEach(() => {
-      // given
-      bscroll.x = 0
-      bscroll.options.pullDownRefresh = {
-        threshold: THRESHOLD,
-        stop: STOP
-      }
-      pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', pullDownHandler)
-    })
+  it('should checkPullDown', () => {
+    const mockFn = jest.fn()
+    scroll.on(scroll.eventTypes.pullingDown, mockFn)
 
-    it('should restore to trigger pullingDown', () => {
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      pullDown.finish()
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(2)
-    })
+    // simulate pullUp action
+    scroll.y = -100
+    scroll.directionY = 1
+    scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.end)
+    expect(mockFn).toHaveBeenCalledTimes(0)
 
-    it('should resetPosition', () => {
-      // when
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      pullDown.finish()
-      // then
-      expect(bscroll.resetPosition).toBeCalledTimes(1)
-    })
+    // simulate pullDown action
+    scroll.y = 100
+    scroll.directionY = -1
+
+    scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.end)
+    expect(mockFn).toHaveBeenCalledTimes(1)
   })
 
-  describe('api close', () => {
-    let pullDown: PullDown
-    beforeEach(() => {
-      // given
-      bscroll.x = 0
-      bscroll.options.pullDownRefresh = {
-        threshold: THRESHOLD,
-        stop: STOP
-      }
-      pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', pullDownHandler)
-    })
-
-    it('should close feature pullDown', () => {
-      // when
-      pullDown.close()
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(0)
-    })
+  it('should trigger pullingDown once', () => {
+    const mockFn = jest.fn()
+    scroll.on(scroll.eventTypes.pullingDown, mockFn)
+    // when
+    scroll.directionY = -1
+    scroll.y = 100
+    scroll.scroller.hooks.trigger('end')
+    scroll.scroller.hooks.trigger('end')
+    // then
+    expect(mockFn).toBeCalledTimes(1)
   })
 
-  describe('api open', () => {
-    let pullDown: PullDown
-    beforeEach(() => {
-      // given
-      bscroll.x = 0
-      bscroll.options.pullDownRefresh = undefined
-      pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', pullDownHandler)
-    })
-
-    it('should open feature pullDown', () => {
-      // when
-      pullDown.open({ threshold: THRESHOLD, stop: STOP })
-      bscroll.y = THRESHOLD + 1
-      bscroll.scroller.hooks.trigger('end')
-      // then
-      expect(pullDownHandler).toBeCalledTimes(1)
-    })
+  it('should stop at correct position', () => {
+    // when
+    scroll.directionY = -1
+    scroll.y = 100
+    scroll.scroller.hooks.trigger('end')
+    expect(scroll.scrollTo).toHaveBeenCalledWith(
+      0,
+      40,
+      scroll.options.bounceTime,
+      ease.bounce
+    )
   })
 
-  describe('api autoPull', () => {
-    let pullDown: PullDown
-    beforeEach(() => {
-      // given
-      bscroll.x = 0
-      bscroll.options.pullDownRefresh = { threshold: THRESHOLD, stop: STOP }
-      pullDown = new PullDown(bscroll)
-      bscroll.on('pullingDown', pullDownHandler)
+  it('should work well when call finishPullDown()', () => {
+    pullDown.finishPullDown()
+
+    expect(pullDown.pulling).toBe(false)
+    expect(scroll.scroller.scrollBehaviorY.computeBoundary).toBeCalled()
+    expect(scroll.resetPosition).toBeCalled()
+  })
+
+  it('should work well when call closePullDown()', () => {
+    pullDown.closePullDown()
+
+    expect(pullDown.watching).toBe(false)
+    expect(scroll.scroller.hooks.events.end.length).toBe(0)
+  })
+
+  it('should work well when call openPullDown()', () => {
+    pullDown.closePullDown()
+
+    expect(pullDown.watching).toBe(false)
+    expect(pullDown.options).toMatchObject({
+      threshold: 90,
+      stop: 40,
     })
 
-    it('should auto trigger pullingDown', () => {
-      // when
-      pullDown.autoPull()
-      // then
-      expect(pullDownHandler).toBeCalledTimes(1)
+    // modify options
+    pullDown.openPullDown({
+      threshold: 200,
+      stop: 80,
     })
 
-    it('should scrollTo correct position', () => {
-      // when
-      pullDown.autoPull()
-      // then
-      expect(pullDownHandler).toBeCalledTimes(1)
+    expect(pullDown.options).toMatchObject({
+      threshold: 200,
+      stop: 80,
     })
+    expect(pullDown.watching).toBe(true)
+  })
+
+  it('should work well when call autoPullDownRefresh()', () => {
+    const mockFn = jest.fn()
+    scroll.on(scroll.eventTypes.pullingDown, mockFn)
+    pullDown.autoPullDownRefresh()
+    expect(pullDown.watching).toBe(true)
+    expect(pullDown.currentMinScrollY).toBe(40)
+    expect(scroll.scroller.scrollBehaviorY.computeBoundary).toBeCalled()
+    expect(scroll.scrollTo).toHaveBeenCalledTimes(2)
+    expect(scroll.scrollTo).toHaveBeenLastCalledWith(
+      0,
+      40,
+      scroll.options.bounceTime,
+      ease.bounce
+    )
   })
 })

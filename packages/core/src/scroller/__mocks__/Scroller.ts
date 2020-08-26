@@ -1,6 +1,6 @@
 import createAnimater from '../../animater'
 import Translater from '../../translater'
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import ActionsHandler from '../../base/ActionsHandler'
 import Actions from '../Actions'
 
@@ -48,7 +48,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scroll',
       'beforeEnd',
       'scrollEnd',
-      'refresh',
+      'resize',
       'touchEnd',
       'end',
       'flick',
@@ -58,13 +58,15 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scrollToElement',
       'transitionEnd',
       'checkClick',
-      'ignoreDisMoveForSamePos',
-      'resize'
+      'beforeRefresh',
     ]),
     scrollBehaviorX,
     scrollBehaviorY,
     resizeRegister: new EventRegister(wrapper, []),
-    transitionEndRegister: new EventRegister(wrapper, [])
+    transitionEndRegister: new EventRegister(wrapper, []),
+    scrollTo: jest.fn(),
+    resetPosition: jest.fn(),
+    togglePointerEvents: jest.fn(),
   }
 })
 

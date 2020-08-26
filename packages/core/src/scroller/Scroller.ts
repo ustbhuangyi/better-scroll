@@ -1,12 +1,12 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
-import { Options as BScrollOptions, BounceConfig } from '../Options'
-import Behavior from './Behavior'
+import { OptionsConstructor as BScrollOptions, BounceConfig } from '../Options'
+import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
 import {
   createActionsHandlerOptions,
-  createBehaviorOptions
+  createBehaviorOptions,
 } from './createOptions'
 import {
   getElement,
@@ -16,6 +16,7 @@ import {
   preventDefaultExceptionFn,
   TouchEvent,
   isAndroid,
+  isIOSBadVersion,
   click,
   dblclick,
   tap,
@@ -25,14 +26,37 @@ import {
   EaseItem,
   Probe,
   EventEmitter,
-  EventRegister
+  EventRegister,
 } from '@better-scroll/shared-utils'
 import { bubbling } from '../utils/bubbling'
-export interface MountedBScrollHTMLElement extends HTMLElement {
-  isBScrollContainer?: boolean
+import { isSamePoint } from '../utils/compare'
+import { MountedBScrollHTMLElement } from '../BScroll'
+
+export interface ExposedAPI {
+  scrollTo(
+    x: number,
+    y: number,
+    time?: number,
+    easing?: EaseItem,
+    extraTransform?: { start: object; end: object }
+  ): void
+  scrollBy(
+    deltaX: number,
+    deltaY: number,
+    time?: number,
+    easing?: EaseItem
+  ): void
+  scrollToElement(
+    el: HTMLElement | string,
+    time: number,
+    offsetX: number | boolean,
+    offsetY: number | boolean,
+    easing?: EaseItem
+  ): void
+  resetPosition(time?: number, easing?: EaseItem): boolean
 }
 
-export default class Scroller {
+export default class Scroller implements ExposedAPI {
   wrapper: HTMLElement
   content: HTMLElement
   actionsHandler: ActionsHandler
@@ -50,8 +74,8 @@ export default class Scroller {
     top: number
   }
   _reflow: number
-  resizeTimeout: number
-  lastClickTime: number | null
+  resizeTimeout: number = 0
+  lastClickTime: number | null;
   [key: string]: any
   constructor(wrapper: HTMLElement, options: BScrollOptions) {
     this.hooks = new EventEmitter([
@@ -62,16 +86,15 @@ export default class Scroller {
       'scroll',
       'beforeEnd',
       'scrollEnd',
-      'refresh',
+      'resize',
       'touchEnd',
       'end',
       'flick',
       'scrollCancel',
       'momentum',
       'scrollTo',
-      'ignoreDisMoveForSamePos',
       'scrollToElement',
-      'resize'
+      'beforeRefresh',
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -84,7 +107,7 @@ export default class Scroller {
       wrapper,
       createBehaviorOptions(options, 'scrollX', [left, right], {
         size: 'width',
-        position: 'left'
+        position: 'left',
       })
     )
     // direction Y
@@ -92,7 +115,7 @@ export default class Scroller {
       wrapper,
       createBehaviorOptions(options, 'scrollY', [top, bottom], {
         size: 'height',
-        position: 'top'
+        position: 'top',
       })
     )
 
@@ -101,7 +124,7 @@ export default class Scroller {
     this.animater = createAnimater(this.content, this.translater, this.options)
 
     this.actionsHandler = new ActionsHandler(
-      wrapper,
+      this.options.bindToTarget ? this.content : wrapper,
       createActionsHandlerOptions(this.options)
     )
 
@@ -117,19 +140,19 @@ export default class Scroller {
     this.resizeRegister = new EventRegister(window, [
       {
         name: 'orientationchange',
-        handler: resizeHandler
+        handler: resizeHandler,
       },
       {
         name: 'resize',
-        handler: resizeHandler
-      }
+        handler: resizeHandler,
+      },
     ])
 
     this.transitionEndRegister = new EventRegister(this.content, [
       {
         name: style.transitionEnd,
-        handler: this.transitionEnd.bind(this)
-      }
+        handler: this.transitionEnd.bind(this),
+      },
     ])
 
     this.init()
@@ -154,8 +177,12 @@ export default class Scroller {
     })
     // disable pointer events when scrolling
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
+      const prevPos = this.getCurrentPos()
       this.updatePositions(pos)
-      this.togglePointerEvents(false)
+      // a valid translate
+      if (pos.x !== prevPos.x || pos.y !== prevPos.y) {
+        this.togglePointerEvents(false)
+      }
     })
   }
 
@@ -174,12 +201,12 @@ export default class Scroller {
     bubbling(this.animater.hooks, this.hooks, [
       {
         source: this.animater.hooks.eventTypes.move,
-        target: this.hooks.eventTypes.scroll
+        target: this.hooks.eventTypes.scroll,
       },
       {
         source: this.animater.hooks.eventTypes.forceStop,
-        target: this.hooks.eventTypes.scrollEnd
-      }
+        target: this.hooks.eventTypes.scrollEnd,
+      },
     ])
   }
 
@@ -189,28 +216,28 @@ export default class Scroller {
     bubbling(actions.hooks, this.hooks, [
       {
         source: actions.hooks.eventTypes.start,
-        target: this.hooks.eventTypes.beforeStart
+        target: this.hooks.eventTypes.beforeStart,
       },
       {
         source: actions.hooks.eventTypes.start,
-        target: this.hooks.eventTypes.beforeScrollStart // just for event api
+        target: this.hooks.eventTypes.beforeScrollStart, // just for event api
       },
       {
         source: actions.hooks.eventTypes.beforeMove,
-        target: this.hooks.eventTypes.beforeMove
+        target: this.hooks.eventTypes.beforeMove,
       },
       {
         source: actions.hooks.eventTypes.scrollStart,
-        target: this.hooks.eventTypes.scrollStart
+        target: this.hooks.eventTypes.scrollStart,
       },
       {
         source: actions.hooks.eventTypes.scroll,
-        target: this.hooks.eventTypes.scroll
+        target: this.hooks.eventTypes.scroll,
       },
       {
         source: actions.hooks.eventTypes.beforeEnd,
-        target: this.hooks.eventTypes.beforeEnd
-      }
+        target: this.hooks.eventTypes.beforeEnd,
+      },
     ])
 
     actions.hooks.on(
@@ -224,14 +251,12 @@ export default class Scroller {
 
         // check if it is a click operation
         if (!actions.moved && this.checkClick(e)) {
-          this.animater.setForceStopped(false)
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
           return true
         }
-        this.animater.setForceStopped(false)
-
         // reset if we are outside of the boundaries
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
+          this.animater.setForceStopped(false)
           return true
         }
       }
@@ -251,7 +276,13 @@ export default class Scroller {
         if (this.momentum(pos, duration)) {
           return
         }
-        this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+
+        // force stop from transition or animation when click a point
+        if (!this.animater.forceStopped || actions.moved) {
+          this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
+        } else {
+          this.animater.setForceStopped(false)
+        }
       }
     )
   }
@@ -274,7 +305,7 @@ export default class Scroller {
       time: 0,
       easing: ease.swiper,
       newX: pos.x,
-      newY: pos.y
+      newY: pos.y,
     }
     // start momentum animation if needed
     const momentumX = this.scrollBehaviorX.end(duration)
@@ -309,13 +340,14 @@ export default class Scroller {
   }
 
   private checkClick(e: TouchEvent) {
-    // when in the process of pulling down, it should not prevent click
     const cancelable = {
-      preventClick: this.animater.forceStopped
+      preventClick: this.animater.forceStopped,
     }
-
     // we scrolled less than momentumLimitDistance pixels
-    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) return true
+    if (this.hooks.trigger(this.hooks.eventTypes.checkClick)) {
+      this.animater.setForceStopped(false)
+      return true
+    }
     if (!cancelable.preventClick) {
       const _dblclick = this.options.dblclick
       let dblclickTrigged = false
@@ -353,12 +385,10 @@ export default class Scroller {
     if (isAndroid) {
       this.wrapper.scrollTop = 0
     }
-    if (!this.hooks.trigger(this.hooks.eventTypes.resize)) {
-      clearTimeout(this.resizeTimeout)
-      this.resizeTimeout = window.setTimeout(() => {
-        this.refresh()
-      }, this.options.resizePolling)
-    }
+    clearTimeout(this.resizeTimeout)
+    this.resizeTimeout = window.setTimeout(() => {
+      this.hooks.trigger(this.hooks.eventTypes.resize)
+    }, this.options.resizePolling)
   }
 
   private transitionEnd(e: TouchEvent) {
@@ -379,7 +409,7 @@ export default class Scroller {
     }
   }
 
-  private togglePointerEvents(enabled = true) {
+  togglePointerEvents(enabled = true) {
     let el = this.content.children.length
       ? this.content.children
       : [this.content]
@@ -395,6 +425,7 @@ export default class Scroller {
   }
 
   refresh() {
+    this.hooks.trigger(this.hooks.eventTypes.beforeRefresh)
     this.scrollBehaviorX.refresh()
     this.scrollBehaviorY.refresh()
 
@@ -415,36 +446,32 @@ export default class Scroller {
     x: number,
     y: number,
     time = 0,
-    easing?: EaseItem,
+    easing = ease.bounce,
     extraTransform = {
       start: {},
-      end: {}
-    },
-    isSilent?: boolean
+      end: {},
+    }
   ) {
-    easing = !easing ? ease.bounce : easing
     const easingFn = this.options.useTransition ? easing.style : easing.fn
     const currentPos = this.getCurrentPos()
 
     const startPoint = {
       x: currentPos.x,
       y: currentPos.y,
-      ...extraTransform.start
+      ...extraTransform.start,
     }
     const endPoint = {
       x,
       y,
-      ...extraTransform.end
+      ...extraTransform.end,
     }
 
     this.hooks.trigger(this.hooks.eventTypes.scrollTo, endPoint)
-    if (!this.hooks.trigger(this.hooks.eventTypes.ignoreDisMoveForSamePos)) {
-      // it is an useless move
-      if (startPoint.x === endPoint.x && startPoint.y === endPoint.y) {
-        return
-      }
-    }
-    this.animater.move(startPoint, endPoint, time, easingFn, isSilent)
+
+    // it is an useless move
+    if (isSamePoint(startPoint, endPoint)) return
+
+    this.animater.move(startPoint, endPoint, time, easingFn)
   }
 
   scrollToElement(
@@ -512,23 +539,25 @@ export default class Scroller {
     this.scrollTo(pos.left, pos.top, time, easing)
   }
 
-  resetPosition(time = 0, easing?: EaseItem) {
-    easing = !easing ? ease.bounce : easing
+  resetPosition(time = 0, easing = ease.bounce) {
     const {
       position: x,
-      inBoundary: xInBoundary
+      inBoundary: xInBoundary,
     } = this.scrollBehaviorX.checkInBoundary()
     const {
       position: y,
-      inBoundary: yInBoundary
+      inBoundary: yInBoundary,
     } = this.scrollBehaviorY.checkInBoundary()
 
     if (xInBoundary && yInBoundary) {
       return false
     }
-    // fix ios 13.4 bouncing
-    // see it in issues 982
-    this._reflow = this.content.offsetHeight
+
+    if (isIOSBadVersion) {
+      // fix ios 13.4 bouncing
+      // see it in issues 982
+      this._reflow = this.content.offsetHeight
+    }
     // out of boundary
     this.scrollTo(x, y, time, easing)
 
@@ -563,8 +592,8 @@ export default class Scroller {
       'animater',
       'translater',
       'scrollBehaviorX',
-      'scrollBehaviorY'
+      'scrollBehaviorY',
     ]
-    keys.forEach(key => this[key].destroy())
+    keys.forEach((key) => this[key].destroy())
   }
 }

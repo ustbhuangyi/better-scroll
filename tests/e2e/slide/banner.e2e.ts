@@ -1,59 +1,81 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
+import getTranslate from '../../util/getTranslate'
 
 jest.setTimeout(10000000)
 
 describe('Slider for banner', () => {
   let page = (global as any).page as Page
   extendTouch(page)
-  beforeEach(async () => {
+  beforeAll(async () => {
     await page.goto('http://0.0.0.0:8932/#/slide/banner')
+  })
+
+  beforeEach(async () => {
+    await page.reload({
+      waitUntil: 'domcontentloaded',
+    })
   })
 
   it('should loop by default', async () => {
     await page.waitFor(300)
-    const content = await page.$('.slide-banner-wrapper')
-    await page.waitFor(5000)
-    const boundingBox = await content!.boundingBox()
-    await expect(boundingBox!.x).toBeLessThan(-600)
+
+    // wait for slide autoplay
+    await page.waitFor(4000)
+
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+
+    expect(x).toBe(-670)
   })
 
   it('should go nextPage when click nextPage button', async () => {
     await page.waitFor(300)
-    const content = await page.$('.slide-banner-wrapper')
 
-    const oldBoundingBox = await content!.boundingBox()
-    const oldX = oldBoundingBox!.x
     // simulate click
     await page.click('.next')
 
-    // wairt for bs to do a transition
+    // wait for bs to do a transition
     await page.waitFor(1500)
 
-    const curBoundingBox = await content!.boundingBox()
-    const currentX = curBoundingBox!.x
-    await expect(currentX - oldX).toBeLessThan(0)
+    const transformText = await page.$eval('.slide-banner-content', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const x = getTranslate(transformText, 'x')
+
+    expect(x).toBe(-670)
   })
 
   it('should go prevPage when click prevPage button', async () => {
     await page.waitFor(300)
-    const content = await page.$('.slide-banner-wrapper')
 
-    const oldBoundingBox = await content!.boundingBox()
-    const oldX = oldBoundingBox!.x
-    // simulate click
-    await page.click('.prev')
-
+    await page.click('.next')
     // wairt for bs to do a transition
     await page.waitFor(1500)
 
-    const curBoundingBox = await content!.boundingBox()
-    const currentX = curBoundingBox!.x
-    await expect(currentX - oldX).toBeGreaterThan(0)
+    const transformText1 = await page.$eval('.slide-banner-content', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const x1 = getTranslate(transformText1, 'x')
+
+    expect(x1).toBe(-670)
+
+    // simulate click
+    await page.click('.prev')
+    await page.waitFor(1500)
+
+    const transformText2 = await page.$eval('.slide-banner-content', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const x2 = getTranslate(transformText2, 'x')
+
+    expect(x2).toBe(-335)
   })
   it('should change index when drap slide', async () => {
     await page.waitFor(300)
-    const currentIndex = await page.$eval('.docs-wrapper', el => {
+    const currentIndex = await page.$eval('.dots-wrapper', (el) => {
       const children = el.children
       let index = 0
       for (let i = 0; i < children.length; i++) {
@@ -64,17 +86,17 @@ describe('Slider for banner', () => {
       }
       return index + 1
     })
-    const nextDocsIndex = currentIndex === 3 ? 0 : currentIndex + 1
+    const nextDotsIndex = currentIndex === 3 ? 0 : currentIndex + 1
     await page.dispatchScroll({
       x: 200,
       y: 120,
       xDistance: -150,
       yDistance: 0,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
     const secondDots = await page.$eval(
-      `.docs-wrapper .doc:nth-child(${nextDocsIndex})`,
-      el => el.className
+      `.dots-wrapper .dot:nth-child(${nextDotsIndex})`,
+      (el) => el.className
     )
     expect(secondDots).toContain('active')
   })

@@ -24,7 +24,7 @@ const PassthroughHandlers = {
     return false
   }
 }
-const DirectionMap = {
+const DirectionMap: DirectionMap = {
   [DirectionLock.Horizontal]: {
     [Passthrough.Yes]: EventPassthrough.Horizontal,
     [Passthrough.No]: EventPassthrough.Vertical
@@ -33,7 +33,7 @@ const DirectionMap = {
     [Passthrough.Yes]: EventPassthrough.Vertical,
     [Passthrough.No]: EventPassthrough.Horizontal
   }
-} as DirectionMap
+}
 
 export default class DirectionLockAction {
   directionLocked: DirectionLock

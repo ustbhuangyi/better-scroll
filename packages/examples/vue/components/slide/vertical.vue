@@ -1,17 +1,17 @@
 <template>
   <div class="slide-vertical">
     <div class="vertical-wrapper">
-      <div class="slide-vertical-scroll" ref="slide">
-        <div class="slide-group" ref="slideGroup">
-          <div class="slide-item page1">page 1</div>
-          <div class="slide-item page2">page 2</div>
-          <div class="slide-item page3">page 3</div>
-          <div class="slide-item page4">page 4</div>
+      <div class="slide-vertical-wrapper" ref="slide">
+        <div class="slide-vertical-content">
+          <div class="slide-page page1">page 1</div>
+          <div class="slide-page page2">page 2</div>
+          <div class="slide-page page3">page 3</div>
+          <div class="slide-page page4">page 4</div>
         </div>
       </div>
-      <div class="docs-wrapper">
+      <div class="dots-wrapper">
         <span
-          class="doc"
+          class="dot"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
@@ -29,8 +29,6 @@
   export default {
     data() {
       return {
-        slide: null,
-        playTimer: 0,
         currentPageIndex: 0
       }
     },
@@ -42,12 +40,10 @@
     },
     methods: {
       init() {
-        clearTimeout(this.playTimer)
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: false,
           scrollY: true,
           slide: {
-            loop: true,
             threshold: 100
           },
           useTransition: true,
@@ -75,10 +71,10 @@
     position relative
     height 100%
     font-size 0
-  .slide-vertical-scroll
+  .slide-vertical-wrapper
     height 100%
     overflow hidden
-    .slide-item
+    .slide-page
       display inline-block
       width 100%
       line-height 200px
@@ -94,12 +90,12 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .docs-wrapper
+  .dots-wrapper
     position absolute
     right 4px
     top 50%
     transform translateY(-50%)
-    .doc
+    .dot
       display block
       margin 4px 0
       width 8px

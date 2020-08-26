@@ -24,7 +24,7 @@ describe('BetterScroll Core', () => {
   it('should init plugins when set top-level of BScroll options', () => {
     let mockFn = jest.fn()
     const plugin = class MyPlugin {
-      static pluginName = 'myPlugin'
+      static pluginName = 'myPlugin2'
       constructor(bscroll: BScroll) {
         mockFn(bscroll)
       }
@@ -34,7 +34,7 @@ describe('BetterScroll Core', () => {
     wrapper.appendChild(document.createElement('p'))
 
     let bs = new BScroll(wrapper, {
-      myPlugin: true
+      myPlugin2: true,
     })
     expect(mockFn).toBeCalledWith(bs)
   })

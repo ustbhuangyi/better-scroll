@@ -1,17 +1,17 @@
 <template>
   <div class="slide-banner">
     <div class="banner-wrapper">
-      <div class="slide-banner-scroll" ref="slide">
-        <div class="slide-banner-wrapper">
-          <div class="slide-item page1">page 1</div>
-          <div class="slide-item page2">page 2</div>
-          <div class="slide-item page3">page 3</div>
-          <div class="slide-item page4">page 4</div>
+      <div class="slide-banner-wrapper" ref="slide">
+        <div class="slide-banner-content">
+          <div class="slide-page page1">page 1</div>
+          <div class="slide-page page2">page 2</div>
+          <div class="slide-page page3">page 3</div>
+          <div class="slide-page page4">page 4</div>
         </div>
       </div>
-      <div class="docs-wrapper">
+      <div class="dots-wrapper">
         <span
-          class="doc"
+          class="dot"
           v-for="(item, index) in 4"
           :key="index"
           :class="{'active': currentPageIndex === index}"></span>
@@ -33,28 +33,21 @@
   export default {
     data() {
       return {
-        slide: null,
-        currentPageIndex: 0,
-        playTimer: 0
+        currentPageIndex: 0
       }
     },
     mounted() {
       this.init()
     },
     beforeDestroy() {
-      clearTimeout(this.playTimer)
       this.slide.destroy()
     },
     methods: {
       init() {
-        clearTimeout(this.playTimer)
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: {
-            loop: true,
-            threshold: 100
-          },
+          slide: true,
           useTransition: true,
           momentum: false,
           bounce: false,
@@ -63,33 +56,18 @@
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
 
-        // user touches the slide area
-        this.slide.on('beforeScrollStart', () => {
-          clearTimeout(this.playTimer)
-        })
-        // user touched the slide done
-        this.slide.on('scrollEnd', () => {
-          this.autoGoNext()
-        })
         this.slide.on('slideWillChange', (page) => {
           this.currentPageIndex = page.pageX
         })
-        this.autoGoNext()
+      },
+      _onScrollEnd () {
+        console.log(this.slide.getCurrentPage())
       },
       nextPage() {
         this.slide.next()
       },
       prePage() {
         this.slide.prev()
-      },
-      _onScrollEnd() {
-        this.autoGoNext()
-      },
-      autoGoNext() {
-        clearTimeout(this.playTimer)
-        this.playTimer = setTimeout(() => {
-          this.nextPage()
-        }, 4000)
       }
     }
   }
@@ -99,14 +77,14 @@
 .slide-banner
   .banner-wrapper
     position relative
-  .slide-banner-scroll
+  .slide-banner-wrapper
     min-height 1px
     overflow hidden
-  .slide-banner-wrapper
+  .slide-banner-content
     height 200px
     white-space nowrap
     font-size 0
-    .slide-item
+    .slide-page
       display inline-block
       height 200px
       width 100%
@@ -121,12 +99,12 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
-  .docs-wrapper
+  .dots-wrapper
     position absolute
     bottom 4px
     left 50%
     transform translateX(-50%)
-    .doc
+    .dot
       display inline-block
       margin 0 4px
       width 8px

@@ -8,11 +8,11 @@
 ## 安装
 
 ```bash
-npm install @better-scroll/observe-dom@next --save
+npm install @better-scroll/observe-dom --save
 
 // or
 
-yarn add @better-scroll/observe-dom@next
+yarn add @better-scroll/observe-dom
 ```
 
 ## 使用

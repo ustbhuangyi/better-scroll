@@ -1,15 +1,14 @@
 import Scroller from '../scroller/Scroller'
-import { Options } from '../Options'
+import { OptionsConstructor } from '../Options'
 import { EventEmitter } from '@better-scroll/shared-utils'
 
 jest.mock('../scroller/Scroller')
 jest.mock('../Options')
 
 const BScroll = jest.fn().mockImplementation((wrapper, options) => {
-  options = Object.assign(new Options(), options)
+  options = Object.assign(new OptionsConstructor(), options)
   const eventEmitter = new EventEmitter([
     // bscroll
-    'init',
     'refresh',
     'enable',
     'disable',
@@ -20,17 +19,17 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     'scroll',
     'scrollEnd',
     'touchEnd',
-    'flick'
+    'flick',
   ])
   const res = {
     wrapper: wrapper,
     options: options,
     hooks: new EventEmitter([
-      'init',
       'refresh',
       'enable',
       'disable',
-      'destroy'
+      'destroy',
+      'beforeInitialScrollTo',
     ]),
     scroller: new Scroller(wrapper, options),
     // own methods
@@ -40,12 +39,19 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
     registerType: jest.fn().mockImplementation((names: string[]) => {
-      names.forEach(name => {
+      names.forEach((name) => {
         const eventTypes = eventEmitter.eventTypes
         eventTypes[name] = name
       })
     }),
-    plugins: {}
+    plugins: {},
+    x: 0,
+    y: 0,
+    maxScrollY: 0,
+    maxScrollX: 0,
+    hasVerticalScroll: true,
+    hasHorizontalScroll: false,
+    enabled: true,
   }
 
   Object.setPrototypeOf(res, eventEmitter)

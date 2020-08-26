@@ -17,6 +17,7 @@ const propertiesMap = [
     name: 'getCurrentPage'
   }
 ]
+
 export default propertiesMap.map(item => {
   return {
     key: item.key,

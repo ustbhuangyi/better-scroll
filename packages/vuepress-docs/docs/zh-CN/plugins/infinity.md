@@ -7,11 +7,11 @@ infinity 插件为 BetterScroll 提供了无限滚动的能力。如果有大量
 ## 安装
 
 ```shell
-npm install @better-scroll/infinity@next --save
+npm install @better-scroll/infinity --save
 
 // or
 
-yarn add @better-scroll/infinity@next
+yarn add @better-scroll/infinity
 ```
 
 ## 使用

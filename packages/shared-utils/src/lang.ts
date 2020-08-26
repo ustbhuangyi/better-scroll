@@ -1,34 +1,29 @@
 export function getNow() {
-  return window.performance && window.performance.now && window.performance.timing
+  return window.performance &&
+    window.performance.now &&
+    window.performance.timing
     ? window.performance.now() + window.performance.timing.navigationStart
     : +new Date()
 }
 
-export function extend(
-  target: { [key: string]: any },
-  ...rest: { [key: string]: any }[]
-): object {
-  for (let i = 0; i < rest.length; i++) {
-    let source = rest[i]
-    for (let key in source) {
-      target[key] = source[key] as any
-    }
+export const extend = <T extends object, U extends object>(
+  target: T,
+  source: U
+): T & U => {
+  for (const key in source) {
+    ;(target as any)[key] = source[key]
   }
-  return target
+  return target as T & U
 }
 
 export function isUndef(v: any): boolean {
   return v === undefined || v === null
 }
 
-export function isPlainObject(v: any): boolean {
-  return typeof v === 'object' && v !== null
-}
-
 export function getDistance(x: number, y: number) {
   return Math.sqrt(x * x + y * y)
 }
-export function fixInboundValue(x: number, min: number, max: number) {
+export function between(x: number, min: number, max: number) {
   if (x < min) {
     return min
   }

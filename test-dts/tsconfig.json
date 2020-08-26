@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": true
+  },
+  "include": ["../test-dts"],
+  "exclude": [
+    "../tests",
+    "../packages/*/src/__tests__",
+    "../packages/*/src/__mocks__",
+    "../packages/*/src"
+  ]
+}

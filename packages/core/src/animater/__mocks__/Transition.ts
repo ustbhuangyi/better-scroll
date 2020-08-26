@@ -15,19 +15,21 @@ const Transition = jest
         'move',
         'end',
         'forceStop',
+        'beforeForceStop',
+        'callStop',
         'time',
         'timeFunction',
-        'beforeForceStop'
       ]),
       translate: jest.fn(),
       stop: jest.fn(),
+      doStop: jest.fn(),
       move: jest.fn(),
       startProbe: jest.fn(),
       transitionTime: jest.fn(),
       transitionTimingFunction: jest.fn(),
       destroy: jest.fn(),
       setPending: jest.fn(),
-      setForceStopped: jest.fn()
+      setForceStopped: jest.fn(),
     }
   })
 

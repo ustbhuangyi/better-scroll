@@ -1,7 +1,7 @@
-import Behavior from '../Behavior'
+import { Behavior } from '../Behavior'
 import createAnimater from '../../animater'
 import Translater from '../../translater'
-import { Options } from '../../Options'
+import { OptionsConstructor } from '../../Options'
 import ActionsHandler from '../../base/ActionsHandler'
 
 jest.mock('../Behavior')
@@ -21,12 +21,12 @@ describe('Actions Class tests', () => {
     Object.defineProperty(window, 'performance', {
       get() {
         return undefined
-      }
+      },
     })
 
     let content = document.createElement('div')
     let wrapper = document.createElement('div')
-    let bscrollOptions = new Options() as any
+    let bscrollOptions = new OptionsConstructor() as any
     let scrollBehaviorX = new Behavior(content, bscrollOptions)
     let scrollBehaviorY = new Behavior(content, bscrollOptions)
     let actionsHandler = new ActionsHandler(wrapper, bscrollOptions)
@@ -58,7 +58,7 @@ describe('Actions Class tests', () => {
     expect(actions.scrollBehaviorY.start).toBeCalled()
     expect(actions.scrollBehaviorX.resetStartPos).toBeCalled()
     expect(actions.scrollBehaviorY.resetStartPos).toBeCalled()
-    expect(actions.animater.stop).toBeCalled()
+    expect(actions.animater.doStop).toBeCalled()
   })
 
   it('should invoke handleMove when actionsHandler trigger move hook', () => {
@@ -72,7 +72,7 @@ describe('Actions Class tests', () => {
     actions.actionsHandler.hooks.trigger('move', {
       deltaX: 0,
       deltaY: -20,
-      e
+      e,
     })
 
     expect(beforeMoveMockHandler).toBeCalled()

@@ -1,15 +1,15 @@
-import BScroll from '@better-scroll/core'
+import BScroll, { Boundary } from '@better-scroll/core'
 import {
   style,
   hasClass,
-  getRect,
   ease,
   EaseItem,
-  isPlainObject
+  extend,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
-export type wheelOptions = Partial<WheelConfig>
+export type WheelOptions = Partial<WheelConfig> | true
+
 export interface WheelConfig {
   selectedIndex: number
   rotate: number
@@ -20,53 +20,87 @@ export interface WheelConfig {
 }
 
 declare module '@better-scroll/core' {
-  interface Options {
-    wheel: wheelOptions
+  interface CustomOptions {
+    wheel?: WheelOptions
+  }
+  interface CustomAPI {
+    wheel: PluginAPI
   }
 }
 
-const CONSTANTS = {
-  rate: 4
+interface PluginAPI {
+  wheelTo(index?: number, time?: number, ease?: EaseItem): void
+  getSelectedIndex(): number
 }
-export default class Wheel {
+
+const CONSTANTS = {
+  rate: 4,
+}
+export default class Wheel implements PluginAPI {
   static pluginName = 'wheel'
-  options: wheelOptions
+  options: WheelConfig
   wheelItemsAllDisabled: boolean
   items: HTMLCollection
   itemHeight: number
   selectedIndex: number
   target: EventTarget | null
   constructor(public scroll: BScroll) {
-    this.options = this.scroll.options.wheel
     this.init()
   }
 
   init() {
-    if (this.options) {
-      this.normalizeOptions()
-      this.refresh()
-      this.tapIntoHooks()
-      this.wheelTo(this.selectedIndex)
-      this.scroll.proxy(propertiesConfig)
-    }
+    this.handleBScroll()
+    this.handleOptions()
+    this.handleHooks()
+    // init boundary for Wheel
+    this.refreshBoundary()
+    this.handleSelectedIndex()
   }
 
-  private tapIntoHooks() {
+  private handleBScroll() {
+    this.scroll.proxy(propertiesConfig)
+  }
+
+  private handleOptions() {
+    const userOptions = (this.scroll.options.wheel === true
+      ? {}
+      : this.scroll.options.wheel) as Partial<WheelConfig>
+
+    const defaultOptions: WheelConfig = {
+      wheelWrapperClass: 'wheel-scroll',
+      wheelItemClass: 'wheel-item',
+      rotate: 25,
+      adjustTime: 400,
+      selectedIndex: 0,
+      wheelDisabledItemClass: 'wheel-disabled-item',
+    }
+    this.options = extend(defaultOptions, userOptions)
+  }
+
+  private handleHooks() {
     const scroller = this.scroll.scroller
-    const actionsHandler = scroller.actionsHandler
-    const scrollBehaviorY = scroller.scrollBehaviorY
-    const animater = scroller.animater
-
+    const {
+      actionsHandler,
+      scrollBehaviorX,
+      scrollBehaviorY,
+      animater,
+    } = scroller
     // BScroll
-    this.scroll.on(this.scroll.hooks.eventTypes.refresh, () => {
-      this.refresh()
-    })
-
+    this.scroll.hooks.on(
+      this.scroll.hooks.eventTypes.beforeInitialScrollTo,
+      (position: { x: number; y: number }) => {
+        position.x = 0
+        position.y = -(this.selectedIndex * this.itemHeight)
+      }
+    )
     // Scroller
     scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
-      const index = Array.from(this.items).indexOf(this.target as Element)
+      const index = Array.prototype.slice
+        .call(this.items, 0)
+        .indexOf(this.target as Element)
       if (index === -1) return true
-      this.wheelTo(index, this.options.adjustTime, ease.swipe)
+
+      this.wheelToAfterClick(index, this.options.adjustTime, ease.swipe)
       return true
     })
     scroller.hooks.on(
@@ -78,16 +112,13 @@ export default class Wheel {
     scroller.hooks.on(
       scroller.hooks.eventTypes.scrollToElement,
       (el: HTMLElement, pos: { top: number; left: number }) => {
-        if (!hasClass(el, this.options.wheelItemClass!)) {
+        if (!hasClass(el, this.options.wheelItemClass)) {
           return true
         } else {
           pos.top = this.findNearestValidWheel(pos.top).y
         }
       }
     )
-    scroller.hooks.on(scroller.hooks.eventTypes.ignoreDisMoveForSamePos, () => {
-      return true
-    })
 
     // ActionsHandler
     actionsHandler.hooks.on(
@@ -97,7 +128,32 @@ export default class Wheel {
       }
     )
 
+    // ScrollBehaviorX
+    // Wheel has no x direction now
+    scrollBehaviorX.hooks.on(
+      scrollBehaviorX.hooks.eventTypes.computeBoundary,
+      (boundary: Boundary) => {
+        boundary.maxScrollPos = 0
+        boundary.minScrollPos = 0
+      }
+    )
+
     // ScrollBehaviorY
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
+      (boundary: Boundary) => {
+        this.items = this.scroll.scroller.content.children
+        this.checkWheelAllDisabled()
+
+        this.itemHeight =
+          this.items.length > 0
+            ? scrollBehaviorY.contentSize / this.items.length
+            : 0
+
+        boundary.maxScrollPos = -this.itemHeight * (this.items.length - 1)
+        boundary.minScrollPos = 0
+      }
+    )
     scrollBehaviorY.hooks.on(
       scrollBehaviorY.hooks.eventTypes.momentum,
       (
@@ -112,6 +168,7 @@ export default class Wheel {
         momentumInfo.destination = this.findNearestValidWheel(
           momentumInfo.destination
         ).y
+        // TODO algorithm optimize
         const maxDistance = 1000
         const minDuration = 800
         if (distance < maxDistance) {
@@ -127,7 +184,7 @@ export default class Wheel {
       (momentumInfo: { destination: number; duration: number }) => {
         let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
-        momentumInfo.duration = this.options.adjustTime as number
+        momentumInfo.duration = this.options.adjustTime
         this.selectedIndex = validWheel.index
       }
     )
@@ -147,10 +204,20 @@ export default class Wheel {
       animater.hooks.eventTypes.beforeForceStop,
       ({ y }: { x: number; y: number }) => {
         this.target = this.items[this.findNearestValidWheel(y).index]
-        // don't dispatch scrollEnd when it is a click operation
+        // don't dispatch scrollEnd when forceStop from transition or animation
         return true
       }
     )
+    // bs.stop() to make wheel stop at a correct position
+    animater.hooks.on(animater.hooks.eventTypes.callStop, () => {
+      const index = Array.prototype.slice
+        .call(this.items, 0)
+        .indexOf(this.target as Element)
+      if (index > 0) {
+        const y = -(index * this.itemHeight)
+        animater.translate({ x: 0, y })
+      }
+    })
 
     // Translater
     animater.translater.hooks.on(
@@ -162,41 +229,36 @@ export default class Wheel {
     )
   }
 
-  refresh() {
-    const scroller = this.scroll.scroller
-    const scrollBehaviorY = scroller.scrollBehaviorY
+  private refreshBoundary() {
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    scrollBehaviorX.refresh()
+    scrollBehaviorY.refresh()
+  }
 
-    // adjust contentSize
-    const contentRect = getRect(scroller.content)
-    scrollBehaviorY.contentSize = contentRect.height
-
-    this.items = scroller.content.children
-    this.checkWheelAllDisabled()
-
-    this.itemHeight = this.items.length
-      ? scrollBehaviorY.contentSize / this.items.length
-      : 0
-
-    if (this.selectedIndex === undefined) {
-      this.selectedIndex = this.options.selectedIndex || 0
-    }
-
-    this.scroll.maxScrollX = 0
-    this.scroll.maxScrollY = -this.itemHeight * (this.items.length - 1)
-    this.scroll.minScrollX = 0
-    this.scroll.minScrollY = 0
-
-    scrollBehaviorY.hasScroll =
-      scrollBehaviorY.options && this.scroll.maxScrollY < this.scroll.minScrollY
+  private handleSelectedIndex() {
+    this.selectedIndex = this.options.selectedIndex
   }
 
   getSelectedIndex() {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0, time = 0, ease?: EaseItem, isSlient?: boolean) {
+  wheelTo(index = 0, time = 0, ease?: EaseItem): boolean {
     const y = -index * this.itemHeight
-    this.scroll.scrollTo(0, y, time, ease, isSlient)
+    const currentY = Math.round(this.scroll.y)
+
+    this.scroll.scrollTo(0, y, time, ease)
+    return y === currentY
+  }
+
+  private wheelToAfterClick(index = 0, time = 0, ease: EaseItem) {
+    const needDispatchScrollEnd = this.wheelTo(index, time, ease)
+    // startpoint === endpoint
+    // manually trigger scrollEnd
+    if (needDispatchScrollEnd) {
+      const hooks = this.scroll.scroller.hooks
+      hooks.trigger(hooks.eventTypes.scrollEnd)
+    }
   }
 
   private transitionDuration(time: number) {
@@ -217,10 +279,12 @@ export default class Wheel {
   private rotateX(y: number) {
     const { rotate = 25 } = this.options
     for (let i = 0; i < this.items.length; i++) {
-      let deg = rotate * (y / this.itemHeight + i)
+      const deg = rotate * (y / this.itemHeight + i)
+      // Too small value is invalid in some phones, issue 1026
+      const SafeDeg = deg.toFixed(3)
       ;(this.items[i] as HTMLElement).style[
         style.transform as any
-      ] = `rotateX(${deg}deg)`
+      ] = `rotateX(${SafeDeg}deg)`
     }
   }
 
@@ -269,34 +333,12 @@ export default class Wheel {
     // when all the items are disabled, this.selectedIndex should always be -1
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
-      y: -currentIndex * this.itemHeight
-    }
-  }
-
-  private normalizeOptions() {
-    const options = (this.options = isPlainObject(this.options)
-      ? this.options
-      : {})
-    if (!options.wheelWrapperClass) {
-      options.wheelWrapperClass = 'wheel-scroll'
-    }
-    if (!options.wheelItemClass) {
-      options.wheelItemClass = 'wheel-item'
-    }
-    if (!options.rotate) {
-      options.rotate = 25
-    }
-    if (!options.adjustTime) {
-      options.adjustTime = 400
-    }
-    if (!options.wheelDisabledItemClass) {
-      options.wheelDisabledItemClass = 'wheel-disabled-item'
+      y: -currentIndex * this.itemHeight,
     }
   }
 
   private checkWheelAllDisabled() {
-    const wheelDisabledItemClassName = this.options
-      .wheelDisabledItemClass as string
+    const wheelDisabledItemClassName = this.options.wheelDisabledItemClass
     const items = this.items
     this.wheelItemsAllDisabled = true
     for (let i = 0; i < items.length; i++) {

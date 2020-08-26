@@ -7,16 +7,16 @@ The wheel plugin is the cornerstone for implementing similar IOS Picker componen
 ## Install
 
 ```bash
-npm install @better-scroll/wheel@next --save
+npm install @better-scroll/wheel --save
 
 // or
 
-yarn add @better-scroll/wheel@next
+yarn add @better-scroll/wheel
 ```
 
-## Use
+## Usage
 
-First import the wheel plugin and extend the capabilities of BetterScroll via the global method `BScroll.use()`.
+import `wheel`, then call `BScroll.use()`.
 
 ```js
 import BScroll from '@better-scroll/core'
@@ -25,23 +25,21 @@ import Wheel from '@better-scroll/wheel'
 BScroll.use(Wheel)
 ```
 
-As long as the following configuration is passed, `bs` extends the capabilities of the wheel.
+pass in the correct configuration in options, for example:
 
 ```js
-let bs = new BScroll('.bs-wrap', {
+let bs = new BScroll('.bs-wrapper', {
   wheel: true // wheel options
 })
-
-let wheel = bs.plugins.wheel // wheel instance
 ```
 
 :::tip
-Wheel options is a truthy value or object, otherwise the plugin function is invalid, please refer to [wheel options](./wheel.html#wheel-options).
+Wheel options is `true` or object, otherwise the plugin is invalid, please refer to [wheel options](./wheel.html#wheel-options).
 :::
 
-## Pay attention
-
+::: danger
 BetterScroll combined with the Wheel plugin is just the JS logic part of the Picker effect, and the DOM template is user-implemented. Fortunately, for most Picker scenarios, we have corresponding examples.
+:::
 
 - **Basic usage**
 
@@ -96,32 +94,67 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 
 ## wheel options
 
-|name|types|descriptions|default|
-|----------|:-----:|:-----------|:--------:|
-|selectedIndex|number|Initialize the selected items|0|
-|rotate|number|`transform: rotate` style applied to wheel item|25|
-|adjustTime|number|Time to correct to the correct index item when clicked|400|
-|wheelWrapperClass|string|Container classname|'wheel-scroll'|
-|wheelItemClass|string|The classname of the container child element item|'wheel-item'|
-|wheelDisabledItemClass|string|disabled items's classname|'wheel-disabled-item'|
+### selectedIndex
 
-## API
+  - **Type**: `number`
+  - **默认值**：`0`
+
+  Instantiate the Wheel, the `selectedIndex` item is selected by default, and the index starts from 0.
+
+### rotate
+
+  - **Type**: `number`
+  - **Default**: `25`
+
+  When rolling the wheel, the degree of bending of the wheel item.
+
+### adjustTime
+
+  - **Type**: `number`
+  - **Default**: `400`(ms)
+
+  When an item is clicked, the duration of scroll.
+
+### wheelWrapperClass
+
+  - **Type**: `string`
+  - **Default**: `wheel-scroll`
+
+  The className of the scroll element, where "scroll element" refers to the `content` element of BetterScroll.
+
+### wheelItemClass
+
+  - **Type**: `string`
+  - **Default**: `wheel-item`
+
+  The style of the child elements of the scroll element.
+
+### wheelDisabledItemClass
+
+  - **Type**: `string`
+  - **Default**: `wheel-disabled-item`
+
+  The child element that you want to disable in the scroll element is similar to the effect of the disabled option in the select element. The wheel plugin judges whether the item is designated as disabled according to the `wheelDisabledItemClass` configuration.
+
+## Instance Methods
 
 ### getSelectedIndex()
 
-Get the index of the currently selected item.
+  - **Returns**: The index of the currently selected item, the subscript starts from 0
 
-**return**：The index of the currently selected item
+  Get the index of the currently selected item.
 
-### wheelTo(index = 0, time = 0, ease?: EaseItem, isSlient?: boolean)
+### wheelTo(index = 0, time = 0, [ease])
 
-Scroll to the item of the corresponding index.
+  - **Arguments**:
+    - `{ number } index`
+    - `{ number } time`: Animation duration
+    - `{ number } ease<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
+    ```typescript
+    interface EaseItem {
+      style: string
+      fn(t: number): number
+    }
+    ```
 
-**Arguments**
-
-|name|types|descriptions|
-|----------|:-----:|:-----------|
-|index|number|Index(subscript starts at 0)|
-|time|number|The duration of the animation, in milliseconds|
-|ease|?:EaseItem|viewed in `packages/shared-utils/src/ease`, generally not passed|
-|isSlient|?:boolean|Usually false, if true, then scroll and scrollEnd hooks will not be dispatched when time is 0|
+  Scroll to the list item corresponding to the index.

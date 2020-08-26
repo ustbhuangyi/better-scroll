@@ -7,11 +7,11 @@
 ## Install
 
 ```bash
-npm install @better-scroll/scroll-bar@next --save
+npm install @better-scroll/scroll-bar --save
 
 // or
 
-yarn add @better-scroll/scroll-bar@next
+yarn add @better-scroll/scroll-bar
 ```
 
 ## Usage
@@ -25,10 +25,10 @@ import ScrollBar from '@better-scroll/scroll-bar'
 BScroll.use(ScrollBar)
 ```
 
-Then, To instantiate BetterScroll, you need to pass the scrollbar related configuration item `scrollbar`:
+pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ```js
-new BScroll('.bs-wrap', {
+new BScroll('.bs-wrapper', {
   scrollY: true,
   scrollbar: true
 })
@@ -49,11 +49,18 @@ new BScroll('.bs-wrap', {
   <scrollbar-default slot="demo"></scrollbar-default>
 </demo>
 
-## Options scrollbar
+## scrollbar options
 
-The default is false. When set to true or an Object, scrollbar can be turned on. When the configuration item is an Object, it has the following properties:
+### fade
 
-|Name|Type|Description|Default|
-|----------|:-----:|:-----------|:--------:|
-| fade | boolean | When the scroll stops, the scroll bar fades out | true |
-| interactive | boolean | Whether scroll bars can interact | false |
+  - **类型**：`boolean`
+  - **默认值**：`true`
+
+  When the scroll stops, the scrollbar fades out.
+
+### interactive
+
+  - **类型**：`boolean`
+  - **默认值**：`false`
+
+  Whether scrollbar can interacted with.

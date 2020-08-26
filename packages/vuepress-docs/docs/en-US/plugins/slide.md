@@ -2,21 +2,21 @@
 
 ## Introduction
 
-This plugin is used for slide or swipe.
+slide expands the ability of carousel for BetterScroll.
 
-## Install
+## 安装
 
 ```bash
-npm install @better-scroll/slide@next --save
+npm install @better-scroll/slide --save
 
 // or
 
-yarn add @better-scroll/slide@next
+yarn add @better-scroll/slide
 ```
 
 ## Usage
 
-To hava slide or swipe effect, you need to import the slide plugin and use it with `BScroll.use()`.
+import `slide`, then call `BScroll.use()`.
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -25,14 +25,13 @@ To hava slide or swipe effect, you need to import the slide plugin and use it wi
   BScroll.use(Slide)
 ```
 
-You can get the slide effect after setting some configurations which are required by slide plugin.
+pass in the correct configuration in options, for example:
 
 ```js
-  new BScroll('.bs-wrap', {
+  new BScroll('.bs-wrapper', {
     scrollX: true,
     scrollY: false,
     slide: {
-      loop: true,
       threshold: 100
     },
     momentum: false,
@@ -41,30 +40,66 @@ You can get the slide effect after setting some configurations which are require
   })
 ```
 
-The following are the configuration related to the slide:
+The following is related to `slide` plugin and [BetterScroll configuration](../guide/base-scroll-options.html):
 
-- slide
-  It needs a Object value to enable slide functionality. This option is also be used to set the slide feature. Refer to [slide options](./slide.html#options)] for more details.
+- **slide(for plugin)**
 
-- scrollX
-  When setted to true, horizontal slide would be enabled.
+  Enable zoom functionality. That is to say, the zoom plugin won't work without the zoom options, see [slide options](./slide.html#slide-options).
 
-- scrollY
-  When setted to true, vertical slide would be enabled. **Note: scrollX and scrollY cannot be set to true at the same time**
+- **scrollX**
 
-- momentum
-  This value needs to be set to false to prevent the flicker and scrolling multiple pages when users quickly flick on screen.
+  When the value is true, set the direction of slide to **horizontal**.
 
-- bounce
-  Setting this to false if you have enabled the loop feature with `slide.loop = true`. Bounce feature will cause flicker when the slide switch from the last page to the fist page or from the first page to the last page.
+- **scrollY**
 
-- probeType
+  When the value is true, set the direction of slide to **vertical**. **Note: scrollX and scrollY cannot be set to true at the same time**
 
-  This value needs to be set to 2 or 3, if you want to get the index of page which will be showed by listening to  `slideWillChange` event, when user drags the slide.
+- **momentum**
+
+  When using slide, this value needs to be set to false to avoid the problem of flickering during fast scrolling caused by inertial animation and the problem of scrolling multiple pages at a time during fast sliding.
+
+- **bounce**
+
+  The bounce value needs to be set to false, otherwise it will flicker when the loop is true.
+
+- **probeType**
+
+  If you want to register the `slideWillChange` hook to get the change of the PageIndex of the slide in real time when the user drags the slide, you need to set the probeType value to 2 or 3.
+
+## Terms about slide
+
+In general, the layout of BetterScroll's slide is as follows:
+
+```html
+<div class="slide-wrapper">
+  <div class="slide-content">
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+    <div class="slide-page"><div>
+  <div/>
+<div/>
+```
+
+- **slide-wrapper**
+
+  slide container.
+
+- **slide-content**
+
+  slide scroll element.
+
+- **slide-page**
+
+  slide is composed of multiple Pages.
+
+  ::: tip
+  In the loop scenario, two more pages will be inserted before and after the slide-content to achieve the visual effect of seamless scrolling.
+  :::
 
 ## Demo
 
-- horizontal slide
+- **Horizontal Slide**
 
   <demo qrcode-url="slide/banner">
     <template slot="code-template">
@@ -79,7 +114,7 @@ The following are the configuration related to the slide:
     <slide-banner slot="demo"></slide-banner>
   </demo>
 
-- full page slide
+- **Fullscreen Slide**
 
   <demo qrcode-url="slide/fullpage">
     <template slot="code-template">
@@ -94,23 +129,23 @@ The following are the configuration related to the slide:
     <slide-fullpage slot="demo"></slide-fullpage>
   </demo>
 
-- vertical slide
+- **Vertical Slide**
 
   <demo qrcode-url="slide/vertical">
     <template slot="code-template">
-      <<< @/examples/vue/components/zoom/vertical.vue?template
+      <<< @/examples/vue/components/slide/vertical.vue?template
     </template>
     <template slot="code-script">
-      <<< @/examples/vue/components/zoom/vertical.vue?script
+      <<< @/examples/vue/components/slide/vertical.vue?script
     </template>
     <template slot="code-style">
-      <<< @/examples/vue/components/zoom/vertical.vue?style
+      <<< @/examples/vue/components/slide/vertical.vue?style
     </template>
     <slide-vertical slot="demo"></slide-vertical>
   </demo>
 
   ::: tip
-  Note: The screen will be flicker when the slider switches from one page to another in the case of `useTransition = true`. To fix this, you should add two style for every slider item like the code showed in vertical slider demo.
+  Note: When setting `useTransition = true`, there may be flickering on some iPhone systems. You need to add the following two additional styles to each `slide-page` like the code in the above demo:
 
   ```css
   transform: translate3d(0,0,0)
@@ -118,182 +153,182 @@ The following are the configuration related to the slide:
   ```
   :::
 
-## Options
+## slide options
 
 ### loop
 
-set to true to support slide loop.
+  - **Type**: `boolean`
+  - **Default**: `true`
 
-:::tip
-It won't work when there is only one slide item.
-:::
+  Is it possible to loop. But when there is only one element, this setting does not take effect.
 
-- Type: boolean
-- Default: false
+### autoplay
+
+  - **Type**: `boolean`
+  - **Default**: `true`
+
+  Whether to enable auto play.
+
+### interval
+
+  - **Type**: `number`
+  - **Default**: `3000`
+
+  The interval before the next play.
+
+### speed
+
+  - **Type**: `number`
+  - **Default**: `400`
+
+  the default duration of Page animation.
 
 ### easing
 
-The scroll easing function for switching.
-
-- Type: object
-- Default
-
+  - **Type**: `EaseItem`
+    - `{ string } style`: for `transition-timing-function`
+    - `{ Function } fn`: When setting `useTransition:false`, the animation curve is determined by `easing.fn`.
+  - **Default**:
   ```js
-    {
-      style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
-      fn: function(t: number) {
-        return 1 - --t * t * t * t
-      }
+  {
+    style: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+    fn: function(t: number) {
+      return 1 - --t * t * t * t
     }
+  }
   ```
 
-- easing.style {string}: The css value of `transition-timing-function` when the slide switches.
-- easing.fn {function}: When `useTransition` is set to false, the animation curve is determined by `easing.fn`.
+  Scrolling easing effect.
 
 ### listenFlick
 
-The slide will switch from one page to another when the user flickes it. This can be turned off by setting listenFlick to false.
+  - **Type**: `boolean`
+  - **Default**: `true`
 
-- Type: boolean
-- Default: true
+  When quickly flicking across the slide area, it will trigger the switch to the previous/next page. Set listenFlick to false to turn off the effect.
 
 ### threshold
 
-The threshold of going to the next page.
+  - **Type**: `number`
+  - **Default**: `0.1`
 
-- Type: number
-- Default: 0.1
+  :::tip
+  When the scrolling distance is less than the threshold, the switch to the next or previous one will not be triggered.
 
-:::tip
-When the scrolling distance is less than the threshold, the switching action won't be triggered.
+  It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slideWrapperWidth * threshold` or `slideWrapperHeight * threshold`. When the value is an integer, the threshold is threshold.
+  :::
 
-It's value can be a decimal, such as 0.1, or an integer such as 100. The difference between decimal and integer is that decimal is treated as a percentage of widh or height of slide item and integer is a threshold value.
-:::
+  Switch the threshold of the next or previous Page.
 
-### stepX
+## Instance Methods
 
-Horizonal pixel distance scrolled during the switch to the next page in x-axis direction. In general, you don't need to set this value. You should be careful when change it.
+### next([time], [easing])
 
-- Type: number
-- Default: slideItemWidth
+  - **Arguments**:
+    - `{ number } time<Optional>`: Animation duration, default is `options.speed`
+    - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
+    ```typescript
+    interface EaseItem {
+      style: string
+      fn(t: number): number
+    }
+    ```
 
+  - **Returns**: none
 
-### stepY
+  Scroll to the next page.
 
-Similar to stepX, but this is used on the y-axis direction.
+### prev([time], [easing])
 
-- Type: number
-- Default: slideItemHeight
+  - **Arguments**:
+    - `{ number } time<Optional>`: Animation duration, default is `options.speed`
+    - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
 
-### disableSetWidth
+  - **Returns**: none
 
-In default, slide plugin will give the slide wrapper element a width value which is calculated according to the width of a slide item and the number of slide items when scrolling in the x direction. If you want to set the width of slider wrapper by yourself, you need to prohibit this default action by setting this value to false, otherwise your settings of slider wrapper width will be overwritten.
+  Scroll to the previous page.
 
-- Type: boolean
-- Default: false
+### goToPage(pageX, pageY, [time], [easing])
 
-### disableSetHeight
+  - **Arguments**:
+    - `{ number } pageX`: Scroll horizontally to the Page of the corresponding index, the subscript starts from 0
+    - `{ number } pageY`: Scroll vertically to the Page of the corresponding index, the subscript starts from 0
+    - `{ number } time<Optional>`: Animation duration, default is `options.speed`
+    - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
 
-In default, slide plugin will give the slide item element a height value which is calculated according to the height of a slide wrapper when scrolling in the y direction. If you want to set the height of slider item by yourself, you need to prohibit this default action by setting this value to false, otherwise your settings of slider item height will be overwritten.
+  - **Returns**: none
 
-- Type: boolean
-- Default: false
-
-## API
-
-### next(time, easing)
-
-switch to next page
-
-**Arguments**
-
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|time|number|animation duration time|
-|easing|Object|easing function, usually don't suggest modifying. If you really need to modify, please refer to `slide.easing`|
-
-**Return**：void
-
-### prev(time, easing)
-
-switch to previous page
-
-**Arguments**
-
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|time|number|animation duration time|
-|easing|Object|easing function, usually don't suggest modifying. If you really need to modify, please refer to `slide.easing`|
-
-**Return**：void
-
-### goToPage(x, y, time, easing)
-
-In slide component, slide usually has several pages. Use this method scroll to specific page.
-
-**Arguments**
-
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|x|number|index of horizontal axis page|
-|y|number|index of vertical axis page|
-|time|number|animation duration time|
-|easing|Object|easing function when switching. Refer `slide.easing` option|
-
-**Return**: void
+  Scroll to the specified page.
 
 ### getCurrentPage()
 
-Get information of current page
+  - **Arguments**: none
 
-**Arguments**: void
+  - **Returns**: `page`
+  ```typescript
+  type Page = {
+    x: number,
+    y: number,
+    pageX: number, // pageIndex in horizontal direction
+    pageY: number  // pageIndex in vertical direction
+  }
+  const page:Page = BScroll.getCurrentPage()
+  ```
 
-**Return**: Object
+  Get currentPage.
 
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|x|number|coordinate of current page on horizontal axis|
-|y|number|coordinate of current page on vertical axis|
-|pageX|number| page index on horizontal axis(starting from 0)|
-|pageY|number| page index on vertical axis(starting from 0)|
+### startPlay()
 
-## Events
+  - **Arguments**: none
+
+  - **Returns**: none
+
+  If the loop configuration is turned on, manually turn on autoplay.
+
+### pausePlay()
+
+  - **Arguments**: none
+
+  - **Returns**: none
+
+  If the loop configuration is turned on, manually turn off autoplay.
+
+## Hooks
 
 ### slideWillChange
 
-- Arguments: Object
+  - **Arguments**: `page` object
+    - `{ number } x`: The x value of the page to be displayed
+    - `{ number } y`: The y value of the page to be displayed
+    - `{ number } pageX`: The index value of the horizontal page to be displayed, the subscript starts from 0
+    - `{ number } pageY`: The index value of the vertical page to be displayed, the subscript starts from 0
 
-|Name|Type|Description|
-|----------|:-----:|:-----------|
-|pageX|number| index of the page to be displayed on horizontal axis|
-|pageY|number| index of the page to be displayed on vertical axis|
+  - **Trigger timing**: When the currentPage value of slide is about to change
 
-- trigger: the value of currentPage will change
+  - **Usage**:
 
-- Usage
+  In the banner, it is often accompanied by a dot legend to indicate which page the current banner is on, such as the "Horizontal Slide" example above. When the user drags the banner to the next one, we hope the dot legend below will change synchronously. As shown below
 
-In the banner demo, a dot legend is used to indicate that the index of current page. When the user drags the banner to the next one, we want the dot legend to change synchronously. As shown below
+  <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
-<img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner demo">
+  This effect can be achieved by register the `slideWillChange` hook. code show as below:
 
-This effect can be achieved by listening to the `slideWillChange` event, as follows:
+  ```js
+    let currentPageIndex
+    const slide = new BScroll(this.$refs.slide, {
+      scrollX: true,
+      scrollY: false,
+      slide: {
+        threshold: 100
+      },
+      useTransition: true,
+      momentum: false,
+      bounce: false,
+      stopPropagation: true,
+      probeType: 2
+    })
+    slide.on('slideWillChange', (page) => {
+      currentPageIndex = page.pageX
+    })
+  ```
 
-```js
-  let currentPageIndex // used to show current page index
-  const slide = new BScroll(this.$refs.slide, {
-    scrollX: true,
-    scrollY: false,
-    slide: {
-      loop: true,
-      threshold: 100
-    },
-    useTransition: true,
-    momentum: false,
-    bounce: false,
-    stopPropagation: true,
-    probeType: 2
-  })
-  slide.on('slideWillChange', (page) => {
-    currentPageIndex = page.pageX
-  })
-```

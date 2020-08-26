@@ -13,19 +13,11 @@ export default class Animation extends Base {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easingFn: EaseFn | string,
-    isSlient?: boolean
+    easingFn: EaseFn | string
   ) {
     // time is 0
     if (!time) {
       this.translate(endPoint)
-      // if we change content's transformY in a tick
-      // such as: 0 -> 50px -> 0
-      // transitionend will not be triggered
-      // so we forceupdate by reflow
-      this._reflow = this.content.offsetHeight
-      // no need to dispatch move and end when slient
-      if (isSlient) return
 
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
@@ -41,11 +33,9 @@ export default class Animation extends Base {
     easingFn: EaseFn
   ) {
     let startTime = getNow()
-    let destTime = startTime + duration
-
+    const destTime = startTime + duration
     const step = () => {
       let now = getNow()
-
       // js animation end
       if (now >= destTime) {
         this.translate(endPoint)
@@ -57,20 +47,27 @@ export default class Animation extends Base {
 
       now = (now - startTime) / duration
       let easing = easingFn(now)
-      const newPoint = {} as { [key: string]: any }
+      const newPoint = {} as TranslaterPoint
       Object.keys(endPoint).forEach(key => {
         const startValue = startPoint[key]
         const endValue = endPoint[key]
         newPoint[key] = (endValue - startValue) * easing + startValue
       })
-      this.translate(<TranslaterPoint>newPoint)
+      this.translate(newPoint)
+
+      if (this.options.probeType === Probe.Realtime) {
+        this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
+      }
 
       if (this.pending) {
         this.timer = requestAnimationFrame(step)
       }
 
-      if (this.options.probeType === Probe.Realtime) {
-        this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
+      // when call stop() in animation.hooks.move or bs.scroll
+      // should not dispatch end hook, because forceStop hook will do this.
+      if (!this.pending && !this.forceStopped) {
+        console.log(this.forceStopped)
+        this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       }
     }
 
@@ -79,19 +76,29 @@ export default class Animation extends Base {
     step()
   }
 
-  stop() {
+  doStop(): boolean {
+    const pending = this.pending
+    this.setForceStopped(false)
     // still in requestFrameAnimation
-    if (this.pending) {
+    if (pending) {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
 
       if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
-        return
+        return true
       }
 
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
+    }
+    return pending
+  }
+
+  stop() {
+    const stopFromAnimation = this.doStop()
+    if (stopFromAnimation) {
+      this.hooks.trigger(this.hooks.eventTypes.callStop)
     }
   }
 }

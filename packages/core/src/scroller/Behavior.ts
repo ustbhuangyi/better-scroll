@@ -14,10 +14,13 @@ export interface Options {
   swipeTime: number
   bounces: Bounces
   rect: Rect
+  outOfBoundaryDampingFactor: number
   [key: string]: number | boolean | Bounces | Rect
 }
 
-export default class Behavior {
+export type Boundary = { minScrollPos: number; maxScrollPos: number }
+
+export class Behavior {
   content: HTMLElement
   currentPos: number
   startPos: number
@@ -33,36 +36,60 @@ export default class Behavior {
   contentSize: number
   hooks: EventEmitter
   constructor(public wrapper: HTMLElement, public options: Options) {
-    this.hooks = new EventEmitter(['momentum', 'end'])
+    this.hooks = new EventEmitter([
+      'beforeComputeBoundary',
+      'computeBoundary',
+      'momentum',
+      'end',
+    ])
     this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
+    this.refresh()
   }
 
   start() {
-    this.direction = Direction.Default
-    this.movingDirection = Direction.Default
     this.dist = 0
+    this.setMovingDirection(Direction.Default)
+    this.setDirection(Direction.Default)
   }
 
-  move(delta: number) {
+  move(delta: number): number {
     delta = this.hasScroll ? delta : 0
+    this.setMovingDirection(delta)
+    return this.performDampingAlgorithm(
+      delta,
+      this.options.outOfBoundaryDampingFactor
+    )
+  }
+
+  setMovingDirection(delta: number) {
     this.movingDirection =
       delta > 0
         ? Direction.Negative
         : delta < 0
         ? Direction.Positive
         : Direction.Default
+  }
 
+  setDirection(delta: number) {
+    this.direction =
+      delta > 0
+        ? Direction.Negative
+        : delta < 0
+        ? Direction.Positive
+        : Direction.Default
+  }
+
+  performDampingAlgorithm(delta: number, dampingFactor: number) {
     let newPos = this.currentPos + delta
-
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
       if (
         (newPos > this.minScrollPos && this.options.bounces[0]) ||
         (newPos < this.maxScrollPos && this.options.bounces[1])
       ) {
-        newPos = this.currentPos + delta / 3
+        newPos = this.currentPos + delta * dampingFactor
       } else {
         newPos =
           newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
@@ -76,7 +103,7 @@ export default class Behavior {
       destination?: number
       duration?: number
     } = {
-      duration: 0
+      duration: 0,
     }
 
     const absDist = Math.abs(this.currentPos - this.startPos)
@@ -125,7 +152,7 @@ export default class Behavior {
     const momentumData = {
       destination: current + (speed / deceleration) * (distance < 0 ? -1 : 1),
       duration: swipeTime,
-      rate: 15
+      rate: 15,
     }
 
     this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData, distance)
@@ -154,12 +181,7 @@ export default class Behavior {
 
   updateDirection() {
     const absDist = Math.round(this.currentPos) - this.absStartPos
-    this.direction =
-      absDist > 0
-        ? Direction.Negative
-        : absDist < 0
-        ? Direction.Positive
-        : Direction.Default
+    this.setDirection(absDist)
   }
 
   refresh() {
@@ -177,21 +199,34 @@ export default class Behavior {
       this.relativeOffset -= wrapperRect[position]
     }
 
-    this.minScrollPos = 0
-    this.maxScrollPos = this.wrapperSize - this.contentSize
-    if (this.maxScrollPos < 0) {
-      this.maxScrollPos -= this.relativeOffset
-      this.minScrollPos = -this.relativeOffset
+    this.computeBoundary()
+
+    this.setDirection(Direction.Default)
+  }
+
+  computeBoundary() {
+    this.hooks.trigger(this.hooks.eventTypes.beforeComputeBoundary)
+
+    const boundary: Boundary = {
+      minScrollPos: 0,
+      maxScrollPos: this.wrapperSize - this.contentSize,
     }
+    if (boundary.maxScrollPos < 0) {
+      boundary.maxScrollPos -= this.relativeOffset
+      boundary.minScrollPos = -this.relativeOffset
+    }
+    this.hooks.trigger(this.hooks.eventTypes.computeBoundary, boundary)
+
+    this.minScrollPos = boundary.minScrollPos
+    this.maxScrollPos = boundary.maxScrollPos
 
     this.hasScroll =
       this.options.scrollable && this.maxScrollPos < this.minScrollPos
+
     if (!this.hasScroll) {
       this.maxScrollPos = this.minScrollPos
       this.contentSize = this.wrapperSize
     }
-
-    this.direction = 0
   }
 
   updatePosition(pos: number) {
@@ -207,7 +242,7 @@ export default class Behavior {
     const inBoundary = position === this.getCurrentPos()
     return {
       position,
-      inBoundary
+      inBoundary,
     }
   }
 

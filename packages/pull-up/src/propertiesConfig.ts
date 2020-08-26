@@ -3,15 +3,19 @@ const sourcePrefix = 'plugins.pullUpLoad'
 const propertiesMap = [
   {
     key: 'finishPullUp',
-    name: 'finish'
+    name: 'finishPullUp'
   },
   {
     key: 'openPullUp',
-    name: 'open'
+    name: 'openPullUp'
   },
   {
     key: 'closePullUp',
-    name: 'close'
+    name: 'closePullUp'
+  },
+  {
+    key: 'autoPullUpLoad',
+    name: 'autoPullUpLoad'
   }
 ]
 

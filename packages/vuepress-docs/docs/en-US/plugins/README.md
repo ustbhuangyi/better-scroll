@@ -13,12 +13,15 @@ Existing plugins:
 - [zoom](./zoom.html)
 - [mouse-wheel](./mouse-wheel.html)
 - [observe-dom](./observe-dom.html)
+- [nested-scroll](./nested-scroll.html)
+- [infinity](./infinity.html)
+- [movable](./movable.html)
 
 You can write a plugin by yourself to add new feature to `bs`. If you want do this, please refer to [How to write a plugin](./how-to-write.html).
 
 ## Use a plugin
 
-Use plugins by calling the `BScroll.use()` global method. This has to be done before you call `new BScroll()`:
+Use plugins by calling the `BScroll.use()` static method. This has to be done before you call `new BScroll()`:
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -67,8 +70,6 @@ The hooks exposed in the plugin will be delegated to `bs`. For example, you can 
     freeScroll: true,
     scrollX: true,
     scrollY: true,
-    disableMouse: true,
-    useTransition: true,
     zoom: {
       start: 1,
       min: 0.5,
@@ -79,9 +80,9 @@ The hooks exposed in the plugin will be delegated to `bs`. For example, you can 
   bs.on('zoomStart', zoomStartHandler)
 ```
 
-## BetterScroll with all plugin capabilities
+## BetterScroll with all plugins
 
-Considering the trouble of registering plugins one by one, if your project uses the full plugin capabilities of BetterScroll, we offer a once-in-a-lifetime solution.
+Considering the trouble of registering plugins one by one, if your project uses the full plugins of BetterScroll, we offer a once-in-a-lifetime solution.
 
 
 ```js
@@ -94,3 +95,7 @@ Considering the trouble of registering plugins one by one, if your project uses 
     // and so on
   })
 ```
+
+::: warning
+import all of BetterScroll may have a big impact on the size of your bundle, try to import what you need.
+:::

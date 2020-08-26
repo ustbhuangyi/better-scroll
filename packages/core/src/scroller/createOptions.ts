@@ -11,14 +11,12 @@ export function createActionsHandlerOptions(bsOptions: BScrollOptions) {
     'preventDefault',
     'stopPropagation',
     'tagException',
-    'preventDefaultException'
-  ].reduce<ActionsHandlerOptions>(
-    (prev, cur) => {
-      prev[cur] = bsOptions[cur]
-      return prev
-    },
-    {} as ActionsHandlerOptions
-  )
+    'preventDefaultException',
+    'autoEndDistance',
+  ].reduce<ActionsHandlerOptions>((prev, cur) => {
+    prev[cur] = bsOptions[cur]
+    return prev
+  }, {} as ActionsHandlerOptions)
   return options
 }
 
@@ -34,16 +32,14 @@ export function createBehaviorOptions(
     'momentumLimitDistance',
     'deceleration',
     'swipeBounceTime',
-    'swipeTime'
-  ].reduce<BehaviorOptions>(
-    (prev, cur) => {
-      prev[cur] = bsOptions[cur]
-      return prev
-    },
-    {} as BehaviorOptions
-  )
+    'swipeTime',
+    'outOfBoundaryDampingFactor',
+  ].reduce<BehaviorOptions>((prev, cur) => {
+    prev[cur] = bsOptions[cur]
+    return prev
+  }, {} as BehaviorOptions)
   // add extra property
-  options.scrollable = bsOptions[extraProp]
+  options.scrollable = !!bsOptions[extraProp]
   options.bounces = bounces
   options.rect = rect
   return options

@@ -108,4 +108,4 @@ const mockOptions = jest.fn().mockImplementation(() => {
   }
 })
 
-export { mockOptions as Options }
+export { mockOptions as OptionsConstructor }

@@ -19,19 +19,31 @@ let vendor = (() => {
   if (!inBrowser) {
     return false
   }
-  let transformNames: {
-    [prefix: string]: string
-  } = {
-    webkit: 'webkitTransform',
-    Moz: 'MozTransform',
-    O: 'OTransform',
-    ms: 'msTransform',
-    standard: 'transform'
-  }
-
-  for (let key in transformNames) {
-    if (elementStyle[transformNames[key]] !== undefined) {
-      return key
+  const transformNames = [
+    {
+      key: 'standard',
+      value: 'transform',
+    },
+    {
+      key: 'webkit',
+      value: 'webkitTransform',
+    },
+    {
+      key: 'Moz',
+      value: 'MozTransform',
+    },
+    {
+      key: 'O',
+      value: 'OTransform',
+    },
+    {
+      key: 'ms',
+      value: 'msTransform',
+    },
+  ]
+  for (let obj of transformNames) {
+    if (elementStyle[obj.value] !== undefined) {
+      return obj.key
     }
   }
 
@@ -67,7 +79,7 @@ export function addEvent(
 ) {
   el.addEventListener(type, fn, {
     passive: false,
-    capture: !!capture
+    capture: !!capture,
   })
 }
 
@@ -78,7 +90,7 @@ export function removeEvent(
   capture?: EventListenerOptions
 ) {
   el.removeEventListener(type, fn, {
-    capture: !!capture
+    capture: !!capture,
   })
 }
 
@@ -94,7 +106,7 @@ export function offset(el: HTMLElement | null) {
 
   return {
     left,
-    top
+    top,
   }
 }
 
@@ -103,7 +115,7 @@ export function offsetToBody(el: HTMLElement) {
 
   return {
     left: -(rect.left + window.pageXOffset),
-    top: -(rect.top + window.pageYOffset)
+    top: -(rect.top + window.pageYOffset),
   }
 }
 
@@ -127,7 +139,8 @@ export const style = {
   transitionDuration: prefixStyle('transitionDuration'),
   transitionDelay: prefixStyle('transitionDelay'),
   transformOrigin: prefixStyle('transformOrigin'),
-  transitionEnd: prefixStyle('transitionEnd')
+  transitionEnd: prefixStyle('transitionEnd'),
+  transitionProperty: prefixStyle('transitionProperty'),
 }
 
 export const eventTypeMap: {
@@ -145,7 +158,7 @@ export const eventTypeMap: {
 
   mousedown: 2,
   mousemove: 2,
-  mouseup: 2
+  mouseup: 2,
 }
 
 export function getRect(el: HTMLElement): DOMRect {
@@ -155,14 +168,14 @@ export function getRect(el: HTMLElement): DOMRect {
       top: rect.top,
       left: rect.left,
       width: rect.width,
-      height: rect.height
+      height: rect.height,
     }
   } else {
     return {
       top: el.offsetTop,
       left: el.offsetLeft,
       width: el.offsetWidth,
-      height: el.offsetHeight
+      height: el.offsetHeight,
     }
   }
 }
@@ -222,7 +235,7 @@ export function click(e: any, event = 'click') {
         extend(
           {
             bubbles,
-            cancelable
+            cancelable,
           },
           posSrc
         )
@@ -289,29 +302,4 @@ export function removeClass(el: HTMLElement, className: string) {
 
   let reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
   el.className = el.className.replace(reg, ' ')
-}
-
-export function removeSizeStyle(
-  el: HTMLElement,
-  styleName: 'width' | 'height'
-): void {
-  const originStyle = el.getAttribute('style')
-  if (!originStyle) {
-    return
-  }
-  const styleArr = originStyle
-    .split(';')
-    .map(s => {
-      const SPACE_REGEXP = /(^\s*)|(\s*$)/g
-      return s.replace(SPACE_REGEXP, '').split(':')
-    })
-    .filter(s => {
-      const SPACE_REGEXP = /(^\s*)/
-      const name = s[0].replace(SPACE_REGEXP, '')
-      return name !== styleName
-    })
-    .map(s => {
-      return s.join(':')
-    })
-  el.setAttribute('style', styleArr.join(';'))
 }

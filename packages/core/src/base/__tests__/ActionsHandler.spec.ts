@@ -1,9 +1,9 @@
 import ActionsHandler, {
-  Options
+  Options,
 } from '@better-scroll/core/src/base/ActionsHandler'
 import {
   dispatchTouch,
-  dispatchMouse
+  dispatchMouse,
 } from '@better-scroll/core/src/__tests__/__utils__/event'
 
 describe('ActionsHandler', () => {
@@ -21,32 +21,33 @@ describe('ActionsHandler', () => {
       preventDefault: true,
       stopPropagation: true,
       preventDefaultException: {
-        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/
+        tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
       },
       tagException: { tagName: /^TEXTAREA$/ },
-      momentumLimitDistance: 15
+      autoEndDistance: 5,
     }
   })
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should bind click handler when options.disableMouse is true', () => {
+  it('should bind mouse event when options.disableMouse is false', () => {
+    options.disableTouch = true
     actionsHandler = new ActionsHandler(wrapper, options)
 
     const wrapperEventsName = actionsHandler.wrapperEventRegister.events.map(
-      event => event.name
+      (event) => event.name
     )
 
     const targetEventsName = actionsHandler.targetEventRegister.events.map(
-      event => event.name
+      (event) => event.name
     )
 
     expect(wrapperEventsName).toMatchObject(['mousedown'])
     expect(targetEventsName).toMatchObject(['mousemove', 'mouseup'])
   })
 
-  it('should invoice start method when dispatch mousedown', () => {
+  it('should invoke start method when dispatch mousedown', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
     const beforeStartMockHandler = jest.fn().mockImplementation(() => {
       return 'dummy test'
@@ -64,7 +65,7 @@ describe('ActionsHandler', () => {
     expect(startMockHandler).toBeCalled()
   })
 
-  it('should invoice move method when dispatch touchmove', () => {
+  it('should invoke move method when dispatch touchmove', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
     const moveMockHandler = jest.fn().mockImplementation(() => {
       return 'dummy test'
@@ -79,7 +80,7 @@ describe('ActionsHandler', () => {
     expect(moveMockHandler).toBeCalled()
   })
 
-  it('should invoice end method when dispatch touchend', () => {
+  it('should invoke end method when dispatch touchend', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
     const endMockHandler = jest.fn().mockImplementation(() => {
       return 'dummy test'
@@ -106,8 +107,8 @@ describe('ActionsHandler', () => {
     dispatchTouch(wrapper, 'click', [
       {
         pageX: 10,
-        pageY: 10
-      }
+        pageY: 10,
+      },
     ])
 
     expect(clickMockHandler).toBeCalled()

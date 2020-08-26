@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 import extendTouch from '../../util/extendTouch'
-import extendMouseWheel from '../../util/extendMouseWheel'
+import getTranslate from '../../util/getTranslate'
 
 // set default timeout
 jest.setTimeout(1000000)
@@ -15,32 +15,22 @@ describe('CoreScroll', () => {
   it('should display 4 items at least', async () => {
     const itemsCounts = await page.$$eval(
       '.core .example-item',
-      element => element.length
+      (element) => element.length
     )
-    const itemsContent = await page.$$eval('.core .example-item', element =>
-      element.map(el => el.textContent)
+    const itemsContent = await page.$$eval('.core .example-item', (element) =>
+      element.map((el) => el.textContent)
     )
 
-    expect(itemsContent).toEqual([
-      'vertical',
-      'horizontal',
-      'freescroll',
-      'driven by Mouse wheel'
-    ])
-    await expect(itemsCounts).toBeGreaterThanOrEqual(4)
+    expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
+    await expect(itemsCounts).toBeGreaterThanOrEqual(3)
   })
 
   it("should display correct items's texts", async () => {
-    const itemsContent = await page.$$eval('.core .example-item', element =>
-      element.map(el => el.textContent)
+    const itemsContent = await page.$$eval('.core .example-item', (element) =>
+      element.map((el) => el.textContent)
     )
 
-    await expect(itemsContent).toEqual([
-      'vertical',
-      'horizontal',
-      'freescroll',
-      'driven by Mouse wheel'
-    ])
+    await expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
   })
 
   describe('CoreScroll/vertical', () => {
@@ -53,12 +43,12 @@ describe('CoreScroll', () => {
       const content = await page.$('.scroll-content')
 
       expect(wrapper).toBeTruthy()
-      await expect(content).toBeTruthy()
+      expect(content).toBeTruthy()
     })
 
     it('should trigger eventListener when click wrapper DOM', async () => {
       let mockHandler = jest.fn()
-      page.once('dialog', async dialog => {
+      page.once('dialog', async (dialog) => {
         mockHandler()
         await dialog.dismiss()
       })
@@ -67,7 +57,7 @@ describe('CoreScroll', () => {
       await page.waitFor(1000)
       await page.touchscreen.tap(100, 100)
 
-      await expect(mockHandler).toHaveBeenCalled()
+      expect(mockHandler).toHaveBeenCalled()
     })
 
     it('should scroll when dispatch touch', async () => {
@@ -78,18 +68,22 @@ describe('CoreScroll', () => {
         y: 150,
         xDistance: 0,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
-      const content = await page.$('.scroll-content')
       await page.waitFor(1000)
-      const boundingBox = await content!.boundingBox()
-      await expect(boundingBox!.y).toBeLessThan(0)
+
+      const transformText = await page.$eval('.scroll-content', (node) => {
+        return window.getComputedStyle(node).transform
+      })
+      const y = getTranslate(transformText, 'y')
+
+      expect(y).toBeLessThan(0)
     })
 
     it('should dispatch scroll event', async () => {
       let mockHandler = jest.fn()
-      page.once('console', async message => {
+      page.once('console', async (message) => {
         mockHandler()
       })
       await page.waitFor(1000)
@@ -98,10 +92,10 @@ describe('CoreScroll', () => {
         y: 150,
         xDistance: 0,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
       await page.waitFor(1000)
-      await expect(mockHandler).toBeCalled()
+      expect(mockHandler).toBeCalled()
     })
   })
 
@@ -115,7 +109,7 @@ describe('CoreScroll', () => {
       const container = await page.$('.horizontal-container')
 
       expect(wrapper).toBeTruthy()
-      await expect(container).toBeTruthy()
+      expect(container).toBeTruthy()
     })
 
     it('should scroll to right when finger moves from right to left', async () => {
@@ -125,13 +119,17 @@ describe('CoreScroll', () => {
         y: 120,
         xDistance: -70,
         yDistance: 0,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
-      const content = await page.$('.scroll-content')
       await page.waitFor(1000)
-      const boundingBox = await content!.boundingBox()
-      await expect(boundingBox!.x).toBeLessThan(0)
+
+      const transformText = await page.$eval('.scroll-content', (node) => {
+        return window.getComputedStyle(node).transform
+      })
+      const x = getTranslate(transformText, 'x')
+
+      expect(x).toBeLessThan(0)
     })
   })
 
@@ -147,49 +145,19 @@ describe('CoreScroll', () => {
         y: 100,
         xDistance: -70,
         yDistance: -70,
-        gestureSourceType: 'touch'
+        gestureSourceType: 'touch',
       })
 
-      const content = await page.$('.scroll-content')
       await page.waitFor(1000)
-      const boundingBox = await content!.boundingBox()
-      await expect(boundingBox!.x).toBeLessThan(0)
-      await expect(boundingBox!.y).toBeLessThan(0)
-    })
-  })
 
-  describe('CoreScroll/driven by MouseWheel', () => {
-    beforeAll(async () => {
-      extendMouseWheel(page)
-      // emulate pc scene
-      await page.emulate({
-        viewport: {
-          isMobile: false,
-          width: 375,
-          height: 667
-        },
-        // tslint:disable-next-line: max-line-length
-        userAgent:
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'
+      const transformText = await page.$eval('.scroll-content', (node) => {
+        return window.getComputedStyle(node).transform
       })
-      await page.goto('http://0.0.0.0:8932/#/core/mouse-wheel')
-    })
+      const y = getTranslate(transformText, 'y')
+      const x = getTranslate(transformText, 'x')
 
-    it('should scroll correctly when using MouseWheel to scroll', async () => {
-      await page.waitFor(1000)
-
-      await page.dispatchMouseWheel({
-        type: 'mouseWheel',
-        x: 100,
-        y: 100,
-        deltaX: 0,
-        deltaY: 50
-      })
-
-      const content = await page.$('.wheel-scroll')
-      await page.waitFor(1000)
-      const boundingBox = await content!.boundingBox()
-      await expect(boundingBox!.y).toBeLessThan(0)
+      expect(x).toBeLessThan(0)
+      expect(y).toBeLessThan(0)
     })
   })
 })

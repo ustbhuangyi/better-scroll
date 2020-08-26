@@ -6,7 +6,9 @@ BetterScroll 是一款重点解决移动端（已支持 PC）各种滚动场景�
 
 BetterScroll 是使用纯 JavaScript 实现的，这意味着它是无依赖的。
 
-## 线上示例
+## 示例
+
+[地址](https://better-scroll.github.io/examples/)
 
 <img :src="$withBase('/assets/images/qrcode.png')" alt="示例">
 
@@ -24,7 +26,7 @@ BetterScroll 最常见的应用场景是列表滚动，我们来看一下它的 
   <!-- 这里可以放一些其它的 DOM，但不会影响滚动 -->
 </div>
 ```
-上面的代码中 BetterScroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，BetterScroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
+上面的代码中 BetterScroll 是作用在外层 **wrapper** 容器上的，滚动的部分是 **content** 元素。这里要注意的是，BetterScroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
 
 最简单的初始化代码如下：
 

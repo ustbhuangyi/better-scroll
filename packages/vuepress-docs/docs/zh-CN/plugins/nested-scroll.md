@@ -11,11 +11,11 @@
 ## 安装
 
 ```bash
-npm install @better-scroll/nested-scroll@next --save
+npm install @better-scroll/nested-scroll --save
 
 // or
 
-yarn add @better-scroll/nested-scroll@next
+yarn add @better-scroll/nested-scroll
 ```
 
 ## 使用
