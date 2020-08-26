@@ -117,6 +117,9 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     // mark wrapper to recognize bs instance by DOM attribute
     wrapper.isBScrollContainer = true
     this.scroller = new Scroller(wrapper, this.options)
+    this.scroller.hooks.on(this.scroller.hooks.eventTypes.resize, () => {
+      this.refresh()
+    })
 
     this.eventBubbling()
     this.handleAutoBlur()

@@ -33,18 +33,11 @@ export default class PagesMatrix {
     this.pageLengthOfY = this.pages && this.pages[0] ? this.pages[0].length : 0
   }
 
-  hasPages(): boolean {
-    return !!(this.pages && this.pages.length)
+  getPageStats(pageX: number, pageY: number): PageStats {
+    return this.pages[pageX][pageY]
   }
 
-  getPageStats(x: number, y: number): PageStats {
-    return this.pages[x][y]
-  }
-
-  getNearestPageIndex(x: number, y: number): PageIndex | undefined {
-    if (!this.hasPages()) {
-      return
-    }
+  getNearestPageIndex(x: number, y: number): PageIndex {
     let pageX = 0
     let pageY = 0
     let l = this.pages.length
@@ -60,7 +53,6 @@ export default class PagesMatrix {
         break
       }
     }
-
     return {
       pageX,
       pageY,

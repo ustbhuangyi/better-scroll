@@ -47,7 +47,8 @@ describe('Scroller Class tests', () => {
       'scroll',
       'beforeEnd',
       'scrollEnd',
-      'refresh',
+      'resize',
+      'beforeRefresh',
       'touchEnd',
       'flick',
       'scrollCancel',
@@ -182,14 +183,15 @@ describe('Scroller Class tests', () => {
 
   it('should invoke resize method when window is resized', () => {
     jest.useFakeTimers()
-    scroller.refresh = jest.fn()
+    const mockFn = jest.fn()
+    scroller.hooks.on(scroller.hooks.eventTypes.resize, mockFn)
     const resizeEvent = document.createEvent('Event')
     resizeEvent.initEvent('resize', true, true)
     window.dispatchEvent(resizeEvent)
     jest.advanceTimersByTime(60)
     jest.clearAllTimers()
 
-    expect(scroller.refresh).toBeCalled()
+    expect(mockFn).toBeCalled()
   })
 
   it('should trigger scrollTo hook when invoking scrollTo method', () => {

@@ -86,7 +86,7 @@ export default class Scroller implements ExposedAPI {
       'scroll',
       'beforeEnd',
       'scrollEnd',
-      'refresh',
+      'resize',
       'touchEnd',
       'end',
       'flick',
@@ -94,7 +94,7 @@ export default class Scroller implements ExposedAPI {
       'momentum',
       'scrollTo',
       'scrollToElement',
-      'resize',
+      'beforeRefresh',
     ])
     this.wrapper = wrapper
     this.content = wrapper.children[0] as HTMLElement
@@ -385,12 +385,10 @@ export default class Scroller implements ExposedAPI {
     if (isAndroid) {
       this.wrapper.scrollTop = 0
     }
-    if (!this.hooks.trigger(this.hooks.eventTypes.resize)) {
-      clearTimeout(this.resizeTimeout)
-      this.resizeTimeout = window.setTimeout(() => {
-        this.refresh()
-      }, this.options.resizePolling)
-    }
+    clearTimeout(this.resizeTimeout)
+    this.resizeTimeout = window.setTimeout(() => {
+      this.hooks.trigger(this.hooks.eventTypes.resize)
+    }, this.options.resizePolling)
   }
 
   private transitionEnd(e: TouchEvent) {
@@ -427,6 +425,7 @@ export default class Scroller implements ExposedAPI {
   }
 
   refresh() {
+    this.hooks.trigger(this.hooks.eventTypes.beforeRefresh)
     this.scrollBehaviorX.refresh()
     this.scrollBehaviorY.refresh()
 

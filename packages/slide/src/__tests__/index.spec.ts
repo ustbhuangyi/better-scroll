@@ -6,10 +6,10 @@ import { ease } from '@better-scroll/shared-utils'
 jest.mock('@better-scroll/core')
 jest.mock('../SlidePages')
 
-const createSlideElements = () => {
+const createSlideElements = (len = 3) => {
   const wrapper = document.createElement('div')
   const content = document.createElement('div')
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < len; i++) {
     content.appendChild(document.createElement('p'))
   }
   wrapper.appendChild(content)
@@ -30,13 +30,17 @@ describe('slide test for SlidePage class', () => {
   })
 
   afterAll(() => {
-    Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
-      get: function () {
-        return 0
-      },
-    })
     jest.clearAllMocks()
     jest.clearAllTimers()
+  })
+
+  it('should fail when slideContent has no children element', () => {
+    const spyFn = jest.spyOn(console, 'error')
+    const { wrapper } = createSlideElements(0)
+    scroll = new BScroll(wrapper, {})
+    slide = new Slide(scroll)
+
+    expect(spyFn).toBeCalled()
   })
 
   it('should proxy hooks to BScroll instance', () => {
@@ -97,6 +101,9 @@ describe('slide test for SlidePage class', () => {
 
   it('should clone the first and last page when loop is true', () => {
     const content = scroll.scroller.content
+    scroll.scroller.hooks.trigger(
+      scroll.scroller.hooks.eventTypes.beforeRefresh
+    )
     expect(content.children.length).toBe(5)
   })
 
@@ -107,6 +114,9 @@ describe('slide test for SlidePage class', () => {
       loop: false,
     }
     slide = new Slide(scroll)
+    scroll.scroller.hooks.trigger(
+      scroll.scroller.hooks.eventTypes.beforeRefresh
+    )
     const content = scroll.scroller.content
     expect(content.children.length).toBe(3)
   })
@@ -124,8 +134,6 @@ describe('slide test for SlidePage class', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
       slide = new Slide(scroll)
       scroll.trigger(scroll.eventTypes.scrollEnd)
-
-      expect(slide.pages.nearestPage).toBeCalled()
       expect(spyFn).toBeCalled()
     })
 
@@ -159,7 +167,7 @@ describe('slide test for SlidePage class', () => {
   })
 
   describe('tap into scroll hooks', () => {
-    it('should call initSlideState when Bscroll.hooks.refresh triggered', () => {
+    it('should call refreshHandler when Bscroll.hooks.refresh triggered', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
       slide = new Slide(scroll)
       const position = {}
@@ -169,7 +177,7 @@ describe('slide test for SlidePage class', () => {
         position
       )
 
-      expect(slide.pages.init).toBeCalled()
+      expect(slide.pages.refresh).toBeCalled()
       expect(slide.pages.getInitialPage).toBeCalled()
       expect(slide.pages.setCurrentPage).toBeCalledWith({
         pageX: 0,
@@ -243,13 +251,6 @@ describe('slide test for SlidePage class', () => {
       )
 
       expect(slide.pages.getWillChangedPage).toBeCalled()
-    })
-
-    it('should call resize when scroller.hooks.resize triggered ', () => {
-      scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.resize)
-      jest.advanceTimersByTime(61)
-
-      expect(scroll.refresh).toBeCalled()
     })
 
     it('should start a new autoPlay timer when scroller.hooks.checkClick triggered', () => {

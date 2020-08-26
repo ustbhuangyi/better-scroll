@@ -38,7 +38,7 @@ describe('slide test for SlidePages class', () => {
     const { wrapper } = createSlideElements()
     scroll = new BScroll(wrapper, {})
     slidePages = new SlidePages(scroll, slideOptions)
-    slidePages.init()
+    slidePages.refresh()
   })
 
   afterEach(() => {

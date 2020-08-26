@@ -48,7 +48,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scroll',
       'beforeEnd',
       'scrollEnd',
-      'refresh',
+      'resize',
       'touchEnd',
       'end',
       'flick',
@@ -58,7 +58,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
       'scrollToElement',
       'transitionEnd',
       'checkClick',
-      'resize'
+      'beforeRefresh',
     ]),
     scrollBehaviorX,
     scrollBehaviorY,
@@ -66,7 +66,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
     transitionEndRegister: new EventRegister(wrapper, []),
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
-    togglePointerEvents: jest.fn()
+    togglePointerEvents: jest.fn(),
   }
 })
 

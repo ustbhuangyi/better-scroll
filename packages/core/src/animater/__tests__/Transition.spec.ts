@@ -57,10 +57,10 @@ describe('Transition Class test suit', () => {
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onTime).toHaveBeenCalledTimes(1)
     expect(onTimeFunction).toHaveBeenCalledTimes(1)
-    expect(dom.style.webkitTransitionTimingFunction).toBe(
+    expect(dom.style.transitionTimingFunction).toBe(
       'cubic-bezier(0.23, 1, 0.32, 1)'
     )
-    expect(dom.style.webkitTransitionDuration).toBe('200ms')
+    expect(dom.style.transitionDuration).toBe('200ms')
     transition.destroy()
   })
 
@@ -116,7 +116,7 @@ describe('Transition Class test suit', () => {
     })
     transition.stop()
 
-    expect(dom.style.webkitTransitionDuration).toBe('0ms')
+    expect(dom.style.transitionDuration).toBe('0ms')
     expect(translater.translate).toBeCalledWith({ x: 10, y: 10 })
     expect(onForceStop).toBeCalledWith({ x: 10, y: 10 })
     expect(mockCancelAnimationFrame).toBeCalled()

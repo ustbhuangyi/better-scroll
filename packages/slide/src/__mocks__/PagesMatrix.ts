@@ -41,7 +41,6 @@ const PagesMatrix = jest.fn().mockImplementation(() => {
     scrollerWidth: 0,
     scrollerHeight: 0,
     init: jest.fn(),
-    hasPages: jest.fn().mockImplementation(() => true),
     getPageStats: jest.fn().mockImplementation(() => {
       return {
         x: 0,

@@ -25,8 +25,8 @@ describe('zoom plugin', () => {
     expect(scroll.proxy).toHaveBeenLastCalledWith([
       {
         key: 'zoomTo',
-        sourceKey: 'plugins.zoom.zoomTo'
-      }
+        sourceKey: 'plugins.zoom.zoomTo',
+      },
     ])
   })
 
@@ -38,7 +38,7 @@ describe('zoom plugin', () => {
       'beforeZoomStart',
       'zoomStart',
       'zooming',
-      'zoomEnd'
+      'zoomEnd',
     ])
     expect(scroll.eventTypes.beforeZoomStart).toEqual('beforeZoomStart')
     expect(scroll.eventTypes.zoomStart).toEqual('zoomStart')
@@ -54,13 +54,13 @@ describe('zoom plugin', () => {
       max: 4,
       initialOrigin: [0, 0],
       minimalZoomDistance: 5,
-      bounceTime: 800
+      bounceTime: 800,
     })
 
     // case 2
     scroll.options.zoom = {
       initialOrigin: ['center', 'center'],
-      bounceTime: 300
+      bounceTime: 300,
     }
     zoom = new Zoom(scroll)
     expect(zoom.zoomOpt).toMatchObject({
@@ -69,7 +69,7 @@ describe('zoom plugin', () => {
       max: 4,
       initialOrigin: ['center', 'center'],
       minimalZoomDistance: 5,
-      bounceTime: 300
+      bounceTime: 300,
     })
   })
 
@@ -81,7 +81,7 @@ describe('zoom plugin', () => {
     // start !== 1
     scroll.options.zoom = {
       start: 1.5,
-      initialOrigin: [0, 0]
+      initialOrigin: [0, 0],
     }
     new Zoom(scroll)
     expect(scroll.scroller.scrollTo).toBeCalledTimes(1)
@@ -92,11 +92,11 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 1
+          scale: 1,
         },
         end: {
-          scale: 1.5
-        }
+          scale: 1.5,
+        },
       }
     )
 
@@ -104,7 +104,7 @@ describe('zoom plugin', () => {
     scroll.options.zoom = {
       start: 3.5,
       max: 3,
-      initialOrigin: [0, 0]
+      initialOrigin: [0, 0],
     }
     new Zoom(scroll)
     expect(scroll.scroller.scrollTo).toBeCalledTimes(2)
@@ -115,20 +115,18 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 1
+          scale: 1,
         },
         end: {
-          scale: 3 // equals max
-        }
+          scale: 3, // equals max
+        },
       }
     )
   })
 
   it("should set scaled element's transform origin", () => {
     new Zoom(scroll)
-    expect(
-      scroll.scroller.content.style['webkit-transform-origin' as any]
-    ).toBe('0 0')
+    expect(scroll.scroller.content.style['transform-origin' as any]).toBe('0 0')
   })
 
   it('should not response with one finger', () => {
@@ -173,7 +171,7 @@ describe('zoom plugin', () => {
 
   it('should fail when zooming distance < minimalZoomDistance', () => {
     scroll.options.zoom = {
-      minimalZoomDistance: 10
+      minimalZoomDistance: 10,
     }
     new Zoom(scroll)
     const actions = scroll.scroller.actions
@@ -196,7 +194,7 @@ describe('zoom plugin', () => {
 
   it('should have correct behavior when zooming out', () => {
     scroll.options.zoom = {
-      max: 2
+      max: 2,
     }
     const zoom = new Zoom(scroll)
     const actions = scroll.scroller.actions
@@ -224,13 +222,13 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toBeCalledWith({
       x: -16,
       y: -16,
-      scale: 1.2
+      scale: 1.2,
     })
     expect(zoom.scale).toBe(1.2)
     // triggered beforeTranslate hooks
     const transformString: string[] = []
     const transformPoint = {
-      scale: 1.2
+      scale: 1.2,
     }
     translater.hooks.trigger(
       translater.hooks.eventTypes.beforeTranslate,
@@ -251,7 +249,7 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
       x: -32,
       y: -32,
-      scale: 1.4
+      scale: 1.4,
     })
     expect(zoom.scale).toBe(1.4)
 
@@ -267,7 +265,7 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
       x: -85,
       y: -85,
-      scale: 2 * 2 * Math.pow(0.5, 2 / 2.1)
+      scale: 2 * 2 * Math.pow(0.5, 2 / 2.1),
     })
     expect(zoom.scale).toBeCloseTo(2.067)
 
@@ -281,18 +279,18 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 2.0671155660140554
+          scale: 2.0671155660140554,
         },
         end: {
-          scale: 2
-        }
+          scale: 2,
+        },
       }
     )
   })
 
   it('should have correct behavior when zooming in', () => {
     scroll.options.zoom = {
-      min: 0.5
+      min: 0.5,
     }
     const zoom = new Zoom(scroll)
     const actions = scroll.scroller.actions
@@ -320,13 +318,13 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toBeCalledWith({
       x: 16,
       y: 16,
-      scale: 0.8
+      scale: 0.8,
     })
     expect(zoom.scale).toBe(0.8)
     // triggered beforeTranslate hooks
     const transformString: string[] = []
     const transformPoint = {
-      scale: 0.8
+      scale: 0.8,
     }
     translater.hooks.trigger(
       translater.hooks.eventTypes.beforeTranslate,
@@ -347,7 +345,7 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
       x: 32,
       y: 32,
-      scale: 0.6
+      scale: 0.6,
     })
     expect(zoom.scale).toBe(0.6)
 
@@ -363,7 +361,7 @@ describe('zoom plugin', () => {
     expect(scroll.scroller.translater.translate).toHaveBeenLastCalledWith({
       x: 57,
       y: 57,
-      scale: 0.5 * 0.5 * Math.pow(2, 0.1 / 0.5)
+      scale: 0.5 * 0.5 * Math.pow(2, 0.1 / 0.5),
     })
     expect(zoom.scale).toBeCloseTo(0.287)
 
@@ -377,11 +375,11 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 0.2871745887492588
+          scale: 0.2871745887492588,
         },
         end: {
-          scale: 0.5
-        }
+          scale: 0.5,
+        },
       }
     )
   })
@@ -390,7 +388,7 @@ describe('zoom plugin', () => {
     scroll.options.zoom = {
       min: 0.5,
       max: 3,
-      start: 1
+      start: 1,
     }
     const zoom = new Zoom(scroll)
     const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
@@ -408,11 +406,11 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 1
+          scale: 1,
         },
         end: {
-          scale: 2
-        }
+          scale: 2,
+        },
       }
     )
 
@@ -425,11 +423,11 @@ describe('zoom plugin', () => {
       ease.bounce,
       {
         start: {
-          scale: 2
+          scale: 2,
         },
         end: {
-          scale: 1.5
-        }
+          scale: 1.5,
+        },
       }
     )
   })
@@ -438,7 +436,7 @@ describe('zoom plugin', () => {
     scroll.options.zoom = {
       min: 1,
       start: 1,
-      max: 4
+      max: 4,
     }
     new Zoom(scroll)
     const actions = scroll.scroller.actions
@@ -489,7 +487,7 @@ describe('zoom plugin', () => {
       actions,
       scrollBehaviorX,
       scrollBehaviorY,
-      translater
+      translater,
     } = scroll.scroller
     scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
     expect(scrollBehaviorX.hooks.events['beforeComputeBoundary'].length).toBe(0)

@@ -154,7 +154,7 @@ describe('BetterScroll Options', () => {
       swipeTime: 2500,
       tap: '',
       useTransition: true,
-      translateZ: ' translateZ(1px)',
+      translateZ: '',
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,

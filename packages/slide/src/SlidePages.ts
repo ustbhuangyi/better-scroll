@@ -28,11 +28,16 @@ export default class SlidePages {
   needLoop: boolean
   pagesMatrix: PagesMatrix
   currentPage: Page
-  constructor(public scroll: BScroll, private slideOptions: SlideConfig) {}
+  constructor(public scroll: BScroll, private slideOptions: SlideConfig) {
+    this.currentPage = extend({}, BASE_PAGE)
+  }
 
-  init() {
-    this.currentPage = this.currentPage || extend({}, BASE_PAGE)
+  refresh() {
     this.pagesMatrix = new PagesMatrix(this.scroll)
+    const { pageX, pageY } = this.currentPage
+    // when refresh or resize, currenpage.(x|y) need recaculate
+    const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
+    this.currentPage = { pageX, pageY, x, y }
     this.checkSlideLoop()
   }
 
@@ -40,10 +45,7 @@ export default class SlidePages {
     this.currentPage = newPage
   }
 
-  getInternalPage(pageX: number, pageY: number): Page | undefined {
-    if (!this.pagesMatrix.hasPages()) {
-      return
-    }
+  getInternalPage(pageX: number, pageY: number): Page {
     if (pageX >= this.pagesMatrix.pageLengthOfX) {
       pageX = this.pagesMatrix.pageLengthOfX - 1
     } else if (pageX < 0) {
@@ -138,10 +140,7 @@ export default class SlidePages {
     )
   }
 
-  getValidPageIndex(x: number, y: number): PageIndex | undefined {
-    if (!this.pagesMatrix.hasPages()) {
-      return
-    }
+  getValidPageIndex(x: number, y: number): PageIndex {
     let lastX = this.pagesMatrix.pageLengthOfX - 1
     let lastY = this.pagesMatrix.pageLengthOfY - 1
     let firstX = 0
@@ -180,9 +179,7 @@ export default class SlidePages {
     directionY: number
   ): Page {
     const pageIndex = this.pagesMatrix.getNearestPageIndex(x, y)
-    if (!pageIndex) {
-      return extend({}, BASE_PAGE)
-    }
+
     let { pageX, pageY } = pageIndex
     let newX
     let newY
@@ -193,7 +190,7 @@ export default class SlidePages {
     }
     if (pageY === this.currentPage.pageY) {
       pageY += directionY
-      pageY = between(pageIndex.pageY, 0, this.pagesMatrix.pageLengthOfY - 1)
+      pageY = between(pageY, 0, this.pagesMatrix.pageLengthOfY - 1)
     }
 
     newX = this.pagesMatrix.getPageStats(pageX, 0).x

@@ -3,7 +3,7 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn,
-  Probe
+  Probe,
 } from '@better-scroll/shared-utils'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
@@ -38,6 +38,10 @@ export default class Transition extends Base {
     this.hooks.trigger(this.hooks.eventTypes.timeFunction, easing)
   }
 
+  transitionProperty() {
+    this.style[style.transitionProperty] = style.transform
+  }
+
   move(
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
@@ -46,6 +50,7 @@ export default class Transition extends Base {
   ) {
     this.setPending(time > 0)
     this.transitionTimingFunction(easingFn as string)
+    this.transitionProperty()
     this.transitionTime(time)
     this.translate(endPoint)
 

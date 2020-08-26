@@ -15,7 +15,7 @@ const SlidePage = jest.fn().mockImplementation(() => {
     slideY: false,
     needLoop: true,
     pagesMatrix: new PagesMatrix({} as any),
-    init: jest.fn(),
+    refresh: jest.fn(),
     checkSlideLoop: jest.fn(),
     setCurrentPage: jest.fn(),
     getInternalPage: jest.fn(),

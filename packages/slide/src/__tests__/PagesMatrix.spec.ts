@@ -55,10 +55,6 @@ describe('slide test for PagesMatrix class', () => {
     expect(pageMatrix.pageLengthOfY).toBe(4)
   })
 
-  it('should work well with hasPages()', () => {
-    expect(pageMatrix.hasPages()).toBe(true)
-  })
-
   it('should work well with getPageStats()', () => {
     const pageStats1 = pageMatrix.getPageStats(1, 0)
 
