@@ -82,7 +82,7 @@
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^4.0.2",
+    "typescript": "4.0.2",
     "vconsole": "^3.3.4",
     "zlib": "^1.0.5"
   },
