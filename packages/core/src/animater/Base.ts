@@ -2,7 +2,7 @@ import {
   EaseFn,
   safeCSSStyleDeclaration,
   cancelAnimationFrame,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 
@@ -33,7 +33,7 @@ export default abstract class Base implements ExposedAPI {
       'forceStop',
       'callStop',
       'time',
-      'timeFunction'
+      'timeFunction',
     ])
     this.style = content.style as safeCSSStyleDeclaration
   }
@@ -54,8 +54,7 @@ export default abstract class Base implements ExposedAPI {
     startPoint: TranslaterPoint,
     endPoint: TranslaterPoint,
     time: number,
-    easing: string | EaseFn,
-    isSilent?: boolean
+    easing: string | EaseFn
   ): void
 
   abstract doStop(): void
