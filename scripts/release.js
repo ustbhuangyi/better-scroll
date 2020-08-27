@@ -73,9 +73,9 @@ const release = async () => {
     'publish',
     version,
     '--force-publish',
+    '*',
     '--npm-tag',
-    npmTag,
-    '*'
+    npmTag
   ]
 
   console.log(chalk.grey(`lerna ${releaseArguments.join(' ')}`))
