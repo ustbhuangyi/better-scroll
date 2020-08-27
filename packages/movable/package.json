@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/movable",
-  "version": "2.0.0-beta.10",
+  "version": "2.0.0",
   "description": "Movable plugin for BetterScroll",
   "author": "huangyi <ustbhuangyi@gmail.com>",
   "main": "dist/movable.min.js",
@@ -27,6 +27,6 @@
     "directory": "packages/observe-dom"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.0-beta.10"
+    "@better-scroll/core": "^2.0.0"
   }
 }
