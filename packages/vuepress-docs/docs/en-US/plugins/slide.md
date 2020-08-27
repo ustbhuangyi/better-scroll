@@ -4,7 +4,7 @@
 
 slide expands the ability of carousel for BetterScroll.
 
-## 安装
+## Install
 
 ```bash
 npm install @better-scroll/slide --save
