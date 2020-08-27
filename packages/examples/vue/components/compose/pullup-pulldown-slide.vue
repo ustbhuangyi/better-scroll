@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- pollup -->
-    <div class="pullup-wrapper">
+    <div class="pullup-wrapper" ref="pullup">
       <div v-show="!isPullingUp">
         <span>Pull Up and load</span>
       </div>
@@ -54,10 +54,10 @@ BScroll.use(PullDown)
 BScroll.use(PullUp)
 BScroll.use(Slide)
 
-const BASE = 10
+const BASE = 2
 const TIME_BOUNCE = 700
-const REQUEST_TIME = 300
-const THRESHOLD = 20
+const REQUEST_TIME = 1000
+const THRESHOLD = 50
 const STOP = 56
 
 export default {
@@ -66,7 +66,8 @@ export default {
       beforePullDown: true,
       isPullingDown: false,
       isPullingUp: false,
-      dataList: new Array(BASE)
+      dataList: new Array(BASE),
+      stopPullup: false
     }
   },
   created() {
@@ -110,29 +111,42 @@ export default {
         pullDownEle.style.transform = `translateY(${-parseInt(pulldownH) +
           pos.y}px) translateZ(0)`
       }
+      const pullupThreshold = -30
+      const maxScrollY = this.bscroll.maxScrollY
+      if (pos.y - maxScrollY <= pullupThreshold && this.isPullingUp) {
+        this.stopPullup = true
+      }
+      if (pos.y - maxScrollY <= 0 && !this.stopPullup) {
+        const pullUpEle = this.$refs.pullup
+        const { height: pullupH } = getComputedStyle(pullUpEle, null)
+        pullUpEle.style.transform = `translateY(${pos.y - maxScrollY}px) translateZ(0)`
+      }
     },
     // pullingDown event handler
     async pullingDownHandler() {
       this.beforePullDown = false
       this.isPullingDown = true
+      this.bscroll.enabled = false
       await this.requestData('refresh')
       this.isPullingDown = false
       this.$nextTick(() => {
         this.bscroll.finishPullDown()
         this.beforePullDown = true
+        this.bscroll.enabled = true
         this.bscroll.refresh()
       })
     },
     // pullingUp event handler
     async pullingUpHandler() {
-      // debugger
       this.isPullingUp = true
+      this.bscroll.enabled = false
       await this.requestData('load')
-      this.isPullingUp = false
       this.$nextTick(() => {
+        this.isPullingUp = false
         this.bscroll.finishPullUp()
-        // debugger
+        this.bscroll.enabled = true
         this.bscroll.refresh()
+        this.resetPullupPos()
       })
     },
     async requestData(type) {
@@ -155,6 +169,12 @@ export default {
           resolve(dataList)
         }, REQUEST_TIME)
       })
+    },
+    resetPullupPos() {
+      const pullUpEle = this.$refs.pullup
+      pullUpEle.style.transform = `translateY(0px) translateZ(0)`
+      pullUpEle.style.transition = 'transform 0.5s'
+      this.stopPullup = false
     }
   }
 }
