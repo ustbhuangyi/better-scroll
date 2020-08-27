@@ -1,11 +1,12 @@
-import BScroll from '@better-scroll/core'
-import { Probe } from '@better-scroll/shared-utils'
+import BScroll, { Boundary } from '@better-scroll/core'
+import { Probe, warn } from '@better-scroll/shared-utils'
 import IndexCalculator from './IndexCalculator'
 import DataManager from './DataManager'
 import DomManager from './DomManager'
 import Tombstone from './Tombstone'
+
 export interface InfinityOptions {
-  fetch: (count: number) => Promise<Array<any>>
+  fetch: (count: number) => Promise<Array<any> | false>
   render: (item: any, div?: HTMLElement) => HTMLElement
   createTombstone: () => HTMLElement
 }
@@ -20,36 +21,34 @@ const EXTRA_SCROLL_Y = -2000
 
 export default class InfinityScroll {
   static pluginName = 'infinity'
-  public start: number = 0
-  public end: number = 0
+  start: number = 0
+  end: number = 0
+  options: InfinityOptions
   private tombstone: Tombstone
   private domManager: DomManager
   private dataManager: DataManager
   private indexCalculator: IndexCalculator
 
-  constructor(public bscroll: BScroll) {
-    if (bscroll.options.infinity) {
-      this.bscroll.options.probeType = Probe.Realtime
-      this.bscroll.scroller.scrollBehaviorY.hasScroll = true
-      this.bscroll.scroller.scrollBehaviorY.maxScrollPos = EXTRA_SCROLL_Y
-
-      this.init(bscroll.options.infinity)
-    }
+  constructor(public scroll: BScroll) {
+    this.init()
   }
 
-  init(options: InfinityOptions): void {
+  init() {
+    this.handleOptions()
+
     const {
       fetch: fetchFn,
       render: renderFn,
       createTombstone: createTombstoneFn
-    } = options
+    } = this.options
+
     this.tombstone = new Tombstone(createTombstoneFn)
     this.indexCalculator = new IndexCalculator(
-      this.bscroll.scroller.scrollBehaviorY.wrapperSize,
+      this.scroll.scroller.scrollBehaviorY.wrapperSize,
       this.tombstone.height
     )
     this.domManager = new DomManager(
-      this.bscroll.scroller.content,
+      this.scroll.scroller.content,
       renderFn,
       this.tombstone
     )
@@ -59,10 +58,43 @@ export default class InfinityScroll {
       this.onFetchFinish.bind(this)
     )
 
-    this.bscroll.on(this.bscroll.eventTypes.destroy, this.destroy, this)
-    this.bscroll.on(this.bscroll.eventTypes.scroll, this.update, this)
+    this.scroll.on(this.scroll.eventTypes.destroy, this.destroy, this)
+    this.scroll.on(this.scroll.eventTypes.scroll, this.update, this)
+    const { scrollBehaviorY } = this.scroll.scroller
+
+    scrollBehaviorY.hooks.on(
+      scrollBehaviorY.hooks.eventTypes.computeBoundary,
+      this.modifyBoundary,
+      this
+    )
 
     this.update({ y: 0 })
+  }
+
+  private modifyBoundary(boundary: Boundary) {
+    // manually set position to allow scroll
+    boundary.maxScrollPos = EXTRA_SCROLL_Y
+  }
+
+  private handleOptions() {
+    // narrow down type to an object
+    const infinityOptions = this.scroll.options.infinity
+    if (infinityOptions) {
+      if (typeof infinityOptions.fetch !== 'function') {
+        warn('Infinity plugin need fetch Function to new data.')
+      }
+      if (typeof infinityOptions.render !== 'function') {
+        warn('Infinity plugin need render Function to render each item.')
+      }
+      if (typeof infinityOptions.render !== 'function') {
+        warn(
+          'Infinity plugin need createTombstone Function to create tombstone.'
+        )
+      }
+      this.options = infinityOptions
+    }
+
+    this.scroll.options.probeType = Probe.Realtime
   }
 
   update(pos: { y: number }): void {
@@ -83,8 +115,8 @@ export default class InfinityScroll {
     const { end } = this.updateDom(list)
     if (!hasMore) {
       this.domManager.removeTombstone()
-      this.bscroll.scroller.animater.stop()
-      this.bscroll.resetPosition()
+      this.scroll.scroller.animater.stop()
+      this.scroll.resetPosition()
     }
     // tslint:disable-next-line: no-floating-promises
     return end
@@ -100,12 +132,12 @@ export default class InfinityScroll {
     )
 
     if (startDelta) {
-      this.bscroll.minScrollY = startDelta
+      this.scroll.minScrollY = startDelta
     }
 
-    if (endPos > this.bscroll.maxScrollY) {
-      this.bscroll.maxScrollY = -(
-        endPos - this.bscroll.scroller.scrollBehaviorY.wrapperSize
+    if (endPos > this.scroll.maxScrollY) {
+      this.scroll.maxScrollY = -(
+        endPos - this.scroll.scroller.scrollBehaviorY.wrapperSize
       )
     }
 
@@ -117,12 +149,13 @@ export default class InfinityScroll {
   }
 
   destroy() {
-    const content: HTMLElement = this.bscroll.scroller.content
+    const { content, scrollBehaviorY } = this.scroll.scroller
     while (content.firstChild) {
       content.removeChild(content.firstChild)
     }
     this.domManager.destroy()
-    this.bscroll.off('scroll', this.update)
-    this.bscroll.off('destroy', this.destroy)
+    this.scroll.off('scroll', this.update)
+    this.scroll.off('destroy', this.destroy)
+    scrollBehaviorY.hooks.off(scrollBehaviorY.hooks.eventTypes.computeBoundary)
   }
 }

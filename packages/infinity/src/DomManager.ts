@@ -122,7 +122,6 @@ export default class DomManager {
     )
     let pos = startPos
 
-    // TODO transition
     for (let i = start; i < end; i++) {
       const tombstone = list[i].tombstone
       if (tombstone) {
