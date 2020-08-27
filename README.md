@@ -1,6 +1,6 @@
 # better-scroll
 
-[![npm version](https://img.shields.io/npm/v/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![npm next Version](https://badgen.net/npm/v/better-scroll/next)](https://www.npmjs.com/package/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll)
+[![npm version](https://img.shields.io/npm/v/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll)
 
 [中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/README_zh-CN.md)
 
@@ -10,19 +10,20 @@
 
 [2.x Demo](https://better-scroll.github.io/examples/)
 
-> **Note**: The following code is the syntax of `2.x`.
+> **Note**: `1.x` is not maintained. please migrate your version as soon as possible
 
 # Install
 
 ```bash
-npm install better-scroll -S # install 1.x
-npm install better-scroll@next -S # install 2.x，with full-featured plugin.
+npm install better-scroll -S # install 2.x，with full-featured plugin.
+
+npm install @better-scroll/core # core scroll
 ```
 
 or include it directly via CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/better-scroll"></script>
+<script src="https://unpkg.com/better-scroll@2.0.0/dist/better-scroll.js"></script>
 ```
 
 ## What is BetterScroll ?

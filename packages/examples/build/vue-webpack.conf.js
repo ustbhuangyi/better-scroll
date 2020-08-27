@@ -7,7 +7,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const webpackBar = require('webpackbar')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const path = require('path')
 const fs = require('fs')
 const { e2e } = require('yargs').argv
@@ -153,12 +153,10 @@ webpackConfig
   }, () => {
     webpackConfig
       .optimization
-        .minimizer([new UglifyJsPlugin({
-          uglifyOptions: {
-            warnings: false
-          }
-        })])
+        .minimizer('TerserPlugin')
+          .use(TerserPlugin)
         .end()
+      .end()
       .plugin('OptimizeCSSPlugin')
         .use(OptimizeCSSPlugin, [{
           cssProcessorOptions: {
