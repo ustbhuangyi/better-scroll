@@ -4,7 +4,7 @@
 
 [中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/README_zh-CN.md)
 
-[1.x Docs](https://ustbhuangyi.github.io/better-scroll/#/)
+[1.x Docs](https://better-scroll.github.io/docs-v1/)
 
 [2.x Docs](https://better-scroll.github.io/docs/en-US/)
 
