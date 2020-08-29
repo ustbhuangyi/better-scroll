@@ -2,47 +2,63 @@
 
 BetterScroll 的插件需要是一个类，并且具有以下特性：
 
-- 静态的 pluginName 属性。
-- constructor 中会将 bs 传入。因此你可以在插件中控制 bs。
+  - 静态的 pluginName 属性。
+  - constructor 的第一个参数就是 BetterScroll 实例 `bs`，你可以通过 bs 的**事件**或者**钩子**来注入自己的逻辑。
 
-一个最简单的插件结构如下：
+最简单的插件骨架如下：
 
 ```typescript
   export default class MyPlugin {
     static pluginName = 'myPlugin'
     constructor(public scroll: BScroll){
-      // this.scroll 就是 BetterScroll 实例
+      // this.scroll is BetterScroll instance
     }
   }
 ```
 
-:::warning
-  插件类上面的 pluginName 属性对应的值，必须有初始化 BetterScroll 传入的 options 的顶级根属性名称对应，要不然在实例化 BetterScroll 的时候，并不会执行插件的初始化。
+但是我们需要深入了解更好的细节，才能写出一个逻辑完备、功能强大的 BetterScroll 插件。请继续往下阅读。
 
-  ```js
-  // myplugin.js
-  export default class MyPlugin {
-    static pluginName = 'myPlugin'
-    constructor(public scroll: BScroll){}
+## 事件 VS 钩子
+
+基于 2.x 的架构设计，以及对 1.x 事件的兼容，我们延伸出两个概念 ——『**事件**』以及『**钩子**』。从本源上来说它们都是属于 `EventEmitter` 实例，只是叫法不一样。下面我们从节选的源码来讲解一下：
+
+```typescript
+  export default BScrollCore extends EventEmitter {
+    hooks: EventEmitter
   }
+```
 
-  // main.js
-  import BetterScroll from '@better-scroll/core'
-  import MyPlugin from 'myplugin.js'
-  BetterScroll.use(MyPlugin)
+  - **BScrollCore**
 
-  // 传入顶级属性叫 'myPlugin' 的 options。
-  // 因为 MyPlugin.pluginName 的 value 值是 'myPlugin'
-  let bs = new BetterScroll('.wrapper', {
-    myPlugin: {}
-  })
-  let myPluginInstance = bs.plugins.myPlugin
-  ```
-:::
+    本身继承了 EventEmitter。它派发出来的，我们都称之为『**事件**』。
 
-## 暴露方法
+    ```js
+      let bs = new BScroll('.wrapper', {})
 
-bs 提供了 `proxy` 方法把插件中的方法或者属性代理到 bs 上。
+      // 监听 bs 的 scroll 事件
+      bs.on('scroll', () => {})
+      // 监听 bs 的 refresh 事件
+      bs.on('refresh', () => {})
+    ```
+
+  - **BScrollCore.hooks**
+
+    hooks 也是 EventEmitter 的实例。它派发出来的，我们都称之为『**钩子**』。
+
+    ```js
+      let bs = new BScroll('.wrapper', {})
+
+      // 监听 bs 的 refresh 钩子
+      bs.hooks.on('refresh', () => {})
+      // 监听 bs 的 enable 钩子
+      bs.hooks.on('enable', () => {})
+    ```
+
+相信现在大家对两者有了更好的区分吧，『**事件**』是为了 1.x 的兼容考虑，在 2.x 编写插件的时候，你应该更加关注『**钩子**』。
+
+## 代理方法或者属性
+
+如果你想要将插件的**方法**或者**属性**暴露出去，bs 提供了 `proxy` 方法代理至 bs。
 
 ```typescript
   export default class MyPlugin {
@@ -59,23 +75,28 @@ bs 提供了 `proxy` 方法把插件中的方法或者属性代理到 bs 上。
           sourceKey: 'plugins.myPlugin.newProperty'
         }
       ])
+
+      // 通过 bs 获取插件的属性或者方法
+      this.scroll.newFunction // myPlugin.newFunction 方法的别名
+      this.scroll.newProperty // myPlugin.newFunction 属性的别名
     }
   }
 ```
 
-## 注册钩子
+## 注册事件
 
-调用 `registerType` 方法来给 bs 增加新的 hook，这样 bs 校验 hook 是合法的，因此你就可以触发这个钩子。
+调用 `registerType` 方法来给 bs 增加新事件，要不然在监听或者触发事件的时候会被检验为非法事件并且报错。
 
 ```typescript
   export default class MyPlugin {
     static pluginName = 'myPlugin'
     constructor(private scroll: BScroll){
-      // 注册 hook
-      this.scroll.registerType(['yourHook'])
+      // 注册事件
+      this.scroll.registerType(['yourEventName'])
     }
     someFunction() {
-      this.scroll.trigger(this.scroll.eventTypes.yourHook) // 触发 hook
+      // 安全触发事件
+      this.scroll.trigger(this.scroll.eventTypes.yourEventName)
     }
   }
 ```

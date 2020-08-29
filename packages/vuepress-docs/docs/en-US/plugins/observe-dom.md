@@ -23,6 +23,6 @@ yarn add @better-scroll/observe-dom
 
     new BScroll('.bs-wrap', {
       //...
-      observeDOM: true // set observeDOM to true
+      observeDOM: true // init observe-dom plugin
     })
   ```

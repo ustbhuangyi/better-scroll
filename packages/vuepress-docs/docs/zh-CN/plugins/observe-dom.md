@@ -17,13 +17,13 @@ yarn add @better-scroll/observe-dom
 
 ## 使用
 
-  ```js
-    import BScroll from '@better-scroll/core'
-    import ObserveDOM from '@better-scroll/observe-dom'
-    BScroll.use(ObserveDOM)
+```js
+  import BScroll from '@better-scroll/core'
+  import ObserveDOM from '@better-scroll/observe-dom'
+  BScroll.use(ObserveDOM)
 
-    new BScroll('.bs-wrap', {
-      //...
-      observeDOM: true // 设置 observeDOM 值为 true
-    })
-  ```
+  new BScroll('.bs-wrapper', {
+    //...
+    observeDOM: true // 开启 observe-dom 插件
+  })
+```

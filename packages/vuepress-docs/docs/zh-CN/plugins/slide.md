@@ -148,8 +148,8 @@ yarn add @better-scroll/slide
   注意：当设置 `useTransition = true`时，可能在 iphone 某些系统上出现闪烁。你需要像上面 demo 中的代码一样，每个 `slide-page` 额外增加下面两个样式：
 
   ```css
-  transform: translate3d(0,0,0)
-  backface-visibility: hidden
+    transform: translate3d(0,0,0)
+    backface-visibility: hidden
   ```
   :::
 
@@ -214,11 +214,11 @@ yarn add @better-scroll/slide
 
   切换下一个或上一个 Page 的阈值。
 
-:::tip
-当滚动距离小于该阈值时，不会触发切换到下一个或上一个。
+  :::tip
+  当滚动距离小于该阈值时，不会触发切换到下一个或上一个。
 
-可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideWrapperWidth * threshold` 或者 `slideWrapperHeight * threshold`。当该值为整数时，则阈值就是 threshold。
-:::
+  可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideWrapperWidth * threshold` 或者 `slideWrapperHeight * threshold`。当该值为整数时，则阈值就是 threshold。
+  :::
 
 ## 实例方法
 
@@ -293,7 +293,7 @@ yarn add @better-scroll/slide
 
   如果开启了 loop 的配置，手动关闭循环播放。
 
-## 钩子
+## 事件
 
 ### slideWillChange
 

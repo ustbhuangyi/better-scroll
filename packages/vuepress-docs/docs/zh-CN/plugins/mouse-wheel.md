@@ -21,18 +21,18 @@ yarn add @better-scroll/mouse-wheel
 为了开启鼠标滚动功能，你需要首先引入 mouseWheel 插件，通过静态方法 `BScroll.use()` 注册插件，最后传入正确的 [mouseWheel 选项对象](./mouse-wheel.html#mousewheel-选项对象)
 
 ```js
-import BScroll from '@better-scroll/core'
-import MouseWheel from '@better-scroll/mouse-wheel'
-BScroll.use(MouseWheel)
+  import BScroll from '@better-scroll/core'
+  import MouseWheel from '@better-scroll/mouse-wheel'
+  BScroll.use(MouseWheel)
 
-new BScroll('.bs-wrapper', {
-  //...
-  mouseWheel: {
-    speed: 20,
-    invert: false,
-    easeTime: 300
-  }
-})
+  new BScroll('.bs-wrapper', {
+    //...
+    mouseWheel: {
+      speed: 20,
+      invert: false,
+      easeTime: 300
+    }
+  })
 ```
 
 - **纵向普通滚动示例**
@@ -158,40 +158,40 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
 ### speed
 
-- **类型**：`number`
-- **默认值**：`20`
+  - **类型**：`number`
+  - **默认值**：`20`
 
   鼠标滚轮滚动的速度。
 
 ### invert
 
-- **类型**：`boolean`
-- **默认值**：`false`
+  - **类型**：`boolean`
+  - **默认值**：`false`
 
   当该值为 true 时，表示滚轮滚动和 BetterScroll 滚动的方向相反。
 
 ### easeTime
 
-- **类型**：`number`
-- **默认值**: `300`(ms)
+  - **类型**：`number`
+  - **默认值**： `300`(ms)
 
   滚动动画的缓动时长。
 
 ### discreteTime
 
-- **类型**：`number`
-- **默认值**: `400`(ms)
+  - **类型**：`number`
+  - **默认值**： `400`(ms)
 
   由于滚轮滚动是一种离散的运动，并没有 start、move、end 的事件类型，因此只要在 discreteTime 时间内没有探测到滚动，那么一次的滚轮动作就结束了。
 
-::: warning 注意
-当搭配 [pulldown](./pulldown.html) 插件的时候，`easeTime` 和 `discreteTime` 会被内部修改成合理的固定值，以便触发 `pullingDown` 钩子
-:::
+  ::: warning 注意
+  当搭配 [pulldown](./pulldown.html) 插件的时候，`easeTime` 和 `discreteTime` 会被内部修改成合理的固定值，以便触发 `pullingDown` 钩子
+  :::
 
 ### throttleTime
 
-- **类型**：`number`
-- **默认值**: `0`(ms)
+  - **类型**：`number`
+  - **默认值**： `0`(ms)
 
   由于滚轮滚动是高频率的动作，因此可以通过 throttleTime 来限制触发频率，mouseWheel 内部会缓存滚动的距离，并且每隔 throttleTime 会计算缓存的距离并且滚动。
 
@@ -199,54 +199,63 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
 ### dampingFactor
 
-- **类型**：`number`
-- **默认值**: `0.1`
+  - **类型**：`number`
+  - **默认值**： `0.1`
 
   阻尼因子，值的范围是[0, 1]，当 BetterScroll 滚出边界的时候，需要施加阻力，防止滚动幅度过大，值越小，阻力越大。
 
 ## 钩子
 
 ### alterOptions
-- **参数**：`wheelConfig`
-  ```typescript
-  export interface MouseWheelConfig {
-    speed: number
-    invert: boolean
-    easeTime: number
-    discreteTime: number
-    throttleTime: number,
-    dampingFactor: number
-  }
-  ```
-- **触发时机**：滚轮滚动开始，允许修改 options 来控制滚动中的某些行为。
+
+  - **参数**：`MouseWheelConfig`
+    ```typescript
+    export interface MouseWheelConfig {
+      speed: number
+      invert: boolean
+      easeTime: number
+      discreteTime: number
+      throttleTime: number,
+      dampingFactor: number
+    }
+    ```
+  - **触发时机**：滚轮滚动开始
+
+  允许修改 options 来控制滚动中的某些行为。
+
+## 事件
 
 ### mousewheelStart
-- **参数**：无
-- **触发时机**：滚轮滚动开始。
+
+  - **参数**：无
+  - **触发时机**：滚轮滚动开始。
 
 ### mousewheelMove
-- **参数**: `{ x, y }`
- - `{ number } x`: 当前 BetterScroll 的横坐标
- - `{ number } y`: 当前 BetterScroll 的纵坐标
-- **类型**: `{ x: number, y: number }`
-- **触发时机**：滚轮滚动中
+
+  - **参数**： `{ x, y }`
+  - `{ number } x`：当前 BetterScroll 的横向滚动位置
+  - `{ number } y`：当前 BetterScroll 的纵向滚动位置
+  - **类型**： `{ x: number, y: number }`
+  - **触发时机**：滚轮滚动中
 
 ### mousewheelEnd
-- **参数**：`delta`
-- **类型**： `WheelDelta`
-```typescript
-interface WheelDelta {
-  x: number
-  y: number
-  directionX: Direction
-  directionY: Direction
-}
-```
-- **触发时机**：discreteTime 之后如果还没有触发 mousewheel 事件，那么便结算一次滚轮滚动行为。
 
-::: danger 警告
-由于 mousewheel 事件的特殊性，mousewheelEnd 派发并不代表滚动动画结束。
-:::
+  - **参数**：`delta`
+  - **类型**： `WheelDelta`
+  ```typescript
+    interface WheelDelta {
+      x: number
+      y: number
+      directionX: Direction
+      directionY: Direction
+    }
+  ```
+  - **触发时机**：discreteTime 之后如果还没有触发 mousewheel 事件，那么便结算一次滚轮滚动行为。
+
+  ::: danger 警告
+  由于 mousewheel 事件的特殊性，mousewheelEnd 派发并不代表滚动动画结束。
+  :::
+
 
 ::: tip 提示
 在绝大多数的场景下，如果你想要精确的知道当前 BetterScroll 的滚动位置，请监听 scroll、scrollEnd 钩子，而不是 `mouseXXX` 钩子。

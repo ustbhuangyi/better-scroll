@@ -16,21 +16,21 @@ yarn add @better-scroll/pull-up
 
 ## 使用
 
-通过静态方法 `BScroll.use()` 初始化插件
+通过静态方法 `BScroll.use()` 注册插件
 
 ```js
-import BScroll from '@better-scroll/core'
-import Pullup from '@better-scroll/pull-up'
+  import BScroll from '@better-scroll/core'
+  import Pullup from '@better-scroll/pull-up'
 
-BScroll.use(Pullup)
+  BScroll.use(Pullup)
 ```
 
 然后，实例化 BetterScroll 时需要传入[ pullup 配置项](./pullup.html#pullupload-选项对象)。
 
 ```js
-new BScroll('.bs-wrapper', {
-  pullUpLoad: true
-})
+  new BScroll('.bs-wrapper', {
+    pullUpLoad: true
+  })
 ```
 ## 示例
 
@@ -64,11 +64,9 @@ new BScroll('.bs-wrapper', {
   - **参数**：无
   - **返回值**：无
 
-::: warning 注意
-
-每次触发 `pullingUp` 钩子后，你应该**主动调用** `finishPullUp()` 告诉 BetterScroll 准备好下一次的 pullingUp 钩子。
-
-:::
+  ::: warning 注意
+  每次触发 `pullingUp` 钩子后，你应该**主动调用** `finishPullUp()` 告诉 BetterScroll 准备好下一次的 pullingUp 钩子。
+  :::
 
 ### `openPullUp(config: PullUpLoadOptions = {})`
 
@@ -85,9 +83,9 @@ new BScroll('.bs-wrapper', {
     ```
   - **返回值**：无
 
-::: warning 注意
-openPullUp 方法应该配合 closePullUp 一起使用，因为在 pullup 插件的生成过程当中，已经**自动监测了上拉加载的动作**。
-:::
+  ::: warning 注意
+  openPullUp 方法应该配合 closePullUp 一起使用，因为在 pullup 插件的生成过程当中，已经**自动监测了上拉加载的动作**。
+  :::
 
 ### `closePullUp()`
 
@@ -101,13 +99,13 @@ openPullUp 方法应该配合 closePullUp 一起使用，因为在 pullup 插件
   - **参数**：无
   - **返回值**：无
 
-## 钩子
+## 事件
 
 ### `pullingUp`
 
-- **参数**：无
-- **触发时机**：当距离滚动到底部小于 `threshold` 值时，触发一次 `pullingUp` 事件。
+  - **参数**：无
+  - **触发时机**：当距离滚动到底部小于 `threshold` 值时，触发一次 `pullingUp` 事件。
 
-::: danger 警告
-监测到上拉刷新的动作之后，`pullingUp` 钩子的消费机会只有一次，因此你需要调用 `finishPullUp()` 来告诉 BetterScroll 为提供下一次 `pullingUp` 钩子的消费机会。
-:::
+  ::: danger 警告
+  监测到上拉刷新的动作之后，`pullingUp` 事件的消费机会只有一次，因此你需要调用 `finishPullUp()` 来告诉 BetterScroll 来提供下一次 `pullingUp` 事件的消费机会。
+  :::

@@ -44,7 +44,7 @@ yarn add @better-scroll/nested-scroll
 
 ## 示例
 
-- 竖向双层嵌套
+- **竖向双层嵌套**
 
   <demo qrcode-url="nested-scroll/vertical">
     <template slot="code-template">
@@ -59,7 +59,7 @@ yarn add @better-scroll/nested-scroll
     <nested-scroll-vertical slot="demo"></nested-scroll-vertical>
   </demo>
 
-- 横向双层嵌套
+- **横向双层嵌套**
 
   <demo qrcode-url="nested-scroll/horizontal">
     <template slot="code-template">

@@ -108,13 +108,13 @@ openPullDown 方法应该配合 closePullDown 一起使用，因为在 pulldown 
   - **参数**：无
   - **返回值**：无
 
-## 钩子
+## 事件
 
 ### `pullingDown`
 
 - **参数**：无
 - **触发时机**：当顶部下拉的距离大于 `threshold` 值时，触发一次 `pullingDown` 钩子。
 
-::: danger 警告
-监测到下拉刷新的动作之后，`pullingDown` 钩子的消费机会只有一次，因此你需要调用 `finishPullDown()` 来告诉 BetterScroll 为提供下一次 `pullingDown` 钩子的消费机会。
+::: danger 危险
+监测到下拉刷新的动作之后，`pullingDown` 钩子的消费机会只有一次，因此你需要调用 `finishPullDown()` 来告诉 BetterScroll 来提供下一次 `pullingDown` 钩子的消费机会。
 :::

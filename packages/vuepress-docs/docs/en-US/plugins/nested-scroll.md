@@ -5,10 +5,10 @@
 Coordinates BetterScroll's two-level nested scrolling behavior.
 
 ::: warning
-Currently, the plugin only solves the problem of double nesting, such as ** vertical in vertical **, ** horizontal in horizontal **.
+Currently, the plugin only solves the problem of double nesting, such as **vertical in vertical**, **horizontal in horizontal**.
 :::
 
-## Installation
+## Install
 
 ```bash
 npm install @better-scroll/nested-scroll --save
@@ -20,7 +20,7 @@ yarn add @better-scroll/nested-scroll
 
 ## Usage
 
-import the `nested-scroll` plugin and use it with the global method `BScroll.use()`
+import the `nested-scroll` plugin and use it with the static method `BScroll.use()`
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -42,9 +42,9 @@ After the above steps are completed, `nestedScroll` is configured in BScroll's `
   })
 ```
 
-## Examples
+## Demo
 
-- Nested vertical scroll
+- **Nested vertical scroll**
 
   <demo qrcode-url="nested-scroll/vertical">
     <template slot="code-template">
@@ -59,7 +59,7 @@ After the above steps are completed, `nestedScroll` is configured in BScroll's `
     <nested-scroll-vertical slot="demo"></nested-scroll-vertical>
   </demo>
 
-- Nested horizontal scroll
+- **Nested horizontal scroll**
 
   <demo qrcode-url="nested-scroll/horizontal">
     <template slot="code-template">

@@ -19,23 +19,23 @@ yarn add @better-scroll/movable
 import `movable`, then call `BScroll.use()`.
 
 ```js
-import BScroll from '@better-scroll/core'
-import Movable from '@better-scroll/movable'
+  import BScroll from '@better-scroll/core'
+  import Movable from '@better-scroll/movable'
 
-BScroll.use(Movable)
+  BScroll.use(Movable)
 ```
 
 pass in the correct configuration in options, for example:
 
 ```js
-new BScroll('.bs-wrapper', {
-  bindToTarget: true,
-  scrollX: true,
-  scrollY: true,
-  freeScroll: true,
-  bounce: true
-  movable: true // for movable plugin
-})
+  new BScroll('.bs-wrapper', {
+    bindToTarget: true,
+    scrollX: true,
+    scrollY: true,
+    freeScroll: true,
+    bounce: true
+    movable: true // for movable plugin
+  })
 ```
 
 The following is related to `movable` plugin and [BetterScroll configuration](../guide/base-scroll-options.html):
@@ -65,16 +65,17 @@ The following is related to `movable` plugin and [BetterScroll configuration](..
   Specifies to turn on boundary rebound.
 
   - **Examples**
+
   ```js
-  {
-    bounce: true // Enable all directions,
-    bounce: {
-      left: true, // Enable the left
-      right: true, // Enable the right
-      top: false,
-      bottom: false
+    {
+      bounce: true // Enable all directions,
+      bounce: {
+        left: true, // Enable the left
+        right: true, // Enable the right
+        top: false,
+        bottom: false
+      }
     }
-  }
   ```
 ## Demo
 
@@ -96,22 +97,22 @@ The following is related to `movable` plugin and [BetterScroll configuration](..
 With [ zoom ](./zoom.html#introduction) plugin, increase the zoom capability.
 
 ```js
-import BScroll from '@better-scroll/core'
-import Movable from '@better-scroll/movable'
-import Zoom from '@better-scroll/zoom'
-new BScroll('.bs-wrapper', {
-  bindToTarget: true,
-  scrollX: true,
-  scrollY: true,
-  freeScroll: true,
-  bounce: true
-  movable: true // for movable plugin
-  zoom: { // for zoom plugin
-    start: 1,
-    min: 1,
-    max: 3
-  }
-})
+  import BScroll from '@better-scroll/core'
+  import Movable from '@better-scroll/movable'
+  import Zoom from '@better-scroll/zoom'
+  new BScroll('.bs-wrapper', {
+    bindToTarget: true,
+    scrollX: true,
+    scrollY: true,
+    freeScroll: true,
+    bounce: true
+    movable: true // for movable plugin
+    zoom: { // for zoom plugin
+      start: 1,
+      min: 1,
+      max: 3
+    }
+  })
 ```
 
 ## Demo

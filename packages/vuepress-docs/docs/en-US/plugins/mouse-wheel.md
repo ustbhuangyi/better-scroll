@@ -12,7 +12,7 @@ npm install @better-scroll/mouse-wheel --save
 yarn add @better-scroll/mouse-wheel
 ```
 
-:::tip
+::: tip
 Currently supports mouse wheel: core, slide, wheel, pullup, pulldown plugins.
 :::
 
@@ -21,21 +21,21 @@ Currently supports mouse wheel: core, slide, wheel, pullup, pulldown plugins.
 In order to enable the mouseWheel plugin, you need to first import it, register the plugin through the static method `BScroll.use()`, and finally pass in the correct [mouseWheel option](./mouse-wheel.html#mousewheel-options)
 
 ```js
-import BScroll from '@better-scroll/core'
-import MouseWheel from '@better-scroll/mouse-wheel'
-BScroll.use(MouseWheel)
+  import BScroll from '@better-scroll/core'
+  import MouseWheel from '@better-scroll/mouse-wheel'
+  BScroll.use(MouseWheel)
 
-new BScroll('.bs-wrapper', {
-  //...
-  mouseWheel: {
-    speed: 20,
-    invert: false,
-    easeTime: 300
-  }
-})
+  new BScroll('.bs-wrapper', {
+    //...
+    mouseWheel: {
+      speed: 20,
+      invert: false,
+      easeTime: 300
+    }
+  })
 ```
 
- **VerticalScroll Demo**
+ - **VerticalScroll Demo**
 
   <demo :hide-qrcode="true">
     <template slot="code-template">
@@ -159,40 +159,40 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
 ### speed
 
-- **Type**: `number`
-- **Default**: `20`
+  - **Type**: `number`
+  - **Default**: `20`
 
   The speed at which the mouse wheel scrolls.
 
 ### invert
 
-- **Type**: `boolean`
-- **Default**: `false`
+  - **Type**: `boolean`
+  - **Default**: `false`
 
   When the value is true, it means that the scrolling direction of the wheel is opposite to that of BetterScroll.
 
 ### easeTime
 
-- **Type**: `number`
-- **Default**: `300`(ms)
+  - **Type**: `number`
+  - **Default**: `300`(ms)
 
   The duration of the scroll animation.
 
 ### discreteTime
 
-- **Type**: `number`
-- **Default**: `400`(ms)
+  - **Type**: `number`
+  - **Default**: `400`(ms)
 
   Because the mouse wheel is a discrete movement, there is no event type of **start**, **move**, **end**, so as long as no scroll is detected within `discreteTime`, then one scroll wheel action ends.
 
-::: warning
-When integrated with [pulldown](./pulldown.html) plugin, `easeTime` and `discreteTime` will be **internally** modified to **reasonable fixed value** to trigger the `pullingDown` hook
-:::
+  ::: warning
+  When integrated with [pulldown](./pulldown.html) plugin, `easeTime` and `discreteTime` will be **internally** modified to **reasonable fixed value** to trigger the `pullingDown` hook
+  :::
 
 ### throttleTime
 
-- **Type**: `number`
-- **Default**: `0`(ms)
+  - **Type**: `number`
+  - **Default**: `0`(ms)
 
   Since the scroll wheel is a high-frequency action, the trigger frequency can be limited by `throttleTime`. MouseWheel will cache the scrolling distance, and calculate the cached distance and scroll every throttleTime.
 
@@ -200,54 +200,56 @@ When integrated with [pulldown](./pulldown.html) plugin, `easeTime` and `discret
 
 ### dampingFactor
 
-- **Type**: `number`
-- **Default**: `0.1`
+  - **Type**: `number`
+  - **Default**: `0.1`
 
   Damping factor, the value range is [0, 1]. When BetterScroll rolls out of the boundary, resistance needs to be applied to prevent the rolling range from being too large. The smaller the value, the greater the resistance.
 
 ## Hooks
 
 ### alterOptions
-- **Arguments**:`wheelConfig`
-  ```typescript
-  export interface MouseWheelConfig {
-    speed: number
-    invert: boolean
-    easeTime: number
-    discreteTime: number
-    throttleTime: number,
-    dampingFactor: number
-  }
-  ```
-- **Triggered Timing**: The mousewheel begins to scroll, allowing to modify options to control certain behaviors during scrolling.
+  - **Arguments**: `wheelConfig`
+    ```typescript
+      export interface MouseWheelConfig {
+        speed: number
+        invert: boolean
+        easeTime: number
+        discreteTime: number
+        throttleTime: number,
+        dampingFactor: number
+      }
+    ```
+  - **Triggered Timing**: The mousewheel begins to scroll, allowing to modify options to control certain behaviors during scrolling.
+
+## Events
 
 ### mousewheelStart
-- **Arguments**: none
-- **Triggered Timing**: The mousewheel starts.
+  - **Arguments**: none
+  - **Triggered Timing**: The mousewheel starts.
 
 ### mousewheelMove
-- **Arguments**: `{ x, y }`
- - `{ number } x`: The current x of BetterScroll
- - `{ number } y`: The current y of BetterScroll
-- **Type**: `{ x: number, y: number }`
-- **Triggered Timing**: Mousewheel is scrolling
+  - **Arguments**: `{ x, y }`
+  - `{ number } x`: The current x of BetterScroll
+  - `{ number } y`: The current y of BetterScroll
+  - **Type**: `{ x: number, y: number }`
+  - **Triggered Timing**: Mousewheel is scrolling
 
 ### mousewheelEnd
-- **Arguments**:`delta`
-- **Type**: `WheelDelta`
-```typescript
-interface WheelDelta {
-  x: number
-  y: number
-  directionX: Direction
-  directionY: Direction
-}
-```
-- **Triggered Timing**: If the mousewheel hook has not been triggered after `discreteTime`, a mousewheel action will be settled.
+  - **Arguments**:`delta`
+  - **Type**: `WheelDelta`
+  ```typescript
+    interface WheelDelta {
+      x: number
+      y: number
+      directionX: Direction
+      directionY: Direction
+    }
+  ```
+  - **Triggered Timing**: If the mousewheel hook has not been triggered after `discreteTime`, a mousewheel action will be settled.
 
-::: danger Note
-Due to the particularity of the mousewheel hook, the dispatch of mousewheelEnd does not mean the end of the scroll animation.
-:::
+  ::: danger Note
+  Due to the particularity of the mousewheel hook, the dispatch of mousewheelEnd does not mean the end of the scroll animation.
+  :::
 
 ::: tip
 In most scenarios, if you want to know the current scroll position of BetterScroll accurately, please listen to the scroll and scrollEnd hooks instead of the `mouseXXX` hooks.

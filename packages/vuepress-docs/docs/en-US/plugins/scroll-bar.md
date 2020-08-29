@@ -19,19 +19,19 @@ yarn add @better-scroll/scroll-bar
 First, install the plugin via the static method `BScroll.use()`
 
 ```js
-import BScroll from '@better-scroll/core'
-import ScrollBar from '@better-scroll/scroll-bar'
+  import BScroll from '@better-scroll/core'
+  import ScrollBar from '@better-scroll/scroll-bar'
 
-BScroll.use(ScrollBar)
+  BScroll.use(ScrollBar)
 ```
 
 pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ```js
-new BScroll('.bs-wrapper', {
-  scrollY: true,
-  scrollbar: true
-})
+  new BScroll('.bs-wrapper', {
+    scrollY: true,
+    scrollbar: true
+  })
 ```
 
 ## Demo

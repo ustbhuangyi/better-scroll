@@ -28,9 +28,9 @@ BScroll.use(Wheel)
 pass in the correct configuration in options, for example:
 
 ```js
-let bs = new BScroll('.bs-wrapper', {
-  wheel: true // wheel options
-})
+  let bs = new BScroll('.bs-wrapper', {
+    wheel: true // wheel options
+  })
 ```
 
 :::tip

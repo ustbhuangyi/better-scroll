@@ -19,10 +19,10 @@ yarn add @better-scroll/movable
 首先引入 movable 插件，并通过全局方法 `BScroll.use()` 注册插件
 
 ```js
-import BScroll from '@better-scroll/core'
-import Movable from '@better-scroll/movable'
+  import BScroll from '@better-scroll/core'
+  import Movable from '@better-scroll/movable'
 
-BScroll.use(Movable)
+  BScroll.use(Movable)
 ```
 
 上面步骤完成后，需要在 `options` 中传入正确的配置：
@@ -65,17 +65,18 @@ new BScroll('.bs-wrapper', {
   指定开启边界回弹。
 
   - **示例**
-  ```js
-  {
-    bounce: true // 开启四个方向,
-    bounce: {
-      left: true, // 开启左边界回弹
-      right: true, // 开启右边界回弹
-      top: false,
-      bottom: false
-    }
-  }
-  ```
+
+    ```js
+      {
+        bounce: true // 开启四个方向,
+        bounce: {
+          left: true, // 开启左边界回弹
+          right: true, // 开启右边界回弹
+          top: false,
+          bottom: false
+        }
+      }
+    ```
 ## 示例
 
   <demo qrcode-url="movable/default">
@@ -96,22 +97,22 @@ new BScroll('.bs-wrapper', {
 搭配[ zoom ](./zoom.html#介绍)插件，增加缩放能力。
 
 ```js
-import BScroll from '@better-scroll/core'
-import Movable from '@better-scroll/movable'
-import Zoom from '@better-scroll/zoom'
-new BScroll('.bs-wrapper', {
-  bindToTarget: true,
-  scrollX: true,
-  scrollY: true,
-  freeScroll: true,
-  bounce: true
-  movable: true // for movable plugin
-  zoom: { // for zoom plugin
-    start: 1,
-    min: 1,
-    max: 3
-  }
-})
+  import BScroll from '@better-scroll/core'
+  import Movable from '@better-scroll/movable'
+  import Zoom from '@better-scroll/zoom'
+  new BScroll('.bs-wrapper', {
+    bindToTarget: true,
+    scrollX: true,
+    scrollY: true,
+    freeScroll: true,
+    bounce: true
+    movable: true // for movable plugin
+    zoom: { // for zoom plugin
+      start: 1,
+      min: 1,
+      max: 3
+    }
+  })
 ```
 
 ## 示例

@@ -28,16 +28,16 @@ BScroll.use(Wheel)
 接着在 `options` 传入正确的配置
 
 ```js
-let bs = new BScroll('.bs-wrapper', {
-  wheel: true // wheel options 为 true
-})
+  let bs = new BScroll('.bs-wrapper', {
+    wheel: true // wheel options 为 true
+  })
 ```
 
 :::tip
 wheel options 是 true 或者对象，否则插件功能失效，具体请参考[ wheel options](./wheel.html#wheel-选项对象)。
 :::
 
-::: danger 须知
+::: danger 危险
 BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，还有 DOM 模版是需要用户去实现，所幸，对于大多数的 Picker 场景，我们给出了相对应的示例。
 :::
 

@@ -293,7 +293,7 @@ In general, the layout of BetterScroll's slide is as follows:
 
   If the loop configuration is turned on, manually turn off autoplay.
 
-## Hooks
+## Events
 
 ### slideWillChange
 
@@ -311,7 +311,7 @@ In general, the layout of BetterScroll's slide is as follows:
 
   <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
-  This effect can be achieved by register the `slideWillChange` hook. code show as below:
+  This effect can be achieved by register the `slideWillChange` event. code show as below:
 
   ```js
     let currentPageIndex

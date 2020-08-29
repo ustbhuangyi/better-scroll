@@ -172,45 +172,48 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
 
   - **Returns**: void
 
-## Hooks
+## Events
 
 ### beforeZoomStart
 - **Arguments**: none
 - **Trigger timing**: When two fingers touch the scaled element, it does not include directly calling the `zoomTo` method
 
 ### zoomStart
-- **Arguments**: none
-- **Trigger timing**: The two finger zoom distance exceeds the minimum threshold `minimalZoomDistance`, and the zoom will start soon. it does not include directly calling the `zoomTo` method
+
+  - **Arguments**: none
+  - **Trigger timing**: The two finger zoom distance exceeds the minimum threshold `minimalZoomDistance`, and the zoom will start soon. it does not include directly calling the `zoomTo` method
 
 ### zooming
-- **Arguments**: `{ scale }`
-- **Type**: `{ scale: number }`
-- **Trigger timing**: the process of two-finger zooming action in progress or directly calling `zoomTo` to zoom
 
-- **Examples**:
-```js
-const bs = new BScroll('.bs-wrapper', {
-  freeScroll: true,
-  scrollX: true,
-  scrollY: true,
-  zoom: {
-    start: 1,
-    min: 0.5,
-    max: 2
-  }
-})
+  - **Arguments**: `{ scale }`
+  - **Type**: `{ scale: number }`
+  - **Trigger timing**: the process of two-finger zooming action in progress or directly calling `zoomTo` to zoom
 
-bs.on('zooming', ({ scale }) => {
-  // use scale
-  console.log(scale) // current scale
-})
-```
+  - **Examples**:
+  ```js
+    const bs = new BScroll('.bs-wrapper', {
+      freeScroll: true,
+      scrollX: true,
+      scrollY: true,
+      zoom: {
+        start: 1,
+        min: 0.5,
+        max: 2
+      }
+    })
+
+    bs.on('zooming', ({ scale }) => {
+      // use scale
+      console.log(scale) // current scale
+    })
+  ```
 
 ### zoomEnd
-- **Arguments**: `{ scale }`
-- **Type**: `{ scale: number }`
-- **Trigger timing**: After two finger zooming behavior ends (if there is a rebound, the trigger timing is after the rebound animation ends) or after calling `zoomTo` to complete the zoom
 
-::: warning
-In the zoom scenario, you should listen to events such as `zoomStart`, `zooming`, `zoomEnd`, and not the lower-level `scroll` and `scrollEnd` events, otherwise it may not match your expectations.
-:::
+  - **Arguments**: `{ scale }`
+  - **Type**: `{ scale: number }`
+  - **Trigger timing**: After two finger zooming behavior ends (if there is a rebound, the trigger timing is after the rebound animation ends) or after calling `zoomTo` to complete the zoom
+
+  ::: warning
+  In the zoom scenario, you should listen to events such as `zoomStart`, `zooming`, `zoomEnd`, and not the lower-level `scroll` and `scrollEnd` events, otherwise it may not match your expectations.
+  :::

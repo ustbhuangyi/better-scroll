@@ -19,19 +19,19 @@ yarn add @better-scroll/scroll-bar
 首先引入 scrollbar 插件，并通过静态方法 `BScroll.use()` 注册插件
 
 ```js
-import BScroll from '@better-scroll/core'
-import ScrollBar from '@better-scroll/scroll-bar'
+  import BScroll from '@better-scroll/core'
+  import ScrollBar from '@better-scroll/scroll-bar'
 
-BScroll.use(ScrollBar)
+  BScroll.use(ScrollBar)
 ```
 
 接着在 `options` 传入正确的配置。
 
 ```js
-new BScroll('.bs-wrapper', {
-  scrollY: true,
-  scrollbar: true
-})
+  new BScroll('.bs-wrapper', {
+    scrollY: true,
+    scrollbar: true
+  })
 ```
 ## 示例
 

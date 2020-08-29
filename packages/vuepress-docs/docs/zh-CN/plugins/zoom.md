@@ -169,45 +169,49 @@ new BScroll('.bs-wrapper', {
 
   - **返回值**：无
 
-## 钩子
+## 事件
 
 ### beforeZoomStart
-- **参数**：无
-- **触发时机**：双指接触缩放元素时，不包括直接调用 zoomTo 方法
+
+  - **参数**：无
+  - **触发时机**：双指接触缩放元素时，不包括直接调用 zoomTo 方法
 
 ### zoomStart
-- **参数**：无
-- **触发时机**：双指缩放距离超过最小阈值 `minimalZoomDistance`，缩放即将开始。不包括直接调用 zoomTo 方法
+
+  - **参数**：无
+  - **触发时机**：双指缩放距离超过最小阈值 `minimalZoomDistance`，缩放即将开始。不包括直接调用 zoomTo 方法
 
 ### zooming
-- **参数**: `{ scale }`
-- **类型**: `{ scale: number }`
-- **触发时机**：双指缩放行为正在进行时或者直接调用 zoomTo 进行缩放的过程
 
-- **示例**：
-```js
-const bs = new BScroll('.bs-wrapper', {
-  freeScroll: true,
-  scrollX: true,
-  scrollY: true,
-  zoom: {
-    start: 1,
-    min: 0.5,
-    max: 2
-  }
-})
+  - **参数**: `{ scale }`
+  - **类型**: `{ scale: number }`
+  - **触发时机**：双指缩放行为正在进行时或者直接调用 zoomTo 进行缩放的过程
 
-bs.on('zooming', ({ scale }) => {
-  // use scale
-  console.log(scale) // 当前 scale 的值
-})
-```
+  - **示例**：
+  ```js
+    const bs = new BScroll('.bs-wrapper', {
+      freeScroll: true,
+      scrollX: true,
+      scrollY: true,
+      zoom: {
+        start: 1,
+        min: 0.5,
+        max: 2
+      }
+    })
+
+    bs.on('zooming', ({ scale }) => {
+      // use scale
+      console.log(scale) // 当前 scale 的值
+    })
+  ```
 
 ### zoomEnd
-- **参数**：`{ scale }`
-- **类型**: `{ scale: number }`
-- **触发时机**：双指缩放行为结束后（如果有回弹，触发时机在回弹动画结束之后）或者调用 zoomTo 完成缩放之后
 
-:::warning
-在 zoom 的场景下，你应该监听 zoomStart、zooming、zoomEnd 等等事件，而不是更底层的 scroll、scrollEnd 事件，要不然可能与你的预期不符。
-:::
+  - **参数**：`{ scale }`
+  - **类型**: `{ scale: number }`
+  - **触发时机**：双指缩放行为结束后（如果有回弹，触发时机在回弹动画结束之后）或者调用 zoomTo 完成缩放之后
+
+  :::warning
+  在 zoom 的场景下，你应该监听 zoomStart、zooming、zoomEnd 等等事件，而不是更底层的 scroll、scrollEnd 事件，要不然可能与你的预期不符。
+  :::

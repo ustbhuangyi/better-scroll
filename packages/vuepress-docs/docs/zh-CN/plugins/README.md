@@ -2,7 +2,7 @@
 
 ## 为什么要有插件
 
-为了方便对 BetterScroll 功能的扩展，在 2.0 的设计中引入了插件。我们提取了 `1.x` 版本的核心滚动能力，其余的 feature，诸如 pulldown、pullup 等等，都将通过插件来增强。
+为了解耦 BetterScroll 1.x 的各个 feature 的功能，防止 bundle 体积无限制的增加。在 2.x 的架构设计当中，采用了『插件化』 的架构设计。对于 1.x 的各个 feature，在 2.x 都将以 Plugin 的形式实现。
 
 已有的插件：
 - [pulldown](./pulldown.html)
@@ -28,7 +28,9 @@
   import Plugin from 'somewhere'
 
   BScroll.use(Plugin)
-  new BScroll(/*arguments*/)
+  new BScroll('.wrapper', {
+    pluginKey: {} // pluginKey 对应 Plugin 类上静态属性 pluginName 的值，否则插件无法实例化
+  })
 ```
 
 ## 使用插件的方法和属性
@@ -54,12 +56,12 @@
     }
   })
 
-  bs.zoomTo(1.5, 0, 0) // 使用 zoomTo
+  bs.zoomTo(1.5, 0, 0) // 不用关心 zoom 插件实例，直接通过 bs 获取暴露的属性或者方法。
 ```
 
-## 使用插件的钩子
+## 使用插件的事件
 
-和方法、属性类似，插件中暴露的钩子最终也会被代理至 `bs`。例如，zoom 插件中提供了 `zoomStart` 钩子，你可以通过下面的方式来监听：
+和方法、属性类似，插件中暴露的事件最终也会被代理至 `bs`。例如，zoom 插件中提供了 `zoomStart` 事件，你可以通过下面的方式来注册事件侦听器：
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -99,5 +101,22 @@
 ```
 
 ::: warning 注意
-引用全部的 BetterScroll 可能对你的 bundle 体积有很大的冲击，**尽量按需引入**。
+引用全部的 BetterScroll 可能对你的 bundle 体积有很大的冲击，而且随着 BetterScroll 的功能扩展，体积会无限制的增加，**请按需引入**。
+:::
+
+::: warning 注意
+通常情况下，你应该关注 BetterScroll 实例暴露出来的属性和方法，因为对于插件实例上的属性和方法，都已经代理到 bs 上面，如果你真的需要关心插件实例，你也可以通过 `bs.plugins` 来获取所有插件的信息。
+
+```js
+  import BScroll from '@better-scroll/scroll'
+  import zoom from '@better-scroll/zoom'
+
+  BScroll.use(zoom)
+
+  const bs = new BScroll('.wrapper', {
+    zoom: true
+  })
+
+  console.log(bs.plugins.zoom) // 获取对应插件实例
+```
 :::
