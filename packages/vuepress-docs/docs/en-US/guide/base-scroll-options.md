@@ -37,7 +37,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
 ## freeScroll
   - **Type**: `boolean`
   - **Default**: `false`
-  - **Usage**: In some scenes we need to calculate offset when fingers move both horizontally and vertically, we can set  `freeScroll` to true
+  - **Usage**: By default, because human fingers cannot perform absolute vertical or horizontal movement, there will be horizontal and vertical offsets during a finger operation. The internal default will abandon the smaller offset direction , Keep scrolling in the other direction. But in some scenes, we need to calculate the horizontal and vertical finger offset distances at the same time, instead of only calculating the direction with a larger offset. At this time, we only need to set `freeScroll` to true.
   - **Note**:  This configuration is invalid when [eventPassthrough](./base-scroll-options.html#eventpassthrough) isn't set to empty.
   - **Examples**
   ```js
