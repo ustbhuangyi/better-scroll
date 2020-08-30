@@ -86,7 +86,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
 ## bounce
    - **Type**: `boolean | Object`
    - **Default**: `true`
-   - **Details**: When the scroller meets the boundary it performs a small bounce animation. Setting this to true will enable the animation.
+   - **Details**: When the content element meets the boundary it performs a small bounce animation. Setting this to true will enable the animation.
    ```js
      bounce: {
        top: true,
@@ -130,7 +130,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
 ## swipeBounceTime
    - **Type**: `number`
    - **Default**: `500` (ms)
-   - **Usage**: Set the entire bounce animation time when the scroller meets the boundary in the case of running a momentum animation.
+   - **Usage**: Set the entire bounce animation time when the content element meets the boundary in the case of running a momentum animation.
 
 ## deceleration
    - **Type**: `number`
@@ -178,7 +178,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
 ## HWCompositing
    - **Type**: `boolean`
    - **Default**: `true`
-   - **Usage**: This option tries to put the scroller on the hardware layer by appending `translateZ(1px)` to the transform CSS property. This greatly increases performance especially on mobile and achieve a good scrolling effect.
+   - **Usage**: This option tries to put the content element on the hardware layer by appending `translateZ(1px)` to the transform CSS property. This greatly increases performance especially on mobile and achieve a good scrolling effect.
    - **Note**: Only browsers that support enabling hardware acceleration has the effect.
 
 ## useTransition

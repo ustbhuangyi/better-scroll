@@ -177,7 +177,7 @@ let scroll = new BScroll('.wrapper',{
 ## HWCompositing
    - **类型**：`boolean`
    - **默认值**：`true`
-   - **作用**：是否开启硬件加速，开启它会在 scroller 上添加 `translateZ(1px)` 来开启硬件加速从而提升动画性能，有很好的滚动效果。
+   - **作用**：是否开启硬件加速，开启它会在 content 元素上添加 `translateZ(1px)` 来开启硬件加速从而提升动画性能，有很好的滚动效果。
    - **备注**：只有支持硬件加速的浏览器开启才有效果。
 
 ## useTransition
