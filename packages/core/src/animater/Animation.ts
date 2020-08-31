@@ -5,7 +5,7 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn,
-  Probe
+  Probe,
 } from '@better-scroll/shared-utils'
 
 export default class Animation extends Base {
@@ -48,7 +48,7 @@ export default class Animation extends Base {
       now = (now - startTime) / duration
       let easing = easingFn(now)
       const newPoint = {} as TranslaterPoint
-      Object.keys(endPoint).forEach(key => {
+      Object.keys(endPoint).forEach((key) => {
         const startValue = startPoint[key]
         const endValue = endPoint[key]
         newPoint[key] = (endValue - startValue) * easing + startValue
@@ -66,7 +66,6 @@ export default class Animation extends Base {
       // when call stop() in animation.hooks.move or bs.scroll
       // should not dispatch end hook, because forceStop hook will do this.
       if (!this.pending && !this.forceStopped) {
-        console.log(this.forceStopped)
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       }
     }
