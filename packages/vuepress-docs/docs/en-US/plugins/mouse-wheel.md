@@ -37,7 +37,7 @@ In order to enable the mouseWheel plugin, you need to first import it, register 
 
  - **VerticalScroll Demo**
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/vertical-scroll.vue?template
     </template>

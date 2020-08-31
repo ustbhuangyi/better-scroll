@@ -37,7 +37,7 @@ yarn add @better-scroll/mouse-wheel
 
 - **纵向普通滚动示例**
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/vertical-scroll.vue?template
     </template>

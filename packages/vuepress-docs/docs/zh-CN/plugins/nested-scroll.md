@@ -46,7 +46,7 @@ yarn add @better-scroll/nested-scroll
 
 - **竖向双层嵌套**
 
-  <demo qrcode-url="nested-scroll/vertical">
+  <demo qrcode-url="nested-scroll/vertical" render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/nested-scroll/vertical.vue?template
     </template>

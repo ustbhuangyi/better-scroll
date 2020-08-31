@@ -43,7 +43,7 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 
 - **Basic usage**
 
-  <demo qrcode-url="picker/one-column">
+  <demo qrcode-url="picker/one-column" render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/picker/one-column.vue?template
     </template>

@@ -35,7 +35,7 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 
 ## Demo
 
-<demo qrcode-url="pullup/">
+<demo qrcode-url="pullup/" render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/pullup/default.vue?template
   </template>

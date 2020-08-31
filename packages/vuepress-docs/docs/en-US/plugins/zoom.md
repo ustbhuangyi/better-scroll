@@ -64,7 +64,7 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
   pc is not allowed, scan the qrcode.
   :::
 
-  <demo qrcode-url="zoom/default">
+  <demo qrcode-url="zoom/default" render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/zoom/default.vue?template
     </template>

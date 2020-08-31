@@ -3,8 +3,8 @@
     <div class="demo-nav">
       <i class="demo-nav-btn icon-code" @click='toggleCode'>
         <!-- more details in https://github.com/tailwindlabs/heroicons -->
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#666">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" :stroke="codeIconColor">
+          <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="codeIconWidth" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       </i>
       <v-popover v-if="!hideQrcode" placement='right' :offset ='10' trigger='click'>
@@ -74,6 +74,10 @@ export default {
       type: String,
       default: ''
     },
+    renderCode: {
+      type: Boolean,
+      default: false
+    },
     hideQrcode: {
       type: Boolean,
       default: false
@@ -82,11 +86,17 @@ export default {
   computed: {
     fullQrcodeUrl() {
       return `${BASE_URL}${this.qrcodeUrl}`
+    },
+    codeIconColor() {
+      return this.showCode ? '#000' : '#666'
+    },
+    codeIconWidth() {
+      return this.showCode ? 3 : 2
     }
   },
   data() {
     return {
-      showCode: false,
+      showCode: this.renderCode,
       copied: false,
       codeNavIndex: 0,
       codeNavConfigs: []

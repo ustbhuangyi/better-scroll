@@ -35,7 +35,7 @@ yarn add @better-scroll/scroll-bar
 ```
 ## 示例
 
-<demo qrcode-url="scrollbar/default">
+<demo qrcode-url="scrollbar/default" render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/scrollbar/default.vue?template
   </template>
