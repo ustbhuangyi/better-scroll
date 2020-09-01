@@ -13,12 +13,12 @@ module.exports = {
   locales: {
     '/en-US/': {
       lang: 'en-US',
-      title: 'BetterScroll 2.x',
+      title: 'BetterScroll 2.0',
       description: 'Make Scroll Perfect'
     },
     '/zh-CN/': {
       lang: 'zh-CN',
-      title: 'BetterScroll 2.x',
+      title: 'BetterScroll 2.0',
       description: 'Make Scroll Perfect'
     }
   },

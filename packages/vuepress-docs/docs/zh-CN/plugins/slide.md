@@ -64,7 +64,7 @@ yarn add @better-scroll/slide
 
 - **probeType**
 
-  如果你想通过监听 `slideWillChange` 钩子，在用户拖动 slide 时，实时获取到 slide 的 PageIndex 的改变，需要设置 probeType 值为 2 或者 3。
+  如果你想通过监听 `slideWillChange` 事件，在用户拖动 slide 时，实时获取到 slide 的 PageIndex 的改变，需要设置 probeType 值为 2 或者 3。
 
 ## 关于 slide 的术语
 

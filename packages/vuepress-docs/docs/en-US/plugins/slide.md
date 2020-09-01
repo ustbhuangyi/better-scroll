@@ -64,7 +64,7 @@ The following is related to `slide` plugin and [BetterScroll configuration](../g
 
 - **probeType**
 
-  If you want to register the `slideWillChange` hook to get the change of the PageIndex of the slide in real time when the user drags the slide, you need to set the probeType value to 2 or 3.
+  If you want to register the `slideWillChange` event to get the change of the PageIndex of the slide in real time when the user drags the slide, you need to set the probeType value to 2 or 3.
 
 ## Terms about slide
 

@@ -1,6 +1,6 @@
 # API
 
-如果想要彻底了解 BetterScroll，就需要了解其实例的常用属性、灵活的方法以及提供的钩子。
+如果想要彻底了解 BetterScroll，就需要了解其实例的常用属性、灵活的方法以及提供的事件与钩子。
 
 ## 属性
 
@@ -177,60 +177,717 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
    scroll.off('scroll', handler)
    ```
 
-## 钩子
+## 事件 VS 钩子
 
-BetterScroll 除了提供了丰富的 API 调用，还提供了一些事件，方便和外部做交互。你可以利用它们实现一些更高级的 feature。
+基于 2.x 的架构设计，以及对 1.x 事件的兼容，我们延伸出两个概念 ——『**事件**』以及『**钩子**』。从本源上来说它们都是属于 `EventEmitter` 实例，只是叫法不一样。下面我们从节选的源码来讲解一下：
 
-```js
-const bs = new BScroll('.wrapper', {
-  probeType: 3
-})
-
-bs.on('beforeScrollStart', () => {
-  console.log('scrolling is ready to bootstrap')
-})
+```typescript
+  export default BScrollCore extends EventEmitter {
+    hooks: EventEmitter
+  }
 ```
 
-### beforeScrollStart
-   - **参数**：无
-   - **触发时机**：滚动开始之前。
+  - **BScrollCore**
 
-### scrollStart
-   - **参数**：无
-   - **触发时机**：滚动开始时。
+    本身继承了 EventEmitter。它派发出来的，我们都称之为『**事件**』。
 
-### scroll
-   - **参数**：{Object} {x, y} 滚动的实时坐标
-   - **触发时机**：滚动过程中。
+    ```js
+      import BScroll from '@better-scroll/core'
+      let bs = new BScroll('.wrapper', {})
 
-### scrollCancel
-   - **参数**：无
-   - **触发时机**：滚动被取消。比如你强制让一个正在滚动的 bs 停住。
+      // 监听 bs 的 scroll 事件
+      bs.on('scroll', () => {})
+      // 监听 bs 的 refresh 事件
+      bs.on('refresh', () => {})
+    ```
 
-### scrollEnd
-   - **参数**：{Object} {x, y} 滚动结束的位置坐标
-   - **触发时机**：滚动结束。
+  - **BScrollCore.hooks**
 
-### touchEnd
-   - **参数**：{Object} {x, y} 位置坐标
-   - **触发时机**：鼠标/手指离开。
+    hooks 也是 EventEmitter 的实例。它派发出来的，我们都称之为『**钩子**』。
 
-### flick
-   - **参数**：无
-   - **触发时机**：轻拂时。
+    ```js
+      import BScroll from '@better-scroll/core'
+      let bs = new BScroll('.wrapper', {})
 
-### refresh
-   - **参数**： 无
-   - **触发时机**：refresh 方法调用完成后。
+      // 监听 bs 的 refresh 钩子
+      bs.hooks.on('refresh', () => {})
+      // 监听 bs 的 enable 钩子
+      bs.hooks.on('enable', () => {})
+    ```
 
-### disable
-   - **参数**： 无
-   - **触发时机**：bs 被禁用，即不再响应 DOM 事件（touchstart、touchmove、touchend...）。
+相信现在大家对两者有了更好的区分吧，『**事件**』是为了 1.x 的兼容考虑，用户一般关注的是事件的派发，但是如果要编写一款插件，你应该更加关注『**钩子**』。
 
-### enable
-   - **参数**： 无
-   - **触发时机**：bs 激活，再次响应 DOM 事件（touchstart、touchmove、touchend...）。
+## 事件
 
-### destroy
-   - **参数**：无
-   - **触发时机**：destroy 方法调用完成后。
+在 2.0 当中，BetterScroll 事件与 1.x 的事件是拉齐的，只有 BetterScroll 会派发『**事件**』，如果你在编写插件的时候需要暴露事件，你也应该通过 BetterScroll 来派发，[详细的教程看这](../plugins/how-to-write.html#注册事件)，目前的事件分为下面几种：
+
+  - **refresh**
+    - **触发时机**：BetterScroll 重新计算
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+
+      const bs = new BetterScroll('.wrapper', {})
+
+      bs.on('refresh', () => {})
+    ```
+
+  - **enable**
+    - **触发时机**：BetterScroll 启用，开始响应用户交互
+
+    ```js
+      bs.on('enable', () => {})
+    ```
+
+  - **disable**
+    - **触发时机**：BetterScroll 禁用，不再响应用户交互
+
+    ```js
+      bs.on('disable', () => {})
+    ```
+
+  - **beforeScrollStart**
+    - **触发时机**：用户手指放在滚动区域的时候
+
+    ```js
+      bs.on('beforeScrollStart', () => {})
+    ```
+
+  - **scrollStart**
+    - **触发时机**：content 元素满足滚动条件，即将开始滚动
+
+    ```js
+      bs.on('scrollStart', () => {})
+    ```
+
+  - **scroll**
+    - **触发时机**：正在滚动
+
+    ```js
+      bs.on('scroll', (position) => {
+        console.log(position.x, position.y)
+      })
+    ```
+
+  - **scrollEnd**
+    - **触发时机**：滚动结束，或者让一个正在滚动的 content 强制停止
+
+    ```js
+      bs.on('scrollEnd', () => {})
+    ```
+
+  - **scrollCancel**
+    - **触发时机**：滚动取消
+
+    ```js
+      bs.on('scrollCancel', () => {})
+    ```
+
+  - **touchEnd**
+    - **触发时机**：用户手指离开滚动区域
+
+    ```js
+      bs.on('touchEnd', () => {})
+    ```
+
+  - **flick**
+    - **触发时机**：用户触发轻拂操作
+
+    ```js
+      bs.on('flick', () => {})
+    ```
+
+  - **destroy**
+    - **触发时机**：BetterScroll 销毁
+
+    ```js
+      bs.on('destroy', () => {})
+    ```
+
+以下的事件必须注册括号中的**插件**才会派发：
+
+  - **alterOptions(__mouse-wheel__)**
+    - **触发时机**：滚轮滚动开始
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import MouseWheel from '@better-scroll/mouse-wheel'
+
+      BetterScroll.use(MouseWheel)
+      const bs = new BetterScroll('.wrapper', {
+        mouseWheel: true
+      })
+
+      bs.on('alterOptions', (mouseWheelOptions) => {
+        /**
+         * mouseWheelOptions.speed：鼠标滚轮滚动的速度
+         * mouseWheelOptions.invert：滚轮滚动和 BetterScroll 滚动的方向是否一致
+         * mouseWheelOptions.easeTime：滚动动画的缓动时长。
+         * mouseWheelOptions.discreteTime：触发 wheelEnd 的间隔时长
+         * mouseWheelOptions.throttleTime：滚轮滚动是高频率的动作，因此可以通过 throttleTime 来限制触发频率
+         * mouseWheelOptions.dampingFactor：阻尼因子，当超出边界会施加阻力
+         **/
+      })
+    ```
+
+  - **mousewheelStart(__mouse-wheel__)**
+    - **触发时机**：滚轮滚动开始
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import MouseWheel from '@better-scroll/mouse-wheel'
+
+      BetterScroll.use(MouseWheel)
+      const bs = new BetterScroll('.wrapper', {
+        mouseWheel: true
+      })
+
+      bs.on('mousewheelStart', () => {})
+    ```
+
+  - **mousewheelMove(__mouse-wheel__)**
+    - **触发时机**：滚轮滚动中
+
+    ```js
+      bs.on('mousewheelMove', () => {})
+    ```
+
+  - **mousewheelEnd(__mouse-wheel__)**
+    - **触发时机**：滚轮滚动结束
+
+    ```js
+      bs.on('mousewheelEnd', () => {})
+    ```
+
+  - **pullingDown(__pull-down__)**
+    - **触发时机**：当顶部下拉距离超过阈值
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import Pulldown from '@better-scroll/pull-down'
+
+      BetterScroll.use(Pulldown)
+      const bs = new BetterScroll('.wrapper', {
+        pullDownRefresh: true
+      })
+
+      bs.on('pullingDown', () => {
+        await fetchData()
+        bs.finishPullDown()
+      })
+    ```
+
+  - **pullingUp(__pull-up__)**
+    - **触发时机**：当底部下拉距离超过阈值
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import Pullup from '@better-scroll/pull-up'
+
+      BetterScroll.use(Pullup)
+      const bs = new BetterScroll('.wrapper', {
+        pullUpLoad: true
+      })
+
+      bs.on('pullingUp', () => {
+        await fetchData()
+        bs.finishPullUp()
+      })
+    ```
+
+  - **slideWillChange(__slide__)**
+    - **触发时机**：轮播图即将要切换 Page
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import Slide from '@better-scroll/slide'
+
+      BetterScroll.use(Slide)
+
+      const bs = new BetterScroll('.wrapper', {
+        slide: true,
+        momentum: false,
+        bounce: false,
+        probeType: 2
+      })
+
+      bs.on('slideWillChange', (page) => {
+        // 即将要切换的页面
+        console.log(page.pageX, page.pageY)
+      })
+    ```
+
+  - **beforeZoomStart(__zoom__)**
+    - **触发时机**：双指接触缩放元素时
+
+    ```js
+      import BetterScroll from '@better-scroll/core'
+      import Zoom from '@better-scroll/zoom'
+
+      BetterScroll.use(Zoom)
+
+      const bs = new BetterScroll('.wrapper', {
+        zoom: true
+      })
+
+      bs.on('beforeZoomStart', () => {})
+    ```
+
+  - **zoomStart(__zoom__)**
+    - **触发时机**：双指缩放距离超过最小阈值
+
+    ```js
+      bs.on('zoomStart', () => {})
+    ```
+
+  - **zooming(__zoom__)**
+    - **触发时机**：双指缩放行为正在进行时
+
+    ```js
+      bs.on('zooming', ({ scale }) => {
+        // scale 当前 scale
+      })
+    ```
+
+  - **zoomEnd(__zoom__)**
+    - **触发时机**：双指缩放行为结束后
+
+    ```js
+      bs.on('zoomEnd', ({ scale }) => {})
+    ```
+
+## 钩子
+
+钩子是 2.0 版本延伸出来的概念，它的本质与事件相同，都是 EventEmitter 实例，也就是典型的订阅发布模式。BScrollCore 作为一个最小的滚动单元，内部也是存在非常多的功能类，每个功能类都有一个叫 hooks 的属性，它架起了不同类之间沟通的桥梁。如果你要编写一个复杂的插件，钩子是必须需要掌握的内容。
+
+  - **BScrollCore.hooks**
+
+    - **beforeInitialScrollTo**
+      - **触发时机**：初始化加载完插件，需要滚动到指定位置
+      - **参数**：position 对象
+        - `{ x: number, y: number }`
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        bs.hooks.on('beforeInitialScrollTo', (postion) => {
+          postion.x = 0
+          position.y = -200 // 初始化滚动至 -200 的位置
+        })
+      ```
+
+    - **refresh**
+      - **触发时机**：重新计算 BetterScroll
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        bs.hooks.on('refresh', () => { console.log('refreshed') })
+      ```
+
+    - **enable**
+      - **触发时机**：启用 BetterScroll，响应用户行为
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        bs.hooks.on('enable', () => { console.log('enabled') })
+      ```
+
+    - **disable**
+      - **触发时机**：禁用 BetterScroll，不再响应用户行为
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        bs.hooks.on('disable', () => { console.log('disabled') })
+      ```
+
+    - **destroy**
+      - **触发时机**：销毁 BetterScroll
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        bs.hooks.on('destroy', () => { console.log('destroyed') })
+      ```
+
+  - **ActionsHandler.hooks**
+
+    - **beforeStart**
+      - **触发时机**：刚响应 touchstart 事件，还未记录手指在屏幕点击的位置
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actionsHandler.hooks
+        hooks.on('beforeStart', (event) => { console.log(event.target) })
+      ```
+
+    - **start**
+      - **触发时机**：记录完手指在屏幕点击的位置，即将触发 touchmove
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actionsHandler.hooks
+        hooks.on('start', (event) => { console.log(event.target) })
+      ```
+
+    - **move**
+      - **触发时机**：响应 touchmove 事件，记录完手指在屏幕点击的位置
+      - **参数**：拥有如下属性的对象
+        - `{ number } deltaX`：x 方向的手指偏移量
+        - `{ number } deltaY`：y 方向的手指偏移量
+        - `{ event } e`：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actionsHandler.hooks
+        hooks.on('move', ({ deltaX, deltaY, e }) => {})
+      ```
+
+    - **end**
+      - **触发时机**：响应 touchend 事件
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actionsHandler.hooks
+        hooks.on('end', (event) => {})
+      ```
+
+    - **click**
+      - **触发时机**：触发 click 事件
+      - **参数**：event 事件对象
+
+  - **ScrollerActions.hooks**
+
+    - **start**
+      - **触发时机**：记录完所有的滚动初始信息
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('start', (event) => { console.log(event.target) })
+      ```
+
+    - **beforeMove**
+      - **触发时机**：在检验是否是合法的滚动之前
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('beforeMove', (event) => { console.log(event.target) })
+      ```
+
+    - **scrollStart**
+      - **触发时机**：校验是合法的滚动，并且即将开始滚动
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('scrollStart', () => {})
+      ```
+
+    - **scroll**
+      - **触发时机**：正在滚动
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('scroll', () => {})
+      ```
+
+    - **beforeEnd**
+      - **触发时机**：刚执行 touchend 事件回调，但是还未更新最终位置
+      - **参数**：event 事件对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('beforeEnd', (event) => { console.log(event) })
+      ```
+
+    - **end**
+      - **触发时机**：刚执行 touchend 事件回调并且更新滚动方向
+      - **参数**：两个参数，第一个是 event 事件对象，第二个是当前位置
+        - `{ event } e`：事件对象
+        - `{ x: number, y: number } postion`：当前位置
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('end', (e, postion) => { console.log(e) })
+      ```
+
+    - **scrollEnd**
+      - **触发时机**：滚动即将结束，但还需要校验一次滚动行为是否触发了 flick、momentum 行为。
+      - **参数**：两个参数，第一个是当前位置，第二个是动画时长
+        - `{ x: number, y: number } postion`：当前位置
+        - `{ number } duration`：动画时长
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('beforeEnd', (pos, duration) => { console.log(pos) })
+      ```
+
+  - **Behavior.hooks**
+
+    - **beforeComputeBoundary**
+      - **触发时机**：即将计算滚动边界
+      - **参数**：boundary 对象
+        - `{ minScrollPos: number, maxScrollPos: number } boundary`
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.scrollBehaviorX.hooks
+        hooks.on('beforeComputeBoundary', () => {})
+      ```
+
+    - **computeBoundary**
+      - **触发时机**：计算滚动边界
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.scrollBehaviorX.hooks
+        hooks.on('computeBoundary', (boundary) => {
+          console.log(boundary.minScrollPos) // 上边界最大值，正的越多，下拉的幅度越大
+          console.log(boundary.maxScrollPos) // 下边界最小值，负的越多，滚的越远
+        })
+      ```
+
+    - **momentum**
+      - **触发时机**：满足触发 momentum 动量动画条件，并且在计算之前
+      - **参数**：两个参数，第一个是 momentumData 对象，第二个是滚动偏移量
+        - `{ destination: number, duration: number, rate: number} momentumData`：destination 是目标位置，duration 是缓动时长，rate 是斜率
+        - `{ number } distance`：触发 momentum 的滚动偏移量
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.scrollBehaviorX.hooks
+        hooks.on('momentum', (momentumData, distance) => {})
+      ```
+
+    - **end**
+      - **触发时机**：不满足触发 momentum 动量动画条件
+      - **参数**：momentumInfo 对象
+        - `{ destination: number, duration: number} momentumInfo`：destination 是目标位置，duration 是缓动时长
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.scrollBehaviorX.hooks
+        hooks.on('end', (momentumInfo) => {
+          console.log(momentumInfo.destination)
+          console.log(momentumInfo.duration)
+        })
+      ```
+  - **Animation.hooks(useTransition: false)**
+
+    - **forceStop**
+      - **触发时机**：强制让一个滚动的 bs 停止
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **move**
+      - **触发时机**：滚动进行中
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **end**
+      - **触发时机**：滚动结束
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+  - **Transition.hooks(useTransition: true)**
+
+    - **forceStop**
+      - **触发时机**：强制让一个正在做动画的 bs 停止
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **move**
+      - **触发时机**：滚动进行中
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **end**
+      - **触发时机**：滚动结束
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **time**
+      - **触发时机**：CSS3 transition 开始之前，wheel 插件监听了该钩子
+      - **参数**：CSS3 transition duration
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.animater
+          hooks.on('time', (duration) => {
+            console.log(duration) // 800
+          })
+        ```
+
+    - **timeFunction**
+      - **触发时机**：CSS3 transition 开始之前，wheel 插件监听了该钩子
+      - **参数**：CSS3 transition-timing-function
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.animater
+          hooks.on('timeFunction', (easing) => {
+            console.log(easing) // cubic-bezier(0.1, 0.7, 1.0, 0.1)
+          })
+        ```
+
+  - **Scroller.hooks**
+
+    - **beforeStart**
+      同 `ScrollerActions.hooks.start`
+
+    - **beforeMove**
+      同 `ScrollerActions.hooks.beforeMove`
+
+    - **beforeScrollStart**
+      同 `ScrollerActions.hooks.start`
+
+    - **scrollStart**
+      同 `ScrollerActions.hooks.scrollStart`
+
+    - **scroll**
+      - **触发时机**：滚动进行中
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **beforeEnd**
+      同 `ScrollerActions.hooks.beforeEnd`
+
+    - **touchEnd**
+      - **触发时机**：用户手指离开滚动区域
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('touchEnd', () => {
+          console.log('your finger has leave')
+        })
+      ```
+
+    - **end**
+      - **触发时机**：touchEnd 之后，校验 click 之前触发，pull-down 插件基于这个钩子实现
+      - **参数**：position 对象
+       - `{ x: number, y: number } position`：当前位置
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('end', (position) => {
+          console.log(position.x)
+          console.log(position.y)
+        })
+      ```
+
+    - **scrollEnd**
+      - **触发时机**：滚动结束
+      - **参数**：position 对象
+        - `{ x: number, y: number } position`：当前坐标值
+
+    - **resize**
+      - **触发时机**：window 尺寸发生改变
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('resize', () => {
+          console.log("window's size has changed")
+        })
+      ```
+
+    - **flick**
+      - **触发时机**：探测到手指轻拂动作
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('flick', () => {})
+      ```
+
+    - **scrollCancel**
+      - **触发时机**：滚动取消或者未发生
+
+    - **momentum**
+      - **触发时机**：即将进行 momentum 动量位移，slide 插件监听了该钩子
+      - **参数**：scrollMetaData 对象
+        - `{ time: number, easing: EaseItem, newX: number, newY: number }`：time 是动画时长，easing是缓动函数，newX 和 newY 是终点
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('momentum', (scrollMetaData) => {
+          scrollMetaData.newX = 0
+          scrollMetaData.newY = -200
+        })
+      ```
+
+    - **scrollTo**
+      - **触发时机**：调用 bs.scrollTo 方法的时候触发
+      - **参数**：endPoint 对象
+        - `{ x: number, y: number } endPoint`：终点坐标值
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('scrollTo', (endPoint) => {
+          console.log(endPoint.x)
+          console.log(endPoint.y)
+        })
+        bs.scrollTo(0, -200)
+      ```
+
+    - **scrollToElement**
+      - **触发时机**：调用 bs.scrollToElement 方法的时候触发，wheel 插件监听了该钩子
+      - **参数**：第一个是目标 DOM 对象，第二个是终点的坐标
+        - `{ HTMLElment } el`
+        - `{ top: number, left: number } postion`
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('scrollToElement', (el, pos) => {
+          console.log(el)
+          console.log(pos.left)
+          console.log(pos.top)
+        })
+        bs.scrollToElement('.some-item', 300, true, true)
+      ```
+
+    - **beforeRefresh**
+      - **触发时机**：在 behavior 计算边界之前，slide 插件监听了该钩子
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller
+        hooks.on('beforeRefresh', () => {})
+      ```
+
+::: tip 提示
+细心的你会发现，有部分 Scroller.hooks 与 ScrollActions.hooks 的功能一模一样，其实我们内部采用了一种 [钩子冒泡](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/core/src/utils/bubbling.ts) 的策略，将内层功能类的钩子，通过冒泡的形式一直代理到 BetterScroll Instance 来兼容 1.x 的使用方式。
+:::

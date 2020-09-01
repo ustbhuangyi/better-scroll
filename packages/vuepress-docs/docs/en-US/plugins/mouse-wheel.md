@@ -205,10 +205,10 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   Damping factor, the value range is [0, 1]. When BetterScroll rolls out of the boundary, resistance needs to be applied to prevent the rolling range from being too large. The smaller the value, the greater the resistance.
 
-## Hooks
+## Events
 
 ### alterOptions
-  - **Arguments**: `wheelConfig`
+  - **Arguments**: `MouseWheelConfig`
     ```typescript
       export interface MouseWheelConfig {
         speed: number
@@ -220,8 +220,6 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
       }
     ```
   - **Triggered Timing**: The mousewheel begins to scroll, allowing to modify options to control certain behaviors during scrolling.
-
-## Events
 
 ### mousewheelStart
   - **Arguments**: none

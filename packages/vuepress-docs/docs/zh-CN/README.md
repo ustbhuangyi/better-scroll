@@ -1,6 +1,6 @@
 ---
 home: true
-heroText: BetterScroll 2.x
+heroText: BetterScroll 2.0
 actionText: 快速上手 →
 actionLink: /zh-CN/guide/
 features:

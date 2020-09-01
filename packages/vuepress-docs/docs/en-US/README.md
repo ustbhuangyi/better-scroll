@@ -1,6 +1,6 @@
 ---
 home: true
-heroText: BetterScroll 2.x
+heroText: BetterScroll 2.0
 actionText: Getting Started →
 actionLink: /en-US/guide/
 features:
