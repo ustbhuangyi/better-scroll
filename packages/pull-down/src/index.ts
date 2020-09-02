@@ -1,12 +1,6 @@
 import BScroll, { Boundary } from '@better-scroll/core'
 import { MouseWheelConfig } from '@better-scroll/mouse-wheel'
-import {
-  ease,
-  Direction,
-  extend,
-  EventEmitter,
-  Probe,
-} from '@better-scroll/shared-utils'
+import { ease, extend, EventEmitter, Probe } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
 export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | true
@@ -146,10 +140,7 @@ export default class PullDown implements PluginAPI {
   private checkPullDown() {
     const { threshold, stop } = this.options
     // check if a real pull down action
-    if (
-      this.scroll.directionY !== Direction.Negative ||
-      this.scroll.y < threshold
-    ) {
+    if (this.scroll.y < threshold) {
       return false
     }
 

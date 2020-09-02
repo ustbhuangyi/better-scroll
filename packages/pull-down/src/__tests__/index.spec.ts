@@ -102,13 +102,11 @@ describe('pull down tests', () => {
 
     // simulate pullUp action
     scroll.y = -100
-    scroll.directionY = 1
     scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.end)
     expect(mockFn).toHaveBeenCalledTimes(0)
 
     // simulate pullDown action
     scroll.y = 100
-    scroll.directionY = -1
 
     scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.end)
     expect(mockFn).toHaveBeenCalledTimes(1)
@@ -118,7 +116,6 @@ describe('pull down tests', () => {
     const mockFn = jest.fn()
     scroll.on(scroll.eventTypes.pullingDown, mockFn)
     // when
-    scroll.directionY = -1
     scroll.y = 100
     scroll.scroller.hooks.trigger('end')
     scroll.scroller.hooks.trigger('end')
@@ -128,7 +125,6 @@ describe('pull down tests', () => {
 
   it('should stop at correct position', () => {
     // when
-    scroll.directionY = -1
     scroll.y = 100
     scroll.scroller.hooks.trigger('end')
     expect(scroll.scrollTo).toHaveBeenCalledWith(
