@@ -147,3 +147,5 @@ declare module '@better-scroll/core' {
       ```
 
 恭喜你，一个简单的 BetterScroll 插件就已经完成啦，如果结合你的场景，需要更复杂的插件，可以仔细阅读 [事件与钩子大全](../guide/base-scroll-api.html#事件-vs-钩子)，它能很好的帮助你来完成一款独特的插件。
+
+查看[完整的 repo](https://github.com/better-scroll/plugin-tutorial)，以及[线上例子](https://better-scroll.github.io/plugin-tutorial/)
