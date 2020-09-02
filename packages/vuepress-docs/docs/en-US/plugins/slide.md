@@ -101,7 +101,7 @@ In general, the layout of BetterScroll's slide is as follows:
 
 - **Horizontal Slide**
 
-  <demo qrcode-url="slide/banner" render-code="true">
+  <demo qrcode-url="slide/banner" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/slide/banner.vue?template
     </template>

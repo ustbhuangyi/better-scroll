@@ -34,7 +34,7 @@ yarn add @better-scroll/pull-up
 ```
 ## 示例
 
-<demo qrcode-url="pullup/" render-code="true">
+<demo qrcode-url="pullup/" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/pullup/default.vue?template
   </template>

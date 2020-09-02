@@ -46,7 +46,7 @@ After the above steps are completed, `nestedScroll` is configured in BScroll's `
 
 - **Nested vertical scroll**
 
-  <demo qrcode-url="nested-scroll/vertical" render-code="true">
+  <demo qrcode-url="nested-scroll/vertical" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/nested-scroll/vertical.vue?template
     </template>

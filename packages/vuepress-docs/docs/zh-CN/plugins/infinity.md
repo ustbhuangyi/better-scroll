@@ -57,7 +57,7 @@ new BScroll('.bs-wrapper', {
 
 ## 示例
 
-<demo qrcode-url="infinity/" render-code="true">
+<demo qrcode-url="infinity/" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/infinity/default.vue?template
   </template>

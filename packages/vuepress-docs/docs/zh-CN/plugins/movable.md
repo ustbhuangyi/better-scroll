@@ -79,7 +79,7 @@ new BScroll('.bs-wrapper', {
     ```
 ## 示例
 
-  <demo qrcode-url="movable/default" render-code="true">
+  <demo qrcode-url="movable/default" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/movable/default.vue?template
     </template>

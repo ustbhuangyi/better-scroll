@@ -101,7 +101,7 @@ yarn add @better-scroll/slide
 
 - **横向轮播**
 
-  <demo qrcode-url="slide/banner" render-code="true">
+  <demo qrcode-url="slide/banner" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/slide/banner.vue?template
     </template>

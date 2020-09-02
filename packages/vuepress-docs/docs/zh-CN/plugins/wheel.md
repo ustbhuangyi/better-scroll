@@ -43,7 +43,7 @@ BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
 - **基本使用**
 
-  <demo qrcode-url="picker/one-column" render-code="true">
+  <demo qrcode-url="picker/one-column" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/picker/one-column.vue?template
     </template>

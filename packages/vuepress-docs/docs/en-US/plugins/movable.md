@@ -79,7 +79,7 @@ The following is related to `movable` plugin and [BetterScroll configuration](..
   ```
 ## Demo
 
-  <demo qrcode-url="movable/default" render-code="true">
+  <demo qrcode-url="movable/default" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/movable/default.vue?template
     </template>

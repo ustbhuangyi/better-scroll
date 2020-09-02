@@ -35,7 +35,7 @@ new BScroll('.bs-wrapper', {
 
 ## 示例
 
-<demo qrcode-url="pulldown/" render-code="true">
+<demo qrcode-url="pulldown/" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/pulldown/default.vue?template
   </template>

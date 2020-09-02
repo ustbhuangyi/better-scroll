@@ -36,7 +36,7 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ## Demo
 
-<demo qrcode-url="scrollbar/default" render-code="true">
+<demo qrcode-url="scrollbar/default" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/scrollbar/default.vue?template
   </template>
