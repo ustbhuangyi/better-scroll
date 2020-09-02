@@ -219,7 +219,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
 
 ## 事件
 
-在 2.0 当中，BetterScroll 事件与 1.x 的事件是拉齐的，只有 BetterScroll 会派发『**事件**』，如果你在编写插件的时候需要暴露事件，你也应该通过 BetterScroll 来派发，[详细的教程看这](../plugins/how-to-write.html#注册事件)，目前的事件分为下面几种：
+在 2.0 当中，BetterScroll 事件与 1.x 的事件是拉齐的，只有 BetterScroll 会派发『**事件**』，如果你在编写插件的时候需要暴露事件，你也应该通过 BetterScroll 来派发，[详细的教程看这](../plugins/how-to-write.html)，目前的事件分为下面几种：
 
   - **refresh**
     - **触发时机**：BetterScroll 重新计算

@@ -1,64 +1,149 @@
 # 如何写一个插件
 
-BetterScroll 的插件需要是一个类，并且具有以下特性：
+### 构思插件的功能
 
-  - 静态的 pluginName 属性。
-  - constructor 的第一个参数就是 BetterScroll 实例 `bs`，你可以通过 bs 的**事件**或者**钩子**来注入自己的逻辑。
+```js
+  import BScroll from '@better-scroll/core'
+  import MyPlugin from '@better-scroll/my-plugin'
 
-最简单的插件骨架如下：
+  BScroll.use(MyPlugin)
 
-```typescript
-  export default class MyPlugin {
-    static pluginName = 'myPlugin'
-    constructor(public scroll: BScroll){
-      // this.scroll is BetterScroll instance
-    }
-  }
+  const bs = new BScroll('.wrapper', {
+    myPluginOptions: {
+      scrollText: 'I am scrolling',
+      scrollEndText: 'Scroll has ended'
+    },
+    // 或者
+    myPluginOptions: true
+  })
+
+  // 使用插件暴露到 bs 的事件
+  bs.on('printScrollEndText', (scrollEndText) => {
+    console.log(scrollEndText) // 打印 "Scroll has ended, position is (xx, yy)"
+  })
+
+  // 使用插件代理到 bs 实例上的方法
+  bs.printScrollText() // 打印 "I am scrolling"
 ```
 
-但是我们需要深入了解更好的细节，才能写出一个逻辑完备、功能强大的 BetterScroll 插件。请继续往下阅读。
+### 编写插件
 
-## 代理方法或者属性
-
-如果你想要将插件的**方法**或者**属性**暴露出去，bs 提供了 `proxy` 方法代理至 bs。
+1. **TypeScript 声明合并以及暴露插件方法**
 
 ```typescript
-  export default class MyPlugin {
-    static pluginName = 'myPlugin'
-    constructor(private scroll: BScroll){
-      // 注册方法和属性
-      this.scroll.proxy([
-        {
-          key: 'newFunction',
-          sourceKey: 'plugins.myPlugin.newFunction'
-        },
-        {
-          key: 'newProperty',
-          sourceKey: 'plugins.myPlugin.newProperty'
+import BScroll from '@better-scroll/core'
+
+export type myPluginOptions = Partial<myPluginConfig> | true
+
+type myPluginConfig = {
+  scrollText: string,
+  scrollEndText: string
+}
+
+interface PluginAPI {
+  printScrollText(): void
+}
+
+declare module '@better-scroll/core' {
+  interface CustomOptions {
+    myPluginOptions?: myPluginOptions
+  }
+
+  interface CustomAPI {
+    myPluginOptions: PluginAPI
+  }
+}
+```
+
+这样做的好处，就是为了在引入 `myPlugin` 插件并且实例化 BetterScroll 的时候，能够有对应的 Options 提示以及 bs 能够有对应的方法提示，以 pulldown 插件为例：
+
+<img :src="$withBase('/assets/images/tip1.png')" alt="">
+
+<img :src="$withBase('/assets/images/tip2.png')" alt="">
+
+2. **编写插件主体**
+
+    - **BetterScroll 的插件需要是一个类，并且具有以下特性：**
+
+      - 静态的 pluginName 属性。
+      - 实现 PluginAPI 接口（当且仅当需要把插件方法代理至 bs）。
+      - constructor 的第一个参数就是 BetterScroll 实例 `bs`，你可以通过 bs 的**事件**或者**钩子**来注入自己的逻辑。
+
+      ```typescript
+        export default class MyPlugin implements PluginAPI {
+          static pluginName = 'myPluginOptions'
+          public options: myPluginConfig
+          constructor(public scroll: BScroll){
+            this.handleOptions()
+
+            this.handleBScroll()
+
+            this.registerHooks()
+          }
         }
-      ])
+      ```
 
-      // 通过 bs 获取插件的属性或者方法
-      this.scroll.newFunction // myPlugin.newFunction 方法的别名
-      this.scroll.newProperty // myPlugin.newFunction 属性的别名
-    }
-  }
-```
+    - **handleOptions**
 
-## 注册事件
+      合并用户传入的 options，收缩它的类型。
 
-调用 `registerType` 方法来给 bs 增加新事件，要不然在监听或者触发事件的时候会被检验为非法事件并且报错。
+      ```typescript
+        import { extend } from '@better-scroll/shared-utils'
+        export default class MyPlugin {
+          private handleOptions() {
+            const userOptions = (this.scroll.options.myPluginOptions === true
+              ? {}
+              : this.scroll.options.myPluginOptions) as Partial<myPluginConfig>
+            const defaultOptions: myPluginConfig = {
+              scrollText: 'I am scrolling',
+              scrollEndText: 'Scroll has ended'
+            }
+            this.options = extend(defaultOptions, userOptions)
+          }
+        }
+      ```
 
-```typescript
-  export default class MyPlugin {
-    static pluginName = 'myPlugin'
-    constructor(private scroll: BScroll){
-      // 注册事件
-      this.scroll.registerType(['yourEventName'])
-    }
-    someFunction() {
-      // 安全触发事件
-      this.scroll.trigger(this.scroll.eventTypes.yourEventName)
-    }
-  }
-```
+    - **handleBScroll**
+
+      代理事件以及方法至 BetterScroll 实例。
+
+      ```typescript
+        export default class MyPlugin implements PluginAPI {
+          private handleBScroll() {
+            const propertiesConfig = [
+              {
+                key: 'printScrollText',
+                sourceKey: 'plugins.myPluginOptions.printScrollText'
+              }
+            ]
+            // 将 myPlugin.printScrollText 代理至 bs.printScrollText
+            this.scroll.proxy(propertiesConfig)
+            // 注册 printScrollEndText 事件至 bs，以至于用户可以通过 bs.on('printScrollEndText', handler) 来订阅事件
+            this.scroll.registerType(['printScrollEndText'])
+          }
+
+          printScrollText() {
+            console.log(this.options.scrollText)
+          }
+        }
+      ```
+
+    - **registerHooks**
+
+      钩入 bs 的钩子，实现插件的逻辑，并且派发插件自定义的事件。
+
+      ```typescript
+        export default class MyPlugin implements PluginAPI {
+          private registerHooks() {
+            const scroll = this.scroll
+            scroll.on(scroll.eventTypes.scrollEnd, ({ x, y }) => {
+              scroll.trigger(
+                scroll.eventTypes.printScrollEndText,
+                `${this.options.scrollEndText}, position is (${x}, ${y})`
+              )
+            })
+          }
+        }
+      ```
+
+恭喜你，一个简单的 BetterScroll 插件就已经完成啦，如果结合你的场景，需要更复杂的插件，可以仔细阅读 [事件与钩子大全](../guide/base-scroll-api.html#事件-vs-钩子)，它能很好的帮助你来完成一款独特的插件。

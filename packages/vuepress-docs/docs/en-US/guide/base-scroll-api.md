@@ -219,7 +219,7 @@ I believe everyone now has a better distinction between the two. "**Event**" is 
 
 ## Events
 
-In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll will dispatch "**events**". If you need to expose events when writing plugins, you should also dispatch them through BetterScroll. [details is here](../plugins/how-to-write.html#register-events), the current events are divided into the following types:
+In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll will dispatch "**events**". If you need to expose events when writing plugins, you should also dispatch them through BetterScroll. [details is here](../plugins/how-to-write.html), the current events are divided into the following types:
 
   - **refresh**
     - **Trigger timing**: BetterScroll recalculate
