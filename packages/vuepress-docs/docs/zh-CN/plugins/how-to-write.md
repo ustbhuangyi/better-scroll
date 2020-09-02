@@ -9,12 +9,12 @@
   BScroll.use(MyPlugin)
 
   const bs = new BScroll('.wrapper', {
-    myPluginOptions: {
+    myPlugin: {
       scrollText: 'I am scrolling',
       scrollEndText: 'Scroll has ended'
     },
     // 或者
-    myPluginOptions: true
+    myPlugin: true
   })
 
   // 使用插件暴露到 bs 的事件
@@ -33,9 +33,9 @@
 ```typescript
 import BScroll from '@better-scroll/core'
 
-export type myPluginOptions = Partial<myPluginConfig> | true
+export type MyPluginOptions = Partial<MyPluginConfig> | true
 
-type myPluginConfig = {
+type MyPluginConfig = {
   scrollText: string,
   scrollEndText: string
 }
@@ -46,11 +46,11 @@ interface PluginAPI {
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    myPluginOptions?: myPluginOptions
+    myPlugin?: MyPluginOptions
   }
 
   interface CustomAPI {
-    myPluginOptions: PluginAPI
+    myPlugin: PluginAPI
   }
 }
 ```
@@ -71,8 +71,8 @@ declare module '@better-scroll/core' {
 
       ```typescript
         export default class MyPlugin implements PluginAPI {
-          static pluginName = 'myPluginOptions'
-          public options: myPluginConfig
+          static pluginName = 'myPlugin'
+          public options: MyPluginConfig
           constructor(public scroll: BScroll){
             this.handleOptions()
 
@@ -91,10 +91,10 @@ declare module '@better-scroll/core' {
         import { extend } from '@better-scroll/shared-utils'
         export default class MyPlugin {
           private handleOptions() {
-            const userOptions = (this.scroll.options.myPluginOptions === true
+            const userOptions = (this.scroll.options.myPlugin === true
               ? {}
-              : this.scroll.options.myPluginOptions) as Partial<myPluginConfig>
-            const defaultOptions: myPluginConfig = {
+              : this.scroll.options.myPlugin) as Partial<MyPluginConfig>
+            const defaultOptions: MyPluginConfig = {
               scrollText: 'I am scrolling',
               scrollEndText: 'Scroll has ended'
             }
@@ -113,7 +113,7 @@ declare module '@better-scroll/core' {
             const propertiesConfig = [
               {
                 key: 'printScrollText',
-                sourceKey: 'plugins.myPluginOptions.printScrollText'
+                sourceKey: 'plugins.myPlugin.printScrollText'
               }
             ]
             // 将 myPlugin.printScrollText 代理至 bs.printScrollText

@@ -9,12 +9,12 @@
   BScroll.use(MyPlugin)
 
   const bs = new BScroll('.wrapper', {
-    myPluginOptions: {
+    myPlugin: {
       scrollText: 'I am scrolling',
       scrollEndText: 'Scroll has ended'
     },
     // or
-    myPluginOptions: true
+    myPlugin: true
   })
 
   // Use the event that is proxied to bs by plugin
@@ -33,9 +33,9 @@
 ```typescript
 import BScroll from '@better-scroll/core'
 
-export type myPluginOptions = Partial<myPluginConfig> | true
+export type MyPluginOptions = Partial<MyPluginConfig> | true
 
-type myPluginConfig = {
+type MyPluginConfig = {
   scrollText: string,
   scrollEndText: string
 }
@@ -46,11 +46,11 @@ interface PluginAPI {
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    myPluginOptions?: myPluginOptions
+    myPlugin?: myPluginOptions
   }
 
   interface CustomAPI {
-    myPluginOptions: PluginAPI
+    myPlugin: PluginAPI
   }
 }
 ```
@@ -72,8 +72,8 @@ The advantage of this is that when the `myPlugin` plugin is imported and BetterS
 
       ```typescript
         export default class MyPlugin implements PluginAPI {
-          static pluginName = 'myPluginOptions'
-          public options: myPluginConfig
+          static pluginName = 'myPlugin'
+          public options: MyPluginConfig
           constructor(public scroll: BScroll){
             this.handleOptions()
 
@@ -92,10 +92,10 @@ The advantage of this is that when the `myPlugin` plugin is imported and BetterS
         import { extend } from '@better-scroll/shared-utils'
         export default class MyPlugin {
           private handleOptions() {
-            const userOptions = (this.scroll.options.myPluginOptions === true
+            const userOptions = (this.scroll.options.myPlugin === true
               ? {}
-              : this.scroll.options.myPluginOptions) as Partial<myPluginConfig>
-            const defaultOptions: myPluginConfig = {
+              : this.scroll.options.myPlugin) as Partial<MyPluginConfig>
+            const defaultOptions: MyPluginConfig = {
               scrollText: 'I am scrolling',
               scrollEndText: 'Scroll has ended'
             }
