@@ -81,6 +81,7 @@ export default {
       this.bscroll = new BScroll(this.$refs.bsWrapper, {
         scrollY: true,
         bounceTime: TIME_BOUNCE,
+        momentum: false,
         // pullDown options
         pullDownRefresh: {
           threshold: THRESHOLD,

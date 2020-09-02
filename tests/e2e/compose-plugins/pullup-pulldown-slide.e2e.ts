@@ -70,17 +70,17 @@ describe('Compose/pullup-pulldown-slide', () => {
         x: 100,
         y: 200,
         xDistance: 0,
-        yDistance: -50,
+        yDistance: -150,
         gestureSourceType: 'touch',
       })
-      await page.waitFor(1000)
+      await page.waitFor(1500)
     }
 
     await page.dispatchScroll({
       x: 100,
       y: 200,
       xDistance: 0,
-      yDistance: -100,
+      yDistance: -150,
       gestureSourceType: 'touch',
     })
 
@@ -89,6 +89,6 @@ describe('Compose/pullup-pulldown-slide', () => {
       '.pullup-pulldown-slide-item',
       (element) => element.length
     )
-    await expect(itemsCounts).toBeGreaterThanOrEqual(20)
+    await expect(itemsCounts).toBeGreaterThanOrEqual(10)
   })
 })
