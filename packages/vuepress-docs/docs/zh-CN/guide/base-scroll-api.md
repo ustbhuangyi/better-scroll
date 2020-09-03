@@ -700,6 +700,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
           console.log(momentumInfo.duration)
         })
       ```
+
   - **Animation.hooks(useTransition: false)**
 
     - **forceStop**
@@ -716,6 +717,37 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       - **触发时机**：滚动结束
       - **参数**：position 对象
         - `{ x: number, y: number } position`：当前坐标值
+
+  - **Translater.hooks**
+
+    - **beforeTranslate**
+      - **触发时机**：在修改 content 元素的 transform style 之前，zoom 插件监听了钩子
+      - **参数**：第一个是 transformStyle 数组，第二个是 point 对象
+        - `{ ['translateX(0px)'|'translateY(0px)'] } transformStyle`：当前 transform 对应的属性值
+        - `{ x: number, y: number } point`：x 对应 translateX 的值，y 对应 translateY 的值
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.translater.hooks
+          hooks.on('beforeTranslate', (transformStyle, point) => {
+            transformStyle.push('scale(1.2)')
+            console.log(transformStyle) // ['translateX(0px)', 'translateY(0px)', 'scale(1.2)']
+            console.log(point) // { x: 0, y: 0 }
+          })
+        ```
+
+    - **translate**
+      - **触发时机**：修改 content 元素的 transform style 之后，wheel 插件监听了钩子
+      - **参数**：point 对象
+        - `{ x: number, y: number } point`：x 对应 translateX 的值，y 对应 translateY 的值
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.translater.hooks
+          hooks.on('translate', (point) => {
+            console.log(point) // { x: 0, y: 0 }
+          })
+        ```
 
   - **Transition.hooks(useTransition: true)**
 
@@ -740,7 +772,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         ```js
           import BScroll from '@better-scroll/core'
           const bs = new BScroll('.wrapper', {})
-          const hooks = bs.scroller.animater
+          const hooks = bs.scroller.animater.hooks
           hooks.on('time', (duration) => {
             console.log(duration) // 800
           })
@@ -752,7 +784,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         ```js
           import BScroll from '@better-scroll/core'
           const bs = new BScroll('.wrapper', {})
-          const hooks = bs.scroller.animater
+          const hooks = bs.scroller.animater.hooks
           hooks.on('timeFunction', (easing) => {
             console.log(easing) // cubic-bezier(0.1, 0.7, 1.0, 0.1)
           })
@@ -785,7 +817,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('touchEnd', () => {
           console.log('your finger has leave')
         })
@@ -798,7 +830,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('end', (position) => {
           console.log(position.x)
           console.log(position.y)
@@ -815,7 +847,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('resize', () => {
           console.log("window's size has changed")
         })
@@ -826,7 +858,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('flick', () => {})
       ```
 
@@ -840,7 +872,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('momentum', (scrollMetaData) => {
           scrollMetaData.newX = 0
           scrollMetaData.newY = -200
@@ -854,7 +886,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('scrollTo', (endPoint) => {
           console.log(endPoint.x)
           console.log(endPoint.y)
@@ -870,7 +902,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('scrollToElement', (el, pos) => {
           console.log(el)
           console.log(pos.left)
@@ -884,7 +916,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('beforeRefresh', () => {})
       ```
 
