@@ -29,6 +29,7 @@ let bs = new BetterScroll('.wrapper', {
 })
 
 import BScroll from '@better-scroll/core'
+
 let bs = new BScroll('.wrapper', {})
 ```
 
@@ -36,24 +37,29 @@ let bs = new BScroll('.wrapper', {})
 
 BetterScroll with full-featured plugin.
 
-```js
+```html
 <script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
 
-// minify
+<!-- minify -->
 <script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+```
 
+```js
 let wrapper = document.getElementById("wrapper")
 let bs = BetterScroll.createBScroll(wrapper, {})
 ```
 
+
 Only CoreScroll
 
-```js
+```html
 <script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
 
-// minify
+<!-- minify -->
 <script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+```
 
+```js
 let wrapper = document.getElementById("wrapper")
 let bs = new BScroll(wrapper, {})
 ```
