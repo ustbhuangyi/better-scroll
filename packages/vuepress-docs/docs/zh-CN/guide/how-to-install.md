@@ -27,3 +27,43 @@ var BScroll = require('@better-scroll/scroll')
 ## script 加载
 
 BetterScroll 也支持直接用 script 加载的方式，加载后会在 window 上挂载一个 BScroll 的对象。
+
+```html
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+```
+
+```js
+let wrapper = document.getElementById("wrapper")
+let bs = new BScroll(wrapper, {})
+```
+
+## 具备所有插件能力的 BetterScroll
+
+```bash
+npm install better-scroll --save
+
+// or
+
+yarn add better-scroll
+```
+
+```js
+  import BetterScroll from 'better-scroll'
+  let bs = new BetterScroll('.wrapper', {})
+```
+
+也可以通过 CDN 加载。
+
+```html
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+```
+
+```js
+  let bs = BetterScroll.createBScroll('.wrapper', {})
+```

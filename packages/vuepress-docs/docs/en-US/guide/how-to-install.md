@@ -24,6 +24,46 @@ If it is the syntax of commonjs, as follows:
 var BScroll = require('@better-scroll/scroll')
 ```
 
-## script
+## Script
 
 BetterScroll also supports direct loading with script, which loads a BScroll object on the window after loading.
+
+```html
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+```
+
+```js
+let wrapper = document.getElementById("wrapper")
+let bs = new BScroll(wrapper, {})
+```
+
+## BetterScroll with all plugins
+
+```bash
+npm install better-scroll --save
+
+// or
+
+yarn add better-scroll
+```
+
+```js
+  import BetterScroll from 'better-scroll'
+  let bs = new BetterScroll('.wrapper', {})
+```
+
+Use script.
+
+```html
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+```
+
+```js
+  let bs = BetterScroll.createBScroll('.wrapper', {})
+```
