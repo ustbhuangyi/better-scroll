@@ -1,6 +1,6 @@
 {
   "name": "better-scroll",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Full-featured BetterScroll",
   "author": {
     "name": "huangyi",
@@ -31,15 +31,15 @@
     "directory": "packages/better-scroll"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.2",
-    "@better-scroll/mouse-wheel": "^2.0.2",
-    "@better-scroll/observe-dom": "^2.0.2",
-    "@better-scroll/pull-down": "^2.0.2",
-    "@better-scroll/pull-up": "^2.0.2",
-    "@better-scroll/scroll-bar": "^2.0.2",
-    "@better-scroll/slide": "^2.0.2",
-    "@better-scroll/wheel": "^2.0.2",
-    "@better-scroll/zoom": "^2.0.2"
+    "@better-scroll/core": "^2.0.3",
+    "@better-scroll/mouse-wheel": "^2.0.3",
+    "@better-scroll/observe-dom": "^2.0.3",
+    "@better-scroll/pull-down": "^2.0.3",
+    "@better-scroll/pull-up": "^2.0.3",
+    "@better-scroll/scroll-bar": "^2.0.3",
+    "@better-scroll/slide": "^2.0.3",
+    "@better-scroll/wheel": "^2.0.3",
+    "@better-scroll/zoom": "^2.0.3"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }
