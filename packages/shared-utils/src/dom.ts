@@ -228,6 +228,13 @@ export function click(e: any, event = 'click') {
   let ev: any
   const bubbles = true
   const cancelable = true
+  const { ctrlKey, shiftKey, altKey, metaKey } = e
+  const pressedKeysMap = {
+    ctrlKey,
+    shiftKey,
+    altKey,
+    metaKey,
+  }
   if (typeof MouseEvent !== 'undefined') {
     try {
       ev = new MouseEvent(
@@ -236,6 +243,7 @@ export function click(e: any, event = 'click') {
           {
             bubbles,
             cancelable,
+            ...pressedKeysMap,
           },
           posSrc
         )
