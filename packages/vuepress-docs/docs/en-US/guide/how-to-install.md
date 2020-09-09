@@ -51,8 +51,8 @@ yarn add better-scroll
 ```
 
 ```js
-  import BetterScroll from 'better-scroll'
-  let bs = new BetterScroll('.wrapper', {})
+import BetterScroll from 'better-scroll'
+let bs = new BetterScroll('.wrapper', {})
 ```
 
 Use script.
@@ -65,5 +65,5 @@ Use script.
 ```
 
 ```js
-  let bs = BetterScroll.createBScroll('.wrapper', {})
+let bs = BetterScroll.createBScroll('.wrapper', {})
 ```

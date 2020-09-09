@@ -51,8 +51,8 @@ yarn add better-scroll
 ```
 
 ```js
-  import BetterScroll from 'better-scroll'
-  let bs = new BetterScroll('.wrapper', {})
+import BetterScroll from 'better-scroll'
+let bs = new BetterScroll('.wrapper', {})
 ```
 
 也可以通过 CDN 加载。
@@ -65,5 +65,5 @@ yarn add better-scroll
 ```
 
 ```js
-  let bs = BetterScroll.createBScroll('.wrapper', {})
+let bs = BetterScroll.createBScroll('.wrapper', {})
 ```
