@@ -269,11 +269,13 @@ export default class Scroller implements ExposedAPI {
         const deltaY = Math.abs(pos.y - this.scrollBehaviorY.startPos)
 
         if (this.checkFlick(duration, deltaX, deltaY)) {
+          this.animater.setForceStopped(false)
           this.hooks.trigger(this.hooks.eventTypes.flick)
           return
         }
 
         if (this.momentum(pos, duration)) {
+          this.animater.setForceStopped(false)
           return
         }
 
