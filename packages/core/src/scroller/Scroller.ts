@@ -250,9 +250,11 @@ export default class Scroller implements ExposedAPI {
         }
 
         // check if it is a click operation
-        if (!actions.moved && this.checkClick(e)) {
+        if (!actions.moved) {
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
-          return true
+          if (this.checkClick(e)) {
+            return true
+          }
         }
         // reset if we are outside of the boundaries
         if (this.resetPosition(this.options.bounceTime, ease.bounce)) {
