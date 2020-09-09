@@ -17,13 +17,45 @@
 ```bash
 npm install better-scroll -S # install 2.x，with full-featured plugin.
 
-npm install @better-scroll/core # core scroll
+npm install @better-scroll/core # only CoreScroll
 ```
 
-or include it directly via CDN
+```js
+import BetterScroll from 'better-scroll'
 
-```html
-<script src="https://unpkg.com/better-scroll@2.0.0/dist/better-scroll.js"></script>
+let bs = new BetterScroll('.wrapper', {
+  movable: true,
+  zoom: true
+})
+
+import BScroll from '@better-scroll/core'
+let bs = new BScroll('.wrapper', {})
+```
+
+# CDN
+
+BetterScroll with full-featured plugin.
+
+```js
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
+
+// minify
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+
+let wrapper = document.getElementById("wrapper")
+let bs = BetterScroll.createBScroll(wrapper, {})
+```
+
+Only CoreScroll
+
+```js
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
+
+// minify
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+
+let wrapper = document.getElementById("wrapper")
+let bs = new BScroll(wrapper, {})
 ```
 
 ## What is BetterScroll ?
