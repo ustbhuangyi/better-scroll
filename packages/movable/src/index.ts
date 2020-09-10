@@ -1,25 +1,60 @@
 import BScroll, { Behavior, Boundary } from '@better-scroll/core'
-import { EventEmitter } from '@better-scroll/shared-utils'
+import { EventEmitter, extend } from '@better-scroll/shared-utils'
+
+export type MovableOptions = Partial<MovableConfig> | true
+
+type InitialPositionX = number | 'left' | 'right' | 'center'
+type InitialPositionY = number | 'top' | 'bottom' | 'center'
+
+export interface MovableConfig {
+  initialPosition: [InitialPositionX, InitialPositionY]
+}
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    movable?: true
+    movable?: MovableOptions
   }
 }
 
 export default class Movable {
   static pluginName = 'movable'
+  options: MovableConfig
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
+    this.handleOptions()
+
     this.handleHooks()
+  }
+
+  private handleOptions() {
+    const userOptions = (this.scroll.options.movable === true
+      ? {}
+      : this.scroll.options.movable) as Partial<MovableConfig>
+    const defaultOptions: MovableConfig = {
+      initialPosition: [0, 0],
+    }
+    this.options = extend(defaultOptions, userOptions)
   }
 
   private handleHooks() {
     this.hooksFn = []
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
 
+    this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.beforeInitialScrollTo,
+      (position: { x: number; y: number }) => {
+        const initialPosition = this.options.initialPosition
+        const { x, y } = this.resolveInitialPostion(
+          initialPosition[0],
+          initialPosition[1]
+        )
+        position.x = x
+        position.y = y
+      }
+    )
+
     const computeBoundary = (boundary: Boundary, behavior: Behavior) => {
-      if (!behavior.options.scrollable) return
       if (boundary.maxScrollPos > 0) {
         // content is smaller than wrapper
         boundary.minScrollPos = behavior.wrapperSize - behavior.contentSize
@@ -29,10 +64,21 @@ export default class Movable {
 
     this.registerHooks(
       scrollBehaviorX.hooks,
+      scrollBehaviorX.hooks.eventTypes.ignoreHasScroll,
+      () => true
+    )
+    this.registerHooks(
+      scrollBehaviorX.hooks,
       scrollBehaviorX.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorX)
       }
+    )
+
+    this.registerHooks(
+      scrollBehaviorY.hooks,
+      scrollBehaviorY.hooks.eventTypes.ignoreHasScroll,
+      () => true
     )
     this.registerHooks(
       scrollBehaviorY.hooks,
@@ -51,8 +97,37 @@ export default class Movable {
     )
   }
 
+  resolveInitialPostion(x: InitialPositionX, y: InitialPositionY) {
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    const resolveFormula = {
+      left() {
+        return 0
+      },
+      top() {
+        return 0
+      },
+      right() {
+        return scrollBehaviorX.minScrollPos
+      },
+      bottom() {
+        return scrollBehaviorY.minScrollPos
+      },
+      center(index: number) {
+        const baseSize =
+          index === 0
+            ? scrollBehaviorX.minScrollPos
+            : scrollBehaviorY.minScrollPos
+        return baseSize / 2
+      },
+    }
+    return {
+      x: typeof x === 'number' ? x : resolveFormula[x](0),
+      y: typeof y === 'number' ? y : resolveFormula[y](1),
+    }
+  }
+
   destroy() {
-    this.hooksFn.forEach(item => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]

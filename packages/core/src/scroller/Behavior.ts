@@ -41,6 +41,7 @@ export class Behavior {
       'computeBoundary',
       'momentum',
       'end',
+      'ignoreHasScroll',
     ])
     this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
@@ -223,7 +224,7 @@ export class Behavior {
     this.hasScroll =
       this.options.scrollable && this.maxScrollPos < this.minScrollPos
 
-    if (!this.hasScroll) {
+    if (!this.hasScroll && this.minScrollPos < this.maxScrollPos) {
       this.maxScrollPos = this.minScrollPos
       this.contentSize = this.wrapperSize
     }
@@ -249,7 +250,13 @@ export class Behavior {
   // adjust position when out of boundary
   adjustPosition(pos: number) {
     let roundPos = Math.round(pos)
-    if (!this.hasScroll || roundPos > this.minScrollPos) {
+
+    if (
+      !this.hasScroll &&
+      !this.hooks.trigger(this.hooks.eventTypes.ignoreHasScroll)
+    ) {
+      roundPos = this.minScrollPos
+    } else if (roundPos > this.minScrollPos) {
       roundPos = this.minScrollPos
     } else if (roundPos < this.maxScrollPos) {
       roundPos = this.maxScrollPos
