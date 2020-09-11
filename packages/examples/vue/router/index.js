@@ -42,7 +42,9 @@ import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizon
 import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 
 import Movable from 'vue-example/components/movable/default'
+import MovableMultiContent from 'vue-example/components/movable/multi-content'
 import MovableScale from 'vue-example/components/movable/scale'
+import MovableMultiContentScale from 'vue-example/components/movable/multi-content-scale'
 
 import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
 import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
@@ -200,6 +202,14 @@ export default new Router({
           path: 'scale',
           component: MovableScale,
         },
+        {
+          path: 'multi-content',
+          component: MovableMultiContent
+        },
+        {
+          path: 'multi-content-scale',
+          component: MovableMultiContentScale
+        }
       ],
     },
     {

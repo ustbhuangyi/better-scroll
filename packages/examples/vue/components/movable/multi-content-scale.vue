@@ -2,7 +2,10 @@
   <div class="core-container">
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
-        <div class="scroll-item" v-for="(item, index) in emojis" :key="index">{{item}}</div>
+        <div class="scroll-item" v-for="(item, index) in emojis1" :key="index">{{item}}</div>
+      </div>
+      <div class="scroll-content">
+        <div class="scroll-item" v-for="(item, index) in emojis2" :key="index">{{item}}</div>
       </div>
     </div>
   </div>
@@ -19,11 +22,17 @@
   export default {
     data () {
       return {
-        emojis: [
+        emojis1: [
           '😀 😁 😂 🤣 😃',
           '😄 😅 😆 😉 😊',
           '😫 😴 😌 😛 😜',
           '👆🏻 😒 😓 😔 👇🏻'
+        ],
+        emojis2: [
+          '👍🏼 👎🏼 👊🏼 ✊🏼 🤛🏼',
+          '☝🏽 ✋🏽 🤚🏽 🖐🏽 🖖🏽',
+          '🌖 🌗 🌘 🌑 🌒',
+          '💫 💥 💢 💦 💧'
         ]
       }
     },
@@ -35,18 +44,33 @@
     },
     methods: {
       init() {
-        this.bs = new BScroll(this.$refs.scroll, {
+        this.bs1 = new BScroll(this.$refs.scroll, {
           bindToTarget: true,
           scrollX: true,
           scrollY: true,
           freeScroll: true,
           movable: true,
           zoom: {
-            start: 1,
+            start: 1.2,
             min: 0.5,
             max: 3
           }
         })
+        this.bs1.putAt('left', 'top')
+        this.bs2 = new BScroll(this.$refs.scroll, {
+          specifiedIndexAsContent: 1,
+          bindToTarget: true,
+          scrollX: true,
+          scrollY: true,
+          freeScroll: true,
+          movable: true,
+          zoom: {
+            start: 0.8,
+            min: 0.5,
+            max: 3
+          }
+        })
+        this.bs2.putAt('right', 'bottom')
       }
     }
   }
@@ -57,8 +81,12 @@
   .scroll-wrapper
     height 400px
     overflow hidden
+    position relative
     box-shadow 0 0 3px rgba(0, 0, 0, .3)
     .scroll-content
+      position absolute
+      top 0
+      left 0
       width 220px
     .scroll-item
       height 50px
