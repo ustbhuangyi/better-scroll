@@ -39,7 +39,7 @@ export default class Indicator {
   public keyVals: KeyValues = {
     sizeRatio: 1,
     maxPos: 0,
-    initialSize: 0
+    initialSize: 0,
   }
   public curPos: number = 0
   public keysMap: KeysMap
@@ -49,7 +49,9 @@ export default class Indicator {
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.wrapper
     this.wrapperStyle = this.wrapper.style
-    this.el = this.wrapper.children[0] as HTMLElement
+    this.el = this.wrapper.children[
+      bscroll.options.specifiedIndexAsContent
+    ] as HTMLElement
     this.elStyle = this.el.style
     this.bscroll = bscroll
     this.direction = options.direction
@@ -124,7 +126,7 @@ export default class Indicator {
         maxScroll: 'maxScrollY',
         pos: 'y',
         pointPos: 'pageY',
-        translate: 'translateY'
+        translate: 'translateY',
       }
     }
     return {
@@ -135,7 +137,7 @@ export default class Indicator {
       maxScroll: 'maxScrollX',
       pos: 'x',
       pointPos: 'pageX',
-      translate: 'translateX'
+      translate: 'translateX',
     }
   }
 
@@ -159,7 +161,7 @@ export default class Indicator {
 
       this.updatePosAndSize({
         x: this.bscroll.x,
-        y: this.bscroll.y
+        y: this.bscroll.y,
       })
     }
   }
@@ -192,7 +194,7 @@ export default class Indicator {
     return {
       initialSize,
       maxPos,
-      sizeRatio
+      sizeRatio,
     }
   }
 
@@ -223,7 +225,7 @@ export default class Indicator {
 
     return {
       pos,
-      size
+      size,
     }
   }
 
@@ -232,9 +234,9 @@ export default class Indicator {
 
     this.elStyle[sizeKey] = `${size}px`
 
-    this.elStyle[style.transform as any] = `${translate}(${pos}px)${
-      this.bscroll.options.translateZ
-    }`
+    this.elStyle[
+      style.transform as any
+    ] = `${translate}(${pos}px)${this.bscroll.options.translateZ}`
   }
 
   setTransitionTime(time: number = 0) {
@@ -266,7 +268,7 @@ export default class Indicator {
 
     this.bscroll.trigger('scroll', {
       x: this.bscroll.x,
-      y: this.bscroll.y
+      y: this.bscroll.y,
     })
   }
 
@@ -291,7 +293,7 @@ export default class Indicator {
     if (moved) {
       this.bscroll.trigger('scrollEnd', {
         x: this.bscroll.x,
-        y: this.bscroll.y
+        y: this.bscroll.y,
       })
     }
   }
@@ -302,7 +304,7 @@ export default class Indicator {
     }
     this.wrapper.parentNode!.removeChild(this.wrapper)
 
-    this.hooksHandlers.forEach(item => {
+    this.hooksHandlers.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]

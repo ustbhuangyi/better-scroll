@@ -94,13 +94,18 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       warn('Can not resolve the wrapper DOM.')
       return
     }
-    const content = wrapper.children[0]
+
+    this.plugins = {}
+    this.options = new OptionsConstructor().merge(options).process()
+
+    const content = wrapper.children[
+      this.options.specifiedIndexAsContent
+    ] as HTMLElement
     if (!content) {
       warn('The wrapper need at least one child element to be scroller.')
       return
     }
-    this.plugins = {}
-    this.options = new OptionsConstructor().merge(options).process()
+
     this.hooks = new EventEmitter([
       'refresh',
       'enable',
@@ -108,15 +113,15 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       'destroy',
       'beforeInitialScrollTo',
     ])
-    this.init(wrapper)
+    this.init(wrapper, content)
   }
 
-  private init(wrapper: MountedBScrollHTMLElement) {
+  private init(wrapper: MountedBScrollHTMLElement, content: HTMLElement) {
     this.wrapper = wrapper
 
     // mark wrapper to recognize bs instance by DOM attribute
     wrapper.isBScrollContainer = true
-    this.scroller = new Scroller(wrapper, this.options)
+    this.scroller = new Scroller(wrapper, content, this.options)
     this.scroller.hooks.on(this.scroller.hooks.eventTypes.resize, () => {
       this.refresh()
     })

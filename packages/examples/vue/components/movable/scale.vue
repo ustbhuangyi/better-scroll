@@ -44,7 +44,8 @@
           zoom: {
             start: 1,
             min: 0.5,
-            max: 3
+            max: 3,
+            initialOrigin: ['center', 'center']
           }
         })
       }

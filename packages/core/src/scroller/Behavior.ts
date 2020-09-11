@@ -21,7 +21,6 @@ export interface Options {
 export type Boundary = { minScrollPos: number; maxScrollPos: number }
 
 export class Behavior {
-  content: HTMLElement
   currentPos: number
   startPos: number
   absStartPos: number
@@ -35,7 +34,11 @@ export class Behavior {
   wrapperSize: number
   contentSize: number
   hooks: EventEmitter
-  constructor(public wrapper: HTMLElement, public options: Options) {
+  constructor(
+    public wrapper: HTMLElement,
+    public content: HTMLElement,
+    public options: Options
+  ) {
     this.hooks = new EventEmitter([
       'beforeComputeBoundary',
       'computeBoundary',
@@ -43,7 +46,6 @@ export class Behavior {
       'end',
       'ignoreHasScroll',
     ])
-    this.content = this.wrapper.children[0] as HTMLElement
     this.currentPos = 0
     this.startPos = 0
     this.refresh()

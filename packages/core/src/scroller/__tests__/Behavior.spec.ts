@@ -26,7 +26,7 @@ describe('Behavior Class tests', () => {
     content = createDiv(100, 400, 0, 0)
     document.body.appendChild(content)
     wrapper.appendChild(content)
-    behavior = new Behavior(wrapper, options)
+    behavior = new Behavior(wrapper, content, options)
   })
 
   it('should init hooks when call constructor function', () => {

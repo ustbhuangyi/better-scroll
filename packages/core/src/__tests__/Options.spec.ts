@@ -56,6 +56,7 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 
@@ -106,6 +107,7 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 
@@ -158,6 +160,7 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 

@@ -68,6 +68,7 @@ export interface DefOptions {
   dblclick?: dblclickOptions
   autoEndDistance?: number
   outOfBoundaryDampingFactor?: number
+  specifiedIndexAsContent?: number
 }
 
 export interface Options extends DefOptions, CustomOptions {}
@@ -116,6 +117,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
   dblclick: dblclickOptions
   autoEndDistance: number
   outOfBoundaryDampingFactor: number
+  specifiedIndexAsContent: number
 
   constructor() {
     super()
@@ -173,6 +175,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
 
     this.autoEndDistance = 5
     this.outOfBoundaryDampingFactor = 1 / 3
+    this.specifiedIndexAsContent = 0
   }
   merge(options?: Options) {
     if (!options) return this

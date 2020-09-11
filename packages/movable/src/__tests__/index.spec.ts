@@ -10,7 +10,7 @@ const createMovableEls = () => {
 
   return {
     wrapper,
-    content
+    content,
   }
 }
 describe('movable plugin', () => {
@@ -26,6 +26,16 @@ describe('movable plugin', () => {
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  it('should proxy properties to BScroll instance', () => {
+    expect(scroll.proxy).toBeCalled()
+    expect(scroll.proxy).toHaveBeenLastCalledWith([
+      {
+        key: 'putAt',
+        sourceKey: 'plugins.movable.putAt',
+      },
+    ])
   })
 
   it('should modify boundary', () => {
@@ -52,31 +62,12 @@ describe('movable plugin', () => {
 
     expect(boundaryX).toMatchObject({
       minScrollPos: 100,
-      maxScrollPos: 0
+      maxScrollPos: 0,
     })
 
     expect(boundaryY).toMatchObject({
       minScrollPos: 200,
-      maxScrollPos: 0
-    })
-  })
-
-  it('should fail when scrollable is false', () => {
-    const { scrollBehaviorX } = scroll.scroller
-
-    scrollBehaviorX.options.scrollable = false
-    scrollBehaviorX.wrapperSize = 200
-    scrollBehaviorX.contentSize = 100
-
-    let boundaryX: Boundary = { minScrollPos: 0, maxScrollPos: 1 }
-    scrollBehaviorX.hooks.trigger(
-      scrollBehaviorX.hooks.eventTypes.computeBoundary,
-      boundaryX
-    )
-
-    expect(boundaryX).toMatchObject({
-      minScrollPos: 0,
-      maxScrollPos: 1
+      maxScrollPos: 0,
     })
   })
 })

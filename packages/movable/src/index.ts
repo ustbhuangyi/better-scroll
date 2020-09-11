@@ -1,58 +1,44 @@
 import BScroll, { Behavior, Boundary } from '@better-scroll/core'
-import { EventEmitter, extend } from '@better-scroll/shared-utils'
+import {
+  ease,
+  EventEmitter,
+  ApplyOrder,
+  EaseItem,
+} from '@better-scroll/shared-utils'
+import propertiesConfig from './propertiesConfig'
 
-export type MovableOptions = Partial<MovableConfig> | true
-
-type InitialPositionX = number | 'left' | 'right' | 'center'
-type InitialPositionY = number | 'top' | 'bottom' | 'center'
-
-export interface MovableConfig {
-  initialPosition: [InitialPositionX, InitialPositionY]
-}
+type PositionX = number | 'left' | 'right' | 'center'
+type PositionY = number | 'top' | 'bottom' | 'center'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    movable?: MovableOptions
+    movable?: true
+  }
+  interface CustomAPI {
+    movable: PluginAPI
   }
 }
 
-export default class Movable {
+interface PluginAPI {
+  putAt(x: PositionX, y: PositionY, time?: number, easing?: EaseItem): void
+}
+
+export default class Movable implements PluginAPI {
   static pluginName = 'movable'
-  options: MovableConfig
+  static applyOrder = ApplyOrder.Pre
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
-    this.handleOptions()
-
+    this.handleBScroll()
     this.handleHooks()
   }
 
-  private handleOptions() {
-    const userOptions = (this.scroll.options.movable === true
-      ? {}
-      : this.scroll.options.movable) as Partial<MovableConfig>
-    const defaultOptions: MovableConfig = {
-      initialPosition: [0, 0],
-    }
-    this.options = extend(defaultOptions, userOptions)
+  private handleBScroll() {
+    this.scroll.proxy(propertiesConfig)
   }
 
   private handleHooks() {
     this.hooksFn = []
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
-
-    this.registerHooks(
-      this.scroll.hooks,
-      this.scroll.hooks.eventTypes.beforeInitialScrollTo,
-      (position: { x: number; y: number }) => {
-        const initialPosition = this.options.initialPosition
-        const { x, y } = this.resolveInitialPostion(
-          initialPosition[0],
-          initialPosition[1]
-        )
-        position.x = x
-        position.y = y
-      }
-    )
 
     const computeBoundary = (boundary: Boundary, behavior: Behavior) => {
       if (boundary.maxScrollPos > 0) {
@@ -97,7 +83,17 @@ export default class Movable {
     )
   }
 
-  resolveInitialPostion(x: InitialPositionX, y: InitialPositionY) {
+  putAt(
+    x: PositionX,
+    y: PositionY,
+    time = this.scroll.options.bounceTime,
+    easing = ease.bounce
+  ) {
+    const position = this.resolvePostion(x, y)
+    this.scroll.scrollTo(position.x, position.y, time, easing)
+  }
+
+  private resolvePostion(x: PositionX, y: PositionY): { x: number; y: number } {
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
     const resolveFormula = {
       left() {

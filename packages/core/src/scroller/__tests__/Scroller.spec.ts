@@ -35,7 +35,7 @@ describe('Scroller Class tests', () => {
     wrapper.appendChild(content)
     let bscrollOptions = new OptionsConstructor() as any
 
-    scroller = new Scroller(wrapper, bscrollOptions)
+    scroller = new Scroller(wrapper, content, bscrollOptions)
   })
 
   it('should init hooks when call constructor function', () => {
