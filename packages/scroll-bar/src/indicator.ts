@@ -49,11 +49,8 @@ export default class Indicator {
   constructor(public bscroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.wrapper
     this.wrapperStyle = this.wrapper.style
-    this.el = this.wrapper.children[
-      bscroll.options.specifiedIndexAsContent
-    ] as HTMLElement
+    this.el = this.wrapper.children[0] as HTMLElement
     this.elStyle = this.el.style
-    this.bscroll = bscroll
     this.direction = options.direction
 
     this.keysMap = this._getKeysMap()
