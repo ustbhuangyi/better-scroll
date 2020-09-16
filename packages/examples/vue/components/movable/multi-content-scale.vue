@@ -40,7 +40,8 @@
       this.init()
     },
     beforeDestroy() {
-      this.bs.destroy()
+      this.bs1.destroy()
+      this.bs2.destroy()
     },
     methods: {
       init() {

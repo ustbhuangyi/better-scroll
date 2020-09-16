@@ -21,6 +21,7 @@ export interface Options {
 export type Boundary = { minScrollPos: number; maxScrollPos: number }
 
 export class Behavior {
+  content: HTMLElement
   currentPos: number
   startPos: number
   absStartPos: number
@@ -36,7 +37,7 @@ export class Behavior {
   hooks: EventEmitter
   constructor(
     public wrapper: HTMLElement,
-    public content: HTMLElement,
+    content: HTMLElement,
     public options: Options
   ) {
     this.hooks = new EventEmitter([
@@ -46,9 +47,7 @@ export class Behavior {
       'end',
       'ignoreHasScroll',
     ])
-    this.currentPos = 0
-    this.startPos = 0
-    this.refresh()
+    this.refresh(content)
   }
 
   start() {
@@ -187,13 +186,14 @@ export class Behavior {
     this.setDirection(absDist)
   }
 
-  refresh() {
+  refresh(content: HTMLElement) {
     const { size, position } = this.options.rect
     const isWrapperStatic =
       window.getComputedStyle(this.wrapper, null).position === 'static'
     const wrapperRect = getRect(this.wrapper)
     this.wrapperSize = wrapperRect[size]
 
+    this.setContent(content)
     const contentRect = getRect(this.content)
     this.contentSize = contentRect[size]
 
@@ -205,6 +205,22 @@ export class Behavior {
     this.computeBoundary()
 
     this.setDirection(Direction.Default)
+  }
+
+  private setContent(content: HTMLElement) {
+    if (content !== this.content) {
+      this.content = content
+      this.resetState()
+    }
+  }
+
+  private resetState() {
+    this.currentPos = 0
+    this.startPos = 0
+    this.dist = 0
+    this.setDirection(Direction.Default)
+    this.setMovingDirection(Direction.Default)
+    this.resetStartPos()
   }
 
   computeBoundary() {

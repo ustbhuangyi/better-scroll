@@ -29,6 +29,7 @@ import VerticalSlide from 'vue-example/components/slide/vertical'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
+import DynamicContentScroll from 'vue-example/components/core/dynamic-content'
 import Freescroll from 'vue-example/components/core/freescroll'
 
 import OneColumnPicker from 'vue-example/components/picker/one-column'
@@ -87,6 +88,10 @@ export default new Router({
         {
           path: 'horizontal',
           component: HorizontalScroll,
+        },
+        {
+          path: 'dynamic-content',
+          component: DynamicContentScroll
         },
         {
           path: 'freescroll',

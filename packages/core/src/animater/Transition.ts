@@ -95,6 +95,7 @@ export default class Transition extends Base {
     const stopFromTransition = this.doStop()
     if (stopFromTransition) {
       this.hooks.trigger(this.hooks.eventTypes.callStop)
+      this.setForceStopped(false)
     }
   }
 }

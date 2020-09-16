@@ -7,6 +7,9 @@
       <li class="example-item" @click="goPage('/core/horizontal')">
         <span>horizontal</span>
       </li>
+      <li class="example-item" @click="goPage('/core/dynamic-content')">
+        <span>dynamic-content</span>
+      </li>
       <li class="example-item" @click="goPage('/core/freescroll')">
         <span>freescroll</span>
       </li>

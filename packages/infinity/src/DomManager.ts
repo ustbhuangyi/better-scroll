@@ -5,14 +5,17 @@ import { style, cssVendor } from '@better-scroll/shared-utils'
 const ANIMATION_DURATION_MS = 200
 
 export default class DomManager {
+  private content: HTMLElement
   private unusedDom: HTMLElement[] = []
   private timers: Array<number> = []
 
   constructor(
-    private content: HTMLElement,
+    content: HTMLElement,
     private renderFn: (data: any, div?: HTMLElement) => HTMLElement,
     private tombstone: Tombstone
-  ) {}
+  ) {
+    this.setContent(content)
+  }
 
   update(
     list: Array<pListItem>,
@@ -44,7 +47,7 @@ export default class DomManager {
       startPos,
       startDelta,
       end,
-      endPos
+      endPos,
     }
   }
 
@@ -151,7 +154,7 @@ export default class DomManager {
     return {
       startPos,
       startDelta,
-      endPos: pos
+      endPos: pos,
     }
   }
 
@@ -163,7 +166,7 @@ export default class DomManager {
     if (list[start] && list[start].pos !== -1) {
       return {
         start: list[start].pos,
-        delta: 0
+        delta: 0,
       }
     }
     // TODO optimise
@@ -191,7 +194,7 @@ export default class DomManager {
 
     return {
       start: pos,
-      delta: delta
+      delta: delta,
     }
   }
 
@@ -202,9 +205,15 @@ export default class DomManager {
     }
   }
 
+  setContent(content: HTMLElement) {
+    if (content !== this.content) {
+      this.content = content
+    }
+  }
+
   destroy(): void {
     this.removeTombstone()
-    this.timers.forEach(id => {
+    this.timers.forEach((id) => {
       clearTimeout(id)
     })
   }
