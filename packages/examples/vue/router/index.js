@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import CoreEntry from 'vue-example/pages/core-entry'
+import ObserveDOMEntry from 'vue-example/pages/observe-dom-entry'
 import ZoomEntry from 'vue-example/pages/zoom-entry'
 import SlideEntry from 'vue-example/pages/slide-entry'
 import PickerEntry from 'vue-example/pages/picker-entry'
@@ -58,6 +59,10 @@ export default new Router({
     {
       path: '/zoom',
       component: ZoomEntry,
+    },
+    {
+      path: '/observe-dom',
+      component: ObserveDOMEntry
     },
     {
       path: '/slide',

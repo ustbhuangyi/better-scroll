@@ -31,12 +31,24 @@ export default class ObserveDOM {
   }
   private handleHooks() {
     this.hooksFn = []
+    const preContent = this.scroll.scroller.content
+    this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.refresh,
+      (content: HTMLElement) => {
+        if (preContent !== content) {
+          this.stopObserve()
+          // launch a new mutationObserver
+          this.handleMutationObserver()
+        }
+      }
+    )
     this.registerHooks(
       this.scroll.hooks,
       this.scroll.hooks.eventTypes.enable,
       () => {
         if (this.stopObserver) {
-          this.init()
+          this.handleMutationObserver()
         }
       }
     )
@@ -108,18 +120,18 @@ export default class ObserveDOM {
   }
 
   private checkDOMUpdate() {
-    const scrollerEl = this.scroll.scroller.content
-    let scrollerRect = getRect(scrollerEl)
-    let oldWidth = scrollerRect.width
-    let oldHeight = scrollerRect.height
+    const content = this.scroll.scroller.content
+    let contentRect = getRect(content)
+    let oldWidth = contentRect.width
+    let oldHeight = contentRect.height
 
     const check = () => {
       if (this.stopObserver) {
         return
       }
-      scrollerRect = getRect(scrollerEl)
-      let newWidth = scrollerRect.width
-      let newHeight = scrollerRect.height
+      contentRect = getRect(content)
+      let newWidth = contentRect.width
+      let newHeight = contentRect.height
 
       if (oldWidth !== newWidth || oldHeight !== newHeight) {
         this.scroll.refresh()
