@@ -84,13 +84,14 @@ export default class Wheel implements PluginAPI {
       scrollBehaviorX,
       scrollBehaviorY,
       animater,
-      content: prevContent,
     } = scroller
+    let prevContent = scroller.content
     // BScroll
     this.scroll.hooks.on(
       this.scroll.hooks.eventTypes.refresh,
       (content: HTMLElement) => {
         if (content !== prevContent) {
+          prevContent = content
           this.handleSelectedIndex()
         }
         // check we are stop at a disable item
