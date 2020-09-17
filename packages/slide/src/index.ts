@@ -67,6 +67,7 @@ export default class Slide implements PluginAPI {
   private isTouching = false
   private willChangeToPage: Page
   private autoplayTimer: number = 0
+  private prevContent: HTMLElement
   constructor(public scroll: BScroll) {
     if (!this.satisfyInitialization()) {
       return
@@ -119,14 +120,12 @@ export default class Slide implements PluginAPI {
     this.options = extend(defaultOptions, userOptions)
   }
 
-  private handleLoop() {
+  private handleLoop(prevSlideContent: HTMLElement) {
     const { loop } = this.options
-    if (loop) {
-      const slideContent = this.scroll.scroller.content
-      const slidePages = slideContent.children
-      if (slidePages.length > 1) {
-        this.cloneFirstAndLastSlidePage(slideContent)
-      }
+    const slideContent = this.scroll.scroller.content
+    const slidePages = slideContent.children
+    if (loop && slidePages.length > 1) {
+      this.cloneFirstAndLastSlidePage(slideContent, prevSlideContent)
     }
   }
 
@@ -134,6 +133,7 @@ export default class Slide implements PluginAPI {
     const scrollHooks = this.scroll.hooks
     const scrollerHooks = this.scroll.scroller.hooks
     const { listenFlick } = this.options
+    this.prevContent = this.scroll.scroller.content
 
     this.hooksFn = []
     // scroll
@@ -199,7 +199,7 @@ export default class Slide implements PluginAPI {
       scrollerHooks,
       scrollerHooks.eventTypes.beforeRefresh,
       () => {
-        this.handleLoop()
+        this.handleLoop(this.prevContent)
         this.setSlideInlineStyle()
       }
     )
@@ -337,15 +337,22 @@ export default class Slide implements PluginAPI {
       directionY
     )
   }
-  private refreshHandler() {
+  private refreshHandler(content: HTMLElement) {
     if (!this.satisfyInitialization()) {
       return
     }
     this.pages.refresh()
     this.computeThreshold()
 
-    const initPage = this.pages.getInitialPage()
+    const contentChanged = this.prevContent !== content
+    if (contentChanged) {
+      this.prevContent = content
+    }
+    const initPage = this.pages.getInitialPage(contentChanged)
     if (this.initialised) {
+      if (contentChanged) {
+        this.pages.setCurrentPage(initPage)
+      }
       this.goTo(initPage.pageX, initPage.pageY, 0)
     } else {
       this.registerHooks(
@@ -378,8 +385,12 @@ export default class Slide implements PluginAPI {
     }
   }
 
-  private cloneFirstAndLastSlidePage(slideContent: HTMLElement) {
-    if (this.initialised) {
+  private cloneFirstAndLastSlidePage(
+    slideContent: HTMLElement,
+    prevSlideContent: HTMLElement
+  ) {
+    // if content has changed, no need to remove cloned element for preContent
+    if (this.initialised && slideContent === prevSlideContent) {
       this.removeClonedSlidePage(slideContent)
     }
     const children = slideContent.children
