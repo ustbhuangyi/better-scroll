@@ -3,10 +3,10 @@ import Indicator, { IndicatorOption } from './indicator'
 
 export const enum Direction {
   Horizontal = 'horizontal',
-  Vertical = 'vertical'
+  Vertical = 'vertical',
 }
 
-export type scrollbarOptions = Partial<ScrollbarConfig> | true
+export type ScrollbarOptions = Partial<ScrollbarConfig> | true
 
 export interface ScrollbarConfig {
   fade: boolean
@@ -17,7 +17,7 @@ export interface ScrollbarConfig {
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    scrollbar?: scrollbarOptions
+    scrollbar?: ScrollbarOptions
   }
 }
 
@@ -38,7 +38,7 @@ export default class ScrollBar {
 
     let scrolls: { [key: string]: Direction } = {
       scrollX: Direction.Horizontal,
-      scrollY: Direction.Vertical
+      scrollY: Direction.Vertical,
     }
     const indicators: Indicator[] = []
 
@@ -49,7 +49,7 @@ export default class ScrollBar {
           wrapper: this.createIndicatorElement(direction),
           direction: direction,
           fade,
-          interactive
+          interactive,
         }
         bscroll.wrapper.appendChild(indicatorOption.wrapper)
         indicators.push(new Indicator(bscroll, indicatorOption))

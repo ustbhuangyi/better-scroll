@@ -84,11 +84,24 @@ export default class Wheel implements PluginAPI {
       scrollBehaviorX,
       scrollBehaviorY,
       animater,
+      content: prevContent,
     } = scroller
     // BScroll
     this.scroll.hooks.on(
+      this.scroll.hooks.eventTypes.refresh,
+      (content: HTMLElement) => {
+        if (content !== prevContent) {
+          this.handleSelectedIndex()
+        }
+        // check we are stop at a disable item
+        this.wheelTo(this.selectedIndex, 0)
+      }
+    )
+
+    this.scroll.hooks.on(
       this.scroll.hooks.eventTypes.beforeInitialScrollTo,
       (position: { x: number; y: number }) => {
+        // selectedIndex has a better priority than bs.options.startY
         position.x = 0
         position.y = -(this.selectedIndex * this.itemHeight)
       }
@@ -230,9 +243,9 @@ export default class Wheel implements PluginAPI {
   }
 
   private refreshBoundary() {
-    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
-    scrollBehaviorX.refresh()
-    scrollBehaviorY.refresh()
+    const { scrollBehaviorX, scrollBehaviorY, content } = this.scroll.scroller
+    scrollBehaviorX.refresh(content)
+    scrollBehaviorY.refresh(content)
   }
 
   private handleSelectedIndex() {
