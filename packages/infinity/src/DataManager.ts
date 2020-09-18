@@ -53,7 +53,7 @@ export default class DataManager {
       } else {
         this.list[this.loadedNum] = {
           ...this.list[this.loadedNum],
-          ...{ data: data[i] }
+          ...{ data: data[i] },
         }
       }
       this.loadedNum++
@@ -89,7 +89,6 @@ export default class DataManager {
 
     const min = end - this.loadedNum
     const newData = await this.fetch(min)
-
     if (newData instanceof Array && newData.length) {
       this.add(newData)
 
@@ -106,5 +105,12 @@ export default class DataManager {
 
   getList() {
     return this.list
+  }
+
+  resetState() {
+    this.loadedNum = 0
+    this.fetching = false
+    this.hasMore = true
+    this.list = []
   }
 }

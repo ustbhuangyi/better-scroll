@@ -28,6 +28,7 @@ export default class InfinityScroll {
   private domManager: DomManager
   private dataManager: DataManager
   private indexCalculator: IndexCalculator
+  private preContent: HTMLElement
 
   constructor(public scroll: BScroll) {
     this.init()
@@ -47,11 +48,8 @@ export default class InfinityScroll {
       this.scroll.scroller.scrollBehaviorY.wrapperSize,
       this.tombstone.height
     )
-    this.domManager = new DomManager(
-      this.scroll.scroller.content,
-      renderFn,
-      this.tombstone
-    )
+    const preContent = (this.preContent = this.scroll.scroller.content)
+    this.domManager = new DomManager(preContent, renderFn, this.tombstone)
     this.dataManager = new DataManager(
       [],
       fetchFn,
@@ -61,9 +59,16 @@ export default class InfinityScroll {
     this.scroll.on(this.scroll.eventTypes.destroy, this.destroy, this)
     this.scroll.on(this.scroll.eventTypes.scroll, this.update, this)
 
-    this.scroll.on(this.scroll.eventTypes.refresh, (content: HTMLElement) => {
-      this.domManager.setContent(content)
-    })
+    this.scroll.on(
+      this.scroll.eventTypes.contentChanged,
+      (content: HTMLElement) => {
+        this.domManager.setContent(content)
+        this.indexCalculator.resetState()
+        this.domManager.resetState()
+        this.dataManager.resetState()
+        this.update({ y: 0 })
+      }
+    )
     const { scrollBehaviorY } = this.scroll.scroller
 
     scrollBehaviorY.hooks.on(

@@ -139,7 +139,7 @@ export default class DomManager {
         tombstoneEles.push(tombstone)
       }
 
-      if (list[i].dom && list[i].pos !== pos) {
+      if (list[i].dom) {
         ;(<any>list[i].dom!.style)[style.transform] = `translateY(${pos}px)`
         list[i].pos = pos
       }
@@ -216,5 +216,10 @@ export default class DomManager {
     this.timers.forEach((id) => {
       clearTimeout(id)
     })
+  }
+  resetState() {
+    this.destroy()
+    this.timers = []
+    this.unusedDom = []
   }
 }

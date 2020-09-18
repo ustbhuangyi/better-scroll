@@ -44,7 +44,8 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   options: OptionsConstructor
   hooks: EventEmitter
   plugins: { [name: string]: any }
-  wrapper: HTMLElement;
+  wrapper: HTMLElement
+  content: HTMLElement;
   [key: string]: any
 
   static use(ctor: PluginCtor) {
@@ -77,6 +78,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   constructor(el: ElementParam, options?: Options & O) {
     super([
       'refresh',
+      'contentChanged',
       'enable',
       'disable',
       'beforeScrollStart',
@@ -99,7 +101,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     this.plugins = {}
     this.options = new OptionsConstructor().merge(options).process()
 
-    if (!this.setContent(wrapper)) {
+    if (!this.setContent(wrapper).valid) {
       return
     }
 
@@ -109,11 +111,14 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       'disable',
       'destroy',
       'beforeInitialScrollTo',
+      'contentChanged',
     ])
     this.init(wrapper)
   }
 
   setContent(wrapper: MountedBScrollHTMLElement) {
+    let contentChanged = false
+    let valid = true
     const content = wrapper.children[
       this.options.specifiedIndexAsContent
     ] as HTMLElement
@@ -121,11 +126,16 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       warn(
         'The wrapper need at least one child element to be content element to scroll.'
       )
+      valid = false
     } else {
-      if (this.content !== content) {
+      contentChanged = this.content !== content
+      if (contentChanged) {
         this.content = content
       }
-      return true
+    }
+    return {
+      valid,
+      contentChanged,
     }
   }
 
@@ -221,9 +231,16 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     })
   }
   refresh() {
-    this.setContent(this.wrapper)
-    this.refreshWithoutReset(this.content)
-    this.scroller.resetPosition()
+    const { contentChanged, valid } = this.setContent(this.wrapper)
+    if (valid) {
+      const content = this.content
+      this.refreshWithoutReset(content)
+      if (contentChanged) {
+        this.hooks.trigger(this.hooks.eventTypes.contentChanged, content)
+        this.trigger(this.eventTypes.contentChanged, content)
+      }
+      this.scroller.resetPosition()
+    }
   }
 
   enable() {

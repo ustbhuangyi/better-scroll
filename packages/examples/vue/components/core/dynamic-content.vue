@@ -32,7 +32,7 @@
     },
     methods: {
       init() {
-        window.bs = this.bs = new BScroll(this.$refs.scroll, {
+        this.bs = new BScroll(this.$refs.scroll, {
 					click: true,
           probeType: 3 // listening scroll hook
         })
@@ -42,13 +42,16 @@
         this.bs.on('scrollEnd', () => {
           console.log('scrollingEnd')
         })
+        this.bs.on('contentChanged', (content) => {
+          console.log('--- newContent ---')
+          console.log(content)
+        })
 			},
 			handleClick() {
 				this.switcher = !this.switcher
 				// wait for Vue rerender
 				this.$nextTick(() => {
 					this.bs.refresh()
-					console.log(this.bs)
 				})
 			}
     }
