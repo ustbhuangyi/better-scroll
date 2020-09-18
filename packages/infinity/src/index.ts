@@ -28,7 +28,6 @@ export default class InfinityScroll {
   private domManager: DomManager
   private dataManager: DataManager
   private indexCalculator: IndexCalculator
-  private preContent: HTMLElement
 
   constructor(public scroll: BScroll) {
     this.init()
@@ -48,8 +47,11 @@ export default class InfinityScroll {
       this.scroll.scroller.scrollBehaviorY.wrapperSize,
       this.tombstone.height
     )
-    const preContent = (this.preContent = this.scroll.scroller.content)
-    this.domManager = new DomManager(preContent, renderFn, this.tombstone)
+    this.domManager = new DomManager(
+      this.scroll.scroller.content,
+      renderFn,
+      this.tombstone
+    )
     this.dataManager = new DataManager(
       [],
       fetchFn,

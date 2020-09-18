@@ -139,8 +139,8 @@ export default class DomManager {
         tombstoneEles.push(tombstone)
       }
 
-      if (list[i].dom) {
-        ;(<any>list[i].dom!.style)[style.transform] = `translateY(${pos}px)`
+      if (list[i].dom && list[i].pos !== pos) {
+        list[i].dom!.style[style.transform as any] = `translateY(${pos}px)`
         list[i].pos = pos
       }
       pos += list[i].height || this.tombstone.height
