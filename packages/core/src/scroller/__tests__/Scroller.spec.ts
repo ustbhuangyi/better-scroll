@@ -227,7 +227,7 @@ describe('Scroller Class tests', () => {
     let scrollToElementMockHandler = jest.fn()
     scroller.hooks.on('scrollToElement', scrollToElementMockHandler)
 
-    scroller.refresh()
+    scroller.refresh(scroller.content)
     scroller.scrollBehaviorX.adjustPosition = jest.fn(() => {
       return 0
     })
@@ -267,7 +267,7 @@ describe('Scroller Class tests', () => {
   })
 
   it('should invoking refresh method', () => {
-    scroller.refresh()
+    scroller.refresh(scroller.content)
 
     expect(scroller.scrollBehaviorX.refresh).toBeCalled()
     expect(scroller.scrollBehaviorY.refresh).toBeCalled()

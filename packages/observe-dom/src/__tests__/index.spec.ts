@@ -198,11 +198,10 @@ describe('observe dom', () => {
   })
 
   it('enable/disable', () => {
-    const initSpy = jest.spyOn(observeDOM, 'init')
     scroll.hooks.trigger(scroll.hooks.eventTypes.disable)
     expect(mockDisconnect).toBeCalled()
 
     scroll.hooks.trigger(scroll.hooks.eventTypes.enable)
-    expect(initSpy).toBeCalled()
+    expect(mockObserve).toBeCalled()
   })
 })

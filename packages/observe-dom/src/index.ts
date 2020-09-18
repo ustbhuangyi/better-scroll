@@ -31,16 +31,13 @@ export default class ObserveDOM {
   }
   private handleHooks() {
     this.hooksFn = []
-    const preContent = this.scroll.scroller.content
     this.registerHooks(
       this.scroll.hooks,
-      this.scroll.hooks.eventTypes.refresh,
-      (content: HTMLElement) => {
-        if (preContent !== content) {
-          this.stopObserve()
-          // launch a new mutationObserver
-          this.handleMutationObserver()
-        }
+      this.scroll.hooks.eventTypes.contentChanged,
+      () => {
+        this.stopObserve()
+        // launch a new mutationObserver
+        this.handleMutationObserver()
       }
     )
     this.registerHooks(

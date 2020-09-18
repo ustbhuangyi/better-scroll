@@ -68,7 +68,7 @@ export default class SlidePages {
     }
   }
 
-  getInitialPage(resetInitPage: boolean): Page {
+  getInitialPage(resetInitPage: boolean = false): Page {
     let initialPageX = this.loopX ? 1 : 0
     let initialPageY = this.loopY ? 1 : 0
 
