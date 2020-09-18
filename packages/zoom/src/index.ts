@@ -122,8 +122,7 @@ export default class Zoom implements PluginAPI {
     const scroller = this.scroll.scroller
     this.wrapper = this.scroll.scroller.wrapper
 
-    let prevContent = this.scroll.scroller.content
-    this.setTransformOrigin(prevContent)
+    this.setTransformOrigin(this.scroll.scroller.content)
 
     const scrollBehaviorX = scroller.scrollBehaviorX
     const scrollBehaviorY = scroller.scrollBehaviorY
@@ -133,14 +132,11 @@ export default class Zoom implements PluginAPI {
     // BScroll
     this.registerHooks(
       scroll.hooks,
-      scroll.hooks.eventTypes.refresh,
+      scroll.hooks.eventTypes.contentChanged,
       (content: HTMLElement) => {
-        if (content !== prevContent) {
-          this.setTransformOrigin(content)
-          prevContent = content
-          this.scale = RAW_SCALE
-          this.tryInitialZoomTo(this.zoomOpt)
-        }
+        this.setTransformOrigin(content)
+        this.scale = RAW_SCALE
+        this.tryInitialZoomTo(this.zoomOpt)
       }
     )
     this.registerHooks(
