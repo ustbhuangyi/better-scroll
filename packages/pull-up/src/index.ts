@@ -72,6 +72,14 @@ export default class PullUp implements PluginAPI {
     const { scrollBehaviorY } = this.scroll.scroller
 
     this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.contentChanged,
+      () => {
+        this.finishPullUp()
+      }
+    )
+
+    this.registerHooks(
       scrollBehaviorY.hooks,
       scrollBehaviorY.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
