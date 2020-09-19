@@ -1,13 +1,22 @@
 <template>
-  <div class="core-container">
+  <div class="movable-multi-content-scale-container">
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
-        <div class="scroll-item" v-for="(item, index) in emojis1" :key="index">{{item}}</div>
+        <figure>
+          <figcaption>Swordsman</figcaption>
+          <img class="picture" src="./images/ftstr.webp"
+         alt="ftstr">
+        </figure>
       </div>
       <div class="scroll-content">
-        <div class="scroll-item" v-for="(item, index) in emojis2" :key="index">{{item}}</div>
+        <figure>
+          <figcaption>The Witch</figcaption>
+          <img class="picture" src="./images/qos_crop.webp"
+         alt="qos_crop">
+        </figure>
       </div>
     </div>
+    <button class="btn" @click="handleClick">Put The Witch at right-bottom corner</button>
   </div>
 </template>
 
@@ -20,22 +29,6 @@
   BScroll.use(Zoom)
 
   export default {
-    data () {
-      return {
-        emojis1: [
-          '😀 😁 😂 🤣 😃',
-          '😄 😅 😆 😉 😊',
-          '😫 😴 😌 😛 😜',
-          '👆🏻 😒 😓 😔 👇🏻'
-        ],
-        emojis2: [
-          '👍🏼 👎🏼 👊🏼 ✊🏼 🤛🏼',
-          '☝🏽 ✋🏽 🤚🏽 🖐🏽 🖖🏽',
-          '🌖 🌗 🌘 🌑 🌒',
-          '💫 💥 💢 💦 💧'
-        ]
-      }
-    },
     mounted() {
       this.init()
     },
@@ -44,6 +37,9 @@
       this.bs2.destroy()
     },
     methods: {
+      handleClick() {
+        this.bs2.putAt('right', 'bottom', 500)
+      },
       init() {
         this.bs1 = new BScroll(this.$refs.scroll, {
           bindToTarget: true,
@@ -57,7 +53,7 @@
             max: 3
           }
         })
-        this.bs1.putAt('left', 'top')
+        this.bs1.putAt('center', 'center', 0)
         this.bs2 = new BScroll(this.$refs.scroll, {
           specifiedIndexAsContent: 1,
           bindToTarget: true,
@@ -65,20 +61,21 @@
           scrollY: true,
           freeScroll: true,
           movable: true,
+          startY: 150,
           zoom: {
-            start: 0.8,
+            start: 1,
             min: 0.5,
             max: 3
           }
         })
-        this.bs2.putAt('right', 'bottom')
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-.core-container
+.movable-multi-content-scale-container
+
   .scroll-wrapper
     height 400px
     overflow hidden
@@ -88,7 +85,18 @@
       position absolute
       top 0
       left 0
-      width 220px
+      width 200px
+      figure
+        margin 0
+      figcaption
+        font-weight bold
+        margin-bottom 5px
+        text-align center
+        color #ea4c89
+      .picture
+        width 200px
+        height 150px
+        border-radius 10px
     .scroll-item
       height 50px
       line-height 50px
@@ -100,4 +108,12 @@
         background-color #f3f5f7
       &:nth-child(2n+1)
         background-color #42b983
+
+  .btn
+    margin 40px auto
+    padding 10px
+    color #fff
+    border-radius 4px
+    font-size 20px
+    background-color #666  
 </style>

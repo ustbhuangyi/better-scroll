@@ -1,5 +1,5 @@
 <template>
-  <div class="core-container">
+  <div class="movable-container">
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
         <div class="scroll-item" v-for="(item, index) in emojis" :key="index">{{item}}</div>
@@ -48,7 +48,7 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-.core-container
+.movable-container
   .scroll-wrapper
     height 400px
     overflow hidden

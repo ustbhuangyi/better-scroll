@@ -65,7 +65,7 @@ webpackConfig
         .end()
       .end()
     .rule('url')
-      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+      .test(/\.(png|jpe?g|gif|svg|webp)(\?.*)?$/)
       .use('url')
         .loader('url-loader')
         .options({
