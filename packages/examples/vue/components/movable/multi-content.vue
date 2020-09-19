@@ -1,14 +1,14 @@
 <template>
   <div class="movable-multi-content-container">
     <div class="scroll-wrapper" ref="scroll">
-      <div class="scroll-content">
+      <div class="scroll-content content1">
         <figure>
           <figcaption>Cold Oasis</figcaption>
           <img class="picture" src="./images/oasis_one.webp"
          alt="Cold Oasis">
         </figure>
       </div>
-      <div class="scroll-content">
+      <div class="scroll-content content2">
         <figure>
           <figcaption>Warm Oasis</figcaption>
           <img class="picture" src="./images/oasis_two.webp"

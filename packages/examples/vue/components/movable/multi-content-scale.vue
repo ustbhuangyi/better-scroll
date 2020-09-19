@@ -1,14 +1,14 @@
 <template>
   <div class="movable-multi-content-scale-container">
     <div class="scroll-wrapper" ref="scroll">
-      <div class="scroll-content">
+      <div class="scroll-content content1">
         <figure>
           <figcaption>Swordsman</figcaption>
           <img class="picture" src="./images/ftstr.webp"
          alt="ftstr">
         </figure>
       </div>
-      <div class="scroll-content">
+      <div class="scroll-content content2">
         <figure>
           <figcaption>The Witch</figcaption>
           <img class="picture" src="./images/qos_crop.webp"
