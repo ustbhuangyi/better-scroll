@@ -136,6 +136,7 @@ describe('pull down tests', () => {
   })
 
   it('should work well when call finishPullDown()', () => {
+    pullDown.pulling = true
     pullDown.finishPullDown()
 
     expect(pullDown.pulling).toBe(false)

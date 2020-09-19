@@ -21,7 +21,12 @@ describe('CoreScroll', () => {
       element.map((el) => el.textContent)
     )
 
-    expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
+    expect(itemsContent).toEqual([
+      'vertical',
+      'horizontal',
+      'dynamic-content',
+      'freescroll',
+    ])
     await expect(itemsCounts).toBeGreaterThanOrEqual(3)
   })
 
@@ -30,7 +35,12 @@ describe('CoreScroll', () => {
       element.map((el) => el.textContent)
     )
 
-    await expect(itemsContent).toEqual(['vertical', 'horizontal', 'freescroll'])
+    await expect(itemsContent).toEqual([
+      'vertical',
+      'horizontal',
+      'dynamic-content',
+      'freescroll',
+    ])
   })
 
   describe('CoreScroll/vertical', () => {
@@ -158,6 +168,36 @@ describe('CoreScroll', () => {
 
       expect(x).toBeLessThan(0)
       expect(y).toBeLessThan(0)
+    })
+  })
+
+  describe('CoreScroll/dynamicContent', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/dynamic-content')
+    })
+
+    it('should support switching content dynamically', async () => {
+      await page.waitFor(1000)
+      await page.dispatchScroll({
+        x: 100,
+        y: 100,
+        xDistance: 0,
+        yDistance: -70,
+        gestureSourceType: 'touch',
+      })
+
+      await page.waitFor(50)
+
+      await page.click('.btn')
+
+      await page.waitFor(100)
+
+      const itemsCounts = await page.$$eval(
+        '.scroll-content .scroll-item',
+        (element) => element.length
+      )
+
+      expect(itemsCounts).toBe(60)
     })
   })
 })
