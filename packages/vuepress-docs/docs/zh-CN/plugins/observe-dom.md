@@ -45,5 +45,5 @@ yarn add @better-scroll/observe-dom
 
 
 :::warning 注意
-对于 `2.0.3` 版本及之前版本，由于插件的内部实现使用的是 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)，它无法探测到 img 标签的是否加载完成，因此对于 content 内部含有不确定高度的图片，需要等图片加载完成再调用 bs.refresh() 来重新计算可滚动尺寸。如果浏览器不支持 MutationObserver，插件内部的降级方案是每秒重新计算可滚动的尺寸。
+对于 `2.0.4` 版本及之前版本，由于插件的内部实现使用的是 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)，它无法探测到 img 标签的是否加载完成，因此对于 content 内部含有不确定高度的图片，需要等图片加载完成再调用 bs.refresh() 来重新计算可滚动尺寸。如果浏览器不支持 MutationObserver，插件内部的降级方案是每秒重新计算可滚动的尺寸。
 :::
