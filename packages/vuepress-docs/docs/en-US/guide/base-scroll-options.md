@@ -2,7 +2,7 @@
 
 BetterScroll supports rich options configuration, you can pass them in the second parameter when initializing, for example:
 
-``` js
+```js
 import BScroll from '@better-scroll/core'
 let scroll = new BScroll('.wrapper',{
     scrollY: true,
@@ -73,9 +73,9 @@ This implements a list of vertical clickable scrolling effects. so let's list th
   - **Default**: `false`
   - **Usage**: Send dblclick event. When configured to true, by default the two times click delay is 300 ms. If configured to an object, the `delay` can be modified.
   ```js
-    dblclick: {
-      delay: 300
-    }
+	dblclick: {
+		delay: 300
+	}
   ```
 
 ## tap
@@ -88,12 +88,12 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - **Default**: `true`
    - **Details**: When the content element meets the boundary it performs a small bounce animation. Setting this to true will enable the animation.
    ```js
-     bounce: {
-       top: true,
-       bottom: true,
-       left: true,
-       right: true
-     }
+		bounce: {
+			top: true,
+			bottom: true,
+			left: true,
+			right: true
+		}
    ```
    `bounce` can support the effect of closing the back of some edges. You can set the `key` of the corresponding side to `false`.
 
@@ -246,23 +246,23 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - **Usage**: Specify the child element corresponding to the index of the `wrapper` as the `content`. By default, BetterScroll uses the first child element of the `wrapper` as the content.
 
    ```html
-		<div class="wrapper">
-			<div class="content1">
-				<div class="conten1-item">1.1</div>
-				<div class="conten1-item">1.2</div>
-			</div>
-			<div class="content2">
-				<div class="conten2-item">2.1</div>
-				<div class="conten2-item">2.2</div>
-			</div>
-		</div>   
+   <div class="wrapper">
+      <div class="content1">
+         <div class="conten1-item">1.1</div>
+         <div class="conten1-item">1.2</div>
+      </div>
+      <div class="content2">
+         <div class="conten2-item">2.1</div>
+         <div class="conten2-item">2.2</div>
+      </div>
+   </div>
    ```
 
    ```js
-		// For the above DOM structure, when BetterScroll version <= 2.0.3, only div.content1 is used as content
-		// When the version is >= 2.0.4, content can be specified through 'specifiedIndexAsContent'
+   // For the above DOM structure, when BetterScroll version <= 2.0.3, only div.content1 is used as content
+   // When the version is >= 2.0.4, content can be specified through 'specifiedIndexAsContent'
 
-		let bs = new BScroll('.wrapper', {
-			specifiedIndexAsContent: 1 // use div.content2 as BetterScroll's content
-		})
+   let bs = new BScroll('.wrapper', {
+      specifiedIndexAsContent: 1 // use div.content2 as BetterScroll's content
+   })
    ```

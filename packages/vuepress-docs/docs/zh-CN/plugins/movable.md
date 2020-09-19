@@ -79,18 +79,39 @@ new BScroll('.bs-wrapper', {
     ```
 ## 示例
 
-  <demo qrcode-url="movable/default" :render-code="true">
-    <template slot="code-template">
-      <<< @/examples/vue/components/movable/default.vue?template
-    </template>
-    <template slot="code-script">
-      <<< @/examples/vue/components/movable/default.vue?script
-    </template>
-    <template slot="code-style">
-      <<< @/examples/vue/components/movable/default.vue?style
-    </template>
-    <movable-default slot="demo"></movable-default>
-  </demo>
+  - **只有一个 content**
+
+    通常场景下，只存在一个 content。
+
+    <demo qrcode-url="movable/default" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/default.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/default.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/default.vue?style
+      </template>
+      <movable-default slot="demo"></movable-default>
+    </demo>
+
+  - **多个 content**
+
+    但是在某些场景下，可能存在多个 content。
+
+    <demo qrcode-url="movable/multi-content">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/multi-content.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/multi-content.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/multi-content.vue?style
+      </template>
+      <movable-multi-content slot="demo"></movable-multi-content>
+    </demo>
 
 ## 进阶使用
 
@@ -121,15 +142,60 @@ new BScroll('.bs-wrapper', {
   zoom 暂不支持在 pc 端的交互操作，下方 demo 请扫码体验。
   :::
 
-  <demo qrcode-url="movable/scale">
-    <template slot="code-template">
-      <<< @/examples/vue/components/movable/scale.vue?template
-    </template>
-    <template slot="code-script">
-      <<< @/examples/vue/components/movable/scale.vue?script
-    </template>
-    <template slot="code-style">
-      <<< @/examples/vue/components/movable/scale.vue?style
-    </template>
-    <movable-scale slot="demo"></movable-scale>
-  </demo>
+  - **一个 content**
+
+    <demo qrcode-url="movable/scale">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/scale.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/scale.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/scale.vue?style
+      </template>
+      <movable-scale slot="demo"></movable-scale>
+    </demo>
+
+  - **多个 content**
+
+    <demo qrcode-url="movable/multi-content-scale">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?style
+      </template>
+      <movable-multi-content-scale slot="demo"></movable-multi-content-scale>
+    </demo>
+
+## 实例方法
+
+### putAt(x, y, [time], [easing])<sup>(2.0.4)</sup>
+  - **参数**
+    - `{PositionX} x`： x 坐标
+      - `PositionX：'number | 'left' | 'right' | 'center'`
+    - `{PositionY} y`： y 坐标
+      - `PositionY：'number | 'top' | 'bottom' | 'center'`
+    - `{number} [time]<可选>`：滚动的动画时长
+    - `{EaseItem} [easing]<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
+
+    将 content 元素放置在某一个位置。x 与 y 不仅可以是数字，也可以是对应的字符串。
+
+  - **示例**
+
+  ```js
+  const bs = new BScroll('.bs-wrapper', {
+    bindToTarget: true,
+    scrollX: true,
+    scrollY: true,
+    freeScroll: true,
+    movable: true
+  })
+
+  bs.putAt('center', 'center', 0) // 放置在 wrapper 的正中心
+  bs.putAt('right', 'bottom', 1000) // 放置在 wrapper 的右下角，动画时长 1s
+  ```

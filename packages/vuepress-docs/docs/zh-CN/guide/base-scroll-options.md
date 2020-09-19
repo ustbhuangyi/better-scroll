@@ -245,23 +245,23 @@ let scroll = new BScroll('.wrapper',{
    - **作用**：指定 `wrapper` 对应索引的子元素作为 `content`，默认情况下 BetterScroll 采用的是 `wrapper` 的第一个子元素作为 content。
 
    ```html
-		<div class="wrapper">
-			<div class="content1">
-				<div class="conten1-item">1.1</div>
-				<div class="conten1-item">1.2</div>
-			</div>
-			<div class="content2">
-				<div class="conten2-item">2.1</div>
-				<div class="conten2-item">2.2</div>
-			</div>
-		</div>   
+   <div class="wrapper">
+      <div class="content1">
+         <div class="conten1-item">1.1</div>
+         <div class="conten1-item">1.2</div>
+      </div>
+      <div class="content2">
+         <div class="conten2-item">2.1</div>
+         <div class="conten2-item">2.2</div>
+      </div>
+   </div>   
    ```
 
    ```js
-		// 针对以上 DOM 结构，在 BetterScroll 版本 <= 2.0.3，内部只会使用 wrapper.children[0]，也就是 div.content1 作为 content
-		// 当 版本 >= 2.0.4 的时候，可以通过 specifiedIndexAsContent 配置项来指定 content
+   // 针对以上 DOM 结构，在 BetterScroll 版本 <= 2.0.3，内部只会使用 wrapper.children[0]，也就是 div.content1 作为 content
+   // 当 版本 >= 2.0.4 的时候，可以通过 specifiedIndexAsContent 配置项来指定 content
 
-		let bs = new BScroll('.wrapper', {
-			specifiedIndexAsContent: 1 // 使用 div.content2 作为 BetterScroll 的 content
-		})
+   let bs = new BScroll('.wrapper', {
+      specifiedIndexAsContent: 1 // 使用 div.content2 作为 BetterScroll 的 content
+   })
    ```
