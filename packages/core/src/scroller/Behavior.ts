@@ -15,6 +15,7 @@ export interface Options {
   bounces: Bounces
   rect: Rect
   outOfBoundaryDampingFactor: number
+  specifiedIndexAsContent: number
   [key: string]: number | boolean | Bounces | Rect
 }
 
@@ -35,17 +36,19 @@ export class Behavior {
   wrapperSize: number
   contentSize: number
   hooks: EventEmitter
-  constructor(public wrapper: HTMLElement, public options: Options) {
+  constructor(
+    public wrapper: HTMLElement,
+    content: HTMLElement,
+    public options: Options
+  ) {
     this.hooks = new EventEmitter([
       'beforeComputeBoundary',
       'computeBoundary',
       'momentum',
       'end',
+      'ignoreHasScroll',
     ])
-    this.content = this.wrapper.children[0] as HTMLElement
-    this.currentPos = 0
-    this.startPos = 0
-    this.refresh()
+    this.refresh(content)
   }
 
   start() {
@@ -184,13 +187,14 @@ export class Behavior {
     this.setDirection(absDist)
   }
 
-  refresh() {
+  refresh(content: HTMLElement) {
     const { size, position } = this.options.rect
     const isWrapperStatic =
       window.getComputedStyle(this.wrapper, null).position === 'static'
     const wrapperRect = getRect(this.wrapper)
     this.wrapperSize = wrapperRect[size]
 
+    this.setContent(content)
     const contentRect = getRect(this.content)
     this.contentSize = contentRect[size]
 
@@ -204,6 +208,22 @@ export class Behavior {
     this.setDirection(Direction.Default)
   }
 
+  private setContent(content: HTMLElement) {
+    if (content !== this.content) {
+      this.content = content
+      this.resetState()
+    }
+  }
+
+  private resetState() {
+    this.currentPos = 0
+    this.startPos = 0
+    this.dist = 0
+    this.setDirection(Direction.Default)
+    this.setMovingDirection(Direction.Default)
+    this.resetStartPos()
+  }
+
   computeBoundary() {
     this.hooks.trigger(this.hooks.eventTypes.beforeComputeBoundary)
 
@@ -213,7 +233,9 @@ export class Behavior {
     }
     if (boundary.maxScrollPos < 0) {
       boundary.maxScrollPos -= this.relativeOffset
-      boundary.minScrollPos = -this.relativeOffset
+      if (this.options.specifiedIndexAsContent === 0) {
+        boundary.minScrollPos = -this.relativeOffset
+      }
     }
     this.hooks.trigger(this.hooks.eventTypes.computeBoundary, boundary)
 
@@ -223,7 +245,7 @@ export class Behavior {
     this.hasScroll =
       this.options.scrollable && this.maxScrollPos < this.minScrollPos
 
-    if (!this.hasScroll) {
+    if (!this.hasScroll && this.minScrollPos < this.maxScrollPos) {
       this.maxScrollPos = this.minScrollPos
       this.contentSize = this.wrapperSize
     }
@@ -249,7 +271,13 @@ export class Behavior {
   // adjust position when out of boundary
   adjustPosition(pos: number) {
     let roundPos = Math.round(pos)
-    if (!this.hasScroll || roundPos > this.minScrollPos) {
+
+    if (
+      !this.hasScroll &&
+      !this.hooks.trigger(this.hooks.eventTypes.ignoreHasScroll)
+    ) {
+      roundPos = this.minScrollPos
+    } else if (roundPos > this.minScrollPos) {
       roundPos = this.minScrollPos
     } else if (roundPos < this.maxScrollPos) {
       roundPos = this.maxScrollPos

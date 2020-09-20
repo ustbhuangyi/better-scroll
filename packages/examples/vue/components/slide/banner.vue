@@ -3,18 +3,15 @@
     <div class="banner-wrapper">
       <div class="slide-banner-wrapper" ref="slide">
         <div class="slide-banner-content">
-          <div class="slide-page page1">page 1</div>
-          <div class="slide-page page2">page 2</div>
-          <div class="slide-page page3">page 3</div>
-          <div class="slide-page page4">page 4</div>
+          <div v-for="num in nums" class="slide-page" :class="'page' + num" :key="num">page {{num}}</div>
         </div>
       </div>
       <div class="dots-wrapper">
         <span
           class="dot"
-          v-for="(item, index) in 4"
-          :key="index"
-          :class="{'active': currentPageIndex === index}"></span>
+          v-for="num in nums"
+          :key="num"
+          :class="{'active': currentPageIndex === (num - 1)}"></span>
       </div>
     </div>
     <div class="btn-wrap">
@@ -33,6 +30,7 @@
   export default {
     data() {
       return {
+        nums: 4,
         currentPageIndex: 0
       }
     },

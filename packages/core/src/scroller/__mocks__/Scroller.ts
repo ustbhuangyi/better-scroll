@@ -19,10 +19,12 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
   const actionsHandler = new ActionsHandler(wrapper, bscrollOptions)
   const scrollBehaviorX = new Behavior(
     wrapper,
+    content,
     Object.assign(bscrollOptions, { scrollable: bscrollOptions.scrollX })
   )
   const scrollBehaviorY = new Behavior(
     wrapper,
+    content,
     Object.assign(bscrollOptions, { scrollable: bscrollOptions.scrollY })
   )
   const actions = new Actions(

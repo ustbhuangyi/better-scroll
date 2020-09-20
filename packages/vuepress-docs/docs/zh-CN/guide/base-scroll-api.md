@@ -303,6 +303,13 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
     ```js
       bs.on('destroy', () => {})
     ```
+  - **contentChanged**<sup>(2.0.4)</sup>
+    - **触发时机**：在调用 `bs.refresh()`，探测到 content DOM 变成了其他元素的时候
+
+    ```typescript
+      // bs 版本 >= 2.0.4
+      bs.on('contentChanged', (newContent: HTMLElement) => {})
+    ```  
 
 以下的事件必须注册括号中的**插件**才会派发：
 
@@ -512,6 +519,16 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
 
+    - **contentChanged**<sup>(2.0.4)</sup>
+      - **触发时机**：在调用 `bs.refresh()`，探测到 content DOM 变成了其他元素的时候
+      - **示例**
+      ```typescript
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        // bs 版本 >= 2.0.4
+        bs.hooks.on('contentChanged', (newContent: HTMLElement) => { console.log(newContent) })
+      ```
+      
   - **ActionsHandler.hooks**
 
     - **beforeStart**

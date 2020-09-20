@@ -31,7 +31,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
       'destroy',
       'beforeInitialScrollTo',
     ]),
-    scroller: new Scroller(wrapper, options),
+    scroller: new Scroller(wrapper, wrapper.children[0], options),
     // own methods
     proxy: jest.fn(),
     refresh: jest.fn(),

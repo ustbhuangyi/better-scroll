@@ -304,6 +304,14 @@ In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll w
       bs.on('destroy', () => {})
     ```
 
+  - **contentChanged**<sup>(2.0.4)</sup>
+    - **Trigger timing**: When calling `bs.refresh()`, it is detected that the content DOM has become other elements
+
+    ```typescript
+      // bs version >= 2.0.4
+      bs.on('contentChanged', (newContent: HTMLElement) => {})
+    ```  
+
 The following events must be registered for the **plugin** in parentheses to be dispatched:
 
   - **alterOptions(__mouse-wheel__)**
@@ -511,6 +519,17 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         const bs = new BScroll('.wrapper', {})
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
+    
+    - **contentChanged**<sup>(2.0.4)</sup>
+      - **Trigger timing**：When calling `bs.refresh()`, it is detected that the content DOM has become other elements
+      - **Usage**
+      ```typescript
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        // bs version >= 2.0.4
+        bs.hooks.on('contentChanged', (newContent: HTMLElement) => { console.log(newContent) })
+      ```
+        
 
   - **ActionsHandler.hooks**
 

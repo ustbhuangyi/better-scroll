@@ -80,42 +80,42 @@ new BScroll('.bs-wrapper', {
 ## zoom 选项对象
 
 ### start
-  - **类型：** `number`
-  - **默认值：** `1`
+  - **类型**：`number`
+  - **默认值**：`1`
 
     初始缩放比例。
 
 ### min
-  - **类型：** `number`
-  - **默认值：** `1`
+  - **类型**：`number`
+  - **默认值**：`1`
 
     最小缩放比例。
 
 ### max
-  - **类型：** `number`
-  - **默认值：** `4`
+  - **类型**：`number`
+  - **默认值**：`4`
 
     最大缩放比例。
 
 ### initialOrigin
-  - **类型：** `[OriginX, OriginY]`
-    - **OriginX**: `number | 'left' | 'right' | 'center'`
-    - **OriginY**: `number | 'top' | 'bottom' | 'center'`
-  - **默认值：** `[0, 0]`
+  - **类型**：`[OriginX, OriginY]`
+    - **OriginX**：`number | 'left' | 'right' | 'center'`
+    - **OriginY**：`number | 'top' | 'bottom' | 'center'`
+  - **默认值**：`[0, 0]`
 
     初始化 zoom 插件的缩放原点，当 `start` 不为 `1` 的时候有效，缩放原点都是以`缩放元素`为坐标系。
 
-  - **示例：**
+  - **示例**
 
   ```js
     new BScroll('.bs-wrapper', {
       // ... 其他配置项
       zoom: {
-        initialOrigin: [50, 50], // 基于 缩放元素的左顶点上下偏移量都是 50 px
-        initialOrigin: [0, 0], // 基于 缩放元素 的左顶点
+        initialOrigin: [50, 50], // 基于缩放元素的左顶点上下偏移量都是 50 px
+        initialOrigin: [0, 0], // 基于缩放元素的左顶点
         initialOrigin: ['left', 'top'], // 与上面效果相同
-        initialOrigin: ['center', 'center'], // 基于 缩放元素 的中心
-        initialOrigin: ['right', 'top'], // 基于 缩放元素 的右顶点
+        initialOrigin: ['center', 'center'], // 基于缩放元素的中心
+        initialOrigin: ['right', 'top'], // 基于缩放元素的右顶点
       }
     })
   ```
@@ -123,14 +123,14 @@ new BScroll('.bs-wrapper', {
   往往你初始化 zoom 的时候只专注于以端点或者中心进行缩放，可以参考以上示例。
 
 ### minimalZoomDistance
-  - **类型：** `number`
-  - **默认值：** `5`
+  - **类型**：`number`
+  - **默认值**：`5`
 
     当你双指进行缩放操作的时候，只有当缩放的距离超过 `minimalZoomDistance`，zoom 才生效。
 
 ### bounceTime
-  - **类型：** `number`
-  - **默认值：** `800`(毫秒)
+  - **类型**：`number`
+  - **默认值**：`800`(毫秒)
 
     双指不断进行缩放操作并且 scale 超过 `max` 阈值的时候，当双指离开的时候，内部会「回弹」至 `max` 的形态，而 `bounceTime` 就是这次「回弹」行为的动画时长。
 
@@ -140,9 +140,9 @@ new BScroll('.bs-wrapper', {
   - **参数**
     - `{number} scale`： 缩放比例
     - `{OriginX} x`： 缩放原点的 x 坐标，相当于**缩放元素**的左顶点
-      - `OriginX: 'number | 'left' | 'right' | 'center'`
+      - `OriginX：'number | 'left' | 'right' | 'center'`
     - `{OriginY} y`： 缩放原点的 y 坐标，相当于**缩放元素**的左顶点
-      - `OriginY: 'number | 'top' | 'bottom' | 'center'`
+      - `OriginY：'number | 'top' | 'bottom' | 'center'`
     - `{number} [bounceTime]<可选>：一次缩放行为的动画时长`
 
     以 `[x, y]` 坐标作为原点对元素进行缩放。x 与 y 不仅可以是数字，也可以是对应的字符串，因为一般的场景都是基于端点或者中心进行缩放。
@@ -183,8 +183,8 @@ new BScroll('.bs-wrapper', {
 
 ### zooming
 
-  - **参数**: `{ scale }`
-  - **类型**: `{ scale: number }`
+  - **参数**：`{ scale }`
+  - **类型**：`{ scale: number }`
   - **触发时机**：双指缩放行为正在进行时或者直接调用 zoomTo 进行缩放的过程
 
   - **示例**：
@@ -209,7 +209,7 @@ new BScroll('.bs-wrapper', {
 ### zoomEnd
 
   - **参数**：`{ scale }`
-  - **类型**: `{ scale: number }`
+  - **类型**：`{ scale: number }`
   - **触发时机**：双指缩放行为结束后（如果有回弹，触发时机在回弹动画结束之后）或者调用 zoomTo 完成缩放之后
 
   :::warning

@@ -68,12 +68,16 @@ export default class SlidePages {
     }
   }
 
-  getInitialPage(): Page {
-    let initPageX = this.loopX ? 1 : 0
-    let initPageY = this.loopY ? 1 : 0
+  getInitialPage(resetInitPage: boolean = false): Page {
+    let initialPageX = this.loopX ? 1 : 0
+    let initialPageY = this.loopY ? 1 : 0
 
-    const pageX = this.currentPage.pageX || initPageX
-    const pageY = this.currentPage.pageY || initPageY
+    const pageX = resetInitPage
+      ? initialPageX
+      : this.currentPage.pageX || initialPageX
+    const pageY = resetInitPage
+      ? initialPageY
+      : this.currentPage.pageY || initialPageY
 
     const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
 

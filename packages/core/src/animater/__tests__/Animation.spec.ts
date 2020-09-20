@@ -170,7 +170,7 @@ describe('Animation Class test suit', () => {
     animation.stop()
     expect(animation.pending).toBe(false)
     expect(mockCancelAnimationFrame).toBeCalled()
-    expect(animation.forceStopped).toBe(true)
+    expect(animation.forceStopped).toBe(false)
     expect(onForceStop).toBeCalledWith(20)
 
     animation.destroy()

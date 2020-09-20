@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import CoreEntry from 'vue-example/pages/core-entry'
+import ObserveDOMEntry from 'vue-example/pages/observe-dom-entry'
 import ZoomEntry from 'vue-example/pages/zoom-entry'
 import SlideEntry from 'vue-example/pages/slide-entry'
 import PickerEntry from 'vue-example/pages/picker-entry'
@@ -29,6 +30,8 @@ import VerticalSlide from 'vue-example/components/slide/vertical'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
+import DynamicContentScroll from 'vue-example/components/core/dynamic-content'
+import SpecifiedContentScroll from 'vue-example/components/core/specified-content'
 import Freescroll from 'vue-example/components/core/freescroll'
 
 import OneColumnPicker from 'vue-example/components/picker/one-column'
@@ -42,7 +45,9 @@ import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizon
 import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 
 import Movable from 'vue-example/components/movable/default'
+import MovableMultiContent from 'vue-example/components/movable/multi-content'
 import MovableScale from 'vue-example/components/movable/scale'
+import MovableMultiContentScale from 'vue-example/components/movable/multi-content-scale'
 
 import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldown'
 import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
@@ -55,6 +60,10 @@ export default new Router({
     {
       path: '/zoom',
       component: ZoomEntry,
+    },
+    {
+      path: '/observe-dom',
+      component: ObserveDOMEntry
     },
     {
       path: '/slide',
@@ -85,6 +94,14 @@ export default new Router({
         {
           path: 'horizontal',
           component: HorizontalScroll,
+        },
+        {
+          path: 'dynamic-content',
+          component: DynamicContentScroll
+        },
+        {
+          path: 'specified-content',
+          component: SpecifiedContentScroll
         },
         {
           path: 'freescroll',
@@ -200,6 +217,14 @@ export default new Router({
           path: 'scale',
           component: MovableScale,
         },
+        {
+          path: 'multi-content',
+          component: MovableMultiContent
+        },
+        {
+          path: 'multi-content-scale',
+          component: MovableMultiContentScale
+        }
       ],
     },
     {

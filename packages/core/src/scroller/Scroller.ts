@@ -1,7 +1,7 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
 import createAnimater, { Animater, Transition } from '../animater'
-import { OptionsConstructor as BScrollOptions, BounceConfig } from '../Options'
+import { OptionsConstructor as BScrollOptions } from '../Options'
 import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
 import {
@@ -57,8 +57,6 @@ export interface ExposedAPI {
 }
 
 export default class Scroller implements ExposedAPI {
-  wrapper: HTMLElement
-  content: HTMLElement
   actionsHandler: ActionsHandler
   translater: Translater
   animater: Animater
@@ -77,7 +75,11 @@ export default class Scroller implements ExposedAPI {
   resizeTimeout: number = 0
   lastClickTime: number | null;
   [key: string]: any
-  constructor(wrapper: HTMLElement, options: BScrollOptions) {
+  constructor(
+    public wrapper: HTMLElement,
+    public content: HTMLElement,
+    options: BScrollOptions
+  ) {
     this.hooks = new EventEmitter([
       'beforeStart',
       'beforeMove',
@@ -96,15 +98,13 @@ export default class Scroller implements ExposedAPI {
       'scrollToElement',
       'beforeRefresh',
     ])
-    this.wrapper = wrapper
-    this.content = wrapper.children[0] as HTMLElement
     this.options = options
 
-    const { left = true, right = true, top = true, bottom = true } = this
-      .options.bounce as BounceConfig
+    const { left, right, top, bottom } = this.options.bounce
     // direction X
     this.scrollBehaviorX = new Behavior(
       wrapper,
+      content,
       createBehaviorOptions(options, 'scrollX', [left, right], {
         size: 'width',
         position: 'left',
@@ -113,6 +113,7 @@ export default class Scroller implements ExposedAPI {
     // direction Y
     this.scrollBehaviorY = new Behavior(
       wrapper,
+      content,
       createBehaviorOptions(options, 'scrollY', [top, bottom], {
         size: 'height',
         position: 'top',
@@ -148,12 +149,7 @@ export default class Scroller implements ExposedAPI {
       },
     ])
 
-    this.transitionEndRegister = new EventRegister(this.content, [
-      {
-        name: style.transitionEnd,
-        handler: this.transitionEnd.bind(this),
-      },
-    ])
+    this.registerTransitionEnd()
 
     this.init()
   }
@@ -166,6 +162,15 @@ export default class Scroller implements ExposedAPI {
     this.hooks.on(this.hooks.eventTypes.scrollEnd, () => {
       this.togglePointerEvents(true)
     })
+  }
+
+  private registerTransitionEnd() {
+    this.transitionEndRegister = new EventRegister(this.content, [
+      {
+        name: style.transitionEnd,
+        handler: this.transitionEnd.bind(this),
+      },
+    ])
   }
 
   private bindTranslater() {
@@ -428,13 +433,34 @@ export default class Scroller implements ExposedAPI {
     }
   }
 
-  refresh() {
+  refresh(content: HTMLElement) {
+    const contentChanged = this.setContent(content)
     this.hooks.trigger(this.hooks.eventTypes.beforeRefresh)
-    this.scrollBehaviorX.refresh()
-    this.scrollBehaviorY.refresh()
+    this.scrollBehaviorX.refresh(content)
+    this.scrollBehaviorY.refresh(content)
+
+    if (contentChanged) {
+      this.translater.setContent(content)
+      this.animater.setContent(content)
+
+      this.transitionEndRegister.destroy()
+      this.registerTransitionEnd()
+
+      if (this.options.bindToTarget) {
+        this.actionsHandler.setContent(content)
+      }
+    }
 
     this.actions.refresh()
     this.wrapperOffset = offset(this.wrapper)
+  }
+
+  private setContent(content: HTMLElement): boolean {
+    const contentChanged = content !== this.content
+    if (contentChanged) {
+      this.content = content
+    }
+    return contentChanged
   }
 
   scrollBy(deltaX: number, deltaY: number, time = 0, easing?: EaseItem) {

@@ -21,11 +21,11 @@ The most common application scenario of BetterScroll is list scrolling. Let's se
     <li>...</li>
     ...
   </ul>
-  <!-- you can put some other DOMs here, it won't affect the scrolling
+  <!-- you can put some other DOMs here, it won't affect the scrolling -->
 </div>
 ```
 
-In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll only handles the scroll of the first child element (content) of the container (`wrapper`), which means other elements will be ignored.
+In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll handles the scroll of the first child element (content) of the container (`wrapper`) by default, which means other elements will be ignored.
 
 The simplest initialization code is as follow:
 
@@ -38,7 +38,11 @@ let scroll = new BScroll(wrapper)
 BetterScroll provides a class whose first parameter is a plain DOM object when instantiated. Certainly, BetterScroll inside would try to use querySelector to get the DOM object.
 
 :::warning
-In BetterScroll 2.X, we split the 1.X-coupled feature into the plugin to achieve on-demand loading and reduce the volume of the package. Therefore, `@better-scroll/core` only provides the most core scrolling capabilities. If you want to implement the **pull-up refresh**, **pull-down load** function, you need to use the corresponding [plugin] (/en-US/plugins).
+In BetterScroll 2.X, we split the 1.X-coupled feature into the plugin to achieve on-demand loading and reduce the volume of the package. Therefore, `@better-scroll/core` only provides the most core scrolling capabilities. If you want to implement the **pull-up load**, **pull-down refresh** function, you need to use the corresponding [plugin] (/en-US/plugins).
+:::
+
+:::tip
+BetterScroll v2.0.4 can use [specifiedIndexAsContent](./base-scroll-options.html#specifiedindexascontent-2-0-4) to specify a child element of the wrapper as BetterScroll's content.
 :::
 
 ## The principle of scrolling

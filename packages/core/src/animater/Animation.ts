@@ -98,6 +98,7 @@ export default class Animation extends Base {
     const stopFromAnimation = this.doStop()
     if (stopFromAnimation) {
       this.hooks.trigger(this.hooks.eventTypes.callStop)
+      this.setForceStopped(false)
     }
   }
 }

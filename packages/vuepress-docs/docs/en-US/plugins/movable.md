@@ -79,18 +79,39 @@ The following is related to `movable` plugin and [BetterScroll configuration](..
   ```
 ## Demo
 
-  <demo qrcode-url="movable/default" :render-code="true">
-    <template slot="code-template">
-      <<< @/examples/vue/components/movable/default.vue?template
-    </template>
-    <template slot="code-script">
-      <<< @/examples/vue/components/movable/default.vue?script
-    </template>
-    <template slot="code-style">
-      <<< @/examples/vue/components/movable/default.vue?style
-    </template>
-    <movable-default slot="demo"></movable-default>
-  </demo>
+  - **Only one content**
+
+    Usually, there is only one content.
+
+    <demo qrcode-url="movable/default" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/default.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/default.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/default.vue?style
+      </template>
+      <movable-default slot="demo"></movable-default>
+    </demo>
+
+  - **Multi content**
+
+    However, in some scenarios, there may be multiple content.
+
+    <demo qrcode-url="movable/multi-content">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/multi-content.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/multi-content.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/multi-content.vue?style
+      </template>
+      <movable-multi-content slot="demo"></movable-multi-content>
+    </demo>
 
 ## Advanced Usage
 
@@ -121,15 +142,63 @@ With [ zoom ](./zoom.html#introduction) plugin, increase the zoom capability.
   pc is not allowed, scan the qrcode.
   :::
 
-  <demo qrcode-url="movable/scale">
-    <template slot="code-template">
-      <<< @/examples/vue/components/movable/scale.vue?template
-    </template>
-    <template slot="code-script">
-      <<< @/examples/vue/components/movable/scale.vue?script
-    </template>
-    <template slot="code-style">
-      <<< @/examples/vue/components/movable/scale.vue?style
-    </template>
-    <movable-scale slot="demo"></movable-scale>
-  </demo>
+  - **One Content**
+
+    <demo qrcode-url="movable/scale">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/scale.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/scale.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/scale.vue?style
+      </template>
+      <movable-scale slot="demo"></movable-scale>
+    </demo>
+
+  - **Multi Content**
+
+    <demo qrcode-url="movable/multi-content-scale">
+      <template slot="code-template">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/movable/multi-content-scale.vue?style
+      </template>
+      <movable-multi-content-scale slot="demo"></movable-multi-content-scale>
+    </demo>
+
+## Instance Methods
+
+### putAt(x, y, [time], [easing])<sup>(2.0.4)</sup>
+  - **Arguments**
+    - `{PositionX} x`: x coordinate
+      - `PositionX: 'number | 'left' | 'right' | 'center'`
+    - `{PositionY} y`: y coordinate
+      - `PositionY: 'number | 'top' | 'bottom' | 'center'`
+    - `{number} [time]<Optional>`: Scroll animation duration
+    - `{EaseItem} [easing]<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
+
+    Put the content element in a certain position. x and y can be not only numbers, but also corresponding strings.
+
+  - **Examples**
+
+  ```js
+  const bs = new BScroll('.bs-wrapper', {
+    bindToTarget: true,
+    scrollX: true,
+    scrollY: true,
+    freeScroll: true,
+    movable: true
+  })
+
+  // Placed in the center of the wrapper
+  bs.putAt('center', 'center', 0) 
+
+  // Placed in the right-bottom corner of the wrapper, the animation duration is 1s
+  bs.putAt('right', 'bottom', 1000)
+  ```

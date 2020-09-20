@@ -3,18 +3,15 @@
     <div class="banner-wrapper">
       <div class="slide-banner-wrapper" ref="slide">
         <div class="slide-banner-content">
-          <div class="slide-page page1">page 1</div>
-          <div class="slide-page page2">page 2</div>
-          <div class="slide-page page3">page 3</div>
-          <div class="slide-page page4">page 4</div>
+          <div v-for="num in nums" :key="num" class="slide-page" :class="'page' + num">page {{num}}</div>
         </div>
       </div>
       <div class="dots-wrapper">
         <span
           class="dot"
-          v-for="(item, index) in 4"
-          :key="index"
-          :class="{'active': currentPageIndex === index}"></span>
+          v-for="num in nums"
+          :key="num"
+          :class="{'active': currentPageIndex === (num - 1)}"></span>
       </div>
     </div>
   </div>
@@ -29,6 +26,7 @@
   export default {
     data() {
       return {
+        nums: 4,
         currentPageIndex: 0
       }
     },
@@ -40,7 +38,7 @@
     },
     methods: {
       init() {
-        this.slide = new BScroll(this.$refs.slide, {
+        window.slide = this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
           slide: {
@@ -48,7 +46,7 @@
             loop: false,
             autoplay: false
           },
-          useTransition: true,
+          useTransition: false,
           momentum: false,
           bounce: false,
           stopPropagation: true

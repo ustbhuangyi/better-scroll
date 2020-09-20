@@ -49,8 +49,10 @@ new BScroll('.bs-wrapper', {
 })
 ```
 
-::: danger
+::: danger Note
 `fetch`, `render`, `createTombstone` must be implemented in accordance with the comments as above, otherwise an internal error will be reported.
+
+The plugin relies on Promise internally. If the browser does not support it, the Promise Polyfill is required.
 :::
 
 ## Demo

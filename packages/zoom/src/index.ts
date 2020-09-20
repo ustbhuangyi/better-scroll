@@ -6,13 +6,12 @@ import {
   between,
   offsetToBody,
   getRect,
-  DOMRect,
   style,
   EventEmitter,
   extend,
   getNow,
   requestAnimationFrame,
-  cancelAnimationFrame
+  cancelAnimationFrame,
 } from '@better-scroll/shared-utils'
 
 export type ZoomOptions = Partial<ZoomConfig> | true
@@ -56,18 +55,17 @@ interface ResolveFormula {
 }
 
 const TWO_FINGERS = 2
+const RAW_SCALE = 1
 export default class Zoom implements PluginAPI {
   static pluginName = 'zoom'
   origin: Point
-  scale: number = 1
+  scale: number = RAW_SCALE
   zoomOpt: ZoomConfig
   numberOfFingers: number
   private zoomed: boolean
   private startDistance: number
   private startScale: number
   private wrapper: HTMLElement
-  private scaleElement: HTMLElement
-  private scaleElementInitSize: DOMRect
   private prevScale: number = 1
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
@@ -89,7 +87,7 @@ export default class Zoom implements PluginAPI {
     const origin: Point = {
       x: originX,
       y: originY,
-      baseScale: this.scale
+      baseScale: this.scale,
     }
     this._doZoomTo(scale, origin, bounceTime, true)
   }
@@ -100,7 +98,7 @@ export default class Zoom implements PluginAPI {
       'beforeZoomStart',
       'zoomStart',
       'zooming',
-      'zoomEnd'
+      'zoomEnd',
     ])
   }
 
@@ -114,30 +112,41 @@ export default class Zoom implements PluginAPI {
       max: 4,
       initialOrigin: [0, 0],
       minimalZoomDistance: 5,
-      bounceTime: 800 // ms
+      bounceTime: 800, // ms
     }
     this.zoomOpt = extend(defaultOptions, userOptions)
   }
 
   private handleHooks() {
     const scroll = this.scroll
-    const scrollerIns = this.scroll.scroller
+    const scroller = this.scroll.scroller
     this.wrapper = this.scroll.scroller.wrapper
-    this.scaleElement = this.scroll.scroller.content
-    this.scaleElement.style[style.transformOrigin as any] = '0 0'
-    this.scaleElementInitSize = getRect(this.scaleElement)
-    const scrollBehaviorX = scrollerIns.scrollBehaviorX
-    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+
+    this.setTransformOrigin(this.scroll.scroller.content)
+
+    const scrollBehaviorX = scroller.scrollBehaviorX
+    const scrollBehaviorY = scroller.scrollBehaviorY
 
     this.hooksFn = []
 
     // BScroll
     this.registerHooks(
       scroll.hooks,
+      scroll.hooks.eventTypes.contentChanged,
+      (content: HTMLElement) => {
+        this.setTransformOrigin(content)
+        this.scale = RAW_SCALE
+        this.tryInitialZoomTo(this.zoomOpt)
+      }
+    )
+    this.registerHooks(
+      scroll.hooks,
       scroll.hooks.eventTypes.beforeInitialScrollTo,
       () => {
-        // cancel coreScroll scrollTo logic when initialized
-        return true
+        // if perform a zoom action, we should prevent initial scroll when initialised
+        if (this.zoomOpt.start !== RAW_SCALE) {
+          return true
+        }
       }
     )
 
@@ -146,25 +155,27 @@ export default class Zoom implements PluginAPI {
       scrollBehaviorX.hooks,
       scrollBehaviorX.hooks.eventTypes.beforeComputeBoundary,
       () => {
-        scrollBehaviorX.contentSize = Math.floor(
-          this.scaleElementInitSize.width * this.scale
-        )
+        // content may change, don't cache it's size
+        const contentSize = getRect(this.scroll.scroller.content)
+        scrollBehaviorX.contentSize = Math.floor(contentSize.width * this.scale)
       }
     )
     this.registerHooks(
       scrollBehaviorY.hooks,
       scrollBehaviorY.hooks.eventTypes.beforeComputeBoundary,
       () => {
+        // content may change, don't cache it's size
+        const contentSize = getRect(this.scroll.scroller.content)
         scrollBehaviorY.contentSize = Math.floor(
-          this.scaleElementInitSize.height * this.scale
+          contentSize.height * this.scale
         )
       }
     )
 
     // touch event
     this.registerHooks(
-      scrollerIns.actions.hooks,
-      scrollerIns.actions.hooks.eventTypes.start,
+      scroller.actions.hooks,
+      scroller.actions.hooks.eventTypes.start,
       (e: TouchEvent) => {
         const numberOfFingers = (e.touches && e.touches.length) || 0
         this.fingersOperation(numberOfFingers)
@@ -174,8 +185,8 @@ export default class Zoom implements PluginAPI {
       }
     )
     this.registerHooks(
-      scrollerIns.actions.hooks,
-      scrollerIns.actions.hooks.eventTypes.beforeMove,
+      scroller.actions.hooks,
+      scroller.actions.hooks.eventTypes.beforeMove,
       (e: TouchEvent) => {
         const numberOfFingers = (e.touches && e.touches.length) || 0
         this.fingersOperation(numberOfFingers)
@@ -186,8 +197,8 @@ export default class Zoom implements PluginAPI {
       }
     )
     this.registerHooks(
-      scrollerIns.actions.hooks,
-      scrollerIns.actions.hooks.eventTypes.beforeEnd,
+      scroller.actions.hooks,
+      scroller.actions.hooks.eventTypes.beforeEnd,
       (e: TouchEvent) => {
         const numberOfFingers = this.fingersOperation()
         if (numberOfFingers === TWO_FINGERS) {
@@ -198,8 +209,8 @@ export default class Zoom implements PluginAPI {
     )
 
     this.registerHooks(
-      scrollerIns.translater.hooks,
-      scrollerIns.translater.hooks.eventTypes.beforeTranslate,
+      scroller.translater.hooks,
+      scroller.translater.hooks.eventTypes.beforeTranslate,
       (transformStyle: string[], point: TranslaterPoint) => {
         const scale = point.scale ? point.scale : this.prevScale
         this.prevScale = scale
@@ -208,12 +219,12 @@ export default class Zoom implements PluginAPI {
     )
 
     this.registerHooks(
-      scrollerIns.hooks,
-      scrollerIns.hooks.eventTypes.scrollEnd,
+      scroller.hooks,
+      scroller.hooks.eventTypes.scrollEnd,
       () => {
         if (this.fingersOperation() === TWO_FINGERS) {
           this.scroll.trigger(this.scroll.eventTypes.zoomEnd, {
-            scale: this.scale
+            scale: this.scale,
           })
         }
       }
@@ -222,9 +233,20 @@ export default class Zoom implements PluginAPI {
     this.registerHooks(this.scroll.hooks, 'destroy', this.destroy)
   }
 
+  private setTransformOrigin(content: HTMLElement) {
+    content.style[style.transformOrigin as any] = '0 0'
+  }
+
   private tryInitialZoomTo(options: ZoomConfig) {
     const { start, initialOrigin } = options
-    this.zoomTo(start, initialOrigin[0], initialOrigin[1], 0)
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    if (start !== RAW_SCALE) {
+      // Movable plugin may wanna modify minScrollPos or maxScrollPos
+      // so we force Movable to caculate them
+      this.resetBoundaries([scrollBehaviorX, scrollBehaviorY])
+
+      this.zoomTo(start, initialOrigin[0], initialOrigin[1], 0)
+    }
   }
 
   // getter or setter operation
@@ -246,11 +268,11 @@ export default class Zoom implements PluginAPI {
     const fromScale = this.scale
     const toScale = between(scale, min, max)
 
-      // dispatch zooming hooks
+    // dispatch zooming hooks
     ;(() => {
       if (time === 0) {
         this.scroll.trigger(this.scroll.eventTypes.zooming, {
-          scale: toScale
+          scale: toScale,
         })
         return
       }
@@ -262,7 +284,7 @@ export default class Zoom implements PluginAPI {
           const now = getNow()
           if (now >= endTime) {
             this.scroll.trigger(this.scroll.eventTypes.zooming, {
-              scale: toScale
+              scale: toScale,
             })
             cancelAnimationFrame(timer)
             return
@@ -270,7 +292,7 @@ export default class Zoom implements PluginAPI {
           const ratio = ease.bounce.fn((now - startTime) / time)
           const currentScale = ratio * (toScale - fromScale) + fromScale
           this.scroll.trigger(this.scroll.eventTypes.zooming, {
-            scale: currentScale
+            scale: currentScale,
           })
           timer = requestAnimationFrame(scheduler)
         }
@@ -294,11 +316,11 @@ export default class Zoom implements PluginAPI {
     const ratio = toScale / origin.baseScale
     this.setScale(toScale)
 
-    const scrollerIns = this.scroll.scroller
-    const scrollBehaviorX = scrollerIns.scrollBehaviorX
-    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+    const scroller = this.scroll.scroller
+    const { scrollBehaviorX, scrollBehaviorY } = scroller
 
     this.resetBoundaries([scrollBehaviorX, scrollBehaviorY])
+
     // position is restrained in boundary
     const newX = this.getNewPos(
       origin.x,
@@ -320,13 +342,13 @@ export default class Zoom implements PluginAPI {
       scrollBehaviorY.currentPos !== Math.round(newY) ||
       toScale !== fromScale
     ) {
-      scrollerIns.scrollTo(newX, newY, time, ease.bounce, {
+      scroller.scrollTo(newX, newY, time, ease.bounce, {
         start: {
-          scale: fromScale
+          scale: fromScale,
         },
         end: {
-          scale: toScale
-        }
+          scale: toScale,
+        },
       })
     }
   }
@@ -352,11 +374,11 @@ export default class Zoom implements PluginAPI {
             ? scrollBehaviorX.contentSize
             : scrollBehaviorY.contentSize
         return baseSize / 2
-      }
+      },
     }
     return {
       originX: typeof x === 'number' ? x : resolveFormula[x](0),
-      originY: typeof y === 'number' ? y : resolveFormula[y](1)
+      originY: typeof y === 'number' ? y : resolveFormula[y](1),
     }
   }
 
@@ -377,7 +399,7 @@ export default class Zoom implements PluginAPI {
         Math.abs(firstFinger.pageY + secondFinger.pageY) / 2 +
         top -
         this.scroll.y,
-      baseScale: this.startScale
+      baseScale: this.startScale,
     }
     this.scroll.trigger(this.scroll.eventTypes.beforeZoomStart)
   }
@@ -404,9 +426,8 @@ export default class Zoom implements PluginAPI {
       this.scroll.trigger(this.scroll.eventTypes.zoomStart)
     }
 
-    const scrollerIns = this.scroll.scroller
-    const scrollBehaviorX = scrollerIns.scrollBehaviorX
-    const scrollBehaviorY = scrollerIns.scrollBehaviorY
+    const scroller = this.scroll.scroller
+    const { scrollBehaviorX, scrollBehaviorY } = scroller
     const x = this.getNewPos(
       this.origin.x,
       ratio,
@@ -423,9 +444,9 @@ export default class Zoom implements PluginAPI {
     )
 
     this.scroll.trigger(this.scroll.eventTypes.zooming, {
-      scale: this.scale
+      scale: this.scale,
     })
-    scrollerIns.translater.translate({ x, y, scale: endScale })
+    scroller.translater.translate({ x, y, scale: endScale })
   }
 
   zoomEnd() {
@@ -479,7 +500,7 @@ export default class Zoom implements PluginAPI {
   }
 
   private resetBoundaries(scrollBehaviorPairs: [Behavior, Behavior]) {
-    scrollBehaviorPairs.forEach(behavior => behavior.computeBoundary())
+    scrollBehaviorPairs.forEach((behavior) => behavior.computeBoundary())
   }
 
   private getNewPos(
@@ -510,7 +531,7 @@ export default class Zoom implements PluginAPI {
   }
 
   destroy() {
-    this.hooksFn.forEach(item => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]

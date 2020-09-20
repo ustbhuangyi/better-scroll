@@ -1,7 +1,7 @@
 import {
   style,
   safeCSSStyleDeclaration,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 export interface TranslaterPoint {
   x: number
@@ -16,14 +16,15 @@ interface TranslaterMetaData {
 }
 const translaterMetaData: TranslaterMetaData = {
   x: ['translateX', 'px'],
-  y: ['translateY', 'px']
+  y: ['translateY', 'px'],
 }
 
 export default class Translater {
+  content: HTMLElement
   style: CSSStyleDeclaration
   hooks: EventEmitter
-  constructor(public content: HTMLElement) {
-    this.style = content.style
+  constructor(content: HTMLElement) {
+    this.setContent(content)
     this.hooks = new EventEmitter(['beforeTranslate', 'translate'])
   }
 
@@ -33,18 +34,18 @@ export default class Translater {
       null
     ) as safeCSSStyleDeclaration
     let matrix = cssStyle[style.transform].split(')')[0].split(', ')
-    const x = +(matrix[12] || matrix[4])
-    const y = +(matrix[13] || matrix[5])
+    const x = +(matrix[12] || matrix[4]) || 0
+    const y = +(matrix[13] || matrix[5]) || 0
 
     return {
       x,
-      y
+      y,
     }
   }
 
   translate(point: TranslaterPoint) {
     let transformStyle = [] as string[]
-    Object.keys(point).forEach(key => {
+    Object.keys(point).forEach((key) => {
       if (!translaterMetaData[key]) {
         return
       }
@@ -64,6 +65,13 @@ export default class Translater {
     )
     this.style[style.transform as any] = transformStyle.join(' ')
     this.hooks.trigger(this.hooks.eventTypes.translate, point)
+  }
+
+  setContent(content: HTMLElement) {
+    if (this.content !== content) {
+      this.content = content
+      this.style = content.style
+    }
   }
 
   destroy() {

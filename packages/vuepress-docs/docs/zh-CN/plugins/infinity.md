@@ -53,6 +53,8 @@ new BScroll('.bs-wrapper', {
 
 ::: danger 危险
 `fetch`、`render`、`createTombstone` 必须按照注释来实现，否则内部会报错。
+
+插件内部依赖 Promise，如果浏览器不支持，需要 Promise 的 Polyfill。
 :::
 
 ## 示例

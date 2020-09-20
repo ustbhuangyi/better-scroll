@@ -79,9 +79,7 @@
       this.pageNum = 0
     },
     mounted() {
-      this.$nextTick(() => {
-        this.createInfinityScroll()
-      })
+      this.createInfinityScroll()
     },
     methods: {
       createInfinityScroll() {
@@ -131,10 +129,16 @@
                     }
                     resolve(Promise.all(items))
                   }
-                }, 2000)
+                }, 500)
               })
             }
           }
+        })
+        this.scroll.on('scroll', () => {
+          console.log('is scrolling')
+        })
+        this.scroll.on('scrollEnd', () => {
+          console.log('scrollEnd')
         })
       }
     }
