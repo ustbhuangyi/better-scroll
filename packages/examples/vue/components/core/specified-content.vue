@@ -1,14 +1,13 @@
 <template>
-  <div class="core-dynamic-content-container">
+  <div class="core-specified-content-container">
     <div class="scroll-wrapper" ref="scroll">
-      <div class="scroll-content c1" key="1" v-if="!switcher">
-        <div class="scroll-item" v-for="n in nums1" :key="n">{{n}}</div>
+      <div class="ignore-content">
+        The Blue area is not taken as BetterScroll's content
       </div>
-      <div class="scroll-content c2" key="2" v-else>
-        <div class="scroll-item" v-for="n in nums2" :key="n">{{nums2 - n + 1}}</div>
+      <div class="scroll-content">
+        <div class="scroll-item" v-for="n in nums" :key="n">{{n}}</div>
       </div>
     </div>
-    <button class="btn" @click="handleClick">switch content element</button>
   </div>
 </template>
 
@@ -18,9 +17,7 @@
   export default {
     data () {
       return {
-        nums1: 30,
-        nums2: 60,
-        switcher: false
+        nums: 30
       }
     },
     mounted() {
@@ -30,15 +27,9 @@
       this.bs.destroy()
     },
     methods: {
-      handleClick() {
-        this.switcher = !this.switcher
-        // wait for Vue rerender
-        this.$nextTick(() => {
-          this.bs.refresh()
-        })
-      },
       init() {
-        this.bs = new BScroll(this.$refs.scroll, {
+        window.bs = this.bs = new BScroll(this.$refs.scroll, {
+          specifiedIndexAsContent: 1,
           probeType: 3
         })
         this.bs.on('contentChanged', (content) => {
@@ -57,11 +48,18 @@
 </script>
 <style lang="stylus" scoped>
 
-.core-dynamic-content-container
+.core-specified-content-container
   text-align center
   .scroll-wrapper
-    height 300px
+    height 400px
     overflow hidden
+    border 1px solid #42b983
+    .ignore-content
+      padding 20px
+      color white
+      font-size 20px
+      font-weight bold
+      background-color #2c3e50
     .scroll-item
       height 50px
       line-height 50px
@@ -73,11 +71,4 @@
         background-color #f3f5f7
       &:nth-child(2n+1)
         background-color #42b983
-	.btn
-		margin 40px auto
-		padding 10px
-		color #fff
-		border-radius 4px
-		font-size 20px
-		background-color #666    
 </style>

@@ -25,9 +25,10 @@ describe('CoreScroll', () => {
       'vertical',
       'horizontal',
       'dynamic-content',
+      'specified-content',
       'freescroll',
     ])
-    await expect(itemsCounts).toBeGreaterThanOrEqual(3)
+    await expect(itemsCounts).toBeGreaterThanOrEqual(5)
   })
 
   it("should display correct items's texts", async () => {
@@ -39,6 +40,7 @@ describe('CoreScroll', () => {
       'vertical',
       'horizontal',
       'dynamic-content',
+      'specified-content',
       'freescroll',
     ])
   })

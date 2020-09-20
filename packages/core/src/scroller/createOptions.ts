@@ -34,6 +34,7 @@ export function createBehaviorOptions(
     'swipeBounceTime',
     'swipeTime',
     'outOfBoundaryDampingFactor',
+    'specifiedIndexAsContent',
   ].reduce<BehaviorOptions>((prev, cur) => {
     prev[cur] = bsOptions[cur]
     return prev

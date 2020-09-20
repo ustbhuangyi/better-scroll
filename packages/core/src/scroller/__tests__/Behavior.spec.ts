@@ -14,6 +14,7 @@ describe('Behavior Class tests', () => {
     deceleration: 0.001,
     swipeBounceTime: 2500,
     outOfBoundaryDampingFactor: 1 / 3,
+    specifiedIndexAsContent: 0,
     swipeTime: 2000,
     bounces: [true, true] as [boolean, boolean],
     rect: {

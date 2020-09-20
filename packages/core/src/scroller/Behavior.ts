@@ -15,6 +15,7 @@ export interface Options {
   bounces: Bounces
   rect: Rect
   outOfBoundaryDampingFactor: number
+  specifiedIndexAsContent: number
   [key: string]: number | boolean | Bounces | Rect
 }
 
@@ -232,7 +233,9 @@ export class Behavior {
     }
     if (boundary.maxScrollPos < 0) {
       boundary.maxScrollPos -= this.relativeOffset
-      boundary.minScrollPos = -this.relativeOffset
+      if (this.options.specifiedIndexAsContent === 0) {
+        boundary.minScrollPos = -this.relativeOffset
+      }
     }
     this.hooks.trigger(this.hooks.eventTypes.computeBoundary, boundary)
 
