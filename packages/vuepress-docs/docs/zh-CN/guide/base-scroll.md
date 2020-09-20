@@ -78,6 +78,7 @@ BetterScroll 有多种滚动模式。
   </demo>
 
 ## 支持动态 content<sup>(2.0.4)</sup>
+
 对于 `2.0.4` 版本，已经具备了探测 content 元素变成其他元素的能力，可以查看下面的例子。
 
 <demo qrcode-url="core/dynamic-content">
@@ -91,6 +92,23 @@ BetterScroll 有多种滚动模式。
     <<< @/examples/vue/components/core/dynamic-content.vue?style
   </template>
   <core-dynamic-content slot="demo"></core-dynamic-content>
+</demo>
+
+## 支持 specifiedIndexAsContent 配置项<sup>(2.0.4)</sup>
+
+对于 `2.0.4` 版本，可以指定 **wrapper** 的某一个 children 作为 **content**，在之前的版本，BetterScroll只会处理 wrapper 的第一个子元素。[详细的文档在这](./base-scroll-options.html#specifiedindexascontent-2-0-4)。
+
+<demo qrcode-url="core/specified-content">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/specified-content.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/specified-content.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/specified-content.vue?style
+  </template>
+  <core-specified-content slot="demo"></core-specified-content>
 </demo>
 
 ## 温馨提示

@@ -32,10 +32,6 @@
           specifiedIndexAsContent: 1,
           probeType: 3
         })
-        this.bs.on('contentChanged', (content) => {
-          console.log('--- newContent ---')
-          console.log(content)
-        })
         this.bs.on('scroll', () => {
           console.log('scrolling-')
         })
