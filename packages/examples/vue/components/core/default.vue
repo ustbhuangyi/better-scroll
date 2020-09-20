@@ -58,8 +58,8 @@
     methods: {
       init() {
         this.bs = new BScroll(this.$refs.scroll, {
-          click: true,
-          probeType: 3 // listening scroll hook
+          probeType: 3,
+          click: true
         })
         this.bs.on('scroll', ({ y }) => {
           console.log('scrolling-')
@@ -69,7 +69,7 @@
         })
       },
       clickHandler (item) {
-        alert(item)
+        window.alert(item)
       }
     }
   }

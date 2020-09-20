@@ -268,9 +268,6 @@
         }
 
         return this.wheels[i]
-      },
-      _diffSelectedIndex(newV, oldV) {
-
       }
     }
   }

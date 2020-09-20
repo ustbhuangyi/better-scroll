@@ -3,12 +3,12 @@
 在 BetterScroll 2.0 的设计当中，我们抽象了核心滚动部分，它作为 BetterScroll 的最小使用单元，压缩体积比 `1.0` 小了将近三分之一，往往你可能只需要完成一个纯粹的滚动需求，那么你只需要引入这一个库，方式如下：
 
 ```bash
-  npm install @better-scroll/core --save
+npm install @better-scroll/core --save
 ```
 
 ```js
-  import BScroll from '@better-scroll/core'
-  const bs = new BScroll('.div')
+import BScroll from '@better-scroll/core'
+const bs = new BScroll('.div')
 ```
 
 ## 上手
@@ -76,6 +76,22 @@ BetterScroll 有多种滚动模式。
     </template>
     <core-freescroll slot="demo"></core-freescroll>
   </demo>
+
+## 支持动态 content<sup>(2.0.4)</sup>
+对于 `2.0.4` 版本，已经具备了探测 content 元素变成其他元素的能力，可以查看下面的例子。
+
+<demo qrcode-url="core/dynamic-content">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/dynamic-content.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/dynamic-content.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/dynamic-content.vue?style
+  </template>
+  <core-dynamic-content slot="demo"></core-dynamic-content>
+</demo>
 
 ## 温馨提示
 

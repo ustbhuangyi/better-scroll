@@ -17,7 +17,7 @@
   export default {
     data () {
       return {
-				nums: 10
+        nums: 10
       }
     },
     mounted() {
@@ -29,15 +29,15 @@
     methods: {
       init() {
         this.bs = new BScroll(this.$refs.scroll, {
-					observeDOM: true,
-					scrollX: true,
-					scrollY: false
+          observeDOM: true,
+          scrollX: true,
+          scrollY: false
         })
-			},
-			handleClick() {
-				// observe-dom plugin will refresh bs
-				this.nums += 2
-			}
+      },
+      handleClick() {
+        // observe-dom plugin will refresh bs
+        this.nums += 2
+      }
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="core-container">
+  <div class="core-dynamic-content-container">
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content c1" key="1" v-if="!switcher">
         <div class="scroll-item" v-for="n in nums1" :key="n">{{n}}</div>
@@ -24,17 +24,27 @@
       }
     },
     mounted() {
-			this.flag = false
       this.init()
     },
     beforeDestroy() {
       this.bs.destroy()
     },
     methods: {
+      handleClick() {
+        this.switcher = !this.switcher
+        // wait for Vue rerender
+        this.$nextTick(() => {
+          this.bs.refresh()
+        })
+      },
       init() {
         this.bs = new BScroll(this.$refs.scroll, {
-					click: true,
-          probeType: 3 // listening scroll hook
+          probeType: 3,
+          click: true
+        })
+        this.bs.on('contentChanged', (content) => {
+          console.log('--- newContent ---')
+          console.log(content)
         })
         this.bs.on('scroll', () => {
           console.log('scrolling-')
@@ -42,26 +52,16 @@
         this.bs.on('scrollEnd', () => {
           console.log('scrollingEnd')
         })
-        this.bs.on('contentChanged', (content) => {
-          console.log('--- newContent ---')
-          console.log(content)
-        })
-			},
-			handleClick() {
-				this.switcher = !this.switcher
-				// wait for Vue rerender
-				this.$nextTick(() => {
-					this.bs.refresh()
-				})
-			}
+      }
     }
   }
 </script>
-<style lang="stylus" rel="stylesheet/stylus" scoped>
+<style lang="stylus" scoped>
 
-.core-container
+.core-dynamic-content-container
+  text-align center
   .scroll-wrapper
-    height 400px
+    height 300px
     overflow hidden
     .scroll-item
       height 50px
