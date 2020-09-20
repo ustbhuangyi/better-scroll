@@ -85,7 +85,7 @@ The most common application scenario of BetterScroll is list scrolling. Let's se
 </div>
 ```
 
-In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll only handles the scroll of the first child element (content) of the container (`wrapper`), which means other elements will be ignored.
+In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll handles the scroll of the first child element (content) of the container (`wrapper`) by default, which means other elements will be ignored. However, for BetterScroll v2.0.4, content can be specified through the `specifiedIndexAsContent` option. Please refer to the docs for details.
 
 The simplest initialization code is as follow:
 

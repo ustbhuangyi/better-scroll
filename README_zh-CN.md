@@ -74,7 +74,7 @@ BetterScroll 最常见的应用场景是列表滚动，我们来看一下它的 
   <!-- 这里可以放一些其它的 DOM，但不会影响滚动 -->
 </div>
 ```
-上面的代码中 BetterScroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，BetterScroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
+上面的代码中 BetterScroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，BetterScroll 默认处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。不过对于 BetterScroll v2.0.4 版本，可以通过 specifiedIndexAsContent 配置项来指定 content，详细的请参考文档。
 
 最简单的初始化代码如下：
 
