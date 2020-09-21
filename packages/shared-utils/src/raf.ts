@@ -5,13 +5,15 @@ interface DelayedHandler {
   interval: number
 }
 
-const DEFAULT_INTERVAL = 100 / 60
+const DEFAULT_INTERVAL = 1000 / 60
 const windowCompat = inBrowser && (window as any)
+
+/* istanbul ignore next */
 function noop() {}
 
 export const requestAnimationFrame = (() => {
+  /* istanbul ignore if  */
   if (!inBrowser) {
-    /* istanbul ignore if */
     return noop
   }
   return (
@@ -20,7 +22,7 @@ export const requestAnimationFrame = (() => {
     windowCompat.mozRequestAnimationFrame ||
     windowCompat.oRequestAnimationFrame ||
     // if all else fails, use setTimeout
-    function(callback: DelayedHandler) {
+    function (callback: DelayedHandler) {
       return window.setTimeout(
         callback,
         (callback.interval || DEFAULT_INTERVAL) / 2
@@ -30,8 +32,8 @@ export const requestAnimationFrame = (() => {
 })()
 
 export const cancelAnimationFrame = (() => {
+  /* istanbul ignore if  */
   if (!inBrowser) {
-    /* istanbul ignore if */
     return noop
   }
   return (
@@ -39,7 +41,7 @@ export const cancelAnimationFrame = (() => {
     windowCompat.webkitCancelAnimationFrame ||
     windowCompat.mozCancelAnimationFrame ||
     windowCompat.oCancelAnimationFrame ||
-    function(id: number) {
+    function (id: number) {
       window.clearTimeout(id)
     }
   )
