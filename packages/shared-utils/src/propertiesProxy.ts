@@ -1,4 +1,5 @@
-const noop = function(val?: any) {}
+/* istanbul ignore next */
+const noop = function (val?: any) {}
 
 interface TraversedObject {
   [key: string]: any
@@ -7,7 +8,7 @@ const sharedPropertyDefinition: PropertyDescriptor = {
   enumerable: true,
   configurable: true,
   get: noop,
-  set: noop
+  set: noop,
 }
 
 const getProperty = (obj: TraversedObject, key: string) => {
@@ -18,7 +19,7 @@ const getProperty = (obj: TraversedObject, key: string) => {
   }
   const lastKey = keys.pop() as string
   if (typeof obj[lastKey] === 'function') {
-    return function() {
+    return function () {
       return obj[lastKey].apply(obj, arguments)
     }
   } else {

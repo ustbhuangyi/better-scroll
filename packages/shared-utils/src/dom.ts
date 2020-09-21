@@ -16,6 +16,7 @@ let elementStyle = (inBrowser &&
   document.createElement('div').style) as safeCSSStyleDeclaration
 
 let vendor = (() => {
+  /* istanbul ignore if  */
   if (!inBrowser) {
     return false
   }
@@ -46,10 +47,11 @@ let vendor = (() => {
       return obj.key
     }
   }
-
+  /* istanbul ignore next  */
   return false
 })()
 
+/* istanbul ignore next  */
 function prefixStyle(style: string): string {
   if (vendor === false) {
     return style
@@ -162,6 +164,7 @@ export const eventTypeMap: {
 }
 
 export function getRect(el: HTMLElement): DOMRect {
+  /* istanbul ignore if  */
   if (el instanceof (window as any).SVGElement) {
     let rect = el.getBoundingClientRect()
     return {
@@ -249,6 +252,7 @@ export function click(e: any, event = 'click') {
         )
       )
     } catch (e) {
+      /* istanbul ignore next */
       createEvent()
     }
   } else {
@@ -281,7 +285,8 @@ export function prepend(el: HTMLElement, target: HTMLElement) {
 }
 
 export function before(el: HTMLElement, target: HTMLElement) {
-  ;(target.parentNode as HTMLElement).insertBefore(el, target)
+  const parentNode = target.parentNode as HTMLElement
+  parentNode.insertBefore(el, target)
 }
 
 export function removeChild(el: HTMLElement, child: HTMLElement) {
