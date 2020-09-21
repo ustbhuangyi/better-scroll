@@ -56,6 +56,7 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 
@@ -70,7 +71,12 @@ describe('BetterScroll Options', () => {
       HWCompositing: true,
       autoBlur: true,
       bindToWrapper: false,
-      bounce: false,
+      bounce: {
+        top: false,
+        right: false,
+        bottom: false,
+        left: false,
+      },
       bounceTime: 800,
       click: false,
       dblclick: false,
@@ -106,6 +112,7 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 
@@ -158,15 +165,14 @@ describe('BetterScroll Options', () => {
       autoEndDistance: 5,
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
+      specifiedIndexAsContent: 0,
     })
   })
 
   it('should resolve bounce when calling process', () => {
-    options
-      .merge({
-        bounce: false,
-      })
-      .process()
+    options.merge({
+      bounce: false,
+    })
 
     expect(options.bounce).toEqual({
       bottom: false,
@@ -175,17 +181,29 @@ describe('BetterScroll Options', () => {
       top: false,
     })
 
-    options
-      .merge({
-        bounce: true,
-      })
-      .process()
+    options.merge({
+      bounce: true,
+    })
 
     expect(options.bounce).toEqual({
       bottom: true,
       left: true,
       right: true,
       top: true,
+    })
+
+    options.merge({
+      bounce: {
+        top: false,
+        bottom: false,
+      },
+    })
+
+    expect(options.bounce).toEqual({
+      bottom: false,
+      left: true,
+      right: true,
+      top: false,
     })
   })
 })

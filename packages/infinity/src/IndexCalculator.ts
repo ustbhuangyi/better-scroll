@@ -3,7 +3,7 @@ export const POST_NUM = 30
 
 const enum DIRECTION {
   UP,
-  DOWN
+  DOWN,
 }
 
 export default class IndexCalculator {
@@ -37,7 +37,7 @@ export default class IndexCalculator {
 
     return {
       start,
-      end
+      end,
     }
   }
 
@@ -79,5 +79,10 @@ export default class IndexCalculator {
     i += tombstone
 
     return i
+  }
+
+  resetState() {
+    this.lastDirection = DIRECTION.DOWN
+    this.lastPos = 0
   }
 }

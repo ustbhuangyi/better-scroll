@@ -77,6 +77,41 @@ BetterScroll has a variety of scroll modes.
     <core-freescroll slot="demo"></core-freescroll>
   </demo>
 
+## Dynamic Content<sup>(2.0.4)</sup>
+
+For the `2.0.4` version, it has the ability to detect `content` becoming other elements, you can check the following example.
+
+<demo qrcode-url="core/dynamic-content">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/dynamic-content.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/dynamic-content.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/dynamic-content.vue?style
+  </template>
+  <core-dynamic-content slot="demo"></core-dynamic-content>
+</demo>
+
+## specifiedIndexAsContent<sup>(2.0.4)</sup>
+
+For the `2.0.4` version, you can specify a child of **wrapper** as **content**. In previous versions, BetterScroll would only process the first child element of the wrapper. [For details.](./base-scroll-options.html#specifiedindexascontent-2-0-4)
+
+<demo qrcode-url="core/specified-content">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/specified-content.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/specified-content.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/specified-content.vue?style
+  </template>
+  <core-specified-content slot="demo"></core-specified-content>
+</demo>
+
+
 ## Warm Tips
 
   :::tip

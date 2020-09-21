@@ -26,7 +26,7 @@ BetterScroll 最常见的应用场景是列表滚动，我们来看一下它的 
   <!-- 这里可以放一些其它的 DOM，但不会影响滚动 -->
 </div>
 ```
-上面的代码中 BetterScroll 是作用在外层 **wrapper** 容器上的，滚动的部分是 **content** 元素。这里要注意的是，BetterScroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
+上面的代码中 BetterScroll 是作用在外层 **wrapper** 容器上的，滚动的部分是 **content** 元素。这里要注意的是，BetterScroll 默认处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
 
 最简单的初始化代码如下：
 
@@ -37,8 +37,12 @@ let scroll = new BScroll(wrapper)
 ```
 BetterScroll 提供了一个类，实例化的第一个参数是一个原生的 DOM 对象。当然，如果传递的是一个字符串，BetterScroll 内部会尝试调用 querySelector 去获取这个 DOM 对象。
 
-:::warning
+:::warning 注意
 BetterScroll 2.X 里面，我们将 1.X 耦合的 feature 拆分至插件，以达到按需加载、减少包体积的目的。因此，`@better-scroll/core` 只提供了最核心的滚动能力。如果想要实现**上拉刷新**、**下拉加载**的功能，你需要使用对应的[插件](/zh-CN/plugins)。
+:::
+
+:::tip 提示
+版本 2.0.4 的 BetterScroll 可以通过 [specifiedIndexAsContent](./base-scroll-options.html#specifiedindexascontent-2-0-4) 来指定 wrapper 的某个子元素作为 content。
 :::
 
 ## 滚动原理

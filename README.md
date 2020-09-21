@@ -17,13 +17,51 @@
 ```bash
 npm install better-scroll -S # install 2.x，with full-featured plugin.
 
-npm install @better-scroll/core # core scroll
+npm install @better-scroll/core # only CoreScroll
 ```
 
-or include it directly via CDN
+```js
+import BetterScroll from 'better-scroll'
+
+let bs = new BetterScroll('.wrapper', {
+  movable: true,
+  zoom: true
+})
+
+import BScroll from '@better-scroll/core'
+
+let bs = new BScroll('.wrapper', {})
+```
+
+# CDN
+
+BetterScroll with full-featured plugin.
 
 ```html
-<script src="https://unpkg.com/better-scroll@2.0.0/dist/better-scroll.js"></script>
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+```
+
+```js
+let wrapper = document.getElementById("wrapper")
+let bs = BetterScroll.createBScroll(wrapper, {})
+```
+
+
+Only CoreScroll
+
+```html
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
+
+<!-- minify -->
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+```
+
+```js
+let wrapper = document.getElementById("wrapper")
+let bs = new BScroll(wrapper, {})
 ```
 
 ## What is BetterScroll ?
@@ -47,7 +85,7 @@ The most common application scenario of BetterScroll is list scrolling. Let's se
 </div>
 ```
 
-In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll only handles the scroll of the first child element (content) of the container (`wrapper`), which means other elements will be ignored.
+In the code above, BetterScroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that BetterScroll handles the scroll of the first child element (content) of the container (`wrapper`) by default, which means other elements will be ignored. However, for BetterScroll v2.0.4, content can be specified through the `specifiedIndexAsContent` option. Please refer to the docs for details.
 
 The simplest initialization code is as follow:
 

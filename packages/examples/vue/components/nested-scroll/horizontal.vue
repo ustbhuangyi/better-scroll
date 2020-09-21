@@ -12,7 +12,7 @@
               </ul>
             </div>
           </li>
-          <li v-for="(item, idx) in items1" :key="idx" class="list-item">{{ item }}</li>
+          <li v-for="(item, idx) in items1" :key="idx + 100" class="list-item">{{ item }}</li>
         </ul>
       </div>
   </div>

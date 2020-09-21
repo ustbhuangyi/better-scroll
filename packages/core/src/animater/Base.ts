@@ -11,6 +11,7 @@ export interface ExposedAPI {
 }
 
 export default abstract class Base implements ExposedAPI {
+  content: HTMLElement
   style: safeCSSStyleDeclaration
   hooks: EventEmitter
   timer: number = 0
@@ -20,7 +21,7 @@ export default abstract class Base implements ExposedAPI {
   [key: string]: any
 
   constructor(
-    public content: HTMLElement,
+    content: HTMLElement,
     public translater: Translater,
     public options: {
       probeType: number
@@ -35,7 +36,7 @@ export default abstract class Base implements ExposedAPI {
       'time',
       'timeFunction',
     ])
-    this.style = content.style as safeCSSStyleDeclaration
+    this.setContent(content)
   }
 
   translate(endPoint: TranslaterPoint) {
@@ -48,6 +49,14 @@ export default abstract class Base implements ExposedAPI {
 
   setForceStopped(forceStopped: boolean) {
     this.forceStopped = forceStopped
+  }
+
+  setContent(content: HTMLElement) {
+    if (this.content !== content) {
+      this.content = content
+      this.style = content.style as safeCSSStyleDeclaration
+      this.stop()
+    }
   }
 
   abstract move(

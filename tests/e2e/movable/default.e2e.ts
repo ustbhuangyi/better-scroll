@@ -14,17 +14,20 @@ describe('Movable Plugin', () => {
 
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
   it('should work well when specify "startX & startY"', async () => {
     await page.waitFor(300)
-    const scaledElTransformText = await page.$eval('.scroll-content', node => {
-      return window.getComputedStyle(node).transform
-    })
+    const scaledElTransformText = await page.$eval(
+      '.scroll-content',
+      (node) => {
+        return window.getComputedStyle(node).transform
+      }
+    )
     const x = getTranslate(scaledElTransformText, 'x')
-    const y = getTranslate(scaledElTransformText, 'x')
+    const y = getTranslate(scaledElTransformText, 'y')
 
     expect(x).toBe(20)
     expect(y).toBe(20)
@@ -38,16 +41,19 @@ describe('Movable Plugin', () => {
       y: 100,
       xDistance: -70,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     await page.waitFor(2000)
 
-    const scaledElTransformText = await page.$eval('.scroll-content', node => {
-      return window.getComputedStyle(node).transform
-    })
+    const scaledElTransformText = await page.$eval(
+      '.scroll-content',
+      (node) => {
+        return window.getComputedStyle(node).transform
+      }
+    )
     const x = getTranslate(scaledElTransformText, 'x')
-    const y = getTranslate(scaledElTransformText, 'x')
+    const y = getTranslate(scaledElTransformText, 'y')
 
     expect(x).toBe(0)
     expect(y).toBe(0)

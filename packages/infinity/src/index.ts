@@ -39,7 +39,7 @@ export default class InfinityScroll {
     const {
       fetch: fetchFn,
       render: renderFn,
-      createTombstone: createTombstoneFn
+      createTombstone: createTombstoneFn,
     } = this.options
 
     this.tombstone = new Tombstone(createTombstoneFn)
@@ -60,6 +60,17 @@ export default class InfinityScroll {
 
     this.scroll.on(this.scroll.eventTypes.destroy, this.destroy, this)
     this.scroll.on(this.scroll.eventTypes.scroll, this.update, this)
+
+    this.scroll.on(
+      this.scroll.eventTypes.contentChanged,
+      (content: HTMLElement) => {
+        this.domManager.setContent(content)
+        this.indexCalculator.resetState()
+        this.domManager.resetState()
+        this.dataManager.resetState()
+        this.update({ y: 0 })
+      }
+    )
     const { scrollBehaviorY } = this.scroll.scroller
 
     scrollBehaviorY.hooks.on(
@@ -144,7 +155,7 @@ export default class InfinityScroll {
     return {
       end,
       startPos,
-      endPos
+      endPos,
     }
   }
 

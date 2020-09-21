@@ -1,17 +1,39 @@
 import BScroll, { Behavior, Boundary } from '@better-scroll/core'
-import { EventEmitter } from '@better-scroll/shared-utils'
+import {
+  ease,
+  EventEmitter,
+  ApplyOrder,
+  EaseItem,
+} from '@better-scroll/shared-utils'
+import propertiesConfig from './propertiesConfig'
+
+type PositionX = number | 'left' | 'right' | 'center'
+type PositionY = number | 'top' | 'bottom' | 'center'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
     movable?: true
   }
+  interface CustomAPI {
+    movable: PluginAPI
+  }
 }
 
-export default class Movable {
+interface PluginAPI {
+  putAt(x: PositionX, y: PositionY, time?: number, easing?: EaseItem): void
+}
+
+export default class Movable implements PluginAPI {
   static pluginName = 'movable'
+  static applyOrder = ApplyOrder.Pre
   private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(public scroll: BScroll) {
+    this.handleBScroll()
     this.handleHooks()
+  }
+
+  private handleBScroll() {
+    this.scroll.proxy(propertiesConfig)
   }
 
   private handleHooks() {
@@ -19,7 +41,6 @@ export default class Movable {
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
 
     const computeBoundary = (boundary: Boundary, behavior: Behavior) => {
-      if (!behavior.options.scrollable) return
       if (boundary.maxScrollPos > 0) {
         // content is smaller than wrapper
         boundary.minScrollPos = behavior.wrapperSize - behavior.contentSize
@@ -29,10 +50,21 @@ export default class Movable {
 
     this.registerHooks(
       scrollBehaviorX.hooks,
+      scrollBehaviorX.hooks.eventTypes.ignoreHasScroll,
+      () => true
+    )
+    this.registerHooks(
+      scrollBehaviorX.hooks,
       scrollBehaviorX.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
         computeBoundary(boundary, scrollBehaviorX)
       }
+    )
+
+    this.registerHooks(
+      scrollBehaviorY.hooks,
+      scrollBehaviorY.hooks.eventTypes.ignoreHasScroll,
+      () => true
     )
     this.registerHooks(
       scrollBehaviorY.hooks,
@@ -51,8 +83,47 @@ export default class Movable {
     )
   }
 
+  putAt(
+    x: PositionX,
+    y: PositionY,
+    time = this.scroll.options.bounceTime,
+    easing = ease.bounce
+  ) {
+    const position = this.resolvePostion(x, y)
+    this.scroll.scrollTo(position.x, position.y, time, easing)
+  }
+
+  private resolvePostion(x: PositionX, y: PositionY): { x: number; y: number } {
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+    const resolveFormula = {
+      left() {
+        return 0
+      },
+      top() {
+        return 0
+      },
+      right() {
+        return scrollBehaviorX.minScrollPos
+      },
+      bottom() {
+        return scrollBehaviorY.minScrollPos
+      },
+      center(index: number) {
+        const baseSize =
+          index === 0
+            ? scrollBehaviorX.minScrollPos
+            : scrollBehaviorY.minScrollPos
+        return baseSize / 2
+      },
+    }
+    return {
+      x: typeof x === 'number' ? x : resolveFormula[x](0),
+      y: typeof y === 'number' ? y : resolveFormula[y](1),
+    }
+  }
+
   destroy() {
-    this.hooksFn.forEach(item => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]

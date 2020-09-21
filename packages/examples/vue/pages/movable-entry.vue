@@ -7,6 +7,12 @@
       <li class="example-item" @click="goPage('/movable/scale')">
         <span>scale</span>
       </li>
+      <li class="example-item" @click="goPage('/movable/multi-content')">
+        <span>multi-content</span>
+      </li>
+      <li class="example-item" @click="goPage('/movable/multi-content-scale')">
+        <span>multi-content-scale</span>
+      </li>
     </ul>
     <transition name="move">
       <router-view class="view"></router-view>

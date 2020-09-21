@@ -79,6 +79,14 @@ export default class PullDown implements PluginAPI {
       scrollBehaviorY.minScrollPos
 
     this.registerHooks(
+      this.scroll.hooks,
+      this.scroll.hooks.eventTypes.contentChanged,
+      () => {
+        this.finishPullDown()
+      }
+    )
+
+    this.registerHooks(
       scrollBehaviorY.hooks,
       scrollBehaviorY.hooks.eventTypes.computeBoundary,
       (boundary: Boundary) => {
@@ -172,13 +180,14 @@ export default class PullDown implements PluginAPI {
   }
 
   finishPullDown() {
-    const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
-    // restore minScrollY since the hang animation has ended
-    this.currentMinScrollY = this.cachedOriginanMinScrollY
-    scrollBehaviorY.computeBoundary()
-
-    this.pulling = false
-    this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
+    if (this.pulling === true) {
+      const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
+      // restore minScrollY since the hang animation has ended
+      this.currentMinScrollY = this.cachedOriginanMinScrollY
+      scrollBehaviorY.computeBoundary()
+      this.pulling = false
+      this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
+    }
   }
 
   // allow 'true' type is compat for beta version implements

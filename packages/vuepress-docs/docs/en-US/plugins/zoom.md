@@ -80,32 +80,32 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
 ## Option
 
 ### start
-  - **Type:** `number`
-  - **Default:** `1`
+  - **Type**: `number`
+  - **Default**: `1`
 
     Initial scale.
 
 ### min
-  - **Type:** `number`
-  - **Default:** `1`
+  - **Type**: `number`
+  - **Default**: `1`
 
     min scale.
 
 ### max
-  - **Type:** `number`
-  - **Default:** `4`
+  - **Type**: `number`
+  - **Default**: `4`
 
     max scale.
 
 ### initialOrigin
-  - **Type:** `[OriginX, OriginY]`
+  - **Type**: `[OriginX, OriginY]`
     - **OriginX**: `number | 'left' | 'right' | 'center'`
     - **OriginY**: `number | 'top' | 'bottom' | 'center'`
-  - **Default:** `[0, 0]`
+  - **Default**: `[0, 0]`
 
     The origin of first initializing zoom instance, It is valid when `start` is not `1`.The origin is all based on the coordinate system of `scaled element`.
 
-  - **Examples:**
+  - **Examples**
 
   ```js
     new BScroll('.bs-wrapper', {
@@ -123,14 +123,14 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
   When you initialize zoom, you usually focus on zooming with the endpoint or center. You can refer to the above example.
 
 ### minimalZoomDistance
-  - **Type:** `number`
-  - **Default:** `5`
+  - **Type**: `number`
+  - **Default**: `5`
 
     When you zoom with two fingers, only when the zoom distance exceeds `minimalZoomDistance`, the zoom will take effect.
 
 ### bounceTime
-  - **Type:** `number`
-  - **Default:** `800`(ms)
+  - **Type**: `number`
+  - **Default**: `800`(ms)
 
     When the two fingers continue to zoom and the scale exceeds the threshold of `max`, when the two fingers leave, the internal "bounce" to the form of `max`, and `bounceTime` is the animation of this "bounce" behavior duration.
 

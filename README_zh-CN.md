@@ -14,7 +14,44 @@
 npm install better-scroll -S  # 安装带有所有插件的 BetterScroll
 
 npm install @better-scroll/core # 核心滚动，大部分情况可能只需要一个简单的滚动
+```
 
+```js
+import BetterScroll from 'better-scroll'
+
+let bs = new BetterScroll('.wrapper', {
+  movable: true,
+  zoom: true
+})
+
+import BScroll from '@better-scroll/core'
+let bs = new BScroll('.wrapper', {})
+```
+
+# CDN
+
+带有所有插件的 BetterScroll
+
+```js
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.js"></script>
+
+// minify
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
+
+let wrapper = document.getElementById("wrapper")
+let bs = BetterScroll.createBScroll(wrapper, {})
+```
+
+不带有任何插件的 CoreScroll
+
+```js
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.js"></script>
+
+// minify
+<script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+
+let wrapper = document.getElementById("wrapper")
+let bs = new BScroll(wrapper, {})
 ```
 
 # BetterScroll 是什么
@@ -37,7 +74,7 @@ BetterScroll 最常见的应用场景是列表滚动，我们来看一下它的 
   <!-- 这里可以放一些其它的 DOM，但不会影响滚动 -->
 </div>
 ```
-上面的代码中 BetterScroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，BetterScroll 只处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。
+上面的代码中 BetterScroll 是作用在外层 wrapper 容器上的，滚动的部分是 content 元素。这里要注意的是，BetterScroll 默认处理容器（wrapper）的第一个子元素（content）的滚动，其它的元素都会被忽略。不过对于 BetterScroll v2.0.4 版本，可以通过 specifiedIndexAsContent 配置项来指定 content，详细的请参考文档。
 
 最简单的初始化代码如下：
 

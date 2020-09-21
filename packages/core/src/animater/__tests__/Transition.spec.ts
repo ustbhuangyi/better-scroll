@@ -120,7 +120,7 @@ describe('Transition Class test suit', () => {
     expect(translater.translate).toBeCalledWith({ x: 10, y: 10 })
     expect(onForceStop).toBeCalledWith({ x: 10, y: 10 })
     expect(mockCancelAnimationFrame).toBeCalled()
-    expect(transition.forceStopped).toBe(true)
+    expect(transition.forceStopped).toBe(false)
 
     transition.destroy()
   })

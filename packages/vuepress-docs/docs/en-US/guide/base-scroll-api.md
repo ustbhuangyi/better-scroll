@@ -304,6 +304,14 @@ In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll w
       bs.on('destroy', () => {})
     ```
 
+  - **contentChanged**<sup>(2.0.4)</sup>
+    - **Trigger timing**: When calling `bs.refresh()`, it is detected that the content DOM has become other elements
+
+    ```typescript
+      // bs version >= 2.0.4
+      bs.on('contentChanged', (newContent: HTMLElement) => {})
+    ```  
+
 The following events must be registered for the **plugin** in parentheses to be dispatched:
 
   - **alterOptions(__mouse-wheel__)**
@@ -511,6 +519,17 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         const bs = new BScroll('.wrapper', {})
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
+    
+    - **contentChanged**<sup>(2.0.4)</sup>
+      - **Trigger timing**：When calling `bs.refresh()`, it is detected that the content DOM has become other elements
+      - **Usage**
+      ```typescript
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        // bs version >= 2.0.4
+        bs.hooks.on('contentChanged', (newContent: HTMLElement) => { console.log(newContent) })
+      ```
+        
 
   - **ActionsHandler.hooks**
 
@@ -702,6 +721,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
           console.log(momentumInfo.duration)
         })
       ```
+
   - **Animation.hooks(useTransition: false)**
 
     - **forceStop**
@@ -742,7 +762,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         ```js
           import BScroll from '@better-scroll/core'
           const bs = new BScroll('.wrapper', {})
-          const hooks = bs.scroller.animater
+          const hooks = bs.scroller.animater.hooks
           hooks.on('time', (duration) => {
             console.log(duration) // 800
           })
@@ -754,9 +774,40 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         ```js
           import BScroll from '@better-scroll/core'
           const bs = new BScroll('.wrapper', {})
-          const hooks = bs.scroller.animater
+          const hooks = bs.scroller.animater.hooks
           hooks.on('timeFunction', (easing) => {
             console.log(easing) // cubic-bezier(0.1, 0.7, 1.0, 0.1)
+          })
+        ```
+
+  - **Translater.hooks**
+
+    - **beforeTranslate**
+      - **Trigger timing**: Before modifying the transform style of the content element, the zoom plugin listened to the hook
+      - **Arguments**: The first is the transformStyle array, the second is the point object
+        - `{ ['translateX(0px)'|'translateY(0px)'] } transformStyle`: The property value corresponding to the current transform
+        - `{ x: number, y: number } point`: x corresponds to the value of translateX, y corresponds to the value of translateY
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.translater.hooks
+          hooks.on('beforeTranslate', (transformStyle, point) => {
+            transformStyle.push('scale(1.2)')
+            console.log(transformStyle) // ['translateX(0px)', 'translateY(0px)', 'scale(1.2)']
+            console.log(point) // { x: 0, y: 0 }
+          })
+        ```
+
+    - **translate**
+      - **Trigger timing**: After modifying the transform style of the content element, the wheel plugin listened to the hook
+      - **Arguments**: point object
+        - `{ x: number, y: number } point`: x corresponds to the value of translateX, y corresponds to the value of translateY
+        ```js
+          import BScroll from '@better-scroll/core'
+          const bs = new BScroll('.wrapper', {})
+          const hooks = bs.scroller.translater.hooks
+          hooks.on('translate', (point) => {
+            console.log(point) // { x: 0, y: 0 }
           })
         ```
 
@@ -787,7 +838,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('touchEnd', () => {
           console.log('your finger has leave')
         })
@@ -800,7 +851,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('end', (position) => {
           console.log(position.x)
           console.log(position.y)
@@ -817,7 +868,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('resize', () => {
           console.log("window's size has changed")
         })
@@ -828,7 +879,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('flick', () => {})
       ```
 
@@ -842,7 +893,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('momentum', (scrollMetaData) => {
           scrollMetaData.newX = 0
           scrollMetaData.newY = -200
@@ -856,7 +907,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('scrollTo', (endPoint) => {
           console.log(endPoint.x)
           console.log(endPoint.y)
@@ -872,7 +923,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('scrollToElement', (el, pos) => {
           console.log(el)
           console.log(pos.left)
@@ -886,7 +937,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
       ```js
         import BScroll from '@better-scroll/core'
         const bs = new BScroll('.wrapper', {})
-        const hooks = bs.scroller
+        const hooks = bs.scroller.hooks
         hooks.on('beforeRefresh', () => {})
       ```
 

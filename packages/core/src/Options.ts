@@ -4,11 +4,13 @@ import {
   hasTouch,
   Probe,
   EventPassthrough,
+  extend,
 } from '@better-scroll/shared-utils'
+
 // type
-export type tap = 'tap' | ''
-export type bounceOptions = Partial<BounceConfig> | boolean
-export type dblclickOptions = Partial<DblclickConfig> | boolean
+export type Tap = 'tap' | ''
+export type BounceOptions = Partial<BounceConfig> | boolean
+export type DblclickOptions = Partial<DblclickConfig> | boolean
 
 // interface
 export interface BounceConfig {
@@ -34,8 +36,8 @@ export interface DefOptions {
   directionLockThreshold?: number
   eventPassthrough?: string
   click?: boolean
-  tap?: tap
-  bounce?: bounceOptions
+  tap?: Tap
+  bounce?: BounceOptions
   bounceTime?: number
   momentum?: boolean
   momentumLimitTime?: number
@@ -65,9 +67,10 @@ export interface DefOptions {
   disableTouch?: boolean
   autoBlur?: boolean
   translateZ?: string
-  dblclick?: dblclickOptions
+  dblclick?: DblclickOptions
   autoEndDistance?: number
   outOfBoundaryDampingFactor?: number
+  specifiedIndexAsContent?: number
 }
 
 export interface Options extends DefOptions, CustomOptions {}
@@ -82,8 +85,8 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
   directionLockThreshold: number
   eventPassthrough: string
   click: boolean
-  tap: tap
-  bounce: bounceOptions
+  tap: Tap
+  bounce: BounceConfig
   bounceTime: number
   momentum: boolean
   momentumLimitTime: number
@@ -113,9 +116,10 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
   disableTouch: boolean
   autoBlur: boolean
   translateZ: string
-  dblclick: dblclickOptions
+  dblclick: DblclickOptions
   autoEndDistance: number
   outOfBoundaryDampingFactor: number
+  specifiedIndexAsContent: number
 
   constructor() {
     super()
@@ -173,10 +177,15 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
 
     this.autoEndDistance = 5
     this.outOfBoundaryDampingFactor = 1 / 3
+    this.specifiedIndexAsContent = 0
   }
   merge(options?: Options) {
     if (!options) return this
     for (let key in options) {
+      if (key === 'bounce') {
+        this.bounce = this.resolveBounce(options[key]!)
+        continue
+      }
       this[key] = options[key]
     }
     return this
@@ -188,8 +197,6 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
     this.useTransition = this.useTransition && hasTransition
 
     this.preventDefault = !this.eventPassthrough && this.preventDefault
-
-    this.resolveBounce()
 
     // If you want eventPassthrough I have to lock one of the axes
     this.scrollX =
@@ -213,19 +220,27 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
     return this
   }
 
-  resolveBounce() {
-    const directions = ['top', 'right', 'bottom', 'left']
-    const bounce = this.bounce
-    if (typeof bounce === 'boolean') {
-      this.bounce = makeMap(directions, bounce)
+  resolveBounce(bounceOptions: BounceOptions): BounceConfig {
+    const DEFAULT_BOUNCE = {
+      top: true,
+      right: true,
+      bottom: true,
+      left: true,
     }
-  }
-}
+    const NEGATED_BOUNCE = {
+      top: false,
+      right: false,
+      bottom: false,
+      left: false,
+    }
 
-function makeMap(keys: string[], val: boolean = true) {
-  const ret: { [key: string]: boolean } = {}
-  keys.forEach((key) => {
-    ret[key] = val
-  })
-  return ret
+    let ret: BounceConfig
+    if (typeof bounceOptions === 'object') {
+      ret = extend(DEFAULT_BOUNCE, bounceOptions)
+    } else {
+      ret = bounceOptions ? DEFAULT_BOUNCE : NEGATED_BOUNCE
+    }
+
+    return ret
+  }
 }

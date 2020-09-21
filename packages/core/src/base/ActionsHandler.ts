@@ -7,7 +7,7 @@ import {
   EventType,
   MouseButton,
   EventRegister,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 
 type Exception = {
@@ -41,7 +41,7 @@ export default class ActionsHandler {
       'start',
       'move',
       'end',
-      'click'
+      'click',
     ])
     this.handleDOMEvents()
   }
@@ -59,28 +59,28 @@ export default class ActionsHandler {
       wrapperEvents.push({
         name: 'click',
         handler: this.click.bind(this),
-        capture: true
+        capture: true,
       })
     }
 
     if (shouldRegisterTouch) {
       wrapperEvents.push({
         name: 'touchstart',
-        handler: this.start.bind(this)
+        handler: this.start.bind(this),
       })
 
       targetEvents.push(
         {
           name: 'touchmove',
-          handler: this.move.bind(this)
+          handler: this.move.bind(this),
         },
         {
           name: 'touchend',
-          handler: this.end.bind(this)
+          handler: this.end.bind(this),
         },
         {
           name: 'touchcancel',
-          handler: this.end.bind(this)
+          handler: this.end.bind(this),
         }
       )
     }
@@ -88,17 +88,17 @@ export default class ActionsHandler {
     if (shouldRegisterMouse) {
       wrapperEvents.push({
         name: 'mousedown',
-        handler: this.start.bind(this)
+        handler: this.start.bind(this),
       })
 
       targetEvents.push(
         {
           name: 'mousemove',
-          handler: this.move.bind(this)
+          handler: this.move.bind(this),
         },
         {
           name: 'mouseup',
-          handler: this.end.bind(this)
+          handler: this.end.bind(this),
         }
       )
     }
@@ -110,7 +110,7 @@ export default class ActionsHandler {
     const {
       preventDefault,
       stopPropagation,
-      preventDefaultException
+      preventDefaultException,
     } = this.options
 
     const preventDefaultConditions = {
@@ -128,7 +128,7 @@ export default class ActionsHandler {
       },
       move: () => {
         return preventDefault
-      }
+      },
     }
     if (preventDefaultConditions[type]()) {
       e.preventDefault()
@@ -191,7 +191,7 @@ export default class ActionsHandler {
       this.hooks.trigger(this.hooks.eventTypes.move, {
         deltaX,
         deltaY,
-        e
+        e,
       })
     ) {
       return
@@ -233,6 +233,15 @@ export default class ActionsHandler {
 
   private click(e: TouchEvent) {
     this.hooks.trigger(this.hooks.eventTypes.click, e)
+  }
+
+  setContent(content: HTMLElement) {
+    if (content !== this.wrapper) {
+      this.wrapper = content
+      this.wrapperEventRegister.destroy()
+      this.targetEventRegister.destroy()
+      this.handleDOMEvents()
+    }
   }
 
   destroy() {

@@ -150,6 +150,9 @@ describe('zoom plugin', () => {
 
   it('should compute boundary of Behavior when zoom ends', () => {
     const zoom = new Zoom(scroll) as any
+
+    // simulate two fingers
+    zoom.numberOfFingers = 2
     // allow trigger beforeEnd hooks
     zoom.zoomed = true
 

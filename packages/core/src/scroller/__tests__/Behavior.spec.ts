@@ -14,6 +14,7 @@ describe('Behavior Class tests', () => {
     deceleration: 0.001,
     swipeBounceTime: 2500,
     outOfBoundaryDampingFactor: 1 / 3,
+    specifiedIndexAsContent: 0,
     swipeTime: 2000,
     bounces: [true, true] as [boolean, boolean],
     rect: {
@@ -26,7 +27,7 @@ describe('Behavior Class tests', () => {
     content = createDiv(100, 400, 0, 0)
     document.body.appendChild(content)
     wrapper.appendChild(content)
-    behavior = new Behavior(wrapper, options)
+    behavior = new Behavior(wrapper, content, options)
   })
 
   it('should init hooks when call constructor function', () => {
@@ -38,7 +39,7 @@ describe('Behavior Class tests', () => {
   })
 
   it('should refresh some properties when invoking refresh method', () => {
-    behavior.refresh()
+    behavior.refresh(behavior.content)
 
     expect(behavior.wrapperSize).toBe(200)
     expect(behavior.contentSize).toBe(400)
@@ -57,7 +58,7 @@ describe('Behavior Class tests', () => {
   })
 
   it('should refresh some properties when invoking move method', () => {
-    behavior.refresh()
+    behavior.refresh(behavior.content)
     expect(behavior.move(-10)).toBe(-10)
     expect(behavior.movingDirection).toBe(1)
   })
@@ -65,7 +66,7 @@ describe('Behavior Class tests', () => {
   it('should not trigger momentum scroll when duration is exceed momentumLimitTime', () => {
     let endMockHandler = jest.fn()
     behavior.hooks.on('end', endMockHandler)
-    behavior.refresh()
+    behavior.refresh(behavior.content)
     behavior.end(400)
     expect(endMockHandler).toBeCalled()
     expect(endMockHandler).toHaveBeenCalledWith({
@@ -74,7 +75,7 @@ describe('Behavior Class tests', () => {
   })
 
   it('should trigger momentum scroll', () => {
-    behavior.refresh()
+    behavior.refresh(behavior.content)
     behavior.currentPos = -100
 
     expect(behavior.end(100)).toEqual({
@@ -95,7 +96,7 @@ describe('Behavior Class tests', () => {
   })
 
   it('should auto bouncing within boundary when out of boundary', () => {
-    behavior.refresh()
+    behavior.refresh(behavior.content)
     behavior.updatePosition(-400)
     expect(behavior.checkInBoundary()).toEqual({
       position: -200,

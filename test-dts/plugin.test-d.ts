@@ -19,7 +19,7 @@ import {
   WheelConfig,
   SlideConfig,
   MouseWheelOptions,
-  scrollbarOptions,
+  ScrollbarOptions,
   ScrollbarConfig,
   PullUpLoadOptions,
   PullUpLoadConfig,
@@ -181,7 +181,7 @@ describe('scrollBar plugin options and api type shoule be inferred correctly', (
   })
   // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectType<scrollbarOptions, BSOptions['scrollbar']>()
+  expectType<ScrollbarOptions, BSOptions['scrollbar']>()
   expectType<
     boolean,
     FilterType<BSOptions['scrollbar'], Partial<ScrollbarConfig>>

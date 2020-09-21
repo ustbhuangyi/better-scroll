@@ -10,6 +10,7 @@ import {
   EventEmitter,
 } from '@better-scroll/shared-utils'
 import { bubbling } from './utils/bubbling'
+import { UnionToIntersection } from './utils/typesHelper'
 
 interface PluginCtor {
   pluginName: string
@@ -43,7 +44,8 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   options: OptionsConstructor
   hooks: EventEmitter
   plugins: { [name: string]: any }
-  wrapper: HTMLElement;
+  wrapper: HTMLElement
+  content: HTMLElement;
   [key: string]: any
 
   static use(ctor: PluginCtor) {
@@ -76,6 +78,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   constructor(el: ElementParam, options?: Options & O) {
     super([
       'refresh',
+      'contentChanged',
       'enable',
       'disable',
       'beforeScrollStart',
@@ -94,21 +97,46 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
       warn('Can not resolve the wrapper DOM.')
       return
     }
-    const content = wrapper.children[0]
-    if (!content) {
-      warn('The wrapper need at least one child element to be scroller.')
-      return
-    }
+
     this.plugins = {}
     this.options = new OptionsConstructor().merge(options).process()
+
+    if (!this.setContent(wrapper).valid) {
+      return
+    }
+
     this.hooks = new EventEmitter([
       'refresh',
       'enable',
       'disable',
       'destroy',
       'beforeInitialScrollTo',
+      'contentChanged',
     ])
     this.init(wrapper)
+  }
+
+  setContent(wrapper: MountedBScrollHTMLElement) {
+    let contentChanged = false
+    let valid = true
+    const content = wrapper.children[
+      this.options.specifiedIndexAsContent
+    ] as HTMLElement
+    if (!content) {
+      warn(
+        'The wrapper need at least one child element to be content element to scroll.'
+      )
+      valid = false
+    } else {
+      contentChanged = this.content !== content
+      if (contentChanged) {
+        this.content = content
+      }
+    }
+    return {
+      valid,
+      contentChanged,
+    }
   }
 
   private init(wrapper: MountedBScrollHTMLElement) {
@@ -116,7 +144,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
 
     // mark wrapper to recognize bs instance by DOM attribute
     wrapper.isBScrollContainer = true
-    this.scroller = new Scroller(wrapper, this.options)
+    this.scroller = new Scroller(wrapper, this.content, this.options)
     this.scroller.hooks.on(this.scroller.hooks.eventTypes.resize, () => {
       this.refresh()
     })
@@ -129,7 +157,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     this.applyPlugins()
 
     // maybe boundary has changed, should refresh
-    this.refreshWithoutReset()
+    this.refreshWithoutReset(this.content)
     const { startX, startY } = this.options
     const position = {
       x: startX,
@@ -191,10 +219,10 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     ])
   }
 
-  private refreshWithoutReset() {
-    this.scroller.refresh()
-    this.hooks.trigger(this.hooks.eventTypes.refresh)
-    this.trigger(this.eventTypes.refresh)
+  private refreshWithoutReset(content: HTMLElement) {
+    this.scroller.refresh(content)
+    this.hooks.trigger(this.hooks.eventTypes.refresh, content)
+    this.trigger(this.eventTypes.refresh, content)
   }
 
   proxy(propertiesConfig: PropertyConfig[]) {
@@ -203,8 +231,16 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
     })
   }
   refresh() {
-    this.refreshWithoutReset()
-    this.scroller.resetPosition()
+    const { contentChanged, valid } = this.setContent(this.wrapper)
+    if (valid) {
+      const content = this.content
+      this.refreshWithoutReset(content)
+      if (contentChanged) {
+        this.hooks.trigger(this.hooks.eventTypes.contentChanged, content)
+        this.trigger(this.eventTypes.contentChanged, content)
+      }
+      this.scroller.resetPosition()
+    }
   }
 
   enable() {
@@ -234,12 +270,6 @@ export interface BScrollConstructor extends BScrollInstance {}
 export interface CustomAPI {
   [key: string]: {}
 }
-
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never
 
 type ExtractAPI<O> = {
   [K in keyof O]: K extends string
