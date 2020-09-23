@@ -161,7 +161,7 @@ export default class Wheel implements PluginAPI {
 
         this.itemHeight =
           this.items.length > 0
-            ? scrollBehaviorY.contentSize / this.items.length
+            ? Math.floor(scrollBehaviorY.contentSize / this.items.length)
             : 0
 
         boundary.maxScrollPos = -this.itemHeight * (this.items.length - 1)
