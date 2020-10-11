@@ -1,0 +1,18 @@
+image:
+  file: .gitpod.Dockerfile
+tasks:
+  - command: gp await-port 8080 && sleep 3 && gp preview $(gp url 8080)/docs
+  - name: Dev
+    init: yarn install && gp sync-done install
+    command: yarn vue:dev
+
+  - name: Docs
+    init: gp sync-await install && yarn docs:build
+    command: yarn docs:dev
+    openMode: split-right
+
+ports:
+  - port: 8080
+    onOpen: ignore
+  - port: 8932
+    onOpen: open-preview

@@ -2,7 +2,7 @@
 
 <img src="https://dpubstatic.udache.com/static/dpubimg/t_L6vAgQ-E/logo.svg">
 
-[![npm version](https://img.shields.io/npm/v/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll)
+[![npm version](https://img.shields.io/npm/v/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![downloads](https://img.shields.io/npm/dm/better-scroll.svg)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll)  [![Package Quality](http://npm.packagequality.com/shield/better-scroll.svg)](http://packagequality.com/#?package=better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll) [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/from-referrer/)
 
 [中文文档](https://github.com/ustbhuangyi/better-scroll/blob/master/README_zh-CN.md)
 
@@ -137,6 +137,19 @@ Please see for details, [Plugins](https://better-scroll.github.io/docs/en-US/plu
 I wrote an article [When BetterScroll meets Vue](https://zhuanlan.zhihu.com/p/27407024) (in Chinese). I also hope that developers can contribute to share the experience of using BetterScroll with other frameworks.
 
 A fantastic mobile ui lib implement by Vue: [cube-ui](https://github.com/didi/cube-ui/)
+
+## Contributing
+
+### Online one-click setup
+
+You can use Gitpod(An Online Open Source VS Code like IDE which is free for Open Source) for contributing. With a single click it will launch a workspace and automatically:
+
+- clone the `better-scroll` repo.
+- install all of the dependencies.
+- run `yarn vue:dev`,
+- run `yarn docs:build` and `yarn docs:dev`.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
 
 ## Using BetterScroll in the real project
 
