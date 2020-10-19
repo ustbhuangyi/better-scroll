@@ -50,7 +50,7 @@
           momentum: false,
           bounce: false,
           stopPropagation: true,
-          probeType: 2
+          probeType: 3
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
 
@@ -59,7 +59,7 @@
         })
       },
       _onScrollEnd () {
-        console.log(this.slide.getCurrentPage())
+        console.log('CurrentPage => ', this.slide.getCurrentPage())
       },
       nextPage() {
         this.slide.next()

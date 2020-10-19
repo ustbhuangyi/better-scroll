@@ -35,7 +35,7 @@ export default class SlidePages {
   refresh() {
     this.pagesMatrix = new PagesMatrix(this.scroll)
     const { pageX, pageY } = this.currentPage
-    // when refresh or resize, currenpage.(x|y) need recaculate
+    // when refresh or resize, currentPage.(x|y) need recaculate
     const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
     this.currentPage = { pageX, pageY, x, y }
     this.checkSlideLoop()
@@ -176,33 +176,36 @@ export default class SlidePages {
     return this.getPageIndexByDirection(Direction.Negative)
   }
 
-  nearestPage(
-    x: number,
-    y: number,
-    directionX: number,
-    directionY: number
-  ): Page {
+  getNearestPage(x: number, y: number): Page {
     const pageIndex = this.pagesMatrix.getNearestPageIndex(x, y)
-
     let { pageX, pageY } = pageIndex
-    let newX
-    let newY
 
-    if (pageX === this.currentPage.pageX) {
-      pageX += directionX
-      pageX = between(pageX, 0, this.pagesMatrix.pageLengthOfX - 1)
-    }
-    if (pageY === this.currentPage.pageY) {
-      pageY += directionY
-      pageY = between(pageY, 0, this.pagesMatrix.pageLengthOfY - 1)
-    }
-
-    newX = this.pagesMatrix.getPageStats(pageX, 0).x
-    newY = this.pagesMatrix.getPageStats(0, pageY).y
+    let newX = this.pagesMatrix.getPageStats(pageX, 0).x
+    let newY = this.pagesMatrix.getPageStats(0, pageY).y
 
     return {
       x: newX,
       y: newY,
+      pageX,
+      pageY,
+    }
+  }
+
+  getPageByDirection(page: Page, directionX: number, directionY: number): Page {
+    let { pageX, pageY } = page
+    if (pageX === this.currentPage.pageX) {
+      pageX = between(pageX + directionX, 0, this.pagesMatrix.pageLengthOfX - 1)
+    }
+    if (pageY === this.currentPage.pageY) {
+      pageY = between(pageY + directionY, 0, this.pagesMatrix.pageLengthOfY - 1)
+    }
+
+    const x = this.pagesMatrix.getPageStats(pageX, 0).x
+    const y = this.pagesMatrix.getPageStats(0, pageY).y
+
+    return {
+      x,
+      y,
       pageX,
       pageY,
     }

@@ -56,7 +56,7 @@ const SlidePage = jest.fn().mockImplementation(() => {
         pageY: 0,
       }
     }),
-    nearestPage: jest.fn().mockImplementation(() => {
+    getNearestPage: jest.fn().mockImplementation(() => {
       return {
         pageX: 0,
         pageY: 0,
@@ -66,6 +66,14 @@ const SlidePage = jest.fn().mockImplementation(() => {
     }),
     resetLoopPage: jest.fn(),
     getPageIndexByDirection: jest.fn(),
+    getPageByDirection: jest.fn().mockImplementation(() => {
+      return {
+        pageX: 0,
+        pageY: 0,
+        x: 0,
+        y: 0,
+      }
+    }),
   }
 })
 
