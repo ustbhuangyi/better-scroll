@@ -133,7 +133,7 @@ describe('slide test for SlidePage class', () => {
     it('should call modifyCurrentPage() when BScroll trigger scrollEnd hook', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
       slide = new Slide(scroll)
-      scroll.trigger(scroll.eventTypes.scrollEnd)
+      scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
       expect(spyFn).toBeCalled()
     })
 
@@ -179,12 +179,6 @@ describe('slide test for SlidePage class', () => {
 
       expect(slide.pages.refresh).toBeCalled()
       expect(slide.pages.getInitialPage).toBeCalled()
-      expect(slide.pages.setCurrentPage).toBeCalledWith({
-        pageX: 0,
-        pageY: 0,
-        x: 10,
-        y: 10,
-      })
       expect(position).toMatchObject({
         x: 10,
         y: 10,
@@ -208,51 +202,17 @@ describe('slide test for SlidePage class', () => {
       expect(scrollMeta.newY).toBe(0)
       expect(scrollMeta.time).toBe(400)
 
-      expect(slide.pages.setCurrentPage).toBeCalledWith({
-        x: 0,
-        y: 0,
-        pageX: 0,
-        pageY: 0,
-      })
-
-      expect(slide.pages.getWillChangedPage).toBeCalledWith({
-        x: 0,
-        y: 0,
-        pageX: 0,
-        pageY: 0,
-      })
+      expect(slide.pages.getPageByDirection).toBeCalledWith(
+        {
+          x: 0,
+          y: 0,
+          pageX: 0,
+          pageY: 0,
+        },
+        0,
+        0
+      )
     })
-
-    it('should call setTouchFlag when scroller.hooks.scroll triggered', () => {
-      const position = {
-        x: 0,
-        y: 0,
-      }
-      scroll.scroller.hooks.trigger(
-        scroll.scroller.hooks.eventTypes.scroll,
-        position
-      )
-
-      expect(slide.pages.getWillChangedPage).not.toBeCalled()
-
-      const scrollMeta = {
-        newX: -1,
-        newY: -1,
-        time: 0,
-      }
-      // set isTouching = true
-      scroll.scroller.hooks.trigger(
-        scroll.scroller.hooks.eventTypes.momentum,
-        scrollMeta
-      )
-      scroll.scroller.hooks.trigger(
-        scroll.scroller.hooks.eventTypes.scroll,
-        position
-      )
-
-      expect(slide.pages.getWillChangedPage).toBeCalled()
-    })
-
     it('should start a new autoPlay timer when scroller.hooks.checkClick triggered', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
       slide = new Slide(scroll)

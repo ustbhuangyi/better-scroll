@@ -64,7 +64,6 @@ export default class Slide implements PluginAPI {
   private thresholdY: number
   private hooksFn: Array<[EventEmitter, string, Function]>
   private resetLooping = false
-  private isTouching = false
   private willChangeToPage: Page
   private autoplayTimer: number = 0
   private prevContent: HTMLElement
@@ -210,13 +209,8 @@ export default class Slide implements PluginAPI {
     )
     this.registerHooks(
       scrollerHooks,
-      scrollerHooks.eventTypes.beforeStart,
-      this.setTouchFlag
-    )
-    this.registerHooks(
-      scrollerHooks,
       scrollerHooks.eventTypes.scroll,
-      this.scrollMoving
+      this.scrollHandler
     )
     // a click operation will clearTimer, so restart a new one
     this.registerHooks(
@@ -307,36 +301,34 @@ export default class Slide implements PluginAPI {
   nearestPage(x: number, y: number): Page {
     const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
     const {
-      absStartPos: absStartPosX,
       maxScrollPos: maxScrollPosX,
       minScrollPos: minScrollPosX,
-      direction: directionX,
     } = scrollBehaviorX
     const {
-      absStartPos: absStartPosY,
       maxScrollPos: maxScrollPosY,
       minScrollPos: minScrollPosY,
-      direction: directionY,
     } = scrollBehaviorY
 
-    let triggerThreshold = true
-    if (
-      Math.abs(x - absStartPosX) <= this.thresholdX &&
-      Math.abs(y - absStartPosY) <= this.thresholdY
-    ) {
-      triggerThreshold = false
-    }
-    if (!triggerThreshold) {
-      return this.pages.currentPage
-    }
-
-    return this.pages.nearestPage(
+    return this.pages.getNearestPage(
       between(x, maxScrollPosX, minScrollPosX),
-      between(y, maxScrollPosY, minScrollPosY),
-      directionX,
-      directionY
+      between(y, maxScrollPosY, minScrollPosY)
     )
   }
+
+  private satisfyThreshold(x: number, y: number): boolean {
+    const { scrollBehaviorX, scrollBehaviorY } = this.scroll.scroller
+
+    let satisfied = true
+    if (
+      Math.abs(x - scrollBehaviorX.absStartPos) <= this.thresholdX &&
+      Math.abs(y - scrollBehaviorY.absStartPos) <= this.thresholdY
+    ) {
+      satisfied = false
+    }
+
+    return satisfied
+  }
+
   private refreshHandler(content: HTMLElement) {
     if (!this.satisfyInitialization()) {
       return
@@ -362,7 +354,6 @@ export default class Slide implements PluginAPI {
           this.initialised = true
           position.x = initPage.x
           position.y = initPage.y
-          this.pages.setCurrentPage(initPage)
         }
       )
     }
@@ -409,11 +400,14 @@ export default class Slide implements PluginAPI {
     }
   }
 
-  private modifyCurrentPage() {
-    this.isTouching = false
-    if (!this.options.loop) {
+  private modifyCurrentPage(point: Position) {
+    // if in animation, and force stopping
+    if (this.scroll.scroller.animater.forceStopped) {
       return
     }
+    const newPage = this.nearestPage(point.x, point.y)
+    this.pages.setCurrentPage(newPage)
+    this.pageWillChangeTo(newPage)
     // triggered by resetLoop
     if (this.resetLooping) {
       this.resetLooping = false
@@ -428,7 +422,6 @@ export default class Slide implements PluginAPI {
       // since it is a seamless scroll
       return true
     }
-    this.pageWillChangeTo(this.pages.currentPage)
   }
 
   private goTo(pageX: number, pageY: number, time?: number, easing?: EaseItem) {
@@ -445,8 +438,6 @@ export default class Slide implements PluginAPI {
       return
     }
     time = time === undefined ? this.getEaseTime(deltaX, deltaY) : time
-    this.pages.setCurrentPage(newPage)
-    this.pageWillChangeTo(this.pages.currentPage)
     this.scroll.scroller.scrollTo(x, y, time, scrollEasing)
   }
 
@@ -490,7 +481,18 @@ export default class Slide implements PluginAPI {
     time: number
     [key: string]: any
   }) {
-    const newPage = this.nearestPage(scrollMeta.newX, scrollMeta.newY)
+    const { scrollBehaviorX, scrollBehaviorY, animater } = this.scroll.scroller
+    const newX = scrollMeta.newX
+    const newY = scrollMeta.newY
+
+    const newPage =
+      this.satisfyThreshold(newX, newY) || animater.forceStopped
+        ? this.pages.getPageByDirection(
+            this.nearestPage(newX, newY),
+            scrollBehaviorX.direction,
+            scrollBehaviorY.direction
+          )
+        : this.pages.currentPage
 
     scrollMeta.time = this.getEaseTime(
       scrollMeta.newX - newPage.x,
@@ -499,14 +501,12 @@ export default class Slide implements PluginAPI {
     scrollMeta.newX = newPage.x
     scrollMeta.newY = newPage.y
     scrollMeta.easing = this.options.easing || ease.bounce
-    this.pages.setCurrentPage(newPage)
-    this.pageWillChangeTo(this.pages.currentPage)
   }
 
-  private scrollMoving(point: Position) {
-    if (this.isTouching) {
-      const newPos = this.nearestPage(point.x, point.y)
-      this.pageWillChangeTo(newPos)
+  private scrollHandler({ x, y }: Position) {
+    if (this.satisfyThreshold(x, y)) {
+      const newPage = this.nearestPage(x, y)
+      this.pageWillChangeTo(newPage)
     }
   }
 
@@ -519,10 +519,6 @@ export default class Slide implements PluginAPI {
         this.willChangeToPage
       )
     }
-  }
-
-  private setTouchFlag() {
-    this.isTouching = true
   }
 
   private registerHooks(hooks: EventEmitter, name: string, handler: Function) {

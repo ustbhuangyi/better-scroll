@@ -180,8 +180,8 @@ describe('slide test for SlidePages class', () => {
     })
   })
 
-  it('should work well with nearestPage()', () => {
-    const pageIndex = slidePages.nearestPage(0, 0, 1, 1)
+  it('should work well with getNearestPage()', () => {
+    const pageIndex = slidePages.getNearestPage(30, 0)
 
     expect(pageIndex).toMatchObject({
       pageX: 1,
