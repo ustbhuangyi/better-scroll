@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/pull-down",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "pull down to refresh, behave likes App list refreshing",
   "author": "huangyi <ustbhuangyi@gmail.com>",
   "main": "dist/pull-down.min.js",
@@ -28,7 +28,7 @@
     "directory": "packages/pull-down"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.0.4"
+    "@better-scroll/core": "^2.0.5"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }
