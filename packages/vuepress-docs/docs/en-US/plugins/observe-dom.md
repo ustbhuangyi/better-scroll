@@ -43,5 +43,5 @@ yarn add @better-scroll/observe-dom
   </demo>
 
 :::warning
-For version <= `2.0.4`, because the internal implementation of the plugin uses [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), it cannot detect whether the load of the img tag is complete, so for images with uncertain heights inside the content, you need to wait for the image to load before calling `bs.refresh()` to recalculate the scrollable size. If the browser does not support MutationObserver, the fallback inside the plugin is to recalculate the scrollable size every second.
+For version <= `2.0.5`, because the internal implementation of the plugin uses [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), it cannot detect whether the load of the img tag is complete, so for images with uncertain heights inside the content, you need to wait for the image to load before calling `bs.refresh()` to recalculate the scrollable size. If the browser does not support MutationObserver, the fallback inside the plugin is to recalculate the scrollable size every second.
 :::
