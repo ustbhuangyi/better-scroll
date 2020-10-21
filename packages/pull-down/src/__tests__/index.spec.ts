@@ -187,5 +187,33 @@ describe('pull down tests', () => {
       scroll.options.bounceTime,
       ease.bounce
     )
+
+    // closePullDown, and autoPullDownRefresh will not work
+    pullDown.closePullDown()
+    pullDown.autoPullDownRefresh()
+    expect(scroll.scrollTo).toBeCalledTimes(2)
+  })
+
+  it('should call finishPullDown when content DOM changed', () => {
+    // simulate pullDown action
+    pullDown.pulling = true
+
+    scroll.hooks.trigger(scroll.hooks.eventTypes.contentChanged)
+    expect(scroll.scroller.scrollBehaviorY.computeBoundary).toBeCalled()
+    expect(scroll.resetPosition).toBeCalledWith(800, ease.bounce)
+  })
+
+  it('should work well when integrating with mousewheel', () => {
+    const options = {} as any
+    scroll.trigger(scroll.eventTypes.alterOptions, options)
+
+    expect(options.discreteTime).toBe(300)
+    expect(options.easeTime).toBe(350)
+
+    const mockFn = jest.fn()
+    scroll.scroller.hooks.on(scroll.scroller.hooks.eventTypes.end, mockFn)
+
+    scroll.trigger(scroll.eventTypes.mousewheelEnd)
+    expect(mockFn).toBeCalled()
   })
 })
