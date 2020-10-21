@@ -228,5 +228,16 @@ describe('pullUp plugins', () => {
       -1
     )
     expect(scroll.scrollTo).toBeCalledWith(0, outOfBoundaryPos, 800)
+    expect(scroll.scrollTo).toBeCalledTimes(1)
+
+    // closePullUp, and autoPullUpLoad will not work
+    pullUp.closePullUp()
+    pullUp.autoPullUpLoad()
+    expect(scroll.scrollTo).toBeCalledTimes(1)
+  })
+
+  it('should call finishPullUp when content DOM changed', () => {
+    scroll.hooks.trigger(scroll.hooks.eventTypes.contentChanged)
+    expect(scroll.scroller.scrollBehaviorY.setMovingDirection).toBeCalled()
   })
 })
