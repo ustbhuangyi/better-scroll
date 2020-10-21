@@ -13,7 +13,7 @@ const createSlideElements = (len = 3) => {
     content.appendChild(document.createElement('p'))
   }
   wrapper.appendChild(content)
-  return { wrapper }
+  return { wrapper, content }
 }
 
 describe('slide test for SlidePage class', () => {
@@ -121,6 +121,44 @@ describe('slide test for SlidePage class', () => {
     expect(content.children.length).toBe(3)
   })
 
+  it('should failed to initialised slide when only has a child', () => {
+    const { wrapper } = createSlideElements(0)
+    const spyFn = jest.spyOn(console, 'error')
+    scroll = new BScroll(wrapper, {})
+    slide = new Slide(scroll)
+    expect(spyFn).toBeCalled()
+  })
+
+  describe('api', () => {
+    it('goToPage()', () => {
+      slide.goToPage(2, 0)
+
+      expect(scroll.scroller.scrollTo).toBeCalledWith(
+        20,
+        20,
+        400,
+        expect.anything()
+      )
+    })
+
+    it('getCurrentPage()', () => {
+      slide.getCurrentPage()
+
+      expect(slide.pages.getExposedPage).toBeCalled()
+    })
+
+    it('startPlay()', () => {
+      slide.startPlay()
+      jest.advanceTimersByTime(4000)
+      expect(scroll.scroller.scrollTo).toBeCalledWith(
+        20,
+        20,
+        400,
+        expect.anything()
+      )
+    })
+  })
+
   describe('tap into scroll', () => {
     it('should pause play when BScroll trigger beforeScrollStart hook', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'pausePlay')
@@ -131,10 +169,17 @@ describe('slide test for SlidePage class', () => {
     })
 
     it('should call modifyCurrentPage() when BScroll trigger scrollEnd hook', () => {
-      const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
-      slide = new Slide(scroll)
+      // simulate stopping from animation
+      scroll.scroller.animater.forceStopped = true
       scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
-      expect(spyFn).toBeCalled()
+
+      expect(slide.pages.setCurrentPage).not.toBeCalled()
+
+      scroll.scroller.animater.forceStopped = false
+      const ret1 = scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
+      expect(ret1).toBe(true)
+      scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
+      expect(slide.pages.resetLoopPage).toBeCalledTimes(1)
     })
 
     it('should stop mousewheelMove handler chain', () => {
@@ -168,8 +213,38 @@ describe('slide test for SlidePage class', () => {
 
   describe('tap into scroll hooks', () => {
     it('should call refreshHandler when Bscroll.hooks.refresh triggered', () => {
-      const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
+      // case 1 content changed
+      let wrapper1 = createSlideElements().wrapper
+      scroll = new BScroll(wrapper1, {
+        slide: {
+          threshold: 100,
+        },
+      })
       slide = new Slide(scroll)
+      ;(slide as any).initialised = true
+      scroll.hooks.trigger(scroll.hooks.eventTypes.refresh)
+
+      expect(scroll.scroller.scrollTo).toBeCalledWith(
+        20,
+        20,
+        0,
+        expect.anything()
+      )
+      expect(slide.pages.getInitialPage).toHaveBeenCalled()
+
+      // case 2 content has only no child
+      let { wrapper: wrapper2, content: content2 } = createSlideElements(1)
+      scroll = new BScroll(wrapper2, {})
+      slide = new Slide(scroll)
+      content2.removeChild(content2.children[0])
+      scroll.hooks.trigger(scroll.hooks.eventTypes.refresh)
+      expect(slide.pages.refresh).not.toBeCalled()
+
+      // case3 common refresh
+      let { wrapper: wrapper3 } = createSlideElements(1)
+      scroll = new BScroll(wrapper3, {})
+      slide = new Slide(scroll)
+      const spyFn2 = jest.spyOn(Slide.prototype, 'startPlay')
       const position = {}
       scroll.hooks.trigger(scroll.hooks.eventTypes.refresh)
       scroll.hooks.trigger(
@@ -183,7 +258,7 @@ describe('slide test for SlidePage class', () => {
         x: 10,
         y: 10,
       })
-      expect(spyFn).toBeCalled()
+      expect(spyFn2).toBeCalled()
     })
   })
 
@@ -217,7 +292,58 @@ describe('slide test for SlidePage class', () => {
       const spyFn = jest.spyOn(Slide.prototype, 'startPlay')
       slide = new Slide(scroll)
 
+      scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.checkClick)
       expect(spyFn).toBeCalled()
     })
+
+    it('should go to next/pre page scroller.hooks.flickHandler triggered', () => {
+      slide = new Slide(scroll)
+
+      scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.flick)
+
+      expect(scroll.scroller.scrollTo).toBeCalledWith(
+        20,
+        20,
+        400,
+        expect.anything()
+      )
+    })
+
+    it('should dispatch slideWillChange event when scroller.hooks.scroll triggered', () => {
+      slide = new Slide(scroll)
+      let pageX = 0
+
+      scroll.on(scroll.eventTypes.slideWillChange, (Page: any) => {
+        pageX = Page.pageX
+      })
+      slide.pages.getWillChangedPage = jest.fn().mockImplementation(() => {
+        return {
+          pageX: 1,
+          pageY: 0,
+          x: 0,
+          y: 0,
+        }
+      })
+      scroll.hooks.trigger(scroll.hooks.eventTypes.refresh)
+      scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.scroll, {
+        x: 0,
+        y: 0,
+      })
+      expect(pageX).toBe(0)
+
+      scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.scroll, {
+        x: 200,
+        y: 0,
+      })
+      expect(pageX).toBe(1)
+    })
+  })
+
+  it('should destroy all events', () => {
+    scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
+
+    expect(scroll.scroller.content.children.length).toBe(1)
+    expect(scroll.events['beforeScrollStart'].length).toBe(0)
+    expect(scroll.events['scrollEnd'].length).toBe(0)
   })
 })

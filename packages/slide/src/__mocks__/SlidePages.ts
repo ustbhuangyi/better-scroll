@@ -14,11 +14,20 @@ const SlidePage = jest.fn().mockImplementation(() => {
     slideX: true,
     slideY: false,
     needLoop: true,
-    pagesMatrix: new PagesMatrix({} as any),
+    pagesMatrix: new PagesMatrix({
+      options: {},
+    } as any),
     refresh: jest.fn(),
     checkSlideLoop: jest.fn(),
     setCurrentPage: jest.fn(),
-    getInternalPage: jest.fn(),
+    getInternalPage: jest.fn().mockImplementation((pageX, pageY) => {
+      return {
+        pageX,
+        pageY,
+        x: 20,
+        y: 20,
+      }
+    }),
     getInitialPage: jest.fn().mockImplementation(() => {
       return {
         pageX: 0,
@@ -43,7 +52,12 @@ const SlidePage = jest.fn().mockImplementation(() => {
         height: 0,
       }
     }),
-    getValidPageIndex: jest.fn(),
+    getValidPageIndex: jest.fn().mockImplementation((pageX, pageY) => {
+      return {
+        pageX,
+        pageY,
+      }
+    }),
     nextPageIndex: jest.fn().mockImplementation(() => {
       return {
         pageX: 0,
@@ -64,7 +78,12 @@ const SlidePage = jest.fn().mockImplementation(() => {
         y: 0,
       }
     }),
-    resetLoopPage: jest.fn(),
+    resetLoopPage: jest.fn().mockImplementation(() => {
+      return {
+        pageX: 0,
+        pageY: 0,
+      }
+    }),
     getPageIndexByDirection: jest.fn(),
     getPageByDirection: jest.fn().mockImplementation(() => {
       return {
