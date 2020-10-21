@@ -70,4 +70,49 @@ describe('movable plugin', () => {
       maxScrollPos: 0,
     })
   })
+
+  it('should register ignoreHasScroll hook', () => {
+    const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+    const retX = scrollBehaviorX.hooks.trigger(
+      scrollBehaviorX.hooks.eventTypes.ignoreHasScroll
+    )
+    const retY = scrollBehaviorY.hooks.trigger(
+      scrollBehaviorY.hooks.eventTypes.ignoreHasScroll
+    )
+
+    expect(retX).toBe(true)
+    expect(retY).toBe(true)
+  })
+
+  it('should work well when call putAt()', () => {
+    // integer
+    movable.putAt(20, 20)
+    expect(scroll.scrollTo).toBeCalledWith(20, 20, 800, expect.anything())
+
+    // simulate minScrollPos
+    scroll.scroller.scrollBehaviorX.minScrollPos = 300
+    scroll.scroller.scrollBehaviorY.minScrollPos = 300
+
+    // [left, bottom]
+    movable.putAt('left', 'bottom')
+    expect(scroll.scrollTo).toBeCalledWith(0, 300, 800, expect.anything())
+
+    // [right, top]
+    movable.putAt('right', 'top')
+    expect(scroll.scrollTo).toBeCalledWith(300, 0, 800, expect.anything())
+
+    // [center, center]
+    movable.putAt('center', 'center')
+    expect(scroll.scrollTo).toBeCalledWith(150, 150, 800, expect.anything())
+  })
+
+  it('should destroy all events', () => {
+    const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+    scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
+    expect(scrollBehaviorX.hooks.events['computeBoundary'].length).toBe(0)
+    expect(scrollBehaviorX.hooks.events['ignoreHasScroll'].length).toBe(0)
+
+    expect(scrollBehaviorY.hooks.events['computeBoundary'].length).toBe(0)
+    expect(scrollBehaviorY.hooks.events['ignoreHasScroll'].length).toBe(0)
+  })
 })

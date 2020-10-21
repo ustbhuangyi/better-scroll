@@ -21,6 +21,7 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
       'end',
       'beforeComputeBoundary',
       'computeBoundary',
+      'ignoreHasScroll',
     ]),
     start: jest.fn(),
     move: jest.fn(),
