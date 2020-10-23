@@ -17,7 +17,9 @@ export interface CustomTouchEvent extends Event {
 }
 
 interface CustomMouseEvent extends Event {
-  button: 0
+  button: 0 | 1
+  pageX: number
+  pageY: number
 }
 
 export function dispatchTouch(
@@ -30,9 +32,15 @@ export function dispatchTouch(
   target.dispatchEvent(event)
 }
 
-export function dispatchMouse(target: EventTarget, name = 'mousedown'): void {
+export function dispatchMouse(
+  target: EventTarget,
+  name = 'mousedown',
+  useLeftButton = true
+): void {
   const event = <CustomMouseEvent>createEvent('', name)
-  event.button = 0
+  event.button = useLeftButton ? 0 : 1
+  event.pageX = 0
+  event.pageY = 0
   target.dispatchEvent(event)
 }
 

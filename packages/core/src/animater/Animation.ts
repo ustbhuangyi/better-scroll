@@ -65,6 +65,7 @@ export default class Animation extends Base {
 
       // when call stop() in animation.hooks.move or bs.scroll
       // should not dispatch end hook, because forceStop hook will do this.
+      /* istanbul ignore if  */
       if (!this.pending && !this.forceStopped) {
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       }

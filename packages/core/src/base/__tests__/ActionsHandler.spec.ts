@@ -61,23 +61,56 @@ describe('ActionsHandler', () => {
 
     dispatchMouse(wrapper, 'mousedown')
 
-    expect(beforeStartMockHandler).toBeCalled()
-    expect(startMockHandler).toBeCalled()
+    expect(beforeStartMockHandler).toBeCalledTimes(1)
+    expect(startMockHandler).toBeCalledTimes(1)
+
+    // return early
+    actionsHandler.setInitiated(1)
+    dispatchMouse(wrapper, 'mousedown')
+    expect(beforeStartMockHandler).toBeCalledTimes(1)
+    expect(startMockHandler).toBeCalledTimes(1)
+
+    // only allow mouse left button
+    actionsHandler.setInitiated(0)
+    dispatchMouse(wrapper, 'mousedown', false)
+    expect(beforeStartMockHandler).toBeCalledTimes(1)
+    expect(startMockHandler).toBeCalledTimes(1)
+
+    // cancelable beforeStart hook
+    actionsHandler.hooks.on('beforeStart', () => true)
+    dispatchMouse(wrapper, 'mousedown')
+    expect(beforeStartMockHandler).toBeCalledTimes(2)
+    expect(startMockHandler).toBeCalledTimes(1)
   })
 
   it('should invoke move method when dispatch touchmove', () => {
     actionsHandler = new ActionsHandler(wrapper, options)
-    const moveMockHandler = jest.fn().mockImplementation(() => {
+    const moveMockHandler1 = jest.fn().mockImplementationOnce(() => {
+      return true
+    })
+    const moveMockHandler2 = jest.fn().mockImplementation(() => {
       return 'dummy test'
     })
 
-    actionsHandler.hooks.on('move', moveMockHandler)
+    actionsHandler.hooks.on('move', moveMockHandler1)
+    actionsHandler.hooks.on('move', moveMockHandler2)
 
     dispatchMouse(wrapper, 'mousedown')
 
     dispatchMouse(window, 'mousemove')
 
-    expect(moveMockHandler).toBeCalled()
+    expect(moveMockHandler1).toBeCalledTimes(1)
+
+    // cancelable move hook
+    expect(moveMockHandler2).not.toBeCalled()
+
+    // simulate finger moved out of viewport
+    actionsHandler.pointX = 5
+    const endMockHandler = jest.fn()
+    actionsHandler.hooks.on(actionsHandler.hooks.eventTypes.end, endMockHandler)
+    dispatchMouse(window, 'mousemove')
+
+    expect(endMockHandler).toBeCalled()
   })
 
   it('should invoke end method when dispatch touchend', () => {
@@ -124,5 +157,22 @@ describe('ActionsHandler', () => {
     dispatchMouse(textarea, 'mousedown')
 
     expect(actionsHandler.initiated).toBeFalsy()
+  })
+
+  it('destroy()', () => {
+    actionsHandler = new ActionsHandler(wrapper, options)
+
+    actionsHandler.destroy()
+
+    expect(actionsHandler.wrapperEventRegister.events.length).toBe(0)
+    expect(actionsHandler.targetEventRegister.events.length).toBe(0)
+    expect(actionsHandler.hooks.eventTypes).toMatchObject({})
+    expect(actionsHandler.hooks.events).toMatchObject({})
+  })
+
+  it('setContent()', () => {
+    const p = document.createElement('p')
+    actionsHandler.setContent(p)
+    expect(actionsHandler.wrapper).toBe(p)
   })
 })

@@ -17,15 +17,16 @@ describe('Translater Class test suit', () => {
     translater.hooks.on(translater.hooks.eventTypes.beforeTranslate, mockFn1)
     translater.hooks.on(translater.hooks.eventTypes.translate, mockFn2)
 
-    translater.translate({ x: 0, y: 0 })
+    translater.translate({ x: 0, y: 0, dummy: 0 })
 
     expect(mockFn1).toBeCalled()
     expect(mockFn1).toBeCalledWith(['translateX(0px)', 'translateY(0px)'], {
       x: 0,
       y: 0,
+      dummy: 0,
     })
     expect(mockFn2).toBeCalled()
-    expect(mockFn2).toBeCalledWith({ x: 0, y: 0 })
+    expect(mockFn2).toBeCalledWith({ x: 0, y: 0, dummy: 0 })
     expect(translater.content.style.transform).toBe(
       'translateX(0px) translateY(0px)'
     )
