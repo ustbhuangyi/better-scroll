@@ -199,6 +199,7 @@ export class Behavior {
     this.contentSize = contentRect[size]
 
     this.relativeOffset = contentRect[position]
+    /* istanbul ignore if  */
     if (isWrapperStatic) {
       this.relativeOffset -= wrapperRect[position]
     }

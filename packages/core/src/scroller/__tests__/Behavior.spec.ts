@@ -83,6 +83,17 @@ describe('Behavior Class tests', () => {
       duration: 2500,
       rate: 15,
     })
+    behavior.hooks.on(
+      behavior.hooks.eventTypes.momentum,
+      (momentumData: any) => {
+        momentumData.destination = 200
+      }
+    )
+    expect(behavior.end(100)).toEqual({
+      destination: -0,
+      duration: 2500,
+      rate: 15,
+    })
   })
 
   it('should keep direction unchanged when invoking updateDirection method', () => {
@@ -102,5 +113,38 @@ describe('Behavior Class tests', () => {
       position: -200,
       inBoundary: false,
     })
+  })
+
+  it('performDampingAlgorithm()', () => {
+    const ret = behavior.performDampingAlgorithm(20, 0.1)
+    expect(ret).toBe(2)
+
+    behavior.options.bounces = [false, false]
+    // simulate out of the boundaries and no bounce
+    const ret2 = behavior.performDampingAlgorithm(20, 0.1)
+    expect(ret2).toBe(-0)
+  })
+
+  it('getAbsDist()', () => {
+    const ret = behavior.getAbsDist(-20)
+    expect(ret).toBe(20)
+  })
+
+  it('adjustPosition()', () => {
+    const ret = behavior.adjustPosition(20.1)
+    expect(ret).toBe(-0)
+  })
+
+  it('computeBoundary()', () => {
+    behavior.hooks.on(
+      behavior.hooks.eventTypes.computeBoundary,
+      (boundary: { minScrollPos: number; maxScrollPos: number }) => {
+        boundary.minScrollPos = 20
+        boundary.maxScrollPos = 30
+      }
+    )
+    behavior.computeBoundary()
+
+    expect(behavior.maxScrollPos).toEqual(behavior.minScrollPos)
   })
 })
