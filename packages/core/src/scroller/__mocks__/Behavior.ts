@@ -35,7 +35,9 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
     updateStartPos: jest.fn(),
     updateAbsStartPos: jest.fn(),
     resetStartPos: jest.fn(),
-    getAbsDist: jest.fn(),
+    getAbsDist: jest.fn().mockImplementation((delta: number) => {
+      return Math.abs(delta)
+    }),
     destroy: jest.fn(),
     computeBoundary: jest.fn(),
     setMovingDirection: jest.fn(),
