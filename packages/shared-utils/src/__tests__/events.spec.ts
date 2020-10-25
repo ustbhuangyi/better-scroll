@@ -19,7 +19,7 @@ describe('events', () => {
     })
 
     it('should trigger handler', () => {
-      let mockHandler = jest.fn(x => x + 1)
+      let mockHandler = jest.fn((x) => x + 1)
       eventEmitter.on('test1', mockHandler)
       eventEmitter.trigger('test1', 1)
 
@@ -29,7 +29,7 @@ describe('events', () => {
     })
 
     it('should trigger handler only once', () => {
-      let mockHandler = jest.fn(x => x + 1)
+      let mockHandler = jest.fn((x) => x + 1)
       eventEmitter.once('test1', mockHandler)
       eventEmitter.trigger('test1', 1)
       eventEmitter.trigger('test1', 1)
@@ -38,7 +38,7 @@ describe('events', () => {
     })
 
     it('should tear down handler when invoking off()', () => {
-      let mockHandler = jest.fn(x => x + 1)
+      let mockHandler = jest.fn((x) => x + 1)
       eventEmitter.once('test1', mockHandler)
       eventEmitter.off('test1', mockHandler)
 
@@ -49,6 +49,19 @@ describe('events', () => {
       eventEmitter.registerType(['test2'])
 
       expect(eventEmitter.eventTypes.test2).toBe('test2')
+    })
+
+    it('should warn about unregistered event when invoking off()', () => {
+      const spyFn = jest.spyOn(console, 'error')
+      eventEmitter.off('test2')
+
+      expect(spyFn).toBeCalled()
+    })
+
+    it('should keep chainable call when invoking off()', () => {
+      const ret = eventEmitter.off('test1', () => {})
+
+      expect(ret).toBe(eventEmitter)
     })
   })
 
@@ -63,8 +76,8 @@ describe('events', () => {
       eventRegister = new EventRegister(fakeNode, [
         {
           name: 'test',
-          handler: mockHandler as any
-        }
+          handler: mockHandler as any,
+        },
       ])
     })
     afterEach(() => {

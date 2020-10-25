@@ -170,6 +170,11 @@ describe('zoom plugin', () => {
 
     expect(behaviorX.computeBoundary).toHaveBeenCalled()
     expect(behaviorY.computeBoundary).toHaveBeenCalled()
+
+    // we should zoomed before call zoomEnd
+    zoom.zoomed = false
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeEnd, e)
+    expect(behaviorX.computeBoundary).toBeCalledTimes(1)
   })
 
   it('should fail when zooming distance < minimalZoomDistance', () => {
@@ -387,7 +392,7 @@ describe('zoom plugin', () => {
     )
   })
 
-  it('should have correct behavior for zoomTo', () => {
+  it('should have correct behavior for zoomTo', (done) => {
     scroll.options.zoom = {
       min: 0.5,
       max: 3,
@@ -433,6 +438,44 @@ describe('zoom plugin', () => {
         },
       }
     )
+
+    // ['left', 'top'] as origin, time is 300, scale to 3
+    zoom.zoomTo(3, 'left', 'top', 300)
+    expect(scroll.scroller.scrollTo).toHaveBeenCalledWith(
+      0,
+      0,
+      300,
+      ease.bounce,
+      {
+        start: {
+          scale: 1.5,
+        },
+        end: {
+          scale: 3,
+        },
+      }
+    )
+
+    // ['right', 'bottom'] as origin, time is 300, scale to 3
+    zoom.zoomTo(2, 'right', 'bottom', 300)
+    expect(scroll.scroller.scrollTo).toHaveBeenCalledWith(
+      0,
+      0,
+      300,
+      ease.bounce,
+      {
+        start: {
+          scale: 3,
+        },
+        end: {
+          scale: 2,
+        },
+      }
+    )
+    // The purpose for improving test coverage
+    setTimeout(() => {
+      done()
+    }, 320)
   })
 
   it('should support full hooks', () => {
@@ -499,5 +542,74 @@ describe('zoom plugin', () => {
     expect(actions.hooks.events['beforeMove'].length).toBe(0)
     expect(actions.hooks.events['beforeEnd'].length).toBe(0)
     expect(translater.hooks.events['beforeTranslate'].length).toBe(0)
+  })
+
+  it('should work well when content DOM has changed', () => {
+    const zoom = new Zoom(scroll)
+    const newContent = document.createElement('p')
+    scroll.hooks.trigger(scroll.hooks.eventTypes.contentChanged, newContent)
+
+    expect(zoom.scale).toBe(1)
+    expect(newContent.style['transform-origin' as any]).toBe('0 0')
+  })
+
+  it('should prevent initial scroll when startScale not equals 1', () => {
+    const { wrapper } = createZoomElements()
+    scroll = new BScroll(wrapper, {
+      zoom: {
+        start: 2,
+      },
+    })
+    new Zoom(scroll)
+    const ret = scroll.hooks.trigger(
+      scroll.hooks.eventTypes.beforeInitialScrollTo
+    )
+
+    expect(ret).toBeTruthy()
+  })
+
+  it('should calculate right size when scrollBehavior triggered beforeComputeBoundary hook', () => {
+    const zoom = new Zoom(scroll)
+    zoom.scale = 1.2
+    const scrollBehaviorX = scroll.scroller.scrollBehaviorX
+    const scrollBehaviorY = scroll.scroller.scrollBehaviorY
+    scrollBehaviorX.hooks.trigger(
+      scrollBehaviorX.hooks.eventTypes.beforeComputeBoundary
+    )
+    scrollBehaviorY.hooks.trigger(
+      scrollBehaviorY.hooks.eventTypes.beforeComputeBoundary
+    )
+
+    expect(scrollBehaviorX.contentSize).toBe(360)
+    expect(scrollBehaviorY.contentSize).toBe(360)
+  })
+
+  it('should dispatch scrollEnd event when two fingers make bs scroll', () => {
+    new Zoom(scroll)
+    let endScale
+
+    scroll.scroller.actions.hooks.trigger(
+      scroll.scroller.actions.hooks.eventTypes.start,
+      {
+        touches: [
+          {
+            pageX: 1,
+            pageY: 1,
+          },
+          {
+            pageX: 2,
+            pageY: 2,
+          },
+        ],
+      }
+    )
+
+    scroll.on(scroll.eventTypes.zoomEnd, ({ scale }: { scale: number }) => {
+      endScale = scale
+    })
+
+    scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.scrollEnd)
+
+    expect(endScale).toBe(1)
   })
 })

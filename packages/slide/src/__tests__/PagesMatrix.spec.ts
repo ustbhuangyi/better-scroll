@@ -36,6 +36,20 @@ describe('slide test for PagesMatrix class', () => {
     expect(pageMatrix.pages[0].length).toBe(1)
     expect(pageMatrix.pageLengthOfX).toBe(4)
     expect(pageMatrix.pageLengthOfY).toBe(1)
+
+    const pageIndex1 = pageMatrix.getNearestPageIndex(0, 0)
+
+    expect(pageIndex1).toMatchObject({
+      pageX: 0,
+      pageY: 0,
+    })
+
+    const pageIndex2 = pageMatrix.getNearestPageIndex(-175, 0)
+
+    expect(pageIndex2).toMatchObject({
+      pageX: 2,
+      pageY: 0,
+    })
   })
 
   it('should create 1 * 4 matrix page in Y direction', () => {
@@ -53,6 +67,20 @@ describe('slide test for PagesMatrix class', () => {
     expect(pageMatrix.pages[0].length).toBe(4)
     expect(pageMatrix.pageLengthOfX).toBe(1)
     expect(pageMatrix.pageLengthOfY).toBe(4)
+
+    const pageIndex1 = pageMatrix.getNearestPageIndex(0, 0)
+
+    expect(pageIndex1).toMatchObject({
+      pageX: 0,
+      pageY: 0,
+    })
+
+    const pageIndex2 = pageMatrix.getNearestPageIndex(0, -175)
+
+    expect(pageIndex2).toMatchObject({
+      pageX: 0,
+      pageY: 2,
+    })
   })
 
   it('should work well with getPageStats()', () => {
@@ -75,22 +103,6 @@ describe('slide test for PagesMatrix class', () => {
       height: 100,
       cx: -250,
       cy: -50,
-    })
-  })
-
-  it('should work well with getNearestPageIndex() ', () => {
-    const pageIndex1 = pageMatrix.getNearestPageIndex(0, 0)
-
-    expect(pageIndex1).toMatchObject({
-      pageX: 0,
-      pageY: 0,
-    })
-
-    const pageIndex2 = pageMatrix.getNearestPageIndex(-175, 0)
-
-    expect(pageIndex2).toMatchObject({
-      pageX: 2,
-      pageY: 0,
     })
   })
 })

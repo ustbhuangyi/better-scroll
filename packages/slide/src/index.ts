@@ -288,9 +288,6 @@ export default class Slide implements PluginAPI {
 
   goToPage(pageX: number, pageY: number, time?: number, easing?: EaseItem) {
     const pageIndex = this.pages.getValidPageIndex(pageX, pageY)
-    if (!pageIndex) {
-      return
-    }
     this.goTo(pageIndex.pageX, pageIndex.pageY, time, easing)
   }
 
@@ -381,6 +378,7 @@ export default class Slide implements PluginAPI {
     prevSlideContent: HTMLElement
   ) {
     // if content has changed, no need to remove cloned element for preContent
+    /* istanbul ignore if */
     if (this.initialised && slideContent === prevSlideContent) {
       this.removeClonedSlidePage(slideContent)
     }
@@ -426,14 +424,12 @@ export default class Slide implements PluginAPI {
 
   private goTo(pageX: number, pageY: number, time?: number, easing?: EaseItem) {
     const newPage = this.pages.getInternalPage(pageX, pageY)
-    if (!newPage) {
-      return
-    }
     const scrollEasing = easing || this.options.easing || ease.bounce
     const { x, y } = newPage
 
     const deltaX = x - this.scroll.scroller.scrollBehaviorX.currentPos
     const deltaY = y - this.scroll.scroller.scrollBehaviorY.currentPos
+    /* istanbul ignore if */
     if (!deltaX && !deltaY) {
       return
     }

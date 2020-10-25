@@ -12,7 +12,9 @@ const ActionsHandler = jest
       startClickRegister: new EventRegister(wrapper, []),
       moveEndRegister: new EventRegister(wrapper, []),
       hooks: new EventEmitter(['beforeStart', 'start', 'move', 'end', 'click']),
-      destroy: jest.fn()
+      destroy: jest.fn(),
+      setInitiated: jest.fn(),
+      setContent: jest.fn(),
     }
   })
 

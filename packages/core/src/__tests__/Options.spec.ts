@@ -114,6 +114,9 @@ describe('BetterScroll Options', () => {
       outOfBoundaryDampingFactor: 1 / 3,
       specifiedIndexAsContent: 0,
     })
+    // an invalid parameter
+    const ret = options.merge()
+    expect(ret).toBe(options)
   })
 
   it('should generate some extra properties of options', () => {

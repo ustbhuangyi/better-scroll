@@ -3,12 +3,14 @@ import createAnimater from '../../animater'
 import Translater from '../../translater'
 import { OptionsConstructor } from '../../Options'
 import ActionsHandler from '../../base/ActionsHandler'
+import DirectionLockAction from '../DirectionLock'
 
 jest.mock('../Behavior')
 jest.mock('../../animater')
 jest.mock('../../translater')
 jest.mock('../../Options')
 jest.mock('../../base/ActionsHandler')
+jest.mock('../DirectionLock')
 
 import Actions from '../Actions'
 
@@ -66,29 +68,65 @@ describe('Actions Class tests', () => {
     let beforeMoveMockHandler = jest.fn()
     let scrollStartHandler = jest.fn()
     let scrollHandler = jest.fn()
-    actions.hooks.on('beforeMove', beforeMoveMockHandler)
-    actions.hooks.on('scrollStart', scrollStartHandler)
-    actions.hooks.on('scroll', scrollHandler)
+    // cancelable beforeMove hook
+    actions.hooks.on(
+      actions.hooks.eventTypes.beforeMove,
+      jest.fn().mockImplementationOnce(() => true)
+    )
+    actions.hooks.on(actions.hooks.eventTypes.beforeMove, beforeMoveMockHandler)
+    actions.hooks.on(actions.hooks.eventTypes.scrollStart, scrollStartHandler)
+    actions.hooks.on(actions.hooks.eventTypes.scroll, scrollHandler)
+
     actions.actionsHandler.hooks.trigger('move', {
       deltaX: 0,
       deltaY: -20,
       e,
     })
 
-    expect(beforeMoveMockHandler).toBeCalled()
-    expect(beforeMoveMockHandler).toHaveBeenCalledWith(e)
-    expect(scrollStartHandler).toBeCalled()
-    // because probeType is 0
-    expect(scrollHandler).not.toBeCalled()
+    expect(beforeMoveMockHandler).toHaveBeenCalledTimes(0)
 
-    expect(actions.scrollBehaviorX.getAbsDist).toBeCalled()
-    expect(actions.scrollBehaviorY.getAbsDist).toBeCalled()
-    expect(actions.scrollBehaviorX.getAbsDist).toHaveBeenCalledWith(0)
+    // moved less than 15 px
+    actions.endTime = Date.now() - 400
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: 10,
+      e,
+    })
+
+    expect(beforeMoveMockHandler).toHaveBeenCalledTimes(1)
+    expect(actions.directionLockAction.checkMovingDirection).not.toBeCalled()
+
+    // lock direction
+    actions.endTime = Date.now()
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 10,
+      deltaY: 0,
+      e,
+    })
+    expect(beforeMoveMockHandler).toHaveBeenCalledTimes(2)
+    expect(actions.actionsHandler.setInitiated).toBeCalled()
+
+    actions.startTime = Date.now() - 400
+    actions.options.probeType = 1
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+    expect(beforeMoveMockHandler).toHaveBeenCalledTimes(3)
+    expect(scrollStartHandler).toBeCalled()
+    expect(scrollHandler).toBeCalledTimes(1)
     expect(actions.scrollBehaviorY.getAbsDist).toHaveBeenCalledWith(-20)
-    expect(actions.scrollBehaviorX.move).toBeCalled()
-    expect(actions.scrollBehaviorY.move).toBeCalled()
-    expect(actions.scrollBehaviorX.move).toHaveBeenCalledWith(0)
     expect(actions.scrollBehaviorY.move).toHaveBeenCalledWith(-20)
+
+    actions.startTime = Date.now()
+    actions.options.probeType = 3
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+    expect(scrollHandler).toBeCalledTimes(2)
   })
 
   it('should invoke handleEnd when actionsHandler trigger end hook', () => {
@@ -96,15 +134,41 @@ describe('Actions Class tests', () => {
     let endMockHandler = jest.fn()
     let scrollEndHandler = jest.fn()
     let e = new Event('touchend')
-    actions.hooks.on('beforeEnd', beforeEndMockHandler)
-    actions.hooks.on('end', endMockHandler)
-    actions.hooks.on('scrollEnd', scrollEndHandler)
-    actions.actionsHandler.hooks.trigger('end', e)
+    // cancelable beforeEnd hook
+    actions.hooks.on(
+      actions.hooks.eventTypes.beforeEnd,
+      jest.fn().mockImplementationOnce(() => true)
+    )
+    // cancelable end hook
+    actions.hooks.on(
+      actions.hooks.eventTypes.end,
+      jest.fn().mockImplementationOnce(() => true)
+    )
+    actions.hooks.on(actions.hooks.eventTypes.beforeEnd, beforeEndMockHandler)
+    actions.hooks.on(actions.hooks.eventTypes.end, endMockHandler)
+    actions.hooks.on(actions.hooks.eventTypes.scrollEnd, scrollEndHandler)
 
-    expect(beforeEndMockHandler).toBeCalled()
-    expect(actions.scrollBehaviorX.updateDirection).toBeCalled()
-    expect(actions.scrollBehaviorY.updateDirection).toBeCalled()
-    expect(endMockHandler).toBeCalled()
+    actions.actionsHandler.hooks.trigger(
+      actions.actionsHandler.hooks.eventTypes.end,
+      e
+    )
+    expect(beforeEndMockHandler).not.toBeCalled()
+    expect(actions.scrollBehaviorX.updateDirection).not.toBeCalled()
+
+    actions.actionsHandler.hooks.trigger(
+      actions.actionsHandler.hooks.eventTypes.end,
+      e
+    )
+
+    expect(beforeEndMockHandler).toHaveBeenCalledTimes(1)
+    expect(actions.scrollBehaviorX.updateDirection).toHaveBeenCalledTimes(1)
+    expect(actions.scrollBehaviorY.updateDirection).toHaveBeenCalledTimes(1)
+    expect(endMockHandler).not.toBeCalled()
+
+    actions.actionsHandler.hooks.trigger(
+      actions.actionsHandler.hooks.eventTypes.end,
+      e
+    )
     expect(scrollEndHandler).toBeCalled()
   })
 
@@ -120,10 +184,39 @@ describe('Actions Class tests', () => {
     expect(actions.endTime).toBe(0)
   })
 
-  it('should gc when invoking destroy method', () => {
+  it('destroy()', () => {
     actions.destroy()
 
     expect(actions.hooks.events).toEqual({})
     expect(actions.hooks.eventTypes).toEqual({})
+  })
+
+  it('should can be disabled', () => {
+    actions.enabled = false
+    const actionsHandler = actions.actionsHandler
+
+    actionsHandler.hooks.trigger(actionsHandler.hooks.eventTypes.start)
+    expect(actions.directionLockAction.reset).not.toBeCalled()
+
+    actionsHandler.hooks.trigger(actionsHandler.hooks.eventTypes.move, {
+      deltaX: 0,
+      deltaY: 0,
+    })
+    expect(actions.scrollBehaviorX.getAbsDist).not.toBeCalled()
+
+    actionsHandler.hooks.trigger(actionsHandler.hooks.eventTypes.end)
+    expect(actions.scrollBehaviorX.updateDirection).not.toBeCalled()
+  })
+
+  it('should prevent native click event', () => {
+    actions.actionsHandler.hooks.trigger(
+      actions.actionsHandler.hooks.eventTypes.click,
+      {
+        _constructed: false,
+        target: document.createElement('div'),
+        preventDefault() {},
+        stopPropagation() {},
+      }
+    )
   })
 })

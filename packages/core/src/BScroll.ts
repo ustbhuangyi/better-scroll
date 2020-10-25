@@ -193,6 +193,7 @@ export class BScrollConstructor<O = {}> extends EventEmitter {
   }
 
   private handleAutoBlur() {
+    /* istanbul ignore if  */
     if (this.options.autoBlur) {
       this.on(this.eventTypes.beforeScrollStart, () => {
         let activeElement = document.activeElement as HTMLElement

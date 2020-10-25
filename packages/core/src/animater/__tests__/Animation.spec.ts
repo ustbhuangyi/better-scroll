@@ -19,7 +19,7 @@ jest.mock('@better-scroll/shared-utils/src/lang', () => {
 
 import Animation from '../Animation'
 
-function createTransition(probeType: number) {
+function createAnimation(probeType: number) {
   const dom = document.createElement('div')
   const translater = new Translater(dom)
   const animation = new Animation(dom, translater, { probeType })
@@ -40,7 +40,7 @@ describe('Animation Class test suit', () => {
   })
 
   it('should off hooks and cancelAnimationFrame when destroy', () => {
-    const { animation } = createTransition(0)
+    const { animation } = createAnimation(0)
     const hooksDestroySpy = jest.spyOn(animation.hooks, 'destroy')
     animation.destroy()
     expect(mockCancelAnimationFrame).toBeCalledTimes(1)
@@ -48,7 +48,7 @@ describe('Animation Class test suit', () => {
   })
 
   it('should move to endPoint and trigger hooks in one step when time=0', () => {
-    const { animation, translater } = createTransition(0)
+    const { animation, translater } = createAnimation(0)
     const onMove = jest.fn()
     const onEnd = jest.fn()
     animation.hooks.on('move', onMove)
@@ -71,7 +71,7 @@ describe('Animation Class test suit', () => {
   })
 
   it('should move to endPoint for serveral steps with time', () => {
-    const { animation, translater, dom } = createTransition(3)
+    const { animation, translater, dom } = createAnimation(3)
     const onMove = jest.fn()
     const onEnd = jest.fn()
     const easeFn = jest.fn()
@@ -123,7 +123,7 @@ describe('Animation Class test suit', () => {
     animation.destroy()
   })
   it('should force stop', () => {
-    const { animation, translater } = createTransition(3)
+    const { animation, translater } = createAnimation(3)
     const onMove = jest.fn()
     const onForceStop = jest.fn()
     const easeFn = jest.fn()
@@ -174,5 +174,13 @@ describe('Animation Class test suit', () => {
     expect(onForceStop).toBeCalledWith(20)
 
     animation.destroy()
+  })
+
+  it('cancelable beforeForceStop hook ', () => {
+    const { animation, translater } = createAnimation(3)
+    animation.hooks.on(animation.hooks.eventTypes.beforeForceStop, () => true)
+    animation.setPending(true)
+    const ret = animation.doStop()
+    expect(ret).toBe(true)
   })
 })

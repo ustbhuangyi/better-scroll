@@ -37,7 +37,9 @@ describe('mouse-wheel plugin', () => {
 
   beforeEach(() => {
     const { wrapper } = createMouseWheelElements()
-    scroll = new BScroll(wrapper, {})
+    scroll = new BScroll(wrapper, {
+      stopPropagation: true,
+    })
 
     scroll.scroller.scrollBehaviorX.performDampingAlgorithm = jest
       .fn()
@@ -98,7 +100,7 @@ describe('mouse-wheel plugin', () => {
     })
   })
 
-  it('should trigger event when mouse(start|move|end) hooks', () => {
+  it('should trigger mousewheel(start|move|end) when moved ', () => {
     const onStart = jest.fn()
     const onMove = jest.fn()
     const onEnd = jest.fn()
@@ -119,6 +121,38 @@ describe('mouse-wheel plugin', () => {
     expect(onMove).toBeCalledTimes(2)
 
     expect(onEnd).toBeCalledTimes(1)
+
+    // forbid moving
+    scroll.enabled = false
+    dispatchMouseWheel(scroll.wrapper, 'wheel')
+    expect(onStart).toBeCalledTimes(1)
+    expect(onMove).toBeCalledTimes(2)
+    expect(onEnd).toBeCalledTimes(1)
+  })
+
+  it('should support throttle when throttleTime > 0', () => {
+    mouseWheel.mouseWheelOpt.throttleTime = 50
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
+      deltaY: 10,
+    })
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
+      deltaY: 20,
+    })
+    jest.advanceTimersByTime(51)
+    dispatchMouseWheel(scroll.wrapper, 'wheel', {
+      deltaX: 0,
+      deltaY: 30,
+    })
+    expect(scroll.scrollTo).toBeCalledTimes(2)
+  })
+
+  it('should warn when easeTime is invalid', () => {
+    const spyFn = jest.spyOn(console, 'error')
+    mouseWheel.mouseWheelOpt.easeTime = 50
+    dispatchMouseWheel(scroll.wrapper, 'wheel')
+    expect(spyFn).toBeCalled()
   })
 
   it('should preventDefault & stopProgation if they are set', () => {
@@ -297,5 +331,7 @@ describe('mouse-wheel plugin', () => {
     })
 
     expect(scroll.scrollTo).toBeCalledWith(0, -4, 300)
+    // improve coverage
+    mouseWheel.destroy()
   })
 })
