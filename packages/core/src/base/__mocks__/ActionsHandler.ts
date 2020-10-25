@@ -14,6 +14,7 @@ const ActionsHandler = jest
       hooks: new EventEmitter(['beforeStart', 'start', 'move', 'end', 'click']),
       destroy: jest.fn(),
       setInitiated: jest.fn(),
+      setContent: jest.fn(),
     }
   })
 

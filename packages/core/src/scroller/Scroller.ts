@@ -391,6 +391,7 @@ export default class Scroller implements ExposedAPI {
     }
 
     // fix a scroll problem under Android condition
+    /* istanbul ignore if  */
     if (isAndroid) {
       this.wrapper.scrollTop = 0
     }
@@ -400,6 +401,7 @@ export default class Scroller implements ExposedAPI {
     }, this.options.resizePolling)
   }
 
+  /* istanbul ignore next */
   private transitionEnd(e: TouchEvent) {
     if (e.target !== this.content || !this.animater.pending) {
       return
@@ -426,6 +428,7 @@ export default class Scroller implements ExposedAPI {
     for (let i = 0; i < el.length; i++) {
       let node = el[i] as MountedBScrollHTMLElement
       // ignore BetterScroll instance's wrapper DOM
+      /* istanbul ignore if  */
       if (node.isBScrollContainer) {
         continue
       }
@@ -583,6 +586,7 @@ export default class Scroller implements ExposedAPI {
       return false
     }
 
+    /* istanbul ignore if  */
     if (isIOSBadVersion) {
       // fix ios 13.4 bouncing
       // see it in issues 982
