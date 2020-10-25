@@ -170,6 +170,11 @@ describe('zoom plugin', () => {
 
     expect(behaviorX.computeBoundary).toHaveBeenCalled()
     expect(behaviorY.computeBoundary).toHaveBeenCalled()
+
+    // we should zoomed before call zoomEnd
+    zoom.zoomed = false
+    actions.hooks.trigger(actions.hooks.eventTypes.beforeEnd, e)
+    expect(behaviorX.computeBoundary).toBeCalledTimes(1)
   })
 
   it('should fail when zooming distance < minimalZoomDistance', () => {
