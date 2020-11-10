@@ -255,7 +255,7 @@ export default class Scroller implements ExposedAPI {
         }
 
         // check if it is a click operation
-        if (!actions.moved) {
+        if (!actions.fingerMoved) {
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
           if (this.checkClick(e)) {
             return true
@@ -286,10 +286,10 @@ export default class Scroller implements ExposedAPI {
           return
         }
 
-        // force stop from transition or animation when click a point
-        if (!this.animater.forceStopped || actions.moved) {
+        if (actions.contentMoved) {
           this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
-        } else {
+        }
+        if (this.animater.forceStopped) {
           this.animater.setForceStopped(false)
         }
       }

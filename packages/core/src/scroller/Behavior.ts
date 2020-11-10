@@ -57,7 +57,7 @@ export class Behavior {
     this.setDirection(Direction.Default)
   }
 
-  move(delta: number): number {
+  move(delta: number) {
     delta = this.hasScroll ? delta : 0
     this.setMovingDirection(delta)
     return this.performDampingAlgorithm(
@@ -84,7 +84,11 @@ export class Behavior {
         : Direction.Default
   }
 
-  performDampingAlgorithm(delta: number, dampingFactor: number) {
+  performDampingAlgorithm(
+    delta: number,
+    dampingFactor: number
+  ): [number, number] {
+    const prevPos = this.currentPos
     let newPos = this.currentPos + delta
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
@@ -98,7 +102,7 @@ export class Behavior {
           newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
       }
     }
-    return newPos
+    return [prevPos, newPos]
   }
 
   end(duration: number) {

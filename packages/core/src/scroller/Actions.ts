@@ -9,7 +9,7 @@ import {
   TouchEvent,
   getNow,
   Probe,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 
 export default class ScrollerActions {
@@ -20,7 +20,8 @@ export default class ScrollerActions {
   animater: Animater
   options: BScrollOptions
   directionLockAction: DirectionLockAction
-  moved: boolean
+  fingerMoved: boolean
+  contentMoved: boolean
   enabled: boolean
   startTime: number
   endTime: number
@@ -38,7 +39,7 @@ export default class ScrollerActions {
       'scroll',
       'beforeEnd',
       'end',
-      'scrollEnd'
+      'scrollEnd',
     ])
 
     this.scrollBehaviorX = scrollBehaviorX
@@ -73,7 +74,7 @@ export default class ScrollerActions {
       ({
         deltaX,
         deltaY,
-        e
+        e,
       }: {
         deltaX: number
         deltaY: number
@@ -106,7 +107,8 @@ export default class ScrollerActions {
 
   private handleStart(e: TouchEvent) {
     const timestamp = getNow()
-    this.moved = false
+    this.fingerMoved = false
+    this.contentMoved = false
 
     this.startTime = timestamp
 
@@ -145,20 +147,31 @@ export default class ScrollerActions {
 
     const delta = this.directionLockAction.adjustDelta(deltaX, deltaY)
 
-    const newX = this.scrollBehaviorX.move(delta.deltaX)
-    const newY = this.scrollBehaviorY.move(delta.deltaY)
+    const [prevX, newX] = this.scrollBehaviorX.move(delta.deltaX)
+    const [prevY, newY] = this.scrollBehaviorY.move(delta.deltaY)
 
-    if (!this.moved) {
-      this.moved = true
+    if (!this.fingerMoved) {
+      this.fingerMoved = true
+    }
+    // must use Math.round to compare
+    // eg: newY -0.2px prevY 0px, in handleEnd event newY will be rounded to 0
+    const positionChanged =
+      Math.round(newX) !== Math.round(prevX) ||
+      Math.round(newY) !== Math.round(prevY)
+
+    if (!this.contentMoved && positionChanged) {
+      this.contentMoved = true
       this.hooks.trigger(this.hooks.eventTypes.scrollStart)
     }
 
-    this.animater.translate({
-      x: newX,
-      y: newY
-    })
+    if (this.contentMoved && positionChanged) {
+      this.animater.translate({
+        x: newX,
+        y: newY,
+      })
 
-    this.dispatchScroll(timestamp)
+      this.dispatchScroll(timestamp)
+    }
   }
 
   private dispatchScroll(timestamp: number) {
@@ -220,7 +233,7 @@ export default class ScrollerActions {
   getCurrentPos(): TranslaterPoint {
     return {
       x: this.scrollBehaviorX.getCurrentPos(),
-      y: this.scrollBehaviorY.getCurrentPos()
+      y: this.scrollBehaviorY.getCurrentPos(),
     }
   }
 

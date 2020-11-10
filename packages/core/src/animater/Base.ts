@@ -16,6 +16,7 @@ export default abstract class Base implements ExposedAPI {
   hooks: EventEmitter
   timer: number = 0
   pending: boolean
+  callStopWhenPending: boolean
   forceStopped: boolean
   _reflow: number;
   [key: string]: any
@@ -49,6 +50,10 @@ export default abstract class Base implements ExposedAPI {
 
   setForceStopped(forceStopped: boolean) {
     this.forceStopped = forceStopped
+  }
+
+  setCallStop(called: boolean) {
+    this.callStopWhenPending = called
   }
 
   setContent(content: HTMLElement) {
