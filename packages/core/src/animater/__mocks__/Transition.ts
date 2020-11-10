@@ -30,6 +30,7 @@ const Transition = jest
       destroy: jest.fn(),
       setPending: jest.fn(),
       setForceStopped: jest.fn(),
+      setCallStop: jest.fn(),
       setContent: jest.fn(),
     }
   })

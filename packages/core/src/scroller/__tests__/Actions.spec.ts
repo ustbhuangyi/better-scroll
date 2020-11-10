@@ -55,7 +55,7 @@ describe('Actions Class tests', () => {
   it('should invoke handleStart when actionsHandler trigger start hook', () => {
     actions.actionsHandler.hooks.trigger('start')
 
-    expect(actions.moved).toBe(false)
+    expect(actions.fingerMoved).toBe(false)
     expect(actions.scrollBehaviorX.start).toBeCalled()
     expect(actions.scrollBehaviorY.start).toBeCalled()
     expect(actions.scrollBehaviorX.resetStartPos).toBeCalled()

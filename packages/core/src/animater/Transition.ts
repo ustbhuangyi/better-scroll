@@ -16,6 +16,7 @@ export default class Transition extends Base {
 
       // call bs.stop() should not dispatch end hook again.
       // forceStop hook will do this.
+      /* istanbul ignore if  */
       if (!this.pending) {
         if (this.callStopWhenPending) {
           this.callStopWhenPending = false

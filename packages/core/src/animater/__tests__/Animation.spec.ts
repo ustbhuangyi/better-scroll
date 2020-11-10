@@ -124,6 +124,7 @@ describe('Animation Class test suit', () => {
   })
   it('should force stop', () => {
     const { animation, translater } = createAnimation(3)
+    animation.setCallStop(true)
     const onMove = jest.fn()
     const onForceStop = jest.fn()
     const easeFn = jest.fn()
@@ -164,13 +165,14 @@ describe('Animation Class test suit', () => {
       y: 20,
     })
     expect(animation.pending).toBe(true)
+    expect(animation.callStopWhenPending).toBe(false)
     ;(<jest.Mock>translater.getComputedPosition).mockImplementation(() => {
       return 20
     })
     animation.stop()
     expect(animation.pending).toBe(false)
     expect(mockCancelAnimationFrame).toBeCalled()
-    expect(animation.forceStopped).toBe(false)
+    expect(animation.callStopWhenPending).toBe(true)
     expect(onForceStop).toBeCalledWith(20)
 
     animation.destroy()

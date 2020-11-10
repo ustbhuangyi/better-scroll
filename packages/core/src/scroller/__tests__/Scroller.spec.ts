@@ -252,7 +252,7 @@ describe('Scroller Class tests', () => {
       expect(scroller.animater.setForceStopped).toBeCalledWith(false)
 
       // force stop from transition
-      scroller.actions.moved = false
+      scroller.actions.contentMoved = false
       scroller.animater.forceStopped = true
       scroller.actions.hooks.trigger(
         scroller.actions.hooks.eventTypes.scrollEnd,
@@ -262,7 +262,7 @@ describe('Scroller Class tests', () => {
       expect(scroller.animater.setForceStopped).toBeCalledWith(false)
 
       const mockFn2 = jest.fn()
-      scroller.animater.forceStopped = false
+      scroller.actions.contentMoved = true
       scroller.hooks.on(scroller.hooks.eventTypes.scrollEnd, mockFn2)
       scroller.actions.hooks.trigger(
         scroller.actions.hooks.eventTypes.scrollEnd,

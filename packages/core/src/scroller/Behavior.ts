@@ -84,11 +84,7 @@ export class Behavior {
         : Direction.Default
   }
 
-  performDampingAlgorithm(
-    delta: number,
-    dampingFactor: number
-  ): [number, number] {
-    const prevPos = this.currentPos
+  performDampingAlgorithm(delta: number, dampingFactor: number): number {
     let newPos = this.currentPos + delta
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
@@ -102,7 +98,7 @@ export class Behavior {
           newPos > this.minScrollPos ? this.minScrollPos : this.maxScrollPos
       }
     }
-    return [prevPos, newPos]
+    return newPos
   }
 
   end(duration: number) {

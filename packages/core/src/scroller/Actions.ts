@@ -147,17 +147,18 @@ export default class ScrollerActions {
 
     const delta = this.directionLockAction.adjustDelta(deltaX, deltaY)
 
-    const [prevX, newX] = this.scrollBehaviorX.move(delta.deltaX)
-    const [prevY, newY] = this.scrollBehaviorY.move(delta.deltaY)
+    const prevX = this.scrollBehaviorX.getCurrentPos()
+    const newX = this.scrollBehaviorX.move(delta.deltaX)
+    const prevY = this.scrollBehaviorY.getCurrentPos()
+    const newY = this.scrollBehaviorY.move(delta.deltaY)
 
     if (!this.fingerMoved) {
       this.fingerMoved = true
     }
     // must use Math.round to compare
-    // eg: newY -0.2px prevY 0px, in handleEnd event newY will be rounded to 0
+    // eg: newY -0.2px, prevY 0px, content will not move
     const positionChanged =
-      Math.round(newX) !== Math.round(prevX) ||
-      Math.round(newY) !== Math.round(prevY)
+      Math.round(newX) !== prevX || Math.round(newY) !== prevY
 
     if (!this.contentMoved && positionChanged) {
       this.contentMoved = true

@@ -120,12 +120,13 @@ describe('Transition Class test suit', () => {
     expect(translater.translate).toBeCalledWith({ x: 10, y: 10 })
     expect(onForceStop).toBeCalledWith({ x: 10, y: 10 })
     expect(mockCancelAnimationFrame).toBeCalled()
-    expect(transition.forceStopped).toBe(false)
+    expect(transition.callStopWhenPending).toBe(true)
 
     transition.destroy()
   })
   it('should startProbe with probeType=3', () => {
     const { transition } = createTransition(3)
+    transition.setCallStop(true)
     mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()
@@ -145,6 +146,7 @@ describe('Transition Class test suit', () => {
       y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
+    expect(transition.callStopWhenPending).toBe(false)
     jest.advanceTimersByTime(200)
     expect(onMove).toBeCalled()
 
