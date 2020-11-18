@@ -180,8 +180,6 @@
           cities = DATA[newSelectedIndex[0]].children
           this.pickerData = [provinces, cities]
         } else {
-          console.log('oldSelectedIndex', oldSelectedIndex)
-          console.log('newSelectedIndex', newSelectedIndex)
           // provinces'index changed, refresh cities data
           if (newSelectedIndex[0] !== oldSelectedIndex[0]) {
             cities = DATA[newSelectedIndex[0]].children
