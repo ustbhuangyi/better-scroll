@@ -160,6 +160,16 @@
       // pickerData has two array, the first is province collections, second is city collections
       this._loadPickerData(this.selectedIndex, undefined /* no prevSelectedIndex due to instantiating */)
     },
+    computed: {
+      prevSelectedIndex: {
+        get() {
+          return this.selectedIndex
+        },
+        set(v) {
+          this.selectedIndex = v
+        }
+      }
+    },
     methods: {
       _loadPickerData (newSelectedIndex, oldSelectedIndex) {
         let provinces
@@ -170,6 +180,8 @@
           cities = DATA[newSelectedIndex[0]].children
           this.pickerData = [provinces, cities]
         } else {
+          console.log('oldSelectedIndex', oldSelectedIndex)
+          console.log('newSelectedIndex', newSelectedIndex)
           // provinces'index changed, refresh cities data
           if (newSelectedIndex[0] !== oldSelectedIndex[0]) {
             cities = DATA[newSelectedIndex[0]].children
@@ -256,11 +268,10 @@
             probeType: 3
           })
           // when any of wheels'scrolling ended , you should refresh data
-          let prevSelectedIndex = this.selectedIndex
           wheels[i].on('scrollEnd', () => {
             const currentSelectedIndex = wheels.map(wheel => wheel.getSelectedIndex())
-            this._loadPickerData(currentSelectedIndex, prevSelectedIndex)
-            prevSelectedIndex = currentSelectedIndex
+            this._loadPickerData(currentSelectedIndex, this.prevSelectedIndex)
+            this.prevSelectedIndex = currentSelectedIndex
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
           })
         } else {
