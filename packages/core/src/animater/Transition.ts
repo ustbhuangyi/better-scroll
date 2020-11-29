@@ -7,12 +7,19 @@ import {
 } from '@better-scroll/shared-utils'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
+import { isValidPostion } from '../utils/compat'
 
 export default class Transition extends Base {
-  startProbe() {
+  startProbe(endPoint: TranslaterPoint) {
+    let prePos = this.translater.getComputedPosition()
+    let startPoint = prePos
     const probe = () => {
       let pos = this.translater.getComputedPosition()
-      this.hooks.trigger(this.hooks.eventTypes.move, pos)
+      if (isValidPostion(startPoint, endPoint, pos, prePos)) {
+        this.hooks.trigger(this.hooks.eventTypes.move, pos)
+      }
+      prePos = pos
+
       // transition ends should dispatch end hook.
       // but when call stop() in animation.hooks.move or bs.scroll
       // should not dispatch end hook, because forceStop hook will do this.
@@ -55,7 +62,7 @@ export default class Transition extends Base {
     this.translate(endPoint)
 
     if (time && this.options.probeType === Probe.Realtime) {
-      this.startProbe()
+      this.startProbe(endPoint)
     }
 
     // if we change content's transformY in a tick
