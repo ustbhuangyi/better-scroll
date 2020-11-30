@@ -592,6 +592,7 @@ export default class Scroller implements ExposedAPI {
       // see it in issues 982
       this._reflow = this.content.offsetHeight
     }
+
     // out of boundary
     this.scrollTo(x, y, time, easing)
 

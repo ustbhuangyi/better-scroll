@@ -10,6 +10,7 @@ import {
   getNow,
   Probe,
   EventEmitter,
+  between,
 } from '@better-scroll/shared-utils'
 
 export default class ScrollerActions {
@@ -155,10 +156,8 @@ export default class ScrollerActions {
     if (!this.fingerMoved) {
       this.fingerMoved = true
     }
-    // must use Math.round to compare
-    // eg: newY -0.2px, prevY 0px, content will not move
-    const positionChanged =
-      Math.round(newX) !== prevX || Math.round(newY) !== prevY
+
+    const positionChanged = newX !== prevX || newY !== prevY
 
     if (!this.contentMoved && positionChanged) {
       this.contentMoved = true
@@ -205,13 +204,15 @@ export default class ScrollerActions {
     if (this.hooks.trigger(this.hooks.eventTypes.beforeEnd, e)) {
       return
     }
-    const currentPos = this.getCurrentPos()
+    let currentPos = this.getCurrentPos()
 
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
     if (this.hooks.trigger(this.hooks.eventTypes.end, e, currentPos)) {
       return true
     }
+
+    currentPos = this.ensureIntegerPos(currentPos)
 
     this.animater.translate(currentPos)
 
@@ -220,6 +221,25 @@ export default class ScrollerActions {
     const duration = this.endTime - this.startTime
 
     this.hooks.trigger(this.hooks.eventTypes.scrollEnd, currentPos, duration)
+  }
+
+  private ensureIntegerPos(currentPos: TranslaterPoint) {
+    let { x, y } = currentPos
+    const {
+      minScrollPos: minScrollPosX,
+      maxScrollPos: maxScrollPosX,
+    } = this.scrollBehaviorX
+    const {
+      minScrollPos: minScrollPosY,
+      maxScrollPos: maxScrollPosY,
+    } = this.scrollBehaviorY
+
+    x = x > 0 ? Math.ceil(x) : Math.floor(x)
+    y = y > 0 ? Math.ceil(y) : Math.floor(y)
+
+    x = between(x, maxScrollPosX, minScrollPosX)
+    y = between(y, maxScrollPosY, minScrollPosY)
+    return { x, y }
   }
 
   private handleClick(e: TouchEvent) {

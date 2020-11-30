@@ -257,7 +257,7 @@ export class Behavior {
   }
 
   getCurrentPos() {
-    return Math.round(this.currentPos)
+    return this.currentPos
   }
 
   checkInBoundary() {
@@ -271,20 +271,18 @@ export class Behavior {
 
   // adjust position when out of boundary
   adjustPosition(pos: number) {
-    let roundPos = Math.round(pos)
-
     if (
       !this.hasScroll &&
       !this.hooks.trigger(this.hooks.eventTypes.ignoreHasScroll)
     ) {
-      roundPos = this.minScrollPos
-    } else if (roundPos > this.minScrollPos) {
-      roundPos = this.minScrollPos
-    } else if (roundPos < this.maxScrollPos) {
-      roundPos = this.maxScrollPos
+      pos = this.minScrollPos
+    } else if (pos > this.minScrollPos) {
+      pos = this.minScrollPos
+    } else if (pos < this.maxScrollPos) {
+      pos = this.maxScrollPos
     }
 
-    return roundPos
+    return pos
   }
 
   updateStartPos() {
