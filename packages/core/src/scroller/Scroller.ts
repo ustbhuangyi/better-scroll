@@ -1,6 +1,10 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
-import createAnimater, { Animater, Transition } from '../animater'
+import createAnimater, {
+  Animater,
+  Transition,
+  MIN_SCROLL_DISTANCE,
+} from '../animater'
 import { OptionsConstructor as BScrollOptions } from '../Options'
 import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
@@ -503,6 +507,15 @@ export default class Scroller implements ExposedAPI {
 
     // it is an useless move
     if (isSamePoint(startPoint, endPoint)) return
+
+    const deltaX = Math.abs(endPoint.x - startPoint.x)
+    const deltaY = Math.abs(endPoint.y - startPoint.y)
+
+    // considering of browser compatibility for decimal transform value
+    // force translating immediately
+    if (deltaX < 1 && deltaY < 1) {
+      time = 0
+    }
 
     this.animater.move(startPoint, endPoint, time, easingFn)
   }
