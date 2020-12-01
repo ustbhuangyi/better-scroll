@@ -77,7 +77,7 @@ BetterScroll provides a lot of flexible APIs, which are used when we implement s
      - `{number} y`, vertical axis distance. (unit: px)
      - `{number} time`, animation duration. (unit: ms)
      - `{Object} easing function`, usually don't suggest modifying. If you really need to modify, please refer `packages/shared-utils/src/ease.ts`'s of source code
-     - You only need to pass in this parameter if you want to modify some other properties of the CSS transform. The structure is as follows:
+     - `{Object} extraTransform`, you only need to pass in this parameter if you want to modify some other properties of the CSS transform. The structure is as follows:
      ```js
      let extraTransform = {
        // start point
@@ -89,7 +89,10 @@ BetterScroll provides a lot of flexible APIs, which are used when we implement s
          scale: 1.1
        }
      }
+     bs.scrollTo(0, -60, 300, undefined, extraTransform)
      ```
+    - **Return**: none.
+    - **Usage**: scroll to specified position.
 
 ### scrollBy(x, y, time, easing)
    - **Arguments**:
@@ -98,7 +101,7 @@ BetterScroll provides a lot of flexible APIs, which are used when we implement s
      - `{number} time`, animation duration. (unit: ms)
      - `{Object} easing function`, usually don't suggest modifying. If you really need to modify, please refer `packages/shared-utils/src/ease.ts`.
    - **Return**: none.
-   - **Usage**: Refer to current position, scroll the distance of (x, y).
+   - **Usage**: scroll to specified position based on current position.
 
 ### scrollToElement(el, time, offsetX, offsetY, easing)
    - **Arguments**:
@@ -136,7 +139,7 @@ BetterScroll provides a lot of flexible APIs, which are used when we implement s
      - `{Function} fn`, callback
      - `{Object} context`,default is `this`.
    - **Return**: none
-   - **Usage**: Listen for a hook on the current BScroll, such as "scroll", "scrollEnd" and so on.
+   - **Usage**: listen for a hook on the current BScroll, such as "scroll", "scrollEnd" and so on.
    - **Example**:
    ```javascript
    import BScroll from '@BetterScroll/core'
@@ -155,14 +158,14 @@ BetterScroll provides a lot of flexible APIs, which are used when we implement s
      - `{Function} fn`, callback
      - `{Object} context`, default is `this`.
    - **Return**: none
-   - **Usage**: Listen for a custom event, but only once. The listener will be removed once it triggers for the first time.
+   - **Usage**: listen for a custom event, but only once. The listener will be removed once it triggers for the first time.
 
 ### off(type, fn)
    - **Arguments**:
      - `{string} type`, event
      - `{Function} fn`, callback
    - **Return**: none
-   - **Usage**: Remove custom event listener. Only remove the listener for that specific callback.
+   - **Usage**: remove custom event listener. Only remove the listener for that specific callback.
    - **Example**:
    ```javascript
    import BScroll from '@BetterScroll/core'
