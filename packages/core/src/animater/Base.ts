@@ -63,6 +63,12 @@ export default abstract class Base implements ExposedAPI {
       this.stop()
     }
   }
+  clearTimer() {
+    if (this.timer) {
+      cancelAnimationFrame(this.timer)
+      this.timer = 0
+    }
+  }
 
   abstract move(
     startPoint: TranslaterPoint,

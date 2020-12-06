@@ -18,7 +18,6 @@ export default class Animation extends Base {
     // time is 0
     if (!time) {
       this.translate(endPoint)
-
       this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       return
@@ -97,10 +96,6 @@ export default class Animation extends Base {
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
       this.setCallStop(true)
-
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
-        return true
-      }
 
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
     }

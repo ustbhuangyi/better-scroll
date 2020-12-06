@@ -316,3 +316,7 @@ export function removeClass(el: HTMLElement, className: string) {
   let reg = new RegExp('(^|\\s)' + className + '(\\s|$)', 'g')
   el.className = el.className.replace(reg, ' ')
 }
+
+export function HTMLCollectionToArray(el: HTMLCollection) {
+  return Array.prototype.slice.call(el, 0)
+}

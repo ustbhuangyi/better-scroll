@@ -5,6 +5,8 @@ import {
   ease,
   EaseItem,
   extend,
+  Position,
+  HTMLCollectionToArray,
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -31,6 +33,7 @@ declare module '@better-scroll/core' {
 interface PluginAPI {
   wheelTo(index?: number, time?: number, ease?: EaseItem): void
   getSelectedIndex(): number
+  restorePosition(): void
 }
 
 const CONSTANTS = {
@@ -43,6 +46,7 @@ export default class Wheel implements PluginAPI {
   items: HTMLCollection
   itemHeight: number
   selectedIndex: number
+  isAdjustingPosition: boolean
   target: EventTarget | null
   constructor(public scroll: BScroll) {
     this.init()
@@ -54,7 +58,7 @@ export default class Wheel implements PluginAPI {
     this.handleHooks()
     // init boundary for Wheel
     this.refreshBoundary()
-    this.handleSelectedIndex()
+    this.setSelectedIndex(this.options.selectedIndex)
   }
 
   private handleBScroll() {
@@ -78,6 +82,7 @@ export default class Wheel implements PluginAPI {
   }
 
   private handleHooks() {
+    const scroll = this.scroll
     const scroller = this.scroll.scroller
     const {
       actionsHandler,
@@ -87,42 +92,67 @@ export default class Wheel implements PluginAPI {
     } = scroller
     let prevContent = scroller.content
     // BScroll
+    scroll.on(scroll.eventTypes.scrollEnd, (position: Position) => {
+      const index = this.findNearestValidWheel(position.y).index
+      if (scroller.animater.forceStopped && !this.isAdjustingPosition) {
+        this.target = this.items[index]
+        // since stopped from an animation.
+        // prevent user's scrollEnd callback triggered twice
+        return true
+      } else {
+        this.setSelectedIndex(index)
+        if (this.isAdjustingPosition) {
+          this.isAdjustingPosition = false
+        }
+      }
+    })
+    // BScroll.hooks
     this.scroll.hooks.on(
       this.scroll.hooks.eventTypes.refresh,
       (content: HTMLElement) => {
         if (content !== prevContent) {
           prevContent = content
-          this.handleSelectedIndex()
+          this.setSelectedIndex(this.options.selectedIndex)
         }
-        // check we are stop at a disable item
+        // rotate all wheel-items
+        // because position may not change
+        this.rotateX(this.scroll.y)
+        // check we are stop at a disable item or not
         this.wheelTo(this.selectedIndex, 0)
       }
     )
 
     this.scroll.hooks.on(
       this.scroll.hooks.eventTypes.beforeInitialScrollTo,
-      (position: { x: number; y: number }) => {
-        // selectedIndex has a better priority than bs.options.startY
+      (position: Position) => {
+        // selectedIndex has higher priority than bs.options.startY
         position.x = 0
         position.y = -(this.selectedIndex * this.itemHeight)
       }
     )
     // Scroller
     scroller.hooks.on(scroller.hooks.eventTypes.checkClick, () => {
-      const index = Array.prototype.slice
-        .call(this.items, 0)
-        .indexOf(this.target as Element)
+      const index = HTMLCollectionToArray(this.items).indexOf(this.target)
       if (index === -1) return true
 
-      this.wheelToAfterClick(index, this.options.adjustTime, ease.swipe)
+      this.wheelTo(index, this.options.adjustTime, ease.swipe)
       return true
     })
     scroller.hooks.on(
       scroller.hooks.eventTypes.scrollTo,
-      (endPoint: { x: number; y: number }) => {
+      (endPoint: Position) => {
         endPoint.y = this.findNearestValidWheel(endPoint.y).y
       }
     )
+    // when content is scrolling
+    // click wheel-item DOM repeatedly and crazily will cause scrollEnd not triggered
+    // so reset forceStopped
+    scroller.hooks.on(scroller.hooks.eventTypes.minDistanceScroll, () => {
+      const animater = scroller.animater
+      if (animater.forceStopped === true) {
+        animater.forceStopped = false
+      }
+    })
     scroller.hooks.on(
       scroller.hooks.eventTypes.scrollToElement,
       (el: HTMLElement, pos: { top: number; left: number }) => {
@@ -199,7 +229,6 @@ export default class Wheel implements PluginAPI {
         let validWheel = this.findNearestValidWheel(scrollBehaviorY.currentPos)
         momentumInfo.destination = validWheel.y
         momentumInfo.duration = this.options.adjustTime
-        this.selectedIndex = validWheel.index
       }
     )
 
@@ -213,32 +242,18 @@ export default class Wheel implements PluginAPI {
         this.timeFunction(easing)
       }
     )
-
-    animater.hooks.on(
-      animater.hooks.eventTypes.beforeForceStop,
-      ({ y }: { x: number; y: number }) => {
-        this.target = this.items[this.findNearestValidWheel(y).index]
-        // don't dispatch scrollEnd when forceStop from transition or animation
-        return true
-      }
-    )
-    // bs.stop() to make wheel stop at a correct position
+    // bs.stop() to make wheel stop at a correct position when pending
     animater.hooks.on(animater.hooks.eventTypes.callStop, () => {
-      const index = Array.prototype.slice
-        .call(this.items, 0)
-        .indexOf(this.target as Element)
-      if (index > 0) {
-        const y = -(index * this.itemHeight)
-        animater.translate({ x: 0, y })
-      }
+      const { index } = this.findNearestValidWheel(this.scroll.y)
+      this.isAdjustingPosition = true
+      this.wheelTo(index, 0)
     })
 
     // Translater
     animater.translater.hooks.on(
       animater.translater.hooks.eventTypes.translate,
-      (endPoint: { x: number; y: number }) => {
+      (endPoint: Position) => {
         this.rotateX(endPoint.y)
-        this.selectedIndex = this.findNearestValidWheel(endPoint.y).index
       }
     )
   }
@@ -249,29 +264,26 @@ export default class Wheel implements PluginAPI {
     scrollBehaviorY.refresh(content)
   }
 
-  private handleSelectedIndex() {
-    this.selectedIndex = this.options.selectedIndex
+  setSelectedIndex(index: number) {
+    this.selectedIndex = index
   }
 
   getSelectedIndex() {
     return this.selectedIndex
   }
 
-  wheelTo(index = 0, time = 0, ease?: EaseItem): boolean {
+  wheelTo(index = 0, time = 0, ease?: EaseItem) {
     const y = -index * this.itemHeight
-    const currentY = Math.round(this.scroll.y)
-
     this.scroll.scrollTo(0, y, time, ease)
-    return y === currentY
   }
 
-  private wheelToAfterClick(index = 0, time = 0, ease: EaseItem) {
-    const needDispatchScrollEnd = this.wheelTo(index, time, ease)
-    // startpoint === endpoint
-    // manually trigger scrollEnd
-    if (needDispatchScrollEnd) {
-      const hooks = this.scroll.scroller.hooks
-      hooks.trigger(hooks.eventTypes.scrollEnd)
+  restorePosition() {
+    // bs is scrolling
+    const isPending = this.scroll.pending
+    if (isPending) {
+      const selectedIndex = this.getSelectedIndex()
+      this.scroll.scroller.animater.clearTimer()
+      this.wheelTo(selectedIndex, 0)
     }
   }
 
@@ -344,7 +356,7 @@ export default class Wheel implements PluginAPI {
     if (currentIndex === items.length) {
       currentIndex = cacheIndex
     }
-    // when all the items are disabled, this.selectedIndex should always be -1
+    // when all the items are disabled, selectedIndex should always be -1
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
       y: -currentIndex * this.itemHeight,

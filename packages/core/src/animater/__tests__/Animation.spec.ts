@@ -177,12 +177,4 @@ describe('Animation Class test suit', () => {
 
     animation.destroy()
   })
-
-  it('cancelable beforeForceStop hook ', () => {
-    const { animation, translater } = createAnimation(3)
-    animation.hooks.on(animation.hooks.eventTypes.beforeForceStop, () => true)
-    animation.setPending(true)
-    const ret = animation.doStop()
-    expect(ret).toBe(true)
-  })
 })

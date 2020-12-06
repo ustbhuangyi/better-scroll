@@ -157,15 +157,4 @@ describe('Transition Class test suit', () => {
 
     transition.destroy()
   })
-
-  it('cancelable beforeForceStop hook ', () => {
-    const { transition, translater } = createTransition(3)
-    transition.hooks.on(transition.hooks.eventTypes.beforeForceStop, () => true)
-    translater.getComputedPosition = jest.fn().mockImplementation(() => {
-      return { x: 0, y: 0 }
-    })
-    transition.setPending(true)
-    const ret = transition.doStop()
-    expect(ret).toBe(true)
-  })
 })

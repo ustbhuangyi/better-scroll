@@ -99,6 +99,7 @@ export default class Scroller implements ExposedAPI {
       'scrollCancel',
       'momentum',
       'scrollTo',
+      'minDistanceScroll',
       'scrollToElement',
       'beforeRefresh',
     ])
@@ -513,10 +514,10 @@ export default class Scroller implements ExposedAPI {
 
     // considering of browser compatibility for decimal transform value
     // force translating immediately
-    if (deltaX < 1 && deltaY < 1) {
+    if (deltaX < MIN_SCROLL_DISTANCE && deltaY < MIN_SCROLL_DISTANCE) {
       time = 0
+      this.hooks.trigger(this.hooks.eventTypes.minDistanceScroll)
     }
-
     this.animater.move(startPoint, endPoint, time, easingFn)
   }
 

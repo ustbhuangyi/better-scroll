@@ -90,15 +90,11 @@ export default class Transition extends Base {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const { x, y } = this.translater.getComputedPosition()
+
       this.transitionTime()
       this.translate({ x, y })
       this.setForceStopped(true)
       this.setCallStop(true)
-
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, { x, y })) {
-        return true
-      }
-
       this.hooks.trigger(this.hooks.eventTypes.forceStop, { x, y })
     }
     return pending

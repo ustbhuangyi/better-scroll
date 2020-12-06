@@ -2,16 +2,20 @@ const sourcePrefix = 'plugins.wheel'
 const propertiesMap = [
   {
     key: 'wheelTo',
-    name: 'wheelTo'
+    name: 'wheelTo',
   },
   {
     key: 'getSelectedIndex',
-    name: 'getSelectedIndex'
-  }
+    name: 'getSelectedIndex',
+  },
+  {
+    key: 'restorePosition',
+    name: 'restorePosition',
+  },
 ]
-export default propertiesMap.map(item => {
+export default propertiesMap.map((item) => {
   return {
     key: item.key,
-    sourceKey: `${sourcePrefix}.${item.name}`
+    sourceKey: `${sourcePrefix}.${item.name}`,
   }
 })
