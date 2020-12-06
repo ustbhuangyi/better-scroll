@@ -125,8 +125,10 @@ describe('Transition Class test suit', () => {
     transition.destroy()
   })
   it('should startProbe with probeType=3', () => {
-    const { transition } = createTransition(3)
-    transition.setCallStop(true)
+    const { transition, translater } = createTransition(3)
+    translater.getComputedPosition = jest.fn().mockImplementation(() => {
+      return { x: 0, y: 0 }
+    })
     mockRequestAnimationFrame.mockImplementation((cb) => {
       setTimeout(() => {
         cb()

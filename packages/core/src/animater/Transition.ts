@@ -7,13 +7,17 @@ import {
 } from '@better-scroll/shared-utils'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
+import { isValidPostion } from '../utils/compat'
 
 export default class Transition extends Base {
-  startProbe() {
+  startProbe(startPoint: TranslaterPoint, endPoint: TranslaterPoint) {
+    let prePos = startPoint
     const probe = () => {
       let pos = this.translater.getComputedPosition()
-      this.hooks.trigger(this.hooks.eventTypes.move, pos)
 
+      if (isValidPostion(startPoint, endPoint, pos, prePos)) {
+        this.hooks.trigger(this.hooks.eventTypes.move, pos)
+      }
       // call bs.stop() should not dispatch end hook again.
       // forceStop hook will do this.
       /* istanbul ignore if  */
@@ -25,6 +29,7 @@ export default class Transition extends Base {
           this.hooks.trigger(this.hooks.eventTypes.end, pos)
         }
       }
+      prePos = pos
 
       if (this.pending) {
         this.timer = requestAnimationFrame(probe)
@@ -35,6 +40,7 @@ export default class Transition extends Base {
     if (this.callStopWhenPending) {
       this.setCallStop(false)
     }
+
     cancelAnimationFrame(this.timer)
     probe()
   }
@@ -66,7 +72,7 @@ export default class Transition extends Base {
     this.translate(endPoint)
 
     if (time && this.options.probeType === Probe.Realtime) {
-      this.startProbe()
+      this.startProbe(startPoint, endPoint)
     }
 
     // if we change content's transformY in a tick

@@ -63,6 +63,14 @@ describe('slide test for SlidePage class', () => {
         key: 'getCurrentPage',
         sourceKey: 'plugins.slide.getCurrentPage',
       },
+      {
+        key: 'startPlay',
+        sourceKey: 'plugins.slide.startPlay',
+      },
+      {
+        key: 'pausePlay',
+        sourceKey: 'plugins.slide.pausePlay',
+      },
     ])
   })
 
