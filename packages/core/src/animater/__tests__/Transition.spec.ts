@@ -157,4 +157,11 @@ describe('Transition Class test suit', () => {
 
     transition.destroy()
   })
+
+  it('clearTimer ', () => {
+    const { transition } = createTransition(0)
+    transition.timer = 1
+    transition.clearTimer()
+    expect(transition.timer).toBe(0)
+  })
 })

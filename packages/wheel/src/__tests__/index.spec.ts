@@ -44,6 +44,10 @@ describe('wheel plugin tests', () => {
         key: 'getSelectedIndex',
         sourceKey: 'plugins.wheel.getSelectedIndex',
       },
+      {
+        key: 'restorePosition',
+        sourceKey: 'plugins.wheel.restorePosition',
+      },
     ])
   })
 
@@ -118,6 +122,15 @@ describe('wheel plugin tests', () => {
     scroll.scroller.hooks.trigger('checkClick')
     expect(wheel.wheelTo).toBeCalled()
     expect(wheel.wheelTo).toHaveBeenCalledWith(0, 400, expect.anything())
+
+    // if target element is not found
+    addPropertiesToWheel(wheel, {
+      items: [div],
+      target: null,
+      wheelTo: jest.fn(),
+    })
+    let ret = scroll.scroller.hooks.trigger('checkClick')
+    expect(ret).toBe(true)
   })
 
   it('should invoke findNearestValidWheel when scroll.scroller trigger scrollTo hook', () => {
@@ -150,6 +163,24 @@ describe('wheel plugin tests', () => {
 
     expect(pos).toEqual({
       top: -0,
+      left: 0,
+    })
+
+    // mismatch target element
+    let div1 = document.createElement('div')
+    let pos1 = {
+      top: -40,
+      left: 0,
+    }
+    addPropertiesToWheel(wheel, {
+      items: [div1],
+      target: div1,
+      itemHeight: 40,
+    })
+    let ret = scroll.scroller.hooks.trigger('scrollToElement', div1, pos1)
+    expect(ret).toBe(true)
+    expect(pos1).toMatchObject({
+      top: -40,
       left: 0,
     })
   })
@@ -223,48 +254,158 @@ describe('wheel plugin tests', () => {
       rate: 4,
       duration: 400,
     })
+
+    scroll.scroller.scrollBehaviorY.hooks.trigger('momentum', momentumInfo, 800)
+    expect(momentumInfo).toEqual({
+      destination: -0,
+      rate: 4,
+      duration: 2000,
+    })
   })
 
-  it('should change target when scroll.scroller.animater trigger beforeForceStop hook', () => {
+  it('scroll.hooks.refresh ', () => {
+    let newContent = document.createElement('p')
     let div = document.createElement('div')
     addPropertiesToWheel(wheel, {
       items: [div],
+      target: div,
       itemHeight: 40,
-      wheelItemsAllDisabled: false,
     })
-    scroll.scroller.animater.hooks.trigger('beforeForceStop', { x: 0, y: -20 })
-    expect(wheel.target).toEqual(div)
+    wheel.options.selectedIndex = 1
+    scroll.hooks.trigger(scroll.hooks.eventTypes.refresh, newContent)
+
+    expect(scroll.scrollTo).toBeCalledWith(0, -40, 0, undefined)
   })
 
-  it('should stop at correct position when callStop hook is trigger', () => {
+  it('scroll.scroller.animater.hooks.time ', () => {
+    let div = document.createElement('div')
+    addPropertiesToWheel(wheel, {
+      items: [div],
+    })
+    const animater = scroll.scroller.animater
+    animater.hooks.trigger(animater.hooks.eventTypes.time, 100)
+    expect(div.style.transitionDuration).toBe('100ms')
+  })
+
+  it('scroll.scroller.animater.hooks.timeFunction ', () => {
+    let div = document.createElement('div')
+    addPropertiesToWheel(wheel, {
+      items: [div],
+    })
+    const animater = scroll.scroller.animater
+    animater.hooks.trigger(
+      animater.hooks.eventTypes.timeFunction,
+      'cubic-bezier(0.23, 1, 0.32, 1)'
+    )
+    expect(div.style.transitionTimingFunction).toBe(
+      'cubic-bezier(0.23, 1, 0.32, 1)'
+    )
+  })
+
+  it('scroll.scroller.animater.hooks.callStop', () => {
     let div1 = document.createElement('div')
     let div2 = document.createElement('div')
     addPropertiesToWheel(wheel, {
       items: [div1, div2],
-      target: div2,
       itemHeight: 40,
       wheelItemsAllDisabled: false,
     })
+    scroll.y = -41
+    scroll.maxScrollY = -80
     scroll.scroller.animater.hooks.trigger('callStop')
-    expect(wheel.target).toEqual(div2)
-    expect(scroll.scroller.animater.translate).toBeCalledWith({
-      x: 0,
-      y: -40,
-    })
+    expect(scroll.scrollTo).toBeCalledWith(0, -40, 0, undefined)
   })
 
-  it('should change selectedIndex when scroll.scroller.animater.translater trigger translate hook', () => {
+  it('scroll.scroller.animater.translater.hooks.translate', () => {
     let div = document.createElement('div')
     addPropertiesToWheel(wheel, {
       items: [div],
       itemHeight: 40,
       wheelItemsAllDisabled: false,
     })
-
-    scroll.scroller.animater.translater.hooks.trigger('translate', {
+    const translater = scroll.scroller.animater.translater
+    translater.hooks.trigger(translater.hooks.eventTypes.translate, {
       x: 0,
       y: -20,
     })
     expect(wheel.selectedIndex).toEqual(0)
+  })
+
+  it('scroll.scroller.hooks.minDistanceScroll ', () => {
+    let div = document.createElement('div')
+    addPropertiesToWheel(wheel, {
+      items: [div],
+    })
+    const scroller = scroll.scroller
+    scroller.animater.forceStopped = true
+    scroller.hooks.trigger(scroller.hooks.eventTypes.minDistanceScroll)
+    expect(scroller.animater.forceStopped).toBe(false)
+  })
+
+  it('scrollEnd event', () => {
+    let div1 = document.createElement('div')
+    let div2 = document.createElement('div')
+    addPropertiesToWheel(wheel, {
+      itemHeight: 40,
+      items: [div1, div2],
+    })
+    scroll.maxScrollY = -80
+    scroll.scroller.animater.forceStopped = true
+    // stopped from an animation,
+    // prevent user's scrollEnd callback triggered twice
+    const ret = scroll.trigger(scroll.eventTypes.scrollEnd, { y: 0 })
+    expect(ret).toBe(true)
+
+    wheel.isAdjustingPosition = true
+    // update selectedIndex
+    scroll.trigger(scroll.eventTypes.scrollEnd, { y: -41 })
+
+    expect(wheel.getSelectedIndex()).toBe(1)
+    expect(wheel.isAdjustingPosition).toBe(false)
+  })
+
+  it('wheel.restorePosition()', () => {
+    addPropertiesToWheel(wheel, {
+      itemHeight: 40,
+    })
+    // simulate bs is scrolling
+    scroll.pending = true
+    wheel.restorePosition()
+    expect(scroll.scroller.animater.clearTimer).toBeCalled()
+    expect(scroll.scrollTo).toBeCalledWith(0, -0, 0, undefined)
+  })
+
+  it('should support disable wheel items', () => {
+    let div1 = document.createElement('div')
+    let div2 = document.createElement('div')
+    const scroller = scroll.scroller
+    const position = { y: -41 }
+    addPropertiesToWheel(wheel, {
+      items: [div1, div2],
+      itemHeight: 40,
+      wheelItemsAllDisabled: false,
+    })
+    scroll.y = -41
+    scroll.maxScrollY = -80
+    div2.className = 'wheel-disabled-item'
+    scroller.hooks.trigger(scroller.hooks.eventTypes.scrollTo, position)
+    expect(position.y).toBe(-0)
+
+    div1.className = 'wheel-disabled-item'
+    wheel.wheelItemsAllDisabled = true
+    scroller.hooks.trigger(scroller.hooks.eventTypes.scrollTo, position)
+    expect(position.y).toBe(-0)
+
+    let div3 = document.createElement('div')
+    let position3 = {
+      y: -39,
+    }
+    addPropertiesToWheel(wheel, {
+      items: [div1, div2, div3],
+      itemHeight: 40,
+      wheelItemsAllDisabled: false,
+    })
+    scroller.hooks.trigger(scroller.hooks.eventTypes.scrollTo, position3)
+    expect(position3.y).toBe(-80)
   })
 })

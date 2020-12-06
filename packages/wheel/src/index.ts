@@ -321,7 +321,7 @@ export default class Wheel implements PluginAPI {
     const items = this.items
     const wheelDisabledItemClassName = this.options
       .wheelDisabledItemClass as string
-    // Impersonation web native select
+    // implement web native select element
     // first, check whether there is a enable item whose index is smaller than currentIndex
     // then, check whether there is a enable item whose index is bigger than currentIndex
     // otherwise, there are all disabled items, just keep currentIndex unchange

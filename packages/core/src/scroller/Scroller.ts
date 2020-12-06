@@ -1,10 +1,6 @@
 import ActionsHandler from '../base/ActionsHandler'
 import Translater, { TranslaterPoint } from '../translater'
-import createAnimater, {
-  Animater,
-  Transition,
-  MIN_SCROLL_DISTANCE,
-} from '../animater'
+import createAnimater, { Animater, Transition } from '../animater'
 import { OptionsConstructor as BScrollOptions } from '../Options'
 import { Behavior } from './Behavior'
 import ScrollerActions from './Actions'
@@ -36,6 +32,7 @@ import { bubbling } from '../utils/bubbling'
 import { isSamePoint } from '../utils/compare'
 import { MountedBScrollHTMLElement } from '../BScroll'
 
+const MIN_SCROLL_DISTANCE = 1
 export interface ExposedAPI {
   scrollTo(
     x: number,

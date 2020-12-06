@@ -29,6 +29,7 @@ const Animation = jest
       setForceStopped: jest.fn(),
       setCallStop: jest.fn(),
       setContent: jest.fn(),
+      clearTimer: jest.fn(),
     }
   })
 

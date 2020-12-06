@@ -55,6 +55,7 @@ describe('Scroller Class tests', () => {
       'momentum',
       'scrollTo',
       'scrollToElement',
+      'minDistanceScroll',
     ].forEach((key) => {
       expect(scroller.hooks.eventTypes).toHaveProperty(key)
     })
@@ -422,5 +423,12 @@ describe('Scroller Class tests', () => {
       x: 0,
       y: 0,
     })
+  })
+  it('scrollTo()', () => {
+    // minDistanceScroll
+    const mockFn = jest.fn()
+    scroller.hooks.on(scroller.hooks.eventTypes.minDistanceScroll, mockFn)
+
+    scroller.scrollTo(0, 0.5, 300)
   })
 })

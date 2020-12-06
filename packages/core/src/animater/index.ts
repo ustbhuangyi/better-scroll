@@ -7,8 +7,6 @@ import Animation from './Animation'
 
 export { Animater, Transition, Animation }
 
-export const MIN_SCROLL_DISTANCE = 1
-
 export default function createAnimater(
   element: HTMLElement,
   translater: Translater,
