@@ -109,4 +109,66 @@ describe('One column picker', () => {
     const translateY = getTranslate(transformText, 'y')
     await expect(translateY).toBeLessThan(-72)
   })
+
+  it('should restore position when bs is scrolling and invoke restorePosition()', async () => {
+    await page.waitFor(300)
+
+    await page.click('.open')
+
+    await page.waitFor(1000)
+
+    await page.dispatchScroll({
+      x: 200,
+      y: 630,
+      xDistance: 0,
+      yDistance: -100,
+      gestureSourceType: 'touch',
+    })
+
+    await page.click('.cancel')
+
+    await page.waitFor(500)
+
+    await page.click('.open')
+
+    await page.waitFor(500)
+
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const translateY = getTranslate(transformText, 'y')
+
+    expect(translateY).toBe(-72)
+  })
+
+  it('should stop at the nearest wheel item when bs is scrolling and invoke stop()', async () => {
+    await page.waitFor(300)
+
+    await page.click('.open')
+
+    await page.waitFor(1000)
+
+    await page.dispatchScroll({
+      x: 200,
+      y: 630,
+      xDistance: 0,
+      yDistance: -100,
+      gestureSourceType: 'touch',
+    })
+
+    await page.click('.confirm')
+
+    await page.waitFor(500)
+
+    await page.click('.open')
+
+    await page.waitFor(500)
+
+    const transformText = await page.$eval('.wheel-scroll', (node) => {
+      return window.getComputedStyle(node).transform
+    })
+    const translateY = getTranslate(transformText, 'y')
+
+    expect(translateY).toBeLessThan(-180)
+  })
 })
