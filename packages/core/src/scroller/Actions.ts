@@ -41,6 +41,7 @@ export default class ScrollerActions {
       'beforeEnd',
       'end',
       'scrollEnd',
+      'contentNotMoved',
     ])
 
     this.scrollBehaviorX = scrollBehaviorX
@@ -158,6 +159,10 @@ export default class ScrollerActions {
     }
 
     const positionChanged = newX !== prevX || newY !== prevY
+
+    if (!this.contentMoved && !positionChanged) {
+      this.hooks.trigger(this.hooks.eventTypes.contentNotMoved)
+    }
 
     if (!this.contentMoved && positionChanged) {
       this.contentMoved = true

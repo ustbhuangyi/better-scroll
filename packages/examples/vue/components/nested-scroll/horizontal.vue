@@ -2,13 +2,13 @@
   <div class="container">
       <div ref="outerScroll" class="outer-wrapper">
         <ul class="outer-content">
-          <li v-for="(item, idx) in items1" :key="idx" class="list-item">{{ item }}</li>
+          <li v-for="(item, idx) in items1" @click="handleOuterClick" :key="idx" class="list-item">{{ item }}</li>
           <li class="list-item inner-list-item">
             <div
               ref="innerScroll"
               class="inner-wrapper">
               <ul class="inner-content">
-                <li v-for="(item, idx) in items2" :key="idx" class="list-item">{{ item }}</li>
+                <li v-for="(item, idx) in items2" @click="handleInnerClick" :key="idx" class="list-item">{{ item }}</li>
               </ul>
             </div>
           </li>
@@ -50,18 +50,26 @@ export default {
     this.initBScroll()
   },
   methods: {
+    handleOuterClick () {
+      window.alert('clicked outer item')
+    },
+    handleInnerClick () {
+      window.alert('clicked inner item')
+    },
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
         nestedScroll: true,
         scrollX: true,
-        scrollY: false
+        scrollY: false,
+        click: true
       })
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
         nestedScroll: true,
         scrollX: true,
         scrollY: false,
+        click: true,
         // close bounce effects
         bounce: {
           left: false,
@@ -103,4 +111,5 @@ export default {
 
   .inner-list-item
     vertical-align: top // important
+    background-color: rgba(98,183,145, 0.2)
 </style>

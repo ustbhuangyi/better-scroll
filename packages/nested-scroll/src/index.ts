@@ -1,4 +1,5 @@
 import BScroll, { MountedBScrollHTMLElement } from '@better-scroll/core'
+import { Direction } from '@better-scroll/shared-utils'
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
@@ -8,53 +9,64 @@ declare module '@better-scroll/core' {
 
 type BScrollPairs = [BScroll, BScroll]
 
-const compatibleFeatures: {
-  [index: string]: Function
-  duplicateClick: (pairs: BScrollPairs) => void
-  nestedScroll: (pairs: BScrollPairs) => void
-} = {
-  duplicateClick([parentScroll, childScroll]) {
-    // no need to make childScroll's click true
-    if (parentScroll.options.click && childScroll.options.click) {
-      childScroll.options.click = false
-    }
-  },
-  nestedScroll(scrollsPair: BScrollPairs) {
-    const [parentScroll, childScroll] = scrollsPair
-
-    const parentScrollX = parentScroll.options.scrollX
-    const parentScrollY = parentScroll.options.scrollY
-    const childScrollX = childScroll.options.scrollX
-    const childScrollY = childScroll.options.scrollY
-    // vertical nested in vertical scroll and horizontal nested in horizontal
-    // otherwise, no need to handle.
-    if (parentScrollX === childScrollX || parentScrollY === childScrollY) {
-      scrollsPair.forEach((scroll, index) => {
-        const oppositeScroll = scrollsPair[(index + 1) % 2]
-
-        scroll.on(scroll.eventTypes.beforeScrollStart, () => {
-          if (oppositeScroll.pending) {
-            oppositeScroll.stop()
-            oppositeScroll.resetPosition()
-          }
-          setupData(oppositeScroll)
-          oppositeScroll.disable()
-        })
-
-        scroll.on(scroll.eventTypes.touchEnd, () => {
-          oppositeScroll.enable()
-        })
-      })
-
-      childScroll.on(childScroll.eventTypes.scrollStart, () => {
-        if (checkBeyondBoundary(childScroll)) {
-          childScroll.disable()
-          parentScroll.enable()
-        }
-      })
-    }
+const hasScroll = (scroll: BScroll) => {
+  return {
+    hasHorizontalScroll: scroll.hasHorizontalScroll,
+    hasVerticalScroll: scroll.hasVerticalScroll,
   }
 }
+
+const syncTouchstartData = (scroll: BScroll) => {
+  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
+  const { actions, scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+
+  actions.startTime = +new Date()
+
+  if (hasVerticalScroll) {
+    scrollBehaviorY.startPos = scrollBehaviorY.currentPos
+  } else if (hasHorizontalScroll) {
+    scrollBehaviorX.startPos = scrollBehaviorX.currentPos
+  }
+}
+
+const calculateDepths = (
+  childNode: HTMLElement,
+  parentNode: HTMLElement
+): number => {
+  let depth = 0
+  let parent = childNode.parentNode
+  while (parent && parent !== parentNode) {
+    depth++
+    parent = parent.parentNode
+  }
+  return depth
+}
+
+const isOutOfBoundary = (scroll: BScroll): boolean => {
+  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
+  const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+
+  const outOfLeftBoundary =
+    scroll.x >= scroll.minScrollX &&
+    scrollBehaviorX.movingDirection === Direction.Negative
+  const outOfRightBoundary =
+    scroll.x <= scroll.maxScrollX &&
+    scrollBehaviorX.movingDirection === Direction.Positive
+  const outOfTopBoundary =
+    scroll.y >= scroll.minScrollY &&
+    scrollBehaviorY.movingDirection === Direction.Negative
+  const outOfBottomBoundary =
+    scroll.y <= scroll.maxScrollY &&
+    scrollBehaviorY.movingDirection === Direction.Positive
+
+  if (hasVerticalScroll) {
+    return outOfTopBoundary || outOfBottomBoundary
+  } else if (hasHorizontalScroll) {
+    return outOfLeftBoundary || outOfRightBoundary
+  }
+  return false
+}
+
 export default class NestedScroll {
   static pluginName = 'nestedScroll'
   static nestedScroll?: NestedScroll
@@ -74,9 +86,9 @@ export default class NestedScroll {
   }
 
   private setup(scroll: BScroll): void {
-    this.appendBScroll(scroll)
-    this.handleContainRelationship()
-    this.handleCompatible()
+    this.addBScroll(scroll)
+    this.buildContainRelationship()
+    this.consortNestedScrolls()
   }
 
   private addHooks(scroll: BScroll): void {
@@ -85,27 +97,28 @@ export default class NestedScroll {
     })
   }
 
-  private teardown(scroll: BScroll): void {
+  private teardown(scroll: BScroll) {
     this.removeBScroll(scroll)
-    this.handleContainRelationship()
-    this.handleCompatible()
+    this.buildContainRelationship()
+    this.consortNestedScrolls()
   }
 
-  appendBScroll(scroll: BScroll): void {
+  addBScroll(scroll: BScroll) {
     this.stores.push(scroll)
   }
 
   removeBScroll(scroll: BScroll): void {
-    const index = this.stores.indexOf(scroll)
+    const stores = this.stores
+    const index = stores.indexOf(scroll)
     if (index === -1) {
       return
     }
-    ;(scroll.wrapper as MountedBScrollHTMLElement).isBScrollContainer = undefined
-    this.stores.splice(index, 1)
+    const wrapper = scroll.wrapper as MountedBScrollHTMLElement
+    wrapper.isBScrollContainer = undefined
+    stores.splice(index, 1)
   }
 
-  private handleContainRelationship(): void {
-    // bs's length <= 1
+  private buildContainRelationship(): void {
     const stores = this.stores
     if (stores.length <= 1) {
       // there is only a childBScroll left.
@@ -139,11 +152,11 @@ export default class NestedScroll {
         if (!outerBS.__parentInfo) {
           outerBS.__parentInfo = {
             parent: innerBS,
-            depth: calculateDepths(outerBSWrapper, innerBSWrapper)
+            depth: calculateDepths(outerBSWrapper, innerBSWrapper),
           }
         } else {
           // has parentInfo already!
-          // just judge the "true" parent by depth
+          // just judge the real parent by depth
           // we regard the latest node as parent, not the furthest
           const currentDepths = calculateDepths(outerBSWrapper, innerBSWrapper)
           const prevDepths = outerBS.__parentInfo.depth
@@ -151,7 +164,7 @@ export default class NestedScroll {
           if (prevDepths > currentDepths) {
             outerBS.__parentInfo = {
               parent: innerBS,
-              depth: currentDepths
+              depth: currentDepths,
             }
           }
         }
@@ -159,75 +172,59 @@ export default class NestedScroll {
     }
   }
 
-  private handleCompatible() {
-    const pairs = this.availableBScrolls()
-    const keys = ['duplicateClick', 'nestedScroll']
+  private consortNestedScrolls() {
+    const pairs = this.getBScrollPairs()
 
-    pairs.forEach(pair => {
-      keys.forEach(key => {
-        compatibleFeatures[key](pair)
-      })
+    pairs.forEach((scrollsPair: BScrollPairs) => {
+      const [parentScroll, childScroll] = scrollsPair
+
+      const parentScrollX = parentScroll.options.scrollX
+      const parentScrollY = parentScroll.options.scrollY
+      const childScrollX = childScroll.options.scrollX
+      const childScrollY = childScroll.options.scrollY
+      // vertical nested in vertical
+      // horizontal nested in horizontal
+      // otherwise, no need to handle.
+      if (parentScrollX === childScrollX || parentScrollY === childScrollY) {
+        scrollsPair.forEach((scroll, index) => {
+          const oppositeScroll = scrollsPair[(index + 1) % 2]
+
+          scroll.on(scroll.eventTypes.beforeScrollStart, () => {
+            if (oppositeScroll.pending) {
+              oppositeScroll.stop()
+              oppositeScroll.resetPosition()
+            }
+            syncTouchstartData(oppositeScroll)
+            oppositeScroll.disable()
+          })
+
+          scroll.on(scroll.eventTypes.touchEnd, () => {
+            oppositeScroll.enable()
+          })
+        })
+
+        const childActionsHooks = childScroll.scroller.actions.hooks
+        childActionsHooks.on(
+          childActionsHooks.eventTypes.contentNotMoved,
+          () => {
+            parentScroll.enable()
+          }
+        )
+        childScroll.on(childScroll.eventTypes.scrollStart, () => {
+          if (isOutOfBoundary(childScroll)) {
+            childScroll.disable()
+            parentScroll.enable()
+          }
+        })
+      }
     })
   }
 
-  private availableBScrolls(): BScrollPairs[] {
+  private getBScrollPairs(): BScrollPairs[] {
     let ret: BScrollPairs[] = []
     ret = this.stores
-      .filter(bs => !!bs.__parentInfo)
-      .map(bs => [bs.__parentInfo.parent, bs])
+      .filter((bs) => !!bs.__parentInfo)
+      .map((bs) => [bs.__parentInfo.parent, bs])
     return ret
-  }
-}
-
-function calculateDepths(
-  childNode: HTMLElement,
-  parentNode: HTMLElement
-): number {
-  let depth = 0
-  let parent = childNode.parentNode
-  while (parent && parent !== parentNode) {
-    depth++
-    parent = parent.parentNode
-  }
-  return depth
-}
-
-function checkBeyondBoundary(scroll: BScroll): Boolean {
-  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
-  const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
-
-  const hasReachLeft =
-    scroll.x >= scroll.minScrollX && scrollBehaviorX.movingDirection === -1
-  const hasReachRight =
-    scroll.x <= scroll.maxScrollX && scrollBehaviorX.movingDirection === 1
-  const hasReachTop =
-    scroll.y >= scroll.minScrollY && scrollBehaviorY.movingDirection === -1
-  const hasReachBottom =
-    scroll.y <= scroll.maxScrollY && scrollBehaviorY.movingDirection === 1
-
-  if (hasVerticalScroll) {
-    return hasReachTop || hasReachBottom
-  } else if (hasHorizontalScroll) {
-    return hasReachLeft || hasReachRight
-  }
-  return false
-}
-
-function setupData(scroll: BScroll): void {
-  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
-  const { actions, scrollBehaviorX, scrollBehaviorY } = scroll.scroller
-  actions.startTime = +new Date()
-
-  if (hasVerticalScroll) {
-    scrollBehaviorY.startPos = scrollBehaviorY.currentPos
-  } else if (hasHorizontalScroll) {
-    scrollBehaviorX.startPos = scrollBehaviorX.currentPos
-  }
-}
-
-function hasScroll(scroll: BScroll) {
-  return {
-    hasHorizontalScroll: scroll.hasHorizontalScroll,
-    hasVerticalScroll: scroll.hasVerticalScroll
   }
 }

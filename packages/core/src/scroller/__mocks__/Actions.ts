@@ -43,6 +43,7 @@ const ScrollerActions = jest
           'beforeEnd',
           'end',
           'scrollEnd',
+          'contentNotMoved',
         ]),
       }
     }
