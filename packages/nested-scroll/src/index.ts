@@ -1,13 +1,41 @@
 import BScroll, { MountedBScrollHTMLElement } from '@better-scroll/core'
-import { Direction } from '@better-scroll/shared-utils'
+import {
+  Direction,
+  EventEmitter,
+  extend,
+  warn,
+  findIndex,
+} from '@better-scroll/shared-utils'
+import BScrollFamily from './BScrollFamily'
+import propertiesConfig from './propertiesConfig'
+
+export const DEFAUL_GROUP_ID = 'INTERNAL_NESTED_SCROLL'
+
+export type NestedScrollGroupId = string | number
+
+export interface NestedScrollConfig {
+  groupId: NestedScrollGroupId
+}
+
+export type NestedScrollOptions = NestedScrollConfig | true
 
 declare module '@better-scroll/core' {
   interface CustomOptions {
-    nestedScroll?: true
+    nestedScroll?: NestedScrollOptions
+  }
+  interface CustomAPI {
+    nestedScroll: PluginAPI
   }
 }
 
-type BScrollPairs = [BScroll, BScroll]
+interface PluginAPI {
+  purgeNestedScroll(groupId: NestedScrollGroupId): void
+}
+
+interface NestedScrollInstancesMap {
+  [key: string]: NestedScroll
+  [index: number]: NestedScroll
+}
 
 const hasScroll = (scroll: BScroll) => {
   return {
@@ -29,22 +57,10 @@ const syncTouchstartData = (scroll: BScroll) => {
   }
 }
 
-const calculateDepths = (
-  childNode: HTMLElement,
-  parentNode: HTMLElement
-): number => {
-  let depth = 0
-  let parent = childNode.parentNode
-  while (parent && parent !== parentNode) {
-    depth++
-    parent = parent.parentNode
-  }
-  return depth
-}
-
 const isOutOfBoundary = (scroll: BScroll): boolean => {
   const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
   const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+  let ret = false
 
   const outOfLeftBoundary =
     scroll.x >= scroll.minScrollX &&
@@ -60,171 +76,228 @@ const isOutOfBoundary = (scroll: BScroll): boolean => {
     scrollBehaviorY.movingDirection === Direction.Positive
 
   if (hasVerticalScroll) {
-    return outOfTopBoundary || outOfBottomBoundary
+    ret = outOfTopBoundary || outOfBottomBoundary
   } else if (hasHorizontalScroll) {
-    return outOfLeftBoundary || outOfRightBoundary
+    ret = outOfLeftBoundary || outOfRightBoundary
   }
-  return false
+  return ret
 }
 
-export default class NestedScroll {
+export default class NestedScroll implements PluginAPI {
   static pluginName = 'nestedScroll'
-  static nestedScroll?: NestedScroll
-  stores: BScroll[]
+  static instancesMap: NestedScrollInstancesMap = {}
+  store: BScrollFamily[]
+  options: NestedScrollConfig
+  private hooksFn: Array<[EventEmitter, string, Function]>
   constructor(scroll: BScroll) {
-    let singleton = NestedScroll.nestedScroll
-
-    if (!(singleton instanceof NestedScroll)) {
-      singleton = NestedScroll.nestedScroll = this
-      singleton.stores = []
+    const groupId = this.handleOptions(scroll)
+    let instance = NestedScroll.instancesMap[groupId]
+    if (!instance) {
+      instance = NestedScroll.instancesMap[groupId] = this
+      instance.store = []
+      instance.hooksFn = []
     }
 
-    singleton.setup(scroll)
-    singleton.addHooks(scroll)
+    instance.init(scroll)
 
-    return singleton
+    return instance
   }
 
-  private setup(scroll: BScroll): void {
+  static getAllNestedScrolls(): NestedScroll[] {
+    const instancesMap = NestedScroll.instancesMap
+    return Object.keys(instancesMap).map((key) => instancesMap[key])
+  }
+
+  static purgeAllNestedScrolls() {
+    const nestedScrolls = NestedScroll.getAllNestedScrolls()
+    nestedScrolls.forEach((ns) => ns.purgeNestedScroll())
+  }
+
+  private handleOptions(scroll: BScroll): number | string {
+    const userOptions = (scroll.options.nestedScroll === true
+      ? {}
+      : scroll.options.nestedScroll) as NestedScrollConfig
+    const defaultOptions: NestedScrollConfig = {
+      groupId: DEFAUL_GROUP_ID,
+    }
+    this.options = extend(defaultOptions, userOptions)
+
+    const groupIdType = typeof this.options.groupId
+    if (groupIdType !== 'string' && groupIdType !== 'number') {
+      warn('groupId must be string or number for NestedScroll plugin')
+    }
+
+    return this.options.groupId
+  }
+
+  private init(scroll: BScroll) {
+    scroll.proxy(propertiesConfig)
     this.addBScroll(scroll)
-    this.buildContainRelationship()
-    this.consortNestedScrolls()
+    this.buildBScrollGraph()
+    this.analyzeBScrollGraph()
+    this.handleHooks(scroll)
   }
 
-  private addHooks(scroll: BScroll): void {
-    scroll.on('destroy', () => {
-      this.teardown(scroll)
+  private handleHooks(scroll: BScroll) {
+    this.registerHooks(scroll.hooks, scroll.hooks.eventTypes.destroy, () => {
+      this.deleteScroll(scroll)
     })
   }
 
-  private teardown(scroll: BScroll) {
-    this.removeBScroll(scroll)
-    this.buildContainRelationship()
-    this.consortNestedScrolls()
+  deleteScroll(scroll: BScroll) {
+    const wrapper = scroll.wrapper as MountedBScrollHTMLElement
+    wrapper.isBScrollContainer = undefined
+    const store = this.store
+    const hooksFn = this.hooksFn
+    const i = findIndex(store, (bscrollFamily) => {
+      return bscrollFamily.selfScroll === scroll
+    })
+    if (i > -1) {
+      const bscrollFamily = store[i]
+      bscrollFamily.purge()
+      store.splice(i, 1)
+    }
+    const k = findIndex(hooksFn, ([hooks, eventType, handler]) => {
+      return hooks === scroll.hooks
+    })
+    if (k > -1) {
+      const [hooks, eventType, handler] = hooksFn[k]
+      hooks.off(eventType, handler)
+      hooksFn.splice(k, 1)
+    }
   }
 
   addBScroll(scroll: BScroll) {
-    this.stores.push(scroll)
+    this.store.push(BScrollFamily.create(scroll))
   }
 
-  removeBScroll(scroll: BScroll): void {
-    const stores = this.stores
-    const index = stores.indexOf(scroll)
-    if (index === -1) {
-      return
-    }
-    const wrapper = scroll.wrapper as MountedBScrollHTMLElement
-    wrapper.isBScrollContainer = undefined
-    stores.splice(index, 1)
-  }
+  private buildBScrollGraph() {
+    const store = this.store
 
-  private buildContainRelationship(): void {
-    const stores = this.stores
-    if (stores.length <= 1) {
-      // there is only a childBScroll left.
-      if (stores[0] && stores[0].__parentInfo) {
-        stores[0].__parentInfo = undefined
-      }
-      return
-    }
+    let bf1: BScrollFamily
+    let bf2: BScrollFamily
+    let wrapper1: MountedBScrollHTMLElement
+    let wrapper2: MountedBScrollHTMLElement
+    let len = this.store.length
 
-    let outerBS
-    let outerBSWrapper
-    let innerBS
-    let innerBSWrapper
-
-    // Need two layers of "For loop" to calculate parent-child relationship
-    for (let i = 0; i < stores.length; i++) {
-      outerBS = stores[i]
-      outerBSWrapper = outerBS.wrapper
-      for (let j = 0; j < stores.length; j++) {
-        innerBS = stores[j]
-        innerBSWrapper = innerBS.wrapper
+    // build graph relationship
+    for (let i = 0; i < len; i++) {
+      bf1 = store[i]
+      wrapper1 = bf1.selfScroll.wrapper
+      for (let j = 0; j < len; j++) {
+        bf2 = store[j]
+        wrapper2 = bf2.selfScroll.wrapper
 
         // same bs
-        if (outerBS === innerBS) continue
+        if (bf1 === bf2) continue
 
-        // now start calculating
-        if (!innerBSWrapper.contains(outerBSWrapper)) continue
+        if (!wrapper1.contains(wrapper2)) continue
 
-        // now innerBS contains outerBS
-        // no parentInfo yet
-        if (!outerBS.__parentInfo) {
-          outerBS.__parentInfo = {
-            parent: innerBS,
-            depth: calculateDepths(outerBSWrapper, innerBSWrapper),
-          }
-        } else {
-          // has parentInfo already!
-          // just judge the real parent by depth
-          // we regard the latest node as parent, not the furthest
-          const currentDepths = calculateDepths(outerBSWrapper, innerBSWrapper)
-          const prevDepths = outerBS.__parentInfo.depth
-          // refresh currentBS as parentScroll
-          if (prevDepths > currentDepths) {
-            outerBS.__parentInfo = {
-              parent: innerBS,
-              depth: currentDepths,
-            }
-          }
+        // bs1 contains bs2
+        if (!bf1.hasDescendants(bf2)) {
+          bf1.addDescendant(bf2)
+        }
+
+        if (!bf2.hasAncestors(bf1)) {
+          bf2.addAncestor(bf1)
         }
       }
     }
   }
 
-  private consortNestedScrolls() {
-    const pairs = this.getBScrollPairs()
+  private analyzeBScrollGraph() {
+    this.store.forEach((bscrollFamily) => {
+      if (bscrollFamily.analyzed) {
+        return
+      }
 
-    pairs.forEach((scrollsPair: BScrollPairs) => {
-      const [parentScroll, childScroll] = scrollsPair
+      const { ancestors, descendants } = bscrollFamily
 
-      const parentScrollX = parentScroll.options.scrollX
-      const parentScrollY = parentScroll.options.scrollY
-      const childScrollX = childScroll.options.scrollX
-      const childScrollY = childScroll.options.scrollY
-      // vertical nested in vertical
-      // horizontal nested in horizontal
-      // otherwise, no need to handle.
-      if (parentScrollX === childScrollX || parentScrollY === childScrollY) {
-        scrollsPair.forEach((scroll, index) => {
-          const oppositeScroll = scrollsPair[(index + 1) % 2]
-
-          scroll.on(scroll.eventTypes.beforeScrollStart, () => {
-            if (oppositeScroll.pending) {
-              oppositeScroll.stop()
-              oppositeScroll.resetPosition()
-            }
-            syncTouchstartData(oppositeScroll)
-            oppositeScroll.disable()
-          })
-
-          scroll.on(scroll.eventTypes.touchEnd, () => {
-            oppositeScroll.enable()
-          })
+      const beforeScrollStartHandler = () => {
+        const stopHandler = (instance: BScroll) => {
+          if (instance.pending) {
+            instance.stop()
+            instance.resetPosition()
+          }
+        }
+        ancestors.forEach(({ selfScroll }) => {
+          stopHandler(selfScroll)
+          selfScroll.disable()
+          syncTouchstartData(selfScroll)
         })
 
-        const childActionsHooks = childScroll.scroller.actions.hooks
-        childActionsHooks.on(
-          childActionsHooks.eventTypes.contentNotMoved,
-          () => {
-            parentScroll.enable()
-          }
-        )
-        childScroll.on(childScroll.eventTypes.scrollStart, () => {
-          if (isOutOfBoundary(childScroll)) {
-            childScroll.disable()
-            parentScroll.enable()
-          }
+        descendants.forEach(({ selfScroll }) => {
+          stopHandler(selfScroll)
         })
       }
+
+      const touchEndHandler = () => {
+        enableScrollHander(ancestors)
+        enableScrollHander(descendants)
+      }
+
+      const enableScrollHander = (scrolls: BScrollFamily[]) => {
+        scrolls.forEach(({ selfScroll }) => {
+          selfScroll.enable()
+        })
+      }
+
+      const currentScroll = bscrollFamily.selfScroll
+
+      const scrollStartHandler = () => {
+        // only top scroll can perform a bounce effect
+        const isTopScroll = ancestors.length === 0
+        if (!isTopScroll && isOutOfBoundary(currentScroll)) {
+          currentScroll.disable()
+          enableScrollHander(ancestors)
+        }
+      }
+
+      bscrollFamily.registerHooks(
+        currentScroll,
+        currentScroll.eventTypes.beforeScrollStart,
+        beforeScrollStartHandler
+      )
+      bscrollFamily.registerHooks(
+        currentScroll,
+        currentScroll.eventTypes.touchEnd,
+        touchEndHandler
+      )
+      bscrollFamily.registerHooks(
+        currentScroll,
+        currentScroll.eventTypes.scrollStart,
+        scrollStartHandler
+      )
+      const selfActionsHooks = currentScroll.scroller.actions.hooks
+      bscrollFamily.registerHooks(
+        selfActionsHooks,
+        selfActionsHooks.eventTypes.contentNotMoved,
+        () => {
+          enableScrollHander(ancestors)
+        }
+      )
+
+      bscrollFamily.setAnalyzed(true)
     })
   }
 
-  private getBScrollPairs(): BScrollPairs[] {
-    let ret: BScrollPairs[] = []
-    ret = this.stores
-      .filter((bs) => !!bs.__parentInfo)
-      .map((bs) => [bs.__parentInfo.parent, bs])
-    return ret
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
+  }
+
+  purgeNestedScroll() {
+    const groupId = this.options.groupId
+    this.store.forEach((bscrollFamily) => {
+      bscrollFamily.purge()
+    })
+    this.store = []
+
+    this.hooksFn.forEach(([hooks, eventType, handler]) => {
+      hooks.off(eventType, handler)
+    })
+    this.hooksFn = []
+
+    delete NestedScroll.instancesMap[groupId]
   }
 }
