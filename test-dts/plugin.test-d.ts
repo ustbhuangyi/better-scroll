@@ -25,6 +25,7 @@ import {
   PullUpLoadConfig,
   PullDownRefreshOptions,
   PullDownRefreshConfig,
+  NestedScrollOptions,
 } from './index'
 import {
   DeepNonNullable,
@@ -258,17 +259,22 @@ describe('observeDom plugin options and api type shoule be inferred correctly', 
   })
   // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectType<boolean, BSOptions['observeDOM']>()
+  expectType<true, BSOptions['observeDOM']>()
 })
 
 describe('nestedScroll plugin options and api type shoule be inferred correctly', () => {
   BScroll.use(NestedScroll)
   const bscroll = new BScroll('', {
-    nestedScroll: true,
+    nestedScroll: {
+      groupId: 1,
+    },
   })
   // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectType<true, BSOptions['nestedScroll']>()
+  expectType<
+    string | number,
+    ExcludeTrue<BSOptions['nestedScroll']>['groupId']
+  >()
 })
 
 describe('mouseWheel plugin options and api type shoule be inferred correctly', () => {
@@ -319,5 +325,5 @@ describe('movable plugin options and api type shoule be inferred correctly', () 
   })
   // Options
   type BSOptions = DeepNonNullable<typeof bscroll.options>
-  expectType<boolean, FilterUndef<BSOptions['movable']>>()
+  expectType<true, FilterUndef<BSOptions['movable']>>()
 })
