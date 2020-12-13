@@ -26,6 +26,10 @@ export default {
         {
           path: '/nested-scroll/horizontal',
           name: 'horizontal'
+        },
+        {
+          path: '/nested-scroll/horizontal-in-vertical',
+          name: 'horizontal-in-vertical'
         }
       ]
     }

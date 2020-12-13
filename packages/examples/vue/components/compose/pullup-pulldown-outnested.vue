@@ -119,7 +119,9 @@ export default {
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScroll: true,
+        nestedScroll: {
+          groupId: 'pullup-pullldown'
+        },
         bounceTime:TIME_BOUNCE,
         // pullDown options
         pullDownRefresh: {
@@ -133,7 +135,9 @@ export default {
       })
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
-        nestedScroll: true,
+        nestedScroll: {
+          groupId: 'pullup-pullldown'
+        },
         // close bounce effects
         bounce: {
           top: false,
@@ -212,6 +216,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, .1)
 .inner-wrapper
   height: 240px
+  background-color: rgba(98,183,145, 0.2)
 
 .inner-list-item
   height: 50px

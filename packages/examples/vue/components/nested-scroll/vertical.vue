@@ -11,7 +11,7 @@
           </ul>
         </div>
         <ul>
-          <li class="outer-list-item" v-for="(item, index) in items1" :key="index">{{item}}</li>
+          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in items1" :key="index">{{item}}</li>
         </ul>
       </div>
 
@@ -69,6 +69,10 @@ export default {
   mounted () {
     this.initBScroll()
   },
+  beforeDestroy () {
+    this.outerScroll.destroy()
+    this.innerScroll.destroy()
+  },
   methods: {
     handleOuterClick () {
       window.alert('clicked outer item')
@@ -79,18 +83,20 @@ export default {
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScroll: true,
+        nestedScroll: {
+          groupId: 'vertical-nested-scroll' // groupId is a string or number
+        },
         click: true
       })
+
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
-        nestedScroll: true,
-        click: true,
-        // close bounce effects
-        bounce: {
-          top: false,
-          bottom: false
-        }
+        // please keep the same groupId as above
+        // outerScroll and innerScroll will be controlled by the same nestedScroll instance
+        nestedScroll: {
+          groupId: 'vertical-nested-scroll'
+        },
+        click: true
       })
     }
   }

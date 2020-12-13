@@ -42,6 +42,7 @@ import FormTextarea from 'vue-example/components/form/textarea'
 
 import NestedVerticalScroll from 'vue-example/components/nested-scroll/vertical'
 import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizontal'
+import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 
 import Movable from 'vue-example/components/movable/default'
 import MovableMultiContent from 'vue-example/components/movable/multi-content'
@@ -197,6 +198,10 @@ export default new Router({
         {
           path: 'horizontal',
           component: NestedHorizontalScroll,
+        },
+        {
+          path: 'horizontal-in-vertical',
+          component: NestedHorizontalInVertical,
         }
       ],
     },

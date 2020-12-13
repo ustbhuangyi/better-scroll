@@ -75,17 +75,26 @@ export default {
   mounted () {
     this.initBScroll()
   },
+  beforeDestroy () {
+    this.outerScroll.destroy()
+    this.innerScroll.destroy()
+  },
   methods: {
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScroll: true
+        nestedScroll: {
+          groupId: 'slide-nested'
+        }
       })
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
-        nestedScroll: true,
+        nestedScroll: {
+          groupId: 'slide-nested'
+        },
         scrollX: true,
         scrollY: false,
+        momentum: false,
         // close bounce effects
         bounce: {
           top: false,
