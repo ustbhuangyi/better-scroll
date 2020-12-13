@@ -166,4 +166,12 @@ describe('Transition Class test suit', () => {
     transition.clearTimer()
     expect(transition.timer).toBe(0)
   })
+
+  it('should reset callStopWhenPending', () => {
+    const { transition } = createTransition(0)
+    transition.setPending(true)
+    transition.stop()
+    transition.startProbe({ x: 0, y: 0 }, { x: 0, y: -10 })
+    expect(transition.callStopWhenPending).toBe(false)
+  })
 })

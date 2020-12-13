@@ -127,6 +127,22 @@ describe('Actions Class tests', () => {
       e,
     })
     expect(scrollHandler).toBeCalledTimes(2)
+
+    // content not moved
+    const mockFn = jest.fn()
+    actions.contentMoved = false
+    actions.hooks.on(actions.hooks.eventTypes.contentNotMoved, mockFn)
+    actions.startTime = Date.now() - 400
+    actions.scrollBehaviorX.move = jest.fn().mockImplementation(() => 0)
+    actions.scrollBehaviorY.move = jest.fn().mockImplementation(() => 0)
+
+    actions.endTime = Date.now() + 400
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: 0,
+      e,
+    })
+    expect(mockFn).toBeCalled()
   })
 
   it('should invoke handleEnd when actionsHandler trigger end hook', () => {

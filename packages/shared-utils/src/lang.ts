@@ -32,3 +32,21 @@ export function between(x: number, min: number, max: number) {
   }
   return x
 }
+
+export function findIndex<T>(
+  ary: T[],
+  fn: (value: T, index: number, arr?: T[]) => boolean
+) {
+  if (ary.findIndex) {
+    return ary.findIndex(fn)
+  }
+  let index = -1
+  ary.some(function (item, i, ary) {
+    const ret = fn(item, i, ary)
+    if (ret) {
+      index = i
+      return ret
+    }
+  })
+  return index
+}
