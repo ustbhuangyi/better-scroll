@@ -138,7 +138,7 @@ BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
 ## 实例方法
 
-:::tip
+:::tip 提示
 以下方法皆已代理至 BetterScroll 实例，例如：
 
 ```js
