@@ -186,6 +186,12 @@ export default class Scroller implements ExposedAPI {
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
       const prevPos = this.getCurrentPos()
       this.updatePositions(pos)
+      // scrollEnd will dispatch when scroll is force stopping in touchstart handler
+      // so in touchend handler, don't toggle pointer-events
+      if (this.actions.ensuringInteger === true) {
+        this.actions.ensuringInteger = false
+        return
+      }
       // a valid translate
       if (pos.x !== prevPos.x || pos.y !== prevPos.y) {
         this.togglePointerEvents(false)

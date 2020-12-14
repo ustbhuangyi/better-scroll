@@ -431,4 +431,9 @@ describe('Scroller Class tests', () => {
 
     scroller.scrollTo(0, 0.5, 300)
   })
+  it('should not toggle pointer-events when casting last position into integer in touchend handlers', () => {
+    scroller.actions.ensuringInteger = true
+    scroller.translater.hooks.trigger('translate', { x: 0, y: -20 })
+    expect(scroller.actions.ensuringInteger).toBe(false)
+  })
 })

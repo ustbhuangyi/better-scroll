@@ -27,6 +27,7 @@ const ScrollerActions = jest
         enabled: true,
         startTime: 0,
         endTime: 0,
+        ensuringInteger: false,
         getCurrentPos: jest.fn().mockImplementation(() => {
           return {
             x: 0,

@@ -26,6 +26,7 @@ export default class ScrollerActions {
   enabled: boolean
   startTime: number
   endTime: number
+  ensuringInteger: boolean
   constructor(
     scrollBehaviorX: Behavior,
     scrollBehaviorY: Behavior,
@@ -229,6 +230,7 @@ export default class ScrollerActions {
   }
 
   private ensureIntegerPos(currentPos: TranslaterPoint) {
+    this.ensuringInteger = true
     let { x, y } = currentPos
     const {
       minScrollPos: minScrollPosX,
