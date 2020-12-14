@@ -138,6 +138,24 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 
 ## Instance Methods
 
+:::tip
+All methdos are proxied to BetterScroll instance, for example:
+
+```js
+import BScroll from '@better-scroll/core'
+import Wheel from '@better-scroll/wheel'
+
+BScroll.use(Wheel)
+
+const bs = new BScroll('.bs-wrapper', {
+  wheel: true
+})
+
+bs.getSelectedIndex()
+bs.wheelTo(1, 300)
+```
+:::
+
 ### getSelectedIndex()
 
   - **Returns**: The index of the currently selected item, the subscript starts from 0
