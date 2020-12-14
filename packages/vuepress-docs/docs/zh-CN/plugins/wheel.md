@@ -138,6 +138,24 @@ BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
 ## 实例方法
 
+:::tip 提示
+以下方法皆已代理至 BetterScroll 实例，例如：
+
+```js
+import BScroll from '@better-scroll/core'
+import Wheel from '@better-scroll/wheel'
+
+BScroll.use(Wheel)
+
+const bs = new BScroll('.bs-wrapper', {
+  wheel: true
+})
+
+bs.getSelectedIndex()
+bs.wheelTo(1, 300)
+```
+:::
+
 ### getSelectedIndex()
 
   - **返回值**：当前选中项的 index，下标从 0 开始

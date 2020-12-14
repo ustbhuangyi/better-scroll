@@ -167,8 +167,6 @@ new BScroll('.bs-wrapper', {
   bs.zoomTo(2, 'center', 'center') // 基于缩放元素的中心进行缩放
   ```
 
-  - **返回值**：无
-
 ## 事件
 
 ### beforeZoomStart

@@ -58,11 +58,28 @@ yarn add @better-scroll/pull-up
 
 ## 实例方法
 
+:::tip 提示
+以下方法皆已代理至 BetterScroll 实例，例如：
+
+```js
+import BScroll from '@better-scroll/core'
+import PullUp from '@better-scroll/pull-up'
+
+BScroll.use(PullUp)
+
+const bs = new BScroll('.bs-wrapper', {
+  pullUpLoad: true
+})
+
+bs.finishPullUp()
+bs.openPullUp({})
+bs.closePullUp()
+```
+:::
+
 ### `finishPullUp()`
 
   - **介绍**：结束上拉加载行为。
-  - **参数**：无
-  - **返回值**：无
 
   ::: warning 注意
   每次触发 `pullingUp` 钩子后，你应该**主动调用** `finishPullUp()` 告诉 BetterScroll 准备好下一次的 pullingUp 钩子。
@@ -81,7 +98,6 @@ yarn add @better-scroll/pull-up
       threshold: number
     }
     ```
-  - **返回值**：无
 
   ::: warning 注意
   openPullUp 方法应该配合 closePullUp 一起使用，因为在 pullup 插件的生成过程当中，已经**自动监测了上拉加载的动作**。
@@ -90,14 +106,10 @@ yarn add @better-scroll/pull-up
 ### `closePullUp()`
 
   - **介绍**：关闭上拉加载功能。
-  - **参数**：无
-  - **返回值**：无
 
 ### `autoPullUpLoad()`
 
   - **介绍**：自动执行上拉加载。
-  - **参数**：无
-  - **返回值**：无
 
 ## 事件
 

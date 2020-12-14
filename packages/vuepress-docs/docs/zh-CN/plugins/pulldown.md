@@ -66,11 +66,28 @@ new BScroll('.bs-wrapper', {
 
 ## 实例方法
 
+:::tip 提示
+以下方法皆已代理至 BetterScroll 实例，例如：
+
+```js
+import BScroll from '@better-scroll/core'
+import PullDown from '@better-scroll/pull-down'
+
+BScroll.use(PullDown)
+
+const bs = new BScroll('.bs-wrapper', {
+  pullDownRefresh: true
+})
+
+bs.finishPullDown()
+bs.openPullDown({})
+bs.autoPullDownRefresh()
+```
+:::
+
 ### `finishPullDown()`
 
   - **介绍**：结束下拉刷新行为。
-  - **参数**：无
-  - **返回值**：无
 
 ::: warning 注意
 每次触发 `pullingDown` 钩子后，你应该**主动调用** `finishPullDown()` 告诉 BetterScroll 准备好下一次的 pullingDown 钩子。
@@ -99,14 +116,10 @@ openPullDown 方法应该配合 closePullDown 一起使用，因为在 pulldown 
 ### `closePullDown()`
 
   - **介绍**：动态关闭下拉刷新功能。
-  - **参数**：无
-  - **返回值**：无
 
 ### `autoPullDownRefresh()`
 
   - **介绍**：自动执行下拉刷新。
-  - **参数**：无
-  - **返回值**：无
 
 ## 事件
 

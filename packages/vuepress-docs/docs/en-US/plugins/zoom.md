@@ -170,8 +170,6 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
   bs.zoomTo(2, 'center', 'center')
   ```
 
-  - **Returns**: void
-
 ## Events
 
 ### beforeZoomStart

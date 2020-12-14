@@ -66,11 +66,28 @@ new BScroll('.bs-wrapper', {
 
 ## Instance Methods
 
+:::tip
+All methdos are proxied to BetterScroll instance, for example:
+
+```js
+import BScroll from '@better-scroll/core'
+import PullDown from '@better-scroll/pull-down'
+
+BScroll.use(PullDown)
+
+const bs = new BScroll('.bs-wrapper', {
+  pullDownRefresh: true
+})
+
+bs.finishPullDown()
+bs.openPullDown({})
+bs.autoPullDownRefresh()
+```
+:::
+
 ### `finishPullDown()`
 
   - **Details**: End the pull-down refresh behavior.
-  - **Arguments**: None
-  - **Returns**: None
 
   ::: warning
   Every time the `pullingDown` hook is triggered, you should **actively call** `finishPullDown()` to tell BetterScroll to be ready for the next pullingDown hook.
@@ -91,7 +108,6 @@ new BScroll('.bs-wrapper', {
       stop: number
     }
     ```
-  - **Returns**: None
 
   ::: warning
   The **openPullDown** method should be used with **closePullDown**, because in the process of generating the pulldown plugin, the pull-down refresh action has been automatically monitored.
@@ -100,8 +116,6 @@ new BScroll('.bs-wrapper', {
 ### `closePullDown()`
 
   - **Details**: Turn off the pull-down refresh dynamically.
-  - **Arguments**: None
-  - **Returns**: None
 
 ## Events
 

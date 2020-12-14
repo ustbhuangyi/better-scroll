@@ -222,6 +222,25 @@ In general, the layout of BetterScroll's slide is as follows:
 
 ## Instance Methods
 
+:::tip
+All methdos are proxied to BetterScroll instance, for example:
+
+```js
+import BScroll from '@better-scroll/core'
+import Slide from '@better-scroll/slide'
+
+BScroll.use(Slide)
+
+const bs = new BScroll('.bs-wrapper', {
+  slide: true
+})
+
+bs.next()
+bs.prev()
+bs.getCurrentPage()
+```
+:::
+
 ### next([time], [easing])
 
   - **Arguments**:
@@ -234,8 +253,6 @@ In general, the layout of BetterScroll's slide is as follows:
     }
     ```
 
-  - **Returns**: none
-
   Scroll to the next page.
 
 ### prev([time], [easing])
@@ -243,8 +260,6 @@ In general, the layout of BetterScroll's slide is as follows:
   - **Arguments**:
     - `{ number } time<Optional>`: Animation duration, default is `options.speed`
     - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
-
-  - **Returns**: none
 
   Scroll to the previous page.
 
@@ -256,13 +271,9 @@ In general, the layout of BetterScroll's slide is as follows:
     - `{ number } time<Optional>`: Animation duration, default is `options.speed`
     - `{ EaseItem } easing<Optional>`: Ease effect configuration, refer to [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts), the default is `bounce` effect
 
-  - **Returns**: none
-
   Scroll to the specified page.
 
 ### getCurrentPage()
-
-  - **Arguments**: none
 
   - **Returns**: `page`
   ```typescript
@@ -279,17 +290,9 @@ In general, the layout of BetterScroll's slide is as follows:
 
 ### startPlay()
 
-  - **Arguments**: none
-
-  - **Returns**: none
-
   If the loop configuration is turned on, manually turn on autoplay.
 
 ### pausePlay()
-
-  - **Arguments**: none
-
-  - **Returns**: none
 
   If the loop configuration is turned on, manually turn off autoplay.
 
