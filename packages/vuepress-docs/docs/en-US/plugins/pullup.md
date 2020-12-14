@@ -59,11 +59,28 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 
 ## Instance Methods
 
+:::tip
+All methdos are proxied to BetterScroll instance, for example:
+
+```js
+import BScroll from '@better-scroll/core'
+import PullUp from '@better-scroll/pull-up'
+
+BScroll.use(PullUp)
+
+const bs = new BScroll('.bs-wrapper', {
+  pullUpLoad: true
+})
+
+bs.finishPullUp()
+bs.openPullUp({})
+bs.closePullUp()
+```
+:::
+
 ### `finishPullUp()`
 
-  - **Details**: End the pullUpLoad behavior.
-  - **Arguments**: None
-  - **Returns**: None
+  - **Details**: Finish the pullUpLoad behavior.
 
   ::: warning
   Every time you trigger the `pullingUp` hook, you should **actively call** `finishPullUp()` to tell BetterScroll to be ready for the next pullingUp hook.
@@ -84,7 +101,6 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
       stop: number
     }
     ```
-  - **Returns**: None
 
   ::: warning
   The **openPullUp** method should be used with **closePullUp**, because in the process of generating the pullup plugin, the pullUpLoad action has been automatically monitored.
@@ -93,8 +109,10 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 ### `closePullUp()`
 
   - **Details**: Turn off pullUpLoad dynamically.
-  - **Arguments**: None
-  - **Returns**: None
+
+### `autoPullUpLoad()`
+
+  - **Details**：Auto pullUp.
 
 ## Events
 
@@ -103,6 +121,6 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 - **Arguments**: None
 - **Trigger**: When the distance to the bottom is less than the value of `threshold`, a `pullingUp` event is triggered.
 
-  ::: danger Note
-  After the pullUpLoad action is detected, the consumption opportunity of the `pullingUp` event is only once, so you need to call `finishPullUp()` to tell BetterScroll to provide the next consumption opportunity of the `pullingUp` event.
-  :::
+::: danger Note
+After the pullUpLoad action is detected, the consumption opportunity of the `pullingUp` event is only once, so you need to call `finishPullUp()` to tell BetterScroll to provide the next consumption opportunity of the `pullingUp` event.
+:::
