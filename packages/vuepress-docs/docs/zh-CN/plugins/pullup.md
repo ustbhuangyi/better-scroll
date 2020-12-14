@@ -59,7 +59,7 @@ yarn add @better-scroll/pull-up
 ## 实例方法
 
 :::tip 提示
-All methdos are proxied to BetterScroll instance, for example:
+以下方法皆已代理至 BetterScroll 实例，例如：
 
 ```js
 import BScroll from '@better-scroll/core'

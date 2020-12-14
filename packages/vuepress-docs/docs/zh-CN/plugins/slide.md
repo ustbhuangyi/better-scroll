@@ -222,6 +222,25 @@ yarn add @better-scroll/slide
 
 ## 实例方法
 
+:::tip 提示
+以下方法皆已代理至 BetterScroll 实例，例如：
+
+```js
+import BScroll from '@better-scroll/core'
+import Slide from '@better-scroll/slide'
+
+BScroll.use(Slide)
+
+const bs = new BScroll('.bs-wrapper', {
+  slide: true
+})
+
+bs.next()
+bs.prev()
+bs.getCurrentPage()
+```
+:::
+
 ### next([time], [easing])
 
   - **参数**：
@@ -234,8 +253,6 @@ yarn add @better-scroll/slide
     }
     ```
 
-  - **返回值**：无
-
   滚动到下一张。
 
 ### prev([time], [easing])
@@ -243,8 +260,6 @@ yarn add @better-scroll/slide
   - **参数**：
     - `{ number } time<可选>`：动画时长，默认是 `options.speed`
     - `{ EaseItem } easing<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
-
-  - **返回值**：无
 
   滚动到上一张。
 
@@ -256,13 +271,9 @@ yarn add @better-scroll/slide
     - `{ number } time<可选>`：动画时长，默认是 `options.speed`
     - `{ EaseItem } easing<可选>`：缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
 
-  - **返回值**：无
-
   滚动到指定的 Page 位置。
 
 ### getCurrentPage()
-
-  - **参数**： 无
 
   - **返回值**： `page`
   ```typescript
@@ -279,17 +290,9 @@ yarn add @better-scroll/slide
 
 ### startPlay()
 
-  - **参数**：无
-
-  - **返回值**：无
-
   如果开启了 loop 的配置，手动开启循环播放。
 
 ### pausePlay()
-
-  - **参数**：无
-
-  - **返回值**：无
 
   如果开启了 loop 的配置，手动关闭循环播放。
 
