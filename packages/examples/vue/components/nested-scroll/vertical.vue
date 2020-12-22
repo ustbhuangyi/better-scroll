@@ -3,15 +3,15 @@
     <div ref="outerScroll" class="outer-wrapper">
       <div class="outer-content">
         <ul>
-          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in items1" :key="index">{{item}}</li>
+          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in outerOpenData" :key="index">{{item}}</li>
         </ul>
         <div ref="innerScroll" class="inner-wrapper">
           <ul class="inner-content">
-            <li class="inner-list-item" v-for="(item, index) in items2" @click="handleInnerClick" :key="index">{{item}}</li>
+            <li class="inner-list-item" v-for="(item, index) in innerData" @click="handleInnerClick" :key="index">{{item}}</li>
           </ul>
         </div>
         <ul>
-          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in items1" :key="index">{{item}}</li>
+          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in outerCloseData" :key="index">{{item}}</li>
         </ul>
       </div>
 
@@ -24,24 +24,30 @@ import BScroll from '@better-scroll/core'
 import NestedScroll from '@better-scroll/nested-scroll'
 BScroll.use(NestedScroll)
 
-const _data1 = [
-  '😀 😁 😂 🤣 😃 🙃 ',
+const outerOpenData = [
+  '----Outer Start----',
   '👆🏻 outer scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
-  '👆🏻 outer scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
-  '🙂 🤔 😄 🤨  😐 🙃 ',
-  '👆🏻 outer scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ '
+  '👆🏻 outer scroll 👇🏻 '
 ]
 
-const _data2 = [
-  'The Mountain top of Inner',
+const outerCloseData = [
+  '👆🏻 outer scroll 👇🏻 ',
+  '🙂 🤔 😄 🤨 😐 🙃 ',
+  '👆🏻 outer scroll 👇🏻 ',
+  '😔 😕 🙃 🤑 😲 😲 ',
+  '🙂 🤔 😄 🤨  😐 🙃 ',
+  '👆🏻 outer scroll 👇🏻 ',
+  '----Outer End----',
+]
+
+const innerData = [
+  '------Inner Start-----',
   '😀 😁 😂 🤣 😃 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '😔 😕 🙃 🤑 😲 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🐣 🐣 🐣 🐣 🐣 🐣 ',
   '👆🏻 inner scroll 👇🏻 ',
@@ -56,14 +62,15 @@ const _data2 = [
   '🚖 🚖 🚖 🚖 🚖 🚖 ',
   '👆🏻 inner scroll 👇🏻 ',
   '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ',
-  'The Mountain foot of Inner',
+  '-----Inner End-----'
 ]
 
 export default {
   data() {
     return {
-      items1: _data1,
-      items2: _data2
+      outerOpenData,
+      outerCloseData,
+      innerData,
     }
   },
   mounted () {

@@ -35,7 +35,7 @@ import NestedScroll from '@better-scroll/nested-scroll'
 BScroll.use(NestedScroll)
 
 const outerOpenData = [
-  '------------Outer Start-------------',
+  '----Outer Start----',
   '👆🏻 outer scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 outer scroll 👇🏻 '
@@ -45,14 +45,14 @@ const outerCloseData = [
   '👆🏻 outer scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 outer scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '😔 😕 🙃 🤑 😲 😲 ',
   '🙂 🤔 😄 🤨  😐 🙃 ',
   '👆🏻 outer scroll 👇🏻 ',
-  '------------Outer End-------------',
+  '----Outer End----',
 ]
 
 const middleOpenData = [
-  '------------Middle Start-------------',
+  '----Middle Start----',
   '👆🏻 middle scroll 👇🏻 ',
   '🐣 🐣 🐣 🐣 🐣 🐣 ',
 ]
@@ -68,16 +68,16 @@ const middleCloseData = [
   '🚖 🚖 🚖 🚖 🚖 🚖 ',
   '👆🏻 middle scroll 👇🏻 ',
   '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ',
-  '------------Middle End-------------',
+  '----Middle End----',
 ]
 
 const innerData = [
-  '------------Inner Start-------------',
+  '------Inner Start-----',
   '😀 😁 😂 🤣 😃 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '😔 😕 🙃 🤑 😲 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🐣 🐣 🐣 🐣 🐣 🐣 ',
   '👆🏻 inner scroll 👇🏻 ',
@@ -92,7 +92,7 @@ const innerData = [
   '🚖 🚖 🚖 🚖 🚖 🚖 ',
   '👆🏻 inner scroll 👇🏻 ',
   '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ',
-  '------------Inner End-------------'
+  '-----Inner End-----'
 ]
 
 export default {
@@ -110,6 +110,7 @@ export default {
   },
   beforeDestroy () {
     this.outerScroll.destroy()
+    this.middleScroll.destroy()
     this.innerScroll.destroy()
   },
   methods: {
@@ -124,15 +125,7 @@ export default {
     },
     initBScroll () {
       // outer
-      this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScroll: {
-          groupId: 'triple-nested-scroll' // groupId is a string or number
-        },
-        click: true
-      })
-
-      // inner
-      this.middleScroll = new BScroll(this.$refs.middleScroll, {
+      this.outerScroll = this.outerScroll = new BScroll(this.$refs.outerScroll, {
         nestedScroll: {
           groupId: 'triple-nested-scroll' // groupId is a string or number
         },
@@ -146,7 +139,28 @@ export default {
         nestedScroll: {
           groupId: 'triple-nested-scroll'
         },
+        probeType:2,
         click: true
+      })
+
+      this.innerScroll.on('scroll', () => {
+        console.log('innerScroll scroll')
+      })
+      this.innerScroll.on('scrollEnd', () => {
+        console.log('innerScroll scrollEnd')
+      })
+
+      // middle
+      this.middleScroll = new BScroll(this.$refs.middleScroll, {
+        nestedScroll: {
+          groupId: 'triple-nested-scroll' // groupId is a string or number
+        },
+        probeType: 2,
+        click: true
+      })
+
+      this.middleScroll.on('scroll', () => {
+        console.log('middleScroll scroll')
       })
     }
   }

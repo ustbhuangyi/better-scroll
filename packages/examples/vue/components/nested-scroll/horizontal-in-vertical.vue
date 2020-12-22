@@ -20,26 +20,35 @@
 <script>
 import BScroll from '@better-scroll/core';
 import NestedScroll from '@better-scroll/nested-scroll'
+import Slide from '@better-scroll/slide'
+
 BScroll.use(NestedScroll)
+BScroll.use(Slide)
+
 const LIST1 = [
   '😀 😁 😂 🤣 😃 🙃 ',
   '👆🏻 vertical scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
-  '👆🏻 vertical scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
-  '🙂 🤔 😄 🤨  😐 🙃 ',
-  '👆🏻 vertical scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ '
 ]
 const LIST2 = [
   '😀 😁 😂 🤣 😃 🙃 ',
   '👆🏻 vertical scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 vertical scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '😔 😕 🙃 🤣 😲 🙃 🤣',
   '🙂 🤔 😄 🤨  😐 🙃 ',
   '👆🏻 vertical scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ '
+  '😔 😕 🙃 🤣 😲 🙃 🤣',
+  '👆🏻 vertical scroll 👇🏻 ',
+  '😔 😕 🙃 🤣 😲 🙃 🤣',
+  '🙂 🤔 😄 🤨 😐 🙃 ',
+  '👆🏻 vertical scroll 👇🏻 ',
+  '😔 😕 🙃 🤣 😲 🙃 🤣',
+  '👆🏻 vertical scroll 👇🏻 ',
+  '😔 😕 🙃 🤣 😲 🙃 🤣',
+  '🙂 🤔 😄 🤨  😐 🙃 ',
+  '👆🏻 vertical scroll 👇🏻 ',
+  '😔 😕 🙃 🤣 😲 🙃 🤣'
 ]
 export default {
   data () {
@@ -87,23 +96,24 @@ export default {
 
 <style lang="stylus" scoped>
   .horizontal-in-vertical-container
+      height: 100%
     .vertical-wrapper
-      width: 100%
-      height: 500px
-      border: 2px solid #62B791
+      height: 100%
+      border: 1px solid rgba(0, 0, 0, .1)
+      position: relative
       overflow: hidden
       .vertical-item
         line-height: 40px
         text-align: center
     .slide-banner-content
-      height: 200px
+      height: 120px
       white-space: nowrap
       font-size: 0
       .slide-item
         display: inline-block
-        height: 200px
+        height: 120px
         width: 100%
-        line-height: 200px
+        line-height: 120px
         text-align: center
         font-size: 26px
         &.page1
