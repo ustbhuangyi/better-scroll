@@ -223,7 +223,7 @@ In general, the layout of BetterScroll's slide is as follows:
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'

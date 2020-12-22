@@ -139,7 +139,7 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'

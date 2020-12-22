@@ -111,7 +111,7 @@ export default {
       this.showCode = !this.showCode
     },
     toPreview() {
-      location.href = `${BASE_URL}${this.qrcodeUrl}`
+      window.open(`${BASE_URL}${this.qrcodeUrl}`)
     },
     copyCode () {
       const pre = this.$el.querySelectorAll('pre')[this.codeNavIndex]
