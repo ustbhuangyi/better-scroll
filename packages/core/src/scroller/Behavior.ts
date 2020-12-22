@@ -183,7 +183,7 @@ export class Behavior {
   }
 
   updateDirection() {
-    const absDist = Math.round(this.currentPos) - this.absStartPos
+    const absDist = this.currentPos - this.absStartPos
     this.setDirection(absDist)
   }
 

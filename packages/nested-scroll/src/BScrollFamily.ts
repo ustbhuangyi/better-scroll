@@ -1,12 +1,15 @@
 import BScroll from '@better-scroll/core'
-import { EventEmitter } from '@better-scroll/shared-utils'
+import { EventEmitter, findIndex } from '@better-scroll/shared-utils'
+
+// second element is used to discribe the distance between two bs instance's wrapper DOM
+export type BScrollFamilyTuple = [BScrollFamily, number]
 
 export default class BScrollFamily {
   static create(scroll: BScroll) {
     return new BScrollFamily(scroll)
   }
-  ancestors: BScrollFamily[] = []
-  descendants: BScrollFamily[] = []
+  ancestors: BScrollFamilyTuple[] = []
+  descendants: BScrollFamilyTuple[] = []
   hooksManager: [EventEmitter, string, Function][] = []
   selfScroll: BScroll
   analyzed: boolean = false
@@ -15,25 +18,43 @@ export default class BScrollFamily {
   }
 
   hasAncestors(bscrollFamily: BScrollFamily) {
-    return this.ancestors.indexOf(bscrollFamily) > -1
+    const index = findIndex(this.ancestors, ([item]) => {
+      return item === bscrollFamily
+    })
+    return index > -1
   }
 
   hasDescendants(bscrollFamily: BScrollFamily) {
-    return this.descendants.indexOf(bscrollFamily) > -1
+    const index = findIndex(this.descendants, ([item]) => {
+      return item === bscrollFamily
+    })
+    return index > -1
   }
 
-  addAncestor(bscrollFamily: BScrollFamily) {
-    this.ancestors.push(bscrollFamily)
+  addAncestor(bscrollFamily: BScrollFamily, distance: number) {
+    const ancestors = this.ancestors
+    ancestors.push([bscrollFamily, distance])
+    // by ascend
+    ancestors.sort((a, b) => {
+      return a[1] - b[1]
+    })
   }
 
-  addDescendant(bscrollFamily: BScrollFamily) {
-    this.descendants.push(bscrollFamily)
+  addDescendant(bscrollFamily: BScrollFamily, distance: number) {
+    const descendants = this.descendants
+    descendants.push([bscrollFamily, distance])
+    // by ascend
+    descendants.sort((a, b) => {
+      return a[1] - b[1]
+    })
   }
 
   removeAncestor(bscrollFamily: BScrollFamily) {
     const ancestors = this.ancestors
     if (ancestors.length) {
-      const index = ancestors.indexOf(bscrollFamily)
+      const index = findIndex(this.ancestors, ([item]) => {
+        return item === bscrollFamily
+      })
       if (index > -1) {
         return ancestors.splice(index, 1)
       }
@@ -43,7 +64,9 @@ export default class BScrollFamily {
   removeDescendant(bscrollFamily: BScrollFamily) {
     const descendants = this.descendants
     if (descendants.length) {
-      const index = descendants.indexOf(bscrollFamily)
+      const index = findIndex(this.descendants, ([item]) => {
+        return item === bscrollFamily
+      })
       if (index > -1) {
         return descendants.splice(index, 1)
       }
@@ -61,10 +84,10 @@ export default class BScrollFamily {
 
   purge() {
     // remove self from graph
-    this.ancestors.forEach((bscrollFamily) => {
+    this.ancestors.forEach(([bscrollFamily]) => {
       bscrollFamily.removeDescendant(this)
     })
-    this.descendants.forEach((bscrollFamily) => {
+    this.descendants.forEach(([bscrollFamily]) => {
       bscrollFamily.removeAncestor(this)
     })
 

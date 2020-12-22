@@ -43,6 +43,7 @@ export default class ScrollerActions {
       'end',
       'scrollEnd',
       'contentNotMoved',
+      'detectMovingDirection',
     ])
 
     this.scrollBehaviorX = scrollBehaviorX
@@ -155,6 +156,10 @@ export default class ScrollerActions {
     const prevY = this.scrollBehaviorY.getCurrentPos()
     const newY = this.scrollBehaviorY.move(delta.deltaY)
 
+    if (this.hooks.trigger(this.hooks.eventTypes.detectMovingDirection)) {
+      return
+    }
+
     if (!this.fingerMoved) {
       this.fingerMoved = true
     }
@@ -214,6 +219,7 @@ export default class ScrollerActions {
 
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
+
     if (this.hooks.trigger(this.hooks.eventTypes.end, e, currentPos)) {
       return true
     }

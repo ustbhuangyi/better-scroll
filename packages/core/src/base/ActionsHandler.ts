@@ -238,10 +238,14 @@ export default class ActionsHandler {
   setContent(content: HTMLElement) {
     if (content !== this.wrapper) {
       this.wrapper = content
-      this.wrapperEventRegister.destroy()
-      this.targetEventRegister.destroy()
-      this.handleDOMEvents()
+      this.rebindDOMEvents()
     }
+  }
+
+  rebindDOMEvents() {
+    this.wrapperEventRegister.destroy()
+    this.targetEventRegister.destroy()
+    this.handleDOMEvents()
   }
 
   destroy() {

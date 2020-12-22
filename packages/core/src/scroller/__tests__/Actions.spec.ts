@@ -128,6 +128,18 @@ describe('Actions Class tests', () => {
     })
     expect(scrollHandler).toBeCalledTimes(2)
 
+    const cbMock = jest.fn().mockImplementationOnce(() => true)
+    actions.fingerMoved = true
+    actions.hooks.on(actions.hooks.eventTypes.detectMovingDirection, cbMock)
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+
+    expect(cbMock).toBeCalled()
+    expect(actions.fingerMoved).toBe(true)
+
     // content not moved
     const mockFn = jest.fn()
     actions.contentMoved = false

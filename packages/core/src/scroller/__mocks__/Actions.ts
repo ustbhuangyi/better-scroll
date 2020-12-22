@@ -45,6 +45,7 @@ const ScrollerActions = jest
           'end',
           'scrollEnd',
           'contentNotMoved',
+          'detectMovingDirection',
         ]),
       }
     }

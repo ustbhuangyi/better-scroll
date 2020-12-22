@@ -37,50 +37,91 @@ interface NestedScrollInstancesMap {
   [index: number]: NestedScroll
 }
 
-const hasScroll = (scroll: BScroll) => {
-  return {
-    hasHorizontalScroll: scroll.hasHorizontalScroll,
-    hasVerticalScroll: scroll.hasVerticalScroll,
-  }
+const forceScrollStopHandler = (scrolls: BScroll[]) => {
+  scrolls.forEach((scroll) => {
+    if (scroll.pending) {
+      scroll.stop()
+      scroll.resetPosition()
+    }
+  })
 }
 
-const syncTouchstartData = (scroll: BScroll) => {
-  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
-  const { actions, scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+const enableScrollHander = (scrolls: BScroll[]) => {
+  scrolls.forEach((scroll) => {
+    scroll.enable()
+  })
+}
 
-  actions.startTime = +new Date()
+const disableScrollHander = (scrolls: BScroll[]) => {
+  scrolls.forEach((scroll) => {
+    scroll.disable()
+  })
+}
 
-  if (hasVerticalScroll) {
-    scrollBehaviorY.startPos = scrollBehaviorY.currentPos
-  } else if (hasHorizontalScroll) {
-    scrollBehaviorX.startPos = scrollBehaviorX.currentPos
-  }
+const syncTouchstartData = (scrolls: BScroll[]) => {
+  scrolls.forEach((scroll) => {
+    const { actions, scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+
+    // prevent click triggering many times
+    actions.fingerMoved = true
+    actions.contentMoved = false
+
+    actions.directionLockAction.reset()
+
+    scrollBehaviorX.start()
+    scrollBehaviorY.start()
+
+    scrollBehaviorX.resetStartPos()
+    scrollBehaviorY.resetStartPos()
+
+    actions.startTime = +new Date()
+  })
 }
 
 const isOutOfBoundary = (scroll: BScroll): boolean => {
-  const { hasHorizontalScroll, hasVerticalScroll } = hasScroll(scroll)
-  const { scrollBehaviorX, scrollBehaviorY } = scroll.scroller
+  const {
+    hasHorizontalScroll,
+    hasVerticalScroll,
+    x,
+    y,
+    minScrollX,
+    maxScrollX,
+    minScrollY,
+    maxScrollY,
+    movingDirectionX,
+    movingDirectionY,
+  } = scroll
   let ret = false
 
   const outOfLeftBoundary =
-    scroll.x >= scroll.minScrollX &&
-    scrollBehaviorX.movingDirection === Direction.Negative
+    x >= minScrollX && movingDirectionX === Direction.Negative
   const outOfRightBoundary =
-    scroll.x <= scroll.maxScrollX &&
-    scrollBehaviorX.movingDirection === Direction.Positive
+    x <= maxScrollX && movingDirectionX === Direction.Positive
   const outOfTopBoundary =
-    scroll.y >= scroll.minScrollY &&
-    scrollBehaviorY.movingDirection === Direction.Negative
+    y >= minScrollY && movingDirectionY === Direction.Negative
   const outOfBottomBoundary =
-    scroll.y <= scroll.maxScrollY &&
-    scrollBehaviorY.movingDirection === Direction.Positive
+    y <= maxScrollY && movingDirectionY === Direction.Positive
 
   if (hasVerticalScroll) {
     ret = outOfTopBoundary || outOfBottomBoundary
   } else if (hasHorizontalScroll) {
     ret = outOfLeftBoundary || outOfRightBoundary
   }
+
   return ret
+}
+
+const calculateDistance = (
+  childNode: HTMLElement,
+  parentNode: HTMLElement
+): number => {
+  let distance = 0
+  let parent = childNode.parentNode
+  while (parent && parent !== parentNode) {
+    distance++
+    parent = parent.parentNode
+  }
+  return distance
 }
 
 export default class NestedScroll implements PluginAPI {
@@ -135,6 +176,7 @@ export default class NestedScroll implements PluginAPI {
     this.addBScroll(scroll)
     this.buildBScrollGraph()
     this.analyzeBScrollGraph()
+    this.ensureEventInvokeSequence()
     this.handleHooks(scroll)
   }
 
@@ -180,7 +222,7 @@ export default class NestedScroll implements PluginAPI {
     let wrapper2: MountedBScrollHTMLElement
     let len = this.store.length
 
-    // build graph relationship
+    // build graph
     for (let i = 0; i < len; i++) {
       bf1 = store[i]
       wrapper1 = bf1.selfScroll.wrapper
@@ -194,12 +236,13 @@ export default class NestedScroll implements PluginAPI {
         if (!wrapper1.contains(wrapper2)) continue
 
         // bs1 contains bs2
+        const distance = calculateDistance(wrapper2, wrapper1)
         if (!bf1.hasDescendants(bf2)) {
-          bf1.addDescendant(bf2)
+          bf1.addDescendant(bf2, distance)
         }
 
         if (!bf2.hasAncestors(bf1)) {
-          bf2.addAncestor(bf1)
+          bf2.addAncestor(bf1, distance)
         }
       }
     }
@@ -211,46 +254,33 @@ export default class NestedScroll implements PluginAPI {
         return
       }
 
-      const { ancestors, descendants } = bscrollFamily
+      const {
+        ancestors,
+        descendants,
+        selfScroll: currentScroll,
+      } = bscrollFamily
 
       const beforeScrollStartHandler = () => {
-        const stopHandler = (instance: BScroll) => {
-          if (instance.pending) {
-            instance.stop()
-            instance.resetPosition()
-          }
-        }
-        ancestors.forEach(({ selfScroll }) => {
-          stopHandler(selfScroll)
-          selfScroll.disable()
-          syncTouchstartData(selfScroll)
-        })
-
-        descendants.forEach(({ selfScroll }) => {
-          stopHandler(selfScroll)
-        })
+        // always get the latest scroll
+        const ancestorScrolls = ancestors.map(
+          ([bscrollFamily]) => bscrollFamily.selfScroll
+        )
+        const descendantScrolls = descendants.map(
+          ([bscrollFamily]) => bscrollFamily.selfScroll
+        )
+        forceScrollStopHandler([...ancestorScrolls, ...descendantScrolls])
+        syncTouchstartData(ancestorScrolls)
+        disableScrollHander(ancestorScrolls)
       }
 
       const touchEndHandler = () => {
-        enableScrollHander(ancestors)
-        enableScrollHander(descendants)
-      }
-
-      const enableScrollHander = (scrolls: BScrollFamily[]) => {
-        scrolls.forEach(({ selfScroll }) => {
-          selfScroll.enable()
-        })
-      }
-
-      const currentScroll = bscrollFamily.selfScroll
-
-      const scrollStartHandler = () => {
-        // only top scroll can perform a bounce effect
-        const isTopScroll = ancestors.length === 0
-        if (!isTopScroll && isOutOfBoundary(currentScroll)) {
-          currentScroll.disable()
-          enableScrollHander(ancestors)
-        }
+        const ancestorScrolls = ancestors.map(
+          ([bscrollFamily]) => bscrollFamily.selfScroll
+        )
+        const descendantScrolls = descendants.map(
+          ([bscrollFamily]) => bscrollFamily.selfScroll
+        )
+        enableScrollHander([...ancestorScrolls, ...descendantScrolls])
       }
 
       bscrollFamily.registerHooks(
@@ -263,21 +293,45 @@ export default class NestedScroll implements PluginAPI {
         currentScroll.eventTypes.touchEnd,
         touchEndHandler
       )
-      bscrollFamily.registerHooks(
-        currentScroll,
-        currentScroll.eventTypes.scrollStart,
-        scrollStartHandler
-      )
+
       const selfActionsHooks = currentScroll.scroller.actions.hooks
       bscrollFamily.registerHooks(
         selfActionsHooks,
-        selfActionsHooks.eventTypes.contentNotMoved,
+        selfActionsHooks.eventTypes.detectMovingDirection,
         () => {
-          enableScrollHander(ancestors)
+          const ancestorScrolls = ancestors.map(
+            ([bscrollFamily]) => bscrollFamily.selfScroll
+          )
+          const parentScroll = ancestorScrolls[0]
+          const otherAncestorScrolls = ancestorScrolls.slice(1)
+          const contentMoved = currentScroll.scroller.actions.contentMoved
+          const isTopScroll = ancestorScrolls.length === 0
+          if (contentMoved) {
+            disableScrollHander(ancestorScrolls)
+          } else if (!isTopScroll) {
+            if (isOutOfBoundary(currentScroll)) {
+              disableScrollHander([currentScroll])
+              if (parentScroll) {
+                enableScrollHander([parentScroll])
+              }
+              disableScrollHander(otherAncestorScrolls)
+              return true
+            }
+          }
         }
       )
-
       bscrollFamily.setAnalyzed(true)
+    })
+  }
+  // make sure touchmove|touchend invoke from child to parent
+  private ensureEventInvokeSequence() {
+    const copied = this.store.slice()
+    const sequencedScroll = copied.sort((a, b) => {
+      return a.descendants.length - b.descendants.length
+    })
+    sequencedScroll.forEach((bscrollFamily) => {
+      const scroll = bscrollFamily.selfScroll
+      scroll.scroller.actionsHandler.rebindDOMEvents()
     })
   }
 

@@ -132,12 +132,16 @@ describe('NestedScroll tests', () => {
     const childBScrollFamily = ns1.store[1]
 
     expect(parentBScrollFamily.ancestors.length).toBe(0)
-    expect(parentBScrollFamily.descendants.includes(childBScrollFamily)).toBe(
-      true
-    )
-    expect(childBScrollFamily.ancestors.includes(parentBScrollFamily)).toBe(
-      true
-    )
+    expect(
+      parentBScrollFamily.descendants.findIndex(([bf]) => {
+        return bf === childBScrollFamily
+      }) > -1
+    ).toBe(true)
+    expect(
+      childBScrollFamily.ancestors.findIndex(([bf]) => {
+        return bf === parentBScrollFamily
+      }) > -1
+    ).toBe(true)
     expect(childBScrollFamily.descendants.length).toBe(0)
   })
 
@@ -282,7 +286,7 @@ describe('NestedScroll tests', () => {
     expect(childScroll.resetPosition).toBeCalled()
   })
 
-  it('should enable ancestors when self is keeping unmoved', () => {
+  it('detectMovingDirection hook', () => {
     const parentScroll = new BScroll(parentWrapper, {
       nestedScroll: {
         groupId: 'enable-others',
@@ -297,12 +301,14 @@ describe('NestedScroll tests', () => {
     new NestedScroll(parentScroll)
     new NestedScroll(childScroll)
 
+    // one is moved, all ancestors should be disabled
+    childScroll.scroller.actions.contentMoved = true
     const selfActionsHooks = childScroll.scroller.actions.hooks
-    selfActionsHooks.trigger(selfActionsHooks.eventTypes.contentNotMoved)
-    expect(parentScroll.enable).toBeCalled()
+    selfActionsHooks.trigger(selfActionsHooks.eventTypes.detectMovingDirection)
+    expect(parentScroll.disable).toBeCalled()
   })
 
-  it('should enable ancestors when self touchended', () => {
+  it('should enable ancestors and descendants when self touchended', () => {
     const parentScroll = new BScroll(parentWrapper, {
       nestedScroll: {
         groupId: 'touchend',
@@ -319,6 +325,8 @@ describe('NestedScroll tests', () => {
 
     childScroll.trigger(childScroll.eventTypes.touchEnd)
     expect(parentScroll.enable).toBeCalled()
+    parentScroll.trigger(parentScroll.eventTypes.touchEnd)
+    expect(childScroll.enable).toBeCalled()
   })
 
   it('should only allow top-scroll has bounce effect', () => {
@@ -337,9 +345,10 @@ describe('NestedScroll tests', () => {
     new NestedScroll(parentScroll)
     new NestedScroll(childScroll)
 
-    childScroll.scroller.scrollBehaviorY.movingDirection = -1
+    childScroll.movingDirectionY = -1
 
-    childScroll.trigger(childScroll.eventTypes.scrollStart)
+    const selfActionsHooks = childScroll.scroller.actions.hooks
+    selfActionsHooks.trigger(selfActionsHooks.eventTypes.detectMovingDirection)
 
     expect(childScroll.disable).toBeCalled()
     expect(parentScroll.enable).toBeCalled()
@@ -365,9 +374,12 @@ describe('NestedScroll tests', () => {
     new NestedScroll(parentScrollH)
     new NestedScroll(childScrollH)
 
-    childScrollH.scroller.scrollBehaviorX.movingDirection = -1
+    childScrollH.movingDirectionX = -1
 
-    childScrollH.trigger(childScrollH.eventTypes.scrollStart)
+    const selfActionsHooksH = childScrollH.scroller.actions.hooks
+    selfActionsHooksH.trigger(
+      selfActionsHooksH.eventTypes.detectMovingDirection
+    )
 
     expect(childScrollH.disable).toBeCalled()
     expect(parentScrollH.enable).toBeCalled()

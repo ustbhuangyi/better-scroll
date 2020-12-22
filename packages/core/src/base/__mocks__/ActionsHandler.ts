@@ -15,6 +15,7 @@ const ActionsHandler = jest
       destroy: jest.fn(),
       setInitiated: jest.fn(),
       setContent: jest.fn(),
+      rebindDOMEvents: jest.fn(),
     }
   })
 
