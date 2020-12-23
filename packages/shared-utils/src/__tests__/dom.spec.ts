@@ -70,6 +70,14 @@ describe('dom', () => {
     window.addEventListener('dblclick', mockFn2)
     tap(e, 'tap')
     expect(mockFn1).toBeCalled()
+    // fallback to createEvent
+    Object.defineProperty(window, 'CustomEvent', {
+      get() {
+        return undefined
+      },
+    })
+    tap(e, 'tap')
+    expect(mockFn1).toBeCalled()
 
     dblclick(e)
     expect(mockFn2).toBeCalled()
