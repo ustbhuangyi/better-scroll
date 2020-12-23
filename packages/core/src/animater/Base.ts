@@ -3,6 +3,7 @@ import {
   safeCSSStyleDeclaration,
   cancelAnimationFrame,
   EventEmitter,
+  Probe,
 } from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 
@@ -18,7 +19,8 @@ export default abstract class Base implements ExposedAPI {
   pending: boolean
   callStopWhenPending: boolean
   forceStopped: boolean
-  _reflow: number;
+  _reflow: number
+  isRealtimeProbeType: boolean;
   [key: string]: any
 
   constructor(
@@ -37,6 +39,7 @@ export default abstract class Base implements ExposedAPI {
       'time',
       'timeFunction',
     ])
+    this.isRealtimeProbeType = options.probeType === Probe.Realtime
     this.setContent(content)
   }
 

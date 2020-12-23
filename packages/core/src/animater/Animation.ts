@@ -5,7 +5,6 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn,
-  Probe,
 } from '@better-scroll/shared-utils'
 
 export default class Animation extends Base {
@@ -18,7 +17,9 @@ export default class Animation extends Base {
     // time is 0
     if (!time) {
       this.translate(endPoint)
-      this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+      if (this.isRealtimeProbeType) {
+        this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+      }
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       return
     }
@@ -38,8 +39,9 @@ export default class Animation extends Base {
       // js animation end
       if (now >= destTime) {
         this.translate(endPoint)
-
-        this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+        if (this.isRealtimeProbeType) {
+          this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+        }
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
         return
       }
@@ -54,7 +56,7 @@ export default class Animation extends Base {
       })
       this.translate(newPoint)
 
-      if (this.options.probeType === Probe.Realtime) {
+      if (this.isRealtimeProbeType) {
         this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
       }
 
