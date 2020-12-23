@@ -179,7 +179,8 @@ export default class Indicator {
   ): KeyValues {
     let initialSize = Math.max(
       Math.round(
-        (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
+        (wrapperSize * (scrollerSize + maxScroll)) /
+          (scrollerSize || wrapperSize || 1)
       ),
       INDICATOR_MIN_LEN
     )
