@@ -202,11 +202,31 @@ export function preventDefaultExceptionFn(
 export const tagExceptionFn = preventDefaultExceptionFn
 
 export function tap(e: any, eventName: string) {
-  let ev = document.createEvent('Event') as any
-  ev.initEvent(eventName, true, true)
+  let ev: any
+  if (typeof CustomEvent !== 'undefined') {
+    try {
+      ev = new CustomEvent(eventName, {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      })
+    } catch (e) {
+      /* istanbul ignore next */
+      createEvent()
+    }
+  } else {
+    createEvent()
+  }
+
+  function createEvent() {
+    ev = document.createEvent('Event') as any
+    ev.initEvent(eventName, true, true)
+  }
+
   ev.pageX = e.pageX
   ev.pageY = e.pageY
-  e.target.dispatchEvent(ev)
+  const dispatchTarget = (e.composedPath && e.composedPath()[0]) || e.target
+  dispatchTarget.dispatchEvent(ev)
 }
 
 export function click(e: any, event = 'click') {
@@ -231,6 +251,7 @@ export function click(e: any, event = 'click') {
   let ev: any
   const bubbles = true
   const cancelable = true
+  const composed = true
   const { ctrlKey, shiftKey, altKey, metaKey } = e
   const pressedKeysMap = {
     ctrlKey,
@@ -246,6 +267,7 @@ export function click(e: any, event = 'click') {
           {
             bubbles,
             cancelable,
+            composed,
             ...pressedKeysMap,
           },
           posSrc
@@ -268,7 +290,8 @@ export function click(e: any, event = 'click') {
   // forwardedTouchEvent set to true in case of the conflict with fastclick
   ev.forwardedTouchEvent = true
   ev._constructed = true
-  e.target.dispatchEvent(ev)
+  const dispatchTarget = (e.composedPath && e.composedPath()[0]) || e.target
+  dispatchTarget.dispatchEvent(ev)
 }
 
 export function dblclick(e: Event) {
