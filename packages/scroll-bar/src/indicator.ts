@@ -177,10 +177,10 @@ export default class Indicator {
     scrollerSize: number,
     maxScroll: number
   ): KeyValues {
+    const scrollerSizeRatio =
+      (scrollerSize + maxScroll) / (scrollerSize || wrapperSize || 1)
     let initialSize = Math.max(
-      Math.round(
-        (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
-      ),
+      Math.round(wrapperSize * scrollerSizeRatio),
       INDICATOR_MIN_LEN
     )
 
