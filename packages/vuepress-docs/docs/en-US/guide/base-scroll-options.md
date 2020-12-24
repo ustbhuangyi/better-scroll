@@ -156,7 +156,21 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - **Type**: `number`
    - **Default**: `0`
    - **Optional Value**: `1 | 2 | 3`
-   - **Usage**: Sometimes we want to know the scrolling position. This setting regulates the probe aggressiveness or the frequency at which the `scroll` event is fired. Valid values are: `1`, `2`, `3`. When setted to 1, The scroll event is non-real time fired (after the screen scrolled for some time); When setted to 2,  the scroll event is real-time fired during the screen scrolling; When setted to 3, the scroll event is real-time fired during not only the screen scrolling but also the momentum and bounce animation. If not setted, the default value `0` means there is no scroll event is fired.
+   - **Usage**: Deciding whether to dispatch the scroll event, this has an impact on the performance of the page, especially in the mode where `useTransition` is true.
+
+   ```js
+   // There are two scenarios for dispatching scroll:
+   // 1. The finger acts on the scrolling area (content DOM),
+   // 2. Invoke the scrollTo method or trigger the momentum scroll animation (in fact, the implementation is still Invoking the scrollTo method)
+
+   // For the v2.1.0, the probeType has been unified
+
+   // The probeType is:
+   // 0, scroll event will not be dispatched at any time，
+   // 1, and only when the finger is moving on the scroll area, a scroll event is dispatched every momentumLimitTime milliseconds.
+   // 2, and only when the finger is moving on the scroll area, a scroll event is dispatched all the time.
+   // 3, scroll events are dispatched at any time, including invoking scrollTo or triggering momentum 
+   ```
 
 ## preventDefault
    - **Type**: `boolean`
