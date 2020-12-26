@@ -191,9 +191,12 @@ export class Behavior {
     const { size, position } = this.options.rect
     const isWrapperStatic =
       window.getComputedStyle(this.wrapper, null).position === 'static'
+    // Force reflow
     const wrapperRect = getRect(this.wrapper)
-    this.wrapperSize = wrapperRect[size]
-
+    // use client is more fair than offset
+    this.wrapperSize = this.wrapper[
+      size === 'width' ? 'clientWidth' : 'clientHeight'
+    ]
     this.setContent(content)
     const contentRect = getRect(this.content)
     this.contentSize = contentRect[size]
@@ -205,7 +208,6 @@ export class Behavior {
     }
 
     this.computeBoundary()
-
     this.setDirection(Direction.Default)
   }
 

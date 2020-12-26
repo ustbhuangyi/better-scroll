@@ -82,6 +82,7 @@
 .core-container
   .scroll-wrapper
     height 400px
+    position relative
     overflow hidden
     .scroll-item
       height 50px

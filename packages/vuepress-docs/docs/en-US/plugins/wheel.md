@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The wheel plugin is the cornerstone for implementing similar IOS Picker components.
+The wheel plugin is the cornerstone for implementing similar iOS Picker components.
 
 ## Install
 
@@ -186,5 +186,5 @@ bs.wheelTo(1, 300)
   Force the scrolling BetterScroll to stop and return to the position before the scrolling started.
 
 ::: tip
-The above two methods are only valid for **the scrolling BetterScroll**, and `restorePosition` is exactly the same as the original iOS picker component. Users can choose the corresponding method according to their needs.
+The above two methods are only valid for **the scrolling BetterScroll**, and `restorePosition` is exactly the same as the original iOS Picker component. Users can choose the corresponding method according to their needs.
 :::
