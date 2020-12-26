@@ -199,7 +199,7 @@ export default class NestedScroll implements PluginAPI {
       bscrollFamily.purge()
       store.splice(i, 1)
     }
-    const k = findIndex(hooksFn, ([hooks, eventType, handler]) => {
+    const k = findIndex(hooksFn, ([hooks]) => {
       return hooks === scroll.hooks
     })
     if (k > -1) {
