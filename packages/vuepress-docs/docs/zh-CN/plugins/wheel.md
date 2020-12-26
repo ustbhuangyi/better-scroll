@@ -170,3 +170,15 @@ bs.wheelTo(1, 300)
     - `{ number } ease<可选>`：动画时长。缓动效果配置，参考 [ease.ts](https://github.com/ustbhuangyi/better-scroll/blob/dev/packages/shared-utils/src/ease.ts)，默认是 `bounce` 效果
 
   滚动至对应索引的列表项。
+
+### stop()（v2.1.0）
+
+  强制让滚动的 BetterScroll 停止下来，并且吸附至当前距离最近的 wheel-item 的位置。
+
+### restorePosition()（v2.1.0）
+
+  强制让滚动的 BetterScroll 停止下来，并且恢复至滚动开始前的位置。
+
+::: tip 提示
+以上两个方法只对处于**滚动中的 BetterScroll** 有效，并且 `restorePosition` 是与原生的 iOS picker 组件的效果一模一样，用户可以根据自己的需求选择对应的方法。
+:::
