@@ -158,8 +158,13 @@
             useTransition: false,
             probeType: 3
           })
+          // < v2.1.0
           this.wheel.on('scrollEnd', () => {
             this.$emit(EVENT_CHANGE, this.wheel.getSelectedIndex())
+          })
+          // v2.1.0, only when selectedIndex changed
+          this.wheel.on('selectedIndexChanged', (index) => {
+            console.log(index)
           })
         } else {
           this.wheel.refresh()
