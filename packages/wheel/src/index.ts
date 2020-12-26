@@ -12,6 +12,8 @@ import propertiesConfig from './propertiesConfig'
 
 export type WheelOptions = Partial<WheelConfig> | true
 
+const WHEEL_INDEX_CHANGED_EVENT_NAME = 'selectedIndexChanged'
+
 export interface WheelConfig {
   selectedIndex: number
   rotate: number
@@ -63,6 +65,7 @@ export default class Wheel implements PluginAPI {
 
   private handleBScroll() {
     this.scroll.proxy(propertiesConfig)
+    this.scroll.registerType([WHEEL_INDEX_CHANGED_EVENT_NAME])
   }
 
   private handleOptions() {
@@ -112,7 +115,7 @@ export default class Wheel implements PluginAPI {
       (content: HTMLElement) => {
         if (content !== prevContent) {
           prevContent = content
-          this.setSelectedIndex(this.options.selectedIndex)
+          this.setSelectedIndex(this.options.selectedIndex, true)
         }
         // rotate all wheel-items
         // because position may not change
@@ -264,8 +267,14 @@ export default class Wheel implements PluginAPI {
     scrollBehaviorY.refresh(content)
   }
 
-  setSelectedIndex(index: number) {
+  setSelectedIndex(index: number, contentChanged: boolean = false) {
+    const prevSelectedIndex = this.selectedIndex
     this.selectedIndex = index
+
+    // if content DOM changed, should not trigger event
+    if (prevSelectedIndex !== index && !contentChanged) {
+      this.scroll.trigger(WHEEL_INDEX_CHANGED_EVENT_NAME, index)
+    }
   }
 
   getSelectedIndex() {
