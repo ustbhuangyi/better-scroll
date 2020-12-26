@@ -63,6 +63,8 @@ describe('Animation Class test suit', () => {
       y: 10,
     }
 
+    animation.isRealtimeProbeType = true
+
     animation.move(startPoint, endPoint, 0, 'easing')
     expect(translater.translate).toBeCalledTimes(1)
     expect(translater.translate).toBeCalledWith(endPoint)
