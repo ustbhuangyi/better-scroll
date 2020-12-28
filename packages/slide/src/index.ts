@@ -59,14 +59,18 @@ export default class Slide implements PluginAPI {
   static pluginName = 'slide'
   pages: SlidePages
   options: SlideConfig
-  private initialised: boolean
+  initialised: boolean
+  prevContent: HTMLElement
+  exposedPage: Page
+  private cachedClonedPageDOM: HTMLElement[] = []
+  private oneToMorePagesInLoop: boolean
+  private moreToOnePageInLoop: boolean
   private thresholdX: number
   private thresholdY: number
   private hooksFn: Array<[EventEmitter, string, Function]>
   private resetLooping = false
   private willChangeToPage: Page
   private autoplayTimer: number = 0
-  private prevContent: HTMLElement
   constructor(public scroll: BScroll) {
     if (!this.satisfyInitialization()) {
       return
@@ -99,7 +103,7 @@ export default class Slide implements PluginAPI {
   }
 
   private handleBScroll() {
-    this.scroll.registerType(['slideWillChange'])
+    this.scroll.registerType(['slideWillChange', 'slidePageChanged'])
     this.scroll.proxy(propertiesConfig)
   }
 
@@ -122,10 +126,40 @@ export default class Slide implements PluginAPI {
   private handleLoop(prevSlideContent: HTMLElement) {
     const { loop } = this.options
     const slideContent = this.scroll.scroller.content
-    const slidePages = slideContent.children
-    if (loop && slidePages.length > 1) {
-      this.cloneFirstAndLastSlidePage(slideContent, prevSlideContent)
+    const currentSlidePagesLength = slideContent.children.length
+    // only should respect loop scene
+    if (loop) {
+      if (slideContent !== prevSlideContent) {
+        this.resetLoopChangedStatus()
+        this.removeClonedSlidePage(prevSlideContent)
+        currentSlidePagesLength > 1 &&
+          this.cloneFirstAndLastSlidePage(slideContent)
+      } else {
+        // many pages reduce to one page
+        if (currentSlidePagesLength === 3 && this.initialised) {
+          this.removeClonedSlidePage(slideContent)
+          this.moreToOnePageInLoop = true
+          this.oneToMorePagesInLoop = false
+        } else if (currentSlidePagesLength > 1) {
+          // one page increases to many page
+          if (this.initialised && this.cachedClonedPageDOM.length === 0) {
+            this.oneToMorePagesInLoop = true
+            this.moreToOnePageInLoop = false
+          } else {
+            this.removeClonedSlidePage(slideContent)
+            this.resetLoopChangedStatus()
+          }
+          this.cloneFirstAndLastSlidePage(slideContent)
+        } else {
+          this.resetLoopChangedStatus()
+        }
+      }
     }
+  }
+
+  private resetLoopChangedStatus() {
+    this.moreToOnePageInLoop = false
+    this.oneToMorePagesInLoop = false
   }
 
   private handleHooks() {
@@ -292,7 +326,12 @@ export default class Slide implements PluginAPI {
   }
 
   getCurrentPage(): Page {
-    return this.pages.getExposedPage()
+    return this.exposedPage || this.pages.getInitialPage(true)
+  }
+
+  setCurrentPage(page: Page) {
+    this.pages.setCurrentPage(page)
+    this.exposedPage = this.pages.getExposedPage(page)
   }
 
   nearestPage(x: number, y: number): Page {
@@ -337,10 +376,15 @@ export default class Slide implements PluginAPI {
     if (contentChanged) {
       this.prevContent = content
     }
-    const initPage = this.pages.getInitialPage(contentChanged)
+    const initPage = this.pages.getInitialPage(
+      !this.initialised ||
+        contentChanged ||
+        this.oneToMorePagesInLoop ||
+        this.moreToOnePageInLoop
+    )
     if (this.initialised) {
       if (contentChanged) {
-        this.pages.setCurrentPage(initPage)
+        this.setCurrentPage(initPage)
       }
       this.goTo(initPage.pageX, initPage.pageY, 0)
     } else {
@@ -373,39 +417,77 @@ export default class Slide implements PluginAPI {
     }
   }
 
-  private cloneFirstAndLastSlidePage(
-    slideContent: HTMLElement,
-    prevSlideContent: HTMLElement
-  ) {
-    // if content has changed, no need to remove cloned element for preContent
-    /* istanbul ignore if */
-    if (this.initialised && slideContent === prevSlideContent) {
-      this.removeClonedSlidePage(slideContent)
-    }
+  private cloneFirstAndLastSlidePage(slideContent: HTMLElement) {
     const children = slideContent.children
-    prepend(
-      <HTMLElement>children[children.length - 1].cloneNode(true),
-      slideContent
-    )
-    slideContent.appendChild(children[1].cloneNode(true))
+    const preprendDOM = children[children.length - 1].cloneNode(
+      true
+    ) as HTMLElement
+    const appendDOM = children[0].cloneNode(true) as HTMLElement
+    prepend(preprendDOM, slideContent)
+    slideContent.appendChild(appendDOM)
+    this.cachedClonedPageDOM = [preprendDOM, appendDOM]
   }
 
   private removeClonedSlidePage(slideContent: HTMLElement) {
-    const slidePages = slideContent.children
-    if (slidePages.length > 2) {
-      removeChild(slideContent, <HTMLElement>slidePages[slidePages.length - 1])
-      removeChild(slideContent, <HTMLElement>slidePages[0])
+    // maybe slideContent has removed from DOM Tree
+    const slidePages = (slideContent && slideContent.children) || []
+    if (slidePages.length) {
+      this.cachedClonedPageDOM.forEach((el) => {
+        removeChild(slideContent, el)
+      })
     }
+    this.cachedClonedPageDOM = []
   }
 
   private modifyCurrentPage(point: Position) {
+    const scroller = this.scroll.scroller
     // if in animation, and force stopping
-    if (this.scroll.scroller.animater.forceStopped) {
+    if (scroller.animater.forceStopped) {
       return
     }
+    const {
+      pageX: prevExposedPageX,
+      pageY: prevExposedPageY,
+    } = this.getCurrentPage()
     const newPage = this.nearestPage(point.x, point.y)
-    this.pages.setCurrentPage(newPage)
+    this.setCurrentPage(newPage)
+
+    const {
+      pageX: currentExposedPageX,
+      pageY: currentExposedPageY,
+    } = this.getCurrentPage()
     this.pageWillChangeTo(newPage)
+
+    // loop is true, and one page becomes many pages when call bs.refresh
+    if (this.oneToMorePagesInLoop) {
+      this.oneToMorePagesInLoop = false
+      return true
+    }
+
+    // loop is true, and many page becomes one page when call bs.refresh
+    // if prevPage > 0, dispatch slidePageChanged and scrollEnd events
+    /* istanbul ignore if */
+    if (
+      this.moreToOnePageInLoop &&
+      prevExposedPageX === 0 &&
+      prevExposedPageY === 0
+    ) {
+      this.moreToOnePageInLoop = false
+      return true
+    }
+
+    if (
+      prevExposedPageX !== currentExposedPageX ||
+      prevExposedPageY !== currentExposedPageY
+    ) {
+      // only trust pageX & pageY when loop is true
+      const page = this.pages.getExposedPageByPageIndex(
+        currentExposedPageX,
+        currentExposedPageY
+      )
+      this.scroll.trigger(this.scroll.eventTypes.slidePageChanged, page)
+    }
+
     // triggered by resetLoop
     if (this.resetLooping) {
       this.resetLooping = false
