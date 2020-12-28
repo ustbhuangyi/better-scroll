@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-banner">
+  <div class="dynamic-slide-banner">
     <div class="banner-wrapper">
       <div class="slide-banner-wrapper" ref="slide">
         <div class="slide-banner-content">
@@ -15,8 +15,8 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button class="next" @click="nextPage">nextPage</button>
-      <button class="prev" @click="prePage">prePage</button>
+      <button @click="increase">increase</button>
+      <button @click="decrease">decrease</button>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@
   export default {
     data() {
       return {
-        nums: 4,
+        nums: 1,
         currentPageIndex: 0
       }
     },
@@ -41,8 +41,21 @@
       this.slide.destroy()
     },
     methods: {
+      increase() {
+        this.nums += 1
+        this.$nextTick(() => {
+          this.slide.refresh()
+        })
+      },
+      decrease() {
+        this.nums -= 1
+        this.nums = Math.max(1, this.nums) // at least one page
+        this.$nextTick(() => {
+          this.slide.refresh()
+        })
+      },
       init() {
-        this.slide = new BScroll(this.$refs.slide, {
+        window.slide = this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
           slide: {
@@ -56,29 +69,23 @@
         this.slide.on('scrollEnd', this._onScrollEnd)
 
         this.slide.on('slideWillChange', (page) => {
+          console.log('【slideWillChange】CurrentPage =>', page)
           this.currentPageIndex = page.pageX
         })
 
         // v2.1.0
         this.slide.on('slidePageChanged', (page) => {
-          console.log('CurrentPage changed to => ', page)
+          console.log('【slidePageChanged】CurrentPage =>', page)
         })
       },
       _onScrollEnd () {
-        console.log('CurrentPage => ', this.slide.getCurrentPage())
-      },
-      nextPage() {
-        this.slide.next()
-      },
-      prePage() {
-        this.slide.prev()
+        console.log('【scrollEnd】CurrentPage =>', this.slide.getCurrentPage())
       }
     }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-
-.slide-banner
+.dynamic-slide-banner
   .banner-wrapper
     position relative
   .slide-banner-wrapper
@@ -103,6 +110,14 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
+      &.page5
+        background-color #E71D36
+      &.page6
+        background-color #2EC4B6
+      &.page7
+        background-color #EFFFE9
+      &.page8
+        background-color #011627
   .dots-wrapper
     position absolute
     bottom 4px
@@ -128,5 +143,4 @@
       color #fff
       border-radius 4px
       background-color #666
-
 </style>
