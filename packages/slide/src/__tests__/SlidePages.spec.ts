@@ -58,6 +58,16 @@ describe('slide test for SlidePages class', () => {
       expect(slidePages.loopX).toBe(true)
     })
 
+    it('should work well with getExposedPageByPageIndex()', () => {
+      const ret = slidePages.getExposedPageByPageIndex(1, 0)
+      expect(ret).toMatchObject({
+        x: 0,
+        y: 0,
+        pageX: 1,
+        pageY: 0,
+      })
+    })
+
     it('should work well with setCurrentPage()', () => {
       const currentPage = {
         pageX: 1,
@@ -101,7 +111,7 @@ describe('slide test for SlidePages class', () => {
     })
 
     it('should work well with getInitialPage()', () => {
-      const page = slidePages.getInitialPage()
+      const page = slidePages.getInitialPage(true)
 
       expect(page).toMatchObject({
         pageX: 1,
@@ -112,13 +122,12 @@ describe('slide test for SlidePages class', () => {
     })
 
     it('should work well with getExposedPage() when loopX is true', () => {
-      slidePages.setCurrentPage({
+      const pageX = slidePages.getExposedPage({
         x: 0,
         y: 0,
         pageX: 1,
         pageY: 0,
       })
-      const pageX = slidePages.getExposedPage()
 
       expect(pageX).toMatchObject({
         pageX: 0,
@@ -248,8 +257,18 @@ describe('slide test for SlidePages class', () => {
       expect(slidePages.loopY).toBe(true)
     })
 
+    it('should work well with getExposedPageByPageIndex()', () => {
+      const ret = slidePages.getExposedPageByPageIndex(0, 1)
+      expect(ret).toMatchObject({
+        x: 0,
+        y: 0,
+        pageX: 0,
+        pageY: 1,
+      })
+    })
+
     it('should work well with getInitialPage()', () => {
-      const page = slidePages.getInitialPage()
+      const page = slidePages.getInitialPage(true)
 
       expect(page).toMatchObject({
         pageX: 0,
@@ -260,13 +279,12 @@ describe('slide test for SlidePages class', () => {
     })
 
     it('should work well with getExposedPage() when loopY is true', () => {
-      slidePages.setCurrentPage({
+      const pageY = slidePages.getExposedPage({
         x: 0,
         y: 0,
         pageX: 0,
         pageY: 1,
       })
-      const pageY = slidePages.getExposedPage()
 
       expect(pageY).toMatchObject({
         pageX: 0,

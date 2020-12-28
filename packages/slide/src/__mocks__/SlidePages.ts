@@ -28,7 +28,16 @@ const SlidePage = jest.fn().mockImplementation(() => {
         y: 20,
       }
     }),
-    getInitialPage: jest.fn().mockImplementation(() => {
+    getExposedPageByPageIndex: jest.fn(),
+    getInitialPage: jest.fn().mockImplementation((flag) => {
+      if (flag) {
+        return {
+          pageX: 1,
+          pageY: 0,
+          x: 10,
+          y: 10,
+        }
+      }
       return {
         pageX: 0,
         pageY: 0,
@@ -36,7 +45,16 @@ const SlidePage = jest.fn().mockImplementation(() => {
         y: 10,
       }
     }),
-    getExposedPage: jest.fn(),
+    getExposedPage: jest.fn().mockImplementation((page) => {
+      return (
+        page || {
+          pageX: 0,
+          pageY: 0,
+          x: 0,
+          y: 0,
+        }
+      )
+    }),
     getWillChangedPage: jest.fn().mockImplementation(() => {
       return {
         pageX: 0,
