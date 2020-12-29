@@ -32,7 +32,10 @@
   },
   "dependencies": {
     "@better-scroll/core": "^2.0.6",
+    "@better-scroll/infinity": "^2.0.6",
     "@better-scroll/mouse-wheel": "^2.0.6",
+    "@better-scroll/movable": "^2.0.6",
+    "@better-scroll/nested-scroll": "^2.0.6",
     "@better-scroll/observe-dom": "^2.0.6",
     "@better-scroll/pull-down": "^2.0.6",
     "@better-scroll/pull-up": "^2.0.6",
