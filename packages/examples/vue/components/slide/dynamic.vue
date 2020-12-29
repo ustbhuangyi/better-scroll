@@ -15,8 +15,8 @@
       </div>
     </div>
     <div class="btn-wrap">
-      <button @click="increase">increase</button>
-      <button @click="decrease">decrease</button>
+      <button @click="increase" class="increase">increase</button>
+      <button @click="decrease" class="decrease">decrease</button>
     </div>
   </div>
 </template>
