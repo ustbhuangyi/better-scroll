@@ -182,3 +182,25 @@ bs.wheelTo(1, 300)
 ::: tip 提示
 以上两个方法只对处于**滚动中的 BetterScroll** 有效，并且 `restorePosition` 是与原生的 iOS picker 组件的效果一模一样，用户可以根据自己的需求选择对应的方法。
 :::
+
+## 事件
+
+### wheelIndexChanged
+
+  - **参数**：当前选中的 wheel-item 的索引。
+  - **触发时机**：当列表项发生改变的时候。
+
+  ```js
+  import BScroll from '@better-scroll/core'
+  import Wheel from '@better-scroll/wheel'
+
+  BScroll.use(Wheel)
+
+  const bs = new BScroll('.bs-wrapper', {
+    wheel: true
+  })
+
+  bs.on('wheelIndexChanged', (index) => {
+    console.log(index)
+  })
+  ```

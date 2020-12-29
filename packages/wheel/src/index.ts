@@ -12,7 +12,7 @@ import propertiesConfig from './propertiesConfig'
 
 export type WheelOptions = Partial<WheelConfig> | true
 
-const WHEEL_INDEX_CHANGED_EVENT_NAME = 'selectedIndexChanged'
+const WHEEL_INDEX_CHANGED_EVENT_NAME = 'wheelIndexChanged'
 
 export interface WheelConfig {
   selectedIndex: number

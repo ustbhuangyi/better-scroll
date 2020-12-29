@@ -48,6 +48,7 @@
   const EVENT_SELECT = 'select'
   const EVENT_CANCEL = 'cancel'
   const EVENT_CHANGE = 'change'
+  const WHEEL_INDEX_CHANGED = 'wheelIndexChanged'
 
   const DATA = [
     {
@@ -163,7 +164,7 @@
             this.$emit(EVENT_CHANGE, this.wheel.getSelectedIndex())
           })
           // v2.1.0, only when selectedIndex changed
-          this.wheel.on('selectedIndexChanged', (index) => {
+          this.wheel.on(WHEEL_INDEX_CHANGED, (index) => {
             console.log(index)
           })
         } else {
