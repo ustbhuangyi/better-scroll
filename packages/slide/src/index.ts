@@ -60,6 +60,7 @@ export default class Slide implements PluginAPI {
   pages: SlidePages
   options: SlideConfig
   initialised: boolean
+  contentChanged: boolean
   prevContent: HTMLElement
   exposedPage: Page
   private cachedClonedPageDOM: HTMLElement[] = []
@@ -372,7 +373,7 @@ export default class Slide implements PluginAPI {
     this.pages.refresh()
     this.computeThreshold()
 
-    const contentChanged = this.prevContent !== content
+    const contentChanged = (this.contentChanged = this.prevContent !== content)
     if (contentChanged) {
       this.prevContent = content
     }
@@ -383,9 +384,6 @@ export default class Slide implements PluginAPI {
         this.moreToOnePageInLoop
     )
     if (this.initialised) {
-      if (contentChanged) {
-        this.setCurrentPage(initPage)
-      }
       this.goTo(initPage.pageX, initPage.pageY, 0)
     } else {
       this.registerHooks(
@@ -451,6 +449,12 @@ export default class Slide implements PluginAPI {
     } = this.getCurrentPage()
     const newPage = this.nearestPage(point.x, point.y)
     this.setCurrentPage(newPage)
+
+    /* istanbul ignore if */
+    if (this.contentChanged) {
+      this.contentChanged = false
+      return true
+    }
 
     const {
       pageX: currentExposedPageX,

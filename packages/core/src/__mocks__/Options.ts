@@ -5,7 +5,7 @@ const mockOptions = jest.fn().mockImplementation(() => {
     scrollX: false,
     scrollY: true,
     freeScroll: false,
-    directionLockThreshold: 5,
+    directionLockThreshold: 0,
     eventPassthrough: '',
     click: false,
     tap: '',
