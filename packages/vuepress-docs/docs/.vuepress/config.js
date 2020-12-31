@@ -11,6 +11,7 @@ module.exports = {
   publicPath: '/docs/',
   cache: false,
   head: [
+    ['link', { rel: 'shortcut icon', href: '/assets/bs.ico', type: 'images/x-icon' }],
     ['script', { src: 'https://www.googletagmanager.com/gtag/js?id=G-7E85TW7P27' }],
     ['script', { type: 'text/javascript' }, `
       window.dataLayer = window.dataLayer || [];
