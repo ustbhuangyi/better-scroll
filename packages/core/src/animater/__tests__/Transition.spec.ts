@@ -93,7 +93,7 @@ describe('Transition Class test suit', () => {
       x: 10,
       y: 10,
     }
-    transition.isRealtimeProbeType = true
+    transition.options.probeType = 3
     transition.move(startPoint, endPoint, 0, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onEnd).toHaveBeenCalled()
     transition.destroy()
