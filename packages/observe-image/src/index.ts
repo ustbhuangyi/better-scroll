@@ -61,11 +61,16 @@ export default class ObserveDOM {
 
   private load(e: Event) {
     const target = e.target as HTMLElement
+    const debounceTime = this.options.debounceTime
     if (target && isImageTag(target)) {
-      clearTimeout(this.refreshTimer)
-      this.refreshTimer = window.setTimeout(() => {
+      if (debounceTime === 0) {
         this.scroll.refresh()
-      }, this.options.debounceTime)
+      } else {
+        clearTimeout(this.refreshTimer)
+        this.refreshTimer = window.setTimeout(() => {
+          this.scroll.refresh()
+        }, this.options.debounceTime)
+      }
     }
   }
 }

@@ -38,4 +38,13 @@ describe('observe image', () => {
     jest.advanceTimersByTime(151)
     expect(scroll.refresh).toBeCalled()
   })
+
+  it('should trigger bs.refresh in a tick when debounceTime is 0', () => {
+    observeImage.options.debounceTime = 0
+    let img = document.createElement('img')
+    let loadEvent = createEvent('Event', 'load')
+    content.appendChild(img)
+    img.dispatchEvent(loadEvent)
+    expect(scroll.refresh).toBeCalled()
+  })
 })
