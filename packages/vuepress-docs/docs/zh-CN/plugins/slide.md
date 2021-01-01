@@ -97,6 +97,10 @@ yarn add @better-scroll/slide
   在 loop 的场景下，slide-content 前后会多插入两个 Page，以便实现无缝衔接滚动的视觉效果。
   :::
 
+  :::danger 危险
+  slide-content 必须至少有一个 slide-page，如果只有一个 page，loop 的配置无效。
+  :::
+
 ## 示例
 
 - **横向轮播**
@@ -142,6 +146,21 @@ yarn add @better-scroll/slide
       <<< @/examples/vue/components/slide/vertical.vue?style
     </template>
     <slide-vertical slot="demo"></slide-vertical>
+  </demo>
+
+- **动态卡片轮播（v2.1.0）**
+
+  <demo qrcode-url="slide/dynamic">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/dynamic.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/dynamic.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/dynamic.vue?style
+    </template>
+    <slide-dynamic slot="demo"></slide-dynamic>
   </demo>
 
   ::: tip
@@ -312,7 +331,7 @@ bs.getCurrentPage()
 
   在 banner 展示中，常常伴随着一个 dot 图例，来指示当前 banner 是第几页，例如前面“横向轮播图”的示例。当用户拖动 banner 出现下一张时，我们希望下面的 dot 图例会同步变换。如下图
 
-  <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
+  <img data-zoomable :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
   通过监听 `slideWillChange` 事件，可以实现该效果。代码如下：
 
@@ -335,3 +354,25 @@ bs.getCurrentPage()
     })
   ```
 
+### slidePageChanged（v2.1.0）
+
+  - **参数**：page 对象
+    - `{ number } x`：即将展示页面的 x 坐标值
+    - `{ number } y`：即将展示页面的 y 坐标值
+    - `{ number } pageX`：即将展示的横向页面的索引值，下标从 0 开始
+    - `{ number } pageY`：即将展示的纵向页面的索引值，下标从 0 开始
+
+  - **触发时机**：当 slide 切换 page 之后触发
+
+  ```js
+    const slide = new BScroll(this.$refs.slide, {
+      scrollX: true,
+      scrollY: false,
+      slide: true,
+      momentum: false,
+      bounce: false
+    })
+    slide.on('slidePageChanged', (page) => {
+      currentPageIndex = page.pageX
+    })
+  ```

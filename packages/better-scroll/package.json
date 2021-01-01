@@ -42,7 +42,8 @@
     "@better-scroll/scroll-bar": "^2.0.7",
     "@better-scroll/slide": "^2.0.7",
     "@better-scroll/wheel": "^2.0.7",
-    "@better-scroll/zoom": "^2.0.7"
+    "@better-scroll/zoom": "^2.0.7",
+    "@better-scroll/observe-image": "^2.0.7"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }

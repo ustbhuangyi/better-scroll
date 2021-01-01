@@ -61,11 +61,14 @@
           probeType: 3,
           click: true
         })
+        this.bs.on('scrollStart', () => {
+          console.log('scrollStart-')
+        })
         this.bs.on('scroll', ({ y }) => {
           console.log('scrolling-')
         })
-        this.bs.on('scrollEnd', () => {
-          console.log('scrollingEnd')
+        this.bs.on('scrollEnd', (pos) => {
+          console.log(pos)
         })
       },
       clickHandler (item) {
@@ -79,6 +82,7 @@
 .core-container
   .scroll-wrapper
     height 400px
+    position relative
     overflow hidden
     .scroll-item
       height 50px

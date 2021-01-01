@@ -55,6 +55,7 @@ describe('Scroller Class tests', () => {
       'momentum',
       'scrollTo',
       'scrollToElement',
+      'minDistanceScroll',
     ].forEach((key) => {
       expect(scroller.hooks.eventTypes).toHaveProperty(key)
     })
@@ -252,7 +253,7 @@ describe('Scroller Class tests', () => {
       expect(scroller.animater.setForceStopped).toBeCalledWith(false)
 
       // force stop from transition
-      scroller.actions.moved = false
+      scroller.actions.contentMoved = false
       scroller.animater.forceStopped = true
       scroller.actions.hooks.trigger(
         scroller.actions.hooks.eventTypes.scrollEnd,
@@ -262,7 +263,7 @@ describe('Scroller Class tests', () => {
       expect(scroller.animater.setForceStopped).toBeCalledWith(false)
 
       const mockFn2 = jest.fn()
-      scroller.animater.forceStopped = false
+      scroller.actions.contentMoved = true
       scroller.hooks.on(scroller.hooks.eventTypes.scrollEnd, mockFn2)
       scroller.actions.hooks.trigger(
         scroller.actions.hooks.eventTypes.scrollEnd,
@@ -422,5 +423,17 @@ describe('Scroller Class tests', () => {
       x: 0,
       y: 0,
     })
+  })
+  it('scrollTo()', () => {
+    // minDistanceScroll
+    const mockFn = jest.fn()
+    scroller.hooks.on(scroller.hooks.eventTypes.minDistanceScroll, mockFn)
+
+    scroller.scrollTo(0, 0.5, 300)
+  })
+  it('should not toggle pointer-events when casting last position into integer in touchend handlers', () => {
+    scroller.actions.ensuringInteger = true
+    scroller.translater.hooks.trigger('translate', { x: 0, y: -20 })
+    expect(scroller.actions.ensuringInteger).toBe(false)
   })
 })

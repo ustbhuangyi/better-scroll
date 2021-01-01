@@ -93,6 +93,7 @@ describe('Transition Class test suit', () => {
       x: 10,
       y: 10,
     }
+    transition.isRealtimeProbeType = true
     transition.move(startPoint, endPoint, 0, 'cubic-bezier(0.23, 1, 0.32, 1)')
     expect(onEnd).toHaveBeenCalled()
     transition.destroy()
@@ -120,7 +121,7 @@ describe('Transition Class test suit', () => {
     expect(translater.translate).toBeCalledWith({ x: 10, y: 10 })
     expect(onForceStop).toBeCalledWith({ x: 10, y: 10 })
     expect(mockCancelAnimationFrame).toBeCalled()
-    expect(transition.forceStopped).toBe(false)
+    expect(transition.callStopWhenPending).toBe(true)
 
     transition.destroy()
   })
@@ -148,6 +149,7 @@ describe('Transition Class test suit', () => {
       y: 10,
     }
     transition.move(startPoint, endPoint, 200, 'cubic-bezier(0.23, 1, 0.32, 1)')
+    expect(transition.callStopWhenPending).toBe(false)
     jest.advanceTimersByTime(200)
     expect(onMove).toBeCalled()
 
@@ -159,14 +161,18 @@ describe('Transition Class test suit', () => {
     transition.destroy()
   })
 
-  it('cancelable beforeForceStop hook ', () => {
-    const { transition, translater } = createTransition(3)
-    transition.hooks.on(transition.hooks.eventTypes.beforeForceStop, () => true)
-    translater.getComputedPosition = jest.fn().mockImplementation(() => {
-      return { x: 0, y: 0 }
-    })
+  it('clearTimer ', () => {
+    const { transition } = createTransition(0)
+    transition.timer = 1
+    transition.clearTimer()
+    expect(transition.timer).toBe(0)
+  })
+
+  it('should reset callStopWhenPending', () => {
+    const { transition } = createTransition(0)
     transition.setPending(true)
-    const ret = transition.doStop()
-    expect(ret).toBe(true)
+    transition.stop()
+    transition.startProbe({ x: 0, y: 0 }, { x: 0, y: -10 })
+    expect(transition.callStopWhenPending).toBe(false)
   })
 })

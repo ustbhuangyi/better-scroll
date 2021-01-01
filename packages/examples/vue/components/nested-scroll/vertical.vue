@@ -3,15 +3,15 @@
     <div ref="outerScroll" class="outer-wrapper">
       <div class="outer-content">
         <ul>
-          <li class="outer-list-item" v-for="(item, index) in items1" :key="index">{{item}}</li>
+          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in outerOpenData" :key="index">{{item}}</li>
         </ul>
         <div ref="innerScroll" class="inner-wrapper">
           <ul class="inner-content">
-            <li class="inner-list-item" v-for="(item, index) in items2" :key="index">{{item}}</li>
+            <li class="inner-list-item" v-for="(item, index) in innerData" @click="handleInnerClick" :key="index">{{item}}</li>
           </ul>
         </div>
         <ul>
-          <li class="outer-list-item" v-for="(item, index) in items1" :key="index">{{item}}</li>
+          <li class="outer-list-item" @click="handleOuterClick" v-for="(item, index) in outerCloseData" :key="index">{{item}}</li>
         </ul>
       </div>
 
@@ -24,24 +24,30 @@ import BScroll from '@better-scroll/core'
 import NestedScroll from '@better-scroll/nested-scroll'
 BScroll.use(NestedScroll)
 
-const _data1 = [
-  '😀 😁 😂 🤣 😃 🙃 ',
+const outerOpenData = [
+  '----Outer Start----',
   '👆🏻 outer scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
-  '👆🏻 outer scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
-  '🙂 🤔 😄 🤨  😐 🙃 ',
-  '👆🏻 outer scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ '
+  '👆🏻 outer scroll 👇🏻 '
 ]
 
-const _data2 = [
-  'The Mountain top of Inner',
+const outerCloseData = [
+  '👆🏻 outer scroll 👇🏻 ',
+  '🙂 🤔 😄 🤨 😐 🙃 ',
+  '👆🏻 outer scroll 👇🏻 ',
+  '😔 😕 🙃 🤑 😲 😲 ',
+  '🙂 🤔 😄 🤨  😐 🙃 ',
+  '👆🏻 outer scroll 👇🏻 ',
+  '----Outer End----',
+]
+
+const innerData = [
+  '------Inner Start-----',
   '😀 😁 😂 🤣 😃 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🙂 🤔 😄 🤨 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
-  '😔 😕 🙃 🤑 😲 ☹️ ',
+  '😔 😕 🙃 🤑 😲 😐 🙃 ',
   '👆🏻 inner scroll 👇🏻 ',
   '🐣 🐣 🐣 🐣 🐣 🐣 ',
   '👆🏻 inner scroll 👇🏻 ',
@@ -56,33 +62,48 @@ const _data2 = [
   '🚖 🚖 🚖 🚖 🚖 🚖 ',
   '👆🏻 inner scroll 👇🏻 ',
   '✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ✌🏻 ',
-  'The Mountain foot of Inner',
+  '-----Inner End-----'
 ]
 
 export default {
   data() {
     return {
-      items1: _data1,
-      items2: _data2
+      outerOpenData,
+      outerCloseData,
+      innerData,
     }
   },
   mounted () {
     this.initBScroll()
   },
+  beforeDestroy () {
+    this.outerScroll.destroy()
+    this.innerScroll.destroy()
+  },
   methods: {
+    handleOuterClick () {
+      window.alert('clicked outer item')
+    },
+    handleInnerClick () {
+      window.alert('clicked inner item')
+    },
     initBScroll () {
       // outer
       this.outerScroll = new BScroll(this.$refs.outerScroll, {
-        nestedScroll: true
+        nestedScroll: {
+          groupId: 'vertical-nested-scroll' // groupId is a string or number
+        },
+        click: true
       })
+
       // inner
       this.innerScroll = new BScroll(this.$refs.innerScroll, {
-        nestedScroll: true,
-        // close bounce effects
-        bounce: {
-          top: false,
-          bottom: false
-        }
+        // please keep the same groupId as above
+        // outerScroll and innerScroll will be controlled by the same nestedScroll instance
+        nestedScroll: {
+          groupId: 'vertical-nested-scroll'
+        },
+        click: true
       })
     }
   }
@@ -104,7 +125,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, .1)
 .inner-wrapper
   height: 240px
-
+  background-color rgba(98,183,145, 0.2)
 .inner-list-item
   height: 50px
   line-height: 50px

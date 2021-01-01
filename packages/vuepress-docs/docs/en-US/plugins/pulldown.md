@@ -2,7 +2,7 @@
 
 ## Introduction
 
-  The pulldown plugin provides BetterScroll with the ability to monitor pulldown operation.
+The pulldown plugin provides BetterScroll with the ability to monitor pulldown operation.
 
 ## Install
 
@@ -67,7 +67,7 @@ new BScroll('.bs-wrapper', {
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'

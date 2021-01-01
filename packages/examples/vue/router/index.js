@@ -15,6 +15,7 @@ import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 import MovableEntry from 'vue-example/pages/movable-entry'
 import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
 import ComposeEntry from 'vue-example/pages/compose-entry'
+import ObserveImageEntry from 'vue-example/pages/observe-image-entry'
 
 import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
 import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
@@ -27,6 +28,7 @@ import MouseWheelPicker from 'vue-example/components/mouse-wheel/picker'
 import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
 import VerticalSlide from 'vue-example/components/slide/vertical'
+import DynamicSlide from 'vue-example/components/slide/dynamic'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
@@ -41,6 +43,7 @@ import LinkageColumnPicker from 'vue-example/components/picker/linkage-column'
 import FormTextarea from 'vue-example/components/form/textarea'
 
 import NestedVerticalScroll from 'vue-example/components/nested-scroll/vertical'
+import NestedTripleVerticalScroll from 'vue-example/components/nested-scroll/triple-vertical'
 import NestedHorizontalScroll from 'vue-example/components/nested-scroll/horizontal'
 import NestedHorizontalInVertical from 'vue-example/components/nested-scroll/horizontal-in-vertical'
 
@@ -80,6 +83,10 @@ export default new Router({
         {
           path: 'vertical',
           component: VerticalSlide,
+        },
+        {
+          path: 'dynamic',
+          component: DynamicSlide,
         },
       ],
     },
@@ -203,6 +210,10 @@ export default new Router({
           path: 'horizontal-in-vertical',
           component: NestedHorizontalInVertical,
         },
+        {
+          path: 'triple-vertical',
+          component: NestedTripleVerticalScroll,
+        }
       ],
     },
     {
@@ -249,5 +260,9 @@ export default new Router({
         }
       ],
     },
+    {
+      path: '/observe-image',
+      component: ObserveImageEntry
+    }
   ],
 })

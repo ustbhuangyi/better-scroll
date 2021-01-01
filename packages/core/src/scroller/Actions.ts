@@ -9,7 +9,8 @@ import {
   TouchEvent,
   getNow,
   Probe,
-  EventEmitter
+  EventEmitter,
+  between,
 } from '@better-scroll/shared-utils'
 
 export default class ScrollerActions {
@@ -20,10 +21,12 @@ export default class ScrollerActions {
   animater: Animater
   options: BScrollOptions
   directionLockAction: DirectionLockAction
-  moved: boolean
+  fingerMoved: boolean
+  contentMoved: boolean
   enabled: boolean
   startTime: number
   endTime: number
+  ensuringInteger: boolean
   constructor(
     scrollBehaviorX: Behavior,
     scrollBehaviorY: Behavior,
@@ -38,7 +41,9 @@ export default class ScrollerActions {
       'scroll',
       'beforeEnd',
       'end',
-      'scrollEnd'
+      'scrollEnd',
+      'contentNotMoved',
+      'detectMovingDirection',
     ])
 
     this.scrollBehaviorX = scrollBehaviorX
@@ -73,7 +78,7 @@ export default class ScrollerActions {
       ({
         deltaX,
         deltaY,
-        e
+        e,
       }: {
         deltaX: number
         deltaY: number
@@ -106,7 +111,8 @@ export default class ScrollerActions {
 
   private handleStart(e: TouchEvent) {
     const timestamp = getNow()
-    this.moved = false
+    this.fingerMoved = false
+    this.contentMoved = false
 
     this.startTime = timestamp
 
@@ -145,20 +151,38 @@ export default class ScrollerActions {
 
     const delta = this.directionLockAction.adjustDelta(deltaX, deltaY)
 
+    const prevX = this.scrollBehaviorX.getCurrentPos()
     const newX = this.scrollBehaviorX.move(delta.deltaX)
+    const prevY = this.scrollBehaviorY.getCurrentPos()
     const newY = this.scrollBehaviorY.move(delta.deltaY)
 
-    if (!this.moved) {
-      this.moved = true
+    if (this.hooks.trigger(this.hooks.eventTypes.detectMovingDirection)) {
+      return
+    }
+
+    if (!this.fingerMoved) {
+      this.fingerMoved = true
+    }
+
+    const positionChanged = newX !== prevX || newY !== prevY
+
+    if (!this.contentMoved && !positionChanged) {
+      this.hooks.trigger(this.hooks.eventTypes.contentNotMoved)
+    }
+
+    if (!this.contentMoved && positionChanged) {
+      this.contentMoved = true
       this.hooks.trigger(this.hooks.eventTypes.scrollStart)
     }
 
-    this.animater.translate({
-      x: newX,
-      y: newY
-    })
+    if (this.contentMoved && positionChanged) {
+      this.animater.translate({
+        x: newX,
+        y: newY,
+      })
 
-    this.dispatchScroll(timestamp)
+      this.dispatchScroll(timestamp)
+    }
   }
 
   private dispatchScroll(timestamp: number) {
@@ -191,13 +215,16 @@ export default class ScrollerActions {
     if (this.hooks.trigger(this.hooks.eventTypes.beforeEnd, e)) {
       return
     }
-    const currentPos = this.getCurrentPos()
+    let currentPos = this.getCurrentPos()
 
     this.scrollBehaviorX.updateDirection()
     this.scrollBehaviorY.updateDirection()
+
     if (this.hooks.trigger(this.hooks.eventTypes.end, e, currentPos)) {
       return true
     }
+
+    currentPos = this.ensureIntegerPos(currentPos)
 
     this.animater.translate(currentPos)
 
@@ -206,6 +233,26 @@ export default class ScrollerActions {
     const duration = this.endTime - this.startTime
 
     this.hooks.trigger(this.hooks.eventTypes.scrollEnd, currentPos, duration)
+  }
+
+  private ensureIntegerPos(currentPos: TranslaterPoint) {
+    this.ensuringInteger = true
+    let { x, y } = currentPos
+    const {
+      minScrollPos: minScrollPosX,
+      maxScrollPos: maxScrollPosX,
+    } = this.scrollBehaviorX
+    const {
+      minScrollPos: minScrollPosY,
+      maxScrollPos: maxScrollPosY,
+    } = this.scrollBehaviorY
+
+    x = x > 0 ? Math.ceil(x) : Math.floor(x)
+    y = y > 0 ? Math.ceil(y) : Math.floor(y)
+
+    x = between(x, maxScrollPosX, minScrollPosX)
+    y = between(y, maxScrollPosY, minScrollPosY)
+    return { x, y }
   }
 
   private handleClick(e: TouchEvent) {
@@ -220,7 +267,7 @@ export default class ScrollerActions {
   getCurrentPos(): TranslaterPoint {
     return {
       x: this.scrollBehaviorX.getCurrentPos(),
-      y: this.scrollBehaviorY.getCurrentPos()
+      y: this.scrollBehaviorY.getCurrentPos(),
     }
   }
 

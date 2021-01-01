@@ -55,7 +55,7 @@ describe('Actions Class tests', () => {
   it('should invoke handleStart when actionsHandler trigger start hook', () => {
     actions.actionsHandler.hooks.trigger('start')
 
-    expect(actions.moved).toBe(false)
+    expect(actions.fingerMoved).toBe(false)
     expect(actions.scrollBehaviorX.start).toBeCalled()
     expect(actions.scrollBehaviorY.start).toBeCalled()
     expect(actions.scrollBehaviorX.resetStartPos).toBeCalled()
@@ -127,6 +127,34 @@ describe('Actions Class tests', () => {
       e,
     })
     expect(scrollHandler).toBeCalledTimes(2)
+
+    const cbMock = jest.fn().mockImplementationOnce(() => true)
+    actions.fingerMoved = true
+    actions.hooks.on(actions.hooks.eventTypes.detectMovingDirection, cbMock)
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+
+    expect(cbMock).toBeCalled()
+    expect(actions.fingerMoved).toBe(true)
+
+    // content not moved
+    const mockFn = jest.fn()
+    actions.contentMoved = false
+    actions.hooks.on(actions.hooks.eventTypes.contentNotMoved, mockFn)
+    actions.startTime = Date.now() - 400
+    actions.scrollBehaviorX.move = jest.fn().mockImplementation(() => 0)
+    actions.scrollBehaviorY.move = jest.fn().mockImplementation(() => 0)
+
+    actions.endTime = Date.now() + 400
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: 0,
+      e,
+    })
+    expect(mockFn).toBeCalled()
   })
 
   it('should invoke handleEnd when actionsHandler trigger end hook', () => {

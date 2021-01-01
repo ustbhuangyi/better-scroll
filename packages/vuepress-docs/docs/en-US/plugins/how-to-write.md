@@ -57,10 +57,10 @@ declare module '@better-scroll/core' {
 
 The advantage of this is that when the `myPlugin` plugin is imported and BetterScroll is instantiated, there can be corresponding Options prompts and bs can have corresponding method prompts. Take the pulldown plugin as an example:
 
-<img :src="$withBase('/assets/images/tip1.png')" alt="">
+<img data-zoomable :src="$withBase('/assets/images/tip1.png')" alt="">
 
 
-<img :src="$withBase('/assets/images/tip2.png')" alt="">
+<img data-zoomable :src="$withBase('/assets/images/tip2.png')" alt="">
 
 2. **Write the plugin logic**
 

@@ -32,6 +32,7 @@ import { bubbling } from '../utils/bubbling'
 import { isSamePoint } from '../utils/compare'
 import { MountedBScrollHTMLElement } from '../BScroll'
 
+const MIN_SCROLL_DISTANCE = 1
 export interface ExposedAPI {
   scrollTo(
     x: number,
@@ -95,6 +96,7 @@ export default class Scroller implements ExposedAPI {
       'scrollCancel',
       'momentum',
       'scrollTo',
+      'minDistanceScroll',
       'scrollToElement',
       'beforeRefresh',
     ])
@@ -184,6 +186,12 @@ export default class Scroller implements ExposedAPI {
     hooks.on(hooks.eventTypes.translate, (pos: TranslaterPoint) => {
       const prevPos = this.getCurrentPos()
       this.updatePositions(pos)
+      // scrollEnd will dispatch when scroll is force stopping in touchstart handler
+      // so in touchend handler, don't toggle pointer-events
+      if (this.actions.ensuringInteger === true) {
+        this.actions.ensuringInteger = false
+        return
+      }
       // a valid translate
       if (pos.x !== prevPos.x || pos.y !== prevPos.y) {
         this.togglePointerEvents(false)
@@ -255,7 +263,7 @@ export default class Scroller implements ExposedAPI {
         }
 
         // check if it is a click operation
-        if (!actions.moved) {
+        if (!actions.fingerMoved) {
           this.hooks.trigger(this.hooks.eventTypes.scrollCancel)
           if (this.checkClick(e)) {
             return true
@@ -286,10 +294,10 @@ export default class Scroller implements ExposedAPI {
           return
         }
 
-        // force stop from transition or animation when click a point
-        if (!this.animater.forceStopped || actions.moved) {
+        if (actions.contentMoved) {
           this.hooks.trigger(this.hooks.eventTypes.scrollEnd, pos)
-        } else {
+        }
+        if (this.animater.forceStopped) {
           this.animater.setForceStopped(false)
         }
       }
@@ -504,6 +512,15 @@ export default class Scroller implements ExposedAPI {
     // it is an useless move
     if (isSamePoint(startPoint, endPoint)) return
 
+    const deltaX = Math.abs(endPoint.x - startPoint.x)
+    const deltaY = Math.abs(endPoint.y - startPoint.y)
+
+    // considering of browser compatibility for decimal transform value
+    // force translating immediately
+    if (deltaX < MIN_SCROLL_DISTANCE && deltaY < MIN_SCROLL_DISTANCE) {
+      time = 0
+      this.hooks.trigger(this.hooks.eventTypes.minDistanceScroll)
+    }
     this.animater.move(startPoint, endPoint, time, easingFn)
   }
 
@@ -592,6 +609,7 @@ export default class Scroller implements ExposedAPI {
       // see it in issues 982
       this._reflow = this.content.offsetHeight
     }
+
     // out of boundary
     this.scrollTo(x, y, time, easing)
 

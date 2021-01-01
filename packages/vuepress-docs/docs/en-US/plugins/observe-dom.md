@@ -29,7 +29,7 @@ yarn add @better-scroll/observe-dom
 
 ## Demo
 
-  <demo qrcode-url="observe-dom/default" :render-code="true">
+  <demo qrcode-url="observe-dom/" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/observe-dom/default.vue?template
     </template>
@@ -44,4 +44,8 @@ yarn add @better-scroll/observe-dom
 
 :::warning
 For version <= `2.0.6`, because the internal implementation of the plugin uses [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), it cannot detect whether the load of the img tag is complete, so for images with uncertain heights inside the content, you need to wait for the image to load before calling `bs.refresh()` to recalculate the scrollable size. If the browser does not support MutationObserver, the fallback inside the plugin is to recalculate the scrollable size every second.
+:::
+
+:::tip
+In the v2.1.0 version, the [observe-image](./observe-image) plugin is added to detect the loading of the img tag, so the two can be combined to complement the **autorefresh** ability to update BetterScroll every time.
 :::

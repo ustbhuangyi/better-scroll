@@ -57,7 +57,7 @@ export class Behavior {
     this.setDirection(Direction.Default)
   }
 
-  move(delta: number): number {
+  move(delta: number) {
     delta = this.hasScroll ? delta : 0
     this.setMovingDirection(delta)
     return this.performDampingAlgorithm(
@@ -84,7 +84,7 @@ export class Behavior {
         : Direction.Default
   }
 
-  performDampingAlgorithm(delta: number, dampingFactor: number) {
+  performDampingAlgorithm(delta: number, dampingFactor: number): number {
     let newPos = this.currentPos + delta
     // Slow down or stop if outside of the boundaries
     if (newPos > this.minScrollPos || newPos < this.maxScrollPos) {
@@ -183,7 +183,7 @@ export class Behavior {
   }
 
   updateDirection() {
-    const absDist = Math.round(this.currentPos) - this.absStartPos
+    const absDist = this.currentPos - this.absStartPos
     this.setDirection(absDist)
   }
 
@@ -191,9 +191,12 @@ export class Behavior {
     const { size, position } = this.options.rect
     const isWrapperStatic =
       window.getComputedStyle(this.wrapper, null).position === 'static'
+    // Force reflow
     const wrapperRect = getRect(this.wrapper)
-    this.wrapperSize = wrapperRect[size]
-
+    // use client is more fair than offset
+    this.wrapperSize = this.wrapper[
+      size === 'width' ? 'clientWidth' : 'clientHeight'
+    ]
     this.setContent(content)
     const contentRect = getRect(this.content)
     this.contentSize = contentRect[size]
@@ -205,7 +208,6 @@ export class Behavior {
     }
 
     this.computeBoundary()
-
     this.setDirection(Direction.Default)
   }
 
@@ -257,7 +259,7 @@ export class Behavior {
   }
 
   getCurrentPos() {
-    return Math.round(this.currentPos)
+    return this.currentPos
   }
 
   checkInBoundary() {
@@ -271,20 +273,18 @@ export class Behavior {
 
   // adjust position when out of boundary
   adjustPosition(pos: number) {
-    let roundPos = Math.round(pos)
-
     if (
       !this.hasScroll &&
       !this.hooks.trigger(this.hooks.eventTypes.ignoreHasScroll)
     ) {
-      roundPos = this.minScrollPos
-    } else if (roundPos > this.minScrollPos) {
-      roundPos = this.minScrollPos
-    } else if (roundPos < this.maxScrollPos) {
-      roundPos = this.maxScrollPos
+      pos = this.minScrollPos
+    } else if (pos > this.minScrollPos) {
+      pos = this.minScrollPos
+    } else if (pos < this.maxScrollPos) {
+      pos = this.maxScrollPos
     }
 
-    return roundPos
+    return pos
   }
 
   updateStartPos() {

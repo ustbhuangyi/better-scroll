@@ -45,17 +45,23 @@
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: true,
-          useTransition: true,
+          slide: {
+            autoplay: false,
+            loop: true
+          },
           momentum: false,
           bounce: false,
-          stopPropagation: true,
           probeType: 3
         })
         this.slide.on('scrollEnd', this._onScrollEnd)
 
         this.slide.on('slideWillChange', (page) => {
           this.currentPageIndex = page.pageX
+        })
+
+        // v2.1.0
+        this.slide.on('slidePageChanged', (page) => {
+          console.log('CurrentPage changed to => ', page)
         })
       },
       _onScrollEnd () {

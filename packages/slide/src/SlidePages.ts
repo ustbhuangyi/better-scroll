@@ -25,7 +25,7 @@ export default class SlidePages {
   loopY: boolean
   slideX: boolean = false
   slideY: boolean = false
-  needLoop: boolean
+  wannaLoop: boolean
   pagesMatrix: PagesMatrix
   currentPage: Page
   constructor(public scroll: BScroll, private slideOptions: SlideConfig) {
@@ -34,11 +34,26 @@ export default class SlidePages {
 
   refresh() {
     this.pagesMatrix = new PagesMatrix(this.scroll)
-    const { pageX, pageY } = this.currentPage
-    // when refresh or resize, currentPage.(x|y) need recaculate
-    const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
-    this.currentPage = { pageX, pageY, x, y }
     this.checkSlideLoop()
+    this.currentPage = this.getAdjustedCurrentPage()
+  }
+
+  getAdjustedCurrentPage(): Page {
+    let { pageX, pageY } = this.currentPage
+    // page index should be handled
+    // because page counts may reduce
+    pageX = Math.min(pageX, this.pagesMatrix.pageLengthOfX - 1)
+    pageY = Math.min(pageY, this.pagesMatrix.pageLengthOfY - 1)
+    // loop scene should also be respected
+    // because clonedNode will cause pageLength increasing
+    if (this.loopX) {
+      pageX = Math.min(pageX, this.pagesMatrix.pageLengthOfX - 2)
+    }
+    if (this.loopY) {
+      pageY = Math.min(pageY, this.pagesMatrix.pageLengthOfY - 2)
+    }
+    const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
+    return { pageX, pageY, x, y }
   }
 
   setCurrentPage(newPage: Page) {
@@ -72,12 +87,8 @@ export default class SlidePages {
     let initialPageX = this.loopX ? 1 : 0
     let initialPageY = this.loopY ? 1 : 0
 
-    const pageX = resetInitPage
-      ? initialPageX
-      : this.currentPage.pageX || initialPageX
-    const pageY = resetInitPage
-      ? initialPageY
-      : this.currentPage.pageY || initialPageY
+    const pageX = resetInitPage ? initialPageX : this.currentPage.pageX
+    const pageY = resetInitPage ? initialPageY : this.currentPage.pageY
 
     const { x, y } = this.pagesMatrix.getPageStats(pageX, pageY)
 
@@ -89,8 +100,8 @@ export default class SlidePages {
     }
   }
 
-  getExposedPage(): Page {
-    let exposedPage = extend({}, this.currentPage)
+  getExposedPage(page: Page): Page {
+    let exposedPage = extend({}, page)
     // only pageX or pageY need fix
     if (this.loopX) {
       exposedPage.pageX = this.fixedPage(
@@ -105,6 +116,26 @@ export default class SlidePages {
       )
     }
     return exposedPage
+  }
+
+  getExposedPageByPageIndex(pageIndexX: number, pageIndexY: number): Page {
+    const page = {
+      pageX: pageIndexX,
+      pageY: pageIndexY,
+    }
+    if (this.loopX) {
+      page.pageX = pageIndexX + 1
+    }
+    if (this.loopY) {
+      page.pageY = pageIndexY + 1
+    }
+    const { x, y } = this.pagesMatrix.getPageStats(page.pageX, page.pageY)
+    return {
+      x,
+      y,
+      pageX: pageIndexX,
+      pageY: pageIndexY,
+    }
   }
 
   getWillChangedPage(page: Page): Page {
@@ -258,15 +289,19 @@ export default class SlidePages {
   }
 
   private checkSlideLoop() {
-    this.needLoop = this.slideOptions.loop
+    this.wannaLoop = this.slideOptions.loop
     if (this.pagesMatrix.pageLengthOfX > 1) {
       this.slideX = true
+    } else {
+      this.slideX = false
     }
     if (this.pagesMatrix.pages[0] && this.pagesMatrix.pageLengthOfY > 1) {
       this.slideY = true
+    } else {
+      this.slideY = false
     }
-    this.loopX = this.needLoop && this.slideX
-    this.loopY = this.needLoop && this.slideY
+    this.loopX = this.wannaLoop && this.slideX
+    this.loopY = this.wannaLoop && this.slideY
 
     if (this.slideX && this.slideY) {
       warn('slide does not support two direction at the same time.')

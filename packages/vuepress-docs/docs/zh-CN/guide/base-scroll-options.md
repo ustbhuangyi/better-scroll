@@ -155,7 +155,20 @@ let scroll = new BScroll('.wrapper',{
    - **类型**：`number`
    - **默认值**：`0`
    - **可选值**：`1|2|3`
-   - **作用**：有时候我们需要知道滚动的位置。当 probeType 为 1 的时候，会非实时（屏幕滑动超过一定时间后）派发[scroll 事件](./api.html#scroll)；当 probeType 为 2 的时候，会在屏幕滑动的过程中实时的派发 scroll 事件；当 probeType 为 3 的时候，不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件。如果没有设置该值，其默认值为 0，即不派发 scroll 事件。
+   - **作用**：决定是否派发 scroll 事件，对页面的性能有影响，尤其是在 `useTransition` 为 true 的模式下。
+
+   ```js
+   // 派发 scroll 的场景分为两种：
+   // 1. 手指作用在滚动区域（content DOM）上;
+   // 2. 调用 scrollTo 方法或者触发 momentum 滚动动画（其实底层还是调用 scrollTo 方法）
+   
+   // 对于 v2.1.0 版本，对 probeType 做了一次统一
+   
+   // 1. probeType 为 0，在任何时候都不派发 scroll 事件，
+   // 2. probeType 为 1，仅仅当手指按在滚动区域上，每隔 momentumLimitTime 毫秒派发一次 scroll 事件，
+   // 3. probeType 为 2，仅仅当手指按在滚动区域上，一直派发 scroll 事件，
+   // 4. probeType 为 3，任何时候都派发 scroll 事件，包括调用 scrollTo 或者触发 momentum 滚动动画
+   ```
 
 ## preventDefault
    - **类型**：`boolean`

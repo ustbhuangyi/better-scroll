@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The wheel plugin is the cornerstone for implementing similar IOS Picker components.
+The wheel plugin is the cornerstone for implementing similar iOS Picker components.
 
 ## Install
 
@@ -139,7 +139,7 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'
@@ -176,3 +176,37 @@ bs.wheelTo(1, 300)
     ```
 
   Scroll to the list item corresponding to the index.
+
+### stop() (**v2.1.0**)
+
+  Force the scrolling BetterScroll to stop and snap to the position of the wheel-item closest to the current one.
+
+### restorePosition() (**v2.1.0**)
+
+  Force the scrolling BetterScroll to stop and return to the position before the scrolling started.
+
+::: tip
+The above two methods are only valid for **the scrolling BetterScroll**, and `restorePosition` is exactly the same as the original iOS Picker component. Users can choose the corresponding method according to their needs.
+:::
+
+## Events
+
+### wheelIndexChanged (**v2.1.0**)
+
+  - **Arguments**: The index of the current selected wheel-item.
+  - **Trigger timing**: When the selected wheel-item changes.
+
+  ```js
+  import BScroll from '@better-scroll/core'
+  import Wheel from '@better-scroll/wheel'
+
+  BScroll.use(Wheel)
+
+  const bs = new BScroll('.bs-wrapper', {
+    wheel: true
+  })
+
+  bs.on('wheelIndexChanged', (index) => {
+    console.log(index)
+  })
+  ```

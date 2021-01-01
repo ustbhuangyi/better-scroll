@@ -30,7 +30,7 @@ yarn add @better-scroll/observe-dom
 
 ## 示例
 
-  <demo qrcode-url="observe-dom/default" :render-code="true">
+  <demo qrcode-url="observe-dom/" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/observe-dom/default.vue?template
     </template>
@@ -45,5 +45,9 @@ yarn add @better-scroll/observe-dom
 
 
 :::warning 注意
-对于 `2.0.6` 版本及之前版本，由于插件的内部实现使用的是 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)，它无法探测到 img 标签的是否加载完成，因此对于 content 内部含有不确定高度的图片，需要等图片加载完成再调用 bs.refresh() 来重新计算可滚动尺寸。如果浏览器不支持 MutationObserver，插件内部的降级方案是每秒重新计算可滚动的尺寸。
+由于插件的内部实现使用的是 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)，它无法探测到 img 标签的是否加载完成，因此对于 content 内部含有不确定高度的图片，需要等图片加载完成再调用 bs.refresh() 来重新计算可滚动尺寸。如果浏览器不支持 MutationObserver，插件内部的降级方案是每秒重新计算可滚动的尺寸。
+:::
+
+:::tip 提示
+v2.1.0 版本，新增 [observe-image](./observe-image) 插件来探测 img 标签的加载，因此这两者可以搭配起来，补齐**主动刷新**的能力来更新 BetterScroll 每次滚动的宽度或者高度。
 :::

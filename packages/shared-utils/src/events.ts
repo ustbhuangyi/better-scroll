@@ -36,8 +36,10 @@ export class EventEmitter {
     this.hasType(type)
     const magic = (...args: any[]) => {
       this.off(type, magic)
-
-      fn.apply(context, args)
+      const ret = fn.apply(context, args)
+      if (ret === true) {
+        return ret
+      }
     }
     magic.fn = fn
 
@@ -115,7 +117,7 @@ export class EventEmitter {
     if (!isType) {
       warn(
         `EventEmitter has used unknown event type: "${type}", should be oneof [` +
-          `${Object.keys(types).map(_ => JSON.stringify(_))}` +
+          `${Object.keys(types).map((_) => JSON.stringify(_))}` +
           `]`
       )
     }

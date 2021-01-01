@@ -14,6 +14,6 @@ import ObserveDom from '@better-scroll/observe-dom'
 BScroll.use(ObserveDom)
 
 const bs = new BScroll('.wrapper', {
-  observeDom: true
+  observeDOM: true
 })
 ```

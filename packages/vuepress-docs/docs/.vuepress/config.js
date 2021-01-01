@@ -92,7 +92,7 @@ module.exports = {
     [
       '@vuepress/medium-zoom',
       {
-        selector: 'img',
+        selector: '[data-zoomable]',
         // medium-zoom options here
         // See: https://github.com/francoischalifour/medium-zoom#options
         options: {

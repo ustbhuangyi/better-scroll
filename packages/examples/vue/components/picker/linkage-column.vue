@@ -149,30 +149,28 @@
     data() {
       return {
         state: STATE_HIDE,
-        selectedIndex: [0, 0],
+        selectedIndexPair: [0, 0],
         selectedText: 'open',
         pickerData: []
       }
     },
     created () {
       // generate data
-      // like [[{text: 'province1', value: '1'}, {text: 'province2', value: '2'}], [{text: 'city1', value: '11'}, {text: 'city2', value: '22'}]
-      // pickerData has two array, the first is province collections, second is city collections
-      this._loadPickerData(this.selectedIndex, undefined /* no prevSelectedIndex due to instantiating */)
+      this._loadPickerData(this.selectedIndexPair, undefined /* no prevSelectedIndex due to instantiating */)
     },
     methods: {
-      _loadPickerData (newSelectedIndex, oldSelectedIndex) {
+      _loadPickerData (newIndexPair, oldIndexPair) {
         let provinces
         let cities
         // first instantiated
-        if (!oldSelectedIndex) {
+        if (!oldIndexPair) {
           provinces = DATA.map(({ value, text }) => ({ value, text }))
-          cities = DATA[newSelectedIndex[0]].children
+          cities = DATA[newIndexPair[0]].children
           this.pickerData = [provinces, cities]
         } else {
           // provinces'index changed, refresh cities data
-          if (newSelectedIndex[0] !== oldSelectedIndex[0]) {
-            cities = DATA[newSelectedIndex[0]].children
+          if (newIndexPair[0] !== oldIndexPair[0]) {
+            cities = DATA[newIndexPair[0]].children
             this.pickerData.splice(1, 1, cities)
             // Since cities data changed
             // refresh better-scroll to recaculate scrollHeight
@@ -183,32 +181,42 @@
         }
       },
       _confirm() {
-        if (this._isMoving()) {
-          return
-        }
+        this.wheels.forEach(wheel => {
+          /*
+          * if bs is scrolling, force it stop at the nearest wheel-item
+          * or you can use 'restorePosition' method as the below
+          */
+          // wheel.stop()
+          /*
+          * if bs is scrolling, restore it to the start position
+          * it is same with iOS picker and web Select element implementation
+          * supported at v2.1.0
+          */
+          wheel.restorePosition()
+        })
         this.hide()
 
-        const currentSelectedIndex = this.selectedIndex = this.wheels.map(wheel => {
+        const currentSelectedIndexPair = this.selectedIndexPair = this.wheels.map(wheel => {
           return wheel.getSelectedIndex()
         })
 
-        // store array for preventing multi-collecting array dependencies in Vue Source code
-        const pickerData = this.pickerData
-        const currentSelectedValue =
-              this.selectedText =
-                pickerData.map((data, index) => {
-                  return data[currentSelectedIndex[index]].text
-                }).join('-')
-        this.$emit(EVENT_SELECT, currentSelectedIndex, currentSelectedValue)
+        this.selectedText = this.pickerData.map((data, i) => {
+          const index = currentSelectedIndexPair[i]
+          return `${data[index].text}-${index}`
+        }).join('__')
+        this.$emit(EVENT_SELECT, currentSelectedIndexPair)
       },
       _cancel() {
+        /*
+         * if bs is scrolling, restore it to the start position
+         * it is same with iOS picker and web Select element implementation
+         * supported at v2.1.0
+        */
+        this.wheels.forEach(wheel => {
+          wheel.restorePosition()
+        })
         this.hide()
         this.$emit(EVENT_CANCEL)
-      },
-      _isMoving() {
-        return this.wheels.some((wheel) => {
-          return wheel.pending
-        })
       },
       show() {
         if (this.state === STATE_SHOW) {
@@ -223,51 +231,34 @@
               this._createWheel(wheelWrapper, i)
             }
           })
-        } else {
-          for (let i = 0; i < this.pickerData.length; i++) {
-            this.wheels[i].enable()
-            this.wheels[i].wheelTo(this.selectedIndex[i])
-          }
         }
       },
       hide() {
         this.state = STATE_HIDE
-
-        for (let i = 0; i < this.pickerData.length; i++) {
-          this.wheels[i].disable()
-        }
-      },
-      refresh() {
-        this.$nextTick(() => {
-          this.wheels.forEach((wheel, index) => {
-            wheel.refresh()
-          })
-        })
       },
       _createWheel(wheelWrapper, i) {
         const wheels = this.wheels
         if (!wheels[i]) {
           wheels[i] = new BScroll(wheelWrapper.children[i], {
             wheel: {
-              selectedIndex: this.selectedIndex[i],
+              selectedIndex: this.selectedIndexPair[i],
               wheelWrapperClass: 'wheel-scroll',
               wheelItemClass: 'wheel-item'
             },
             probeType: 3
           })
-          // when any of wheels'scrolling ended , you should refresh data
-          let prevSelectedIndex = this.selectedIndex
+          // when any of wheels'scrolling ended , refresh data
+          let prevSelectedIndexPair = this.selectedIndexPair
           wheels[i].on('scrollEnd', () => {
-            const currentSelectedIndex = wheels.map(wheel => wheel.getSelectedIndex())
-            this._loadPickerData(currentSelectedIndex, prevSelectedIndex)
-            prevSelectedIndex = currentSelectedIndex
+            const currentSelectedIndexPair = wheels.map(wheel => wheel.getSelectedIndex())
+            this._loadPickerData(currentSelectedIndexPair, prevSelectedIndexPair)
+            prevSelectedIndexPair = currentSelectedIndexPair
             this.$emit(EVENT_CHANGE, i, this.wheels[i].getSelectedIndex())
           })
         } else {
-          this.wheels[i].refresh()
+          wheels[i].refresh()
         }
-
-        return this.wheels[i]
+        return wheels[i]
       }
     }
   }
@@ -373,12 +364,7 @@
         display: flex
         padding: 0 16px
         .wheel
-          -ms-flex: 1 1 0.000000001px
-          -webkit-box-flex: 1
-          -webkit-flex: 1
           flex: 1
-          -webkit-flex-basis: 0.000000001px
-          flex-basis: 0.000000001px
           width: 1%
           height: 173px
           overflow: hidden

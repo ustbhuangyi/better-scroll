@@ -60,7 +60,7 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'

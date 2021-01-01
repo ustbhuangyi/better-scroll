@@ -29,7 +29,9 @@ const Behavior = jest.fn().mockImplementation((content, bscrollOptions) => {
     updateDirection: jest.fn(),
     refresh: jest.fn(),
     updatePosition: jest.fn(),
-    getCurrentPos: jest.fn(),
+    getCurrentPos: jest.fn().mockImplementation(() => {
+      return 0
+    }),
     checkInBoundary: jest.fn().mockImplementation(() => {
       return {
         position: 0,

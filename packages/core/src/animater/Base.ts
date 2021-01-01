@@ -3,6 +3,7 @@ import {
   safeCSSStyleDeclaration,
   cancelAnimationFrame,
   EventEmitter,
+  Probe,
 } from '@better-scroll/shared-utils'
 import Translater, { TranslaterPoint } from '../translater'
 
@@ -16,8 +17,10 @@ export default abstract class Base implements ExposedAPI {
   hooks: EventEmitter
   timer: number = 0
   pending: boolean
+  callStopWhenPending: boolean
   forceStopped: boolean
-  _reflow: number;
+  _reflow: number
+  isRealtimeProbeType: boolean;
   [key: string]: any
 
   constructor(
@@ -36,6 +39,7 @@ export default abstract class Base implements ExposedAPI {
       'time',
       'timeFunction',
     ])
+    this.isRealtimeProbeType = options.probeType === Probe.Realtime
     this.setContent(content)
   }
 
@@ -51,11 +55,21 @@ export default abstract class Base implements ExposedAPI {
     this.forceStopped = forceStopped
   }
 
+  setCallStop(called: boolean) {
+    this.callStopWhenPending = called
+  }
+
   setContent(content: HTMLElement) {
     if (this.content !== content) {
       this.content = content
       this.style = content.style as safeCSSStyleDeclaration
       this.stop()
+    }
+  }
+  clearTimer() {
+    if (this.timer) {
+      cancelAnimationFrame(this.timer)
+      this.timer = 0
     }
   }
 

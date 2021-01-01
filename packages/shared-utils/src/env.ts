@@ -14,7 +14,7 @@ export const isIOSBadVersion: boolean = (() => {
       return parseInt(item, 10)
     })
     // ios version >= 13.4 issue 982
-    return !!(parts[0] >= 13 && parts[1] >= 4)
+    return !!(parts[0] === 13 && parts[1] >= 4)
   }
   return false
 })()

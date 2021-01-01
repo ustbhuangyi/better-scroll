@@ -14,7 +14,7 @@ describe('Nested horizontal-in-vertical scroll', () => {
   })
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -26,16 +26,15 @@ describe('Nested horizontal-in-vertical scroll', () => {
       y: 60,
       xDistance: 0,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     await page.waitFor(1000)
 
-    const transformText = await page.$eval('.vertical-content', node => {
+    const transformText = await page.$eval('.vertical-content', (node) => {
       return window.getComputedStyle(node).transform
     })
 
-    const matrix = transformText!.split(')')[0].split(', ')
     const translateX = getTranslate(transformText!, 'y')
     await expect(translateX).toBeLessThan(-30)
   })
@@ -48,12 +47,12 @@ describe('Nested horizontal-in-vertical scroll', () => {
       y: 450,
       xDistance: -300,
       yDistance: 0,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     await page.waitFor(1000)
 
-    const outerTransformText = await page.$eval('.vertical-content', node => {
+    const outerTransformText = await page.$eval('.vertical-content', (node) => {
       return window.getComputedStyle(node).transform
     })
     const outerTranslateX = getTranslate(outerTransformText!, 'x')
@@ -61,7 +60,7 @@ describe('Nested horizontal-in-vertical scroll', () => {
 
     const innerTransformText = await page.$eval(
       '.slide-banner-content',
-      node => {
+      (node) => {
         return window.getComputedStyle(node).transform
       }
     )

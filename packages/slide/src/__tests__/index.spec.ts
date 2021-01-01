@@ -44,7 +44,10 @@ describe('slide test for SlidePage class', () => {
   })
 
   it('should proxy hooks to BScroll instance', () => {
-    expect(scroll.registerType).toHaveBeenCalledWith(['slideWillChange'])
+    expect(scroll.registerType).toHaveBeenCalledWith([
+      'slideWillChange',
+      'slidePageChanged',
+    ])
 
     expect(scroll.proxy).toHaveBeenLastCalledWith([
       {
@@ -152,7 +155,7 @@ describe('slide test for SlidePage class', () => {
     it('getCurrentPage()', () => {
       slide.getCurrentPage()
 
-      expect(slide.pages.getExposedPage).toBeCalled()
+      expect(slide.pages.getInitialPage).toBeCalled()
     })
 
     it('startPlay()', () => {
@@ -188,6 +191,14 @@ describe('slide test for SlidePage class', () => {
       expect(ret1).toBe(true)
       scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
       expect(slide.pages.resetLoopPage).toBeCalledTimes(1)
+    })
+
+    it('slidePageChanged event', () => {
+      const { wrapper } = createSlideElements()
+      const scroll = new BScroll(wrapper, {})
+      const slide = new Slide(scroll)
+      scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
+      expect(slide.pages.getExposedPageByPageIndex).toBeCalled()
     })
 
     it('should stop mousewheelMove handler chain', () => {
@@ -345,12 +356,70 @@ describe('slide test for SlidePage class', () => {
       })
       expect(pageX).toBe(1)
     })
+
+    it('scroller.hooks.beforeRefresh', () => {
+      const { wrapper } = createSlideElements()
+      const scroll = new BScroll(wrapper, {})
+      const slide = new Slide(scroll)
+
+      scroll.scroller.hooks.trigger(
+        scroll.scroller.hooks.eventTypes.beforeRefresh
+      )
+      expect(scroll.scroller.content.children.length).toBe(5)
+
+      // slideContent changed
+      slide.prevContent = document.createElement('p')
+      scroll.scroller.hooks.trigger(
+        scroll.scroller.hooks.eventTypes.beforeRefresh
+      )
+      expect(scroll.scroller.content.children.length).toBe(7)
+
+      // many pages reduce to one page
+      const mockFn1 = jest.fn()
+      slide.initialised = true
+      slide.prevContent = wrapper.children[0] as HTMLElement
+      const childrenEl = [...Array.from(scroll.scroller.content.children)]
+      for (let i = 1; i < 5; i++) {
+        scroll.scroller.content.removeChild(childrenEl[i])
+      }
+      scroll.on(scroll.eventTypes.scrollEnd, mockFn1)
+      scroll.scroller.hooks.trigger(
+        scroll.scroller.hooks.eventTypes.beforeRefresh
+      )
+      scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
+      expect(scroll.scroller.content.children.length).toBe(1)
+      expect(mockFn1).not.toBeCalled()
+
+      // one page increases to many page
+      const mockFn2 = jest.fn()
+      scroll.scroller.content.appendChild(document.createElement('div'))
+      scroll.on(scroll.eventTypes.scrollEnd, mockFn1)
+      scroll.scroller.hooks.trigger(
+        scroll.scroller.hooks.eventTypes.beforeRefresh
+      )
+      scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
+      expect(scroll.scroller.content.children.length).toBe(4)
+      expect(mockFn2).not.toBeCalled()
+      while (scroll.scroller.content.children.length) {
+        const len = scroll.scroller.content.children.length
+        scroll.scroller.content.removeChild(
+          scroll.scroller.content.children[len - 1]
+        )
+      }
+      // reset loop changed status
+      scroll.scroller.hooks.trigger(
+        scroll.scroller.hooks.eventTypes.beforeRefresh
+      )
+    })
   })
 
   it('should destroy all events', () => {
+    scroll.scroller.hooks.trigger(
+      scroll.scroller.hooks.eventTypes.beforeRefresh
+    )
     scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
 
-    expect(scroll.scroller.content.children.length).toBe(1)
+    expect(scroll.scroller.content.children.length).toBe(3)
     expect(scroll.events['beforeScrollStart'].length).toBe(0)
     expect(scroll.events['scrollEnd'].length).toBe(0)
   })

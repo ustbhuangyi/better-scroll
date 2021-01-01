@@ -5,7 +5,6 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn,
-  Probe,
 } from '@better-scroll/shared-utils'
 
 export default class Animation extends Base {
@@ -18,8 +17,9 @@ export default class Animation extends Base {
     // time is 0
     if (!time) {
       this.translate(endPoint)
-
-      this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+      if (this.isRealtimeProbeType) {
+        this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+      }
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
       return
     }
@@ -39,8 +39,9 @@ export default class Animation extends Base {
       // js animation end
       if (now >= destTime) {
         this.translate(endPoint)
-
-        this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+        if (this.isRealtimeProbeType) {
+          this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
+        }
         this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
         return
       }
@@ -55,7 +56,7 @@ export default class Animation extends Base {
       })
       this.translate(newPoint)
 
-      if (this.options.probeType === Probe.Realtime) {
+      if (this.isRealtimeProbeType) {
         this.hooks.trigger(this.hooks.eventTypes.move, newPoint)
       }
 
@@ -63,15 +64,25 @@ export default class Animation extends Base {
         this.timer = requestAnimationFrame(step)
       }
 
-      // when call stop() in animation.hooks.move or bs.scroll
-      // should not dispatch end hook, because forceStop hook will do this.
+      // call bs.stop() should not dispatch end hook again.
+      // forceStop hook will do this.
       /* istanbul ignore if  */
-      if (!this.pending && !this.forceStopped) {
-        this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
+      if (!this.pending) {
+        if (this.callStopWhenPending) {
+          this.callStopWhenPending = false
+        } else {
+          // raf ends should dispatch end hook.
+          this.hooks.trigger(this.hooks.eventTypes.end, endPoint)
+        }
       }
     }
 
     this.setPending(true)
+    // when manually call bs.stop(), then bs.scrollTo()
+    // we should reset callStopWhenPending to dispatch end hook
+    if (this.callStopWhenPending) {
+      this.setCallStop(false)
+    }
     cancelAnimationFrame(this.timer)
     step()
   }
@@ -79,16 +90,14 @@ export default class Animation extends Base {
   doStop(): boolean {
     const pending = this.pending
     this.setForceStopped(false)
+    this.setCallStop(false)
     // still in requestFrameAnimation
     if (pending) {
       this.setPending(false)
       cancelAnimationFrame(this.timer)
       const pos = this.translater.getComputedPosition()
       this.setForceStopped(true)
-
-      if (this.hooks.trigger(this.hooks.eventTypes.beforeForceStop, pos)) {
-        return true
-      }
+      this.setCallStop(true)
 
       this.hooks.trigger(this.hooks.eventTypes.forceStop, pos)
     }
@@ -99,7 +108,6 @@ export default class Animation extends Base {
     const stopFromAnimation = this.doStop()
     if (stopFromAnimation) {
       this.hooks.trigger(this.hooks.eventTypes.callStop)
-      this.setForceStopped(false)
     }
   }
 }

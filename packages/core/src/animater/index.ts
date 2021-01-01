@@ -19,15 +19,23 @@ export default function createAnimater(
     configurable: false,
     get() {
       return options.probeType
-    }
+    },
   })
   if (useTransition) {
-    return new Transition(element, translater, animaterOptions as {
-      probeType: number
-    })
+    return new Transition(
+      element,
+      translater,
+      animaterOptions as {
+        probeType: number
+      }
+    )
   } else {
-    return new Animation(element, translater, animaterOptions as {
-      probeType: number
-    })
+    return new Animation(
+      element,
+      translater,
+      animaterOptions as {
+        probeType: number
+      }
+    )
   }
 }

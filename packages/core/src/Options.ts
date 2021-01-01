@@ -128,7 +128,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
     this.scrollX = false
     this.scrollY = true
     this.freeScroll = false
-    this.directionLockThreshold = 5
+    this.directionLockThreshold = 0
     this.eventPassthrough = EventPassthrough.None
     this.click = false
     this.dblclick = false

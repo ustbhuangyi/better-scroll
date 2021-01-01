@@ -97,6 +97,10 @@ In general, the layout of BetterScroll's slide is as follows:
   In the loop scenario, two more pages will be inserted before and after the slide-content to achieve the visual effect of seamless scrolling.
   :::
 
+  :::danger
+  The slide-content must have at least one slide-page, if there is only one page, the loop configuration is invalid
+  :::
+
 ## Demo
 
 - **Horizontal Slide**
@@ -142,6 +146,21 @@ In general, the layout of BetterScroll's slide is as follows:
       <<< @/examples/vue/components/slide/vertical.vue?style
     </template>
     <slide-vertical slot="demo"></slide-vertical>
+  </demo>
+
+- **Dynamic Slide(v2.1.0)**
+
+  <demo qrcode-url="slide/dynamic">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/dynamic.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/dynamic.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/dynamic.vue?style
+    </template>
+    <slide-dynamic slot="demo"></slide-dynamic>
   </demo>
 
   ::: tip
@@ -223,7 +242,7 @@ In general, the layout of BetterScroll's slide is as follows:
 ## Instance Methods
 
 :::tip
-All methdos are proxied to BetterScroll instance, for example:
+All methods are proxied to BetterScroll instance, for example:
 
 ```js
 import BScroll from '@better-scroll/core'
@@ -312,7 +331,7 @@ bs.getCurrentPage()
 
   In the banner, it is often accompanied by a dot legend to indicate which page the current banner is on, such as the "Horizontal Slide" example above. When the user drags the banner to the next one, we hope the dot legend below will change synchronously. As shown below
 
-  <img :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
+  <img data-zoomable :src="$withBase('/assets/images/slide-pageindex.png')" style="maxHeight: 200px" alt="banner示例图">
 
   This effect can be achieved by register the `slideWillChange` event. code show as below:
 
@@ -324,10 +343,8 @@ bs.getCurrentPage()
       slide: {
         threshold: 100
       },
-      useTransition: true,
       momentum: false,
       bounce: false,
-      stopPropagation: true,
       probeType: 2
     })
     slide.on('slideWillChange', (page) => {
@@ -335,3 +352,25 @@ bs.getCurrentPage()
     })
   ```
 
+### slidePageChanged(v2.1.0)
+
+  - **Arguments**: `page` object
+    - `{ number } x`: The x value of the page to be displayed
+    - `{ number } y`: The y value of the page to be displayed
+    - `{ number } pageX`: The index value of the horizontal page to be displayed, the subscript starts from 0
+    - `{ number } pageY`: The index value of the vertical page to be displayed, the subscript starts from 0
+
+  - **Trigger timing**: When slide page has changed
+
+  ```js
+    const slide = new BScroll(this.$refs.slide, {
+      scrollX: true,
+      scrollY: false,
+      slide: true,
+      momentum: false,
+      bounce: false
+    })
+    slide.on('slidePageChanged', (page) => {
+      currentPageIndex = page.pageX
+    })
+  ```
