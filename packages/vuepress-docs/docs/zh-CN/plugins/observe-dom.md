@@ -30,7 +30,7 @@ yarn add @better-scroll/observe-dom
 
 ## 示例
 
-  <demo qrcode-url="observe-dom/default" :render-code="true">
+  <demo qrcode-url="observe-dom/" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/observe-dom/default.vue?template
     </template>

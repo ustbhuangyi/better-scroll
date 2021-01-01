@@ -2,7 +2,7 @@
 
 ## Introduction
 
-  The pulldown plugin provides BetterScroll with the ability to monitor pulldown operation.
+The pulldown plugin provides BetterScroll with the ability to monitor pulldown operation.
 
 ## Install
 

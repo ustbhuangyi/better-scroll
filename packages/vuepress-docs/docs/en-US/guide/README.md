@@ -8,7 +8,7 @@ BetterScroll is implemented with plain JavaScript, which means it's dependency f
 
 ## Demo
 
-<img :src="$withBase('/assets/images/qrcode.png')" alt="demo">
+<img data-zoomable :src="$withBase('/assets/images/qrcode.png')" alt="demo">
 
 ## Getting started
 
@@ -55,7 +55,7 @@ The phenomenon is 'the content can't scroll' and we need to figure out the root 
 
 The principle of BetterScroll is samed as the browser. We can feel about this more obviously using a picture:
 
-<img :src="$withBase('/assets/images/schematic.png')" alt="schematic">
+<img data-zoomable :src="$withBase('/assets/images/schematic.png')" alt="schematic">
 
 The green part is the wrapper, also known as the parent container, which has **fixed height**. The yellow part is the content, which is **the first child element** of the parent container and whose height would grow with the size of its content. Then, when the height of the content doesn't exceed the height of the parent container, the content would not scroll. Once exceeded, the content can be scrolled. That is the principle of BetterScroll.
 

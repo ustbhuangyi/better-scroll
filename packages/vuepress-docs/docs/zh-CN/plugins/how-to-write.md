@@ -57,9 +57,9 @@ declare module '@better-scroll/core' {
 
 这样做的好处，就是为了在引入 `myPlugin` 插件并且实例化 BetterScroll 的时候，能够有对应的 Options 提示以及 bs 能够有对应的方法提示，以 pulldown 插件为例：
 
-<img :src="$withBase('/assets/images/tip1.png')" alt="">
+<img data-zoomable :src="$withBase('/assets/images/tip1.png')" alt="">
 
-<img :src="$withBase('/assets/images/tip2.png')" alt="">
+<img data-zoomable :src="$withBase('/assets/images/tip2.png')" alt="">
 
 2. **编写插件主体**
 

@@ -13,13 +13,14 @@
   import ObserveImage from '@better-scroll/observe-image'
   import carbinImage from './cabin.webp'
   import homeImage from './home.webp'
-  import treeImage from './tree.jpg'
+  import stoneImage from './stone.webp'
+  import zooImage from './zoo.webp'
 
   BScroll.use(ObserveImage)
   export default {
     data () {
       return {
-        images: [carbinImage, homeImage, treeImage]
+        images: [carbinImage, homeImage, stoneImage, zooImage]
       }
     },
     mounted() {
@@ -44,7 +45,7 @@
   .scroll-wrapper
     position relative
     width 300px
-    height 500px
+    height 300px
     margin 20px auto
     border 3px solid #42b983
     border-radius 5px
