@@ -45,10 +45,7 @@
         this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
-          slide: {
-            autoplay: false,
-            loop: true
-          },
+          slide: true,
           momentum: false,
           bounce: false,
           probeType: 3

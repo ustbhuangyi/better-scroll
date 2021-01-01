@@ -12,7 +12,7 @@ describe('Double column picker', () => {
   })
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -23,7 +23,7 @@ describe('Double column picker', () => {
 
     await page.waitFor(500)
 
-    const displayText = await page.$eval('.picker-panel', node => {
+    const displayText = await page.$eval('.picker-panel', (node) => {
       return window.getComputedStyle(node).display
     })
 
@@ -44,11 +44,11 @@ describe('Double column picker', () => {
     // wait for transition ends
     await page.waitFor(100)
 
-    const innerText = await page.$eval('.open', node => {
+    const innerText = await page.$eval('.open', (node) => {
       return node.textContent
     })
 
-    await expect(innerText).toBe('Venomancer-Durable')
+    await expect(innerText).toBe('Venomancer-0__Durable-0')
   })
 
   it('should scroll correctly when simulate touch event on each column', async () => {
@@ -64,7 +64,7 @@ describe('Double column picker', () => {
       y: 630,
       xDistance: 0,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     // second column
@@ -73,14 +73,14 @@ describe('Double column picker', () => {
       y: 630,
       xDistance: 0,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     // wait for transition ends
     await page.waitFor(1000)
 
-    const transformTexts = await page.$$eval('.wheel-scroll', nodes => {
-      return nodes.map(node => window.getComputedStyle(node).transform)
+    const transformTexts = await page.$$eval('.wheel-scroll', (nodes) => {
+      return nodes.map((node) => window.getComputedStyle(node).transform)
     })
 
     for (const transformText of transformTexts) {

@@ -48,8 +48,7 @@ function generateData() {
 }
 
 const TIME_BOUNCE = 800
-const TIME_STOP = 600
-const REQUEST_TIME = 3000
+const REQUEST_TIME = 1000
 const THRESHOLD = 70
 const STOP = 56
 let STEP = 0
@@ -70,6 +69,7 @@ export default {
       this.bscroll = new BScroll(this.$refs.bsWrapper, {
         scrollY: true,
         bounceTime: TIME_BOUNCE,
+        useTransition: false,
         pullDownRefresh: {
           threshold: THRESHOLD,
           stop: STOP
@@ -97,17 +97,11 @@ export default {
       this.finishPullDown()
     },
     async finishPullDown() {
-      const stopTime = TIME_STOP
-      await new Promise(resolve => {
-        setTimeout(() => {
-          this.bscroll.finishPullDown()
-          resolve()
-        }, stopTime)
-      })
+      this.bscroll.finishPullDown()
       setTimeout(() => {
         this.beforePullDown = true
         this.bscroll.refresh()
-      }, TIME_BOUNCE)
+      }, TIME_BOUNCE + 100)
     },
     async requestData() {
       try {

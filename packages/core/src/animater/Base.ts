@@ -19,8 +19,7 @@ export default abstract class Base implements ExposedAPI {
   pending: boolean
   callStopWhenPending: boolean
   forceStopped: boolean
-  _reflow: number
-  isRealtimeProbeType: boolean;
+  _reflow: number;
   [key: string]: any
 
   constructor(
@@ -39,7 +38,6 @@ export default abstract class Base implements ExposedAPI {
       'time',
       'timeFunction',
     ])
-    this.isRealtimeProbeType = options.probeType === Probe.Realtime
     this.setContent(content)
   }
 

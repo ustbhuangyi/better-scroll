@@ -44,7 +44,7 @@ describe('Nested horizontal-in-vertical scroll', () => {
 
     await page.dispatchScroll({
       x: 100,
-      y: 450,
+      y: 200,
       xDistance: -300,
       yDistance: 0,
       gestureSourceType: 'touch',

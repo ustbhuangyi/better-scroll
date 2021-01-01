@@ -11,7 +11,7 @@ describe('Linkage column picker', () => {
   })
   beforeEach(async () => {
     await page.reload({
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     })
   })
 
@@ -29,11 +29,11 @@ describe('Linkage column picker', () => {
     // wait for transition ends
     await page.waitFor(100)
 
-    const innerText = await page.$eval('.open', node => {
+    const innerText = await page.$eval('.open', (node) => {
       return node.textContent
     })
 
-    await expect(innerText).toBe('北京市-北京市')
+    await expect(innerText).toBe('北京市-0__北京市-0')
   })
 
   it('should linkage correctly when click TianJin province', async () => {
@@ -52,7 +52,7 @@ describe('Linkage column picker', () => {
     // when transition ends
     await page.waitFor(500)
 
-    const cityBtnText = await page.$$eval('.wheel-scroll', nodes => {
+    const cityBtnText = await page.$$eval('.wheel-scroll', (nodes) => {
       return nodes[1].querySelectorAll('.wheel-item')[0].textContent
     })
 
@@ -72,13 +72,13 @@ describe('Linkage column picker', () => {
       y: 630,
       xDistance: 0,
       yDistance: -70,
-      gestureSourceType: 'touch'
+      gestureSourceType: 'touch',
     })
 
     // when transition ends
     await page.waitFor(1000)
 
-    const cityBtnText = await page.$$eval('.wheel-scroll', nodes => {
+    const cityBtnText = await page.$$eval('.wheel-scroll', (nodes) => {
       return nodes[1].querySelectorAll('.wheel-item')[0].textContent
     })
 

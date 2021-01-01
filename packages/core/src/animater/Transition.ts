@@ -3,6 +3,7 @@ import {
   requestAnimationFrame,
   cancelAnimationFrame,
   EaseFn,
+  Probe,
 } from '@better-scroll/shared-utils'
 import Base from './Base'
 import { TranslaterPoint } from '../translater'
@@ -70,7 +71,9 @@ export default class Transition extends Base {
     this.transitionTime(time)
     this.translate(endPoint)
 
-    if (time && this.isRealtimeProbeType) {
+    const isRealtimeProbeType = this.options.probeType === Probe.Realtime
+
+    if (time && isRealtimeProbeType) {
       this.startProbe(startPoint, endPoint)
     }
 
@@ -80,7 +83,7 @@ export default class Transition extends Base {
     // so we forceupdate by reflow
     if (!time) {
       this._reflow = this.content.offsetHeight
-      if (this.isRealtimeProbeType) {
+      if (isRealtimeProbeType) {
         this.hooks.trigger(this.hooks.eventTypes.move, endPoint)
       }
       this.hooks.trigger(this.hooks.eventTypes.end, endPoint)

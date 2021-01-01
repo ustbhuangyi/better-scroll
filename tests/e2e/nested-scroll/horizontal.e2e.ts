@@ -40,12 +40,6 @@ describe('Nested horizontal scroll', () => {
   it('should only make innerBScroll scroll', async () => {
     await page.waitFor(300)
 
-    const oldOuterTransformText = await page.$eval('.outer-content', (node) => {
-      return window.getComputedStyle(node).transform
-    })
-
-    const oldOuterTranslateX = getTranslate(oldOuterTransformText!, 'x')
-
     await page.dispatchScroll({
       x: 270,
       y: 110,
@@ -60,7 +54,7 @@ describe('Nested horizontal scroll', () => {
       return window.getComputedStyle(node).transform
     })
     const outerTranslateX = getTranslate(outerTransformText!, 'x')
-    await expect(outerTranslateX).toBe(oldOuterTranslateX)
+    await expect(outerTranslateX).toBe(0)
 
     const innerTransformText = await page.$eval('.inner-content', (node) => {
       return window.getComputedStyle(node).transform

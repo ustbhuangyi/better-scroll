@@ -78,6 +78,6 @@ describe('Compose/pullup-pulldown-nested', () => {
     })
     const y = getTranslate(transformText, 'y')
 
-    expect(y).toBe(-810)
+    expect(y).toBe(-814)
   })
 })

@@ -40,14 +40,9 @@ describe('Nested vertical scroll', () => {
   it('should only make innerBScroll scroll and outerBScroll stop', async () => {
     await page.waitFor(300)
 
-    const oldOuterTransformText = await page.$eval('.outer-content', (node) => {
-      return window.getComputedStyle(node).transform
-    })
-    const oldOuterTranslateY = getTranslate(oldOuterTransformText!, 'y')
-
     await page.dispatchScroll({
       x: 160,
-      y: 430,
+      y: 300,
       xDistance: 0,
       yDistance: -70,
       gestureSourceType: 'touch',
@@ -60,7 +55,7 @@ describe('Nested vertical scroll', () => {
     })
 
     const outerTranslateY = getTranslate(outerTransformText!, 'y')
-    await expect(outerTranslateY).toBe(oldOuterTranslateY)
+    await expect(outerTranslateY).toBe(0)
 
     const innerTransformText = await page.$eval('.inner-content', (node) => {
       return window.getComputedStyle(node).transform
@@ -75,7 +70,7 @@ describe('Nested vertical scroll', () => {
 
     await page.dispatchScroll({
       x: 160,
-      y: 430,
+      y: 300,
       xDistance: 0,
       yDistance: -300,
       speed: 3000,
@@ -93,7 +88,7 @@ describe('Nested vertical scroll', () => {
 
     await page.dispatchScroll({
       x: 160,
-      y: 430,
+      y: 300,
       xDistance: 0,
       yDistance: -100,
       gestureSourceType: 'touch',
