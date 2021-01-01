@@ -13,6 +13,7 @@ Existing plugins:
 - [zoom](./zoom.html)
 - [mouse-wheel](./mouse-wheel.html)
 - [observe-dom](./observe-dom.html)
+- [observe-image](./observe-image.html)
 - [nested-scroll](./nested-scroll.html)
 - [infinity](./infinity.html)
 - [movable](./movable.html)
