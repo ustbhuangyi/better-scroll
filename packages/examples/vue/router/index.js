@@ -15,6 +15,7 @@ import NestedScrollEntry from 'vue-example/pages/nested-scroll-entry'
 import MovableEntry from 'vue-example/pages/movable-entry'
 import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
 import ComposeEntry from 'vue-example/pages/compose-entry'
+import ObserveImageEntry from 'vue-example/pages/observe-image-entry'
 
 import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
 import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
@@ -259,5 +260,9 @@ export default new Router({
         }
       ],
     },
+    {
+      path: '/observe-image',
+      component: ObserveImageEntry
+    }
   ],
 })

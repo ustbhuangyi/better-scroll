@@ -53,7 +53,8 @@ a {
 .page-header {
   color: #fff;
   text-align: center;
-  background-color: #62B791;}
+  font-family: 'Patrick Hand', cursive;
+  background-color: rgba(39,80,255, .7)}
 
 @media screen and (min-width: 64em) {
   .page-header {

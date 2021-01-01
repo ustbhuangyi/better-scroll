@@ -36,6 +36,10 @@ const examples = [
     path: '/observe-dom/'
   },
   {
+    name: 'observe-image',
+    path: '/observe-image/'
+  },
+  {
     name: 'slide',
     path: '/slide/'
   },
