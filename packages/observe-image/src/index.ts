@@ -14,10 +14,10 @@ declare module '@better-scroll/core' {
 }
 
 const isImageTag = (el: HTMLElement) => {
-  return el.tagName.toLocaleLowerCase() === 'img'
+  return el.tagName.toLowerCase() === 'img'
 }
 
-export default class ObserveDOM {
+export default class ObserveImage {
   static pluginName = 'observeImage'
   imageLoadEventRegister: EventRegister
   imageErrorEventRegister: EventRegister
