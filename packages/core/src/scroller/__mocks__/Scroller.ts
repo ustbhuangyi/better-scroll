@@ -70,6 +70,7 @@ const Scroller = jest.fn().mockImplementation((wrapper, bscrollOptions) => {
     scrollTo: jest.fn(),
     resetPosition: jest.fn(),
     togglePointerEvents: jest.fn(),
+    reflow: jest.fn(),
   }
 })
 

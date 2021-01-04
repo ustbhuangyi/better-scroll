@@ -607,13 +607,17 @@ export default class Scroller implements ExposedAPI {
     if (isIOSBadVersion) {
       // fix ios 13.4 bouncing
       // see it in issues 982
-      this._reflow = this.content.offsetHeight
+      this.reflow()
     }
-
     // out of boundary
     this.scrollTo(x, y, time, easing)
 
     return true
+  }
+
+  reflow() {
+    /* istanbul ignore if  */
+    this._reflow = this.content.offsetHeight
   }
 
   updatePositions(pos: TranslaterPoint) {

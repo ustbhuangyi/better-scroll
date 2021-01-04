@@ -2,7 +2,6 @@ import BScroll from '@better-scroll/core'
 jest.mock('@better-scroll/core')
 
 import NestedScroll, { DEFAUL_GROUP_ID } from '../index'
-import BScrollFamily from '../BScrollFamily'
 
 const addProperties = <T extends Object, K extends Object>(
   target: T,
@@ -283,6 +282,36 @@ describe('NestedScroll tests', () => {
 
     parentScroll.trigger(parentScroll.eventTypes.beforeScrollStart)
     expect(childScroll.stop).toBeCalled()
+    expect(childScroll.resetPosition).toBeCalled()
+  })
+
+  it('should force self resetting potisition', () => {
+    const parentScroll = new BScroll(parentWrapper, {
+      nestedScroll: {
+        groupId: 'force-stop',
+      },
+    })
+    const childScroll = new BScroll(childWrapper, {
+      nestedScroll: {
+        groupId: 'force-stop',
+      },
+    })
+
+    addProperties(parentScroll, {
+      hasVerticalScroll: false,
+      hasHorizontalScroll: true,
+    })
+    addProperties(childScroll, {
+      hasVerticalScroll: false,
+      hasHorizontalScroll: true,
+      x: 1,
+    })
+
+    new NestedScroll(parentScroll)
+    new NestedScroll(childScroll)
+
+    childScroll.trigger(childScroll.eventTypes.beforeScrollStart)
+    expect(childScroll.scroller.reflow).toBeCalled()
     expect(childScroll.resetPosition).toBeCalled()
   })
 

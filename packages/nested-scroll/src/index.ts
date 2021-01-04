@@ -111,6 +111,38 @@ const isOutOfBoundary = (scroll: BScroll): boolean => {
   return ret
 }
 
+const isResettingPosition = (scroll: BScroll): boolean => {
+  const {
+    hasHorizontalScroll,
+    hasVerticalScroll,
+    x,
+    y,
+    minScrollX,
+    maxScrollX,
+    minScrollY,
+    maxScrollY,
+  } = scroll
+  let ret = false
+
+  const outOfLeftBoundary = x > minScrollX
+  const outOfRightBoundary = x < maxScrollX
+  const outOfTopBoundary = y > minScrollY
+  const outOfBottomBoundary = y < maxScrollY
+
+  if (hasVerticalScroll) {
+    ret = outOfTopBoundary || outOfBottomBoundary
+  } else if (hasHorizontalScroll) {
+    ret = outOfLeftBoundary || outOfRightBoundary
+  }
+
+  return ret
+}
+
+const resetPositionHandler = (scroll: BScroll) => {
+  scroll.scroller.reflow()
+  scroll.resetPosition(0 /* Immediately */)
+}
+
 const calculateDistance = (
   childNode: HTMLElement,
   parentNode: HTMLElement
@@ -269,6 +301,10 @@ export default class NestedScroll implements PluginAPI {
           ([bscrollFamily]) => bscrollFamily.selfScroll
         )
         forceScrollStopHandler([...ancestorScrolls, ...descendantScrolls])
+
+        if (isResettingPosition(currentScroll)) {
+          resetPositionHandler(currentScroll)
+        }
         syncTouchstartData(ancestorScrolls)
         disableScrollHander(ancestorScrolls)
       }
