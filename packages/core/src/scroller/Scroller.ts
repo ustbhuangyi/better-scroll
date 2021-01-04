@@ -615,8 +615,8 @@ export default class Scroller implements ExposedAPI {
     return true
   }
 
+  /* istanbul ignore next */
   reflow() {
-    /* istanbul ignore if  */
     this._reflow = this.content.offsetHeight
   }
 
