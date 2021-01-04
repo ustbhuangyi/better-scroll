@@ -11,16 +11,17 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import ObserveImage from '@better-scroll/observe-image'
-  import carbinImage from './cabin.webp'
-  import homeImage from './home.webp'
-  import stoneImage from './stone.webp'
-  import zooImage from './zoo.webp'
 
   BScroll.use(ObserveImage)
   export default {
     data () {
       return {
-        images: [carbinImage, homeImage, stoneImage, zooImage]
+        images: [
+          'https://dpubstatic.udache.com/static/dpubimg/dEswI1MVy6/zoo.png',
+          'https://dpubstatic.udache.com/static/dpubimg/BYb_wPak21/home.png',
+          'https://dpubstatic.udache.com/static/dpubimg/B6q1pWB0sB/cabin.png',
+          'https://dpubstatic.udache.com/static/dpubimg/76n1ilzf4R/stone.png'
+        ]
       }
     },
     mounted() {
