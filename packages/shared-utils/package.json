@@ -1,6 +1,6 @@
 {
 	"name": "@better-scroll/shared-utils",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"description": "shared-utils for BetterScroll",
 	"author": "huangyi <ustbhuangyi@gmail.com>",
 	"main": "dist/shared-utils.min.js",
