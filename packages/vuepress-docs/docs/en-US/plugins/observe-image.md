@@ -8,7 +8,7 @@ Turn on the detection of the loading of image elements in the wrapper child elem
 For scenes where CSS has been used to determine the width and height of the image, this plugin should not be used, because each call to refresh will affect performance. You only need it if the width or height of the image is uncertain.
 :::
 
-## 安装
+## Install
 
 ```bash
 npm install @better-scroll/observe-image --save
@@ -18,7 +18,7 @@ npm install @better-scroll/observe-image --save
 yarn add @better-scroll/observe-image
 ```
 
-## 使用
+## Usage
 
 ```js
   import BScroll from '@better-scroll/core'
@@ -31,7 +31,7 @@ yarn add @better-scroll/observe-image
   })
 ```
 
-## 示例
+## Demo
 
   <demo qrcode-url="observe-image/" :render-code="true">
     <template slot="code-template">
