@@ -48,6 +48,24 @@ yarn add @better-scroll/observe-image
 
 ## observeImage 选项对象
 
+:::tip
+当 observeImage 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  observeImage: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  observeImage: {
+    debounceTime: 100 // ms
+  }
+})
+```
+:::
+
 ### debounceTime
 
   - **类型：** `number`
@@ -58,3 +76,4 @@ yarn add @better-scroll/observe-image
     :::tip 提示
     当 debounceTime 为 0 的时候，会立马调用 **refresh** 方法，而不是使用 **setTimeout**。
     :::
+    
