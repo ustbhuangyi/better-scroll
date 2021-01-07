@@ -64,3 +64,22 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
   - **默认值**：`false`
 
   Whether scrollbar can interacted with.
+
+:::tip
+When `scrollbar` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  scrollbar: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  scrollbar: {
+    fade: true,
+    interactive: false
+  }
+})
+```
+:::
