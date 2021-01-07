@@ -174,6 +174,30 @@ In general, the layout of BetterScroll's slide is as follows:
 
 ## slide options
 
+:::tip
+When `slide` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  slide: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  slide: {
+    loop: true,
+    threshold: 0.1,
+    speed: 400,
+    easing: ease.bounce,
+    listenFlick: true,
+    autoplay: true,
+    interval: 3000
+  }
+})
+```
+:::
+
 ### loop
 
   - **Type**: `boolean`
