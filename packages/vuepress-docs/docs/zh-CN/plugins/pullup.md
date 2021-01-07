@@ -56,6 +56,24 @@ yarn add @better-scroll/pull-up
 
     触发上拉事件的阈值。
 
+:::tip 提示
+当 pullUpLoad 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  pullUpLoad: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  pullUpLoad: {
+    threshold: 90
+  }
+})
+```
+:::
+
 ## 实例方法
 
 :::tip 提示
