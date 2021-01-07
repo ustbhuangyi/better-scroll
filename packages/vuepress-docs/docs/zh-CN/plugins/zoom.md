@@ -134,6 +134,29 @@ new BScroll('.bs-wrapper', {
 
     双指不断进行缩放操作并且 scale 超过 `max` 阈值的时候，当双指离开的时候，内部会「回弹」至 `max` 的形态，而 `bounceTime` 就是这次「回弹」行为的动画时长。
 
+:::tip 提示
+当 zoom 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  zoom: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  zoom: {
+    start: 1,
+    min: 1,
+    max: 4,
+    initialOrigin: [0, 0],
+    minimalZoomDistance: 5,
+    bounceTime: 800, // ms
+  }
+})
+```
+:::
+
 ## 实例方法
 
 ### zoomTo(scale, x, y, [bounceTime])

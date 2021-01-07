@@ -173,6 +173,6 @@ BetterScroll 提供了 `slide` 的 feature。如果实现了一个横向滚动�
   
 - **解决**
 
-  主要是使用一个css特性`touch-action`，如果是横向的滑动，将`touch-action: pan-y`，这样就可以避免横向的切换触发浏览器的默认行为。
+  主要是使用一个 CSS 特性`touch-action`，如果是横向的滑动，将 `touch-action: pan-y` CSS 设置在 `wrapper` 上面，这样就可以避免横向的切换触发浏览器的默认行为。
 
 
