@@ -63,3 +63,22 @@ yarn add @better-scroll/scroll-bar
   - **默认值**：`false`
 
   滚动条是否可以交互。
+
+:::tip 提示
+当 scrollbar 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  scrollbar: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  scrollbar: {
+    fade: true,
+    interactive: false
+  }
+})
+```
+:::
