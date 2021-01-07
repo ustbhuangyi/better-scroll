@@ -134,6 +134,29 @@ The following is related to `zoom` plugin and [BetterScroll configuration](../gu
 
     When the two fingers continue to zoom and the scale exceeds the threshold of `max`, when the two fingers leave, the internal "bounce" to the form of `max`, and `bounceTime` is the animation of this "bounce" behavior duration.
 
+:::tip
+When `zoom` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  zoom: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  zoom: {
+    start: 1,
+    min: 1,
+    max: 4,
+    initialOrigin: [0, 0],
+    minimalZoomDistance: 5,
+    bounceTime: 800, // ms
+  }
+})
+```
+:::
+
 ## Instance Methods
 
 ### zoomTo(scale, x, y, [bounceTime])

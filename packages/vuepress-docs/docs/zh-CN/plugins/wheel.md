@@ -94,6 +94,29 @@ BetterScroll 结合 wheel 插件只是实现 Picker 效果的 JS 逻辑部分，
 
 ## wheel 选项对象
 
+:::tip 提示
+当 wheel 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  wheel: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  wheel: {
+    wheelWrapperClass: 'wheel-scroll',
+    wheelItemClass: 'wheel-item',
+    rotate: 25,
+    adjustTime: 400,
+    selectedIndex: 0,
+    wheelDisabledItemClass: 'wheel-disabled-item'
+  }
+})
+```
+:::
+
 ### selectedIndex
 
   - **类型**：`number`

@@ -94,10 +94,33 @@ BetterScroll combined with the Wheel plugin is just the JS logic part of the Pic
 
 ## wheel options
 
+:::tip
+When `wheel` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  wheel: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  wheel: {
+    wheelWrapperClass: 'wheel-scroll',
+    wheelItemClass: 'wheel-item',
+    rotate: 25,
+    adjustTime: 400,
+    selectedIndex: 0,
+    wheelDisabledItemClass: 'wheel-disabled-item'
+  }
+})
+```
+:::
+
 ### selectedIndex
 
   - **Type**: `number`
-  - **默认值**：`0`
+  - **Default**：`0`
 
   Instantiate the Wheel, the `selectedIndex` item is selected by default, and the index starts from 0.
 

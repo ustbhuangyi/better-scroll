@@ -381,10 +381,10 @@ bs.getCurrentPage()
 ### slidePageChanged（v2.1.0）
 
   - **参数**：page 对象
-    - `{ number } x`：即将展示页面的 x 坐标值
-    - `{ number } y`：即将展示页面的 y 坐标值
-    - `{ number } pageX`：即将展示的横向页面的索引值，下标从 0 开始
-    - `{ number } pageY`：即将展示的纵向页面的索引值，下标从 0 开始
+    - `{ number } x`：当前页面的 x 坐标值
+    - `{ number } y`：当前页面的 y 坐标值
+    - `{ number } pageX`：当前横向页面的索引值，下标从 0 开始
+    - `{ number } pageY`：当前纵向页面的索引值，下标从 0 开始
 
   - **触发时机**：当 slide 切换 page 之后触发
 

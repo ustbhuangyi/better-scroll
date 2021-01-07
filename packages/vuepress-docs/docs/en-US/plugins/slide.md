@@ -379,10 +379,10 @@ bs.getCurrentPage()
 ### slidePageChanged(v2.1.0)
 
   - **Arguments**: `page` object
-    - `{ number } x`: The x value of the page to be displayed
-    - `{ number } y`: The y value of the page to be displayed
-    - `{ number } pageX`: The index value of the horizontal page to be displayed, the subscript starts from 0
-    - `{ number } pageY`: The index value of the vertical page to be displayed, the subscript starts from 0
+    - `{ number } x`: The x value of the current page
+    - `{ number } y`: The y value of the current page
+    - `{ number } pageX`: The index value of the horizontal page, the subscript starts from 0
+    - `{ number } pageY`: The index value of the vertical page, the subscript starts from 0
 
   - **Trigger timing**: When slide page has changed
 
