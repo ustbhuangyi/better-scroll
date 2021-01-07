@@ -174,6 +174,30 @@ yarn add @better-scroll/slide
 
 ## slide 选项对象
 
+:::tip 提示
+当 slide 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  slide: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  slide: {
+    loop: true,
+    threshold: 0.1,
+    speed: 400,
+    easing: ease.bounce,
+    listenFlick: true,
+    autoplay: true,
+    interval: 3000
+  }
+})
+```
+:::
+
 ### loop
 
   - **类型**：`boolean`
