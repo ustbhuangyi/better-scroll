@@ -204,6 +204,29 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   阻尼因子，值的范围是[0, 1]，当 BetterScroll 滚出边界的时候，需要施加阻力，防止滚动幅度过大，值越小，阻力越大。
 
+:::tip
+当 mouseWheel 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  mouseWheel: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  mouseWheel: {
+    speed: 20,
+    invert: false,
+    easeTime: 300,
+    discreteTime: 400,
+    throttleTime: 0,
+    dampingFactor: 0.1
+  }
+})
+```
+:::
+
 ## 事件
 
 ### alterOptions
