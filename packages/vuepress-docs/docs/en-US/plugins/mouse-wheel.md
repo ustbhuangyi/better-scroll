@@ -205,6 +205,29 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   Damping factor, the value range is [0, 1]. When BetterScroll rolls out of the boundary, resistance needs to be applied to prevent the rolling range from being too large. The smaller the value, the greater the resistance.
 
+:::tip
+When `mouseWheel` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  mouseWheel: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  mouseWheel: {
+    speed: 20,
+    invert: false,
+    easeTime: 300,
+    discreteTime: 400,
+    throttleTime: 0,
+    dampingFactor: 0.1
+  }
+})
+```
+:::
+
 ## Events
 
 ### alterOptions
