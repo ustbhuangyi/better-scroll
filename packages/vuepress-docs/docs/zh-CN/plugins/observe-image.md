@@ -48,7 +48,7 @@ yarn add @better-scroll/observe-image
 
 ## observeImage 选项对象
 
-:::tip
+:::tip 提示
 当 observeImage 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
 
 ```js

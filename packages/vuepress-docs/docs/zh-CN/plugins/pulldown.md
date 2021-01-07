@@ -64,6 +64,25 @@ new BScroll('.bs-wrapper', {
 
     回弹悬停的距离。BetterScroll 在派发 `pullingDown` 钩子之后，会立马执行回弹悬停动画。
 
+:::tip 提示
+当 pullDownRefresh 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
+
+```js
+const bs = new BScroll('.wrapper', {
+  pullDownRefresh: true
+})
+
+// 相当于
+
+const bs = new BScroll('.wrapper', {
+  pullDownRefresh: {
+    threshold: 90,
+    stop: 40
+  }
+})
+```
+:::
+
 ## 实例方法
 
 :::tip 提示

@@ -64,6 +64,25 @@ new BScroll('.bs-wrapper', {
 
   Rebound distance. After BetterScroll dispatches the `pullingDown` hook, it will immediately execute the rebound animation.
 
+:::tip
+When `pullDownRefresh` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  pullDownRefresh: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  pullDownRefresh: {
+    threshold: 90,
+    stop: 40
+  }
+})
+```
+:::
+
 ## Instance Methods
 
 :::tip
