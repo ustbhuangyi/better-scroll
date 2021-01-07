@@ -48,6 +48,24 @@ yarn add @better-scroll/observe-image
 
 ## observeImage Options
 
+:::tip
+When `observeImage` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  observeImage: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  observeImage: {
+    debounceTime: 100 // ms
+  }
+})
+```
+:::
+
 ### debounceTime
 
   - **Type**: `number`
