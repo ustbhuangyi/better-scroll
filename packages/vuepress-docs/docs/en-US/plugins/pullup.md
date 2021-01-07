@@ -57,6 +57,24 @@ pass in the correct configuration in [options](./pullup.html#pullupload-options)
 
   The threshold for triggering a `pullingUp` hook.
 
+:::tip
+When `pullUpLoad` is configured as `true`, the plugin uses the default plugin option.
+
+```js
+const bs = new BScroll('.wrapper', {
+  pullUpLoad: true
+})
+
+// equals
+
+const bs = new BScroll('.wrapper', {
+  pullUpLoad: {
+    threshold: 90
+  }
+})
+```
+:::
+
 ## Instance Methods
 
 :::tip
