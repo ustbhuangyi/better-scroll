@@ -17,9 +17,6 @@
   BScroll.use(ScrollBar)
 
   export default {
-    created() {
-      this.bscroll = null
-    },
     mounted() {
       this.initBscroll()
     },
@@ -27,7 +24,9 @@
       initBscroll() {
         this.bscroll = new BScroll(this.$refs.scroller, {
           scrollY: true,
-          scrollbar: true
+          scrollbar: {
+            fade: false
+          }
         })
       }
     }

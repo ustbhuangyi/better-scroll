@@ -1,13 +1,18 @@
 import BScroll, { TranslaterPoint } from '@better-scroll/core'
-import { style, EventEmitter } from '@better-scroll/shared-utils'
+import { style, EventEmitter, between } from '@better-scroll/shared-utils'
 import EventHandler from './event-handler'
-import { Direction } from './index'
+
+export const enum IndicatorDirection {
+  Horizontal = 'horizontal',
+  Vertical = 'vertical',
+}
 
 export interface IndicatorOption {
   wrapper: HTMLElement
-  direction: Direction
+  direction: IndicatorDirection
   fade: boolean
   interactive: boolean
+  minSize: number
 }
 
 interface KeysMap {
@@ -15,115 +20,139 @@ interface KeysMap {
   size: 'height' | 'width'
   wrapperSize: 'clientHeight' | 'clientWidth'
   scrollerSize: 'scrollerHeight' | 'scrollerWidth'
-  maxScroll: 'maxScrollY' | 'maxScrollX'
+  maxScrollPos: 'maxScrollY' | 'maxScrollX'
   pos: 'y' | 'x'
-  pointPos: 'pageX' | 'pageY'
-  translate: 'translateY' | 'translateX'
+  point: 'pageX' | 'pageY'
+  translateProperty: 'translateY' | 'translateX'
 }
 
-interface KeyValues {
-  maxPos: number
+interface ScrollInfo {
+  maxScrollPos: number
+  minScrollPos: number
   sizeRatio: number
-  initialSize: number
+  indicatorSize: number
 }
-
-const INDICATOR_MIN_LEN = 8
 
 export default class Indicator {
-  public wrapper: HTMLElement
-  public wrapperStyle: CSSStyleDeclaration
-  public el: HTMLElement
-  public elStyle: CSSStyleDeclaration
-  public direction: Direction
-  public visible: number
-  public keyVals: KeyValues = {
-    sizeRatio: 1,
-    maxPos: 0,
-    initialSize: 0,
-  }
-  public curPos: number = 0
-  public keysMap: KeysMap
-  public eventHandler: EventHandler
-  private hooksHandlers: Array<[EventEmitter, string, Function]> = []
+  wrapper: HTMLElement
+  indicatorEl: HTMLElement
+  scrollInfo: ScrollInfo
+  currentPos: number = 0
+  keysMap: KeysMap
+  eventHandler: EventHandler
+  hooksFn: [EventEmitter, string, Function][] = []
 
-  constructor(public bscroll: BScroll, public options: IndicatorOption) {
+  constructor(public scroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.wrapper
-    this.wrapperStyle = this.wrapper.style
-    this.el = this.wrapper.children[0] as HTMLElement
-    this.elStyle = this.el.style
-    this.direction = options.direction
+    this.indicatorEl = this.wrapper.children[0] as HTMLElement
+    this.keysMap = this.getKeysMap(options.direction)
 
-    this.keysMap = this._getKeysMap()
+    this.handleFade()
 
-    if (options.fade) {
-      this.visible = 0
-      this.wrapperStyle.opacity = '0'
-    } else {
-      this.visible = 1
-    }
-
-    this._listenHooks(options.fade, options.interactive)
+    this.handleHooks()
 
     this.refresh()
   }
 
-  private _listenHooks(fade: boolean, interactive: boolean) {
-    const bscroll = this.bscroll
-    const bscrollHooks = bscroll
-    const translaterHooks = bscroll.scroller.translater.hooks
-    const animaterHooks = bscroll.scroller.animater.hooks
+  private handleFade() {
+    if (this.options.fade) {
+      this.wrapper.style.opacity = '0'
+    }
+  }
 
-    this._listen(bscrollHooks, 'refresh', this.refresh)
-    this._listen(translaterHooks, 'translate', this.updatePosAndSize)
-    this._listen(animaterHooks, 'time', (time: number) => {
-      this.setTransitionTime(time)
-    })
-    this._listen(animaterHooks, 'timeFunction', (ease: string) => {
-      this.setTransitionTimingFunction(ease)
-    })
+  private handleHooks() {
+    const { fade, interactive } = this.options
+    const scroll = this.scroll
+    const scrollHooks = scroll.hooks
+    const translaterHooks = scroll.scroller.translater.hooks
+    const animaterHooks = scroll.scroller.animater.hooks
+
+    this.registerHooks(
+      scrollHooks,
+      scrollHooks.eventTypes.refresh,
+      this.refresh
+    )
+
+    this.registerHooks(
+      translaterHooks,
+      translaterHooks.eventTypes.translate,
+      this.updatePosition
+    )
+
+    this.registerHooks(
+      animaterHooks,
+      animaterHooks.eventTypes.time,
+      this.setTransitionTime
+    )
+
+    this.registerHooks(
+      animaterHooks,
+      animaterHooks.eventTypes.timeFunction,
+      this.setTransitionTimingFunction
+    )
 
     if (fade) {
-      this._listen(bscrollHooks, 'scrollEnd', () => {
+      this.registerHooks(scroll, scroll.eventTypes.scrollEnd, () => {
         this.fade()
       })
-      this._listen(bscrollHooks, 'scrollStart', () => {
+
+      this.registerHooks(scroll, scroll.eventTypes.scrollStart, () => {
         this.fade(true)
       })
+
       // for mousewheel event
       if (
-        bscroll.eventTypes.mousewheelStart &&
-        bscroll.eventTypes.mousewheelEnd
+        scroll.eventTypes.mousewheelStart &&
+        scroll.eventTypes.mousewheelEnd
       ) {
-        this._listen(bscrollHooks, 'mousewheelStart', () => {
-          this.fade(true)
-        })
-        this._listen(bscrollHooks, 'mousewheelEnd', () => {
+        this.registerHooks(scroll, scroll.eventTypes.mousewheelStart, () => {
           this.fade()
+        })
+
+        this.registerHooks(scroll, scroll.eventTypes.mousewheelEnd, () => {
+          this.fade(true)
         })
       }
     }
 
     if (interactive) {
-      const { disableMouse } = this.bscroll.options
-      this.eventHandler = new EventHandler(this, { disableMouse })
+      const { disableMouse, disableTouch } = this.scroll.options
+      this.eventHandler = new EventHandler(this, { disableMouse, disableTouch })
       const eventHandlerHooks = this.eventHandler.hooks
-      this._listen(eventHandlerHooks, 'touchStart', this.startHandler)
-      this._listen(eventHandlerHooks, 'touchMove', this.moveHandler)
-      this._listen(eventHandlerHooks, 'touchEnd', this.endHandler)
+      this.registerHooks(
+        eventHandlerHooks,
+        eventHandlerHooks.eventTypes.touchStart,
+        this.startHandler
+      )
+      this.registerHooks(
+        eventHandlerHooks,
+        eventHandlerHooks.eventTypes.touchMove,
+        this.moveHandler
+      )
+      this.registerHooks(
+        eventHandlerHooks,
+        eventHandlerHooks.eventTypes.touchEnd,
+        this.endHandler
+      )
     }
   }
 
-  _getKeysMap(): KeysMap {
-    if (this.direction === Direction.Vertical) {
+  private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
+    hooks.on(name, handler, this)
+    this.hooksFn.push([hooks, name, handler])
+  }
+
+  getKeysMap(direction: IndicatorDirection): KeysMap {
+    if (direction === IndicatorDirection.Vertical) {
       return {
         hasScroll: 'hasVerticalScroll',
         size: 'height',
         wrapperSize: 'clientHeight',
         scrollerSize: 'scrollerHeight',
-        maxScroll: 'maxScrollY',
+        maxScrollPos: 'maxScrollY',
         pos: 'y',
-        pointPos: 'pageY',
-        translate: 'translateY',
+        point: 'pageX',
+        translateProperty: 'translateY',
       }
     }
     return {
@@ -131,93 +160,101 @@ export default class Indicator {
       size: 'width',
       wrapperSize: 'clientWidth',
       scrollerSize: 'scrollerWidth',
-      maxScroll: 'maxScrollX',
+      maxScrollPos: 'maxScrollX',
       pos: 'x',
-      pointPos: 'pageX',
-      translate: 'translateX',
+      point: 'pageY',
+      translateProperty: 'translateX',
     }
   }
 
   fade(visible?: boolean) {
-    let time = visible ? 250 : 500
-    this.wrapperStyle[style.transitionDuration as any] = time + 'ms'
-    this.wrapperStyle.opacity = visible ? '1' : '0'
-    this.visible = visible ? 1 : 0
+    const time = visible ? 250 : 500
+    const wrapper = this.wrapper
+    wrapper.style[style.transitionDuration as any] = time + 'ms'
+    wrapper.style.opacity = visible ? '1' : '0'
   }
 
   refresh() {
-    let { hasScroll } = this.keysMap
-    if (this._setShowBy(this.bscroll[hasScroll])) {
-      let { wrapperSize, scrollerSize, maxScroll } = this.keysMap
+    const { hasScroll: hasScrollKey } = this.keysMap
+    const scroll = this.scroll
+    const { x, y } = scroll
+    if (this.canScroll(scroll[hasScrollKey])) {
+      let {
+        wrapperSize: wrapperSizeKey,
+        scrollerSize: scrollerSizeKey,
+        maxScrollPos: maxScrollPosKey,
+      } = this.keysMap
 
-      this.keyVals = this._refreshKeyValues(
-        this.wrapper[wrapperSize],
-        this.bscroll[scrollerSize],
-        this.bscroll[maxScroll]
+      this.scrollInfo = this.refreshScrollInfo(
+        this.wrapper[wrapperSizeKey],
+        scroll[scrollerSizeKey],
+        scroll[maxScrollPosKey]
       )
 
-      this.updatePosAndSize({
-        x: this.bscroll.x,
-        y: this.bscroll.y,
+      this.updatePosition({
+        x,
+        y,
       })
     }
   }
 
-  private _setShowBy(hasScroll: boolean): boolean {
+  private canScroll(hasScroll: boolean): boolean {
     if (hasScroll) {
-      this.wrapper.style.display = ''
+      this.wrapper.style.display = 'block'
       return true
     }
     this.wrapper.style.display = 'none'
     return false
   }
 
-  private _refreshKeyValues(
+  private refreshScrollInfo(
     wrapperSize: number,
     scrollerSize: number,
     maxScroll: number
-  ): KeyValues {
-    let initialSize = Math.max(
+  ): ScrollInfo {
+    const indicatorSize = Math.max(
       Math.round(
         (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
       ),
-      INDICATOR_MIN_LEN
+      this.options.minSize
     )
 
-    let maxPos = wrapperSize - initialSize
+    const maxIndicatorScrollPos = wrapperSize - indicatorSize
     // sizeRatio is negative
-    let sizeRatio = maxPos / maxScroll
+    let sizeRatio = maxIndicatorScrollPos / maxScroll
 
     return {
-      initialSize,
-      maxPos,
+      indicatorSize,
+      maxScrollPos: maxIndicatorScrollPos,
+      minScrollPos: 0,
       sizeRatio,
     }
   }
 
-  updatePosAndSize(endPoint: TranslaterPoint) {
-    const { pos, size } = this._refreshPosAndSizeValue(endPoint, this.keyVals)
-    this.curPos = pos
-    this._refreshPosAndSizeStyle(size, pos)
+  updatePosition(point: TranslaterPoint) {
+    const { pos, size } = this._refreshPosAndSizeValue(point, this.scrollInfo)
+    this.currentPos = pos
+    this.refreshStyle(size, pos)
   }
 
   private _refreshPosAndSizeValue(
-    endPoint: TranslaterPoint,
-    keyVals: KeyValues
+    point: TranslaterPoint,
+    scrollInfo: ScrollInfo
   ): { pos: number; size: number } {
     const { pos: posKey } = this.keysMap
-    const { sizeRatio, initialSize, maxPos } = keyVals
+    const { sizeRatio, indicatorSize, maxScrollPos, minScrollPos } = scrollInfo
+    const minSize = this.options.minSize
 
-    let pos = Math.round(sizeRatio * endPoint[posKey])
+    let pos = Math.round(sizeRatio * point[posKey])
     let size
-    if (pos < 0) {
-      size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN)
-      pos = 0
-    } else if (pos > maxPos) {
-      size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN)
-      pos = maxPos + initialSize - size
+    if (pos < minScrollPos) {
+      size = Math.max(indicatorSize + pos * 3, minSize)
+      pos = minScrollPos
+    } else if (pos > maxScrollPos) {
+      size = Math.max(indicatorSize - (pos - maxScrollPos) * 3, minSize)
+      pos = maxScrollPos + indicatorSize - size
     } else {
-      size = initialSize
+      size = indicatorSize
     }
 
     return {
@@ -226,38 +263,41 @@ export default class Indicator {
     }
   }
 
-  private _refreshPosAndSizeStyle(size: number, pos: number) {
-    const { translate, size: sizeKey } = this.keysMap
+  private refreshStyle(size: number, pos: number) {
+    const {
+      translateProperty: translatePropertyKey,
+      size: sizeKey,
+    } = this.keysMap
+    const translateZ = this.scroll.options.translateZ
 
-    this.elStyle[sizeKey] = `${size}px`
+    this.indicatorEl.style[sizeKey] = `${size}px`
 
-    this.elStyle[
+    this.indicatorEl.style[
       style.transform as any
-    ] = `${translate}(${pos}px)${this.bscroll.options.translateZ}`
+    ] = `${translatePropertyKey}(${pos}px)${translateZ}`
   }
 
   setTransitionTime(time: number = 0) {
-    this.elStyle[style.transitionDuration as any] = time + 'ms'
+    this.indicatorEl.style[style.transitionDuration as any] = time + 'ms'
   }
 
   setTransitionTimingFunction(easing: string) {
-    this.elStyle[style.transitionTimingFunction as any] = easing
+    this.indicatorEl.style[style.transitionTimingFunction as any] = easing
   }
 
   startHandler() {
     this.setTransitionTime()
-    this.bscroll.trigger('beforeScrollStart')
+    this.scroll.trigger('beforeScrollStart')
   }
 
   moveHandler(moved: boolean, delta: number) {
     if (!moved) {
-      this.bscroll.trigger('scrollStart')
+      this.scroll.trigger('scrollStart')
     }
 
-    const newScrollPos = this._calScrollDesPos(this.curPos, delta, this.keyVals)
+    const newScrollPos = this.newPos(this.currentPos, delta, this.scrollInfo)
 
-    // TODO freeScroll ？
-    if (this.direction === Direction.Vertical) {
+    if (this.direction === IndicatorDirection.Vertical) {
       this.bscroll.scrollTo(this.bscroll.x, newScrollPos)
     } else {
       this.bscroll.scrollTo(newScrollPos, this.bscroll.y)
@@ -269,28 +309,25 @@ export default class Indicator {
     })
   }
 
-  private _calScrollDesPos(
+  private newPos(
     curPos: number,
     delta: number,
-    keyVals: KeyValues
+    scrollInfo: ScrollInfo
   ): number {
-    const { maxPos, sizeRatio } = keyVals
+    const { maxScrollPos, sizeRatio, minScrollPos } = scrollInfo
     let newPos = curPos + delta
 
-    if (newPos < 0) {
-      newPos = 0
-    } else if (newPos > maxPos) {
-      newPos = maxPos
-    }
+    newPos = between(newPos, minScrollPos, maxScrollPos)
 
     return Math.round(newPos / sizeRatio)
   }
 
   endHandler(moved: boolean) {
     if (moved) {
-      this.bscroll.trigger('scrollEnd', {
-        x: this.bscroll.x,
-        y: this.bscroll.y,
+      const { x, y } = this.scroll
+      this.scroll.trigger('scrollEnd', {
+        x,
+        y,
       })
     }
   }
@@ -301,17 +338,12 @@ export default class Indicator {
     }
     this.wrapper.parentNode!.removeChild(this.wrapper)
 
-    this.hooksHandlers.forEach((item) => {
+    this.hooksFn.forEach((item) => {
       const hooks = item[0]
       const hooksName = item[1]
       const handlerFn = item[2]
       hooks.off(hooksName, handlerFn)
     })
-    this.hooksHandlers.length = 0
-  }
-
-  private _listen(hooks: EventEmitter, name: string, handler: Function) {
-    hooks.on(name, handler, this)
-    this.hooksHandlers.push([hooks, name, handler])
+    this.hooksFn.length = 0
   }
 }

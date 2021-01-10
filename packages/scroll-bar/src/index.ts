@@ -1,16 +1,14 @@
 import BScroll from '@better-scroll/core'
-import Indicator, { IndicatorOption } from './indicator'
-
-export const enum Direction {
-  Horizontal = 'horizontal',
-  Vertical = 'vertical',
-}
+import Indicator, { IndicatorOption, IndicatorDirection } from './indicator'
+import { extend } from '@better-scroll/shared-utils'
 
 export type ScrollbarOptions = Partial<ScrollbarConfig> | true
 
 export interface ScrollbarConfig {
   fade: boolean
   interactive: boolean
+  customElements: HTMLElement[]
+  minSize: number
 }
 
 // augmentation for Options
@@ -23,71 +21,101 @@ declare module '@better-scroll/core' {
 
 export default class ScrollBar {
   static pluginName = 'scrollbar'
-  public indicators: Array<Indicator> = []
+  options: ScrollbarConfig
+  indicators: Indicator[]
 
-  constructor(scroll: BScroll) {
-    this.indicators = this.createIndicators(scroll)
-
-    scroll.on(scroll.eventTypes.destroy, this.destroy, this)
+  constructor(public scroll: BScroll) {
+    this.handleOptions()
+    this.createIndicators()
+    this.handleHooks()
   }
 
-  private createIndicators(bscroll: BScroll) {
-    const { fade = true, interactive = false } = bscroll.options
-      .scrollbar as ScrollbarConfig
-    let indicatorOption: IndicatorOption
-
-    let scrolls: { [key: string]: Direction } = {
-      scrollX: Direction.Horizontal,
-      scrollY: Direction.Vertical,
-    }
-    const indicators: Indicator[] = []
-
-    Object.keys(scrolls).forEach((key: string) => {
-      const direction: Direction = scrolls[key]
-      if (bscroll.options[key]) {
-        indicatorOption = {
-          wrapper: this.createIndicatorElement(direction),
-          direction: direction,
-          fade,
-          interactive,
-        }
-        bscroll.wrapper.appendChild(indicatorOption.wrapper)
-        indicators.push(new Indicator(bscroll, indicatorOption))
+  private handleHooks() {
+    const scroll = this.scroll
+    scroll.hooks.on(scroll.hooks.eventTypes.destroy, () => {
+      for (let indicator of this.indicators) {
+        indicator.destroy()
       }
     })
-    return indicators
   }
 
-  private createIndicatorElement(direction: Direction) {
-    let scrollbarEl: HTMLDivElement = document.createElement('div')
-    let indicatorEl: HTMLDivElement = document.createElement('div')
+  private handleOptions() {
+    const userOptions = (this.scroll.options.scrollbar === true
+      ? {}
+      : this.scroll.options.scrollbar) as Partial<ScrollbarConfig>
 
-    scrollbarEl.style.cssText =
-      'position:absolute;z-index:9999;pointerEvents:none'
-    indicatorEl.style.cssText =
+    const defaultOptions: ScrollbarConfig = {
+      fade: true,
+      interactive: false,
+      customElements: [],
+      minSize: 8,
+    }
+    this.options = extend(defaultOptions, userOptions)
+  }
+
+  private createIndicators() {
+    let indicatorOption: IndicatorOption
+    const scroll: BScroll = this.scroll
+    const indicators: Indicator[] = []
+    const scrollDirectionConfigKeys = ['scrollX', 'scrollY']
+    const indicatorDirections = [
+      IndicatorDirection.Horizontal,
+      IndicatorDirection.Vertical,
+    ]
+    const customScrollbarEls = this.options.customElements
+    for (let i = 0; i < scrollDirectionConfigKeys.length; i++) {
+      const key = scrollDirectionConfigKeys[i]
+      // wanna scroll in specified direction
+      if (scroll.options[key]) {
+        const customElement = customScrollbarEls.shift()
+        const direction = indicatorDirections[i]
+        let scrollbarWrapper = customElement
+          ? customElement
+          : this.createScrollbarElement(direction)
+        // internal scrollbar
+        if (scrollbarWrapper !== customElement) {
+          scroll.wrapper.append(scrollbarWrapper)
+        }
+        indicatorOption = {
+          wrapper: scrollbarWrapper,
+          direction,
+          ...this.options,
+        }
+        indicators.push(new Indicator(scroll, indicatorOption))
+      }
+    }
+    this.indicators = indicators
+  }
+
+  private createScrollbarElement(
+    direction: IndicatorDirection,
+    interactive = this.options.interactive
+  ) {
+    let scrollbarWrapperEl: HTMLDivElement = document.createElement('div')
+    let scrollbarIndicatorEl: HTMLDivElement = document.createElement('div')
+
+    scrollbarWrapperEl.style.cssText =
+      'position:absolute;z-index:9999;overflow:hidden;'
+    scrollbarIndicatorEl.style.cssText =
       'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;'
 
-    indicatorEl.className = 'bscroll-indicator'
-
-    if (direction === 'horizontal') {
-      scrollbarEl.style.cssText += ';height:7px;left:2px;right:2px;bottom:0'
-      indicatorEl.style.height = '100%'
-      scrollbarEl.className = 'bscroll-horizontal-scrollbar'
+    scrollbarIndicatorEl.className = 'bscroll-indicator'
+    if (direction === IndicatorDirection.Horizontal) {
+      scrollbarWrapperEl.style.cssText +=
+        'height:7px;left:2px;right:2px;bottom:0;'
+      scrollbarIndicatorEl.style.height = '100%'
+      scrollbarWrapperEl.className = 'bscroll-horizontal-scrollbar'
     } else {
-      scrollbarEl.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px'
-      indicatorEl.style.width = '100%'
-      scrollbarEl.className = 'bscroll-vertical-scrollbar'
+      scrollbarWrapperEl.style.cssText +=
+        'width:7px;bottom:2px;top:2px;right:1px;'
+      scrollbarIndicatorEl.style.width = '100%'
+      scrollbarWrapperEl.className = 'bscroll-vertical-scrollbar'
     }
 
-    scrollbarEl.style.cssText += ';overflow:hidden'
-    scrollbarEl.appendChild(indicatorEl)
-
-    return scrollbarEl
-  }
-
-  destroy(): void {
-    for (let indicator of this.indicators) {
-      indicator.destroy()
+    if (!interactive) {
+      scrollbarWrapperEl.style.cssText += 'pointer-events:none;'
     }
+    scrollbarWrapperEl.appendChild(scrollbarIndicatorEl)
+    return scrollbarWrapperEl
   }
 }
