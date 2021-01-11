@@ -30,22 +30,25 @@ interface ScrollInfo {
   maxScrollPos: number
   minScrollPos: number
   sizeRatio: number
-  indicatorSize: number
+  baseSize: number
 }
 
 export default class Indicator {
   wrapper: HTMLElement
   indicatorEl: HTMLElement
+  direction: IndicatorDirection
   scrollInfo: ScrollInfo
-  currentPos: number = 0
+  currentPos: number
+  moved: boolean
   keysMap: KeysMap
   eventHandler: EventHandler
   hooksFn: [EventEmitter, string, Function][] = []
 
   constructor(public scroll: BScroll, public options: IndicatorOption) {
     this.wrapper = options.wrapper
+    this.direction = options.direction
     this.indicatorEl = this.wrapper.children[0] as HTMLElement
-    this.keysMap = this.getKeysMap(options.direction)
+    this.keysMap = this.getKeysMap()
 
     this.handleFade()
 
@@ -82,13 +85,13 @@ export default class Indicator {
     this.registerHooks(
       animaterHooks,
       animaterHooks.eventTypes.time,
-      this.setTransitionTime
+      this.transitionTime
     )
 
     this.registerHooks(
       animaterHooks,
       animaterHooks.eventTypes.timeFunction,
-      this.setTransitionTimingFunction
+      this.transitionTimingFunction
     )
 
     if (fade) {
@@ -142,8 +145,8 @@ export default class Indicator {
     this.hooksFn.push([hooks, name, handler])
   }
 
-  getKeysMap(direction: IndicatorDirection): KeysMap {
-    if (direction === IndicatorDirection.Vertical) {
+  getKeysMap(): KeysMap {
+    if (this.direction === IndicatorDirection.Vertical) {
       return {
         hasScroll: 'hasVerticalScroll',
         size: 'height',
@@ -151,7 +154,7 @@ export default class Indicator {
         scrollerSize: 'scrollerHeight',
         maxScrollPos: 'maxScrollY',
         pos: 'y',
-        point: 'pageX',
+        point: 'pageY',
         translateProperty: 'translateY',
       }
     }
@@ -162,7 +165,7 @@ export default class Indicator {
       scrollerSize: 'scrollerWidth',
       maxScrollPos: 'maxScrollX',
       pos: 'x',
-      point: 'pageY',
+      point: 'pageX',
       translateProperty: 'translateX',
     }
   }
@@ -199,32 +202,28 @@ export default class Indicator {
   }
 
   private canScroll(hasScroll: boolean): boolean {
-    if (hasScroll) {
-      this.wrapper.style.display = 'block'
-      return true
-    }
-    this.wrapper.style.display = 'none'
-    return false
+    this.wrapper.style.display = hasScroll ? 'block' : 'none'
+    return hasScroll
   }
 
   private refreshScrollInfo(
     wrapperSize: number,
     scrollerSize: number,
-    maxScroll: number
+    maxScrollPos: number
   ): ScrollInfo {
-    const indicatorSize = Math.max(
+    const baseSize = Math.max(
       Math.round(
         (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
       ),
       this.options.minSize
     )
 
-    const maxIndicatorScrollPos = wrapperSize - indicatorSize
+    const maxIndicatorScrollPos = wrapperSize - baseSize
     // sizeRatio is negative
-    let sizeRatio = maxIndicatorScrollPos / maxScroll
+    let sizeRatio = maxIndicatorScrollPos / maxScrollPos
 
     return {
-      indicatorSize,
+      baseSize,
       maxScrollPos: maxIndicatorScrollPos,
       minScrollPos: 0,
       sizeRatio,
@@ -232,29 +231,30 @@ export default class Indicator {
   }
 
   updatePosition(point: TranslaterPoint) {
-    const { pos, size } = this._refreshPosAndSizeValue(point, this.scrollInfo)
-    this.currentPos = pos
+    const { pos, size } = this.caculatePosAndSize(point, this.scrollInfo)
     this.refreshStyle(size, pos)
+    this.currentPos = pos
   }
 
-  private _refreshPosAndSizeValue(
+  private caculatePosAndSize(
     point: TranslaterPoint,
     scrollInfo: ScrollInfo
   ): { pos: number; size: number } {
     const { pos: posKey } = this.keysMap
-    const { sizeRatio, indicatorSize, maxScrollPos, minScrollPos } = scrollInfo
+    const { sizeRatio, baseSize, maxScrollPos, minScrollPos } = scrollInfo
     const minSize = this.options.minSize
 
     let pos = Math.round(sizeRatio * point[posKey])
     let size
+    // when out of boundary, slow down size reduction
     if (pos < minScrollPos) {
-      size = Math.max(indicatorSize + pos * 3, minSize)
+      size = Math.max(baseSize + pos * 3, minSize)
       pos = minScrollPos
     } else if (pos > maxScrollPos) {
-      size = Math.max(indicatorSize - (pos - maxScrollPos) * 3, minSize)
-      pos = maxScrollPos + indicatorSize - size
+      size = Math.max(baseSize - (pos - maxScrollPos) * 3, minSize)
+      pos = maxScrollPos + baseSize - size
     } else {
-      size = indicatorSize
+      size = baseSize
     }
 
     return {
@@ -277,45 +277,44 @@ export default class Indicator {
     ] = `${translatePropertyKey}(${pos}px)${translateZ}`
   }
 
-  setTransitionTime(time: number = 0) {
+  transitionTime(time: number = 0) {
     this.indicatorEl.style[style.transitionDuration as any] = time + 'ms'
   }
 
-  setTransitionTimingFunction(easing: string) {
+  transitionTimingFunction(easing: string) {
     this.indicatorEl.style[style.transitionTimingFunction as any] = easing
   }
 
   startHandler() {
-    this.setTransitionTime()
-    this.scroll.trigger('beforeScrollStart')
+    this.transitionTime()
+    this.scroll.trigger(this.scroll.eventTypes.beforeScrollStart)
   }
 
-  moveHandler(moved: boolean, delta: number) {
-    if (!moved) {
+  moveHandler(delta: number) {
+    if (!this.moved) {
       this.scroll.trigger('scrollStart')
     }
+    const newPos = this.newPos(this.currentPos, delta, this.scrollInfo)
+    this.syncBScroll(newPos)
+  }
 
-    const newScrollPos = this.newPos(this.currentPos, delta, this.scrollInfo)
-
-    if (this.direction === IndicatorDirection.Vertical) {
-      this.bscroll.scrollTo(this.bscroll.x, newScrollPos)
-    } else {
-      this.bscroll.scrollTo(newScrollPos, this.bscroll.y)
+  private syncBScroll(newPos: number) {
+    const scroll = this.scroll
+    const position = {
+      x: this.direction === IndicatorDirection.Vertical ? scroll.x : newPos,
+      y: this.direction === IndicatorDirection.Horizontal ? scroll.y : newPos,
     }
-
-    this.bscroll.trigger('scroll', {
-      x: this.bscroll.x,
-      y: this.bscroll.y,
-    })
+    scroll.scroller.translater.translate(position)
+    scroll.trigger(scroll.eventTypes.scroll, position)
   }
 
   private newPos(
-    curPos: number,
+    currentPos: number,
     delta: number,
     scrollInfo: ScrollInfo
   ): number {
     const { maxScrollPos, sizeRatio, minScrollPos } = scrollInfo
-    let newPos = curPos + delta
+    let newPos = currentPos + delta
 
     newPos = between(newPos, minScrollPos, maxScrollPos)
 
@@ -325,7 +324,7 @@ export default class Indicator {
   endHandler(moved: boolean) {
     if (moved) {
       const { x, y } = this.scroll
-      this.scroll.trigger('scrollEnd', {
+      this.scroll.trigger(this.scroll.eventTypes.scrollEnd, {
         x,
         y,
       })
