@@ -2,7 +2,10 @@
   "name": "@better-scroll/movable",
   "version": "2.1.2",
   "description": "Movable plugin for BetterScroll",
-  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
   "main": "dist/movable.min.js",
   "module": "dist/movable.esm.js",
   "typings": "dist/types/index.d.ts",

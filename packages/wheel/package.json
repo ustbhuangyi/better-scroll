@@ -3,8 +3,8 @@
   "version": "2.1.2",
   "description": "a BetterScroll plugin to imitate IOS Picker",
   "author": {
-    "name": "huangyi",
-    "email": "ustbhuangyi@gmail.com"
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
   },
   "main": "dist/wheel.min.js",
   "module": "dist/wheel.esm.js",

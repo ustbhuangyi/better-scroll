@@ -2,7 +2,10 @@
   "name": "@better-scroll/mouse-wheel",
   "version": "2.1.2",
   "description": "support for MouseWheel in PC",
-  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
   "main": "dist/mouse-wheel.min.js",
   "module": "dist/mouse-wheel.esm.js",
   "typings": "dist/types/index.d.ts",

@@ -2,7 +2,10 @@
   "name": "@better-scroll/observe-dom",
   "version": "2.1.2",
   "description": "Dynamic recalculating container's size for BetterScroll",
-  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
   "main": "dist/observe-dom.min.js",
   "module": "dist/observe-dom.esm.js",
   "typings": "dist/types/index.d.ts",
