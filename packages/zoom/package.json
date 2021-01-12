@@ -3,8 +3,8 @@
   "version": "2.1.1",
   "description": "a BetterScroll plugin to enlarge or narrow",
   "author": {
-    "name": "huangyi",
-    "email": "ustbhuangyi@gmail.com"
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
   },
   "main": "dist/zoom.min.js",
   "module": "dist/zoom.esm.js",
