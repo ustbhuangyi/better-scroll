@@ -1,5 +1,13 @@
 import BScroll, { TranslaterPoint } from '@better-scroll/core'
-import { style, EventEmitter, between } from '@better-scroll/shared-utils'
+import {
+  style,
+  EventEmitter,
+  between,
+  getNow,
+  Probe,
+  EventRegister,
+  click,
+} from '@better-scroll/shared-utils'
 import EventHandler from './event-handler'
 
 export const enum IndicatorDirection {
@@ -7,12 +15,26 @@ export const enum IndicatorDirection {
   Vertical = 'vertical',
 }
 
-export interface IndicatorOption {
+const enum ScrollTo {
+  Up = -1,
+  Down = 1,
+}
+
+export const enum OffsetType {
+  Step = 'step',
+  Point = 'clickedPoint',
+}
+
+export interface IndicatorOptions {
   wrapper: HTMLElement
   direction: IndicatorDirection
   fade: boolean
   interactive: boolean
   minSize: number
+  isCustom: boolean
+  scrollbarTrackClickable: boolean
+  scrollbarTrackOffsetType: OffsetType
+  scrollbarTrackOffsetTime: number
 }
 
 interface KeysMap {
@@ -24,6 +46,7 @@ interface KeysMap {
   pos: 'y' | 'x'
   point: 'pageX' | 'pageY'
   translateProperty: 'translateY' | 'translateX'
+  domRect: 'top' | 'left'
 }
 
 interface ScrollInfo {
@@ -35,16 +58,19 @@ interface ScrollInfo {
 
 export default class Indicator {
   wrapper: HTMLElement
+  wrapperRect: DOMRect
   indicatorEl: HTMLElement
   direction: IndicatorDirection
   scrollInfo: ScrollInfo
   currentPos: number
   moved: boolean
+  startTime: number
   keysMap: KeysMap
   eventHandler: EventHandler
+  clickEventRegister: EventRegister
   hooksFn: [EventEmitter, string, Function][] = []
 
-  constructor(public scroll: BScroll, public options: IndicatorOption) {
+  constructor(public scroll: BScroll, public options: IndicatorOptions) {
     this.wrapper = options.wrapper
     this.direction = options.direction
     this.indicatorEl = this.wrapper.children[0] as HTMLElement
@@ -53,8 +79,6 @@ export default class Indicator {
     this.handleFade()
 
     this.handleHooks()
-
-    this.refresh()
   }
 
   private handleFade() {
@@ -64,7 +88,7 @@ export default class Indicator {
   }
 
   private handleHooks() {
-    const { fade, interactive } = this.options
+    const { fade, interactive, scrollbarTrackClickable } = this.options
     const scroll = this.scroll
     const scrollHooks = scroll.hooks
     const translaterHooks = scroll.scroller.translater.hooks
@@ -120,7 +144,10 @@ export default class Indicator {
 
     if (interactive) {
       const { disableMouse, disableTouch } = this.scroll.options
-      this.eventHandler = new EventHandler(this, { disableMouse, disableTouch })
+      this.eventHandler = new EventHandler(this, {
+        disableMouse,
+        disableTouch,
+      })
       const eventHandlerHooks = this.eventHandler.hooks
       this.registerHooks(
         eventHandlerHooks,
@@ -138,11 +165,50 @@ export default class Indicator {
         this.endHandler
       )
     }
+
+    if (scrollbarTrackClickable) {
+      this.bindClick()
+    }
   }
 
   private registerHooks(hooks: EventEmitter, name: string, handler: Function) {
     hooks.on(name, handler, this)
     this.hooksFn.push([hooks, name, handler])
+  }
+
+  private bindClick() {
+    const wrapper = this.wrapper
+    this.clickEventRegister = new EventRegister(wrapper, [
+      {
+        name: 'click',
+        handler: this.handleClick.bind(this),
+      },
+    ])
+  }
+
+  private handleClick(e: MouseEvent) {
+    const newPos = this.calculateclickOffsetPos(e)
+    let { x, y } = this.scroll
+    x = this.direction === IndicatorDirection.Horizontal ? newPos : x
+    y = this.direction === IndicatorDirection.Vertical ? newPos : y
+    this.scroll.scrollTo(x, y, this.options.scrollbarTrackOffsetTime)
+  }
+
+  private calculateclickOffsetPos(e: MouseEvent) {
+    const { point: poinKey, domRect: domRectKey } = this.keysMap
+    const { scrollbarTrackOffsetType } = this.options
+    const clickPointOffset = e[poinKey] - this.wrapperRect[domRectKey]
+    const scrollToWhere =
+      clickPointOffset < this.currentPos ? ScrollTo.Up : ScrollTo.Down
+    let delta = 0
+    let currentPos = this.currentPos
+    if (scrollbarTrackOffsetType === OffsetType.Step) {
+      delta = this.scrollInfo.baseSize * scrollToWhere
+    } else {
+      delta = 0
+      currentPos = clickPointOffset
+    }
+    return this.newPos(currentPos, delta, this.scrollInfo)
   }
 
   getKeysMap(): KeysMap {
@@ -156,6 +222,7 @@ export default class Indicator {
         pos: 'y',
         point: 'pageY',
         translateProperty: 'translateY',
+        domRect: 'top',
       }
     }
     return {
@@ -167,6 +234,7 @@ export default class Indicator {
       pos: 'x',
       point: 'pageX',
       translateProperty: 'translateX',
+      domRect: 'left',
     }
   }
 
@@ -181,6 +249,7 @@ export default class Indicator {
     const { hasScroll: hasScrollKey } = this.keysMap
     const scroll = this.scroll
     const { x, y } = scroll
+    this.wrapperRect = this.wrapper.getBoundingClientRect()
     if (this.canScroll(scroll[hasScrollKey])) {
       let {
         wrapperSize: wrapperSizeKey,
@@ -199,6 +268,14 @@ export default class Indicator {
         y,
       })
     }
+  }
+
+  transitionTime(time: number = 0) {
+    this.indicatorEl.style[style.transitionDuration as any] = time + 'ms'
+  }
+
+  transitionTimingFunction(easing: string) {
+    this.indicatorEl.style[style.transitionTimingFunction as any] = easing
   }
 
   private canScroll(hasScroll: boolean): boolean {
@@ -277,35 +354,83 @@ export default class Indicator {
     ] = `${translatePropertyKey}(${pos}px)${translateZ}`
   }
 
-  transitionTime(time: number = 0) {
-    this.indicatorEl.style[style.transitionDuration as any] = time + 'ms'
-  }
-
-  transitionTimingFunction(easing: string) {
-    this.indicatorEl.style[style.transitionTimingFunction as any] = easing
-  }
-
   startHandler() {
+    this.moved = false
+    this.startTime = getNow()
     this.transitionTime()
-    this.scroll.trigger(this.scroll.eventTypes.beforeScrollStart)
+    this.scroll.scroller.hooks.trigger(
+      this.scroll.scroller.hooks.eventTypes.beforeScrollStart
+    )
   }
 
   moveHandler(delta: number) {
-    if (!this.moved) {
-      this.scroll.trigger('scrollStart')
+    if (!this.moved && !this.indicatorNotMoved(delta)) {
+      this.moved = true
+      this.scroll.scroller.hooks.trigger(
+        this.scroll.scroller.hooks.eventTypes.scrollStart
+      )
     }
-    const newPos = this.newPos(this.currentPos, delta, this.scrollInfo)
-    this.syncBScroll(newPos)
+    if (this.moved) {
+      const newPos = this.newPos(this.currentPos, delta, this.scrollInfo)
+      this.syncBScroll(newPos)
+    }
+  }
+
+  endHandler() {
+    if (this.moved) {
+      const { x, y } = this.scroll
+      this.scroll.scroller.hooks.trigger(
+        this.scroll.scroller.hooks.eventTypes.scrollEnd,
+        {
+          x,
+          y,
+        }
+      )
+    }
+  }
+
+  private indicatorNotMoved(delta: number): boolean {
+    const currentPos = this.currentPos
+    const { maxScrollPos, minScrollPos } = this.scrollInfo
+    const notMoved =
+      (currentPos === minScrollPos && delta <= 0) ||
+      (currentPos === maxScrollPos && delta >= 0)
+    return notMoved
   }
 
   private syncBScroll(newPos: number) {
-    const scroll = this.scroll
-    const position = {
-      x: this.direction === IndicatorDirection.Vertical ? scroll.x : newPos,
-      y: this.direction === IndicatorDirection.Horizontal ? scroll.y : newPos,
+    const timestamp = getNow()
+    const {
+      x,
+      y,
+      options,
+      scroller,
+      maxScrollY,
+      minScrollY,
+      maxScrollX,
+      minScrollX,
+    } = this.scroll
+    const { probeType, momentumLimitTime } = options
+    const position = { x, y }
+    if (this.direction === IndicatorDirection.Vertical) {
+      position.y = between(newPos, maxScrollY, minScrollY)
+    } else {
+      position.x = between(newPos, maxScrollX, minScrollX)
     }
-    scroll.scroller.translater.translate(position)
-    scroll.trigger(scroll.eventTypes.scroll, position)
+    scroller.translater.translate(position)
+
+    // dispatch scroll in interval time
+    if (timestamp - this.startTime > momentumLimitTime) {
+      this.startTime = timestamp
+      if (probeType === Probe.Throttle) {
+        scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, position)
+      }
+    }
+
+    // dispatch scroll all the time
+    if (probeType > Probe.Throttle) {
+      scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, position)
+    }
   }
 
   private newPos(
@@ -321,21 +446,17 @@ export default class Indicator {
     return Math.round(newPos / sizeRatio)
   }
 
-  endHandler(moved: boolean) {
-    if (moved) {
-      const { x, y } = this.scroll
-      this.scroll.trigger(this.scroll.eventTypes.scrollEnd, {
-        x,
-        y,
-      })
-    }
-  }
-
   destroy() {
-    if (this.options.interactive) {
+    const { interactive, scrollbarTrackClickable, isCustom } = this.options
+    if (interactive) {
       this.eventHandler.destroy()
     }
-    this.wrapper.parentNode!.removeChild(this.wrapper)
+    if (scrollbarTrackClickable) {
+      this.clickEventRegister.destroy()
+    }
+    if (!isCustom) {
+      this.wrapper.parentNode!.removeChild(this.wrapper)
+    }
 
     this.hooksFn.forEach((item) => {
       const hooks = item[0]

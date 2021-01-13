@@ -1,8 +1,8 @@
 <template>
   <div class="scrollbar">
-    <div ref="scroller" class="scrollbar-bswrapper">
-      <ul class="scrollbar-list">
-        <li v-for="i of 40" :key="i" class="scrollbar-list-item">
+    <div ref="wrapper" class="scrollbar-wrapper">
+      <ul class="scrollbar-content">
+        <li v-for="i of 40" :key="i" @click="handleClick" class="scrollbar-content-item">
           {{ `I am item ${i} `}}
         </li>
       </ul>
@@ -21,12 +21,28 @@
       this.initBscroll()
     },
     methods: {
+      handleClick() {
+        alert(1)
+      },
       initBscroll() {
-        this.bscroll = new BScroll(this.$refs.scroller, {
+        this.scroll = new BScroll(this.$refs.wrapper, {
           scrollY: true,
+          probeType: 2,
+          click: true,
           scrollbar: {
-            fade: false
+            fade: false,
+            interactive: true,
+            scrollbarTrackOffsetType: 'clickedPoint'
           }
+        })
+        this.scroll.on('scrollEnd', () => {
+          console.log('scrollEnd')
+        })
+        this.scroll.on('scrollStart', () => {
+          console.log('scrollStart')
+        })
+        this.scroll.on('scroll', () => {
+          console.log('scroll')
         })
       }
     }
@@ -36,20 +52,15 @@
 <style lang="stylus">
 .scrollbar
   height: 100%
-.scrollbar-bswrapper
+.scrollbar-wrapper
   position: relative
   height: 100%
   padding: 0 10px
   border: 1px solid #ccc
   overflow: hidden
-.pullup-list
-  padding: 0
-.scrollbar-list-item
+.scrollbar-content-item
   padding: 10px 0
   list-style: none
   border-bottom: 1px solid #ccc
-.scrollbar-wrapper
-  padding: 20px
-  text-align: center
-  color: #999
+  text-align: left
 </style>

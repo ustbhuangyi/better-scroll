@@ -12,19 +12,18 @@ interface EventHandlerOptions {
 }
 
 export default class EventHandler {
-  public startEventRegister: EventRegister
-  public moveEventRegister: EventRegister
-  public endEventRegister: EventRegister
-  public initiated: boolean
-  private lastPoint: number
-  public scroll: BScroll
-  public hooks: EventEmitter
+  startEventRegister: EventRegister
+  moveEventRegister: EventRegister
+  endEventRegister: EventRegister
+  initiated: boolean
+  lastPoint: number
+  scroll: BScroll
+  hooks: EventEmitter
 
   constructor(
     public indicator: Indicator,
     public options: EventHandlerOptions
   ) {
-    this.scroll = indicator.scroll
     this.hooks = new EventEmitter(['touchStart', 'touchMove', 'touchEnd'])
     this.registerEvents()
   }
@@ -77,7 +76,7 @@ export default class EventHandler {
   }
 
   private BScrollIsDisabled() {
-    return !this.scroll.enabled
+    return !this.indicator.scroll.enabled
   }
 
   private start(e: TouchEvent) {

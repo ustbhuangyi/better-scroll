@@ -1,5 +1,9 @@
 import BScroll from '@better-scroll/core'
-import Indicator, { IndicatorOption, IndicatorDirection } from './indicator'
+import Indicator, {
+  IndicatorOptions,
+  IndicatorDirection,
+  OffsetType,
+} from './indicator'
 import { extend } from '@better-scroll/shared-utils'
 
 export type ScrollbarOptions = Partial<ScrollbarConfig> | true
@@ -9,10 +13,10 @@ export interface ScrollbarConfig {
   interactive: boolean
   customElements: HTMLElement[]
   minSize: number
+  scrollbarTrackClickable: boolean
+  scrollbarTrackOffsetType: OffsetType
+  scrollbarTrackOffsetTime: number
 }
-
-// augmentation for Options
-
 declare module '@better-scroll/core' {
   interface CustomOptions {
     scrollbar?: ScrollbarOptions
@@ -49,12 +53,15 @@ export default class ScrollBar {
       interactive: false,
       customElements: [],
       minSize: 8,
+      scrollbarTrackClickable: true,
+      scrollbarTrackOffsetType: OffsetType.Step,
+      scrollbarTrackOffsetTime: 300,
     }
     this.options = extend(defaultOptions, userOptions)
   }
 
   private createIndicators() {
-    let indicatorOption: IndicatorOption
+    let indicatorOptions: IndicatorOptions
     const scroll: BScroll = this.scroll
     const indicators: Indicator[] = []
     const scrollDirectionConfigKeys = ['scrollX', 'scrollY']
@@ -69,19 +76,24 @@ export default class ScrollBar {
       if (scroll.options[key]) {
         const customElement = customScrollbarEls.shift()
         const direction = indicatorDirections[i]
+        let isCustom = false
         let scrollbarWrapper = customElement
           ? customElement
           : this.createScrollbarElement(direction)
         // internal scrollbar
         if (scrollbarWrapper !== customElement) {
           scroll.wrapper.append(scrollbarWrapper)
+        } else {
+          // custom scrollbar passed by users
+          isCustom = true
         }
-        indicatorOption = {
+        indicatorOptions = {
           wrapper: scrollbarWrapper,
           direction,
           ...this.options,
+          isCustom,
         }
-        indicators.push(new Indicator(scroll, indicatorOption))
+        indicators.push(new Indicator(scroll, indicatorOptions))
       }
     }
     this.indicators = indicators
@@ -107,7 +119,7 @@ export default class ScrollBar {
       scrollbarWrapperEl.className = 'bscroll-horizontal-scrollbar'
     } else {
       scrollbarWrapperEl.style.cssText +=
-        'width:7px;bottom:2px;top:2px;right:1px;'
+        'width:15px;bottom:2px;top:2px;right:1px;'
       scrollbarIndicatorEl.style.width = '100%'
       scrollbarWrapperEl.className = 'bscroll-vertical-scrollbar'
     }
