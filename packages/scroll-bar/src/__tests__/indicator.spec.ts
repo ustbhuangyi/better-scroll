@@ -126,11 +126,13 @@ describe('scroll-bar indicator tests', () => {
       direction: IndicatorDirection.Horizontal,
     })
     indicator = new Indicator(scroll, indicatorOptions)
-    scroll.registerType(['mousewheelStart', 'mousewheelEnd'])
+    scroll.registerType(['mousewheelStart', 'mousewheelMove', 'mousewheelEnd'])
     scroll.trigger(scroll.eventTypes.mousewheelStart)
     expect(indicator.wrapper.style.opacity).toBe('1')
     scroll.trigger(scroll.eventTypes.mousewheelEnd)
     expect(indicator.wrapper.style.opacity).toBe('0')
+    scroll.trigger(scroll.eventTypes.mousewheelMove)
+    expect(indicator.wrapper.style.opacity).toBe('1')
   })
 
   it('interactive option', () => {

@@ -22,6 +22,7 @@ const BScroll = jest.fn().mockImplementation((wrapper, options) => {
     'flick',
     'alterOptions',
     'mousewheelStart',
+    'mousewheelMove',
     'mousewheelEnd',
   ])
   const res = {

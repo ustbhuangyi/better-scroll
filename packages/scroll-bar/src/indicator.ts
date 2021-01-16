@@ -102,7 +102,12 @@ export default class Indicator {
     this.registerHooks(
       translaterHooks,
       translaterHooks.eventTypes.translate,
-      this.updatePosition
+      (pos: { x: number; y: number }) => {
+        const { hasScroll: hasScrollKey } = this.keysMap
+        if (this.scroll[hasScrollKey]) {
+          this.updatePosition(pos)
+        }
+      }
     )
 
     this.registerHooks(
@@ -132,6 +137,10 @@ export default class Indicator {
         scroll.eventTypes.mousewheelEnd
       ) {
         this.registerHooks(scroll, scroll.eventTypes.mousewheelStart, () => {
+          this.fade(true)
+        })
+
+        this.registerHooks(scroll, scroll.eventTypes.mousewheelMove, () => {
           this.fade(true)
         })
 

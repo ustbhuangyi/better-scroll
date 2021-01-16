@@ -20,6 +20,7 @@ import ObserveImageEntry from 'vue-example/pages/observe-image-entry'
 import ScrollbarVertical from 'vue-example/components/scrollbar/vertical'
 import ScrollbarHorizontal from 'vue-example/components/scrollbar/horizontal'
 import ScrollbarCustom from 'vue-example/components/scrollbar/custom'
+import ScrollbarMouseWheel from 'vue-example/components/scrollbar/mousewheel'
 
 import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
 import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
@@ -195,6 +196,10 @@ export default new Router({
         {
           path: 'custom',
           component: ScrollbarCustom
+        },
+        {
+          path: 'mousewheel',
+          component: ScrollbarMouseWheel
         }
       ]
     },

@@ -10,6 +10,9 @@
       <li class="example-item" @click="goPage('/scrollbar/custom')">
         <span>custom</span>
       </li>
+      <li class="example-item" @click="goPage('/scrollbar/mousewheel')">
+        <span>use mousewheel</span>
+      </li>
     </ul>
     <transition name="move">
       <router-view class="view"></router-view>
