@@ -17,6 +17,10 @@ import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
 import ComposeEntry from 'vue-example/pages/compose-entry'
 import ObserveImageEntry from 'vue-example/pages/observe-image-entry'
 
+import ScrollbarVertical from 'vue-example/components/scrollbar/vertical'
+import ScrollbarHorizontal from 'vue-example/components/scrollbar/horizontal'
+import ScrollbarCustom from 'vue-example/components/scrollbar/custom'
+
 import MouseWheelVerticalScroll from 'vue-example/components/mouse-wheel/vertical-scroll'
 import MouseWheelHorizontalScroll from 'vue-example/components/mouse-wheel/horizontal-scroll'
 import MouseWheelVerticalSlide from 'vue-example/components/mouse-wheel/vertical-slide'
@@ -179,6 +183,20 @@ export default new Router({
     {
       path: '/scrollbar',
       component: ScrollBarEntry,
+      children: [
+        {
+          path: 'vertical',
+          component: ScrollbarVertical
+        },
+        {
+          path: 'horizontal',
+          component: ScrollbarHorizontal
+        },
+        {
+          path: 'custom',
+          component: ScrollbarCustom
+        }
+      ]
     },
     {
       path: '/infinity',

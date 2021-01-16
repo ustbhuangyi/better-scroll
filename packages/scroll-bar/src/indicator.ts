@@ -6,7 +6,6 @@ import {
   getNow,
   Probe,
   EventRegister,
-  click,
 } from '@better-scroll/shared-utils'
 import EventHandler from './event-handler'
 
@@ -260,7 +259,8 @@ export default class Indicator {
       this.scrollInfo = this.refreshScrollInfo(
         this.wrapper[wrapperSizeKey],
         scroll[scrollerSizeKey],
-        scroll[maxScrollPosKey]
+        scroll[maxScrollPosKey],
+        this.indicatorEl[wrapperSizeKey]
       )
 
       this.updatePosition({
@@ -286,14 +286,19 @@ export default class Indicator {
   private refreshScrollInfo(
     wrapperSize: number,
     scrollerSize: number,
-    maxScrollPos: number
+    maxScrollPos: number,
+    indicatorElSize: number
   ): ScrollInfo {
-    const baseSize = Math.max(
+    let baseSize = Math.max(
       Math.round(
         (wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)
       ),
       this.options.minSize
     )
+
+    if (this.options.isCustom) {
+      baseSize = indicatorElSize
+    }
 
     const maxIndicatorScrollPos = wrapperSize - baseSize
     // sizeRatio is negative

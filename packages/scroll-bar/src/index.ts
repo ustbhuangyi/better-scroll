@@ -53,7 +53,7 @@ export default class ScrollBar {
       interactive: false,
       customElements: [],
       minSize: 8,
-      scrollbarTrackClickable: true,
+      scrollbarTrackClickable: false,
       scrollbarTrackOffsetType: OffsetType.Step,
       scrollbarTrackOffsetTime: 300,
     }
@@ -119,7 +119,7 @@ export default class ScrollBar {
       scrollbarWrapperEl.className = 'bscroll-horizontal-scrollbar'
     } else {
       scrollbarWrapperEl.style.cssText +=
-        'width:15px;bottom:2px;top:2px;right:1px;'
+        'width:7px;bottom:2px;top:2px;right:1px;'
       scrollbarIndicatorEl.style.width = '100%'
       scrollbarWrapperEl.className = 'bscroll-vertical-scrollbar'
     }

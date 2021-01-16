@@ -2,7 +2,7 @@
   <div class="scrollbar">
     <div ref="wrapper" class="scrollbar-wrapper">
       <ul class="scrollbar-content">
-        <li v-for="i of 40" :key="i" @click="handleClick" class="scrollbar-content-item">
+        <li v-for="i of 40" :key="i" class="scrollbar-content-item">
           {{ `I am item ${i} `}}
         </li>
       </ul>
@@ -21,28 +21,10 @@
       this.initBscroll()
     },
     methods: {
-      handleClick() {
-        alert(1)
-      },
       initBscroll() {
         this.scroll = new BScroll(this.$refs.wrapper, {
           scrollY: true,
-          probeType: 2,
-          click: true,
-          scrollbar: {
-            fade: false,
-            interactive: true,
-            scrollbarTrackOffsetType: 'clickedPoint'
-          }
-        })
-        this.scroll.on('scrollEnd', () => {
-          console.log('scrollEnd')
-        })
-        this.scroll.on('scrollStart', () => {
-          console.log('scrollStart')
-        })
-        this.scroll.on('scroll', () => {
-          console.log('scroll')
+          scrollbar: true
         })
       }
     }
