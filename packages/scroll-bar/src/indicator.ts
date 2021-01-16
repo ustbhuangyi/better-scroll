@@ -132,11 +132,11 @@ export default class Indicator {
         scroll.eventTypes.mousewheelEnd
       ) {
         this.registerHooks(scroll, scroll.eventTypes.mousewheelStart, () => {
-          this.fade()
+          this.fade(true)
         })
 
         this.registerHooks(scroll, scroll.eventTypes.mousewheelEnd, () => {
-          this.fade(true)
+          this.fade()
         })
       }
     }

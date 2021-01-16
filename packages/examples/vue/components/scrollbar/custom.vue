@@ -6,7 +6,7 @@
       <div class="custom-vertical-scrollbar" ref="vertical">
         <div class="custom-vertical-indicator"></div>
       </div>
-       <!-- custom-horizontal-scrollbar-->
+      <!-- custom-horizontal-scrollbar-->
       <div class="custom-horizontal-scrollbar" ref="horizontal">
         <div class="custom-horizontal-indicator"></div>
       </div>

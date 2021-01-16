@@ -101,7 +101,7 @@ export default class ScrollBar {
 
   private createScrollbarElement(
     direction: IndicatorDirection,
-    interactive = this.options.interactive
+    scrollbarTrackClickable = this.options.scrollbarTrackClickable
   ) {
     let scrollbarWrapperEl: HTMLDivElement = document.createElement('div')
     let scrollbarIndicatorEl: HTMLDivElement = document.createElement('div')
@@ -124,7 +124,7 @@ export default class ScrollBar {
       scrollbarWrapperEl.className = 'bscroll-vertical-scrollbar'
     }
 
-    if (!interactive) {
+    if (!scrollbarTrackClickable) {
       scrollbarWrapperEl.style.cssText += 'pointer-events:none;'
     }
     scrollbarWrapperEl.appendChild(scrollbarIndicatorEl)

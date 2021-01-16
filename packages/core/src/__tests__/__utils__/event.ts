@@ -4,6 +4,18 @@ export function createEvent(type: string, name: string): Event {
   return e
 }
 
+interface CustomClickEvent extends MouseEvent {
+  pageX: number
+  pageY: number
+}
+
+export function dispatchClick(target: EventTarget, name = 'click') {
+  const event = <CustomClickEvent>createEvent('', name)
+  event.pageX = 0
+  event.pageY = 0
+  target.dispatchEvent(event)
+}
+
 interface CustomTouch {
   pageX: number
   pageY: number
