@@ -53,15 +53,15 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ### fade
 
-  - **类型**：`boolean`
-  - **默认值**：`true`
+  - **Type**: `boolean`
+  - **Default**: `true`
 
   When the scroll stops, the scrollbar fades out.
 
 ### interactive
 
-  - **类型**：`boolean`
-  - **默认值**：`false`
+  - **Type**: `boolean`
+  - **Default**: `false`
 
   Whether scrollbar can interacted with.
 
