@@ -2,7 +2,11 @@
 
 ## Introduciton
 
-  The scrollbar plugin provides a nice scrollbar for BetterScroll.
+The scrollbar plugin provides a nice scrollbar for BetterScroll.
+
+:::tip
+For v2.1.2, users can provide custom scroll bars.
+:::
 
 ## Install
 
@@ -36,34 +40,159 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ## Demo
 
-<demo qrcode-url="scrollbar/default" :render-code="true">
-  <template slot="code-template">
-    <<< @/examples/vue/components/scrollbar/default.vue?template
-  </template>
-  <template slot="code-script">
-    <<< @/examples/vue/components/scrollbar/default.vue?script
-  </template>
-  <template slot="code-style">
-    <<< @/examples/vue/components/scrollbar/default.vue?style
-  </template>
-  <scrollbar-default slot="demo"></scrollbar-default>
-</demo>
+  - **Vertical Scrollbar**
+
+    <demo qrcode-url="scrollbar/vertical" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/scrollbar/vertical.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/scrollbar/vertical.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/scrollbar/vertical.vue?style
+      </template>
+      <scrollbar-vertical slot="demo"></scrollbar-vertical>
+    </demo>
+
+  - **Horizontal Scrollbar**
+
+    <demo qrcode-url="scrollbar/horizontal" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/scrollbar/horizontal.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/scrollbar/horizontal.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/scrollbar/horizontal.vue?style
+      </template>
+      <scrollbar-horizontal slot="demo"></scrollbar-horizontal>
+    </demo>
+
+  - **Custom Scrollbar**
+
+    <demo qrcode-url="scrollbar/custom" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/scrollbar/custom.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/scrollbar/custom.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/scrollbar/custom.vue?style
+      </template>
+      <scrollbar-custom slot="demo"></scrollbar-custom>
+    </demo>
+
+  - **With Mouse wheel**
+
+    <demo qrcode-url="scrollbar/mousewheel" :render-code="true">
+      <template slot="code-template">
+        <<< @/examples/vue/components/scrollbar/mousewheel.vue?template
+      </template>
+      <template slot="code-script">
+        <<< @/examples/vue/components/scrollbar/mousewheel.vue?script
+      </template>
+      <template slot="code-style">
+        <<< @/examples/vue/components/scrollbar/mousewheel.vue?style
+      </template>
+      <scrollbar-mousewheel slot="demo"></scrollbar-mousewheel>
+    </demo>
+
 
 ## scrollbar options
 
 ### fade
 
-  - **类型**：`boolean`
-  - **默认值**：`true`
+  - **Type**: `boolean`
+  - **Default**：`true`
 
   When the scroll stops, the scrollbar fades out.
 
 ### interactive
 
-  - **类型**：`boolean`
-  - **默认值**：`false`
+  - **Type**: `boolean`
+  - **Default**: `false`
 
   Whether scrollbar can interacted with.
+### customElements（v2.1.2）
+
+  - **Type**: `HTMLElement[]`
+  - **Default**: `[]`
+
+  The user provides a custom scroll bar.
+
+  ```js
+  // horizontal
+  const horizontalEl = document.getElementById('User-defined scrollbar')
+  new BScroll('.bs-wrapper', {
+    scrollY: true,
+    scrollbar: {
+      customElements: [horizontalEl]
+    }
+  })
+  // vertical
+  const verticalEl = document.getElementById('User-defined scrollbar')
+  new BScroll('.bs-wrapper', {
+    scrollY: false,
+    scrollX: true,
+    scrollbar: {
+      customElements: [verticalEl]
+    }
+  })
+  // freeScroll
+  const horizontalEl = document.getElementById('User-defined scrollbar')
+  const verticalEl = document.getElementById('User-defined scrollbar')
+  new BScroll('.bs-wrapper', {
+    freeScroll: true,
+    scrollbar: {
+      // When there are two scrollbars
+      // the first element of the array is the horizontal
+      customElements: [horizontalEl, verticalEl]
+    }
+  })
+  ```
+
+### minSize（v2.1.2）
+
+  - **Type**: `number`
+  - **Default**: `8`
+
+  The minimum size of the scrollbar. When the user provides a custom scrollbar, this configuration is invalid.
+
+### scrollbarTrackClickable（v2.1.2）
+
+  - **Type**: `boolean`
+  - **Default**: `false`
+
+  Whether the scrollbar track allows clicking.
+
+  **Note**：When enabling this configuration, please ensure that the `click` of BetterScroll Options is true, otherwise the click event cannot be triggered. [The reason is here](../FAQ/diagnosis.html#question-4-why-are-the-listeners-for-all-click-events-inside-betterscroll-content-not-triggered).
+
+  ```js
+  new BScroll('.bs-wrapper', {
+    scrollY: true,
+    click: true // essential
+    scrollbar: {
+      scrollbarTrackClickable: true
+    }
+  })
+  ```
+
+### scrollbarTrackOffsetType（v2.1.2）
+
+  - **Type**: `string`
+  - **Default**: `'step'`
+
+  After the scroll bar track is clicked, the calculation method of the scroll distance is the same as the browser's performance by default. It can be configured as `'clickedPoint'`, which means the scroll bar is scrolled to the clicked position.
+
+### scrollbarTrackOffsetTime（v2.1.2）
+
+  - **Type**: `number`
+  - **Default**: `300`
+
+  the scroll time after the scrollbar track is clicked,.
 
 :::tip
 When `scrollbar` is configured as `true`, the plugin uses the default plugin option.
@@ -78,7 +207,13 @@ const bs = new BScroll('.wrapper', {
 const bs = new BScroll('.wrapper', {
   scrollbar: {
     fade: true,
-    interactive: false
+    interactive: false,
+    // The following configuration items are only supported in v2.1.2
+    customElements: [],
+    minSize: 8,
+    scrollbarTrackClickable: false,
+    scrollbarTrackOffsetType: 'step',
+    scrollbarTrackOffsetTime: 300
   }
 })
 ```

@@ -73,6 +73,7 @@
     .scroll-item
       opacity  0.6
       color white
+      box-sizing border-box
       height 50px
       width 50px
       line-height 50px
