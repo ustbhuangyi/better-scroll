@@ -2,7 +2,10 @@
   "name": "@better-scroll/pull-up",
   "version": "2.1.1",
   "description": "pull up to load more data",
-  "author": "huangyi <ustbhuangyi@gmail.com>",
+  "author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
   "main": "dist/pull-up.min.js",
   "module": "dist/pull-up.esm.js",
   "typings": "dist/types/index.d.ts",

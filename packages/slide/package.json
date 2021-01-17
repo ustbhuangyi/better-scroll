@@ -2,7 +2,10 @@
 	"name": "@better-scroll/slide",
 	"version": "2.1.1",
 	"description": "a carousel effect triggered by BetterScroll",
-	"author": "huangyi <ustbhuangyi@gmail.com>",
+	"author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
 	"main": "dist/slide.min.js",
 	"module": "dist/slide.esm.js",
 	"typings": "dist/types/index.d.ts",

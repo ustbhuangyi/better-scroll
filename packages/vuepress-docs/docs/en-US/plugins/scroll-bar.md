@@ -106,7 +106,7 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 ### fade
 
   - **Type**: `boolean`
-  - **Default**：`true`
+  - **Default**: `true`
 
   When the scroll stops, the scrollbar fades out.
 
