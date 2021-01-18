@@ -313,7 +313,7 @@ In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll w
     ```typescript
       // bs version >= 2.0.4
       bs.on('contentChanged', (newContent: HTMLElement) => {})
-    ```  
+    ```
 
 The following events must be registered for the **plugin** in parentheses to be dispatched:
 
@@ -331,13 +331,15 @@ The following events must be registered for the **plugin** in parentheses to be 
 
       bs.on('alterOptions', (mouseWheelOptions) => {
         /**
-         * mouseWheelOptions.speed:鼠标滚轮滚动的速度
-         * mouseWheelOptions.invert:滚轮滚动和 BetterScroll 滚动的方向是否一致
-         * mouseWheelOptions.easeTime:滚动动画的缓动时长。
-         * mouseWheelOptions.discreteTime:触发 wheelEnd 的间隔时长
-         * mouseWheelOptions.throttleTime:滚轮滚动是高频率的动作，因此可以通过 throttleTime 来限制触发频率
-         * mouseWheelOptions.dampingFactor:阻尼因子，当超出边界会施加阻力
+         * mouseWheelOptions.speed
+         * mouseWheelOptions.invert
+         * mouseWheelOptions.easeTime
+         * mouseWheelOptions.discreteTime
+         * mouseWheelOptions.throttleTime
+         * mouseWheelOptions.dampingFactor
          **/
+
+        // please see details in mouse-wheel plugin doc
       })
     ```
 
@@ -522,7 +524,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         const bs = new BScroll('.wrapper', {})
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
-    
+
     - **contentChanged**<sup>(2.0.4)</sup>
       - **Trigger timing**：When calling `bs.refresh()`, it is detected that the content DOM has become other elements
       - **Usage**
@@ -532,7 +534,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         // bs version >= 2.0.4
         bs.hooks.on('contentChanged', (newContent: HTMLElement) => { console.log(newContent) })
       ```
-        
+
 
   - **ActionsHandler.hooks**
 
