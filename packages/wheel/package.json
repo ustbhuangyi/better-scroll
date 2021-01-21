@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/wheel",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "a BetterScroll plugin to imitate IOS Picker",
   "author": {
     "name": "jizhi",
@@ -29,7 +29,7 @@
     "url": "git@github.com:ustbhuangyi/better-scroll.git"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.1.2"
+    "@better-scroll/core": "^2.1.3"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }
