@@ -65,6 +65,13 @@ export function dispatchTouchEnd(
   dispatchTouch(target, 'touchend', touches)
 }
 
+export function dispatchTouchCancel(
+  target: EventTarget,
+  touches: CustomTouches
+): void {
+  dispatchTouch(target, 'touchcancel', touches)
+}
+
 export function dispatchSwipe(
   target: EventTarget,
   touches: CustomTouches,
