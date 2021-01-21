@@ -4,6 +4,9 @@ import ActionsHandler, {
 import {
   dispatchTouch,
   dispatchMouse,
+  dispatchTouchStart,
+  dispatchTouchEnd,
+  dispatchTouchCancel,
 } from '@better-scroll/core/src/__tests__/__utils__/event'
 
 describe('ActionsHandler', () => {
@@ -121,9 +124,24 @@ describe('ActionsHandler', () => {
 
     actionsHandler.hooks.on('end', endMockHandler)
 
-    dispatchMouse(wrapper, 'mousedown')
+    dispatchTouchStart(wrapper, [{ pageX: 0, pageY: 0 }])
 
-    dispatchMouse(window, 'mouseup')
+    dispatchTouchEnd(window, [{ pageX: 0, pageY: 0 }])
+
+    expect(endMockHandler).toBeCalled()
+  })
+
+  it('should invoke end method when dispatch touchcancel', () => {
+    actionsHandler = new ActionsHandler(wrapper, options)
+    const endMockHandler = jest.fn().mockImplementation(() => {
+      return 'dummy test'
+    })
+
+    actionsHandler.hooks.on('end', endMockHandler)
+
+    dispatchTouchStart(wrapper, [{ pageX: 0, pageY: 0 }])
+
+    dispatchTouchCancel(window, [{ pageX: 0, pageY: 0 }])
 
     expect(endMockHandler).toBeCalled()
   })
