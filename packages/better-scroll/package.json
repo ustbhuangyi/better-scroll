@@ -1,6 +1,6 @@
 {
   "name": "better-scroll",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Full-featured BetterScroll",
   "author": {
     "name": "huangyi",
@@ -31,19 +31,19 @@
     "directory": "packages/better-scroll"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.1.1",
-    "@better-scroll/infinity": "^2.1.1",
-    "@better-scroll/mouse-wheel": "^2.1.1",
-    "@better-scroll/movable": "^2.1.1",
-    "@better-scroll/nested-scroll": "^2.1.1",
-    "@better-scroll/observe-dom": "^2.1.1",
-    "@better-scroll/observe-image": "^2.1.1",
-    "@better-scroll/pull-down": "^2.1.1",
-    "@better-scroll/pull-up": "^2.1.1",
-    "@better-scroll/scroll-bar": "^2.1.1",
-    "@better-scroll/slide": "^2.1.1",
-    "@better-scroll/wheel": "^2.1.1",
-    "@better-scroll/zoom": "^2.1.1"
+    "@better-scroll/core": "^2.1.2",
+    "@better-scroll/infinity": "^2.1.2",
+    "@better-scroll/mouse-wheel": "^2.1.2",
+    "@better-scroll/movable": "^2.1.2",
+    "@better-scroll/nested-scroll": "^2.1.2",
+    "@better-scroll/observe-dom": "^2.1.2",
+    "@better-scroll/observe-image": "^2.1.2",
+    "@better-scroll/pull-down": "^2.1.2",
+    "@better-scroll/pull-up": "^2.1.2",
+    "@better-scroll/scroll-bar": "^2.1.2",
+    "@better-scroll/slide": "^2.1.2",
+    "@better-scroll/wheel": "^2.1.2",
+    "@better-scroll/zoom": "^2.1.2"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }
