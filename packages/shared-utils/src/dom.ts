@@ -150,6 +150,7 @@ export const eventTypeMap: {
   touchstart: number
   touchmove: number
   touchend: number
+  touchcancel: number
   mousedown: number
   mousemove: number
   mouseup: number
@@ -157,6 +158,7 @@ export const eventTypeMap: {
   touchstart: 1,
   touchmove: 1,
   touchend: 1,
+  touchcancel: 1,
 
   mousedown: 2,
   mousemove: 2,
