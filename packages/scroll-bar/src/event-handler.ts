@@ -61,10 +61,16 @@ export default class EventHandler {
         handler: this.move.bind(this),
       })
 
-      endEvents.push({
-        name: 'touchend',
-        handler: this.end.bind(this),
-      })
+      endEvents.push(
+        {
+          name: 'touchend',
+          handler: this.end.bind(this),
+        },
+        {
+          name: 'touchcancel',
+          handler: this.end.bind(this),
+        }
+      )
     }
 
     this.startEventRegister = new EventRegister(
