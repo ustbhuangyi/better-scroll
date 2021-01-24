@@ -64,6 +64,10 @@ const examples = [
     path: '/scrollbar/'
   },
   {
+    name: 'indicators',
+    path: '/indicators/'
+  },
+  {
     name: 'infinity',
     path: '/infinity/'
   },

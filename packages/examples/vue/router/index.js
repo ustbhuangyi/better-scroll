@@ -16,6 +16,7 @@ import MovableEntry from 'vue-example/pages/movable-entry'
 import MouseWheelEntry from 'vue-example/pages/mouse-wheel-entry'
 import ComposeEntry from 'vue-example/pages/compose-entry'
 import ObserveImageEntry from 'vue-example/pages/observe-image-entry'
+import IndicatorsEntry from 'vue-example/pages/indicators-entry'
 
 import ScrollbarVertical from 'vue-example/components/scrollbar/vertical'
 import ScrollbarHorizontal from 'vue-example/components/scrollbar/horizontal'
@@ -61,6 +62,9 @@ import ComposePullUpPullDown from 'vue-example/components/compose/pullup-pulldow
 import ComposePullUpPullDownSlide from 'vue-example/components/compose/pullup-pulldown-slide'
 import ComposePullUpPullDownNested from 'vue-example/components/compose/pullup-pulldown-outnested'
 import ComposeSlideNested from 'vue-example/components/compose/slide-nested'
+
+import IndicatorsMinimap from 'vue-example/components/indicators/minimap'
+import IndicatorsParallaxScroll from 'vue-example/components/indicators/parallax-scroll'
 Vue.use(Router)
 
 export default new Router({
@@ -286,6 +290,20 @@ export default new Router({
     {
       path: '/observe-image',
       component: ObserveImageEntry
+    },
+    {
+      path: '/indicators',
+      component: IndicatorsEntry,
+      children: [
+        {
+          path: 'minimap',
+          component: IndicatorsMinimap
+        },
+        {
+          path: 'parallax-scroll',
+          component: IndicatorsParallaxScroll
+        }
+      ]
     }
   ],
 })
