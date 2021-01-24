@@ -6,6 +6,7 @@ export type RatioOfDirection = {
 export interface IndicatorOptions {
   interactive?: boolean
   ratio?: Ratio
+  relationElementHandleElementIndex?: number
   relationElement: HTMLElement
 }
 

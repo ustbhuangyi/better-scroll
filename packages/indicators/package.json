@@ -1,0 +1,39 @@
+{
+  "name": "@better-scroll/indicators",
+  "version": "2.1.1",
+  "description": "used as parallax scrolling, magnifier effects",
+  "author": {
+    "name": "jizhi",
+    "email": "theniceangel@163.com"
+  },
+  "main": "dist/indicators.min.js",
+  "module": "dist/indicators.esm.js",
+  "typings": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/ustbhuangyi/better-scroll/issues"
+  },
+  "homepage": "https://github.com/ustbhuangyi/better-scroll",
+  "keywords": [
+    "scroll",
+    "iscroll",
+    "javascript",
+    "typescript",
+    "ios",
+    "scrollbar",
+    "minimap",
+    "magnifier",
+    "parallax scroll"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ustbhuangyi/better-scroll.git",
+    "directory": "packages/indicators"
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.1.1"
+  },
+  "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
+}

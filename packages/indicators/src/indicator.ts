@@ -40,8 +40,13 @@ export default class Indicator {
   ratioX: number
   maxScrollY: number
   minScrollY: number
+  translateXIsPositive: boolean
+  translateYIsPositive: boolean
   ratioY: number
-  currentPos: Postion
+  currentPos: Postion = {
+    x: 0,
+    y: 0,
+  }
   moved: boolean
   startTime: number
   initiated: boolean
@@ -52,16 +57,27 @@ export default class Indicator {
   endEventRegister: EventRegister
   hooksFn: [EventEmitter, string, Function][] = []
   constructor(public scroll: BScroll, public options: IndicatorOptions) {
-    this.wrapper = options.relationElement
-    this.indicatorEl = this.wrapper.children[0] as HTMLElement
+    this.handleDOM()
     this.handleHooks()
     this.handleInteractive()
+  }
+
+  private handleDOM() {
+    const {
+      relationElement,
+      relationElementHandleElementIndex = 0,
+    } = this.options
+    this.wrapper = relationElement
+    this.indicatorEl = this.wrapper.children[
+      relationElementHandleElementIndex
+    ] as HTMLElement
   }
 
   private handleHooks() {
     const scroll = this.scroll
     const scrollHooks = scroll.hooks
     const translaterHooks = scroll.scroller.translater.hooks
+    const animaterHooks = scroll.scroller.animater.hooks
 
     this.registerHooks(
       scrollHooks,
@@ -76,6 +92,26 @@ export default class Indicator {
         this.updatePosition(pos)
       }
     )
+
+    this.registerHooks(
+      animaterHooks,
+      animaterHooks.eventTypes.time,
+      this.transitionTime
+    )
+
+    this.registerHooks(
+      animaterHooks,
+      animaterHooks.eventTypes.timeFunction,
+      this.transitionTimingFunction
+    )
+  }
+
+  private transitionTime(time: number = 0) {
+    this.indicatorEl.style[style.transitionDuration as any] = time + 'ms'
+  }
+
+  private transitionTimingFunction(easing: string) {
+    this.indicatorEl.style[style.transitionTimingFunction as any] = easing
   }
 
   private handleInteractive() {
@@ -123,10 +159,16 @@ export default class Indicator {
         handler: this.move.bind(this),
       })
 
-      endEvents.push({
-        name: 'touchend',
-        handler: this.end.bind(this),
-      })
+      endEvents.push(
+        {
+          name: 'touchend',
+          handler: this.end.bind(this),
+        },
+        {
+          name: 'touchcancel',
+          handler: this.end.bind(this),
+        }
+      )
     }
 
     this.startEventRegister = new EventRegister(this.indicatorEl, startEvents)
@@ -140,8 +182,8 @@ export default class Indicator {
       y,
       hasHorizontalScroll,
       hasVerticalScroll,
-      scrollerWidth,
-      scrollerHeight,
+      maxScrollX: maxBScrollX,
+      maxScrollY: maxBScrollY,
     } = this.scroll
     const { ratioX, ratioY } = resolveRatioOption(this.options.ratio)
     const { width: wrapperWidth, height: wrapperHeight } = getClientSize(
@@ -152,14 +194,17 @@ export default class Indicator {
     )
     if (hasHorizontalScroll) {
       this.maxScrollX = wrapperWidth - indicatorWidth
+      this.translateXIsPositive = this.maxScrollX > 0
       this.minScrollX = 0
-      this.ratioX = ratioX ? ratioX : this.maxScrollX / scrollerWidth
+      // ensure positive
+      this.ratioX = ratioX ? ratioX : Math.abs(this.maxScrollX / maxBScrollX)
     }
 
     if (hasVerticalScroll) {
       this.maxScrollY = wrapperHeight - indicatorHeight
+      this.translateYIsPositive = this.maxScrollY > 0
       this.minScrollY = 0
-      this.ratioY = ratioY ? ratioY : this.maxScrollY / scrollerHeight
+      this.ratioY = ratioY ? ratioY : Math.abs(this.maxScrollY / maxBScrollY)
     }
 
     this.updatePosition({
@@ -258,8 +303,8 @@ export default class Indicator {
     if (hasHorizontalScroll) {
       const newPosX = between(
         currentX + deltaX,
-        this.minScrollX,
-        this.maxScrollX
+        Math.min(this.minScrollX, this.maxScrollX),
+        Math.max(this.minScrollX, this.maxScrollX)
       )
       x = between(
         Math.round(newPosX / this.ratioX),
@@ -271,13 +316,13 @@ export default class Indicator {
     if (hasVerticalScroll) {
       const newPosY = between(
         currentY + deltaY,
-        this.minScrollY,
-        this.maxScrollY
+        Math.min(this.minScrollY, this.maxScrollY),
+        Math.max(this.minScrollY, this.maxScrollY)
       )
       y = between(
         Math.round(newPosY / this.ratioY),
-        BScrollMinScrollY,
-        BScrollMaxScrollY
+        BScrollMaxScrollY,
+        BScrollMinScrollY
       )
     }
     return { x, y }
@@ -323,13 +368,12 @@ export default class Indicator {
   private applyTransformProperty(pos: Postion) {
     const translateZ = this.scroll.options.translateZ
     const transformProperties = [
-      `translateX(${pos.x})px`,
-      `translateY(${pos.y})px`,
+      `translateX(${pos.x}px)`,
+      `translateY(${pos.y}px)`,
       `${translateZ}`,
     ]
-
     this.indicatorEl.style[style.transform as any] = transformProperties.join(
-      ''
+      ' '
     )
   }
 
@@ -337,25 +381,38 @@ export default class Indicator {
     const { x, y } = BScrollPos
     const { hasHorizontalScroll, hasVerticalScroll } = this.scroll
     const position = { ...this.currentPos }
-
     if (hasHorizontalScroll) {
       position.x = between(
         Math.round(this.ratioX * x),
-        this.minScrollX,
-        this.maxScrollX
+        Math.min(this.minScrollX, this.maxScrollX),
+        Math.max(this.minScrollX, this.maxScrollX)
       )
     }
 
     if (hasVerticalScroll) {
       position.y = between(
         Math.round(this.ratioY * y),
-        this.minScrollY,
-        this.maxScrollY
+        Math.min(this.minScrollY, this.maxScrollY),
+        Math.max(this.minScrollY, this.maxScrollY)
       )
     }
 
     return position
   }
 
-  destroy() {}
+  destroy() {
+    if (this.options.interactive !== false) {
+      this.startEventRegister.destroy()
+      this.moveEventRegister.destroy()
+      this.endEventRegister.destroy()
+    }
+
+    this.hooksFn.forEach((item) => {
+      const hooks = item[0]
+      const hooksName = item[1]
+      const handlerFn = item[2]
+      hooks.off(hooksName, handlerFn)
+    })
+    this.hooksFn.length = 0
+  }
 }
