@@ -231,6 +231,10 @@ describe('NestedScroll tests', () => {
       hasVerticalScroll: false,
       hasHorizontalScroll: true,
     })
+    addProperties(grandsonScrollH, {
+      hasVerticalScroll: false,
+      hasHorizontalScroll: true,
+    })
     grandsonScrollH.trigger(grandsonScrollH.eventTypes.beforeScrollStart)
 
     expect(parentScrollH.disable).toBeCalled()
