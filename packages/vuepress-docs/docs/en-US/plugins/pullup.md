@@ -116,7 +116,6 @@ bs.closePullUp()
 
     export interface PullUpLoadConfig {
       threshold: number
-      stop: number
     }
     ```
 
@@ -136,8 +135,10 @@ bs.closePullUp()
 
 ### `pullingUp`
 
-- **Arguments**: None
-- **Trigger**: When the distance to the bottom is less than the value of `threshold`, a `pullingUp` event is triggered.
+  - **Arguments**: None
+  - **Trigger**: When the distance to the bottom is less than the value of `threshold`, a `pullingUp` event is triggered.
+
+  > When threshold is a positive number, it means `pullingUp` is triggered when the threshold pixel is away from the scroll boundary. On the contrary, it means that the event will be triggered when it crosses the scroll boundary.
 
 ::: danger Note
 After the pullUpLoad action is detected, the consumption opportunity of the `pullingUp` event is only once, so you need to call `finishPullUp()` to tell BetterScroll to provide the next consumption opportunity of the `pullingUp` event.
