@@ -52,7 +52,7 @@ yarn add @better-scroll/pull-up
 ### threshold
 
   - **类型：** `number`
-  - **默认值：** `90`
+  - **默认值：** `0`
 
     触发上拉事件的阈值。
 
