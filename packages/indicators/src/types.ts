@@ -19,3 +19,8 @@ export type Postion = {
   x: number
   y: number
 }
+
+export const enum ValueSign {
+  Positive = -1,
+  NotPositive = 1,
+}

@@ -1,5 +1,5 @@
 import BScroll from '@better-scroll/core'
-import { IndicatorOptions, Ratio, Postion } from './types'
+import { IndicatorOptions, Ratio, Postion, ValueSign } from './types'
 import {
   EventRegister,
   EventEmitter,
@@ -16,6 +16,7 @@ const resolveRatioOption = (ratioConfig?: Ratio) => {
     ratioX: 0,
     ratioY: 0,
   }
+  /* istanbul ignore if  */
   if (!ratioConfig) {
     return ret
   }
@@ -40,8 +41,8 @@ export default class Indicator {
   ratioX: number
   maxScrollY: number
   minScrollY: number
-  translateXIsPositive: boolean
-  translateYIsPositive: boolean
+  translateXSign: ValueSign
+  translateYSign: ValueSign
   ratioY: number
   currentPos: Postion = {
     x: 0,
@@ -194,7 +195,8 @@ export default class Indicator {
     )
     if (hasHorizontalScroll) {
       this.maxScrollX = wrapperWidth - indicatorWidth
-      this.translateXIsPositive = this.maxScrollX > 0
+      this.translateXSign =
+        this.maxScrollX > 0 ? ValueSign.Positive : ValueSign.NotPositive
       this.minScrollX = 0
       // ensure positive
       this.ratioX = ratioX ? ratioX : Math.abs(this.maxScrollX / maxBScrollX)
@@ -202,7 +204,8 @@ export default class Indicator {
 
     if (hasVerticalScroll) {
       this.maxScrollY = wrapperHeight - indicatorHeight
-      this.translateYIsPositive = this.maxScrollY > 0
+      this.translateYSign =
+        this.maxScrollY > 0 ? ValueSign.Positive : ValueSign.NotPositive
       this.minScrollY = 0
       this.ratioY = ratioY ? ratioY : Math.abs(this.maxScrollY / maxBScrollY)
     }
@@ -306,11 +309,8 @@ export default class Indicator {
         Math.min(this.minScrollX, this.maxScrollX),
         Math.max(this.minScrollX, this.maxScrollX)
       )
-      x = between(
-        Math.round(newPosX / this.ratioX),
-        BScrollMaxScrollX,
-        BScrollMinScrollX
-      )
+      const roundX = Math.round((newPosX / this.ratioX) * this.translateXSign)
+      x = between(roundX, BScrollMaxScrollX, BScrollMinScrollX)
     }
 
     if (hasVerticalScroll) {
@@ -319,11 +319,8 @@ export default class Indicator {
         Math.min(this.minScrollY, this.maxScrollY),
         Math.max(this.minScrollY, this.maxScrollY)
       )
-      y = between(
-        Math.round(newPosY / this.ratioY),
-        BScrollMaxScrollY,
-        BScrollMinScrollY
-      )
+      const roundY = Math.round((newPosY / this.ratioY) * this.translateYSign)
+      y = between(roundY, BScrollMaxScrollY, BScrollMinScrollY)
     }
     return { x, y }
   }
@@ -382,16 +379,20 @@ export default class Indicator {
     const { hasHorizontalScroll, hasVerticalScroll } = this.scroll
     const position = { ...this.currentPos }
     if (hasHorizontalScroll) {
+      const roundX = Math.round(this.ratioX * x * this.translateXSign)
+      // maybe maxScrollX is negative
       position.x = between(
-        Math.round(this.ratioX * x),
+        roundX,
         Math.min(this.minScrollX, this.maxScrollX),
         Math.max(this.minScrollX, this.maxScrollX)
       )
     }
 
     if (hasVerticalScroll) {
+      const roundY = Math.round(this.ratioY * y * this.translateYSign)
+      // maybe maxScrollY is negative
       position.y = between(
-        Math.round(this.ratioY * y),
+        roundY,
         Math.min(this.minScrollY, this.maxScrollY),
         Math.max(this.minScrollY, this.maxScrollY)
       )

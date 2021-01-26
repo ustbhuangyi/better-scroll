@@ -25,7 +25,10 @@ export default class Indicators {
       `'indicators' must be an array.`
     )
     for (const indicatorOptions of UserIndicatorsOptions) {
-      assert(!!indicatorOptions.relationElement, `'el' must be a HTMLElement.`)
+      assert(
+        !!indicatorOptions.relationElement,
+        `'relationElement' must be a HTMLElement.`
+      )
       this.createIndicators(indicatorOptions)
     }
   }
