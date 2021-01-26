@@ -1,11 +1,11 @@
 {
 	"name": "@better-scroll/shared-utils",
-	"version": "2.1.1",
+	"version": "2.1.4",
 	"description": "shared-utils for BetterScroll",
 	"author": {
-    "name": "jizhi",
-    "email": "theniceangel@163.com"
-  },
+		"name": "jizhi",
+		"email": "theniceangel@163.com"
+	},
 	"main": "dist/shared-utils.min.js",
 	"module": "dist/shared-utils.esm.js",
 	"typings": "dist/types/index.d.ts",

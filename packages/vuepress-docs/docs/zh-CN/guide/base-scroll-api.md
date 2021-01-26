@@ -27,12 +27,12 @@
 ### maxScrollY
   - **类型**：number
   - **作用**：bs 最大纵向滚动位置。
-  - **备注**：bs 纵向滚动的位置区间是 [minScrollY, maxScrollY]，并且 maxScrollY 是负值，maxScrollY 是正值。
+  - **备注**：bs 纵向滚动的位置区间是 [minScrollY, maxScrollY]，并且 maxScrollY 是负值。
 
 ### minScrollY
   - **类型**：number
   - **作用**：bs 最小纵向滚动位置。
-  - **备注**：bs 纵向滚动的位置区间是 [minScrollY, maxScrollY]，并且 minScrollY 是正值
+  - **备注**：bs 纵向滚动的位置区间是 [minScrollY, maxScrollY]，并且 minScrollY 是正值。
 
 ### movingDirectionX
   - **类型**：number
@@ -312,7 +312,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
     ```typescript
       // bs 版本 >= 2.0.4
       bs.on('contentChanged', (newContent: HTMLElement) => {})
-    ```  
+    ```
 
 以下的事件必须注册括号中的**插件**才会派发：
 
@@ -531,7 +531,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         // bs 版本 >= 2.0.4
         bs.hooks.on('contentChanged', (newContent: HTMLElement) => { console.log(newContent) })
       ```
-      
+
   - **ActionsHandler.hooks**
 
     - **beforeStart**

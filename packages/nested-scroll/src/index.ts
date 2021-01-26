@@ -52,9 +52,14 @@ const enableScrollHander = (scrolls: BScroll[]) => {
   })
 }
 
-const disableScrollHander = (scrolls: BScroll[]) => {
+const disableScrollHander = (scrolls: BScroll[], currentScroll: BScroll) => {
   scrolls.forEach((scroll) => {
-    scroll.disable()
+    if (
+      scroll.hasHorizontalScroll === currentScroll.hasHorizontalScroll ||
+      scroll.hasVerticalScroll === currentScroll.hasVerticalScroll
+    ) {
+      scroll.disable()
+    }
   })
 }
 
@@ -306,7 +311,7 @@ export default class NestedScroll implements PluginAPI {
           resetPositionHandler(currentScroll)
         }
         syncTouchstartData(ancestorScrolls)
-        disableScrollHander(ancestorScrolls)
+        disableScrollHander(ancestorScrolls, currentScroll)
       }
 
       const touchEndHandler = () => {
@@ -343,14 +348,14 @@ export default class NestedScroll implements PluginAPI {
           const contentMoved = currentScroll.scroller.actions.contentMoved
           const isTopScroll = ancestorScrolls.length === 0
           if (contentMoved) {
-            disableScrollHander(ancestorScrolls)
+            disableScrollHander(ancestorScrolls, currentScroll)
           } else if (!isTopScroll) {
             if (isOutOfBoundary(currentScroll)) {
-              disableScrollHander([currentScroll])
+              disableScrollHander([currentScroll], currentScroll)
               if (parentScroll) {
                 enableScrollHander([parentScroll])
               }
-              disableScrollHander(otherAncestorScrolls)
+              disableScrollHander(otherAncestorScrolls, currentScroll)
               return true
             }
           }

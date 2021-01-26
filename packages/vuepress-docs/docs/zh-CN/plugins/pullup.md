@@ -52,9 +52,10 @@ yarn add @better-scroll/pull-up
 ### threshold
 
   - **类型：** `number`
-  - **默认值：** `90`
+  - **默认值：** `0`
 
     触发上拉事件的阈值。
+
 
 :::tip 提示
 当 pullUpLoad 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
@@ -68,7 +69,7 @@ const bs = new BScroll('.wrapper', {
 
 const bs = new BScroll('.wrapper', {
   pullUpLoad: {
-    threshold: 90
+    threshold: 0
   }
 })
 ```
@@ -135,6 +136,8 @@ bs.closePullUp()
 
   - **参数**：无
   - **触发时机**：当距离滚动到底部小于 `threshold` 值时，触发一次 `pullingUp` 事件。
+
+  > 当 threshold 为正数，代表距离滚动边界 threshold 像素的时候触发 `pullingUp`，反之，代表越过滚动边界才会触发事件
 
   ::: danger 警告
   监测到上拉刷新的动作之后，`pullingUp` 事件的消费机会只有一次，因此你需要调用 `finishPullUp()` 来告诉 BetterScroll 来提供下一次 `pullingUp` 事件的消费机会。
