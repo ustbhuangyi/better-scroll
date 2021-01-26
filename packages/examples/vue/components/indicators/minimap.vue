@@ -4,8 +4,8 @@
       <img class="scroll-content" :src="dinnerLink" />
     </div>
     <div class="scroll-indicator-wrapper" ref="indicatorWrapper">
-      <div class="scroll-indicator-handle"></div>
       <img class="scroll-indicator-bg" :src="dinnerLink">
+      <div class="scroll-indicator-handle"></div>
     </div>
   </div>
 </template>
@@ -33,7 +33,9 @@ export default {
         bounce: false,
         indicators: [
           {
-            relationElement: this.$refs.indicatorWrapper
+            relationElement: this.$refs.indicatorWrapper,
+            // choose div.scroll-indicator-handle as indicatorHandle
+            relationElementHandleElementIndex: 1
           }
         ]
       })
