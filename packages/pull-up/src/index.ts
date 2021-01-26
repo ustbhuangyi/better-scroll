@@ -119,7 +119,7 @@ export default class PullUp implements PluginAPI {
 
     if (
       this.scroll.movingDirectionY === Direction.Positive &&
-      pos.y <= this.scroll.maxScrollY + threshold
+      pos.y <= this.scroll.maxScrollY - threshold
     ) {
       this.pulling = true
       // must reset pulling after scrollEnd

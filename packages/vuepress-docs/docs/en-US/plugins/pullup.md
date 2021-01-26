@@ -69,7 +69,7 @@ const bs = new BScroll('.wrapper', {
 
 const bs = new BScroll('.wrapper', {
   pullUpLoad: {
-    threshold: 90
+    threshold: 0
   }
 })
 ```
