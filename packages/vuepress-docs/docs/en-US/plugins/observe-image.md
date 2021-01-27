@@ -1,4 +1,4 @@
-# observe-image
+# observe-image <Badge text='2.1.0' />
 
 ## Introduction
 

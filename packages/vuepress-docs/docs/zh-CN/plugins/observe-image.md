@@ -1,4 +1,4 @@
-# observe-image
+# observe-image <Badge text='2.1.0' />
 
 ## 介绍
 
@@ -76,4 +76,3 @@ const bs = new BScroll('.wrapper', {
     :::tip 提示
     当 debounceTime 为 0 的时候，会立马调用 **refresh** 方法，而不是使用 **setTimeout**。
     :::
-    
