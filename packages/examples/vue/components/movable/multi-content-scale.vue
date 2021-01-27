@@ -4,14 +4,14 @@
       <div class="scroll-content content1">
         <figure>
           <figcaption>Swordsman</figcaption>
-          <img class="picture" src="./images/ftstr.webp"
+          <img class="picture" :src="swordsmanLink"
          alt="ftstr">
         </figure>
       </div>
       <div class="scroll-content content2">
         <figure>
           <figcaption>The Witch</figcaption>
-          <img class="picture" src="./images/qos_crop.webp"
+          <img class="picture" :src="witchLink"
          alt="qos_crop">
         </figure>
       </div>
@@ -24,11 +24,17 @@
   import BScroll from '@better-scroll/core'
   import Movable from '@better-scroll/movable'
   import Zoom from '@better-scroll/zoom'
+  import SwordsmanLink from './ftstr.png'
+  import WitchLink from './qos_crop.png'
 
   BScroll.use(Movable)
   BScroll.use(Zoom)
 
   export default {
+    created() {
+      this.swordsmanLink = SwordsmanLink
+      this.witchLink = WitchLink
+    },
     mounted() {
       this.init()
     },
@@ -115,5 +121,5 @@
     color #fff
     border-radius 4px
     font-size 20px
-    background-color #666  
+    background-color #666
 </style>
