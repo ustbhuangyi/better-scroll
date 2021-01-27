@@ -4,14 +4,14 @@
       <div class="scroll-content content1">
         <figure>
           <figcaption>Cold Oasis</figcaption>
-          <img class="picture" src="./images/oasis_one.webp"
+          <img class="picture" :src="picture1"
          alt="Cold Oasis">
         </figure>
       </div>
       <div class="scroll-content content2">
         <figure>
           <figcaption>Warm Oasis</figcaption>
-          <img class="picture" src="./images/oasis_two.webp"
+          <img class="picture" :src="picture2"
          alt="Warm Oasis">
         </figure>
       </div>
@@ -23,10 +23,16 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import Movable from '@better-scroll/movable'
+  import picture1 from './oasis_one.png'
+  import picture2 from './oasis_two.png'
 
   BScroll.use(Movable)
 
   export default {
+    created() {
+      this.picture1 = picture1
+      this.picture2 = picture2
+    },
     mounted() {
       this.init()
     },
@@ -106,5 +112,5 @@
     color #fff
     border-radius 4px
     font-size 20px
-    background-color #666          
+    background-color #666
 </style>

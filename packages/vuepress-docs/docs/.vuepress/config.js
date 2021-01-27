@@ -65,10 +65,6 @@ module.exports = {
           options: {
             transpileOnly: true
           }
-        },
-        {
-          test: /\.(png|jpe?g|gif|svg|webp)(\?.*)?$/,
-          loader: 'url-loader'
         }
       ]
     },
