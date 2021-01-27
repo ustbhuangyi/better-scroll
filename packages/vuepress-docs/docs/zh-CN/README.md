@@ -9,6 +9,6 @@ features:
 - title: 零依赖
   details: 基于原生 JS 实现的，不依赖任何框架。完美运用于 Vue、React 等 MVVM 框架。
 - title: 扩展灵活
-  details: 提供插件机制，便于对基础滚动进行功能扩展，目前支持上拉加载、下拉刷新、Picker、鼠标滚轮、放大缩小、移动缩放、轮播图等等能力
-footer: MIT Licensed | Copyright © 2018-present ustbhuangyi
+  details: 提供插件机制，便于对基础滚动进行功能扩展，目前支持上拉加载、下拉刷新、Picker、鼠标滚轮、放大缩小、移动缩放、轮播图、滚动视觉差，放大镜等等能力
+footer: MIT Licensed | Copyright © 2018-present ustbhuangyi and theniceangel
 ---

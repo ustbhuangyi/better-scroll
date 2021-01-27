@@ -30,6 +30,7 @@ const getPluginsSideBar = function (lang) {
         'pulldown',
         'pullup',
         'scroll-bar',
+        'indicators',
         'slide',
         'wheel',
         'zoom',
