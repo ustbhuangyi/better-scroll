@@ -107,8 +107,6 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-@import '~common/stylus/variable.styl'
-
 .page-header
   h1
     @media screen and (min-width 42rem)
