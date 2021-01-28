@@ -33,6 +33,7 @@ module.exports = {
     }
   },
   themeConfig: {
+    logo: 'https://dpubstatic.udache.com/static/dpubimg/t_L6vAgQ-E/logo.svg',
     locales: {
       '/zh-CN/': {
         label: '简体中文',
