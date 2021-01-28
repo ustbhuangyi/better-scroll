@@ -49,6 +49,7 @@ export default {
 
 <style lang="stylus" scoped>
 .parallax-scroll-container
+  height 100%
   .parallax-scroll-box
     position relative
     width 100%
@@ -66,7 +67,7 @@ export default {
   .scroll-content
     width 100%
     height 4000px
-    background url('./galaxies1.png')
+    background: url('./galaxies1.png')
   .scroll-indicator
     position absolute
     top 0

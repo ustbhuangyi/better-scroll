@@ -1,9 +1,11 @@
 <template>
   <div class="minimap-container">
     <div class="scroll-wrapper" ref="wrapper">
-      <img class="scroll-content" :src="dinnerLink" />
+      <!-- maxWidth is used to overwrite vuepress default theme style -->
+      <!-- because this component is used in vuepress markdown as a demo -->
+      <img :style="{ maxWidth: 'none' }" class="scroll-content" :src="dinnerLink" />
     </div>
-    <div class="scroll-indicator-wrapper" ref="indicatorWrapper">
+    <div class="scroll-indicator" ref="indicatorWrapper">
       <img class="scroll-indicator-bg" :src="dinnerLink">
       <div class="scroll-indicator-handle"></div>
     </div>
@@ -53,7 +55,7 @@ export default {
   .scroll-content
     width 1920px
     height 1080px
-  .scroll-indicator-wrapper
+  .scroll-indicator
     margin-top 15px
     width 320px
     height 180px
