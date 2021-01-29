@@ -1,4 +1,3 @@
-import 'common/stylus/base.styl'
 import './public/assets/stylus/index.styl'
 import VTooltip from 'v-tooltip'
 

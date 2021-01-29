@@ -110,6 +110,6 @@
     width 60px
     height 60px
     border-radius 50%
-    background-image url("../../../common/images/good.svg")
+    background-image url("./good.svg")
     background-size 100%
 </style>
