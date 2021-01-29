@@ -6,7 +6,7 @@ import {
   EaseItem,
   extend,
   Position,
-  HTMLCollectionToArray,
+  HTMLCollectionToArray
 } from '@better-scroll/shared-utils'
 import propertiesConfig from './propertiesConfig'
 
@@ -39,7 +39,7 @@ interface PluginAPI {
 }
 
 const CONSTANTS = {
-  rate: 4,
+  rate: 4
 }
 export default class Wheel implements PluginAPI {
   static pluginName = 'wheel'
@@ -79,7 +79,7 @@ export default class Wheel implements PluginAPI {
       rotate: 25,
       adjustTime: 400,
       selectedIndex: 0,
-      wheelDisabledItemClass: 'wheel-disabled-item',
+      wheelDisabledItemClass: 'wheel-disabled-item'
     }
     this.options = extend(defaultOptions, userOptions)
   }
@@ -91,7 +91,7 @@ export default class Wheel implements PluginAPI {
       actionsHandler,
       scrollBehaviorX,
       scrollBehaviorY,
-      animater,
+      animater
     } = scroller
     let prevContent = scroller.content
     // BScroll
@@ -203,27 +203,15 @@ export default class Wheel implements PluginAPI {
     )
     scrollBehaviorY.hooks.on(
       scrollBehaviorY.hooks.eventTypes.momentum,
-      (
-        momentumInfo: {
-          destination: number
-          duration: number
-          rate: number
-        },
-        distance: number
-      ) => {
+      (momentumInfo: {
+        destination: number
+        duration: number
+        rate: number
+      }) => {
         momentumInfo.rate = CONSTANTS.rate
         momentumInfo.destination = this.findNearestValidWheel(
           momentumInfo.destination
         ).y
-        // TODO algorithm optimize
-        const maxDistance = 1000
-        const minDuration = 800
-        if (distance < maxDistance) {
-          momentumInfo.duration = Math.max(
-            minDuration,
-            (distance / maxDistance) * this.scroll.options.swipeTime
-          )
-        }
       }
     )
     scrollBehaviorY.hooks.on(
@@ -368,7 +356,7 @@ export default class Wheel implements PluginAPI {
     // when all the items are disabled, selectedIndex should always be -1
     return {
       index: this.wheelItemsAllDisabled ? -1 : currentIndex,
-      y: -currentIndex * this.itemHeight,
+      y: -currentIndex * this.itemHeight
     }
   }
 
