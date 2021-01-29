@@ -54,6 +54,8 @@
     width 280px
     height 280px
     overflow hidden
+  .custom-scrollbar-content
+    max-width none
   .custom-vertical-scrollbar
     position absolute
     top 50%

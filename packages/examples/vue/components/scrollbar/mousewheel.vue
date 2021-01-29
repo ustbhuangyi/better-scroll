@@ -60,6 +60,8 @@
   .custom-scrollbar-content
     display inline-block
     height 280px
+    > img
+      max-width none
   .custom-horizontal-scrollbar
     position absolute
     left 50%

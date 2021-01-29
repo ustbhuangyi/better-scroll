@@ -5,7 +5,7 @@
 The scrollbar plugin provides a nice scrollbar for BetterScroll.
 
 :::tip
-For v2.1.2, users can provide custom scroll bars.
+For v2.1.5, users can provide custom scroll bars.
 :::
 
 ## Install
@@ -23,19 +23,19 @@ yarn add @better-scroll/scroll-bar
 First, install the plugin via the static method `BScroll.use()`
 
 ```js
-  import BScroll from '@better-scroll/core'
-  import ScrollBar from '@better-scroll/scroll-bar'
+import BScroll from '@better-scroll/core'
+import ScrollBar from '@better-scroll/scroll-bar'
 
-  BScroll.use(ScrollBar)
+BScroll.use(ScrollBar)
 ```
 
 pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
 
 ```js
-  new BScroll('.bs-wrapper', {
-    scrollY: true,
-    scrollbar: true
-  })
+new BScroll('.bs-wrapper', {
+  scrollY: true,
+  scrollbar: true
+})
 ```
 
 ## Demo
@@ -85,7 +85,7 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
       <scrollbar-custom slot="demo"></scrollbar-custom>
     </demo>
 
-  - **With Mouse wheel**
+  - **With Mousewheel**
 
     <demo qrcode-url="scrollbar/mousewheel" :render-code="true">
       <template slot="code-template">
@@ -116,7 +116,7 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
   - **Default**: `false`
 
   Whether scrollbar can interacted with.
-### customElements（v2.1.2）
+### customElements <Badge text="2.1.5" />
 
   - **Type**: `HTMLElement[]`
   - **Default**: `[]`
@@ -154,14 +154,14 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
   })
   ```
 
-### minSize（v2.1.2）
+### minSize <Badge text="2.1.5" />
 
   - **Type**: `number`
   - **Default**: `8`
 
   The minimum size of the scrollbar. When the user provides a custom scrollbar, this configuration is invalid.
 
-### scrollbarTrackClickable（v2.1.2）
+### scrollbarTrackClickable <Badge text="2.1.5" />
 
   - **Type**: `boolean`
   - **Default**: `false`
@@ -180,14 +180,14 @@ pass correct [scrollbar options](./scroll-bar.html#scrollbar-options)
   })
   ```
 
-### scrollbarTrackOffsetType（v2.1.2）
+### scrollbarTrackOffsetType <Badge text="2.1.5" />
 
   - **Type**: `string`
   - **Default**: `'step'`
 
   After the scroll bar track is clicked, the calculation method of the scroll distance is the same as the browser's performance by default. It can be configured as `'clickedPoint'`, which means the scroll bar is scrolled to the clicked position.
 
-### scrollbarTrackOffsetTime（v2.1.2）
+### scrollbarTrackOffsetTime <Badge text="2.1.5" />
 
   - **Type**: `number`
   - **Default**: `300`
