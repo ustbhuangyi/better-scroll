@@ -17,6 +17,7 @@
 - [nested-scroll](./nested-scroll.html)
 - [infinity](./infinity.html)
 - [movable](./movable.html)
+- [indicators](./indicators.html)
 
 非常欢迎大家参与插件的贡献，在此之前，你需要花点时间了解这个[如何编写插件](./how-to-write.html)。
 

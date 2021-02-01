@@ -1,12 +1,31 @@
 <template>
-  <scroll-bar />
+  <div class="scroll-bar">
+    <ul class="example-list">
+      <li class="example-item" @click="goPage('/scrollbar/vertical')">
+        <span>vertical</span>
+      </li>
+      <li class="example-item" @click="goPage('/scrollbar/horizontal')">
+        <span>horizontal</span>
+      </li>
+      <li class="example-item" @click="goPage('/scrollbar/custom')">
+        <span>custom</span>
+      </li>
+      <li class="example-item" @click="goPage('/scrollbar/mousewheel')">
+        <span>use mousewheel</span>
+      </li>
+    </ul>
+    <transition name="move">
+      <router-view class="view"></router-view>
+    </transition>
+  </div>
 </template>
 
 <script>
-import ScrollBar from 'vue-example/components/scrollbar/default.vue'
 export default {
-  components: {
-    ScrollBar
+  methods: {
+    goPage(path) {
+      this.$router.push(path)
+    }
   }
 }
 </script>

@@ -2,47 +2,91 @@ import BScroll from '@better-scroll/core'
 import {
   TouchEvent,
   EventRegister,
-  EventEmitter
+  EventEmitter,
 } from '@better-scroll/shared-utils'
 import Indicator from './indicator'
 
 interface EventHandlerOptions {
-  disableMouse: boolean | ''
+  disableMouse: boolean
+  disableTouch: boolean
 }
 
 export default class EventHandler {
-  public startEventRegister: EventRegister
-  public moveEventRegister: EventRegister
-  public endEventRegister: EventRegister
-  public initiated: boolean
-  public moved: boolean
-  private lastPoint: number
-  public bscroll: BScroll
-  public hooks: EventEmitter
+  startEventRegister: EventRegister
+  moveEventRegister: EventRegister
+  endEventRegister: EventRegister
+  initiated: boolean
+  lastPoint: number
+  scroll: BScroll
+  hooks: EventEmitter
 
   constructor(
     public indicator: Indicator,
     public options: EventHandlerOptions
   ) {
-    this.bscroll = indicator.bscroll
-    this.startEventRegister = new EventRegister(this.indicator.el, [
-      {
-        name: options.disableMouse ? 'touchstart' : 'mousedown',
-        handler: this._start.bind(this)
-      }
-    ])
-
-    this.endEventRegister = new EventRegister(window, [
-      {
-        name: options.disableMouse ? 'touchend' : 'mouseup',
-        handler: this._end.bind(this)
-      }
-    ])
     this.hooks = new EventEmitter(['touchStart', 'touchMove', 'touchEnd'])
+    this.registerEvents()
+  }
+  private registerEvents() {
+    const { disableMouse, disableTouch } = this.options
+    const startEvents = []
+    const moveEvents = []
+    const endEvents = []
+
+    if (!disableMouse) {
+      startEvents.push({
+        name: 'mousedown',
+        handler: this.start.bind(this),
+      })
+
+      moveEvents.push({
+        name: 'mousemove',
+        handler: this.move.bind(this),
+      })
+
+      endEvents.push({
+        name: 'mouseup',
+        handler: this.end.bind(this),
+      })
+    }
+
+    if (!disableTouch) {
+      startEvents.push({
+        name: 'touchstart',
+        handler: this.start.bind(this),
+      })
+
+      moveEvents.push({
+        name: 'touchmove',
+        handler: this.move.bind(this),
+      })
+
+      endEvents.push(
+        {
+          name: 'touchend',
+          handler: this.end.bind(this),
+        },
+        {
+          name: 'touchcancel',
+          handler: this.end.bind(this),
+        }
+      )
+    }
+
+    this.startEventRegister = new EventRegister(
+      this.indicator.indicatorEl,
+      startEvents
+    )
+    this.moveEventRegister = new EventRegister(window, moveEvents)
+    this.endEventRegister = new EventRegister(window, endEvents)
   }
 
-  private _start(e: TouchEvent) {
-    if (!this.bscroll.scroller.actions.enabled) {
+  private BScrollIsDisabled() {
+    return !this.indicator.scroll.enabled
+  }
+
+  private start(e: TouchEvent) {
+    if (this.BScrollIsDisabled()) {
       return
     }
     let point = (e.touches ? e.touches[0] : e) as Touch
@@ -51,39 +95,26 @@ export default class EventHandler {
     e.stopPropagation()
 
     this.initiated = true
-    this.moved = false
-    this.lastPoint = point[this.indicator.keysMap.pointPos]
-
-    const { disableMouse } = this.bscroll.options
-    this.moveEventRegister = new EventRegister(window, [
-      {
-        name: disableMouse ? 'touchmove' : 'mousemove',
-        handler: this._move.bind(this)
-      }
-    ])
-    this.hooks.trigger('touchStart')
+    this.lastPoint = point[this.indicator.keysMap.point]
+    this.hooks.trigger(this.hooks.eventTypes.touchStart)
   }
 
-  private _move(e: TouchEvent) {
+  private move(e: TouchEvent) {
+    if (!this.initiated) {
+      return
+    }
     let point = (e.touches ? e.touches[0] : e) as Touch
-    const pointPos = point[this.indicator.keysMap.pointPos]
+    const pointPos = point[this.indicator.keysMap.point]
 
     e.preventDefault()
     e.stopPropagation()
 
     let delta = pointPos - this.lastPoint
     this.lastPoint = pointPos
-
-    if (!this.moved) {
-      this.hooks.trigger('touchMove', this.moved, delta)
-      this.moved = true
-      return
-    }
-
-    this.hooks.trigger('touchMove', this.moved, delta)
+    this.hooks.trigger(this.hooks.eventTypes.touchMove, delta)
   }
 
-  private _end(e: TouchEvent) {
+  private end(e: TouchEvent) {
     if (!this.initiated) {
       return
     }
@@ -92,14 +123,12 @@ export default class EventHandler {
     e.preventDefault()
     e.stopPropagation()
 
-    this.moveEventRegister.destroy()
-
-    this.hooks.trigger('touchEnd', this.moved)
+    this.hooks.trigger(this.hooks.eventTypes.touchEnd)
   }
 
-  public destroy() {
+  destroy() {
     this.startEventRegister.destroy()
-    this.moveEventRegister && this.moveEventRegister.destroy()
+    this.moveEventRegister.destroy()
     this.endEventRegister.destroy()
   }
 }

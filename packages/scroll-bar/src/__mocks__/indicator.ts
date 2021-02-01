@@ -1,9 +1,9 @@
 const mockIndicator = jest
   .fn()
-  .mockImplementation(function IndicatorMockFn(bscroll: any, options: any) {
+  .mockImplementation(function IndicatorMockFn(scroll: any, options: any) {
     return {
       wrapper: options.wrapper,
-      destroy: jest.fn()
+      destroy: jest.fn(),
     }
   })
 

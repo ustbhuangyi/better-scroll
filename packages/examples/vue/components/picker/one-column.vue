@@ -183,6 +183,46 @@
     list-style none
     padding 0
 
+  .border-bottom-1px, .border-top-1px
+    position: relative
+    &:before, &:after
+      content: ""
+      display: block
+      position: absolute
+      transform-origin: 0 0
+  .border-bottom-1px
+    &:after
+      border-bottom: 1px solid #ebebeb
+      left: 0
+      bottom: 0
+      width: 100%
+      transform-origin: 0 bottom
+  .border-top-1px
+    &:before
+      border-top: 1px solid #ebebeb
+      left: 0
+      top: 0
+      width: 100%
+      transform-origin: 0 top
+  @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+    .border-top-1px
+      &:before
+        width: 200%
+        transform: scale(.5) translateZ(0)
+    .border-bottom-1px
+      &:after
+        width: 200%
+        transform: scale(.5) translateZ(0)
+
+  @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+    .border-top-1px
+      &:before
+        width: 300%
+        transform: scale(.333) translateZ(0)
+    .border-bottom-1px
+      &:after
+        width: 300%
+        transform: scale(.333) translateZ(0)
   .example-list
     display: flex
     justify-content: space-between

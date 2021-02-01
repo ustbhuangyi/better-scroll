@@ -5,7 +5,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   <div />
   <div
     class="bscroll-horizontal-scrollbar"
-    style="position: absolute; z-index: 9999; left: 2px; right: 2px; bottom: 0px;"
+    style="position: absolute; z-index: 9999; overflow: hidden; height: 7px; left: 2px; right: 2px; bottom: 0px; pointer-events: none;"
   >
     <div
       class="bscroll-indicator"
@@ -14,25 +14,7 @@ exports[`scroll-bar unit tests constructor should create indicator elements 1`] 
   </div>
   <div
     class="bscroll-vertical-scrollbar"
-    style="position: absolute; z-index: 9999; bottom: 2px; top: 2px; right: 1px;"
-  >
-    <div
-      class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; width: 100%;"
-    />
-  </div>
-  <div
-    class="bscroll-horizontal-scrollbar"
-    style="position: absolute; z-index: 9999; left: 2px; right: 2px; bottom: 0px;"
-  >
-    <div
-      class="bscroll-indicator"
-      style="box-sizing: border-box; position: absolute; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.9); border-radius: 3px; height: 100%;"
-    />
-  </div>
-  <div
-    class="bscroll-vertical-scrollbar"
-    style="position: absolute; z-index: 9999; bottom: 2px; top: 2px; right: 1px;"
+    style="position: absolute; z-index: 9999; overflow: hidden; width: 7px; bottom: 2px; top: 2px; right: 1px; pointer-events: none;"
   >
     <div
       class="bscroll-indicator"

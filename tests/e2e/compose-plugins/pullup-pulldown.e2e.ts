@@ -14,7 +14,7 @@ describe('Compose/pullup-pulldown', () => {
 
     const itemsCounts = await page.$$eval(
       '.pullup-down-list-item',
-      (element) => element.length
+      element => element.length
     )
 
     await expect(itemsCounts).toBeGreaterThanOrEqual(30)
@@ -28,11 +28,11 @@ describe('Compose/pullup-pulldown', () => {
       y: 150,
       xDistance: 0,
       yDistance: 300,
-      gestureSourceType: 'touch',
+      gestureSourceType: 'touch'
     })
     const { isShowPullDownTxt, isShowLoading } = await page.$$eval(
       '.pulldown-wrapper',
-      (elements) => {
+      elements => {
         const isShowPullDownTxt =
           window.getComputedStyle(elements[0].children[0]).display === 'block'
         const isShowLoading =
@@ -40,7 +40,7 @@ describe('Compose/pullup-pulldown', () => {
             .display === 'block'
         return {
           isShowPullDownTxt,
-          isShowLoading,
+          isShowLoading
         }
       }
     )
@@ -56,14 +56,14 @@ describe('Compose/pullup-pulldown', () => {
       x: 200,
       y: 630,
       xDistance: 0,
-      yDistance: -500,
+      yDistance: -1000,
       speed: 1500,
-      gestureSourceType: 'touch',
+      gestureSourceType: 'touch'
     })
     await page.waitFor(4000)
     const itemsCounts = await page.$$eval(
       '.pullup-down-list-item',
-      (element) => element.length
+      element => element.length
     )
     await expect(itemsCounts).toBeGreaterThanOrEqual(60)
   })

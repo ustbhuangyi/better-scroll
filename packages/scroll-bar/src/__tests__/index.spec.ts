@@ -6,13 +6,19 @@ jest.mock('../indicator')
 
 import ScrollBar from '../index'
 
-describe('scroll-bar unit tests', () => {
-  let bscroll: BScroll
-  let options: Partial<Options>
-  const CONFIG_SCROLL_BAR = {
-    fade: true,
-    interactive: true
+const addProperties = <T extends Object, K extends Object>(
+  target: T,
+  source: K
+) => {
+  for (const key in source) {
+    ;(target as any)[key] = source[key]
   }
+  return target
+}
+
+describe('scroll-bar unit tests', () => {
+  let scroll: BScroll
+  let options: Partial<Options>
 
   beforeAll(() => {
     // create Dom
@@ -21,11 +27,11 @@ describe('scroll-bar unit tests', () => {
     wrapper.appendChild(content)
     // mock bscroll
     options = {
-      scrollbar: CONFIG_SCROLL_BAR,
+      scrollbar: true,
       scrollX: true,
-      scrollY: true
+      scrollY: true,
     }
-    bscroll = new BScroll(wrapper, options)
+    scroll = new BScroll(wrapper, options)
   })
 
   beforeEach(() => {
@@ -33,27 +39,40 @@ describe('scroll-bar unit tests', () => {
   })
 
   describe('constructor', () => {
-    it('should new indicators', () => {
-      // when
-      new ScrollBar(bscroll)
-      // then
-      expect(Indicator).toBeCalledTimes(2)
-    })
     it('should create indicator elements', () => {
-      // when
-      new ScrollBar(bscroll)
+      const scrollbar = new ScrollBar(scroll)
       // then
-      expect(bscroll.wrapper).toMatchSnapshot()
+      expect(scroll.wrapper).toMatchSnapshot()
+      expect(scrollbar.options).toMatchObject({
+        fade: true,
+        interactive: false,
+        customElements: [],
+        minSize: 8,
+        scrollbarTrackClickable: false,
+        scrollbarTrackOffsetType: 'step',
+        scrollbarTrackOffsetTime: 300,
+      })
     })
-  })
 
-  it('should destroy scrollbar when bscroll destroy', () => {
-    // given
-    const scrollbar = new ScrollBar(bscroll)
-    // when
-    scrollbar.destroy()
-    // then
-    expect(scrollbar.indicators[0].destroy).toBeCalledTimes(1)
-    expect(scrollbar.indicators[1].destroy).toBeCalledTimes(1)
+    it('custom scrollbar', () => {
+      const customHScrollbar = document.createElement('div')
+      addProperties(scroll.options, {
+        scrollX: true,
+        scrollY: false,
+        scrollbar: {
+          customElements: [customHScrollbar],
+        },
+      })
+      const scrollbar = new ScrollBar(scroll)
+      expect(scrollbar.indicators[0].wrapper).toBe(customHScrollbar)
+    })
+
+    it('destroy hook', () => {
+      const scrollbar = new ScrollBar(scroll)
+      scroll.hooks.trigger(scroll.hooks.eventTypes.destroy)
+      for (let indicator of scrollbar.indicators) {
+        expect(indicator.destroy).toBeCalled()
+      }
+    })
   })
 })

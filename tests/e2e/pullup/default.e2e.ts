@@ -31,7 +31,7 @@ describe('Pullup', () => {
       x: 200,
       y: 630,
       xDistance: 0,
-      yDistance: -500,
+      yDistance: -1000,
       speed: 1500,
       gestureSourceType: 'touch'
     })

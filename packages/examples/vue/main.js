@@ -2,7 +2,6 @@ import '@babel/polyfill'
 import Vue from 'vue'
 import router from './router'
 import App from './App.vue'
-import 'common/stylus/base.styl'
 
 // /* eslint-disable no-unused-vars */
 // import VConsole from 'vconsole' // develop console

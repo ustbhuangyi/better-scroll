@@ -17,6 +17,7 @@ Existing plugins:
 - [nested-scroll](./nested-scroll.html)
 - [infinity](./infinity.html)
 - [movable](./movable.html)
+- [indicators](./indicators.html)
 
 You can write a plugin by yourself to add new feature to `bs`. If you want do this, please refer to [How to write a plugin](./how-to-write.html).
 

@@ -322,3 +322,10 @@ export function removeClass(el: HTMLElement, className: string) {
 export function HTMLCollectionToArray(el: HTMLCollection) {
   return Array.prototype.slice.call(el, 0)
 }
+
+export function getClientSize(el: HTMLElement) {
+  return {
+    width: el.clientWidth,
+    height: el.clientHeight,
+  }
+}

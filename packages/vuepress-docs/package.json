@@ -32,7 +32,7 @@
     },
     "devDependencies": {
         "ts-loader": "^5.4.5",
-        "vuepress": "^1.0.0-alpha.47"
+        "vuepress": "^1.8.0"
     },
     "dependencies": {
         "qrcode-js-package": "^1.0.4",

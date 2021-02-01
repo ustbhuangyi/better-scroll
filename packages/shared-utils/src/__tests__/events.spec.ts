@@ -60,8 +60,10 @@ describe('events', () => {
 
     it('should keep chainable call when invoking off()', () => {
       const ret = eventEmitter.off('test1', () => {})
+      const ret2 = eventEmitter.off()
 
       expect(ret).toBe(eventEmitter)
+      expect(ret2).toBe(eventEmitter)
     })
 
     it('should support cancelable callback', () => {
