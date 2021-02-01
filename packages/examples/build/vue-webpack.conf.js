@@ -19,7 +19,7 @@ function resolve(dir) {
 }
 
 const webpackConfig = new Config()
-
+console.log('-----', isProd)
 webpackConfig
   .mode(isProd ? 'production' : 'development')
   .devtool(isProd ? 'false' : 'eval-source-map')
@@ -28,7 +28,7 @@ webpackConfig
     .end()
   .output
     .path(isProd ? path.resolve(__dirname, '../dist/vue') : undefined)
-    .publicPath(isProd ? '' : '/')
+    .publicPath(isProd ? 'https://better-scroll.github.io/examples/' : '/')
     .filename(isProd ? 'static/js/[name].[chunkhash].js' : '[name].js')
     .chunkFilename(isProd ? 'static/js/[id].[chunkhash].js' : '[name].js')
     .end()
