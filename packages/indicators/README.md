@@ -12,6 +12,17 @@ import Indicators from '@better-scroll/indicators'
 BScroll.use(Indicators)
 
 const bs = new BScroll('.wrapper', {
-  indicators: []
+  indicators: [
+    relationElement: someHTMLElement
+  ]
 })
+```
+
+```ts
+interface IndicatorOptions {
+  interactive?: boolean
+  ratio?: Ratio
+  relationElementHandleElementIndex?: number
+  relationElement: HTMLElement
+}
 ```
