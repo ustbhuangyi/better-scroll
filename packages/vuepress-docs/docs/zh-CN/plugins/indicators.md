@@ -1,4 +1,4 @@
-# indicators <Badge text="2.1.5" />
+# indicators <Badge text="2.2.0" />
 
 ## 介绍
 

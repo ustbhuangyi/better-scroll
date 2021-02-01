@@ -5,7 +5,7 @@
 scrollbar 插件为 BetterScroll 提供了样式美观的滚动条。
 
 :::tip 提示
-从 v2.1.5 开始，用户可以提供自定义的滚动条。
+从 v2.2.0 开始，用户可以提供自定义的滚动条。
 :::
 
 ## 安装
@@ -115,7 +115,7 @@ yarn add @better-scroll/scroll-bar
 
   滚动条是否可以交互。
 
-### customElements <Badge text="2.1.5" />
+### customElements <Badge text="2.2.0" />
 
   - **类型**：`HTMLElement[]`
   - **默认值**：`[]`
@@ -152,14 +152,14 @@ yarn add @better-scroll/scroll-bar
   })
   ```
 
-### minSize <Badge text="2.1.5" />
+### minSize <Badge text="2.2.0" />
 
   - **类型**：`number`
   - **默认值**：`8`
 
   滚动条的最小尺寸，当用户提供了自定义的滚动条，该配置无效。
 
-### scrollbarTrackClickable <Badge text="2.1.5" />
+### scrollbarTrackClickable <Badge text="2.2.0" />
 
   - **类型**：`boolean`
   - **默认值**：`false`
@@ -178,14 +178,14 @@ yarn add @better-scroll/scroll-bar
   })
   ```
 
-### scrollbarTrackOffsetType <Badge text="2.1.5" />
+### scrollbarTrackOffsetType <Badge text="2.2.0" />
 
   - **类型**：`string`
   - **默认值**：`'step'`
 
   滚动条轨道被点击之后，滚动距离的计算方式，默认与浏览器的表现形式一样，可以配置为 `'clickedPoint'`，代表滚动条滚动至点击的位置。
 
-### scrollbarTrackOffsetTime <Badge text="2.1.5" />
+### scrollbarTrackOffsetTime <Badge text="2.2.0" />
 
   - **类型**：`number`
   - **默认值**：`300`

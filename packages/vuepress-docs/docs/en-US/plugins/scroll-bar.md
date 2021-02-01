@@ -5,7 +5,7 @@
 The scrollbar plugin provides a nice scrollbar for BetterScroll.
 
 :::tip
-For v2.1.5, users can provide custom scroll bars.
+For v2.2.0, users can provide custom scroll bars.
 :::
 
 ## Install
@@ -116,7 +116,7 @@ new BScroll('.bs-wrapper', {
   - **Default**: `false`
 
   Whether scrollbar can interacted with.
-### customElements <Badge text="2.1.5" />
+### customElements <Badge text="2.2.0" />
 
   - **Type**: `HTMLElement[]`
   - **Default**: `[]`
@@ -154,14 +154,14 @@ new BScroll('.bs-wrapper', {
   })
   ```
 
-### minSize <Badge text="2.1.5" />
+### minSize <Badge text="2.2.0" />
 
   - **Type**: `number`
   - **Default**: `8`
 
   The minimum size of the scrollbar. When the user provides a custom scrollbar, this configuration is invalid.
 
-### scrollbarTrackClickable <Badge text="2.1.5" />
+### scrollbarTrackClickable <Badge text="2.2.0" />
 
   - **Type**: `boolean`
   - **Default**: `false`
@@ -180,14 +180,14 @@ new BScroll('.bs-wrapper', {
   })
   ```
 
-### scrollbarTrackOffsetType <Badge text="2.1.5" />
+### scrollbarTrackOffsetType <Badge text="2.2.0" />
 
   - **Type**: `string`
   - **Default**: `'step'`
 
   After the scroll bar track is clicked, the calculation method of the scroll distance is the same as the browser's performance by default. It can be configured as `'clickedPoint'`, which means the scroll bar is scrolled to the clicked position.
 
-### scrollbarTrackOffsetTime <Badge text="2.1.5" />
+### scrollbarTrackOffsetTime <Badge text="2.2.0" />
 
   - **Type**: `number`
   - **Default**: `300`
