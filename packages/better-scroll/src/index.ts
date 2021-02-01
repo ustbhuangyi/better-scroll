@@ -11,6 +11,7 @@ import NestedScroll from '@better-scroll/nested-scroll'
 import InfinityScroll from '@better-scroll/infinity'
 import Movable from '@better-scroll/movable'
 import ObserveImage from '@better-scroll/observe-image'
+import Indicators from '@better-scroll/indicators'
 
 export {
   createBScroll,
@@ -21,7 +22,7 @@ export {
   MountedBScrollHTMLElement,
   Behavior,
   Boundary,
-  CustomAPI,
+  CustomAPI
 } from '@better-scroll/core'
 
 export {
@@ -37,6 +38,7 @@ export {
   InfinityScroll,
   Movable,
   ObserveImage,
+  Indicators
 }
 
 BScroll.use(MouseWheel)
@@ -51,5 +53,6 @@ BScroll.use(MouseWheel)
   .use(InfinityScroll)
   .use(Movable)
   .use(ObserveImage)
+  .use(Indicators)
 
 export default BScroll

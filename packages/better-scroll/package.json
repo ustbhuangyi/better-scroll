@@ -41,6 +41,7 @@
     "@better-scroll/pull-down": "^2.1.4",
     "@better-scroll/pull-up": "^2.1.4",
     "@better-scroll/scroll-bar": "^2.1.4",
+    "@better-scroll/indicators": "^2.1.4",
     "@better-scroll/slide": "^2.1.4",
     "@better-scroll/wheel": "^2.1.4",
     "@better-scroll/zoom": "^2.1.4"
