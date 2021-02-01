@@ -148,7 +148,7 @@ yarn add @better-scroll/slide
     <slide-vertical slot="demo"></slide-vertical>
   </demo>
 
-- **动态卡片轮播（v2.1.0）**
+- **动态卡片轮播 <Badge text='2.1.0' />**
 
   <demo qrcode-url="slide/dynamic">
     <template slot="code-template">
@@ -378,7 +378,7 @@ bs.getCurrentPage()
     })
   ```
 
-### slidePageChanged（v2.1.0）
+### slidePageChanged <Badge text='2.1.0' />
 
   - **参数**：page 对象
     - `{ number } x`：当前页面的 x 坐标值

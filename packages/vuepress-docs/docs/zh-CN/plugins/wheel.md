@@ -194,11 +194,11 @@ bs.wheelTo(1, 300)
 
   滚动至对应索引的列表项。
 
-### stop()（v2.1.0）
+### stop() <Badge text='2.1.0' />
 
   强制让滚动的 BetterScroll 停止下来，并且吸附至当前距离最近的 wheel-item 的位置。
 
-### restorePosition()（v2.1.0）
+### restorePosition() <Badge text='2.1.0' />
 
   强制让滚动的 BetterScroll 停止下来，并且恢复至滚动开始前的位置。
 
@@ -208,7 +208,7 @@ bs.wheelTo(1, 300)
 
 ## 事件
 
-### wheelIndexChanged
+### wheelIndexChanged <Badge text='2.1.0' />
 
   - **参数**：当前选中的 wheel-item 的索引。
   - **触发时机**：当列表项发生改变的时候。

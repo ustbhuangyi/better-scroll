@@ -169,7 +169,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    // 0, scroll event will not be dispatched at any time，
    // 1, and only when the finger is moving on the scroll area, a scroll event is dispatched every momentumLimitTime milliseconds.
    // 2, and only when the finger is moving on the scroll area, a scroll event is dispatched all the time.
-   // 3, scroll events are dispatched at any time, including invoking scrollTo or triggering momentum 
+   // 3, scroll events are dispatched at any time, including invoking scrollTo or triggering momentum
    ```
 
 ## preventDefault
@@ -254,7 +254,7 @@ This implements a list of vertical clickable scrolling effects. so let's list th
    - **Default**: `1 / 3`
    - **Usage**: When out of boundary, the damping behavior is performed. The smaller the damping factor, the greater the resistance. Value range: [0, 1].
 
-## specifiedIndexAsContent<sup>(2.0.4)</sup>
+## specifiedIndexAsContent <Badge text='2.0.4' />
    - **Type**: `number`
    - **Default**: `0`
    - **Usage**: Specify the child element corresponding to the index of the `wrapper` as the `content`. By default, BetterScroll uses the first child element of the `wrapper` as the content.

@@ -174,7 +174,7 @@ new BScroll('.bs-wrapper', {
 
 ## 实例方法
 
-### putAt(x, y, [time], [easing])<sup>(2.0.4)</sup>
+### putAt(x, y, [time], [easing]) <Badge text='2.0.4' />
   - **参数**
     - `{PositionX} x`： x 坐标
       - `PositionX：'number | 'left' | 'right' | 'center'`

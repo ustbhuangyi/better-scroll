@@ -161,9 +161,9 @@ let scroll = new BScroll('.wrapper',{
    // 派发 scroll 的场景分为两种：
    // 1. 手指作用在滚动区域（content DOM）上;
    // 2. 调用 scrollTo 方法或者触发 momentum 滚动动画（其实底层还是调用 scrollTo 方法）
-   
+
    // 对于 v2.1.0 版本，对 probeType 做了一次统一
-   
+
    // 1. probeType 为 0，在任何时候都不派发 scroll 事件，
    // 2. probeType 为 1，仅仅当手指按在滚动区域上，每隔 momentumLimitTime 毫秒派发一次 scroll 事件，
    // 3. probeType 为 2，仅仅当手指按在滚动区域上，一直派发 scroll 事件，
@@ -252,7 +252,7 @@ let scroll = new BScroll('.wrapper',{
    - **默认值**：`1 / 3`
    - **作用**：当超过边界的时候，进行阻尼行为，阻尼因子越小，阻力越大，取值范围：[0, 1]。
 
-## specifiedIndexAsContent<sup>(2.0.4)</sup>
+## specifiedIndexAsContent <Badge text='2.0.4' />
    - **类型**：`number`
    - **默认值**：`0`
    - **作用**：指定 `wrapper` 对应索引的子元素作为 `content`，默认情况下 BetterScroll 采用的是 `wrapper` 的第一个子元素作为 content。
@@ -267,7 +267,7 @@ let scroll = new BScroll('.wrapper',{
          <div class="conten2-item">2.1</div>
          <div class="conten2-item">2.2</div>
       </div>
-   </div>   
+   </div>
    ```
 
    ```js

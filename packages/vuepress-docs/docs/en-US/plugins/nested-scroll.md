@@ -86,7 +86,7 @@ bs2.destroy()
 
 ## Demo
 
-- **Nested vertical scroll(v2.1.0)**
+- **Nested vertical scroll <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/vertical" :render-code="true">
     <template slot="code-template">
@@ -101,7 +101,7 @@ bs2.destroy()
     <nested-scroll-vertical slot="demo"></nested-scroll-vertical>
   </demo>
 
-- **Nested triple vertical scroll(v2.1.0)**
+- **Nested triple vertical scroll <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/triple-vertical" :render-code="true">
     <template slot="code-template">
@@ -116,7 +116,7 @@ bs2.destroy()
     <nested-scroll-triple-vertical slot="demo"></nested-scroll-triple-vertical>
   </demo>
 
-- **Nested horizontal scroll(v2.1.0)**
+- **Nested horizontal scroll <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/horizontal">
     <template slot="code-template">
@@ -131,7 +131,7 @@ bs2.destroy()
     <nested-scroll-horizontal slot="demo"></nested-scroll-horizontal>
   </demo>
 
-## Instance Methods(v2.1.0)
+## Instance Methods <Badge text='2.1.0' />
 
 :::tip
 All methods are proxied to BetterScroll instance, for example:
@@ -185,7 +185,7 @@ bs1.purgeNestedScroll() // Same as bs2.purgeNestedScroll()
   ```
   :::
 
-## Static Methods(v2.1.0)
+## Static Methods <Badge text='2.1.0' />
 
 ### `getAllNestedScrolls()`
 

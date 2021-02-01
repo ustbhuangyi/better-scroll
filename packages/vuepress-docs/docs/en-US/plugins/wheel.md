@@ -200,11 +200,11 @@ bs.wheelTo(1, 300)
 
   Scroll to the list item corresponding to the index.
 
-### stop() (**v2.1.0**)
+### stop() <Badge text='2.1.0' />
 
   Force the scrolling BetterScroll to stop and snap to the position of the wheel-item closest to the current one.
 
-### restorePosition() (**v2.1.0**)
+### restorePosition() <Badge text='2.1.0' />
 
   Force the scrolling BetterScroll to stop and return to the position before the scrolling started.
 
@@ -214,7 +214,7 @@ The above two methods are only valid for **the scrolling BetterScroll**, and `re
 
 ## Events
 
-### wheelIndexChanged (**v2.1.0**)
+### wheelIndexChanged <Badge text='2.1.0' />
 
   - **Arguments**: The index of the current selected wheel-item.
   - **Trigger timing**: When the selected wheel-item changes.

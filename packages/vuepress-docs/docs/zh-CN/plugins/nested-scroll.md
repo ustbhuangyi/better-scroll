@@ -84,7 +84,7 @@ bs2.destroy() // nestedScroll 不再约束 bs2，不再协调 bs1 与 bs2 的滚
 
 ## 示例
 
-- **竖向双层嵌套(v2.1.0)**
+- **竖向双层嵌套 <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/vertical" :render-code="true">
     <template slot="code-template">
@@ -99,7 +99,7 @@ bs2.destroy() // nestedScroll 不再约束 bs2，不再协调 bs1 与 bs2 的滚
     <nested-scroll-vertical slot="demo"></nested-scroll-vertical>
   </demo>
 
-- **竖向三层嵌套(v2.1.0)**
+- **竖向三层嵌套 <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/triple-vertical" :render-code="true">
     <template slot="code-template">
@@ -114,7 +114,7 @@ bs2.destroy() // nestedScroll 不再约束 bs2，不再协调 bs1 与 bs2 的滚
     <nested-scroll-triple-vertical slot="demo"></nested-scroll-triple-vertical>
   </demo>
 
-- **横向双层嵌套(v2.1.0)**
+- **横向双层嵌套 <Badge text='2.1.0' />**
 
   <demo qrcode-url="nested-scroll/horizontal">
     <template slot="code-template">
@@ -129,7 +129,7 @@ bs2.destroy() // nestedScroll 不再约束 bs2，不再协调 bs1 与 bs2 的滚
     <nested-scroll-horizontal slot="demo"></nested-scroll-horizontal>
   </demo>
 
-  - **横向竖向双层嵌套(v2.1.0)**
+  - **横向竖向双层嵌套 <Badge text='2.1.0' />**
 
     <demo qrcode-url="nested-scroll/horizontal-in-vertical">
       <template slot="code-template">
@@ -144,7 +144,7 @@ bs2.destroy() // nestedScroll 不再约束 bs2，不再协调 bs1 与 bs2 的滚
       <nested-scroll-horizontal-in-vertical slot="demo"></nested-scroll-horizontal-in-vertical>
     </demo>
 
-## 实例方法（v2.1.0）
+## 实例方法 <Badge text='2.1.0' />
 
 :::tip 提示
 以下方法皆已代理至 BetterScroll 实例，例如：
@@ -197,7 +197,7 @@ bs2.destroy() // nestedScroll 不再管控 bs2
 ```
 :::
 
-## 静态方法（v2.1.0）
+## 静态方法 <Badge text='2.1.0' />
 
 ### `getAllNestedScrolls()`
 

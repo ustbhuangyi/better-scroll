@@ -307,7 +307,7 @@ In 2.0, BetterScroll events are almost same with 1.x events. Only BetterScroll w
       bs.on('destroy', () => {})
     ```
 
-  - **contentChanged**<sup>(2.0.4)</sup>
+  - **contentChanged** <Badge text='2.0.4' />
     - **Trigger timing**: When calling `bs.refresh()`, it is detected that the content DOM has become other elements
 
     ```typescript
@@ -525,7 +525,7 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
 
-    - **contentChanged**<sup>(2.0.4)</sup>
+    - **contentChanged** <Badge text='2.0.4' />
       - **Trigger timing**：When calling `bs.refresh()`, it is detected that the content DOM has become other elements
       - **Usage**
       ```typescript

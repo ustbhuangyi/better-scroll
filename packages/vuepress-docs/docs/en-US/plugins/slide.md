@@ -148,7 +148,7 @@ In general, the layout of BetterScroll's slide is as follows:
     <slide-vertical slot="demo"></slide-vertical>
   </demo>
 
-- **Dynamic Slide(v2.1.0)**
+- **Dynamic Slide <Badge text='2.1.0' />**
 
   <demo qrcode-url="slide/dynamic">
     <template slot="code-template">
@@ -376,7 +376,7 @@ bs.getCurrentPage()
     })
   ```
 
-### slidePageChanged(v2.1.0)
+### slidePageChanged <Badge text='2.1.0' />
 
   - **Arguments**: `page` object
     - `{ number } x`: The x value of the current page

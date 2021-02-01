@@ -174,7 +174,7 @@ With [ zoom ](./zoom.html#introduction) plugin, increase the zoom capability.
 
 ## Instance Methods
 
-### putAt(x, y, [time], [easing])<sup>(2.0.4)</sup>
+### putAt(x, y, [time], [easing]) <Badge text='2.0.4' />
   - **Arguments**
     - `{PositionX} x`: x coordinate
       - `PositionX: 'number | 'left' | 'right' | 'center'`
@@ -197,7 +197,7 @@ With [ zoom ](./zoom.html#introduction) plugin, increase the zoom capability.
   })
 
   // Placed in the center of the wrapper
-  bs.putAt('center', 'center', 0) 
+  bs.putAt('center', 'center', 0)
 
   // Placed in the right-bottom corner of the wrapper, the animation duration is 1s
   bs.putAt('right', 'bottom', 1000)

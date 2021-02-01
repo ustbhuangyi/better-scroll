@@ -306,7 +306,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
     ```js
       bs.on('destroy', () => {})
     ```
-  - **contentChanged**<sup>(2.0.4)</sup>
+  - **contentChanged** <Badge text='2.0.4' />
     - **触发时机**：在调用 `bs.refresh()`，探测到 content DOM 变成了其他元素的时候
 
     ```typescript
@@ -522,7 +522,7 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         bs.hooks.on('destroy', () => { console.log('destroyed') })
       ```
 
-    - **contentChanged**<sup>(2.0.4)</sup>
+    - **contentChanged** <Badge text='2.0.4' />
       - **触发时机**：在调用 `bs.refresh()`，探测到 content DOM 变成了其他元素的时候
       - **示例**
       ```typescript

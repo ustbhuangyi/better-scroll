@@ -77,7 +77,7 @@ BetterScroll 有多种滚动模式。
     <core-freescroll slot="demo"></core-freescroll>
   </demo>
 
-## 支持动态 content<sup>(2.0.4)</sup>
+## 支持动态 content <Badge text='2.0.4' />
 
 对于 `2.0.4` 版本，已经具备了探测 content 元素变成其他元素的能力，可以查看下面的例子。
 
@@ -94,7 +94,7 @@ BetterScroll 有多种滚动模式。
   <core-dynamic-content slot="demo"></core-dynamic-content>
 </demo>
 
-## 支持 specifiedIndexAsContent 配置项<sup>(2.0.4)</sup>
+## 支持 specifiedIndexAsContent 配置项 <Badge text='2.0.4' />
 
 对于 `2.0.4` 版本，可以指定 **wrapper** 的某一个 children 作为 **content**，在之前的版本，BetterScroll只会处理 wrapper 的第一个子元素。[详细的文档在这](./base-scroll-options.html#specifiedindexascontent-2-0-4)。
 

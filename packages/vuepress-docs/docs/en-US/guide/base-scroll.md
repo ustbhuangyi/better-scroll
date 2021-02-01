@@ -77,7 +77,7 @@ BetterScroll has a variety of scroll modes.
     <core-freescroll slot="demo"></core-freescroll>
   </demo>
 
-## Dynamic Content<sup>(2.0.4)</sup>
+## Dynamic Content <Badge text='2.0.4' />
 
 For the `2.0.4` version, it has the ability to detect `content` becoming other elements, you can check the following example.
 
@@ -94,7 +94,7 @@ For the `2.0.4` version, it has the ability to detect `content` becoming other e
   <core-dynamic-content slot="demo"></core-dynamic-content>
 </demo>
 
-## specifiedIndexAsContent<sup>(2.0.4)</sup>
+## specifiedIndexAsContent <Badge text='2.0.4' />
 
 For the `2.0.4` version, you can specify a child of **wrapper** as **content**. In previous versions, BetterScroll would only process the first child element of the wrapper. [For details.](./base-scroll-options.html#specifiedindexascontent-2-0-4)
 
