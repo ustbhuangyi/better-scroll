@@ -29,15 +29,6 @@ describe('BetterScroll Core', () => {
     BScroll.use(unnamedPlugin as any)
     expect(spyFn).toBeCalled()
     spyFn.mockRestore()
-
-    const spyFn2 = jest.spyOn(console, 'error')
-    // duplicate register plugins
-    const plugin2 = class MyPlugin2 {
-      static pluginName = 'myPlugin'
-    }
-    BScroll.use(plugin2)
-    expect(spyFn2).toBeCalled()
-    spyFn2.mockRestore()
   })
 
   it('should init plugins when set top-level of BScroll options', () => {
@@ -53,7 +44,7 @@ describe('BetterScroll Core', () => {
     wrapper.appendChild(document.createElement('p'))
 
     let bs = new BScroll(wrapper, {
-      myPlugin2: true,
+      myPlugin2: true
     })
     expect(mockFn).toBeCalledWith(bs)
   })
