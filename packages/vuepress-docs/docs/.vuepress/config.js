@@ -81,6 +81,7 @@ module.exports = {
     LOCAL_IP: getIp()
   },
   plugins: [
+    ['@vuepress/back-to-top', true],
     [
       '@vuepress/register-components',
       {
