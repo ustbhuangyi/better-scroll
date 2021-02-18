@@ -34,6 +34,10 @@ module.exports = {
   },
   themeConfig: {
     smoothScroll: true,
+    algolia: {
+      apiKey: '93916bfd4dd5ed93f9b7c0d9c9854404',
+      indexName: 'better-scroll'
+    },
     logo: 'https://dpubstatic.udache.com/static/dpubimg/t_L6vAgQ-E/logo.svg',
     locales: {
       '/zh-CN/': {
