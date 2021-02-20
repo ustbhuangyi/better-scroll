@@ -33,6 +33,10 @@ module.exports = {
     }
   },
   themeConfig: {
+    repo: 'ustbhuangyi/better-scroll',
+    docsBranch: 'dev',
+    docsDir: 'packages/vuepress-docs/docs',
+    editLinks: true,
     smoothScroll: true,
     algolia: {
       apiKey: '93916bfd4dd5ed93f9b7c0d9c9854404',
@@ -44,7 +48,8 @@ module.exports = {
         label: '简体中文',
         selectText: '选择语言',
         nav: require('./nav/zh-CN.js'),
-        lastUpdated: 'Last Updated',
+        lastUpdated: '上次更新',
+        editLinkText: '在 GitHub 上编辑此页',
         sidebar: {
           '/zh-CN/guide/': require('./sidebar/guide.js')('zh-CN'),
           '/zh-CN/plugins/': require('./sidebar/plugins.js')('zh-CN'),
@@ -55,7 +60,8 @@ module.exports = {
         label: 'English',
         selectText: 'Languages',
         nav: require('./nav/en-US.js'),
-        lastUpdated: '上次更新',
+        lastUpdated: 'Last Updated',
+        editLinkText: 'Edit this page on GitHub',
         sidebar: {
           '/en-US/guide/': require('./sidebar/guide.js')('en-US'),
           '/en-US/plugins/': require('./sidebar/plugins.js')('en-US'),
