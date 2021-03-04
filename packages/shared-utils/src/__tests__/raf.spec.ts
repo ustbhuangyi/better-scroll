@@ -23,7 +23,7 @@ describe('raf', () => {
     const mockFn = jest.fn()
 
     const timer = requestAnimationFrame(mockFn)
-    jest.advanceTimersByTime(10)
+    jest.advanceTimersByTime(17)
 
     expect(mockFn).toBeCalled()
     expect(spySetTimeout).toBeCalled()
