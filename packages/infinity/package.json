@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/infinity",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "The ability to inject a infinity load for BetterScroll.",
   "author": "fengweiyao <fengweiyao0317@hotmail.com>",
   "main": "dist/infinity.min.js",
@@ -27,7 +27,7 @@
     "directory": "packages/infinity"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.2.0"
+    "@better-scroll/core": "^2.2.1"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }
