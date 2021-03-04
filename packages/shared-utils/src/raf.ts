@@ -23,10 +23,7 @@ export const requestAnimationFrame = (() => {
     windowCompat.oRequestAnimationFrame ||
     // if all else fails, use setTimeout
     function (callback: DelayedHandler) {
-      return window.setTimeout(
-        callback,
-        (callback.interval || DEFAULT_INTERVAL) / 2
-      ) // make interval as precise as possible.
+      return window.setTimeout(callback, callback.interval || DEFAULT_INTERVAL) // make interval as precise as possible.
     }
   )
 })()

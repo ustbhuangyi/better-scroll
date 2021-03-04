@@ -1,4 +1,4 @@
-import { inBrowser, isWeChatDevTools } from './env'
+import { inBrowser, isWeChatDevTools, supportsPassive } from './env'
 import { extend } from './lang'
 
 export type safeCSSStyleDeclaration = {
@@ -79,10 +79,13 @@ export function addEvent(
   fn: EventListenerOrEventListenerObject,
   capture?: AddEventListenerOptions
 ) {
-  el.addEventListener(type, fn, {
-    passive: false,
-    capture: !!capture,
-  })
+  const useCapture = supportsPassive
+    ? {
+        passive: false,
+        capture: !!capture,
+      }
+    : !!capture
+  el.addEventListener(type, fn, useCapture)
 }
 
 export function removeEvent(
