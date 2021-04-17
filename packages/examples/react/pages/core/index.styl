@@ -1,0 +1,115 @@
+.free-scroll-container
+  &.view
+    position fixed!important
+
+.core-container
+  .scroll-wrapper
+    height 400px
+    position relative
+    overflow hidden
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      font-weight bold
+      border-bottom 1px solid #eee
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+
+.horizontal-container
+  .scroll-wrapper
+    position relative
+    width 90%
+    margin 80px auto
+    white-space nowrap
+    border 3px solid #42b983
+    border-radius 5px
+    overflow hidden
+    .scroll-content
+      display inline-block
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      display inline-block
+      text-align center
+      padding 0 10px
+
+
+.core-dynamic-content-container
+  text-align center
+  .scroll-wrapper
+    height 300px
+    overflow hidden
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      font-weight bold
+      border-bottom 1px solid #eee
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+	.btn
+		margin 40px auto
+		padding 10px
+		color #fff!important
+		border-radius 4px
+		font-size 20px
+		background-color #666!important
+
+.core-specified-content-container
+  text-align center
+  .scroll-wrapper
+    height 400px
+    overflow hidden
+    border 1px solid #42b983
+    .ignore-content
+      padding 20px
+      color white
+      font-size 20px
+      font-weight bold
+      background-color #2c3e50
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      font-weight bold
+      border-bottom 1px solid #eee
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+
+.free-scroll-container
+  position: relative
+  width: 100%
+  height: 100%
+  .free-scroll-wrapper
+    position: relative
+    width: 100%
+    height: 100%
+    border: 1px solid rgb(96, 108, 113)
+    box-sizing: border-box
+    .scroll-wrapper
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      overflow: hidden
+      .scroll-content
+        background-color: #efeff4
+        width: 1500px
+        height: 1000px
+        p
+          font-size: 16px
+          padding: 20px
+          line-height: 200%
+          margin: 0
