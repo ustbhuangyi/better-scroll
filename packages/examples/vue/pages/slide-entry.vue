@@ -2,16 +2,19 @@
   <div class="slide">
     <ul class="example-list">
       <li class="example-item" @click="goPage('/slide/banner')">
-          <span>banner slider</span>
+          <span>banner slide</span>
       </li>
       <li class="example-item" @click="goPage('/slide/fullpage')">
-          <span>page slider</span>
+          <span>page slide</span>
       </li>
       <li class="example-item" @click="goPage('/slide/vertical')">
-          <span>vertical slider</span>
+          <span>vertical slide</span>
       </li>
       <li class="example-item" @click="goPage('/slide/dynamic')">
-          <span>dynamic slider（v2.1.0）</span>
+          <span>dynamic slide（v2.1.0）</span>
+      </li>
+      <li class="example-item" @click="goPage('/slide/specified')">
+          <span>specified index slide（v2.3.0）</span>
       </li>
       <li class="example-item placeholder"></li>
     </ul>

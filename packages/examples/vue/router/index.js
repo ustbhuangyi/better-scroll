@@ -35,6 +35,7 @@ import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
 import VerticalSlide from 'vue-example/components/slide/vertical'
 import DynamicSlide from 'vue-example/components/slide/dynamic'
+import SpecifiedIndexSlide from 'vue-example/components/slide/specified-index'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
@@ -97,6 +98,10 @@ export default new Router({
           path: 'dynamic',
           component: DynamicSlide,
         },
+        {
+          path: 'specified',
+          component: SpecifiedIndexSlide
+        }
       ],
     },
     {
