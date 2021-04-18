@@ -2,11 +2,12 @@
   <div class="slide-specified-index">
     <div class="banner-wrapper">
       <div class="slide-specified-wrapper" ref="slide">
-        <div class="slide-specified-wrapper">
+        <div class="slide-specified-content">
           <div v-for="num in nums" class="slide-page" :class="'page' + num" :key="num">page {{num}}</div>
         </div>
       </div>
     </div>
+    <div v-if="slideCreated" class="description">currentPageIndex is {{slide.getCurrentPage().pageX}}</div>
     <div class="btn-wrap">
       <button class="next" @click="nextPage">nextPage</button>
       <button class="prev" @click="prePage">prePage</button>
@@ -23,19 +24,21 @@
   export default {
     data() {
       return {
+        slideCreated: false,
         nums: 4,
         currentPageIndex: 0
       }
     },
     mounted() {
       this.init()
+      this.slideCreated = true
     },
     beforeDestroy() {
       this.slide.destroy()
     },
     methods: {
       init() {
-        window.slide = this.slide = new BScroll(this.$refs.slide, {
+        this.slide = new BScroll(this.$refs.slide, {
           scrollX: true,
           scrollY: false,
           slide: {
@@ -50,6 +53,8 @@
         // v2.1.0
         this.slide.on('slidePageChanged', (page) => {
           console.log('CurrentPage changed to => ', page)
+          // always get the currentPageIndex, because slide is not reactive
+          this.$forceUpdate()
         })
       },
       nextPage() {
@@ -69,7 +74,7 @@
   .slide-specified-wrapper
     min-height 1px
     overflow hidden
-  .slide-specified-wrapper
+  .slide-specified-content
     height 200px
     white-space nowrap
     font-size 0
@@ -88,6 +93,8 @@
         background-color #C3D899
       &.page4
         background-color #F2D4A7
+  .description
+    text-align center
   .btn-wrap
     margin-top 20px
     display flex
