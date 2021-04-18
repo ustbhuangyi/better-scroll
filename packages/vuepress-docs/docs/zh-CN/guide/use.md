@@ -13,7 +13,7 @@ let bs = new BScroll('.wrapper', {
 
 ## 增强型滚动
 
-如果你需要一些额外的 feature。比如 `pull-up`，你需要引入额外的插件，详情查看[插件](/zh-CN/plugins)。
+如果你需要一些额外的 feature。比如 `pull-up`，你需要引入额外的插件，详情查看[插件](/docs/zh-CN/plugins)。
 
 ```js
 import BScroll from '@better-scroll/core'
