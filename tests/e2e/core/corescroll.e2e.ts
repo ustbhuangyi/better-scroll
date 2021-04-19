@@ -27,8 +27,10 @@ describe('CoreScroll', () => {
       'dynamic-content',
       'specified-content',
       'freescroll',
+      'vertical rotated(v2.3.0)',
+      'horizontal rotated(v2.3.0)',
     ])
-    await expect(itemsCounts).toBeGreaterThanOrEqual(5)
+    expect(itemsCounts).toBeGreaterThanOrEqual(5)
   })
 
   it("should display correct items's texts", async () => {
@@ -36,12 +38,14 @@ describe('CoreScroll', () => {
       element.map((el) => el.textContent)
     )
 
-    await expect(itemsContent).toEqual([
+    expect(itemsContent).toEqual([
       'vertical',
       'horizontal',
       'dynamic-content',
       'specified-content',
       'freescroll',
+      'vertical rotated(v2.3.0)',
+      'horizontal rotated(v2.3.0)',
     ])
   })
 
@@ -200,6 +204,58 @@ describe('CoreScroll', () => {
       )
 
       expect(itemsCounts).toBe(60)
+    })
+  })
+
+  describe('CoreScroll/verticalRotated', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/vertical-rotated')
+    })
+
+    it('should support vertical rotated scroll', async () => {
+      await page.waitFor(1000)
+      await page.dispatchScroll({
+        x: 210,
+        y: 180,
+        xDistance: 70,
+        yDistance: 0,
+        gestureSourceType: 'touch',
+      })
+
+      await page.waitFor(100)
+
+      const transformText = await page.$eval('.scroll-content', (node) => {
+        return window.getComputedStyle(node).transform
+      })
+
+      const y = getTranslate(transformText, 'y')
+      expect(y).toBeLessThan(-20)
+    })
+  })
+
+  describe('CoreScroll/horizontalRotated', () => {
+    beforeAll(async () => {
+      await page.goto('http://0.0.0.0:8932/#/core/horizontal-rotated')
+    })
+
+    it('should support horizontal rotated scroll', async () => {
+      await page.waitFor(1000)
+      await page.dispatchScroll({
+        x: 180,
+        y: 100,
+        xDistance: 70,
+        yDistance: 0,
+        gestureSourceType: 'touch',
+      })
+
+      await page.waitFor(100)
+
+      const transformText = await page.$eval('.scroll-content', (node) => {
+        return window.getComputedStyle(node).transform
+      })
+
+      const x = getTranslate(transformText, 'x')
+      expect(x).toBeLessThan(-20)
     })
   })
 })
