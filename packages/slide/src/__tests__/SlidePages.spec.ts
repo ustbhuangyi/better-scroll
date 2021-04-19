@@ -33,6 +33,8 @@ describe('slide test for SlidePages class', () => {
     listenFlick: true,
     autoplay: true,
     interval: 3000,
+    startPageXIndex: 0,
+    startPageYIndex: 0,
   }
 
   afterEach(() => {
@@ -268,7 +270,7 @@ describe('slide test for SlidePages class', () => {
     })
 
     it('should work well with getInitialPage()', () => {
-      const page = slidePages.getInitialPage(true)
+      const page = slidePages.getInitialPage(true, true)
 
       expect(page).toMatchObject({
         pageX: 0,

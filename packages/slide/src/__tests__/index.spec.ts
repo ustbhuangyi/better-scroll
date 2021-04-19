@@ -184,11 +184,8 @@ describe('slide test for SlidePage class', () => {
       scroll.scroller.animater.forceStopped = true
       scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
 
-      expect(slide.pages.setCurrentPage).not.toBeCalled()
+      expect(slide.pages.setCurrentPage).toBeCalled()
 
-      scroll.scroller.animater.forceStopped = false
-      const ret1 = scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
-      expect(ret1).toBe(true)
       scroll.trigger(scroll.eventTypes.scrollEnd, { x: 0, y: 0 })
       expect(slide.pages.resetLoopPage).toBeCalledTimes(1)
     })
