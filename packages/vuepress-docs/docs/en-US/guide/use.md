@@ -13,7 +13,7 @@ let bs = new BScroll('.wrapper', {
 
 ## Plugins
 
-If you need some extra features like `pull-up`, you need to import additional plugins, see for details[plugins](/zh-CN/plugins)。
+If you need some extra features like `pull-up`, you need to import additional plugins, please refer to [plugins](/docs/en-US/plugins).
 
 ```js
 import BScroll from '@better-scroll/core'

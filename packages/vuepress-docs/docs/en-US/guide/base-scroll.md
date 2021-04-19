@@ -117,5 +117,5 @@ For the `2.0.4` version, you can specify a child of **wrapper** as **content**. 
   :::tip
   **If there is any situation where scrolling is not possible, you should first check if the height/width of the content element is greater than the height/width of the wrapper**. This is a prerequisite for content to scroll.
 
-  If the content has an image, it may happen that the image has not been downloaded when the DOM element is rendered, so the height of the content element is less than expected, and the scrolling is not normal. At this point you should call the `bs.refresh` method after the image has been loaded, such as the `onload` event callback, which will recalculate the latest scrolling distance.
+  If the content has an image, it may happen that the image has not been downloaded when the DOM element is rendered, so the height of the content element is less than expected, and the scrolling is not normal. At this point you should call the `bs.refresh` method after the image has been loaded, such as the `onload` event callback, which will recalculate the latest scrolling size.
   :::

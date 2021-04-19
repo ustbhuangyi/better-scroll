@@ -163,6 +163,21 @@ yarn add @better-scroll/slide
     <slide-dynamic slot="demo"></slide-dynamic>
   </demo>
 
+- **初始化索引轮播 <Badge text='2.3.0' />**
+
+  <demo qrcode-url="slide/specified">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/specified-index.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/specified-index.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/specified-index.vue?style
+    </template>
+    <slide-specified-index slot="demo"></slide-specified-index>
+  </demo>
+
   ::: tip
   注意：当设置 `useTransition = true`时，可能在 iphone 某些系统上出现闪烁。你需要像上面 demo 中的代码一样，每个 `slide-page` 额外增加下面两个样式：
 
@@ -262,6 +277,20 @@ const bs = new BScroll('.wrapper', {
 
   可以设置为小数，如 0.1，或者整数，如 100。当该值为小数时，threshold 被当成一个百分比，最终的阈值为 `slideWrapperWidth * threshold` 或者 `slideWrapperHeight * threshold`。当该值为整数时，则阈值就是 threshold。
   :::
+
+### startPageXIndex <Badge text='2.3.0' />
+
+  - **类型**：`number`
+  - **默认值**：`0`
+
+  实例化 slide 的时候，滚动到横向对应索引的 page。
+
+### startPageYIndex <Badge text='2.3.0' />
+
+  - **类型**：`number`
+  - **默认值**：`0`
+
+  实例化 slide 的时候，滚动到竖向对应索引的 page。
 
 ## 实例方法
 

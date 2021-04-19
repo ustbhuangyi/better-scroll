@@ -163,6 +163,21 @@ In general, the layout of BetterScroll's slide is as follows:
     <slide-dynamic slot="demo"></slide-dynamic>
   </demo>
 
+- **Initial PageIndex Slide <Badge text='2.3.0' />**
+
+  <demo qrcode-url="slide/specified">
+    <template slot="code-template">
+      <<< @/examples/vue/components/slide/specified-index.vue?template
+    </template>
+    <template slot="code-script">
+      <<< @/examples/vue/components/slide/specified-index.vue?script
+    </template>
+    <template slot="code-style">
+      <<< @/examples/vue/components/slide/specified-index.vue?style
+    </template>
+    <slide-specified-index slot="demo"></slide-specified-index>
+  </demo>
+
   ::: tip
   Note: When setting `useTransition = true`, there may be flickering on some iPhone systems. You need to add the following two additional styles to each `slide-page` like the code in the above demo:
 
@@ -261,7 +276,21 @@ const bs = new BScroll('.wrapper', {
   It can be set to a decimal, such as 0.1, or an integer, such as 100. When the value is a decimal, the threshold is treated as a percentage, and the final threshold is `slideWrapperWidth * threshold` or `slideWrapperHeight * threshold`. When the value is an integer, the threshold is threshold.
   :::
 
-  Switch the threshold of the next or previous Page.
+  The threshold of the next or previous Page.
+
+### startPageXIndex <Badge text='2.3.0' />
+
+  - **Type**: `number`
+  - **Default**: `0`
+
+  Initial pageXIndex when slide is created.
+
+### startPageYIndex <Badge text='2.3.0' />
+
+  - **Type**: `number`
+  - **Default**: `0`
+
+  Initial pageYIndex when slide is created.
 
 ## Instance Methods
 
