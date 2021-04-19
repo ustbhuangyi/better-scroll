@@ -2,7 +2,7 @@ export const enum DirectionLock {
   Default = '',
   Horizontal = 'horizontal',
   Vertical = 'vertical',
-  None = 'none'
+  None = 'none',
 }
 
 export const enum Direction {
@@ -10,34 +10,41 @@ export const enum Direction {
   Positive = 1,
   // on the contrary as above
   Negative = -1,
-  Default = 0
+  Default = 0,
 }
 
 export const enum ApplyOrder {
   Pre = 'pre',
-  Post = 'post'
+  Post = 'post',
 }
 
 export const enum EventPassthrough {
   None = '',
   Horizontal = 'horizontal',
-  Vertical = 'vertical'
+  Vertical = 'vertical',
 }
 
 export const enum EventType {
   Touch = 1,
-  Mouse = 2
+  Mouse = 2,
 }
 
 export const enum MouseButton {
   Left,
   Middle,
-  Right
+  Right,
 }
 
 export const enum Probe {
   Default,
   Throttle,
   Normal,
-  Realtime
+  Realtime,
+}
+
+export const enum Quadrant {
+  First = 1,
+  Second,
+  Third,
+  Forth,
 }

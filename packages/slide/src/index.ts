@@ -25,6 +25,8 @@ export interface SlideConfig {
   listenFlick: boolean
   autoplay: boolean
   interval: number
+  startPageXIndex: number
+  startPageYIndex: number
 }
 export type SlideOptions = Partial<SlideConfig> | true
 
@@ -120,6 +122,8 @@ export default class Slide implements PluginAPI {
       listenFlick: true,
       autoplay: true,
       interval: 3000,
+      startPageXIndex: 0,
+      startPageYIndex: 0,
     }
     this.options = extend(defaultOptions, userOptions)
   }
@@ -327,7 +331,7 @@ export default class Slide implements PluginAPI {
   }
 
   getCurrentPage(): Page {
-    return this.exposedPage || this.pages.getInitialPage(true)
+    return this.exposedPage || this.pages.getInitialPage(false, true)
   }
 
   setCurrentPage(page: Page) {
@@ -378,10 +382,8 @@ export default class Slide implements PluginAPI {
       this.prevContent = content
     }
     const initPage = this.pages.getInitialPage(
-      !this.initialised ||
-        contentChanged ||
-        this.oneToMorePagesInLoop ||
-        this.moreToOnePageInLoop
+      this.oneToMorePagesInLoop || this.moreToOnePageInLoop,
+      contentChanged || !this.initialised
     )
     if (this.initialised) {
       this.goTo(initPage.pageX, initPage.pageY, 0)
@@ -438,11 +440,6 @@ export default class Slide implements PluginAPI {
   }
 
   private modifyCurrentPage(point: Position) {
-    const scroller = this.scroll.scroller
-    // if in animation, and force stopping
-    if (scroller.animater.forceStopped) {
-      return
-    }
     const {
       pageX: prevExposedPageX,
       pageY: prevExposedPageY,
@@ -517,6 +514,7 @@ export default class Slide implements PluginAPI {
     const deltaY = y - this.scroll.scroller.scrollBehaviorY.currentPos
     /* istanbul ignore if */
     if (!deltaX && !deltaY) {
+      this.scroll.scroller.togglePointerEvents(true)
       return
     }
     time = time === undefined ? this.getEaseTime(deltaX, deltaY) : time

@@ -73,7 +73,7 @@ describe('Slider for banner', () => {
 
     expect(x2).toBe(-335)
   })
-  it('should change index when drap slide', async () => {
+  it('should change index when drag slide', async () => {
     await page.waitFor(300)
     const currentIndex = await page.$eval('.dots-wrapper', (el) => {
       const children = el.children

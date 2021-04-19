@@ -35,12 +35,15 @@ import BannerSlide from 'vue-example/components/slide/banner'
 import PageSlide from 'vue-example/components/slide/fullpage'
 import VerticalSlide from 'vue-example/components/slide/vertical'
 import DynamicSlide from 'vue-example/components/slide/dynamic'
+import SpecifiedIndexSlide from 'vue-example/components/slide/specified-index'
 
 import VerticalScroll from 'vue-example/components/core/default'
 import HorizontalScroll from 'vue-example/components/core/horizontal'
 import DynamicContentScroll from 'vue-example/components/core/dynamic-content'
 import SpecifiedContentScroll from 'vue-example/components/core/specified-content'
 import Freescroll from 'vue-example/components/core/freescroll'
+import VerticalRotatedScroll from 'vue-example/components/core/vertical-rotated'
+import HorizontalRotatedScroll from 'vue-example/components/core/horizontal-rotated'
 
 import OneColumnPicker from 'vue-example/components/picker/one-column'
 import DoubleColumnPicker from 'vue-example/components/picker/double-column'
@@ -97,6 +100,10 @@ export default new Router({
           path: 'dynamic',
           component: DynamicSlide,
         },
+        {
+          path: 'specified',
+          component: SpecifiedIndexSlide
+        }
       ],
     },
     {
@@ -123,6 +130,14 @@ export default new Router({
           path: 'freescroll',
           component: Freescroll,
         },
+        {
+          path: 'vertical-rotated',
+          component: VerticalRotatedScroll
+        },
+        {
+          path: 'horizontal-rotated',
+          component: HorizontalRotatedScroll
+        }
       ],
     },
     {

@@ -29,8 +29,8 @@ const SlidePage = jest.fn().mockImplementation(() => {
       }
     }),
     getExposedPageByPageIndex: jest.fn(),
-    getInitialPage: jest.fn().mockImplementation((flag) => {
-      if (flag) {
+    getInitialPage: jest.fn().mockImplementation((flag, firstInit) => {
+      if (firstInit) {
         return {
           pageX: 1,
           pageY: 0,

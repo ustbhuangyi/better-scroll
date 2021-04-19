@@ -57,6 +57,7 @@ describe('BetterScroll Options', () => {
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
       specifiedIndexAsContent: 0,
+      quadrant: 1,
     })
   })
 
@@ -113,6 +114,7 @@ describe('BetterScroll Options', () => {
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
       specifiedIndexAsContent: 0,
+      quadrant: 1,
     })
     // an invalid parameter
     const ret = options.merge()
@@ -169,6 +171,7 @@ describe('BetterScroll Options', () => {
       bindToTarget: false,
       outOfBoundaryDampingFactor: 1 / 3,
       specifiedIndexAsContent: 0,
+      quadrant: 1,
     })
   })
 
