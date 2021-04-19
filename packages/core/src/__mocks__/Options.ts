@@ -50,6 +50,7 @@ const mockOptions = jest.fn().mockImplementation(() => {
     mouseWheel: false,
     infinity: false,
     specifiedIndexAsContent: 0,
+    quadrant: 0,
     outOfBoundaryDampingFactor: 1 / 3,
     merge: jest.fn(),
     process: jest.fn(),

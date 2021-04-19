@@ -5,6 +5,7 @@ import {
   Probe,
   EventPassthrough,
   extend,
+  Quadrant,
 } from '@better-scroll/shared-utils'
 
 // type
@@ -71,6 +72,7 @@ export interface DefOptions {
   autoEndDistance?: number
   outOfBoundaryDampingFactor?: number
   specifiedIndexAsContent?: number
+  quadrant?: Quadrant
 }
 
 export interface Options extends DefOptions, CustomOptions {}
@@ -120,6 +122,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
   autoEndDistance: number
   outOfBoundaryDampingFactor: number
   specifiedIndexAsContent: number
+  quadrant: Quadrant
 
   constructor() {
     super()
@@ -178,6 +181,7 @@ export class OptionsConstructor extends CustomOptions implements DefOptions {
     this.autoEndDistance = 5
     this.outOfBoundaryDampingFactor = 1 / 3
     this.specifiedIndexAsContent = 0
+    this.quadrant = Quadrant.First
   }
   merge(options?: Options) {
     if (!options) return this

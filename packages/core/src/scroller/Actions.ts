@@ -11,8 +11,24 @@ import {
   Probe,
   EventEmitter,
   between,
+  Quadrant,
 } from '@better-scroll/shared-utils'
 
+const applyQuadrantTransformation = (
+  deltaX: number,
+  deltaY: number,
+  quadrant: Quadrant
+) => {
+  if (quadrant === Quadrant.Second) {
+    return [deltaY, -deltaX]
+  } else if (quadrant === Quadrant.Third) {
+    return [-deltaX, -deltaY]
+  } else if (quadrant === Quadrant.Forth) {
+    return [-deltaY, deltaX]
+  } else {
+    return [deltaX, deltaY]
+  }
+}
 export default class ScrollerActions {
   hooks: EventEmitter
   scrollBehaviorX: Behavior
@@ -44,6 +60,7 @@ export default class ScrollerActions {
       'scrollEnd',
       'contentNotMoved',
       'detectMovingDirection',
+      'coordinateTransformation',
     ])
 
     this.scrollBehaviorX = scrollBehaviorX
@@ -85,7 +102,26 @@ export default class ScrollerActions {
         e: TouchEvent
       }) => {
         if (!this.enabled) return true
-        return this.handleMove(deltaX, deltaY, e)
+
+        const [
+          transformateDeltaX,
+          transformateDeltaY,
+        ] = applyQuadrantTransformation(deltaX, deltaY, this.options.quadrant)
+        const transformateDeltaData = {
+          deltaX: transformateDeltaX,
+          deltaY: transformateDeltaY,
+        }
+
+        this.hooks.trigger(
+          this.hooks.eventTypes.coordinateTransformation,
+          transformateDeltaData
+        )
+
+        return this.handleMove(
+          transformateDeltaData.deltaX,
+          transformateDeltaData.deltaY,
+          e
+        )
       }
     )
     // [mouse|touch]end event

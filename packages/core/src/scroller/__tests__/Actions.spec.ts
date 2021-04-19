@@ -247,4 +247,57 @@ describe('Actions Class tests', () => {
       }
     )
   })
+
+  it('apply quadrant transformation when force rotating by CSS', () => {
+    let e = new Event('touchmove')
+
+    // second quadrant
+    actions.options.quadrant = 2
+
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+
+    expect(actions.scrollBehaviorX.getAbsDist).toBeCalledWith(-20)
+    expect(actions.scrollBehaviorY.getAbsDist).toBeCalledWith(-0)
+
+    // third quadrant
+    actions.options.quadrant = 3
+
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: -20,
+      deltaY: 0,
+      e,
+    })
+
+    expect(actions.scrollBehaviorX.getAbsDist).toBeCalledWith(20)
+    expect(actions.scrollBehaviorY.getAbsDist).toBeCalledWith(-0)
+
+    // forth quadrant
+    actions.options.quadrant = 4
+
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 20,
+      deltaY: 0,
+      e,
+    })
+
+    expect(actions.scrollBehaviorX.getAbsDist).toBeCalledWith(-0)
+    expect(actions.scrollBehaviorY.getAbsDist).toBeCalledWith(20)
+  })
+
+  it('coordinateTransformation hook', () => {
+    let e = new Event('touchmove')
+    const mockFn = jest.fn()
+    actions.hooks.on(actions.hooks.eventTypes.coordinateTransformation, mockFn)
+    actions.actionsHandler.hooks.trigger('move', {
+      deltaX: 0,
+      deltaY: -20,
+      e,
+    })
+
+    expect(mockFn).toBeCalled()
+  })
 })
