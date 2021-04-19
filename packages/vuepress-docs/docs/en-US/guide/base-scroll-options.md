@@ -280,3 +280,73 @@ This implements a list of vertical clickable scrolling effects. so let's list th
       specifiedIndexAsContent: 1 // use div.content2 as BetterScroll's content
    })
    ```
+
+## quadrant <Badge text='2.3.0' />
+   - **Type**: `1 | 2 | 3 | 4`
+   - **Default**: `1`
+   - **Usage**: When the ancestor elements of BetterScroll's wrapper DOM are forced to rotate by CSS, the original displacements in the x and y directions need to perform a certain transformation to ensure a reasonable interaction.
+
+   ```html
+   <style>
+   /* wrapper's parent DOM rotated*/
+   .container {
+      transform: rotate(90deg);
+   }
+   </style>
+   <div class="container">
+      <div class="wrapper">
+         <div class="content">
+            <div class="content-item">1.1</div>
+            <div class="content-item">1.2</div>
+         </div>
+      </div>
+   </div>
+   ```
+
+   ```js
+   let bs = new BScroll('.wrapper', {
+      quadrant: 2
+   })
+   ```
+
+   1. When the rotation angle of the parent element or ancestor element of the `wrapper` is (315, 45], the quadrant can keep the default value;
+   2. When the rotation angle of the parent element or ancestor element of the `wrapper` is (45, 135],Especially **90 degrees**,  the quadrant **must** be `2`;
+   3. When the rotation angle of the parent element or ancestor element of the `wrapper` is (135, 225],Especially **180 degrees**,  the quadrant **must** be `3`;
+   4. When the rotation angle of the parent element or ancestor element of the `wrapper` is (225, 315],Especially **270 degrees**,  the quadrant **must** be `4`;
+   5. When the rotation angle is special, such as 30 degrees or 200 degrees, you may not be satisfied with the built-in transformation logic. You can customize your own transformation logic through the `coordinateTransformation` hook.
+
+   ```js
+   let bs = new BScroll('.wrapper', {
+      quadrant: 1 // default value
+   })
+   bs.scroller.actions.hooks.on(
+      bs.scroller.actions.hooks.eventTypes.coordinateTransformation,
+      (transformateDeltaData) => {
+         // get user finger moved distance
+         const originDeltaX = transformateDeltaData.deltaX
+         const originDeltaY = transformateDeltaData.deltaY
+
+         // apply transformation
+         transformateDeltaData.deltaX = originDeltaY
+         transformateDeltaData.deltaY = originDeltaX
+
+         // transformateDeltaData.deltaX will be used as content DOM style's translateX
+         // transformateDeltaData.deltaY will be used as content DOM style's translateY
+      }
+   )
+   ```
+
+   For example: Use CSS to flip the horizontal scrolling BetterScroll.
+
+   <demo qrcode-url="core/horizontal-rotated">
+      <template slot="code-template">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?template
+      </template>
+      <template slot="code-script">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?script
+      </template>
+      <template slot="code-style">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?style
+      </template>
+      <core-horizontal-rotated slot="demo"></core-horizontal-rotated>
+   </demo>

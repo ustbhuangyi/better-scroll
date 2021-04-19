@@ -111,6 +111,40 @@ BetterScroll 有多种滚动模式。
   <core-specified-content slot="demo"></core-specified-content>
 </demo>
 
+## quadrant <Badge text='2.3.0' />
+
+对于 `2.3.0` 版本，如果 BetterScroll 的 wrapper DOM 的父元素或者祖先元素发生旋转，可以通过 `quadrant` 选项来修正用户的交互行为。
+
+- **竖向滚动强制变换成横向滚动**
+
+<demo qrcode-url="core/vertical-rotated">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?style
+  </template>
+  <core-vertical-rotated slot="demo"></core-vertical-rotated>
+</demo>
+
+- **横向滚动强制翻转**
+
+<demo qrcode-url="core/horizontal-rotated">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?style
+  </template>
+  <core-horizontal-rotated slot="demo"></core-horizontal-rotated>
+</demo>
+
 ## 温馨提示
 
   :::tip

@@ -1,6 +1,6 @@
 <template>
   <div class="horizontal-rotated-container">
-    <div class="description">Force flipping layout via CSS</div>
+    <div class="description">Flipping layout via CSS</div>
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
         <div class="scroll-item" v-for="num in nums" :key="num">{{num}}</div>
@@ -38,11 +38,12 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-/* force flipping by CSS */
+/* flipping by CSS */
 .scroll-wrapper
   transform rotate(180deg)
 .horizontal-rotated-container
   .description
+    margin-bottom 40px
     text-align center
   .scroll-wrapper
     height 100px

@@ -278,3 +278,73 @@ let scroll = new BScroll('.wrapper',{
       specifiedIndexAsContent: 1 // 使用 div.content2 作为 BetterScroll 的 content
    })
    ```
+
+## quadrant <Badge text='2.3.0' />
+   - **类型**：`1 | 2 | 3 | 4`
+   - **默认值**：`1`
+   - **作用**：当 BetterScroll 的 wrapper DOM 的祖先元素被 CSS 强制旋转之后，原先的 x 以及 y 方向的位移需要发生一定的变换才能保证交互合理
+
+   ```html
+   <style>
+   /* wrapper 的父元素强制旋转 */
+   .container {
+      transform: rotate(90deg);
+   }
+   </style>
+   <div class="container">
+      <div class="wrapper">
+         <div class="content">
+            <div class="content-item">1.1</div>
+            <div class="content-item">1.2</div>
+         </div>
+      </div>
+   </div>
+   ```
+
+   ```js
+   let bs = new BScroll('.wrapper', {
+      quadrant: 2
+   })
+   ```
+
+   1. 当 wrapper 的父元素或者祖先元素旋转的角度为 (315, 45]，quadrant 保持默认值即可；
+   2. 当 wrapper 的父元素或者祖先元素旋转的角度为 (45, 135]，quadrant **建议**为 `2`，尤其是 90 度，quadrant **必须**为 `2`；
+   3. 当 wrapper 的父元素或者祖先元素旋转的角度为 (135, 225]，quadrant **建议**为 `3`，尤其是 180 度，quadrant **必须**为 `3`；
+   4. 当 wrapper 的父元素或者祖先元素旋转的角度为 (225, 315]，quadrant **建议**为 `4`，尤其是 270 度，quadrant **必须**为 `4`；
+   5. 当旋转角度比较特殊的时候，比如 30 度，200 度，你可能不满意内置的变换逻辑，你可以通过 `coordinateTransformation` hook 来自定义你自己的变换逻辑。
+
+   ```js
+   let bs = new BScroll('.wrapper', {
+      quadrant: 1 // 保持默认即可
+   })
+   bs.scroller.actions.hooks.on(
+      bs.scroller.actions.hooks.eventTypes.coordinateTransformation,
+      (transformateDeltaData) => {
+         // 获取用户手指移动的距离
+         const originDeltaX = transformateDeltaData.deltaX
+         const originDeltaY = transformateDeltaData.deltaY
+
+         // 变换位移
+         transformateDeltaData.deltaX = originDeltaY
+         transformateDeltaData.deltaY = originDeltaX
+
+         // transformateDeltaData.deltaX 最终作用在 BetterScroll content DOM 的 translateX
+         // transformateDeltaData.deltaY 最终作用在 BetterScroll content DOM 的 translateY
+      }
+   )
+   ```
+
+   例如：使用 CSS 将横向滚动的 BetterScroll 翻转。
+
+   <demo qrcode-url="core/horizontal-rotated">
+      <template slot="code-template">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?template
+      </template>
+      <template slot="code-script">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?script
+      </template>
+      <template slot="code-style">
+         <<< @/examples/vue/components/core/horizontal-rotated.vue?style
+      </template>
+      <core-horizontal-rotated slot="demo"></core-horizontal-rotated>
+   </demo>

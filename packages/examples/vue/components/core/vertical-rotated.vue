@@ -1,6 +1,6 @@
 <template>
   <div class="vertical-rotated-container">
-    <div class="description">Force horizontal layout via CSS</div>
+    <div class="description">Horizontal layout via CSS</div>
     <div class="scroll-wrapper" ref="scroll">
       <div class="scroll-content">
         <div class="scroll-item" v-for="num in nums" :key="num">{{num}}</div>
@@ -36,7 +36,7 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
 
-/* force horizontal by CSS */
+/* horizontal by CSS */
 .scroll-wrapper
   transform rotate(90deg)
 .vertical-rotated-container

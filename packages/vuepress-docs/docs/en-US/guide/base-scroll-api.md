@@ -670,6 +670,34 @@ A hook is a concept extended from version 2.0. Its essence is the same as an eve
         hooks.on('beforeEnd', (pos, duration) => { console.log(pos) })
       ```
 
+    - **coordinateTransformation**
+      - **Trigger timing**: After calculating the offset of the user's finger, before scrolling occurs
+      - **Arguments**: transformateDeltaData object
+        - `{ deltaX: number, deltaY: number } transformateDeltaData`
+      - **Usage**
+      ```js
+      let bs = new BScroll('.wrapper', {
+          quadrant: 1 // default value
+      })
+      bs.scroller.actions.hooks.on(
+        'coordinateTransformation',
+        (transformateDeltaData) => {
+          // get user finger moved distance
+          const originDeltaX = transformateDeltaData.deltaX
+          const originDeltaY = transformateDeltaData.deltaY
+
+          // apply transformation
+          transformateDeltaData.deltaX = originDeltaY
+          transformateDeltaData.deltaY = originDeltaX
+
+          // transformateDeltaData.deltaX will be used as content DOM style's translateX
+          // transformateDeltaData.deltaY will be used as content DOM style's translateY
+        }
+      )
+      ```
+
+      This hook is usually to fix the logic of user-defined displacement transformation when the ancestor element of the wrapper DOM of BetterScroll is rotated. In most cases, it only needs to be configured [quadrant](./base-scroll-options.html#quadrant).
+
   - **Behavior.hooks**
 
     - **beforeComputeBoundary**

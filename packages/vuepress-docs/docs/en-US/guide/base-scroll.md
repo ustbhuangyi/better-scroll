@@ -111,6 +111,39 @@ For the `2.0.4` version, you can specify a child of **wrapper** as **content**. 
   <core-specified-content slot="demo"></core-specified-content>
 </demo>
 
+## quadrant <Badge text='2.3.0' />
+
+For the `2.3.0` version, If the parent element or ancestor element of BetterScroll wrapper DOM rotates, you can use the `quadrant` option to modify the user's interactive behavior.
+
+- **Vertical becomes Horizontal**
+
+<demo qrcode-url="core/vertical-rotated">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/vertical-rotated.vue?style
+  </template>
+  <core-vertical-rotated slot="demo"></core-vertical-rotated>
+</demo>
+
+- **Horizontal scroll flipped**
+
+<demo qrcode-url="core/horizontal-rotated">
+  <template slot="code-template">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/core/horizontal-rotated.vue?style
+  </template>
+  <core-horizontal-rotated slot="demo"></core-horizontal-rotated>
+</demo>
 
 ## Warm Tips
 

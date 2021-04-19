@@ -665,6 +665,30 @@ BetterScroll 提供了很多灵活的 API，当我们基于 BetterScroll 去实�
         const hooks = bs.scroller.actions.hooks
         hooks.on('beforeEnd', (pos, duration) => { console.log(pos) })
       ```
+    
+    - **coordinateTransformation** <Badge text='2.3.0' />
+      - **触发时机**：计算完用户手指的偏移量之后，发生滚动之前。
+      - **参数**：
+        - `{ deltaX: number, deltaY: number } transformateDeltaData`：偏移量对象
+      - **示例**
+      ```js
+        import BScroll from '@better-scroll/core'
+        const bs = new BScroll('.wrapper', {})
+        const hooks = bs.scroller.actions.hooks
+        hooks.on('coordinateTransformation', (：transformateDeltaData) => { 
+          // 获取用户手指移动的距离
+         const originDeltaX = transformateDeltaData.deltaX
+         const originDeltaY = transformateDeltaData.deltaY
+
+         // 变换位移
+         transformateDeltaData.deltaX = originDeltaY
+         transformateDeltaData.deltaY = originDeltaX
+
+         // transformateDeltaData.deltaX 最终作用在 BetterScroll content DOM 的 translateX
+         // transformateDeltaData.deltaY 最终作用在 BetterScroll content DOM 的 translateY
+        })
+      ```
+      该钩子通常是为了修正当 BetterScroll 的 wrapper DOM 的祖先元素发生旋转的时候，用户自定义位移变换的逻辑，大部分情况下只需要配置 [quadrant](./base-scroll-options.html#quadrant) 即可。
 
   - **Behavior.hooks**
 
