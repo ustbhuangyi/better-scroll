@@ -8,12 +8,12 @@ const nums2 = createArray(60)
 const DynamicContent = () => {
   const [switcher, setSwitcher] = useState(false)
 
+  const wrapperRef = useRef(null)
   const scrollRef = useRef(null)
-  const bs = useRef(null)
 
   useEffect(() => {
-    if (!bs.current) {
-      const BS = (bs.current = new BScroll(scrollRef.current, {
+    if (!scrollRef.current) {
+      const BS = (scrollRef.current = new BScroll(wrapperRef.current, {
         probeType: 3,
       }))
 
@@ -28,11 +28,11 @@ const DynamicContent = () => {
         console.log('scrollingEnd')
       })
     }
-  }, [scrollRef.current])
+  }, [])
 
   useEffect(() => {
-    if (bs.current) {
-      bs.current.refresh()
+    if (scrollRef.current) {
+      scrollRef.current.refresh()
     }
   }, [switcher])
 
@@ -42,7 +42,7 @@ const DynamicContent = () => {
 
   return (
     <div className="core-dynamic-content-container view">
-      <div className="scroll-wrapper" ref={scrollRef}>
+      <div className="scroll-wrapper" ref={wrapperRef}>
         {switcher ? (
           <div className="scroll-content c2" key="c2">
             {nums2.map((item) => (

@@ -40,12 +40,12 @@ const handleClick = (item) => {
 }
 
 const Default = () => {
+  const wrapperRef = useRef(null)
   const scrollRef = useRef(null)
-  const bs = useRef(null)
 
   useEffect(() => {
-    if (!bs.current) {
-      const BS = (bs.current = new BScroll(scrollRef.current, {
+    if (!scrollRef.current) {
+      const BS = (scrollRef.current = new BScroll(wrapperRef.current, {
         probeType: 3,
         click: true,
       }))
@@ -60,11 +60,11 @@ const Default = () => {
         console.log(pos)
       })
     }
-  }, [scrollRef.current])
+  }, [])
 
   return (
     <div className="core-container view">
-      <div className="scroll-wrapper" ref={scrollRef}>
+      <div className="scroll-wrapper" ref={wrapperRef}>
         <div className="scroll-content">
           {emojis.map((item, index) => (
             <div

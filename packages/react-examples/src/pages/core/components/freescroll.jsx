@@ -2,12 +2,12 @@ import React, { useRef, useEffect } from 'react'
 import BScroll from '@better-scroll/core'
 
 const FreeScroll = () => {
+  const wrapperRef = useRef(null)
   const scrollRef = useRef(null)
-  const bs = useRef(null)
 
   useEffect(() => {
-    if (!bs.current) {
-      bs.current = new BScroll(scrollRef.current, {
+    if (!scrollRef.current) {
+      scrollRef.current = new BScroll(wrapperRef.current, {
         freeScroll: true,
         bounce: {
           bottom: false,
@@ -17,12 +17,12 @@ const FreeScroll = () => {
         },
       })
     }
-  }, [scrollRef.current])
+  }, [])
 
   return (
     <div className="free-scroll-container view">
       <div className="free-scroll-wrapper">
-        <div className="scroll-wrapper" ref={scrollRef}>
+        <div className="scroll-wrapper" ref={wrapperRef}>
           <div className="scroll-content">
             <p>
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do

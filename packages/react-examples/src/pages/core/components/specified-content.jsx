@@ -5,12 +5,12 @@ const createArray = (length) => Array.from({ length }, (_v, i) => i + 1)
 const nums = createArray(30)
 
 const SpecifiedContent = () => {
+  const wrapperRef = useRef(null)
   const scrollRef = useRef(null)
-  const bs = useRef(null)
 
   useEffect(() => {
-    if (!bs.current) {
-      const BS = (bs.current = new BScroll(scrollRef.current, {
+    if (!scrollRef.current) {
+      const BS = (scrollRef.current = new BScroll(wrapperRef.current, {
         specifiedIndexAsContent: 1,
         probeType: 3,
       }))
@@ -22,11 +22,11 @@ const SpecifiedContent = () => {
         console.log('scrollingEnd')
       })
     }
-  }, [scrollRef.current])
+  }, [])
 
   return (
     <div className="core-specified-content-container view">
-      <div className="scroll-wrapper" ref={scrollRef}>
+      <div className="scroll-wrapper" ref={wrapperRef}>
         <div className="ignore-content">
           The Blue area is not taken as BetterScroll's content
         </div>

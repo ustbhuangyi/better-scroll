@@ -1,7 +1,6 @@
-import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import Router from './router.jsx'
+import Router from './router'
 
 const examples = [
   {

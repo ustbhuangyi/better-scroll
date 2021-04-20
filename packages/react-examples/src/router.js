@@ -56,8 +56,10 @@ const Router = ({ routes }) => {
   return <Switch>{routes.map((route) => renderRoute(route))}</Switch>
 }
 
-export default () => (
+const RouterView = () => (
   <Suspense fallback={null}>
     <Router routes={ROUTES} />
   </Suspense>
 )
+
+export default RouterView

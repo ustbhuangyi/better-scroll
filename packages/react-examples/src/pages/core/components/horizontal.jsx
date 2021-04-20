@@ -17,12 +17,12 @@ const emojis = [
 ]
 
 const Horizontal = () => {
+  const wrapperRef = useRef(null)
   const scrollRef = useRef(null)
-  const bs = useRef(null)
 
   useEffect(() => {
-    if (!bs.current) {
-      const BS = (bs.current = new BScroll(scrollRef.current, {
+    if (!scrollRef.current) {
+      const BS = (scrollRef.current = new BScroll(wrapperRef.current, {
         scrollX: true,
         probeType: 3, // listening scroll event
       }))
@@ -37,11 +37,11 @@ const Horizontal = () => {
         console.log(pos)
       })
     }
-  }, [scrollRef.current])
+  }, [])
 
   return (
     <div className="horizontal-container view">
-      <div className="scroll-wrapper" ref={scrollRef}>
+      <div className="scroll-wrapper" ref={wrapperRef}>
         <div className="scroll-content">
           {emojis.map((item, index) => (
             <div key={index} className="scroll-item">
