@@ -30,6 +30,18 @@ const ROUTES = [
         path: '/core/freescroll',
         component: lazy(() => import('./pages/core/components/freescroll')),
       },
+      {
+        path: '/core/vertical-rotated',
+        component: lazy(() =>
+          import('./pages/core/components/vertical-rotated')
+        ),
+      },
+      {
+        path: '/core/horizontal-rotated',
+        component: lazy(() =>
+          import('./pages/core/components/horizontal-rotated')
+        ),
+      },
     ],
   },
 ]

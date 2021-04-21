@@ -113,3 +113,54 @@
           padding: 20px
           line-height: 200%
           margin: 0
+
+.vertical-rotated-container
+  .description
+    text-align center
+  .scroll-wrapper
+    height 250px
+    width 100px
+    position relative
+    overflow hidden
+    margin 0 auto
+    border 1px solid #ccc
+    transform rotate(90deg)
+    .scroll-item
+      height 100px
+      width 100px
+      line-height 100px
+      font-size 24px
+      font-weight bold
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+
+.horizontal-rotated-container
+  .description
+    margin-bottom 40px
+    text-align center
+  .scroll-wrapper
+    height 100px
+    width 250px
+    position relative
+    overflow hidden
+    white-space nowrap
+    margin 0 auto
+    border 1px solid #ccc
+    transform rotate(180deg)
+    .scroll-content
+      display inline-block
+    .scroll-item
+      height 100px
+      width 100px
+      line-height 100px
+      font-size 24px
+      font-weight bold
+      text-align center
+      display inline-block
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
