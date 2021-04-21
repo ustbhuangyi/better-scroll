@@ -66,10 +66,6 @@ let wrapper = document.getElementById("wrapper")
 let bs = new BScroll(wrapper, {})
 ```
 
-## Wechat
-
-<img src="" />
-
 ## What is BetterScroll ?
 
 BetterScroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (PC supported already). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of BetterScroll are compatible with iscroll on the whole. What's more, BetterScroll also extends some features and optimizes for performance based on iscroll.
