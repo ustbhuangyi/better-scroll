@@ -215,7 +215,7 @@ getPackagesName().forEach((name) => {
   webpackConfig.resolve.alias.set(`${name}$`, `${name}/src/index.ts`)
 })
 
-let config = webpackConfig.toConfig()
+let config = { ...webpackConfig.toConfig(), devServer: { host: '0.0.0.0', disableHostCheck: true }}
 // run test e2e
 if (e2e) {
   config.devServer.setup = (app, server) => {
