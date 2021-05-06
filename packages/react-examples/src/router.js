@@ -54,6 +54,18 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/observe-image',
+    component: lazy(() => import('./pages/observe-image')),
+    routes: [
+      {
+        path: '/observe-image/',
+        component: lazy(() =>
+          import('./pages/observe-image/components/default')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

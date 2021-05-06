@@ -11,6 +11,10 @@ const examples = [
     name: 'observe-dom',
     path: '/observe-dom/',
   },
+  {
+    name: 'observe-image',
+    path: '/observe-image/',
+  },
 ]
 
 const App = () => {
