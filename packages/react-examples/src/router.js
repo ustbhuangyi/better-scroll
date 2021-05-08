@@ -66,6 +66,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/slide',
+    component: lazy(() => import('./pages/slide')),
+    routes: [
+      {
+        path: '/slide/banner',
+        component: lazy(() => import('./pages/slide/components/banner')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

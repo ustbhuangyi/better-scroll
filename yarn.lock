@@ -1973,109 +1973,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@better-scroll/core@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/core/download/@better-scroll/core-2.3.0.tgz#5f05580db3b3f424909183e14215c514374d7e87"
-  integrity sha1-XwVYDbOz9CSQkYPhQhXFFDdNfoc=
-  dependencies:
-    "@better-scroll/shared-utils" "^2.3.0"
-
-"@better-scroll/indicators@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/indicators/download/@better-scroll/indicators-2.3.0.tgz#1118a252ebf0b7d6d4b71761238b655b33f787ad"
-  integrity sha1-ERiiUuvwt9bUtxdhI4tlWzP3h60=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/infinity@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/infinity/download/@better-scroll/infinity-2.3.0.tgz#00e14321f8b1c3116942ce66e11c78eb99a1206b"
-  integrity sha1-AOFDIfixwxFpQs5m4Rx465mhIGs=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/mouse-wheel@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/mouse-wheel/download/@better-scroll/mouse-wheel-2.3.0.tgz#ff320e6391dc258731d369a8ed0ac8ef652da3b0"
-  integrity sha1-/zIOY5HcJYcx02mo7QrI72Uto7A=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/movable@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/movable/download/@better-scroll/movable-2.3.0.tgz#d639ae62e5e3bb4d1e97f2c67e410ea575771e80"
-  integrity sha1-1jmuYuXju00el/LGfkEOpXV3HoA=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/nested-scroll@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/nested-scroll/download/@better-scroll/nested-scroll-2.3.0.tgz#17b3e3abe2afd60b7064273bce2bd7f5d07447a8"
-  integrity sha1-F7Pjq+Kv1gtwZCc7zivX9dB0R6g=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/observe-dom@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/observe-dom/download/@better-scroll/observe-dom-2.3.0.tgz#6b7f5987f75d3256c7cf07aaafbc67459e5d6325"
-  integrity sha1-a39Zh/ddMlbHzweqr7xnRZ5dYyU=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/observe-image@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/observe-image/download/@better-scroll/observe-image-2.3.0.tgz#847f83e4c37d67a9e5ee6149a7ea52e25d590288"
-  integrity sha1-hH+D5MN9Z6nl7mFJp+pS4l1ZAog=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/pull-down@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/pull-down/download/@better-scroll/pull-down-2.3.0.tgz#258885d929ab3283b74a7e82bb7fd0b8640f0874"
-  integrity sha1-JYiF2SmrMoO3Sn6Cu3/QuGQPCHQ=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/pull-up@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/pull-up/download/@better-scroll/pull-up-2.3.0.tgz#471e984b3edfb70ee71a7df82671518830a12b11"
-  integrity sha1-Rx6YSz7ftw7nGn34JnFRiDChKxE=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/scroll-bar@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/scroll-bar/download/@better-scroll/scroll-bar-2.3.0.tgz#d5ebaafbfc8fad29424e5ecd10fc6d454081b3be"
-  integrity sha1-1euq+/yPrSlCTl7NEPxtRUCBs74=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/shared-utils@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/shared-utils/download/@better-scroll/shared-utils-2.3.0.tgz#7f80b198d73a2844f7b4287d197e18d8bc032d6e"
-  integrity sha1-f4CxmNc6KET3tCh9GX4Y2LwDLW4=
-
-"@better-scroll/slide@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/slide/download/@better-scroll/slide-2.3.0.tgz#eb3386bbfbbb3b46d04beb277aa7ec570f4963f0"
-  integrity sha1-6zOGu/u7O0bQS+sneqfsVw9JY/A=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/wheel@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/wheel/download/@better-scroll/wheel-2.3.0.tgz#4092a582dd7efd8d937872dbb1a75324f4d5d090"
-  integrity sha1-QJKlgt1+/Y2TeHLbsadTJPTV0JA=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
-"@better-scroll/zoom@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.nlark.com/@better-scroll/zoom/download/@better-scroll/zoom-2.3.0.tgz#64bfa41cddd1ce79a8228f2c2922f86f85ad1de1"
-  integrity sha1-ZL+kHN3RznmoIo8sKSL4b4WtHeE=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -5579,26 +5476,6 @@ before-after-hook@^2.0.0:
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
   integrity sha512-IWIbu7pMqyw3EAJHzzHbWa85b6oud/yfKYg5rqB5hNE8CeMi3nX+2C2sj0HswfblST86hpVEOAb9x34NZd6P7A==
 
-better-scroll@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.nlark.com/better-scroll/download/better-scroll-2.3.0.tgz#c3be6c2894fd250bf59ea19ff8a4deb9aeeec0f9"
-  integrity sha1-w75sKJT9JQv1nqGf+KTeua7uwPk=
-  dependencies:
-    "@better-scroll/core" "^2.3.0"
-    "@better-scroll/indicators" "^2.3.0"
-    "@better-scroll/infinity" "^2.3.0"
-    "@better-scroll/mouse-wheel" "^2.3.0"
-    "@better-scroll/movable" "^2.3.0"
-    "@better-scroll/nested-scroll" "^2.3.0"
-    "@better-scroll/observe-dom" "^2.3.0"
-    "@better-scroll/observe-image" "^2.3.0"
-    "@better-scroll/pull-down" "^2.3.0"
-    "@better-scroll/pull-up" "^2.3.0"
-    "@better-scroll/scroll-bar" "^2.3.0"
-    "@better-scroll/slide" "^2.3.0"
-    "@better-scroll/wheel" "^2.3.0"
-    "@better-scroll/zoom" "^2.3.0"
-
 bfj@^7.0.2:
   version "7.0.2"
   resolved "https://registry.npm.taobao.org/bfj/download/bfj-7.0.2.tgz#1988ce76f3add9ac2913fd8ba47aad9e651bfbb2"
@@ -6315,6 +6192,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npm.taobao.org/classnames/download/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
+  integrity sha1-38+jiR4wbsHa0QXQ6I9EF7hTXo4=
 
 clean-css@4.2.x, clean-css@^4.2.3:
   version "4.2.3"
