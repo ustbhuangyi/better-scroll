@@ -7,6 +7,10 @@ const examples = [
     path: '/slide/banner',
     name: 'banner slide',
   },
+  {
+    path: '/slide/fullpage',
+    name: 'page slide',
+  },
 ]
 
 const Core = (props) => {

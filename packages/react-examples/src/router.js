@@ -74,6 +74,10 @@ const ROUTES = [
         path: '/slide/banner',
         component: lazy(() => import('./pages/slide/components/banner')),
       },
+      {
+        path: '/slide/fullpage',
+        component: lazy(() => import('./pages/slide/components/fullpage')),
+      },
     ],
   },
 ]
