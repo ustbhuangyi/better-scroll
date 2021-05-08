@@ -28,7 +28,7 @@ webpackConfig
     .end()
   .output
     .path(isProd ? path.resolve(__dirname, '../dist/vue') : undefined)
-    .publicPath(isProd ? 'https://better-scroll.github.io/examples/' : '/')
+    .publicPath(isProd ? '/examples/' : '/')
     .filename(isProd ? 'static/js/[name].[chunkhash].js' : '[name].js')
     .chunkFilename(isProd ? 'static/js/[id].[chunkhash].js' : '[name].js')
     .end()
