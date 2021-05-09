@@ -11,6 +11,10 @@ const examples = [
     path: '/slide/fullpage',
     name: 'page slide',
   },
+  {
+    path: '/slide/vertical',
+    name: 'vertical slide',
+  },
 ]
 
 const Core = (props) => {
