@@ -15,6 +15,10 @@ const examples = [
     path: '/slide/vertical',
     name: 'vertical slide',
   },
+  {
+    path: '/slide/dynamic',
+    name: 'dynamic slide（v2.1.0）',
+  },
 ]
 
 const Core = (props) => {

@@ -82,6 +82,10 @@ const ROUTES = [
         path: '/slide/vertical',
         component: lazy(() => import('./pages/slide/components/vertical')),
       },
+      {
+        path: '/slide/dynamic',
+        component: lazy(() => import('./pages/slide/components/dynamic')),
+      },
     ],
   },
 ]
