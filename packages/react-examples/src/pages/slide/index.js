@@ -19,6 +19,10 @@ const examples = [
     path: '/slide/dynamic',
     name: 'dynamic slide（v2.1.0）',
   },
+  {
+    path: '/slide/specified',
+    name: 'specified index slide（v2.3.0）',
+  },
 ]
 
 const Core = (props) => {
