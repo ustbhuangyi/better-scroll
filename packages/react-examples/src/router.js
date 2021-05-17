@@ -94,6 +94,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/zoom',
+    component: lazy(() => import('./pages/zoom')),
+    routes: [
+      {
+        path: '/zoom/',
+        component: lazy(() => import('./pages/zoom/components/default')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

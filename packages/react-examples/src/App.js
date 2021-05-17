@@ -19,6 +19,10 @@ const examples = [
     name: 'slide',
     path: '/slide',
   },
+  {
+    name: 'zoom',
+    path: '/zoom/',
+  },
 ]
 
 const App = () => {

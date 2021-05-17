@@ -1,0 +1,45 @@
+.zoom-default
+  .zoom-wrapper
+    width 100%
+    overflow hidden
+    .zoom-items
+      display flex
+      flex-direction row
+      flex-wrap wrap
+      align-content space-between
+      .grid-item
+        flex 1 1 25%
+        box-sizing border-box
+        height 52px
+        line-height 52px
+        border 1px solid #eee
+        text-align center
+        &:nth-child(2n)
+          background-color #b3d4a8
+        &:nth-child(2n+1)
+          background-color #b6b7a3
+  .btn-wrap
+    margin-top 20px
+    display flex
+    justify-content center
+    button
+      margin 0 10px
+      padding 10px
+      color #fff
+      border-radius 4px
+      background-color #666
+  .linkwork-wrap
+    margin-top 50px
+    p
+      margin 10px 0
+      font-size 16px
+      font-weight bold
+      text-align center
+  .linkwork-block
+    margin 10px auto
+    width 60px
+    height 60px
+    border-radius 50%
+    img {
+      width 100%
+    }
