@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import classNames from 'classnames'
 import { CSSTransition } from 'react-transition-group'
 import BScroll from '@better-scroll/core'
 import Wheel from '@better-scroll/wheel'
 
 BScroll.use(Wheel)
 
-const DATA = [
+const DATA1 = [
   {
     text: 'Venomancer',
     value: 1,
-    disabled: 'wheel-disabled-item',
   },
   {
     text: 'Nerubian Weaver',
@@ -50,6 +48,41 @@ const DATA = [
   },
 ]
 
+const DATA2 = [
+  {
+    text: 'Durable',
+    value: 'a',
+  },
+  {
+    text: 'Pusher',
+    value: 'b',
+  },
+  {
+    text: 'Carry',
+    value: 'c',
+  },
+  {
+    text: 'Nuker',
+    value: 'd',
+  },
+  {
+    text: 'Support',
+    value: 'e',
+  },
+  {
+    text: 'Jungle',
+    value: 'f',
+  },
+  {
+    text: 'Escape',
+    value: 'g',
+  },
+  {
+    text: 'Initiator',
+    value: 'h',
+  },
+]
+
 const stopPropagation = (e) => {
   e.stopPropagation()
 }
@@ -58,42 +91,48 @@ const preventDefault = (e) => {
   e.preventDefault()
 }
 
-const OneColumn = () => {
+const pickerData = [DATA1, DATA2]
+
+const DoubleColumn = () => {
   const [visible, setVisible] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(2)
+  const [selectedIndexPair, setSelectedIndexPair] = useState([0, 0])
   const [selectedText, setSelectedText] = useState('open')
 
   const wrapperRef = useRef(null)
-  const scrollRef = useRef(null)
+  const scrollRef = useRef([])
 
   useEffect(() => {
     if (visible) {
-      if (!scrollRef.current) {
-        const wrapper = wrapperRef.current.children[0]
-        const BS = (scrollRef.current = new BScroll(wrapper, {
-          wheel: {
-            wheelWrapperClass: 'wheel-scroll',
-            wheelItemClass: 'wheel-item',
-            wheelDisabledItemClass: 'wheel-disabled-item',
-            selectedIndex,
-          },
-          useTransition: false,
-          probeType: 3,
-        }))
+      const createWheel = (wheelWrapper, i) => {
+        if (scrollRef.current[i]) {
+          scrollRef.current[i].refresh()
+        } else {
+          const BS = (scrollRef.current[i] = new BScroll(
+            wheelWrapper.children[i],
+            {
+              wheel: {
+                wheelWrapperClass: 'wheel-scroll',
+                wheelItemClass: 'wheel-item',
+                selectedIndex: selectedIndexPair[i],
+              },
+              useTransition: false,
+              probeType: 3,
+            }
+          ))
 
-        // < v2.1.0
-        BS.on('scrollEnd', () => {
-          console.log('BS.getSelectedIndex()', BS.getSelectedIndex())
-        })
-        // v2.1.0, only when selectedIndex changed
-        BS.on('wheelIndexChanged', (index) => {
-          console.log(index)
-        })
-      } else {
-        scrollRef.current.refresh()
+          // < v2.1.0
+          BS.on('scrollEnd', () => {
+            console.log('BS.getSelectedIndex()', BS.getSelectedIndex())
+          })
+        }
+      }
+
+      const wrapper = wrapperRef.current
+      for (let i = 0; i < pickerData.length; i++) {
+        createWheel(wrapper, i)
       }
     }
-  }, [visible, selectedIndex])
+  }, [visible, selectedIndexPair])
 
   const handleShow = () => {
     if (visible) {
@@ -107,16 +146,31 @@ const OneColumn = () => {
   }
 
   const handleConfirm = () => {
-    /*
-     * if bs is scrolling, force it stop at the nearest wheel-item
-     * or you can use 'restorePosition' method as the below
-     */
-    scrollRef.current.stop()
+    scrollRef.current.forEach((wheel) => {
+      /*
+       * if bs is scrolling, force it stop at the nearest wheel-item
+       * or you can use 'restorePosition' method as the below
+       */
+      // wheel.stop()
+      /*
+       * if bs is scrolling, restore it to the start position
+       * it is same with iOS picker and web Select element implementation
+       * supported at v2.1.0
+       */
+      wheel.restorePosition()
+    })
     handleHide()
-    const currentSelectedIndex = scrollRef.current.getSelectedIndex()
-    setSelectedIndex(currentSelectedIndex)
+    const currentSelectedIndexPair = scrollRef.current.map((wheel) =>
+      wheel.getSelectedIndex()
+    )
+    setSelectedIndexPair(currentSelectedIndexPair)
     setSelectedText(
-      `${DATA[currentSelectedIndex].text}-${currentSelectedIndex}`
+      pickerData
+        .map((data, i) => {
+          const index = currentSelectedIndexPair[i]
+          return `${data[index].text}-${index}`
+        })
+        .join('__')
     )
   }
 
@@ -126,7 +180,9 @@ const OneColumn = () => {
      * it is same with iOS picker and web Select element implementation
      * supported at v2.1.0
      */
-    scrollRef.current.restorePosition()
+    scrollRef.current.forEach((wheel) => {
+      wheel.restorePosition()
+    })
     handleHide()
   }
 
@@ -166,21 +222,17 @@ const OneColumn = () => {
                 <div className="mask-top border-bottom-1px"></div>
                 <div className="mask-bottom border-top-1px"></div>
                 <div className="wheel-wrapper" ref={wrapperRef}>
-                  <div className="wheel">
-                    <ul className="wheel-scroll">
-                      {DATA.map((item, index) => (
-                        <li
-                          key={index}
-                          className={classNames([
-                            'wheel-item',
-                            { 'wheel-disabled-item': item.disabled },
-                          ])}
-                        >
-                          {item.text}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {pickerData.map((data, index) => (
+                    <div className="wheel" key={index}>
+                      <ul className="wheel-scroll">
+                        {data.map((item, index) => (
+                          <li key={index} className="wheel-item">
+                            {item.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="picker-footer"></div>
@@ -192,4 +244,4 @@ const OneColumn = () => {
   )
 }
 
-export default OneColumn
+export default DoubleColumn

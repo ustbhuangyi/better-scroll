@@ -112,6 +112,12 @@ const ROUTES = [
         path: '/picker/one-column',
         component: lazy(() => import('./pages/picker/components/one-column')),
       },
+      {
+        path: '/picker/double-column',
+        component: lazy(() =>
+          import('./pages/picker/components/double-column')
+        ),
+      },
     ],
   },
 ]

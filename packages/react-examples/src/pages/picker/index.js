@@ -7,6 +7,10 @@ const examples = [
     path: '/picker/one-column',
     name: 'One Column Picker',
   },
+  {
+    path: '/picker/double-column',
+    name: 'Double Column Picker',
+  },
 ]
 
 const Picker = (props) => {
