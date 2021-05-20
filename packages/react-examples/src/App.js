@@ -23,6 +23,10 @@ const examples = [
     name: 'zoom',
     path: '/zoom/',
   },
+  {
+    name: 'picker',
+    path: '/picker/',
+  },
 ]
 
 const App = () => {

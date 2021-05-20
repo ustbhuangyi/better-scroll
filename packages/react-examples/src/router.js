@@ -104,6 +104,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/picker',
+    component: lazy(() => import('./pages/picker')),
+    routes: [
+      {
+        path: '/picker/one-column',
+        component: lazy(() => import('./pages/picker/components/one-column')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
