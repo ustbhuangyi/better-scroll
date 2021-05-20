@@ -124,11 +124,9 @@ const OneColumn = () => {
 
   return (
     <div className="container view">
-      <ul className="example-list">
-        <li className="example-item" onClick={handleShow}>
-          <span className="open">{selectedText}</span>
-        </li>
-      </ul>
+      <div className="container-btn" onClick={handleShow}>
+        {selectedText}
+      </div>
       <CSSTransition
         in={visible}
         classNames="picker-fade"
