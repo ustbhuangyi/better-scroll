@@ -27,6 +27,10 @@ const examples = [
     name: 'picker',
     path: '/picker/',
   },
+  {
+    name: 'pullup',
+    path: '/pullup/',
+  },
 ]
 
 const App = () => {

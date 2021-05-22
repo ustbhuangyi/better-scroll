@@ -126,6 +126,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/pullup',
+    component: lazy(() => import('./pages/pullup')),
+    routes: [
+      {
+        path: '/pullup/',
+        component: lazy(() => import('./pages/pullup/components/default')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
