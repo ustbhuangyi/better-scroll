@@ -11,6 +11,10 @@ const examples = [
     path: '/picker/double-column',
     name: 'Double Column Picker',
   },
+  {
+    path: '/picker/linkage-column',
+    name: 'Linkage Column Picker',
+  },
 ]
 
 const Picker = (props) => {

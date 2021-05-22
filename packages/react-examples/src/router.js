@@ -118,6 +118,12 @@ const ROUTES = [
           import('./pages/picker/components/double-column')
         ),
       },
+      {
+        path: '/picker/linkage-column',
+        component: lazy(() =>
+          import('./pages/picker/components/linkage-column')
+        ),
+      },
     ],
   },
 ]
