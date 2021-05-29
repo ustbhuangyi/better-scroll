@@ -15,6 +15,10 @@ const examples = [
     path: '/scrollbar/custom',
     name: 'custom',
   },
+  {
+    path: '/scrollbar/mousewheel',
+    name: 'use mousewheel',
+  },
 ]
 
 const Core = (props) => {

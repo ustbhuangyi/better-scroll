@@ -85,3 +85,32 @@
     width 20px
     border-radius 6px
     background-color #db8090
+
+.mousewheel-scrollbar-container
+  .custom-scrollbar-wrapper
+    position relative
+    width 280px
+    height 280px
+    overflow hidden
+  .custom-scrollbar-content
+    display inline-block
+    height 280px
+    > img
+      max-width none
+  .custom-horizontal-scrollbar
+    position absolute
+    left 50%
+    bottom 10px
+    width 100px
+    height 7px
+    border-radius 6px
+    transform translateX(-50%) translateZ(0)
+    background-color rgb(200, 200, 200, 0.3)
+  .custom-horizontal-indicator
+    height 100%
+    width 20px
+    border-radius 6px
+    background-color #db8090
+  .tip
+    text-align center
+    margin-top 10px

@@ -164,6 +164,12 @@ const ROUTES = [
         path: '/scrollbar/custom',
         component: lazy(() => import('./pages/scrollbar/components/custom')),
       },
+      {
+        path: '/scrollbar/mousewheel',
+        component: lazy(() =>
+          import('./pages/scrollbar/components/mousewheel')
+        ),
+      },
     ],
   },
 ]
