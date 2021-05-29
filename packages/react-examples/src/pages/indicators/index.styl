@@ -23,3 +23,41 @@
     height 36px
     z-index 1
     background-color rgba(255, 255, 255, 0.3)
+
+.parallax-scroll-container
+  height 100%
+  .parallax-scroll-box
+    position relative
+    width 100%
+    height 100%
+    box-sizing border-box
+    border 1px solid #fe0
+  .scroll-wrapper
+    position absolute
+    z-index 3
+    top 0
+    right 0
+    bottom 0
+    left 0
+    overflow hidden
+  .scroll-content
+    width 100%
+    height 4000px
+    background: url('./components/galaxies1.png')
+  .scroll-indicator
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    overflow hidden
+    &.stars1
+      z-index 2
+    &.stars2
+      z-index 1
+  .star1-bg
+    height 3000px
+    background: url('./components/galaxies2.png')
+  .star2-bg
+    height 2000px
+    background: url('./components/stars.jpg')

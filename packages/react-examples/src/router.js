@@ -180,6 +180,12 @@ const ROUTES = [
         path: '/indicators/minimap',
         component: lazy(() => import('./pages/indicators/components/minimap')),
       },
+      {
+        path: '/indicators/parallax-scroll',
+        component: lazy(() =>
+          import('./pages/indicators/components/parallax-scroll')
+        ),
+      },
     ],
   },
 ]

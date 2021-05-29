@@ -7,6 +7,10 @@ const examples = [
     path: '/indicators/minimap',
     name: 'minimap',
   },
+  {
+    path: '/indicators/parallax-scroll',
+    name: 'parallax scroll',
+  },
 ]
 
 const Indicators = (props) => {
