@@ -7,6 +7,10 @@ const examples = [
     path: '/scrollbar/vertical',
     name: 'vertical',
   },
+  {
+    path: '/scrollbar/horizontal',
+    name: 'horizontal',
+  },
 ]
 
 const Core = (props) => {

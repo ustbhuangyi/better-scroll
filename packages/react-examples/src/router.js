@@ -154,6 +154,12 @@ const ROUTES = [
         path: '/scrollbar/vertical',
         component: lazy(() => import('./pages/scrollbar/components/vertical')),
       },
+      {
+        path: '/scrollbar/horizontal',
+        component: lazy(() =>
+          import('./pages/scrollbar/components/horizontal')
+        ),
+      },
     ],
   },
 ]
