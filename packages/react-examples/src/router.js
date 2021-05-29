@@ -172,6 +172,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/indicators',
+    component: lazy(() => import('./pages/indicators')),
+    routes: [
+      {
+        path: '/indicators/minimap',
+        component: lazy(() => import('./pages/indicators/components/minimap')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

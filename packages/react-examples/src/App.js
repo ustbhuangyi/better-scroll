@@ -39,6 +39,10 @@ const examples = [
     name: 'scrollbar',
     path: '/scrollbar',
   },
+  {
+    name: 'indicators',
+    path: '/indicators',
+  },
 ]
 
 const App = () => {
