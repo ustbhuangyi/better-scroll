@@ -43,6 +43,10 @@ const examples = [
     name: 'indicators',
     path: '/indicators',
   },
+  {
+    name: 'infinity',
+    path: '/infinity',
+  },
 ]
 
 const App = () => {
