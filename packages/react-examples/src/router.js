@@ -146,6 +146,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/scrollbar',
+    component: lazy(() => import('./pages/scrollbar')),
+    routes: [
+      {
+        path: '/scrollbar/vertical',
+        component: lazy(() => import('./pages/scrollbar/components/vertical')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
