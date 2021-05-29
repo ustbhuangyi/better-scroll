@@ -160,6 +160,10 @@ const ROUTES = [
           import('./pages/scrollbar/components/horizontal')
         ),
       },
+      {
+        path: '/scrollbar/custom',
+        component: lazy(() => import('./pages/scrollbar/components/custom')),
+      },
     ],
   },
 ]

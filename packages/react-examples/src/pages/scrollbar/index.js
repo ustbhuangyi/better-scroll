@@ -11,6 +11,10 @@ const examples = [
     path: '/scrollbar/horizontal',
     name: 'horizontal',
   },
+  {
+    path: '/scrollbar/custom',
+    name: 'custom',
+  },
 ]
 
 const Core = (props) => {
