@@ -192,6 +192,16 @@ const ROUTES = [
     path: '/infinity',
     component: lazy(() => import('./pages/infinity')),
   },
+  {
+    path: '/form',
+    component: lazy(() => import('./pages/form')),
+    routes: [
+      {
+        path: '/form/textarea',
+        component: lazy(() => import('./pages/form/components/textarea')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
