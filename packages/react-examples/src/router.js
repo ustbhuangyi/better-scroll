@@ -224,6 +224,12 @@ const ROUTES = [
           import('./pages/nested-scroll/components/horizontal-in-vertical')
         ),
       },
+      {
+        path: '/nested-scroll/triple-vertical',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/triple-vertical')
+        ),
+      },
     ],
   },
 ]
