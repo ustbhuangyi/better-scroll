@@ -51,6 +51,10 @@ const examples = [
     name: 'form',
     path: '/form',
   },
+  {
+    name: 'nested-scroll',
+    path: '/nested-scroll',
+  },
 ]
 
 const App = () => {

@@ -202,6 +202,18 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/nested-scroll',
+    component: lazy(() => import('./pages/nested-scroll')),
+    routes: [
+      {
+        path: '/nested-scroll/vertical',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/vertical')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
