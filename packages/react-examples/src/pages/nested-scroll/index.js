@@ -7,6 +7,10 @@ const examples = [
     path: '/nested-scroll/vertical',
     name: 'vertical',
   },
+  {
+    path: '/nested-scroll/horizontal',
+    name: 'horizontal',
+  },
 ]
 
 const NestedScroll = (props) => {

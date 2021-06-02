@@ -22,3 +22,32 @@
     line-height: 40px
     text-align: center
     list-style: none
+
+.horizontal
+  .outer-wrapper
+    border: 1px solid rgba(0, 0, 0, 0.1)
+    border-radius: 5px
+    transform: rotate(0deg)
+    margin-top: 50px
+    position: relative
+    overflow: hidden
+    .outer-content
+      display: inline-block
+      vertical-align: top
+      white-space: nowrap
+  .inner-wrapper
+    border: 2px solid #62B791
+    border-radius: 5px
+    transform: rotate(0deg)
+    position: relative
+    width: 200px
+    overflow: hidden
+    .inner-content
+      display: inline-block
+      vertical-align: top
+  .list-item
+    display: inline-block
+    line-height: 60px
+  .inner-list-item
+    vertical-align: top // important
+    background-color: rgba(98,183,145, 0.2)
