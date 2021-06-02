@@ -51,3 +51,33 @@
   .inner-list-item
     vertical-align: top // important
     background-color: rgba(98,183,145, 0.2)
+
+.horizontal-in-vertical-container
+    height: 100%
+  .vertical-wrapper
+    height: 100%
+    border: 1px solid rgba(0, 0, 0, .1)
+    position: relative
+    overflow: hidden
+    .vertical-item
+      line-height: 40px
+      text-align: center
+  .slide-banner-content
+    height: 120px
+    white-space: nowrap
+    font-size: 0
+    .slide-item
+      display: inline-block
+      height: 120px
+      width: 100%
+      line-height: 120px
+      text-align: center
+      font-size: 26px
+      &.page1
+        background-color: #95B8D1
+      &.page2
+        background-color: #DDA789
+      &.page3
+        background-color: #C3D899
+      &.page4
+        background-color: #F2D4A7
