@@ -242,6 +242,12 @@ const ROUTES = [
           import('./pages/mouse-wheel/components/vertical-scroll')
         ),
       },
+      {
+        path: '/mouse-wheel/horizontal-scroll',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/horizontal-scroll')
+        ),
+      },
     ],
   },
 ]
