@@ -55,6 +55,10 @@ const examples = [
     name: 'nested-scroll',
     path: '/nested-scroll',
   },
+  {
+    name: 'mouse-wheel',
+    path: '/mouse-wheel',
+  },
 ]
 
 const App = () => {

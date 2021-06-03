@@ -232,6 +232,18 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/mouse-wheel',
+    component: lazy(() => import('./pages/mouse-wheel')),
+    routes: [
+      {
+        path: '/mouse-wheel/vertical-scroll',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/vertical-scroll')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
