@@ -248,6 +248,12 @@ const ROUTES = [
           import('./pages/mouse-wheel/components/horizontal-scroll')
         ),
       },
+      {
+        path: '/mouse-wheel/vertical-slide',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/vertical-slide')
+        ),
+      },
     ],
   },
 ]

@@ -11,6 +11,10 @@ const examples = [
     path: '/mouse-wheel/horizontal-scroll',
     name: 'horizontal scroll',
   },
+  {
+    path: '/mouse-wheel/vertical-slide',
+    name: 'vertical slide',
+  },
 ]
 
 const MouseWheel = (props) => {

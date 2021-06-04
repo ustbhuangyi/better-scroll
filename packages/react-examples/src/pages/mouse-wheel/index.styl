@@ -34,3 +34,47 @@
           background-color #C3D899
         &:nth-child(2n+1)
           background-color #F2D4A7
+
+.mouse-wheel-slide-vertical
+  height 100%
+  &.view
+    padding 0
+    height 100%
+  .slide-container
+    position relative
+    height 100%
+    font-size 0
+  .slide-wrapper
+    height 100%
+    overflow hidden
+    .slide-page
+      display inline-block
+      width 100%
+      line-height 200px
+      text-align center
+      font-size 26px
+      transform translate3d(0,0,0)
+      backface-visibility hidden
+      &.page1
+        background-color #D6EADF
+      &.page2
+        background-color #DDA789
+      &.page3
+        background-color #C3D899
+      &.page4
+        background-color #F2D4A7
+  .dots-wrapper
+    position absolute
+    right 4px
+    top 50%
+    transform translateY(-50%)
+    .dot
+      display block
+      margin 4px 0
+      width 8px
+      height 8px
+      border-radius 50%
+      background #eee
+      &.active
+        height  20px
+        border-radius 5px
