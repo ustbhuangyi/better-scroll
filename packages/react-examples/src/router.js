@@ -270,6 +270,10 @@ const ROUTES = [
           import('./pages/mouse-wheel/components/pulldown')
         ),
       },
+      {
+        path: '/mouse-wheel/picker',
+        component: lazy(() => import('./pages/mouse-wheel/components/picker')),
+      },
     ],
   },
 ]

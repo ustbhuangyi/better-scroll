@@ -27,6 +27,10 @@ const examples = [
     path: '/mouse-wheel/pulldown',
     name: 'pull down refresh',
   },
+  {
+    path: '/mouse-wheel/picker',
+    name: 'picker',
+  },
 ]
 
 const MouseWheel = (props) => {

@@ -160,3 +160,160 @@
     transform: translateY(-100%) translateZ(0)
     text-align: center
     color: #999
+
+/* reset */
+ul
+  list-style none
+  padding 0
+
+.border-bottom-1px, .border-top-1px
+  position: relative
+  &:before, &:after
+    content: ""
+    display: block
+    position: absolute
+    transform-origin: 0 0
+.border-bottom-1px
+  &:after
+    border-bottom: 1px solid #ebebeb
+    left: 0
+    bottom: 0
+    width: 100%
+    transform-origin: 0 bottom
+.border-top-1px
+  &:before
+    border-top: 1px solid #ebebeb
+    left: 0
+    top: 0
+    width: 100%
+    transform-origin: 0 top
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+  .border-top-1px
+    &:before
+      width: 200%
+      transform: scale(.5) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 200%
+      transform: scale(.5) translateZ(0)
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+  .border-top-1px
+    &:before
+      width: 300%
+      transform: scale(.333) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 300%
+      transform: scale(.333) translateZ(0)
+.container-btn
+  margin: 2rem
+  background-color white
+  padding: 0.8rem
+  border: 1px solid rgba(0, 0, 0, .1)
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
+  text-align: center
+
+.picker
+  display: none
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 100
+  width: 100%
+  height: 100%
+  overflow: hidden
+  text-align: center
+  font-size: 14px
+  background-color: rgba(37, 38, 45, .4)
+  &.picker-fade-enter
+    opacity: 0
+  &.picker-fade-enter-active
+    opacity: 1
+    transition: all .3s ease-in-out
+  &.picker-fade-exit-active
+    opacity: 0;
+    transition: all .3s ease-in-out
+
+
+  .picker-panel
+    position: absolute
+    z-index: 600
+    bottom: 0
+    width: 100%
+    height: 273px
+    background: white
+    &.picker-move-enter
+      transform: translate3d(0, 273px, 0)
+    &.picker-move-enter-active
+      transform: translate3d(0, 0, 0)
+      transition: all .3s ease-in-out
+    &.picker-move-exit-active
+      transform: translate3d(0, 273px, 0)
+      transition: all .3s ease-in-out
+    .picker-choose
+      position: relative
+      height: 60px
+      color: #999
+      .picker-title
+        margin: 0
+        line-height: 60px
+        font-weight: normal
+        text-align: center
+        font-size: 18px
+        color: #333
+      .confirm, .cancel
+        position: absolute
+        top: 6px
+        padding: 16px
+        font-size: 14px
+      .confirm
+        right: 0
+        color: #007bff
+        &:active
+          color: #5aaaff
+      .cancel
+        left: 0
+        &:active
+          color: #c2c2c2
+    .picker-content
+      position: relative
+      top: 20px
+      .mask-top, .mask-bottom
+        z-index: 10
+        width: 100%
+        height: 68px
+        pointer-events: none
+        transform: translateZ(0)
+      .mask-top
+        position: absolute
+        top: 0
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8))
+      .mask-bottom
+        position: absolute
+        bottom: 1px
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8))
+    .wheel-wrapper
+      display: flex
+      padding: 0 16px
+      .wheel
+        flex: 1
+        width: 1%
+        height: 173px
+        overflow: hidden
+        font-size: 18px
+        .wheel-scroll
+          padding: 0
+          margin-top: 68px
+          line-height: 36px
+          list-style: none
+          .wheel-item
+            list-style: none
+            height: 36px
+            overflow: hidden
+            white-space: nowrap
+            color: #333
+            &.wheel-disabled-item
+              opacity: .2;
+  .picker-footer
+    height: 20px
