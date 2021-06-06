@@ -23,6 +23,10 @@ const examples = [
     path: '/mouse-wheel/pullup',
     name: 'pull up load',
   },
+  {
+    path: '/mouse-wheel/pulldown',
+    name: 'pull down refresh',
+  },
 ]
 
 const MouseWheel = (props) => {

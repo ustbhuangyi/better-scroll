@@ -264,6 +264,12 @@ const ROUTES = [
         path: '/mouse-wheel/pullup',
         component: lazy(() => import('./pages/mouse-wheel/components/pullup')),
       },
+      {
+        path: '/mouse-wheel/pulldown',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/pulldown')
+        ),
+      },
     ],
   },
 ]
