@@ -260,6 +260,10 @@ const ROUTES = [
           import('./pages/mouse-wheel/components/horizontal-slide')
         ),
       },
+      {
+        path: '/mouse-wheel/pullup',
+        component: lazy(() => import('./pages/mouse-wheel/components/pullup')),
+      },
     ],
   },
 ]

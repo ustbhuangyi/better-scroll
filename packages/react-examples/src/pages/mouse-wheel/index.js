@@ -19,6 +19,10 @@ const examples = [
     path: '/mouse-wheel/horizontal-slide',
     name: 'horizontal slide',
   },
+  {
+    path: '/mouse-wheel/pullup',
+    name: 'pull up load',
+  },
 ]
 
 const MouseWheel = (props) => {
