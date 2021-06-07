@@ -7,6 +7,10 @@ const examples = [
     path: '/movable/default',
     name: 'default',
   },
+  {
+    path: '/movable/scale',
+    name: 'scale',
+  },
 ]
 
 const Movable = (props) => {
