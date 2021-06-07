@@ -294,6 +294,12 @@ const ROUTES = [
           import('./pages/movable/components/multi-content')
         ),
       },
+      {
+        path: '/movable/multi-content-scale',
+        component: lazy(() =>
+          import('./pages/movable/components/multi-content-scale')
+        ),
+      },
     ],
   },
 ]
