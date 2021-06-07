@@ -82,7 +82,7 @@ export default class ScrollBar {
           : this.createScrollbarElement(direction)
         // internal scrollbar
         if (scrollbarWrapper !== customElement) {
-          scroll.wrapper.append(scrollbarWrapper)
+          scroll.wrapper.appendChild(scrollbarWrapper)
         } else {
           // custom scrollbar passed by users
           isCustom = true
