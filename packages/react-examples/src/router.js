@@ -288,6 +288,12 @@ const ROUTES = [
         path: '/movable/scale',
         component: lazy(() => import('./pages/movable/components/scale')),
       },
+      {
+        path: '/movable/multi-content',
+        component: lazy(() =>
+          import('./pages/movable/components/multi-content')
+        ),
+      },
     ],
   },
 ]

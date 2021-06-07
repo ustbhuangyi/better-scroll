@@ -11,6 +11,10 @@ const examples = [
     path: '/movable/scale',
     name: 'scale',
   },
+  {
+    path: '/movable/multi-content',
+    name: 'multi-content',
+  },
 ]
 
 const Movable = (props) => {
