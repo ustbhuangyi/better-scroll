@@ -59,6 +59,10 @@ const examples = [
     name: 'mouse-wheel',
     path: '/mouse-wheel',
   },
+  {
+    name: 'movable',
+    path: '/movable',
+  },
 ]
 
 const App = () => {

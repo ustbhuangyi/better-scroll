@@ -276,6 +276,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/movable',
+    component: lazy(() => import('./pages/movable')),
+    routes: [
+      {
+        path: '/movable/default',
+        component: lazy(() => import('./pages/movable/components/default')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
