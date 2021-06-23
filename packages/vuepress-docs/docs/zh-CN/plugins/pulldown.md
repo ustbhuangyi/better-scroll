@@ -50,7 +50,7 @@ new BScroll('.bs-wrapper', {
   <pulldown-default slot="demo"></pulldown-default>
 </demo>
 
-- **仿新浪微博(v2.4.0)**
+- **仿新浪微博 <Badge text='2.4.0' />**
 
 <demo qrcode-url="pulldown/sina">
   <template slot="code-template">

@@ -222,12 +222,15 @@ const bs = new BScroll('.wrapper', {
   scrollbar: {
     fade: true,
     interactive: false,
-    // The following configuration items are only supported in v2.1.2
+    // supported in v2.2.0
     customElements: [],
     minSize: 8,
     scrollbarTrackClickable: false,
     scrollbarTrackOffsetType: 'step',
-    scrollbarTrackOffsetTime: 300
+    scrollbarTrackOffsetTime: 300,
+    // supported in v2.4.0
+    fadeInTime: 250,
+    fadeOutTime: 500
   }
 })
 ```

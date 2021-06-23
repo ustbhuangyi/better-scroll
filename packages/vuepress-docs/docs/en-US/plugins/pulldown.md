@@ -50,7 +50,7 @@ new BScroll('.bs-wrapper', {
   <pulldown-default slot="demo"></pulldown-default>
 </demo>
 
-- **Sina-Weibo(v2.4.0)**
+- **Sina-Weibo <Badge text='2.4.0' />**
 
 <demo qrcode-url="pulldown/sina">
   <template slot="code-template">

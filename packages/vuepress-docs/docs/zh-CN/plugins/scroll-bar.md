@@ -214,12 +214,15 @@ const bs = new BScroll('.wrapper', {
   scrollbar: {
     fade: true,
     interactive: false,
-    // 以下配置项 v2.1.2 才支持
+    // 以下配置项 v2.2.0 才支持
     customElements: [],
     minSize: 8,
     scrollbarTrackClickable: false,
     scrollbarTrackOffsetType: 'step',
-    scrollbarTrackOffsetTime: 300
+    scrollbarTrackOffsetTime: 300,
+    // 以下配置项 v2.4.0 才支持
+    fadeInTime: 250,
+    fadeOutTime: 500
   }
 })
 ```
