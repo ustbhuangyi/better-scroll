@@ -192,7 +192,21 @@ new BScroll('.bs-wrapper', {
   - **Type**: `number`
   - **Default**: `300`
 
-  the scroll time after the scrollbar track is clicked,.
+  the scroll time after the scrollbar track is clicked.
+
+### fadeInTime <Badge text="2.4.0" />
+
+  - **Type**: `number`
+  - **Default**: `250`
+
+  The duration of the animation when the scrollbar fades in.
+
+### fadeOutTime <Badge text="2.4.0" />
+
+  - **Type**: `number`
+  - **Default**: `500`
+
+  The duration of the animation when the scrollbar fades out.
 
 :::tip
 When `scrollbar` is configured as `true`, the plugin uses the default plugin option.
