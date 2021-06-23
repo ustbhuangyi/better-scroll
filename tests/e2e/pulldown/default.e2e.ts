@@ -9,7 +9,7 @@ describe('Pulldown', () => {
   beforeEach(async () => {
     // disable cache
     await page.setCacheEnabled(false)
-    await page.goto('http://0.0.0.0:8932/#/pulldown/')
+    await page.goto('http://0.0.0.0:8932/#/pulldown/default')
   })
 
   it('should render DOM correctly', async () => {
@@ -36,7 +36,7 @@ describe('Pulldown', () => {
     })
 
     // wait for requesting data
-    await page.waitFor(5000)
+    await page.waitFor(3000)
     const itemsCounts = await page.$$eval(
       '.pulldown-list-item',
       (element) => element.length

@@ -68,6 +68,9 @@ import ComposeSlideNested from 'vue-example/components/compose/slide-nested'
 
 import IndicatorsMinimap from 'vue-example/components/indicators/minimap'
 import IndicatorsParallaxScroll from 'vue-example/components/indicators/parallax-scroll'
+
+import PulldownDefault from 'vue-example/components/pulldown/default'
+import PulldownSinaWeibo from 'vue-example/components/pulldown/sina-weibo'
 Vue.use(Router)
 
 export default new Router({
@@ -199,6 +202,16 @@ export default new Router({
     {
       path: '/pulldown',
       component: PullDownEntry,
+      children: [
+        {
+          path: 'default',
+          component: PulldownDefault
+        },
+        {
+          path: 'sina',
+          component: PulldownSinaWeibo
+        }
+      ]
     },
     {
       path: '/scrollbar',
