@@ -1,16 +1,24 @@
 <template>
-  <pull-down />
+  <div class="container">
+    <ul class="example-list">
+      <li class="example-item" @click="goPage('/pulldown/default')">
+          <span>Default</span>
+      </li>
+      <li class="example-item" @click="goPage('/pulldown/sina')">
+          <span>Sina-Weibo</span>
+      </li>
+    </ul>
+    <transition name="move">
+      <router-view class="view"></router-view>
+    </transition>
+  </div>
 </template>
-
 <script>
-import PullDown from 'vue-example/components/pulldown/default.vue'
 export default {
-  components: {
-    PullDown
+  methods: {
+    goPage(path) {
+      this.$router.push(path)
+    }
   }
 }
 </script>
-
-<style lang="stylus">
-
-</style>
