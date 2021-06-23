@@ -66,6 +66,34 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/slide',
+    component: lazy(() => import('./pages/slide')),
+    routes: [
+      {
+        path: '/slide/banner',
+        component: lazy(() => import('./pages/slide/components/banner')),
+      },
+      {
+        path: '/slide/fullpage',
+        component: lazy(() => import('./pages/slide/components/fullpage')),
+      },
+      {
+        path: '/slide/vertical',
+        component: lazy(() => import('./pages/slide/components/vertical')),
+      },
+      {
+        path: '/slide/dynamic',
+        component: lazy(() => import('./pages/slide/components/dynamic')),
+      },
+      {
+        path: '/slide/specified',
+        component: lazy(() =>
+          import('./pages/slide/components/specified-index')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
