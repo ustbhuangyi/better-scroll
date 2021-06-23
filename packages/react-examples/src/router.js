@@ -188,6 +188,10 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/infinity',
+    component: lazy(() => import('./pages/infinity')),
+  },
 ]
 
 const renderRoute = (route) => {
