@@ -172,6 +172,22 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/indicators',
+    component: lazy(() => import('./pages/indicators')),
+    routes: [
+      {
+        path: '/indicators/minimap',
+        component: lazy(() => import('./pages/indicators/components/minimap')),
+      },
+      {
+        path: '/indicators/parallax-scroll',
+        component: lazy(() =>
+          import('./pages/indicators/components/parallax-scroll')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
