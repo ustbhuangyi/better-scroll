@@ -202,6 +202,106 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/nested-scroll',
+    component: lazy(() => import('./pages/nested-scroll')),
+    routes: [
+      {
+        path: '/nested-scroll/vertical',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/vertical')
+        ),
+      },
+      {
+        path: '/nested-scroll/horizontal',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/horizontal')
+        ),
+      },
+      {
+        path: '/nested-scroll/horizontal-in-vertical',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/horizontal-in-vertical')
+        ),
+      },
+      {
+        path: '/nested-scroll/triple-vertical',
+        component: lazy(() =>
+          import('./pages/nested-scroll/components/triple-vertical')
+        ),
+      },
+    ],
+  },
+  {
+    path: '/mouse-wheel',
+    component: lazy(() => import('./pages/mouse-wheel')),
+    routes: [
+      {
+        path: '/mouse-wheel/vertical-scroll',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/vertical-scroll')
+        ),
+      },
+      {
+        path: '/mouse-wheel/horizontal-scroll',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/horizontal-scroll')
+        ),
+      },
+      {
+        path: '/mouse-wheel/vertical-slide',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/vertical-slide')
+        ),
+      },
+      {
+        path: '/mouse-wheel/horizontal-slide',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/horizontal-slide')
+        ),
+      },
+      {
+        path: '/mouse-wheel/pullup',
+        component: lazy(() => import('./pages/mouse-wheel/components/pullup')),
+      },
+      {
+        path: '/mouse-wheel/pulldown',
+        component: lazy(() =>
+          import('./pages/mouse-wheel/components/pulldown')
+        ),
+      },
+      {
+        path: '/mouse-wheel/picker',
+        component: lazy(() => import('./pages/mouse-wheel/components/picker')),
+      },
+    ],
+  },
+  {
+    path: '/movable',
+    component: lazy(() => import('./pages/movable')),
+    routes: [
+      {
+        path: '/movable/default',
+        component: lazy(() => import('./pages/movable/components/default')),
+      },
+      {
+        path: '/movable/scale',
+        component: lazy(() => import('./pages/movable/components/scale')),
+      },
+      {
+        path: '/movable/multi-content',
+        component: lazy(() =>
+          import('./pages/movable/components/multi-content')
+        ),
+      },
+      {
+        path: '/movable/multi-content-scale',
+        component: lazy(() =>
+          import('./pages/movable/components/multi-content-scale')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

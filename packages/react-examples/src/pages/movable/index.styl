@@ -1,0 +1,59 @@
+.movable-container
+  .scroll-wrapper
+    height 400px
+    overflow hidden
+    box-shadow 0 0 3px rgba(0, 0, 0, .3)
+    .scroll-content
+      width 220px
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      font-weight bold
+      border-bottom 1px solid #eee
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+
+.movable-multi-content-container
+  .scroll-wrapper
+    height 400px
+    overflow hidden
+    position relative
+    box-shadow 0 0 3px rgba(0, 0, 0, .3)
+    .scroll-content
+      position absolute
+      top 0
+      left 0
+      width 200px
+      figure
+        margin 0
+      figcaption
+        font-weight bold
+        margin-bottom 5px
+        text-align center
+        color #ea4c89
+      .picture
+        width 200px
+        height 150px
+        border-radius 10px
+    .scroll-item
+      height 50px
+      line-height 50px
+      font-size 24px
+      font-weight bold
+      border-bottom 1px solid #eee
+      text-align center
+      &:nth-child(2n)
+        background-color #f3f5f7
+      &:nth-child(2n+1)
+        background-color #42b983
+  .btn
+    margin 40px auto
+    padding 10px
+    color #fff
+    border-radius 4px
+    font-size 20px
+    background-color #666

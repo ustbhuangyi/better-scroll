@@ -51,6 +51,18 @@ const examples = [
     name: 'form',
     path: '/form',
   },
+  {
+    name: 'nested-scroll',
+    path: '/nested-scroll',
+  },
+  {
+    name: 'mouse-wheel',
+    path: '/mouse-wheel',
+  },
+  {
+    name: 'movable',
+    path: '/movable',
+  },
 ]
 
 const App = () => {

@@ -1,0 +1,319 @@
+.mouse-wheel-vertical-scroll
+  .mouse-wheel-wrapper
+    height 400px
+    overflow hidden
+    .mouse-wheel-item
+      height 50px
+      line-height 50px
+      font-size 20px
+      font-weight bold
+      text-align center
+      &:nth-child(2n)
+        background-color #C3D899
+      &:nth-child(2n+1)
+        background-color #F2D4A7
+
+.mouse-wheel-horizontal-scroll
+  .mouse-wheel-wrapper
+    width 90%
+    margin 80px auto
+    white-space nowrap
+    border 3px solid #42b983
+    border-radius 5px
+    overflow hidden
+    .mouse-wheel-content
+      display inline-block
+      .mouse-wheel-item
+        height 50px
+        line-height 50px
+        font-size 24px
+        display inline-block
+        text-align center
+        padding 0 20px
+        &:nth-child(2n)
+          background-color #C3D899
+        &:nth-child(2n+1)
+          background-color #F2D4A7
+
+.mouse-wheel-slide-vertical
+  height 100%
+  &.view
+    padding 0
+    height 100%
+  .slide-container
+    position relative
+    height 100%
+    font-size 0
+  .slide-wrapper
+    height 100%
+    overflow hidden
+    .slide-page
+      display inline-block
+      width 100%
+      line-height 200px
+      text-align center
+      font-size 26px
+      transform translate3d(0,0,0)
+      backface-visibility hidden
+      &.page1
+        background-color #D6EADF
+      &.page2
+        background-color #DDA789
+      &.page3
+        background-color #C3D899
+      &.page4
+        background-color #F2D4A7
+  .dots-wrapper
+    position absolute
+    right 4px
+    top 50%
+    transform translateY(-50%)
+    .dot
+      display block
+      margin 4px 0
+      width 8px
+      height 8px
+      border-radius 50%
+      background #eee
+      &.active
+        height  20px
+        border-radius 5px
+
+.mouse-wheel-horizontal-slide
+  .slide-container
+    position relative
+  .slide-wrapper
+    min-height 1px
+    overflow hidden
+  .slide-content
+    height 200px
+    white-space nowrap
+    font-size 0
+    .slide-page
+      display inline-block
+      height 200px
+      width 100%
+      line-height 200px
+      text-align center
+      font-size 26px
+      &.page1
+        background-color #95B8D1
+      &.page2
+        background-color #DDA789
+      &.page3
+        background-color #C3D899
+      &.page4
+        background-color #F2D4A7
+  .dots-wrapper
+    position absolute
+    bottom 4px
+    left 50%
+    transform translateX(-50%)
+    .dot
+      display inline-block
+      margin 0 4px
+      width 8px
+      height 8px
+      border-radius 50%
+      background #eee
+      &.active
+        width 20px
+        border-radius 5px
+
+.mouse-wheel-pullup
+  height: 100%
+  .pullup-wrapper
+    height: 100%
+    padding: 0 10px
+    border: 1px solid #ccc
+    overflow: hidden
+  .pullup-list
+    padding: 0
+  .pullup-list-item
+    padding: 10px 0
+    list-style: none
+    border-bottom: 1px solid #ccc
+  .pullup-tips
+    padding: 20px
+    text-align: center
+    color: #999
+
+.mouse-wheel-pulldown
+  height: 100%
+  .pulldown-wrapper
+    position: relative
+    height: 100%
+    padding: 0 10px
+    border: 1px solid #ccc
+    overflow: hidden
+  .pulldown-list
+    padding: 0
+  .pulldown-list-item
+    padding: 10px 0
+    list-style: none
+    border-bottom: 1px solid #ccc
+  .pulldown-tips
+    position: absolute
+    width: 100%
+    padding: 20px
+    box-sizing: border-box
+    transform: translateY(-100%) translateZ(0)
+    text-align: center
+    color: #999
+
+/* reset */
+ul
+  list-style none
+  padding 0
+
+.border-bottom-1px, .border-top-1px
+  position: relative
+  &:before, &:after
+    content: ""
+    display: block
+    position: absolute
+    transform-origin: 0 0
+.border-bottom-1px
+  &:after
+    border-bottom: 1px solid #ebebeb
+    left: 0
+    bottom: 0
+    width: 100%
+    transform-origin: 0 bottom
+.border-top-1px
+  &:before
+    border-top: 1px solid #ebebeb
+    left: 0
+    top: 0
+    width: 100%
+    transform-origin: 0 top
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2)
+  .border-top-1px
+    &:before
+      width: 200%
+      transform: scale(.5) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 200%
+      transform: scale(.5) translateZ(0)
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+  .border-top-1px
+    &:before
+      width: 300%
+      transform: scale(.333) translateZ(0)
+  .border-bottom-1px
+    &:after
+      width: 300%
+      transform: scale(.333) translateZ(0)
+.container-btn
+  margin: 2rem
+  background-color white
+  padding: 0.8rem
+  border: 1px solid rgba(0, 0, 0, .1)
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1)
+  text-align: center
+
+.picker
+  display: none
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 100
+  width: 100%
+  height: 100%
+  overflow: hidden
+  text-align: center
+  font-size: 14px
+  background-color: rgba(37, 38, 45, .4)
+  &.picker-fade-enter
+    opacity: 0
+  &.picker-fade-enter-active
+    opacity: 1
+    transition: all .3s ease-in-out
+  &.picker-fade-exit-active
+    opacity: 0;
+    transition: all .3s ease-in-out
+
+
+  .picker-panel
+    position: absolute
+    z-index: 600
+    bottom: 0
+    width: 100%
+    height: 273px
+    background: white
+    &.picker-move-enter
+      transform: translate3d(0, 273px, 0)
+    &.picker-move-enter-active
+      transform: translate3d(0, 0, 0)
+      transition: all .3s ease-in-out
+    &.picker-move-exit-active
+      transform: translate3d(0, 273px, 0)
+      transition: all .3s ease-in-out
+    .picker-choose
+      position: relative
+      height: 60px
+      color: #999
+      .picker-title
+        margin: 0
+        line-height: 60px
+        font-weight: normal
+        text-align: center
+        font-size: 18px
+        color: #333
+      .confirm, .cancel
+        position: absolute
+        top: 6px
+        padding: 16px
+        font-size: 14px
+      .confirm
+        right: 0
+        color: #007bff
+        &:active
+          color: #5aaaff
+      .cancel
+        left: 0
+        &:active
+          color: #c2c2c2
+    .picker-content
+      position: relative
+      top: 20px
+      .mask-top, .mask-bottom
+        z-index: 10
+        width: 100%
+        height: 68px
+        pointer-events: none
+        transform: translateZ(0)
+      .mask-top
+        position: absolute
+        top: 0
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8))
+      .mask-bottom
+        position: absolute
+        bottom: 1px
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8))
+    .wheel-wrapper
+      display: flex
+      padding: 0 16px
+      .wheel
+        flex: 1
+        width: 1%
+        height: 173px
+        overflow: hidden
+        font-size: 18px
+        .wheel-scroll
+          padding: 0
+          margin-top: 68px
+          line-height: 36px
+          list-style: none
+          .wheel-item
+            list-style: none
+            height: 36px
+            overflow: hidden
+            white-space: nowrap
+            color: #333
+            &.wheel-disabled-item
+              opacity: .2;
+  .picker-footer
+    height: 20px
