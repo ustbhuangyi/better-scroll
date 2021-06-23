@@ -10,6 +10,8 @@ export type ScrollbarOptions = Partial<ScrollbarConfig> | true
 
 export interface ScrollbarConfig {
   fade: boolean
+  fadeInTime: number
+  fadeOutTime: number
   interactive: boolean
   customElements: HTMLElement[]
   minSize: number
@@ -50,6 +52,8 @@ export default class ScrollBar {
 
     const defaultOptions: ScrollbarConfig = {
       fade: true,
+      fadeInTime: 250,
+      fadeOutTime: 500,
       interactive: false,
       customElements: [],
       minSize: 8,

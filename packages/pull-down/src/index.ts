@@ -5,6 +5,22 @@ import propertiesConfig from './propertiesConfig'
 
 export type PullDownRefreshOptions = Partial<PullDownRefreshConfig> | true
 
+// pulldownRefresh phase will go through:
+// DEFAULT -> MOVING -> FETCHING
+// or
+// DEFAULT -> MOVING
+const enum PullDownPhase {
+  DEFAULT,
+  MOVING,
+  FETCHING,
+}
+
+const enum ThresholdBoundary {
+  DEFAULT,
+  INSIDE,
+  OUTSIDE,
+}
+
 export interface PullDownRefreshConfig {
   threshold: number
   stop: number
@@ -26,12 +42,15 @@ interface PluginAPI {
   autoPullDownRefresh(): void
 }
 
-const PULL_DOWN_HOOKS_NAME = 'pullingDown'
+const PULLING_DOWN_EVENT = 'pullingDown'
+const ENTER_THRESHOLD_EVENT = 'enterThreshold'
+const LEAVE_THRESHOLD_EVENT = 'leaveThreshold'
 
 export default class PullDown implements PluginAPI {
   static pluginName = 'pullDownRefresh'
   private hooksFn: Array<[EventEmitter, string, Function]>
-  pulling: boolean = false
+  pulling: PullDownPhase = PullDownPhase.DEFAULT
+  thresholdBoundary: ThresholdBoundary = ThresholdBoundary.DEFAULT
   watching: boolean
   options: PullDownRefreshConfig
   cachedOriginanMinScrollY: number
@@ -39,6 +58,14 @@ export default class PullDown implements PluginAPI {
 
   constructor(public scroll: BScroll) {
     this.init()
+  }
+
+  private setPulling(status: PullDownPhase) {
+    this.pulling = status
+  }
+
+  private setThresholdBoundary(boundary: ThresholdBoundary) {
+    this.thresholdBoundary = boundary
   }
 
   private init() {
@@ -52,7 +79,11 @@ export default class PullDown implements PluginAPI {
   }
 
   private handleBScroll() {
-    this.scroll.registerType([PULL_DOWN_HOOKS_NAME])
+    this.scroll.registerType([
+      PULLING_DOWN_EVENT,
+      ENTER_THRESHOLD_EVENT,
+      LEAVE_THRESHOLD_EVENT,
+    ])
 
     this.scroll.proxy(propertiesConfig)
   }
@@ -66,8 +97,7 @@ export default class PullDown implements PluginAPI {
       stop: 40,
     }
     this.options = extend(defaultOptions, userOptions)
-    // plugin relies on scrollTo api
-    // set it to Realtime make bs dispatch scroll、scrollEnd hooks
+
     this.scroll.options.probeType = Probe.Realtime
   }
 
@@ -137,12 +167,62 @@ export default class PullDown implements PluginAPI {
       scroller.hooks.eventTypes.end,
       this.checkPullDown
     )
+
+    this.registerHooks(
+      this.scroll,
+      this.scroll.eventTypes.scrollStart,
+      this.resetStateBeforeScrollStart
+    )
+
+    this.registerHooks(
+      this.scroll,
+      this.scroll.eventTypes.scroll,
+      this.checkLocationOfThresholdBoundary
+    )
+  }
+
+  private resetStateBeforeScrollStart() {
+    // current fetching pulldownRefresh has ended
+    if (!this.isFetchingStatus()) {
+      this.setPulling(PullDownPhase.MOVING)
+      this.setThresholdBoundary(ThresholdBoundary.DEFAULT)
+    }
+  }
+
+  private checkLocationOfThresholdBoundary() {
+    // pulldownRefresh is in the phase of Moving
+    if (this.pulling === PullDownPhase.MOVING) {
+      const scroll = this.scroll
+      // enter threshold boundary
+      const enteredThresholdBoundary =
+        this.thresholdBoundary !== ThresholdBoundary.INSIDE &&
+        this.locateInsideThresholdBoundary()
+      // leave threshold boundary
+      const leftThresholdBoundary =
+        this.thresholdBoundary !== ThresholdBoundary.OUTSIDE &&
+        !this.locateInsideThresholdBoundary()
+      if (enteredThresholdBoundary) {
+        this.setThresholdBoundary(ThresholdBoundary.INSIDE)
+        scroll.trigger(ENTER_THRESHOLD_EVENT)
+      }
+      if (leftThresholdBoundary) {
+        this.setThresholdBoundary(ThresholdBoundary.OUTSIDE)
+        scroll.trigger(LEAVE_THRESHOLD_EVENT)
+      }
+    }
+  }
+
+  private locateInsideThresholdBoundary() {
+    return this.scroll.y <= this.options.threshold
   }
 
   private unwatch() {
-    const scroller = this.scroll.scroller
+    const scroll = this.scroll
+    const scroller = scroll.scroller
     this.watching = false
     scroller.hooks.off(scroller.hooks.eventTypes.end, this.checkPullDown)
+    scroll.off(scroll.eventTypes.scrollStart, this.resetStateBeforeScrollStart)
+    scroll.off(scroll.eventTypes.scroll, this.checkLocationOfThresholdBoundary)
   }
 
   private checkPullDown() {
@@ -152,12 +232,12 @@ export default class PullDown implements PluginAPI {
       return false
     }
 
-    if (!this.pulling) {
+    if (this.pulling === PullDownPhase.MOVING) {
       this.modifyBehaviorYBoundary(stop)
 
-      this.pulling = true
+      this.setPulling(PullDownPhase.FETCHING)
 
-      this.scroll.trigger(PULL_DOWN_HOOKS_NAME)
+      this.scroll.trigger(PULLING_DOWN_EVENT)
     }
 
     this.scroll.scrollTo(
@@ -167,7 +247,11 @@ export default class PullDown implements PluginAPI {
       ease.bounce
     )
 
-    return this.pulling
+    return this.isFetchingStatus()
+  }
+
+  private isFetchingStatus() {
+    return this.pulling === PullDownPhase.FETCHING
   }
 
   private modifyBehaviorYBoundary(stopDistance: number) {
@@ -180,12 +264,12 @@ export default class PullDown implements PluginAPI {
   }
 
   finishPullDown() {
-    if (this.pulling === true) {
+    if (this.isFetchingStatus()) {
       const scrollBehaviorY = this.scroll.scroller.scrollBehaviorY
       // restore minScrollY since the hang animation has ended
       this.currentMinScrollY = this.cachedOriginanMinScrollY
       scrollBehaviorY.computeBoundary()
-      this.pulling = false
+      this.setPulling(PullDownPhase.DEFAULT)
       this.scroll.resetPosition(this.scroll.options.bounceTime, ease.bounce)
     }
   }
@@ -205,15 +289,17 @@ export default class PullDown implements PluginAPI {
   autoPullDownRefresh() {
     const { threshold, stop } = this.options
 
-    if (this.pulling || !this.watching) {
+    if (this.isFetchingStatus() || !this.watching) {
       return
     }
-    this.pulling = true
 
     this.modifyBehaviorYBoundary(stop)
 
+    this.scroll.trigger(this.scroll.eventTypes.scrollStart)
     this.scroll.scrollTo(this.scroll.x, threshold)
-    this.scroll.trigger(PULL_DOWN_HOOKS_NAME)
+
+    this.setPulling(PullDownPhase.FETCHING)
+    this.scroll.trigger(PULLING_DOWN_EVENT)
     this.scroll.scrollTo(
       this.scroll.x,
       stop,

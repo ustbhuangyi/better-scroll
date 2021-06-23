@@ -28,6 +28,8 @@ export interface IndicatorOptions {
   wrapper: HTMLElement
   direction: IndicatorDirection
   fade: boolean
+  fadeInTime: number
+  fadeOutTime: number
   interactive: boolean
   minSize: number
   isCustom: boolean
@@ -247,7 +249,8 @@ export default class Indicator {
   }
 
   fade(visible?: boolean) {
-    const time = visible ? 250 : 500
+    const { fadeInTime, fadeOutTime } = this.options
+    const time = visible ? fadeInTime : fadeOutTime
     const wrapper = this.wrapper
     wrapper.style[style.transitionDuration as any] = time + 'ms'
     wrapper.style.opacity = visible ? '1' : '0'

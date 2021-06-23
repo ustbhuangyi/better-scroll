@@ -27,6 +27,8 @@ describe('scroll-bar indicator tests', () => {
     wrapper,
     direction: IndicatorDirection.Vertical,
     fade: true,
+    fadeInTime: 250,
+    fadeOutTime: 500,
     interactive: false,
     minSize: 8,
     isCustom: false,
