@@ -47,6 +47,10 @@ const examples = [
     name: 'infinity',
     path: '/infinity',
   },
+  {
+    name: 'form',
+    path: '/form',
+  },
 ]
 
 const App = () => {
