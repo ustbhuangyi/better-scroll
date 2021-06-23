@@ -10,6 +10,8 @@ export type ScrollbarOptions = Partial<ScrollbarConfig> | true
 
 export interface ScrollbarConfig {
   fade: boolean
+  fadeInTime: number
+  fadeOutTime: number
   interactive: boolean
   customElements: HTMLElement[]
   minSize: number
@@ -50,6 +52,8 @@ export default class ScrollBar {
 
     const defaultOptions: ScrollbarConfig = {
       fade: true,
+      fadeInTime: 250,
+      fadeOutTime: 500,
       interactive: false,
       customElements: [],
       minSize: 8,
@@ -82,7 +86,7 @@ export default class ScrollBar {
           : this.createScrollbarElement(direction)
         // internal scrollbar
         if (scrollbarWrapper !== customElement) {
-          scroll.wrapper.append(scrollbarWrapper)
+          scroll.wrapper.appendChild(scrollbarWrapper)
         } else {
           // custom scrollbar passed by users
           isCustom = true

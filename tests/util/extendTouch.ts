@@ -23,18 +23,44 @@ interface ScrollParams {
   repeatDelayMs?: number
 }
 
+interface TouchPoint {
+  x: number
+  y: number
+  radiusX?: number
+  radiusY?: number
+  rotationAngle?: number
+  force?: number
+  tangentialPressure?: number
+  tiltX?: number
+  tiltY?: number
+  twist?: number
+  id?: number
+}
+
+interface TouchesParams {
+  type: 'touchStart' | 'touchEnd' | 'touchMove' | 'touchCancel'
+  touchPoints: TouchPoint[]
+  modifiers?: number // Alt=1, Ctrl=2, Meta/Command=4, Shift=8
+  timestamp?: number
+}
+
 const PINCH_NAME = 'Input.synthesizePinchGesture'
 const SCROLL_NAME = 'Input.synthesizeScrollGesture'
+const TOUCHES_NAME = 'Input.dispatchTouchEvent'
 
 declare module 'puppeteer' {
   interface Touchscreen {
     _client: {
-      send: (name: string, params: PinchParams | ScrollParams) => Promise<void>
+      send: <T>(
+        name: T,
+        params: PinchParams | ScrollParams | TouchesParams
+      ) => Promise<void>
     }
   }
   interface Page {
     dispatchPinch: (pinchParams: PinchParams) => Promise<void>
     dispatchScroll: (scrollParams: ScrollParams) => Promise<void>
+    dispatchTouch: (touchesParams: TouchesParams) => Promise<void>
     touchsceen: Touchscreen
   }
 }
@@ -43,10 +69,13 @@ declare module 'puppeteer' {
 // since puppeteer is connected to chromium with chromeDevTools
 // https://chromedevtools.github.io/devtools-protocol/tot/Input#method-dispatchTouchEvent
 export default (page: Page) => {
-  page.dispatchPinch = async pinchParams => {
+  page.dispatchPinch = async (pinchParams) => {
     await page.touchscreen._client.send(PINCH_NAME, pinchParams)
   }
-  page.dispatchScroll = async scrollParams => {
+  page.dispatchScroll = async (scrollParams) => {
     await page.touchscreen._client.send(SCROLL_NAME, scrollParams)
+  }
+  page.dispatchTouch = async (touchesParams) => {
+    await page.touchscreen._client.send(TOUCHES_NAME, touchesParams)
   }
 }

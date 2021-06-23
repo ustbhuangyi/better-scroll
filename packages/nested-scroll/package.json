@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/nested-scroll",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "make your nested scrolls reconciliation",
   "author": {
     "name": "jizhi",
@@ -31,7 +31,7 @@
     "directory": "packages/nested-scroll"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.3.0"
+    "@better-scroll/core": "^2.4.0"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }

@@ -185,12 +185,20 @@ yarn add @better-scroll/scroll-bar
 
   滚动条轨道被点击之后，滚动距离的计算方式，默认与浏览器的表现形式一样，可以配置为 `'clickedPoint'`，代表滚动条滚动至点击的位置。
 
-### scrollbarTrackOffsetTime <Badge text="2.2.0" />
+### fadeInTime <Badge text="2.4.0" />
 
   - **类型**：`number`
-  - **默认值**：`300`
+  - **默认值**：`250`
 
-  滚动条轨道被点击之后，滚动位移的时间
+  滚动条渐显的动画时长。
+
+### fadeOutTime <Badge text="2.4.0" />
+
+  - **类型**：`number`
+  - **默认值**：`500`
+
+  滚动条渐隐的动画时长。
+
 
 :::tip 提示
 当 scrollbar 配置为 true 的时候，插件内部使用的是默认的插件选项对象。
@@ -206,12 +214,15 @@ const bs = new BScroll('.wrapper', {
   scrollbar: {
     fade: true,
     interactive: false,
-    // 以下配置项 v2.1.2 才支持
+    // 以下配置项 v2.2.0 才支持
     customElements: [],
     minSize: 8,
     scrollbarTrackClickable: false,
     scrollbarTrackOffsetType: 'step',
-    scrollbarTrackOffsetTime: 300
+    scrollbarTrackOffsetTime: 300,
+    // 以下配置项 v2.4.0 才支持
+    fadeInTime: 250,
+    fadeOutTime: 500
   }
 })
 ```

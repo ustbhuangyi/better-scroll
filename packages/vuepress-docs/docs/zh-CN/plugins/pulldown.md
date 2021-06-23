@@ -35,7 +35,9 @@ new BScroll('.bs-wrapper', {
 
 ## 示例
 
-<demo qrcode-url="pulldown/" :render-code="true">
+- **基础使用**
+
+<demo qrcode-url="pulldown/default" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/pulldown/default.vue?template
   </template>
@@ -47,6 +49,47 @@ new BScroll('.bs-wrapper', {
   </template>
   <pulldown-default slot="demo"></pulldown-default>
 </demo>
+
+- **仿新浪微博 <Badge text='2.4.0' />**
+
+<demo qrcode-url="pulldown/sina">
+  <template slot="code-template">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?style
+  </template>
+  <pulldown-sina-weibo slot="demo"></pulldown-sina-weibo>
+</demo>
+
+为了拉齐客户端的交互效果，在 v2.4.0 版本，pulldown 内部进行了功能的改造并且兼容以前的版本，在一次 pulldown 的操作过程中，内部存在三个流转的状态，并且状态是不可逆的。分别如下：
+
+1. **default**
+
+  初始状态。
+
+2. **moving**
+
+  移动状态，这个状态代表用户的手指正在操控 BetterScroll，手指未移开，在这种状态下，BetterScroll 会派发两个事件。
+
+  - **enterThreshold**
+
+    当 BetterScroll 滚动到 pulldown 的 threshold 阈值区域**之内**的时候派发，在这个事件内部，你可以做文案初始化的逻辑，比如提示用户“下拉刷新”
+  
+  - **leaveThreshold**
+
+    当 BetterScroll 滚动到 pulldown 的 threshold 阈值区域**之外**的时候派发。你可以提示用户“手指释放刷新”
+
+3. **fetching**
+
+  手指移开的瞬间，触发 pullingDown 事件，执行获取数据的逻辑
+
+状态的变换只可能是 `default -> moving -> fetching` 或者是 `default -> moving`，后者代表用户的手指在释放的瞬间，没有满足触发 pullingDown 事件的条件。
+
+
 
 ## pullDownRefresh 选项对象
 
@@ -150,3 +193,13 @@ openPullDown 方法应该配合 closePullDown 一起使用，因为在 pulldown 
 ::: danger 危险
 监测到下拉刷新的动作之后，`pullingDown` 钩子的消费机会只有一次，因此你需要调用 `finishPullDown()` 来告诉 BetterScroll 来提供下一次 `pullingDown` 钩子的消费机会。
 :::
+
+### `enterThreshold` <Badge text='2.4.0' />
+
+- **参数**：无
+- **触发时机**：当 pulldown 正处于 moving 状态，并且**进入** threshold 区域的瞬间。
+
+### `leaveThreshold` <Badge text='2.4.0' />
+
+- **参数**：无
+- **触发时机**：当 pulldown 正处于 moving 状态，并且**离开** threshold 区域的瞬间。
