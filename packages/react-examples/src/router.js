@@ -44,6 +44,16 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/observe-dom',
+    component: lazy(() => import('./pages/observe-dom')),
+    routes: [
+      {
+        path: '/observe-dom/',
+        component: lazy(() => import('./pages/observe-dom/components/default')),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {

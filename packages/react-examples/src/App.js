@@ -7,6 +7,10 @@ const examples = [
     name: 'core scroll',
     path: '/core/',
   },
+  {
+    name: 'observe-dom',
+    path: '/observe-dom/',
+  },
 ]
 
 const App = () => {
