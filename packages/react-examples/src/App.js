@@ -35,6 +35,10 @@ const examples = [
     name: 'pulldown',
     path: '/pulldown/',
   },
+  {
+    name: 'scrollbar',
+    path: '/scrollbar',
+  },
 ]
 
 const App = () => {

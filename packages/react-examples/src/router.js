@@ -146,6 +146,32 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/scrollbar',
+    component: lazy(() => import('./pages/scrollbar')),
+    routes: [
+      {
+        path: '/scrollbar/vertical',
+        component: lazy(() => import('./pages/scrollbar/components/vertical')),
+      },
+      {
+        path: '/scrollbar/horizontal',
+        component: lazy(() =>
+          import('./pages/scrollbar/components/horizontal')
+        ),
+      },
+      {
+        path: '/scrollbar/custom',
+        component: lazy(() => import('./pages/scrollbar/components/custom')),
+      },
+      {
+        path: '/scrollbar/mousewheel',
+        component: lazy(() =>
+          import('./pages/scrollbar/components/mousewheel')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
