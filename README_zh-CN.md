@@ -10,6 +10,14 @@
 
 > **注意**：1.x 的代码已经不维护，请尽早升级版本。
 
+# puppeteer 安装
+
+BetterScroll 依赖 puppeteer，在国内下载 puppeteer 容易失败，可以设置 puppeteer 的淘宝镜像。
+
+```sh
+PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors yarn
+```
+
 # 安装
 
 ```bash

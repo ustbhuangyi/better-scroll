@@ -48,10 +48,10 @@ new BScroll('.wrapper', {
         <<< @/examples/vue/components/indicators/minimap.vue?template
       </template>
       <template slot="code-script">
-        <<< @/examples/vue/components/scrollbar/minimap.vue?script
+        <<< @/examples/vue/components/indicators/minimap.vue?script
       </template>
       <template slot="code-style">
-        <<< @/examples/vue/components/scrollbar/minimap.vue?style
+        <<< @/examples/vue/components/indicators/minimap.vue?style
       </template>
       <indicators-minimap slot="demo"></indicators-minimap>
     </demo>

@@ -100,6 +100,7 @@ describe('pull down tests', () => {
     const mockFn = jest.fn()
     scroll.on(scroll.eventTypes.pullingDown, mockFn)
 
+    scroll.trigger(scroll.eventTypes.scrollStart)
     // simulate pullUp action
     scroll.y = -100
     scroll.scroller.hooks.trigger(scroll.scroller.hooks.eventTypes.end)
@@ -112,11 +113,31 @@ describe('pull down tests', () => {
     expect(mockFn).toHaveBeenCalledTimes(1)
   })
 
+  it('should checkLocationOfThresholdBoundary', () => {
+    const enterThresholdFn = jest.fn()
+    const leaveThresholdFn = jest.fn()
+    scroll.on(scroll.eventTypes.enterThreshold, enterThresholdFn)
+    scroll.on(scroll.eventTypes.leaveThreshold, leaveThresholdFn)
+    scroll.trigger(scroll.eventTypes.scrollStart)
+
+    // enter threshold boundary
+    scroll.y = 20
+    scroll.trigger(scroll.eventTypes.scroll)
+
+    // leave threshold boundary
+    scroll.y = 100
+    scroll.trigger(scroll.eventTypes.scroll)
+
+    expect(enterThresholdFn).toHaveBeenCalledTimes(1)
+    expect(leaveThresholdFn).toHaveBeenCalledTimes(1)
+  })
+
   it('should trigger pullingDown once', () => {
     const mockFn = jest.fn()
     scroll.on(scroll.eventTypes.pullingDown, mockFn)
     // when
     scroll.y = 100
+    scroll.trigger(scroll.eventTypes.scrollStart)
     scroll.scroller.hooks.trigger('end')
     scroll.scroller.hooks.trigger('end')
     // then
@@ -136,10 +157,10 @@ describe('pull down tests', () => {
   })
 
   it('should work well when call finishPullDown()', () => {
-    pullDown.pulling = true
+    pullDown.pulling = 2
     pullDown.finishPullDown()
 
-    expect(pullDown.pulling).toBe(false)
+    expect(pullDown.pulling).toBe(0)
     expect(scroll.scroller.scrollBehaviorY.computeBoundary).toBeCalled()
     expect(scroll.resetPosition).toBeCalled()
   })
@@ -196,7 +217,7 @@ describe('pull down tests', () => {
 
   it('should call finishPullDown when content DOM changed', () => {
     // simulate pullDown action
-    pullDown.pulling = true
+    pullDown.pulling = 2
 
     scroll.hooks.trigger(scroll.hooks.eventTypes.contentChanged)
     expect(scroll.scroller.scrollBehaviorY.computeBoundary).toBeCalled()
