@@ -1,0 +1,116 @@
+.scrollbar
+  height: 100%
+.scrollbar-wrapper
+  position: relative
+  height: 100%
+  padding: 0 10px
+  border: 1px solid #ccc
+  overflow: hidden
+.scrollbar-content-item
+  padding: 10px 0
+  list-style: none
+  border-bottom: 1px solid #ccc
+  text-align: left
+
+.horizontal-scrollbar-container
+  .scroll-wrapper
+    position relative
+    display flex
+    align-content center
+    width 90%
+    height 100px
+    margin 80px auto
+    white-space nowrap
+    border 3px solid rgba(30, 80, 255, 0.3)
+    border-radius 5px
+    overflow hidden
+    .scroll-content
+      display inline-block
+      align-self center
+    .scroll-item
+      opacity  0.6
+      color white
+      box-sizing border-box
+      height 50px
+      width 50px
+      line-height 50px
+      border-radius 50%
+      font-size 18px
+      display inline-block
+      text-align center
+      padding 0 10px
+      margin 0 10px
+      &:nth-child(4n)
+        background-color #06F
+      &:nth-child(4n+1)
+        background-color #0f9d00
+      &:nth-child(4n+2)
+        background-color #F00
+      &:nth-child(4n+3)
+        background-color #ffea00
+
+.custom-scrollbar-container
+  .custom-scrollbar-wrapper
+    position relative
+    width 280px
+    height 280px
+    overflow hidden
+  .custom-scrollbar-content
+    max-width none
+  .custom-vertical-scrollbar
+    position absolute
+    top 50%
+    right 10px
+    height 100px
+    width 7px
+    border-radius 6px
+    transform translateY(-50%) translateZ(0)
+    background-color rgb(200, 200, 200, 0.3)
+  .custom-vertical-indicator
+    width 100%
+    height 20px
+    border-radius 6px
+    background-color #db8090
+  .custom-horizontal-scrollbar
+    position absolute
+    left 50%
+    bottom 10px
+    width 100px
+    height 7px
+    border-radius 6px
+    transform translateX(-50%) translateZ(0)
+    background-color rgb(200, 200, 200, 0.3)
+  .custom-horizontal-indicator
+    height 100%
+    width 20px
+    border-radius 6px
+    background-color #db8090
+
+.mousewheel-scrollbar-container
+  .custom-scrollbar-wrapper
+    position relative
+    width 280px
+    height 280px
+    overflow hidden
+  .custom-scrollbar-content
+    display inline-block
+    height 280px
+    > img
+      max-width none
+  .custom-horizontal-scrollbar
+    position absolute
+    left 50%
+    bottom 10px
+    width 100px
+    height 7px
+    border-radius 6px
+    transform translateX(-50%) translateZ(0)
+    background-color rgb(200, 200, 200, 0.3)
+  .custom-horizontal-indicator
+    height 100%
+    width 20px
+    border-radius 6px
+    background-color #db8090
+  .tip
+    text-align center
+    margin-top 10px

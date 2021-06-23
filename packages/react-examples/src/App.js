@@ -7,6 +7,62 @@ const examples = [
     name: 'core scroll',
     path: '/core/',
   },
+  {
+    name: 'observe-dom',
+    path: '/observe-dom/',
+  },
+  {
+    name: 'observe-image',
+    path: '/observe-image/',
+  },
+  {
+    name: 'slide',
+    path: '/slide',
+  },
+  {
+    name: 'zoom',
+    path: '/zoom/',
+  },
+  {
+    name: 'picker',
+    path: '/picker/',
+  },
+  {
+    name: 'pullup',
+    path: '/pullup/',
+  },
+  {
+    name: 'pulldown',
+    path: '/pulldown/',
+  },
+  {
+    name: 'scrollbar',
+    path: '/scrollbar',
+  },
+  {
+    name: 'indicators',
+    path: '/indicators',
+  },
+  {
+    name: 'infinity',
+    path: '/infinity',
+  },
+  {
+    name: 'form',
+    path: '/form',
+  },
+  {
+    name: 'nested-scroll',
+    path: '/nested-scroll',
+  },
+  {
+    name: 'mouse-wheel',
+    path: '/mouse-wheel',
+  },
+  {
+    name: 'movable',
+    path: '/movable',
+  },
 ]
 
 const App = () => {

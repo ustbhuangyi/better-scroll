@@ -1,0 +1,119 @@
+.vertical
+  .outer-wrapper
+  .inner-wrapper
+    border: 2px solid #62B791
+    border-radius: 5px
+    transform: rotate(0deg)
+    position: relative
+    overflow: hidden
+  .outer-wrapper
+    height: 100%
+    border: 1px solid rgba(0, 0, 0, .1)
+  .inner-wrapper
+    height: 240px
+    background-color rgba(98,183,145, 0.2)
+  .inner-list-item
+    height: 50px
+    line-height: 50px
+    text-align: center
+    list-style: none
+  .outer-list-item
+    height: 40px
+    line-height: 40px
+    text-align: center
+    list-style: none
+
+.horizontal
+  .outer-wrapper
+    border: 1px solid rgba(0, 0, 0, 0.1)
+    border-radius: 5px
+    transform: rotate(0deg)
+    margin-top: 50px
+    position: relative
+    overflow: hidden
+    .outer-content
+      display: inline-block
+      vertical-align: top
+      white-space: nowrap
+  .inner-wrapper
+    border: 2px solid #62B791
+    border-radius: 5px
+    transform: rotate(0deg)
+    position: relative
+    width: 200px
+    overflow: hidden
+    .inner-content
+      display: inline-block
+      vertical-align: top
+  .list-item
+    display: inline-block
+    line-height: 60px
+  .inner-list-item
+    vertical-align: top // important
+    background-color: rgba(98,183,145, 0.2)
+
+.horizontal-in-vertical-container
+    height: 100%
+  .vertical-wrapper
+    height: 100%
+    border: 1px solid rgba(0, 0, 0, .1)
+    position: relative
+    overflow: hidden
+    .vertical-item
+      line-height: 40px
+      text-align: center
+  .slide-banner-content
+    height: 120px
+    white-space: nowrap
+    font-size: 0
+    .slide-item
+      display: inline-block
+      height: 120px
+      width: 100%
+      line-height: 120px
+      text-align: center
+      font-size: 26px
+      &.page1
+        background-color: #95B8D1
+      &.page2
+        background-color: #DDA789
+      &.page3
+        background-color: #C3D899
+      &.page4
+        background-color: #F2D4A7
+
+.triple-vertical
+  .outer-wrapper
+  .middle-wrapper
+  .inner-wrapper
+    border: 2px solid #62B791
+    border-radius: 5px
+    transform: rotate(0deg)
+    position: relative
+    overflow: hidden
+  .outer-wrapper
+    height: 100%
+    border: 1px solid rgba(0, 0, 0, .1)
+  .middle-wrapper
+    height: 480px
+    background-color rgba(240,65,85, 0.2)
+    border: 2px solid #f04155
+  .inner-wrapper
+    height: 240px
+    background-color rgb(98,183,145)
+  .middle-list-item
+  .inner-list-item
+    height: 50px
+    line-height: 50px
+    text-align: center
+    list-style: none
+    color: white
+
+  .middle-list-item
+    color: #894e06
+
+  .outer-list-item
+    height: 40px
+    line-height: 40px
+    text-align: center
+    list-style: none
