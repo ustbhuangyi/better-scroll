@@ -5,7 +5,7 @@
           <span>Default</span>
       </li>
       <li class="example-item" @click="goPage('/pulldown/sina')">
-          <span>Sina-Weibo</span>
+          <span>Sina-Weibo(v2.4.0)</span>
       </li>
     </ul>
     <transition name="move">

@@ -35,7 +35,9 @@ new BScroll('.bs-wrapper', {
 
 ## Demo
 
-<demo qrcode-url="pulldown/" :render-code="true">
+- **Basic Usage**
+
+<demo qrcode-url="pulldown/default" :render-code="true">
   <template slot="code-template">
     <<< @/examples/vue/components/pulldown/default.vue?template
   </template>
@@ -47,6 +49,45 @@ new BScroll('.bs-wrapper', {
   </template>
   <pulldown-default slot="demo"></pulldown-default>
 </demo>
+
+- **Sina-Weibo(v2.4.0)**
+
+<demo qrcode-url="pulldown/sina">
+  <template slot="code-template">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?template
+  </template>
+  <template slot="code-script">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?script
+  </template>
+  <template slot="code-style">
+    <<< @/examples/vue/components/pulldown/sina-weibo.vue?style
+  </template>
+  <pulldown-sina-weibo slot="demo"></pulldown-sina-weibo>
+</demo>
+
+In order to match the effects of App, in version v2.4.0, pulldown has made some changes and is compatible with previous versions. During a pulldown procedure, there are three internal circulation states, and the states are irreversible. They are as follows:
+
+1. **default**
+
+  The initial state.
+
+2. **moving**
+
+  Moving state, this state represents that the user's finger is manipulating BetterScroll, and the finger is keeping in touch. In this state, BetterScroll will dispatch two events.
+
+  - **enterThreshold**
+
+    Dispatched when BetterScroll scrolls **into** the pulldown threshold area. Inside this event, you can do the logic of texts initialization, such as prompting the user to "pull down to refresh"
+  
+  - **leaveThreshold**
+
+    Dispatched when BetterScroll scrolls **out of** the pulldown threshold area. You can prompt the user to "Release finger"
+
+3. **fetching**
+
+  Once the finger went away, the pullingDown event is triggered to execute the logic of fetching data
+
+The state change can only be `default -> moving -> fetching` or `default -> moving`. The latter means that at the moment the user's finger is released, the conditions for triggering the pullingDown event are not met.
 
 ## pullDownRefresh Options
 
@@ -141,8 +182,18 @@ bs.autoPullDownRefresh()
 ### `pullingDown`
 
   - **Arguments**: None
-  - **Trigger**:A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
+  - **Trigger**: A `pullingDown` event is fired when the top pull-down distance is greater than the `threshold` value after touchend.
 
 ::: danger Note
 After the pull-down refresh action is detected, the consumption opportunity of the `pullingDown` hook is only once, so you need to call `finishPullDown()` to tell BetterScroll to provide the next consumption opportunity of the `pullingDown` event.
 :::
+
+### `enterThreshold` <Badge text='2.4.0' />
+
+  - **Arguments**: None
+  - **Trigger**: when pulldown is in the **moving** state and **enters** threshold area.
+
+### `leaveThreshold` <Badge text='2.4.0' />
+
+  - **Arguments**: None
+  - **Trigger**: when pulldown is in the **moving** state and **leaves** threshold area.
