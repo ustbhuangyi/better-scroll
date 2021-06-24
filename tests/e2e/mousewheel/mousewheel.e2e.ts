@@ -174,7 +174,7 @@ describe('MouseWheel plugin', () => {
         (element) => element.length
       )
 
-      await expect(itemsCounts).toBeGreaterThanOrEqual(30)
+      await expect(itemsCounts).toBeGreaterThanOrEqual(40)
     })
   })
 

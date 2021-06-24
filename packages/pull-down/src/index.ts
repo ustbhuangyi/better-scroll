@@ -89,9 +89,9 @@ export default class PullDown implements PluginAPI {
   }
 
   private handleOptions(userOptions: PullDownRefreshOptions = {}) {
-    userOptions = (userOptions === true ? {} : userOptions) as Partial<
-      PullDownRefreshConfig
-    >
+    userOptions = (
+      userOptions === true ? {} : userOptions
+    ) as Partial<PullDownRefreshConfig>
     const defaultOptions: PullDownRefreshConfig = {
       threshold: 90,
       stop: 40,
@@ -130,7 +130,7 @@ export default class PullDown implements PluginAPI {
     )
 
     // integrate with mousewheel
-    if (this.scroll.eventTypes.alterOptions) {
+    if (this.hasMouseWheelPlugin()) {
       this.registerHooks(
         this.scroll,
         this.scroll.eventTypes.alterOptions,
@@ -159,6 +159,10 @@ export default class PullDown implements PluginAPI {
     this.hooksFn.push([hooks, name, handler])
   }
 
+  private hasMouseWheelPlugin() {
+    return !!this.scroll.eventTypes.alterOptions
+  }
+
   private watch() {
     const scroller = this.scroll.scroller
     this.watching = true
@@ -179,6 +183,14 @@ export default class PullDown implements PluginAPI {
       this.scroll.eventTypes.scroll,
       this.checkLocationOfThresholdBoundary
     )
+
+    if (this.hasMouseWheelPlugin()) {
+      this.registerHooks(
+        this.scroll,
+        this.scroll.eventTypes.mousewheelStart,
+        this.resetStateBeforeScrollStart
+      )
+    }
   }
 
   private resetStateBeforeScrollStart() {
@@ -223,6 +235,12 @@ export default class PullDown implements PluginAPI {
     scroller.hooks.off(scroller.hooks.eventTypes.end, this.checkPullDown)
     scroll.off(scroll.eventTypes.scrollStart, this.resetStateBeforeScrollStart)
     scroll.off(scroll.eventTypes.scroll, this.checkLocationOfThresholdBoundary)
+    if (this.hasMouseWheelPlugin()) {
+      scroll.off(
+        scroll.eventTypes.mousewheelStart,
+        this.resetStateBeforeScrollStart
+      )
+    }
   }
 
   private checkPullDown() {
