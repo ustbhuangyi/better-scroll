@@ -302,6 +302,18 @@ const ROUTES = [
       },
     ],
   },
+  {
+    path: '/compose',
+    component: lazy(() => import('./pages/compose')),
+    routes: [
+      {
+        path: '/compose/pullup-pulldown',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown')
+        ),
+      },
+    ],
+  },
 ]
 
 const renderRoute = (route) => {
