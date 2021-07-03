@@ -243,6 +243,11 @@ export function click(e: any, event = 'click') {
     altKey,
     metaKey,
   }
+  const { button, buttons } = e
+  const buttonMap = {
+    button: button,
+    buttons: buttons
+  }
   if (typeof MouseEvent !== 'undefined') {
     try {
       ev = new MouseEvent(
@@ -252,6 +257,7 @@ export function click(e: any, event = 'click') {
             bubbles,
             cancelable,
             ...pressedKeysMap,
+            ...buttonMap
           },
           posSrc
         )
