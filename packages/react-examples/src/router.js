@@ -312,6 +312,12 @@ const ROUTES = [
           import('./pages/compose/components/pullup-pulldown')
         ),
       },
+      {
+        path: '/compose/pullup-pulldown-slide',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown-slide')
+        ),
+      },
     ],
   },
 ]

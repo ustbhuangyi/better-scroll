@@ -7,6 +7,10 @@ const examples = [
     path: '/compose/pullup-pulldown',
     name: 'pullup-pulldown',
   },
+  {
+    path: '/compose/pullup-pulldown-slide',
+    name: 'pullup-pulldown-slide',
+  },
 ]
 
 const Compose = (props) => {
