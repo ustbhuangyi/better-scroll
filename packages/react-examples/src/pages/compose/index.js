@@ -15,6 +15,10 @@ const examples = [
     path: '/compose/pullup-pulldown-outnested',
     name: 'pullup-pulldown-outnested',
   },
+  {
+    path: '/compose/slide-nested',
+    name: 'slide-nested',
+  },
 ]
 
 const Compose = (props) => {
