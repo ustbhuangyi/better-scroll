@@ -64,3 +64,46 @@
     background-color #C3D899
   .page0
     background-color #F2D4A7
+
+.pullup-pulldown-outnested
+  height: 100%
+  .outer-wrapper
+  .inner-wrapper
+    border: 2px solid #62B791
+    border-radius: 5px
+    transform: rotate(0deg)
+    position: relative
+    overflow: hidden
+  .outer-wrapper
+    height: 100%
+    border: 1px solid rgba(0, 0, 0, .1)
+  .inner-wrapper
+    height: 240px
+    background-color: rgba(98,183,145, 0.2)
+
+  .inner-list-item
+    height: 50px
+    line-height: 50px
+    text-align: center
+    list-style: none
+
+  .outer-list-item2,
+  .outer-list-item
+    height: 40px
+    line-height: 40px
+    text-align: center
+    list-style: none
+
+  .pulldown-wrapper
+    position absolute
+    width 100%
+    padding 20px
+    box-sizing border-box
+    transform translateY(-100%) translateZ(0)
+    text-align center
+    color #999
+
+  .pullup-wrapper
+    padding 20px
+    text-align center
+    color #999

@@ -318,6 +318,12 @@ const ROUTES = [
           import('./pages/compose/components/pullup-pulldown-slide')
         ),
       },
+      {
+        path: '/compose/pullup-pulldown-outnested',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown-outnested')
+        ),
+      },
     ],
   },
 ]
