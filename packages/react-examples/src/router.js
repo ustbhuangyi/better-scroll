@@ -141,8 +141,12 @@ const ROUTES = [
     component: lazy(() => import('./pages/pulldown')),
     routes: [
       {
-        path: '/pulldown/',
+        path: '/pulldown/default',
         component: lazy(() => import('./pages/pulldown/components/default')),
+      },
+      {
+        path: '/pulldown/sina',
+        component: lazy(() => import('./pages/pulldown/components/sina-weibo')),
       },
     ],
   },
