@@ -141,8 +141,12 @@ const ROUTES = [
     component: lazy(() => import('./pages/pulldown')),
     routes: [
       {
-        path: '/pulldown/',
+        path: '/pulldown/default',
         component: lazy(() => import('./pages/pulldown/components/default')),
+      },
+      {
+        path: '/pulldown/sina',
+        component: lazy(() => import('./pages/pulldown/components/sina-weibo')),
       },
     ],
   },
@@ -298,6 +302,36 @@ const ROUTES = [
         path: '/movable/multi-content-scale',
         component: lazy(() =>
           import('./pages/movable/components/multi-content-scale')
+        ),
+      },
+    ],
+  },
+  {
+    path: '/compose',
+    component: lazy(() => import('./pages/compose')),
+    routes: [
+      {
+        path: '/compose/pullup-pulldown',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown')
+        ),
+      },
+      {
+        path: '/compose/pullup-pulldown-slide',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown-slide')
+        ),
+      },
+      {
+        path: '/compose/pullup-pulldown-outnested',
+        component: lazy(() =>
+          import('./pages/compose/components/pullup-pulldown-outnested')
+        ),
+      },
+      {
+        path: '/compose/slide-nested',
+        component: lazy(() =>
+          import('./pages/compose/components/slide-nested')
         ),
       },
     ],
