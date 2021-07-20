@@ -37,7 +37,7 @@ In order to enable the mouseWheel plugin, you need to first import it, register 
 
  - **VerticalScroll Demo**
 
-  <demo :hide-qrcode="true" :render-code="true">
+  <demo :hide-qrcode="true" :render-code="true" qrcode-url="mouse-wheel/vertical-scroll">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/vertical-scroll.vue?template
     </template>
@@ -52,7 +52,7 @@ In order to enable the mouseWheel plugin, you need to first import it, register 
 
 - **HorizontalScroll Demo**
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/horizontal-scroll">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/horizontal-scroll.vue?template
     </template>
@@ -76,7 +76,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   - **HorizontalSlide Demo**
 
-    <demo :hide-qrcode="true">
+    <demo :hide-qrcode="true" qrcode-url="mouse-wheel/horizontal-slide">
       <template slot="code-template">
         <<< @/examples/vue/components/mouse-wheel/horizontal-slide.vue?template
       </template>
@@ -91,7 +91,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   - **VerticalSlide Demo**
 
-    <demo :hide-qrcode="true">
+    <demo :hide-qrcode="true" qrcode-url="mouse-wheel/vertical-slide">
       <template slot="code-template">
         <<< @/examples/vue/components/mouse-wheel/vertical-slide.vue?template
       </template>
@@ -108,7 +108,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   use mousewheel do [pullup](./pullup.html) operation.
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/pullup">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/pullup.vue?template
     </template>
@@ -125,7 +125,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   use mousewheel do [pulldown](./pulldown.html)  operation.
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/pulldown">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/pulldown.vue?template
     </template>
@@ -142,7 +142,7 @@ The mouseWheel plugin can also be used with other plugins to increase the operat
 
   use mousewheel do [wheel](./wheel.html) operation.
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/picker">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/picker.vue?template
     </template>

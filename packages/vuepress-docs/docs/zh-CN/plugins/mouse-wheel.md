@@ -37,7 +37,7 @@ yarn add @better-scroll/mouse-wheel
 
 - **纵向普通滚动示例**
 
-  <demo :hide-qrcode="true" :render-code="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/vertical-scroll" :render-code="true">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/vertical-scroll.vue?template
     </template>
@@ -52,7 +52,7 @@ yarn add @better-scroll/mouse-wheel
 
 - **横向普通滚动示例**
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/horizontal-scroll">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/horizontal-scroll.vue?template
     </template>
@@ -75,7 +75,7 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   - **横向 slide 示例**
 
-    <demo :hide-qrcode="true">
+    <demo :hide-qrcode="true" qrcode-url="mouse-wheel/horizontal-slide">
       <template slot="code-template">
         <<< @/examples/vue/components/mouse-wheel/horizontal-slide.vue?template
       </template>
@@ -90,7 +90,7 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   - **纵向 slide 示例**
 
-    <demo :hide-qrcode="true">
+    <demo :hide-qrcode="true" qrcode-url="mouse-wheel/vertical-slide">
       <template slot="code-template">
         <<< @/examples/vue/components/mouse-wheel/vertical-slide.vue?template
       </template>
@@ -107,7 +107,7 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   通过鼠标触发上拉加载 [pullup](./pullup.html)。
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/pullup">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/pullup.vue?template
     </template>
@@ -124,7 +124,7 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   通过鼠标触发下拉加载 [pulldown](./pulldown.html)。
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/pulldown">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/pulldown.vue?template
     </template>
@@ -141,7 +141,7 @@ mouseWheel 插件还可以搭配其他的插件，为其增加鼠标滚轮的操
 
   通过鼠标触发 [wheel](./wheel.html)。
 
-  <demo :hide-qrcode="true">
+  <demo :hide-qrcode="true" qrcode-url="mouse-wheel/picker">
     <template slot="code-template">
       <<< @/examples/vue/components/mouse-wheel/picker.vue?template
     </template>
