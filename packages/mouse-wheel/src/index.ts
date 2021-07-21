@@ -250,7 +250,9 @@ export default class MouseWheel {
     wheelDeltaY *= direction
 
     if (!this.scroll.hasVerticalScroll) {
-      wheelDeltaX = wheelDeltaY
+      if(Math.abs(wheelDeltaY) > Math.abs(wheelDeltaX)){
+        wheelDeltaX = wheelDeltaY
+      }
       wheelDeltaY = 0
     }
     if (!this.scroll.hasHorizontalScroll) {
