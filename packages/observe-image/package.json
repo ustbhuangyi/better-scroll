@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/observe-image",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Observe image loading for BetterScroll",
   "author": "theniceangel <theniceangel@163.com>",
   "homepage": "https://github.com/ustbhuangyi/better-scroll/tree/master/packages/observe-image#readme",
@@ -28,6 +28,6 @@
     "url": "https://github.com/ustbhuangyi/better-scroll/issues"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.4.1"
+    "@better-scroll/core": "^2.4.2"
   }
 }

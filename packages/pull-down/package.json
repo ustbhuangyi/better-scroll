@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/pull-down",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "pull down to refresh, behave likes App list refreshing",
   "author": {
     "name": "jizhi",
@@ -31,7 +31,7 @@
     "directory": "packages/pull-down"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.4.1"
+    "@better-scroll/core": "^2.4.2"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }

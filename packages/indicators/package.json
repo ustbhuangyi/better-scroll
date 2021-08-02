@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/indicators",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "used as parallax scrolling, magnifier effects",
   "author": {
     "name": "jizhi",
@@ -33,7 +33,7 @@
     "directory": "packages/indicators"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.4.1"
+    "@better-scroll/core": "^2.4.2"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/scroll-bar",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "scrollbar is used to BetterScroll, which behaves like browser scrollbar",
   "author": {
     "name": "jizhi",
@@ -30,7 +30,7 @@
     "directory": "packages/scroll-bar"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.4.1"
+    "@better-scroll/core": "^2.4.2"
   },
   "gitHead": "f441227b6137d44ba0b44b97ed4cd49de9386130"
 }

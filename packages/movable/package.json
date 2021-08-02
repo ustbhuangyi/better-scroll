@@ -1,6 +1,6 @@
 {
   "name": "@better-scroll/movable",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Movable plugin for BetterScroll",
   "author": {
     "name": "jizhi",
@@ -30,6 +30,6 @@
     "directory": "packages/observe-dom"
   },
   "dependencies": {
-    "@better-scroll/core": "^2.4.1"
+    "@better-scroll/core": "^2.4.2"
   }
 }
