@@ -38,7 +38,7 @@ let scroll = new BScroll(wrapper)
 BetterScroll 提供了一个类，实例化的第一个参数是一个原生的 DOM 对象。当然，如果传递的是一个字符串，BetterScroll 内部会尝试调用 querySelector 去获取这个 DOM 对象。
 
 :::warning 注意
-BetterScroll 2.X 里面，我们将 1.X 耦合的 feature 拆分至插件，以达到按需加载、减少包体积的目的。因此，`@better-scroll/core` 只提供了最核心的滚动能力。如果想要实现**上拉刷新**、**下拉加载**的功能，你需要使用对应的[插件](/zh-CN/plugins)。
+BetterScroll 2.X 里面，我们将 1.X 耦合的 feature 拆分至插件，以达到按需加载、减少包体积的目的。因此，`@better-scroll/core` 只提供了最核心的滚动能力。如果想要实现**上拉加载**、**下拉刷新**的功能，你需要使用对应的[插件](/zh-CN/plugins)。
 :::
 
 :::tip 提示
