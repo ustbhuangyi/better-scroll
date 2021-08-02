@@ -4,16 +4,24 @@ import './index.styl'
 
 const examples = [
   {
-    path: '/pulldown/default',
-    name: 'Default',
+    path: '/compose/pullup-pulldown',
+    name: 'pullup-pulldown',
   },
   {
-    path: '/pulldown/sina',
-    name: 'Sina-Weibo(v2.4.0)',
+    path: '/compose/pullup-pulldown-slide',
+    name: 'pullup-pulldown-slide',
+  },
+  {
+    path: '/compose/pullup-pulldown-outnested',
+    name: 'pullup-pulldown-outnested',
+  },
+  {
+    path: '/compose/slide-nested',
+    name: 'slide-nested',
   },
 ]
 
-const Pulldown = (props) => {
+const Compose = (props) => {
   const goPage = (path) => {
     props.history.push(path)
   }
@@ -36,4 +44,4 @@ const Pulldown = (props) => {
   )
 }
 
-export default Pulldown
+export default Compose
