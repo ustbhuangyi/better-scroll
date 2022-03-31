@@ -37,7 +37,7 @@ new BScroll('.bs-wrapper', {
       // 获取大于 count 数量的数据，该函数是异步的，它需要返回一个 Promise。
       // case 1. resolve 数据数组Array<data>，来告诉 infinity 渲染数据，render 的第一个参数就是数据项
       // case 2. resolve(false), 来停止无限滚动
-    }
+    },
     render(item, div?: HTMLElement) {
       // item 是 fetch 函数提供的每一个数据项，
       // div 是页面回收的 DOM，可能不存在
