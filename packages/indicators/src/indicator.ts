@@ -30,7 +30,7 @@ const resolveRatioOption = (ratioConfig?: Ratio) => {
 }
 
 const handleBubbleAndCancelable = (e: TouchEvent) => {
-  e.preventDefault()
+  e.cancelable && e.preventDefault()
   e.stopPropagation()
 }
 export default class Indicator {
@@ -64,10 +64,8 @@ export default class Indicator {
   }
 
   private handleDOM() {
-    const {
-      relationElement,
-      relationElementHandleElementIndex = 0,
-    } = this.options
+    const { relationElement, relationElementHandleElementIndex = 0 } =
+      this.options
     this.wrapper = relationElement
     this.indicatorEl = this.wrapper.children[
       relationElementHandleElementIndex
@@ -369,9 +367,8 @@ export default class Indicator {
       `translateY(${pos.y}px)`,
       `${translateZ}`,
     ]
-    this.indicatorEl.style[style.transform as any] = transformProperties.join(
-      ' '
-    )
+    this.indicatorEl.style[style.transform as any] =
+      transformProperties.join(' ')
   }
 
   private getIndicatorPosByRatio(BScrollPos: Postion) {

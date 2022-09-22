@@ -91,7 +91,7 @@ export default class EventHandler {
     }
     let point = (e.touches ? e.touches[0] : e) as Touch
 
-    e.preventDefault()
+    e.cancelable && e.preventDefault()
     e.stopPropagation()
 
     this.initiated = true
@@ -106,7 +106,7 @@ export default class EventHandler {
     let point = (e.touches ? e.touches[0] : e) as Touch
     const pointPos = point[this.indicator.keysMap.point]
 
-    e.preventDefault()
+    e.cancelable && e.preventDefault()
     e.stopPropagation()
 
     let delta = pointPos - this.lastPoint
@@ -120,7 +120,7 @@ export default class EventHandler {
     }
     this.initiated = false
 
-    e.preventDefault()
+    e.cancelable && e.preventDefault()
     e.stopPropagation()
 
     this.hooks.trigger(this.hooks.eventTypes.touchEnd)
