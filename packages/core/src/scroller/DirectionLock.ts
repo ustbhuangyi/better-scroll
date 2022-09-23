@@ -2,6 +2,7 @@ import {
   TouchEvent,
   DirectionLock,
   EventPassthrough,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 
 const enum Passthrough {
@@ -20,7 +21,7 @@ const PassthroughHandlers = {
     return true
   },
   [Passthrough.No]: (e: TouchEvent) => {
-    e.cancelable && e.preventDefault()
+    maybePrevent(e)
     return false
   },
 }

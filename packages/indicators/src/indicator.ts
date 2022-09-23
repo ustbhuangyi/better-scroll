@@ -10,6 +10,7 @@ import {
   Probe,
   TouchEvent,
   style,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 const resolveRatioOption = (ratioConfig?: Ratio) => {
   let ret = {
@@ -30,7 +31,7 @@ const resolveRatioOption = (ratioConfig?: Ratio) => {
 }
 
 const handleBubbleAndCancelable = (e: TouchEvent) => {
-  e.cancelable && e.preventDefault()
+  maybePrevent(e)
   e.stopPropagation()
 }
 export default class Indicator {

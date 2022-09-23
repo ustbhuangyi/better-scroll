@@ -7,6 +7,7 @@ import {
   Direction,
   ApplyOrder,
   extend,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 
 export type MouseWheelOptions = Partial<MouseWheelConfig> | true
@@ -288,7 +289,7 @@ export default class MouseWheel {
       preventDefault &&
       !preventDefaultExceptionFn(e.target, preventDefaultException)
     ) {
-      e.cancelable && e.preventDefault()
+      maybePrevent(e)
     }
     if (stopPropagation) {
       e.stopPropagation()

@@ -12,6 +12,7 @@ import {
   EventEmitter,
   between,
   Quadrant,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 
 const applyQuadrantTransformation = (
@@ -289,7 +290,7 @@ export default class ScrollerActions {
     if (
       !preventDefaultExceptionFn(e.target, this.options.preventDefaultException)
     ) {
-      e.cancelable && e.preventDefault()
+      maybePrevent(e)
       e.stopPropagation()
     }
   }
