@@ -7,6 +7,7 @@ import {
   Direction,
   ApplyOrder,
   extend,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 
 export type MouseWheelOptions = Partial<MouseWheelConfig> | true
@@ -73,9 +74,11 @@ export default class MouseWheel {
   }
 
   private handleOptions() {
-    const userOptions = (this.scroll.options.mouseWheel === true
-      ? {}
-      : this.scroll.options.mouseWheel) as Partial<MouseWheelConfig>
+    const userOptions = (
+      this.scroll.options.mouseWheel === true
+        ? {}
+        : this.scroll.options.mouseWheel
+    ) as Partial<MouseWheelConfig>
     const defaultOptions: MouseWheelConfig = {
       speed: 20,
       invert: false,
@@ -250,7 +253,7 @@ export default class MouseWheel {
     wheelDeltaY *= direction
 
     if (!this.scroll.hasVerticalScroll) {
-      if(Math.abs(wheelDeltaY) > Math.abs(wheelDeltaX)){
+      if (Math.abs(wheelDeltaY) > Math.abs(wheelDeltaX)) {
         wheelDeltaX = wheelDeltaY
       }
       wheelDeltaY = 0
@@ -280,16 +283,13 @@ export default class MouseWheel {
   }
 
   private beforeHandler(e: CompatibleWheelEvent) {
-    const {
-      preventDefault,
-      stopPropagation,
-      preventDefaultException,
-    } = this.scroll.options
+    const { preventDefault, stopPropagation, preventDefaultException } =
+      this.scroll.options
     if (
       preventDefault &&
       !preventDefaultExceptionFn(e.target, preventDefaultException)
     ) {
-      e.preventDefault()
+      maybePrevent(e)
     }
     if (stopPropagation) {
       e.stopPropagation()

@@ -1,12 +1,13 @@
 import {
   TouchEvent,
   DirectionLock,
-  EventPassthrough
+  EventPassthrough,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 
 const enum Passthrough {
   Yes = 'yes',
-  No = 'no'
+  No = 'no',
 }
 
 interface DirectionMap {
@@ -20,19 +21,19 @@ const PassthroughHandlers = {
     return true
   },
   [Passthrough.No]: (e: TouchEvent) => {
-    e.preventDefault()
+    maybePrevent(e)
     return false
-  }
+  },
 }
 const DirectionMap: DirectionMap = {
   [DirectionLock.Horizontal]: {
     [Passthrough.Yes]: EventPassthrough.Horizontal,
-    [Passthrough.No]: EventPassthrough.Vertical
+    [Passthrough.No]: EventPassthrough.Vertical,
   },
   [DirectionLock.Vertical]: {
     [Passthrough.Yes]: EventPassthrough.Vertical,
-    [Passthrough.No]: EventPassthrough.Horizontal
-  }
+    [Passthrough.No]: EventPassthrough.Horizontal,
+  },
 }
 
 export default class DirectionLockAction {
@@ -63,7 +64,7 @@ export default class DirectionLockAction {
     }
     return {
       deltaX,
-      deltaY
+      deltaY,
     }
   }
 
