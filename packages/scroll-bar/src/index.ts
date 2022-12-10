@@ -111,7 +111,7 @@ export default class ScrollBar {
     let scrollbarIndicatorEl: HTMLDivElement = document.createElement('div')
 
     scrollbarWrapperEl.style.cssText =
-      'position:absolute;z-index:9999;overflow:hidden;'
+      'position:absolute;z-index:9999;overflow:hidden;transform: translateZ(2px)'
     scrollbarIndicatorEl.style.cssText =
       'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;'
 
