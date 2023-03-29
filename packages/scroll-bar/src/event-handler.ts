@@ -3,6 +3,7 @@ import {
   TouchEvent,
   EventRegister,
   EventEmitter,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 import Indicator from './indicator'
 
@@ -91,7 +92,7 @@ export default class EventHandler {
     }
     let point = (e.touches ? e.touches[0] : e) as Touch
 
-    e.preventDefault()
+    maybePrevent(e)
     e.stopPropagation()
 
     this.initiated = true
@@ -106,7 +107,7 @@ export default class EventHandler {
     let point = (e.touches ? e.touches[0] : e) as Touch
     const pointPos = point[this.indicator.keysMap.point]
 
-    e.preventDefault()
+    maybePrevent(e)
     e.stopPropagation()
 
     let delta = pointPos - this.lastPoint
@@ -120,7 +121,7 @@ export default class EventHandler {
     }
     this.initiated = false
 
-    e.preventDefault()
+    maybePrevent(e)
     e.stopPropagation()
 
     this.hooks.trigger(this.hooks.eventTypes.touchEnd)

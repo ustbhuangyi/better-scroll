@@ -68,9 +68,9 @@ function prefixStyle(style: string): string {
 }
 
 export function getElement(el: HTMLElement | string) {
-  return (typeof el === 'string'
-    ? document.querySelector(el)
-    : el) as HTMLElement
+  return (
+    typeof el === 'string' ? document.querySelector(el) : el
+  ) as HTMLElement
 }
 
 export function addEvent(
@@ -97,6 +97,12 @@ export function removeEvent(
   el.removeEventListener(type, fn, {
     capture: !!capture,
   })
+}
+
+export function maybePrevent(e: Event) {
+  if (e.cancelable) {
+    e.preventDefault()
+  }
 }
 
 export function offset(el: HTMLElement | null) {

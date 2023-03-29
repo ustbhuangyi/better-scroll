@@ -10,6 +10,7 @@ import {
   Probe,
   TouchEvent,
   style,
+  maybePrevent,
 } from '@better-scroll/shared-utils'
 const resolveRatioOption = (ratioConfig?: Ratio) => {
   let ret = {
@@ -30,7 +31,7 @@ const resolveRatioOption = (ratioConfig?: Ratio) => {
 }
 
 const handleBubbleAndCancelable = (e: TouchEvent) => {
-  e.preventDefault()
+  maybePrevent(e)
   e.stopPropagation()
 }
 export default class Indicator {
@@ -64,10 +65,8 @@ export default class Indicator {
   }
 
   private handleDOM() {
-    const {
-      relationElement,
-      relationElementHandleElementIndex = 0,
-    } = this.options
+    const { relationElement, relationElementHandleElementIndex = 0 } =
+      this.options
     this.wrapper = relationElement
     this.indicatorEl = this.wrapper.children[
       relationElementHandleElementIndex
@@ -369,9 +368,8 @@ export default class Indicator {
       `translateY(${pos.y}px)`,
       `${translateZ}`,
     ]
-    this.indicatorEl.style[style.transform as any] = transformProperties.join(
-      ' '
-    )
+    this.indicatorEl.style[style.transform as any] =
+      transformProperties.join(' ')
   }
 
   private getIndicatorPosByRatio(BScrollPos: Postion) {
