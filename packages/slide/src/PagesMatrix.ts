@@ -1,5 +1,6 @@
 import BScroll from '@better-scroll/core'
 import { PageIndex } from './SlidePages'
+import { BASE_PAGE_STATS } from './constants'
 
 export interface PageStats {
   x: number
@@ -34,7 +35,11 @@ export default class PagesMatrix {
   }
 
   getPageStats(pageX: number, pageY: number): PageStats {
-    return this.pages[pageX][pageY]
+    // Returns the default Stats when no Stats are retrieved
+    // Scene: initialize `pages` to an empty array when the clientWidth/clientHeight property of the `wrapper` element is not fetched.
+    return this.pages[pageX] && this.pages[pageX][pageY]
+      ? this.pages[pageX][pageY]
+      : BASE_PAGE_STATS
   }
 
   getNearestPageIndex(x: number, y: number): PageIndex {
@@ -46,8 +51,7 @@ export default class PagesMatrix {
         break
       }
     }
-
-    l = this.pages[pageX].length
+    l = this.pages[pageX] ? this.pages[pageX].length : 0
     for (; pageY < l - 1; pageY++) {
       if (y >= this.pages[0][pageY].cy) {
         break
