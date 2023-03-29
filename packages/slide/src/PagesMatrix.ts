@@ -1,5 +1,6 @@
 import BScroll from '@better-scroll/core'
 import { PageIndex } from './SlidePages'
+import { DEFAULT_PAGE_STATS } from './constants'
 
 export interface PageStats {
   x: number
@@ -34,7 +35,12 @@ export default class PagesMatrix {
   }
 
   getPageStats(pageX: number, pageY: number): PageStats {
-    return this.pages[pageX][pageY]
+    // Returns the default Stats when no Stats are retrieved
+    // Scene: When the `content` element is an empty bounding box, the return value of the `width/height` function of el.getBoundingClientRect is 0 and pages will be calculated as an empty array.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+    return this.pages[pageX] && this.pages[pageX][pageY]
+      ? this.pages[pageX][pageY]
+      : DEFAULT_PAGE_STATS
   }
 
   getNearestPageIndex(x: number, y: number): PageIndex {
@@ -46,8 +52,7 @@ export default class PagesMatrix {
         break
       }
     }
-
-    l = this.pages[pageX].length
+    l = this.pages[pageX] ? this.pages[pageX].length : 0
     for (; pageY < l - 1; pageY++) {
       if (y >= this.pages[0][pageY].cy) {
         break
