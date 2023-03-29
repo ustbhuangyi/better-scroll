@@ -3,7 +3,7 @@ import extendTouch from '../../util/extendTouch'
 
 jest.setTimeout(10000000)
 
-const chunk = (array, size) => {
+const chunk = <T>(array: T[], size: number) => {
   let index = 0
   let resIndex = 0
   const length = array.length
@@ -52,7 +52,7 @@ describe('Pulldown-sina-weibo', () => {
       const step = 5
       const end = 550
       const x = 200
-      let ret = []
+      let ret: Array<{ x: number; y: number }> = []
       for (let i = start; i <= end; i += step) {
         ret.push({
           x,
