@@ -1,5 +1,6 @@
 import PagesMatrix from '../PagesMatrix'
 import BScroll from '@better-scroll/core'
+import { DEFAULT_PAGE_STATS } from '../constants'
 
 const createSlideElements = () => {
   const wrapper = document.createElement('div')
@@ -104,5 +105,47 @@ describe('slide test for PagesMatrix class', () => {
       cx: -250,
       cy: -50,
     })
+  })
+
+  it('The pages calculation fails to access PageStats should return the default value', () => {
+    const { wrapper } = createSlideElements()
+    scroll = new BScroll(wrapper, {})
+    scroll.scroller.scrollBehaviorX.wrapperSize = 100
+    scroll.scroller.scrollBehaviorX.contentSize = 0
+    scroll.scroller.scrollBehaviorX.maxScrollPos = 100
+    scroll.scroller.scrollBehaviorY.wrapperSize = 100
+    scroll.scroller.scrollBehaviorY.contentSize = 0
+    scroll.scroller.scrollBehaviorY.maxScrollPos = 100
+    pageMatrix = new PagesMatrix(scroll)
+
+    expect(pageMatrix.pages.length).toBe(0)
+    expect(pageMatrix.pageLengthOfX).toBe(0)
+    expect(pageMatrix.pageLengthOfY).toBe(0)
+
+    const pagesIdx: [number, number][] = [
+      [1, 0],
+      [-1, 0],
+      [1, 1],
+      [-1, -1],
+      [0, 1],
+      [0, -1],
+    ]
+    for (const idx of pagesIdx) {
+      expect(pageMatrix.getPageStats(idx[0], idx[1])).toMatchObject(
+        DEFAULT_PAGE_STATS
+      )
+    }
+
+    const pagesLoc: [number, number][] = [
+      [-100, 0],
+      [0, -100],
+    ]
+
+    for (const loc of pagesLoc) {
+      expect(pageMatrix.getNearestPageIndex(loc[0], loc[1])).toMatchObject({
+        pageX: 0,
+        pageY: 0,
+      })
+    }
   })
 })

@@ -5,7 +5,7 @@ export const BASE_PAGE = {
   y: 0,
 }
 
-export const BASE_PAGE_STATS = {
+export const DEFAULT_PAGE_STATS = {
   x: 0,
   y: 0,
   width: 0,
