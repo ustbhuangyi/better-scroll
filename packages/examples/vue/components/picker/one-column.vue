@@ -317,7 +317,6 @@
         padding: 0 16px
         .wheel
           flex: 1
-          width: 1%
           height: 173px
           overflow: hidden
           font-size: 18px
