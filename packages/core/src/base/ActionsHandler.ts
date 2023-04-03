@@ -159,7 +159,10 @@ export default class ActionsHandler {
     }
 
     // only allow mouse left button
-    if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) return
+    if (_eventType === EventType.Mouse && e.button !== MouseButton.Left) {
+      this.setInitiated()
+      return
+    }
 
     if (this.hooks.trigger(this.hooks.eventTypes.beforeStart, e)) {
       return
